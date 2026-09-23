@@ -15,6 +15,18 @@ The full notes and open questions from the advisor meetings are in `docs/plantea
 - **Activity labels depend on concentration.** The same compound can flip between inactive and active depending on the µM tested, so pick and document a threshold when turning activity measurements into labels.
 - **"No learnable pattern" is a valid result.** Report it honestly instead of tuning until something looks good.
 
+## Technical decisions
+
+These come from the research in `docs/referencias/`, which holds the evidence, the caveats and the bibliography. Read the relevant document before changing any of them.
+
+- **Data, stage 1:** B3DB, filtered by its `Group` reliability column (train on A+B). logBB threshold −1.0. Data is CC0, so it can live in the repo.
+- **Data, stage 2:** the ChEMBL 37 SQLite dump, not the REST API (which was returning HTTP 500 as of 2026-09-22). Plus NPASS v3.0 and CMAUP 2.0. Labels in two tiers: pChEMBL ≥ 5 primary, ≥ 6 as a robustness check, keeping the most potent value per compound-target pair.
+- **Features:** RDKit 2D descriptors (217 in current RDKit) plus Morgan/ECFP4, 2048 bits, via `rdFingerprintGenerator` — not the deprecated `GetMorganFingerprintAsBitVect`. Note `radius=2` means ECFP4, since the name carries the diameter. Frozen embeddings from pretrained transformers do not beat this under scaffold splits.
+- **Splits:** scaffold (Bemis-Murcko), never random. Random splits inflate results by 7–13 points. Where the data allows, make splits disjoint by source lab too.
+- **Explainability:** at least two independent attribution methods, reporting only the substructures they agree on. Train a simple interpretable model alongside as a control. Sanity-check every structural claim against TPSA (<67 Å²) and HBD (≤1) first, since those dominate empirically.
+
+Do not cite published BBBP performance numbers as a target — the same dataset yields Random Forest baselines anywhere from 0.681 to 0.7194 depending on who reports it. Run the baseline in-house.
+
 ## Current state
 
 The repo is only a scaffold for now. Each directory holds an empty `Nuevo.txt` placeholder so git will track it. There is no code, no `requirements.txt`, no `.gitignore` and no test or lint setup yet. When you add real content to a directory, delete its placeholder. Don't invent build or test commands. Add them here once they exist.
