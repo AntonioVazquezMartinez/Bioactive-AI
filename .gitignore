@@ -1,0 +1,32 @@
+# Datos pesados — se traen con src/data_prep/download_data.py
+data/external/b3db/*.tsv.gz
+data/external/coconut/
+data/external/lotus/
+data/external/chembl/
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Modelos serializados
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.onnx
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Herramientas
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.DS_Store
+firebase-debug.log
+*.log
