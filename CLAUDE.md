@@ -29,7 +29,7 @@ Do not cite published BBBP performance numbers as a target — the same dataset 
 
 ## Current state
 
-The repo is only a scaffold for now. Each directory holds an empty `Nuevo.txt` placeholder so git will track it. There is no code, no `requirements.txt`, no `.gitignore` and no test or lint setup yet. When you add real content to a directory, delete its placeholder. Don't invent build or test commands. Add them here once they exist.
+The repo is only a scaffold for now. Directories without real content hold an empty `Nuevo.txt` placeholder so git will track them. There is no code, no `requirements.txt`, no `.gitignore` and no test or lint setup yet. When you add real content to a directory, delete its placeholder. Don't invent build or test commands. Add them here once they exist.
 
 ## Intended layout and workflow
 
