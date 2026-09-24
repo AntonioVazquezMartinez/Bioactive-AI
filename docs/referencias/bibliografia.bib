@@ -1,0 +1,837 @@
+% Bibliografía consolidada — Bioactive AI
+% Compilada el 2026-09-22 a partir de las cuatro ramas de investigación en docs/referencias/.
+%
+% REGLA APLICADA: ningún campo fue inventado. Donde no se pudo confirmar un volumen,
+% rango de páginas o DOI desde una fuente efectivamente abierta, el campo se omitió
+% en vez de reconstruirlo. Una entrada incompleta pero verdadera es preferible a una
+% inventada.
+%
+% ADVERTENCIA: varias entradas corresponden a fuentes que no se pudieron leer
+% completas (marcadas con una nota). Antes de que cualquiera entre a un entregable,
+% verificar el DOI contra doi.org y leer la fuente.
+%
+% NOTA DE DEDUPLICACIÓN: el grupo de Tiwari publicó DOS papers distintos en
+% Pharmaceutics 2026, ambos usando B3DB. No son duplicados:
+%   - tiwari2026umbrales      18(8):967  — umbrales estructurales (TPSA, HBD)
+%   - tiwari2026conformeros3d 18(8):1018 — valor incremental de descriptores 3D
+
+
+% ============================================================
+% DATASETS Y BASES DE DATOS
+% ============================================================
+
+@article{meng2021b3db,
+  author  = {Meng, Fanwang and Xi, Yang and Huang, Jinfeng and Ayers, Paul W.},
+  title   = {A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors},
+  journal = {Scientific Data},
+  year    = {2021},
+  volume  = {8},
+  number  = {1},
+  pages   = {289},
+  doi     = {10.1038/s41597-021-01069-5}
+}
+
+@misc{meng2021b3db_figshare,
+  author       = {Meng, Fanwang and Xi, Yang and Huang, Jinfeng and Ayers, Paul W.},
+  title        = {A large benchmark dataset, Blood-Brain Barrier Database (B3DB), compiled from 50 published resources},
+  year         = {2021},
+  howpublished = {Figshare dataset},
+  doi          = {10.6084/m9.figshare.15634230.v3},
+  note         = {Versión 3}
+}
+
+@misc{theochem_b3db_repo,
+  author       = {{theochem}},
+  title        = {B3DB: A large benchmark dataset, Blood-Brain Barrier Database},
+  year         = {2021},
+  howpublished = {Repositorio de GitHub},
+  url          = {https://github.com/theochem/B3DB},
+  note         = {Consultado 2026-09-22}
+}
+
+@misc{meng2025b3clf_preprint,
+  author       = {Meng, Fanwang and Chen, Jitian and Collins-Ramirez, Juan Samuel and Ayers, Paul W.},
+  title        = {B3clf: A Resampling-Integrated Machine Learning Framework to Predict Blood-Brain Barrier Permeability},
+  year         = {2025},
+  howpublished = {Preprint en ChemRxiv},
+  doi          = {10.26434/chemrxiv-2025-xschc},
+  note         = {Publicado 2025-08-20. SIN ACCESO al texto completo (403)}
+}
+
+@software{meng2023b3clf_software,
+  author  = {Meng, Fanwang and Collins-Ramirez, Juan Samuel and Ayers, Paul W.},
+  title   = {B3clf: Blood-Brain Barrier Classifiers},
+  year    = {2023},
+  version = {0.0.1},
+  doi     = {10.5281/zenodo.8336769},
+  url     = {https://github.com/theochem/B3clf}
+}
+
+@article{wu2018moleculenet,
+  author  = {Wu, Zhenqin and Ramsundar, Bharath and Feinberg, Evan N. and Gomes, Joseph and Geniesse, Caleb and Pappu, Aneesh S. and Leswing, Karl and Pande, Vijay},
+  title   = {{MoleculeNet}: A Benchmark for Molecular Machine Learning},
+  journal = {Chemical Science},
+  year    = {2018},
+  volume  = {9},
+  number  = {2},
+  pages   = {513--530},
+  doi     = {10.1039/C7SC02664A},
+  note    = {LEÍDO PARCIAL: RSC devolvió 403; se usó arXiv v3, sin el apéndice numérico}
+}
+
+@article{martins2012bayesian,
+  author  = {Martins, Ines Filipa and Teixeira, Ana L. and Pinheiro, Luis and Falc{\~a}o, Andr{\'e} O.},
+  title   = {A Bayesian Approach to in Silico Blood-Brain Barrier Penetration Modeling},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2012},
+  volume  = {52},
+  number  = {6},
+  pages   = {1686--1697},
+  doi     = {10.1021/ci300124c},
+  note    = {SIN ACCESO: muro de pago de ACS. Solo metadatos vía CrossRef. Fuente original de BBBP y TDC BBB\_Martins}
+}
+
+@inproceedings{huang2021tdc,
+  author        = {Huang, Kexin and Fu, Tianfan and Gao, Wenhao and Zhao, Yue and Roohani, Yusuf and Leskovec, Jure and Coley, Connor W. and Xiao, Cao and Sun, Jimeng and Zitnik, Marinka},
+  title         = {Therapeutics Data Commons: Machine Learning Datasets and Tasks for Drug Discovery and Development},
+  booktitle     = {Proceedings of Neural Information Processing Systems, NeurIPS Datasets and Benchmarks Track},
+  year          = {2021},
+  eprint        = {2102.09548},
+  archivePrefix = {arXiv},
+  note          = {LEÍDO PARCIAL: solo el abstract}
+}
+
+@article{shaker2021lightbbb,
+  author  = {Shaker, Bilal and Yu, Myeong-Sang and Song, Jin Sook and Ahn, Sunjoo and Ryu, Jae Yong and Oh, Kwang-Seok and Na, Dokyun},
+  title   = {LightBBB: computational prediction model of blood-brain-barrier penetration based on LightGBM},
+  journal = {Bioinformatics},
+  year    = {2021},
+  volume  = {37},
+  number  = {8},
+  pages   = {1135--1139},
+  doi     = {10.1093/bioinformatics/btaa918},
+  note    = {Protocolo de split (aleatorio o scaffold) NO CONFIRMADO}
+}
+
+@article{spielvogel2025standardized,
+  author  = {Spielvogel, Clemens P. and Schindler, Nina and Schr{\"o}der, Christian and Stellnberger, Sophie Lisa and Wadsak, Wolfgang and Mitterhauser, Markus and Papp, Laszlo and Hacker, Marcus and Pichler, Verena and Vraka, Chrysoula},
+  title   = {Enhancing Blood-Brain Barrier Penetration Prediction by Machine Learning-Based Integration of Novel and Existing, In Silico and Experimental Molecular Parameters from a Standardized Database},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2025},
+  volume  = {65},
+  number  = {6},
+  pages   = {2773--2784},
+  doi     = {10.1021/acs.jcim.4c02212},
+  note    = {LEÍDO COMPLETO vía PMC. Fuente de la cita sobre dependencia de la concentración. Dataset de 154 compuestos, CC BY 4.0, en osf.io/cvhe9}
+}
+
+@article{hou2024cmaup,
+  author  = {Hou, Dongyue and Lin, Hanbo and Feng, Yuhan and Zhou, Kaicheng and Li, Xingxiu and Yang, Yuan and Wang, Shuaiqi and Yang, Xue and Wang, Jiayu and Zhao, Hui and Zhang, Xuyao and Fan, Jiajun and Lu, SongLin and Wang, Dan and Zhu, Lyuhan and Ju, Dianwen and Chen, Yu Zong and Zeng, Xian},
+  title   = {{CMAUP} database update 2024: extended functional and association information of useful plants for biomedical research},
+  journal = {Nucleic Acids Research},
+  year    = {2024},
+  volume  = {52},
+  number  = {D1},
+  pages   = {D1508--D1518},
+  doi     = {10.1093/nar/gkad921}
+}
+
+@article{zhao2023npass,
+  author  = {Zhao, Hui and Yang, Yuan and Wang, Shuaiqi and Yang, Xue and Zhou, Kaicheng and Xu, Caili and Zhang, Xuyao and Fan, Jiajun and Hou, Dongyue and Li, Xingxiu and Lin, Hanbo and Tan, Ying and Wang, Shanshan and Chu, Xin-Yi and Zhuoma, Dongzhi and Zhang, Fengying and Ju, Dianwen and Zeng, Xian and Chen, Yu Zong},
+  title   = {{NPASS} database update 2023: quantitative natural product activity and species source database for biomedical research},
+  journal = {Nucleic Acids Research},
+  year    = {2023},
+  volume  = {51},
+  number  = {D1},
+  pages   = {D621--D628},
+  doi     = {10.1093/nar/gkac1069},
+  note    = {Describe el release ANTERIOR. Para la versión viva citar lin2026npass}
+}
+
+@article{lin2026npass,
+  author  = {Lin, Hanbo and Hou, Dongyue and Jiang, Xianhan and Yin, Ruining and Yu, Shuntao and Lu, Songlin and Wang, Shanshan and Ju, Dianwen and Zhao, Hui and Chen, Yuzong and Zeng, Xian},
+  title   = {{NPASS} database update 2026: comprehensive quantitative composition, bioactivity, and {ADME}-Tox data of natural products for biomedical research},
+  journal = {Nucleic Acids Research},
+  year    = {2026},
+  volume  = {54},
+  number  = {D1},
+  pages   = {D1519--D1527},
+  doi     = {10.1093/nar/gkaf1196},
+  note    = {Describe NPASS v3.0, la versión viva en 2026-09-22. Licencia CC BY-NC 4.0}
+}
+
+@article{zdrazil2024chembl,
+  author  = {Zdrazil, Barbara and Felix, Eloy and Hunter, Fiona and Manners, Emma J. and Blackshaw, James and Corbett, Sybilla and de Veij, Marleen and Ioannidis, Harris and Lopez, David Mendez and Mosquera, Juan F. and Magarinos, Maria Paula and Bosc, Nicolas and Arcila, Ricardo and Kizil{\"o}ren, Tevfik and Gaulton, Anna and Bento, A. Patr{\'i}cia and Adasme, Melissa F. and Monecke, Peter and Landrum, Gregory A. and Leach, Andrew R.},
+  title   = {The {ChEMBL} Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods},
+  journal = {Nucleic Acids Research},
+  year    = {2024},
+  volume  = {52},
+  number  = {D1},
+  pages   = {D1180--D1192},
+  doi     = {10.1093/nar/gkad1004},
+  note    = {Describe el release 33; el release vivo confirmado por FTP es ChEMBL 37}
+}
+
+@article{davies2015chemblws,
+  author  = {Davies, Mark and Nowotka, Micha{\l} and Papadatos, George and Dedman, Nathan and Gaulton, Anna and Atkinson, Francis and Bellis, Louisa and Overington, John P.},
+  title   = {{ChEMBL} web services: streamlining access to drug discovery data and utilities},
+  journal = {Nucleic Acids Research},
+  year    = {2015},
+  volume  = {43},
+  number  = {W1},
+  pages   = {W612--W620},
+  doi     = {10.1093/nar/gkv352},
+  note    = {Cita solicitada para chembl\_webresource\_client}
+}
+
+@article{sun2017excapedb,
+  author  = {Sun, Jiangming and Jeliazkova, Nina and Chupakhin, Vladimir and Golib-Dzib, Jos{\'e} Felipe and Engkvist, Ola and Carlsson, Lars and Wegner, J{\"o}rg K. and Ceulemans, Hugo and Georgiev, Ivan and Jeliazkov, Vedrin and Kochev, Nikolay and Ashby, Thomas J. and Chen, Hongming},
+  title   = {{ExCAPE-DB}: an integrated large scale dataset facilitating Big Data analysis in chemogenomics},
+  journal = {Journal of Cheminformatics},
+  year    = {2017},
+  volume  = {9},
+  pages   = {17},
+  doi     = {10.1186/s13321-017-0203-5},
+  note    = {Fuente del umbral pXC50 >= 5 para el etiquetado de nivel 1}
+}
+
+@misc{cmaup_site,
+  author       = {{BIDD Group}},
+  title        = {{CMAUP}: A Database of Collective Molecular Activities of Useful Plants},
+  howpublished = {\url{http://bidd.group/CMAUP/}},
+  note         = {Versión 2.0, consultado 2026-09-22}
+}
+
+@misc{npass_site,
+  author       = {{BIDD Group}},
+  title        = {{NPASS}: Natural Product Activity and Species Source Database},
+  howpublished = {\url{http://bidd.group/NPASS/}},
+  note         = {Versión 3.0, consultado 2026-09-22}
+}
+
+@misc{chembl_site,
+  author       = {{EMBL-EBI}},
+  title        = {{ChEMBL} Database},
+  howpublished = {\url{https://www.ebi.ac.uk/chembl/}},
+  note         = {Release 37, confirmado por listado FTP, consultado 2026-09-22. API REST devolvía HTTP 500 en esa fecha}
+}
+
+@misc{tdc_bbb_leaderboard,
+  author       = {{Therapeutics Data Commons}},
+  title        = {BBB\_Martins Leaderboard},
+  howpublished = {\url{https://tdcommons.ai/benchmark/admet_group/07bbb/}},
+  note         = {Consultado 2026-09-22. 26 modelos con scaffold split; mejor AUROC 0.924}
+}
+
+@misc{deepchem_issue2336,
+  author       = {{DeepChem contributors}},
+  title        = {12 SMILES strings in the BBBP dataset fail when I attempt to parse them using rdkit (Issue \#2336)},
+  howpublished = {GitHub Issue},
+  url          = {https://github.com/deepchem/deepchem/issues/2336},
+  note         = {Consultado 2026-09-22, sin corregir}
+}
+
+@misc{deepchem_moleculenet_docs,
+  author       = {{DeepChem project}},
+  title        = {MoleculeNet --- DeepChem documentation},
+  howpublished = {\url{https://deepchem.readthedocs.io/en/latest/moleculenet.html}},
+  note         = {Consultado 2026-09-22}
+}
+
+
+% ============================================================
+% REPRESENTACIONES MOLECULARES
+% ============================================================
+
+@article{rogers2010ecfp,
+  author  = {Rogers, David and Hahn, Mathew},
+  title   = {Extended-Connectivity Fingerprints},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2010},
+  volume  = {50},
+  number  = {5},
+  pages   = {742--754},
+  doi     = {10.1021/ci100050t},
+  note    = {ACS, PubMed y Europe PMC devolvieron 403; leído vía espejo verificado de la versión de registro}
+}
+
+@article{moriwaki2018mordred,
+  author  = {Moriwaki, Hirotomo and Tian, Yu-Shi and Kawashita, Norihito and Takagi, Tatsuya},
+  title   = {Mordred: a molecular descriptor calculator},
+  journal = {Journal of Cheminformatics},
+  year    = {2018},
+  volume  = {10},
+  pages   = {4},
+  doi     = {10.1186/s13321-018-0258-y}
+}
+
+@article{praski2026benchmarking,
+  author        = {Praski, Mateusz and Adamczyk, Jakub and Czech, Wojciech},
+  title         = {Benchmarking Pretrained Molecular Embedding Models For Molecular Representation Learning},
+  journal       = {arXiv preprint arXiv:2508.06199},
+  year          = {2026},
+  eprint        = {2508.06199},
+  archivePrefix = {arXiv},
+  note          = {Preprint v4. NO se identificó publicación con revisión por pares. Fuente principal de la decisión de representación}
+}
+
+@article{chithrananda2020chemberta,
+  author  = {Chithrananda, Seyone and Grand, Gabriel and Ramsundar, Bharath},
+  title   = {{ChemBERTa}: Large-Scale Self-Supervised Pretraining for Molecular Property Prediction},
+  journal = {arXiv preprint arXiv:2010.09885},
+  year    = {2020},
+  doi     = {10.48550/arXiv.2010.09885},
+  note    = {NeurIPS 2020 Workshop on Machine Learning for Molecules}
+}
+
+@article{ahmad2022chemberta2,
+  author  = {Ahmad, Walid and Simon, Elana and Chithrananda, Seyone and Grand, Gabriel and Ramsundar, Bharath},
+  title   = {{ChemBERTa-2}: Towards Chemical Foundation Models},
+  journal = {arXiv preprint arXiv:2209.01712},
+  year    = {2022},
+  doi     = {10.48550/arXiv.2209.01712},
+  note    = {2021 ELLIS Machine Learning for Molecule Discovery Workshop}
+}
+
+@article{ross2022molformer,
+  author  = {Ross, Jerret and Belgodere, Brian and Chenthamarakshan, Vijil and Padhi, Inkit and Mroueh, Youssef and Das, Payel},
+  title   = {Large-Scale Chemical Language Representations Capture Molecular Structure and Properties},
+  journal = {Nature Machine Intelligence},
+  year    = {2022},
+  volume  = {4},
+  number  = {12},
+  pages   = {1256--1264},
+  doi     = {10.1038/s42256-022-00580-7},
+  note    = {SIN ACCESO a la versión publicada (muro de login); leído vía preprint arXiv:2106.09553}
+}
+
+@article{yuksel2023selformer,
+  author  = {Y{\"u}ksel, Atakan and Ulusoy, Erva and {\"U}nl{\"u}, Atabey and Do{\u{g}}an, Tunca},
+  title   = {{SELFormer}: Molecular Representation Learning via {SELFIES} Language Models},
+  journal = {Machine Learning: Science and Technology},
+  year    = {2023},
+  volume  = {4},
+  number  = {2},
+  pages   = {025035},
+  doi     = {10.1088/2632-2153/acdb30}
+}
+
+@article{yang2019analyzing,
+  author  = {Yang, Kevin and Swanson, Kyle and Jin, Wengong and Coley, Connor and Eiden, Philipp and Gao, Hua and Guzman-Perez, Angel and Hopper, Timothy and Kelley, Brian and Mathea, Miriam and Palmer, Andrew and Settels, Volker and Jaakkola, Tommi and Jensen, Klavs and Barzilay, Regina},
+  title   = {Analyzing Learned Molecular Representations for Property Prediction},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2019},
+  volume  = {59},
+  number  = {8},
+  pages   = {3370--3388},
+  doi     = {10.1021/acs.jcim.9b00237},
+  note    = {Preprint abierto: arXiv:1904.01561}
+}
+
+@inproceedings{gilmer2017mpnn,
+  author    = {Gilmer, Justin and Schoenholz, Samuel S. and Riley, Patrick F. and Vinyals, Oriol and Dahl, George E.},
+  title     = {Neural Message Passing for Quantum Chemistry},
+  booktitle = {Proceedings of the 34th International Conference on Machine Learning (ICML)},
+  year      = {2017},
+  note      = {arXiv:1704.01212. SIN ACCESO al texto completo; citado solo como contexto}
+}
+
+@article{dablander2024sortslice,
+  author  = {Dablander, Markus and Hanser, Thierry and Lambiotte, Renaud and Morris, Garrett M.},
+  title   = {Sort \& Slice: a simple and superior alternative to hash-based folding for extended-connectivity fingerprints},
+  journal = {Journal of Cheminformatics},
+  year    = {2024},
+  volume  = {16},
+  pages   = {135},
+  doi     = {10.1186/s13321-024-00932-y},
+  note    = {Opción recomendada para fingerprints libres de colisión}
+}
+
+@article{li2026collisionfree,
+  author  = {Li, Jibai and Qu, Xintong and Zhang, Wenlong and Zhong, Shifa},
+  title   = {Collision-free morgan fingerprints: a principled approach to enhance machine learning performance and interpretability in chemistry},
+  journal = {Journal of Cheminformatics},
+  year    = {2026},
+  volume  = {18},
+  pages   = {46},
+  doi     = {10.1186/s13321-026-01170-0},
+  note    = {ADVERTENCIA: validado solo con splits aleatorios, no scaffold, según admiten los autores. Paquete en estado alpha, adopción casi nula}
+}
+
+@article{zhong2023countbased,
+  author  = {Zhong, Shifa and Guan, Xiaohong},
+  title   = {Count-Based Morgan Fingerprint: A More Efficient and Interpretable Molecular Representation in Developing Machine Learning-Based Predictive Regression Models for Water Contaminants' Activities and Properties},
+  journal = {Environmental Science \& Technology},
+  year    = {2023},
+  volume  = {57},
+  number  = {46},
+  pages   = {18193--18202},
+  doi     = {10.1021/acs.est.3c02198},
+  note    = {SIN ACCESO al texto completo (403); solo abstract}
+}
+
+@misc{bitcollisionfreemf,
+  author = {Zhong, Shifa and Li, Jibai},
+  title  = {bit-collision-free-MF (paquete de PyPI)},
+  year   = {2026},
+  note   = {v1.0.0, licencia MIT, clasificado Alpha. https://pypi.org/project/bit-collision-free-MF/ . Repo fuente según metadatos de PyPI: https://github.com/Shifa-Zhong/bit\_collision\_free\_MF (NO VERIFICADO). El repo Shifa-Zhong/CF-MF-project NO es el código del paquete}
+}
+
+@misc{rdkit,
+  author       = {Landrum, Greg and {RDKit contributors}},
+  title        = {RDKit: Open-Source Cheminformatics Software},
+  howpublished = {\url{https://www.rdkit.org}},
+  year         = {2026},
+  note         = {Versión 2026.03.6, instalada y probada empíricamente 2026-09-22. DOI de concepto en Zenodo: 10.5281/zenodo.591637}
+}
+
+@misc{landrum2023fpgen,
+  author       = {Landrum, Greg},
+  title        = {FingerprintGenerator tutorial},
+  howpublished = {Blog de RDKit, \url{https://greglandrum.github.io/rdkit-blog/posts/2023-01-18-fingerprint-generator-tutorial.html}},
+  year         = {2023},
+  note         = {Consultado 2026-09-22}
+}
+
+@misc{landrum2025bitrendering,
+  author       = {Landrum, Greg},
+  title        = {Updated bit rendering},
+  howpublished = {Blog de RDKit, \url{https://greglandrum.github.io/rdkit-blog/posts/2025-03-29-updated-bit-rendering.html}},
+  year         = {2025},
+  note         = {Consultado 2026-09-22. API vigente para mapear bits a substructuras}
+}
+
+@misc{rdkit_murckoscaffold,
+  author       = {{RDKit developers}},
+  title        = {rdkit.Chem.Scaffolds.MurckoScaffold module},
+  howpublished = {\url{https://www.rdkit.org/docs/source/rdkit.Chem.Scaffolds.MurckoScaffold.html}},
+  note         = {Consultado 2026-09-22}
+}
+
+@misc{mordred_pypi,
+  author       = {Moriwaki, Hirotomo and contributors},
+  title        = {mordred (paquete de PyPI)},
+  howpublished = {\url{https://github.com/mordred-descriptor/mordred}},
+  year         = {2018},
+  note         = {v1.2.0, probada 2026-09-22. 21\% de los descriptores fallan con numpy >= 1.24. Fork comunitario: https://github.com/ardeat/mordred-community}
+}
+
+@misc{chemprop_docs,
+  author = {{Chemprop Developers}},
+  title  = {Interpretability with Monte Carlo Tree Search --- Chemprop Documentation},
+  year   = {2024},
+  url    = {https://chemprop.readthedocs.io/en/main/interpreting_monte_carlo_tree_search.html},
+  note   = {Consultado 2026-09-22}
+}
+
+
+% ============================================================
+% EXPLICABILIDAD E INTERPRETACIÓN
+% ============================================================
+
+@article{wellawatte2022mmace,
+  author  = {Wellawatte, Geemi P. and Seshadri, Aditi and White, Andrew D.},
+  title   = {Model agnostic generation of counterfactual explanations for molecules},
+  journal = {Chemical Science},
+  year    = {2022},
+  volume  = {13},
+  number  = {13},
+  pages   = {3697--3705},
+  doi     = {10.1039/D1SC05259D}
+}
+
+@article{wellawatte2023perspective,
+  author  = {Wellawatte, Geemi P. and Gandhi, Heta A. and Seshadri, Aditi and White, Andrew D.},
+  title   = {A Perspective on Explanations of Molecular Prediction Models},
+  journal = {Journal of Chemical Theory and Computation},
+  year    = {2023},
+  volume  = {19},
+  number  = {8},
+  pages   = {2149--2160},
+  doi     = {10.1021/acs.jctc.2c01235},
+  note    = {LEÍDO PARCIAL vía PMC. Siete criterios de evaluación; caso de estudio en permeabilidad BBB}
+}
+
+@misc{exmol_software,
+  author       = {Seshadri, Aditi and Wellawatte, Geemi P. and White, Andrew D.},
+  title        = {exmol: Explainer for black box models that predict molecule properties},
+  year         = {2025},
+  note         = {Paquete de Python, versión 3.3.0, licencia MIT},
+  howpublished = {\url{https://github.com/ur-whitelab/exmol}}
+}
+
+@article{tamura2021mmpkernel,
+  author  = {Tamura, Shumpei and Jasial, Sumit and Miyao, Tomoyuki and Funatsu, Kimito},
+  title   = {Interpretation of Ligand-Based Activity Cliff Prediction Models Using the Matched Molecular Pair Kernel},
+  journal = {Molecules},
+  year    = {2021},
+  volume  = {26},
+  number  = {16},
+  pages   = {4916},
+  doi     = {10.3390/molecules26164916},
+  note    = {Documenta el problema de las moléculas fantasma en el muestreo de fondo de SHAP}
+}
+
+@inproceedings{kumar2020problems,
+  author    = {Kumar, I. Elizabeth and Venkatasubramanian, Suresh and Scheidegger, Carlos and Friedler, Sorelle},
+  title     = {Problems with Shapley-value-based explanations as feature importance measures},
+  booktitle = {Proceedings of the 37th International Conference on Machine Learning},
+  series    = {PMLR},
+  volume    = {119},
+  pages     = {5491--5500},
+  year      = {2020},
+  note      = {LEÍDO PARCIAL: abstract y metadatos}
+}
+
+@article{rodriguezperez2020shapley,
+  author  = {Rodr{\'i}guez-P{\'e}rez, Raquel and Bajorath, J{\"u}rgen},
+  title   = {Interpretation of machine learning models using shapley values: application to compound potency and multi-target activity predictions},
+  journal = {Journal of Computer-Aided Molecular Design},
+  year    = {2020},
+  volume  = {34},
+  number  = {10},
+  pages   = {1013--1026},
+  doi     = {10.1007/s10822-020-00314-0},
+  note    = {Fuente de "importante para el modelo no es importante biológicamente"}
+}
+
+@article{rao2022patterns,
+  author  = {Rao, Jiahua and Zheng, Shuangjia and Lu, Yutong and Yang, Yuedong},
+  title   = {Quantitative evaluation of explainable graph neural networks for molecular property prediction},
+  journal = {Patterns},
+  year    = {2022},
+  volume  = {3},
+  number  = {12},
+  pages   = {100628},
+  doi     = {10.1016/j.patter.2022.100628},
+  note    = {Benchmark con substructuras de referencia: Integrated Gradients 0.675 contra métodos tipo atención cerca del azar}
+}
+
+@inproceedings{ying2019gnnexplainer,
+  author    = {Ying, Rex and Bourgeois, Dylan and You, Jiaxuan and Zitnik, Marinka and Leskovec, Jure},
+  title     = {{GNNExplainer}: Generating Explanations for Graph Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems 32 (NeurIPS 2019)},
+  year      = {2019},
+  note      = {arXiv:1903.03894. LEÍDO PARCIAL vía resumen secundario}
+}
+
+@inproceedings{sanchezlengeling2020evaluating,
+  author    = {Sanchez-Lengeling, Benjamin and Wei, Jennifer N. and Lee, Brian K. and Reif, Emily and Wang, Peter and Qian, Wesley Wei and McCloskey, Kevin and Colwell, Lucy J. and Wiltschko, Alexander B.},
+  title     = {Evaluating Attribution for Graph Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems 33 (NeurIPS 2020)},
+  year      = {2020},
+  note      = {PDF localizado pero no leído a fondo; sin extraer resultados numéricos}
+}
+
+@inproceedings{jain2019attention,
+  author    = {Jain, Sarthak and Wallace, Byron C.},
+  title     = {Attention is not Explanation},
+  booktitle = {Proceedings of NAACL-HLT 2019},
+  year      = {2019},
+  note      = {LEÍDO PARCIAL: nivel abstract}
+}
+
+@inproceedings{wiegreffe2019attention,
+  author    = {Wiegreffe, Sarah and Pinter, Yuval},
+  title     = {Attention is not not Explanation},
+  booktitle = {Proceedings of EMNLP-IJCNLP 2019},
+  year      = {2019},
+  url       = {https://aclanthology.org/D19-1002/},
+  note      = {LEÍDO PARCIAL: nivel abstract}
+}
+
+@inproceedings{jin2020multiobjective,
+  author    = {Jin, Wengong and Barzilay, Regina and Jaakkola, Tommi},
+  title     = {Multi-Objective Molecule Generation using Interpretable Substructures},
+  booktitle = {Proceedings of the 37th International Conference on Machine Learning (ICML)},
+  year      = {2020},
+  note      = {arXiv:2002.03244. SIN ACCESO directo; descrito vía la documentación de Chemprop}
+}
+
+@article{hussain2010mmp,
+  author  = {Hussain, Jameed and Rea, Christopher},
+  title   = {Computationally Efficient Algorithm to Identify Matched Molecular Pairs (MMPs) in Large Data Sets},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2010},
+  volume  = {50},
+  number  = {3},
+  pages   = {339--348},
+  doi     = {10.1021/ci900450m},
+  note    = {LEÍDO PARCIAL: metadatos verificados, texto completo no abierto}
+}
+
+@article{dalke2018mmpdb,
+  author  = {Dalke, Andrew and Hert, J{\'e}r{\^o}me and Kramer, Christian},
+  title   = {mmpdb: An Open-Source Matched Molecular Pair Platform for Large Multiproperty Data Sets},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2018},
+  volume  = {58},
+  number  = {5},
+  pages   = {902--910},
+  doi     = {10.1021/acs.jcim.8b00173}
+}
+
+@misc{mmpdb_software,
+  author       = {Dalke, Andrew and Hert, J{\'e}r{\^o}me and Kramer, Christian and Awale, Mahendra},
+  title        = {mmpdb: matched molecular pair database and analysis tool},
+  year         = {2024},
+  note         = {Versión 3.1.4, licencia BSD-3-Clause},
+  howpublished = {\url{https://github.com/rdkit/mmpdb}}
+}
+
+@misc{blevins2025cleverhans,
+  author        = {Blevins, Andrew D. and Quigley, Ian K.},
+  title         = {Clever Hans in Chemistry: Chemist Style Signals Confound Activity Prediction on Public Benchmarks},
+  year          = {2025},
+  eprint        = {2512.20924},
+  archivePrefix = {arXiv},
+  note          = {PREPRINT SIN REVISIÓN POR PARES. Base de la recomendación de splits disjuntos por laboratorio}
+}
+
+@article{vantilborg2022activitycliffs,
+  author  = {van Tilborg, Derek and Alenicheva, Alisa and Grisoni, Francesca},
+  title   = {Exposing the Limitations of Molecular Machine Learning with Activity Cliffs},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2022},
+  volume  = {62},
+  number  = {23},
+  pages   = {5938--5951},
+  doi     = {10.1021/acs.jcim.2c01073}
+}
+
+@article{rudin2019stop,
+  author  = {Rudin, Cynthia},
+  title   = {Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead},
+  journal = {Nature Machine Intelligence},
+  year    = {2019},
+  volume  = {1},
+  number  = {5},
+  pages   = {206--215},
+  doi     = {10.1038/s42256-019-0048-x},
+  note    = {LEÍDO PARCIAL. Preprint abierto: arXiv:1811.10154}
+}
+
+@article{schuh2026auditing,
+  author  = {Schuh, Maximilian G. and Daniluk, Aleksandra and Sieber, Stephan A.},
+  title   = {Auditing widely used biomolecular benchmarks reveals systematic data inconsistencies},
+  journal = {Chemical Science},
+  year    = {2026},
+  doi     = {10.1039/d6sc01799a},
+  note    = {Publicación anticipada en línea; volumen y páginas sin asignar al consultarse. REVERIFICAR al redactar}
+}
+
+
+% ============================================================
+% ANDAMIOS Y ESTRUCTURAS PRIVILEGIADAS
+% ============================================================
+
+@article{bemis1996properties,
+  author  = {Bemis, Guy W. and Murcko, Mark A.},
+  title   = {The Properties of Known Drugs. 1. Molecular Frameworks},
+  journal = {Journal of Medicinal Chemistry},
+  year    = {1996},
+  volume  = {39},
+  number  = {15},
+  pages   = {2887--2893},
+  doi     = {10.1021/jm9602928},
+  note    = {LEÍDO PARCIAL: muro de pago, sin espejo abierto}
+}
+
+@article{schuffenhauer2007scaffoldtree,
+  author  = {Schuffenhauer, Ansgar and Ertl, Peter and Roggo, Silvio and Wetzel, Stefan and Koch, Marcus A. and Waldmann, Herbert},
+  title   = {The Scaffold Tree --- Visualization of the Scaffold Universe by Hierarchical Scaffold Classification},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2007},
+  volume  = {47},
+  number  = {1},
+  pages   = {47--58},
+  doi     = {10.1021/ci600338x},
+  note    = {LEÍDO PARCIAL}
+}
+
+@article{varin2011scaffoldnetworks,
+  author  = {Varin, Thibault and Schuffenhauer, Ansgar and Ertl, Peter and Renner, Steffen},
+  title   = {Mining for Bioactive Scaffolds with Scaffold Networks: Improved Compound Set Enrichment from Primary Screening Data},
+  journal = {Journal of Chemical Information and Modeling},
+  year    = {2011},
+  volume  = {51},
+  number  = {7},
+  pages   = {1528--1538},
+  doi     = {10.1021/ci2000924},
+  note    = {LEÍDO PARCIAL. El trabajo previo más cercano al análisis de enriquecimiento que piden los asesores}
+}
+
+@article{evans1988privileged,
+  author  = {Evans, Ben E. and Rittle, Kenneth E. and Bock, Mark G. and DiPardo, Robert M. and Freidinger, Roger M. and Whitter, William L. and Lundell, George F. and Veber, Daniel F. and Anderson, Paul S. and Chang, Raymond S. L. and Lotti, Victor J. and Cerino, Doris J. and Chen, Tsing B. and Kling, Peter J. and Kunkel, Karin A. and Springer, John P. and Hirshfield, Judith},
+  title   = {Methods for Drug Discovery: Development of Potent, Selective, Orally Effective Cholecystokinin Antagonists},
+  journal = {Journal of Medicinal Chemistry},
+  year    = {1988},
+  volume  = {31},
+  number  = {12},
+  pages   = {2235--2246},
+  doi     = {10.1021/jm00120a002},
+  note    = {LEÍDO PARCIAL: metadatos vía PubMed. Origen del término "estructura privilegiada"}
+}
+
+
+% ============================================================
+% QUÍMICA MEDICINAL DE BBB — VALORES DE VERIFICACIÓN
+% ============================================================
+
+@article{tiwari2026umbrales,
+  author  = {Tiwari, Saurabh and M{\k{a}}dra-Gackowska, Katarzyna and Gackowski, Marcin and Szeleszczuk, {\L}ukasz},
+  title   = {Quantitative Structural Thresholds for Blood-Brain Barrier Permeability Derived from Experimental logBB Measurements},
+  journal = {Pharmaceutics},
+  year    = {2026},
+  volume  = {18},
+  number  = {8},
+  pages   = {967},
+  doi     = {10.3390/pharmaceutics18080967},
+  note    = {LEÍDO COMPLETO. Referencia principal de verificación: TPSA < 66.8 A^2, regla TPSA+HBD. NO confundir con tiwari2026conformeros3d}
+}
+
+@article{tiwari2026conformeros3d,
+  author  = {Tiwari, Saurabh and M{\k{a}}dra-Gackowska, Katarzyna and Gackowski, Marcin and Szeleszczuk, {\L}ukasz},
+  title   = {Evaluating the Incremental Value of Three-Dimensional Conformer Descriptors for Blood-Brain Barrier Permeability Prediction Using the B3DB Benchmark Dataset},
+  journal = {Pharmaceutics},
+  year    = {2026},
+  volume  = {18},
+  number  = {8},
+  pages   = {1018},
+  doi     = {10.3390/pharmaceutics18081018},
+  note    = {Paper DISTINTO del anterior, mismos autores. Compara descriptores contra ECFP4 con split aleatorio y scaffold}
+}
+
+@article{ertl2000tpsa,
+  author  = {Ertl, Peter and Rohde, Bernhard and Selzer, Paul},
+  title   = {Fast Calculation of Molecular Polar Surface Area as a Sum of Fragment-Based Contributions and Its Application to the Prediction of Drug Transport Properties},
+  journal = {Journal of Medicinal Chemistry},
+  year    = {2000},
+  volume  = {43},
+  number  = {20},
+  pages   = {3714--3717},
+  doi     = {10.1021/jm000942e},
+  note    = {LEÍDO PARCIAL. Método original de TPSA}
+}
+
+@article{clark1999tpsa_bbb,
+  author  = {Clark, David E.},
+  title   = {Rapid Calculation of Polar Molecular Surface Area and Its Application to the Prediction of Transport Phenomena. 2. Prediction of Blood--Brain Barrier Penetration},
+  journal = {Journal of Pharmaceutical Sciences},
+  year    = {1999},
+  volume  = {88},
+  number  = {8},
+  pages   = {815--821},
+  doi     = {10.1021/js980402t},
+  note    = {LEÍDO PARCIAL: solo abstract. Los coeficientes tras el clásico "~90 A^2" NO se confirmaron}
+}
+
+@article{wager2010cnsmpo,
+  author  = {Wager, Travis T. and Hou, Xinjun and Verhoest, Patrick R. and Villalobos, Anabella},
+  title   = {Moving beyond Rules: The Development of a Central Nervous System Multiparameter Optimization (CNS MPO) Approach To Enable Alignment of Druglike Properties},
+  journal = {ACS Chemical Neuroscience},
+  year    = {2010},
+  volume  = {1},
+  number  = {6},
+  pages   = {435--449},
+  doi     = {10.1021/cn100008c},
+  note    = {LEÍDO PARCIAL: descripción corroborada en fuentes secundarias, texto primario no abierto}
+}
+
+@article{ghose1999knowledgebased,
+  author  = {Ghose, Arup K. and Viswanadhan, Vellarkad N. and Wendoloski, John J.},
+  title   = {A Knowledge-Based Approach in Designing Combinatorial or Medicinal Chemistry Libraries for Drug Discovery. 1. A Qualitative and Quantitative Characterization of Known Drug Databases},
+  journal = {Journal of Combinatorial Chemistry},
+  year    = {1999},
+  volume  = {1},
+  number  = {1},
+  pages   = {55--68},
+  doi     = {10.1021/cc9800071},
+  note    = {LEÍDO PARCIAL. Druglikeness general, NO específico de SNC}
+}
+
+@article{deo2013confounding,
+  author  = {Deo, Anand K. and Theil, Frank-Peter and Nicolas, Jean-Marie},
+  title   = {Confounding Parameters in Preclinical Assessment of Blood-Brain Barrier Permeation: An Overview With Emphasis on Species Differences and Effect of Disease States},
+  journal = {Molecular Pharmaceutics},
+  year    = {2013},
+  volume  = {10},
+  number  = {5},
+  pages   = {1581--1595},
+  doi     = {10.1021/mp300570z},
+  note    = {SIN ACCESO. Es el paper más directamente relacionado con la duda de los asesores sobre concentración. CONSEGUIR con acceso institucional del Tec}
+}
+
+
+% ============================================================
+% ESTUDIOS APLICADOS DE BBB Y NEUROPROTECCIÓN
+% ============================================================
+
+@article{zhu2025featureguided,
+  author  = {Zhu, Baining and Liu, Suwei},
+  title   = {Feature-Guided Machine Learning for Studying Passive Blood-Brain Barrier Permeability to Aid Drug Discovery},
+  journal = {International Journal of Molecular Sciences},
+  year    = {2025},
+  volume  = {26},
+  number  = {22},
+  pages   = {11228},
+  doi     = {10.3390/ijms262211228},
+  note    = {Descriptores solos AUC 0.866 contra Morgan solo 0.771 en BBBP}
+}
+
+@article{yuan2018improved,
+  author  = {Yuan, Yaxia and Zheng, Fang and Zhan, Chang-Guo},
+  title   = {Improved Prediction of Blood-Brain Barrier Permeability Through Machine Learning with Combined Use of Molecular Property-Based Descriptors and Fingerprints},
+  journal = {The AAPS Journal},
+  year    = {2018},
+  volume  = {20},
+  number  = {3},
+  pages   = {54},
+  doi     = {10.1208/s12248-018-0215-8},
+  note    = {98.7\% de exactitud con split aleatorio / Kennard-Stone. Ejemplo del inflado por split no-scaffold}
+}
+
+@article{huang2024llm_bbb,
+  author  = {Huang, Eddie T. C. and Yang, Jai-Sing and Liao, Ken Y. K. and Tseng, Warren C. W. and Lee, C. K. and Gill, Michelle and Compas, Colin and See, Simon and Tsai, Fuu-Jen},
+  title   = {Predicting blood-brain barrier permeability of molecules with a large language model and machine learning},
+  journal = {Scientific Reports},
+  year    = {2024},
+  volume  = {14},
+  pages   = {15844},
+  doi     = {10.1038/s41598-024-66897-y},
+  note    = {AUC 0.88 sobre B3DB + CMUH-NPRL; split 80/10/10, no confirmado scaffold}
+}
+
+@article{kato2025bbbnp,
+  author  = {Kato, Rintaro and Zhang, Li and Kinatukara, Nivedita and Huang, Ruili and Asthana, Abhinav and Weber, Claire and Xia, Menghang and Xu, Xin and Shah, Pranav},
+  title   = {Investigating blood--brain barrier penetration and neurotoxicity of natural products for central nervous system drug development},
+  journal = {Scientific Reports},
+  year    = {2025},
+  volume  = {15},
+  pages   = {7431},
+  doi     = {10.1038/s41598-025-90888-2},
+  note    = {El precedente más cercano en arquitectura de dos etapas, aunque de laboratorio y midiendo neurotoxicidad}
+}
+
+@article{gurbuz2025phenolic,
+  author  = {G{\"u}rb{\"u}z, Perihan and Do{\u{g}}an, {\c{S}}erife and G{\"u}nd{\"u}z, M. and Mart{\'i}nez-Gonz{\'a}lez, L. and P{\'e}rez, Concepci{\'o}n and Mart{\'i}nez, Ana},
+  title   = {Screening Natural Phenolic Compounds for Blood-Brain Barrier Permeability, Alongside {GSK-3}$\beta$, {CK-1}$\delta$, and {AChE} Inhibition, for the Treatment of Alzheimer's Disease},
+  journal = {Drug Development Research},
+  year    = {2025},
+  volume  = {86},
+  number  = {8},
+  pages   = {e70193},
+  doi     = {10.1002/ddr.70193}
+}
+
+@article{yasir2026cnsache,
+  author  = {Yasir, Muhammad and Park, Jinyoung and Han, Eun-Taek and Park, Won Sun and Han, Jin-Hee and Choe, Jongseon and Chun, Wanjoo},
+  title   = {Machine Learning and Molecular Modeling Strategy for the Identification of {CNS}-Active Acetylcholinesterase Inhibitors},
+  journal = {Pharmaceuticals},
+  year    = {2026},
+  volume  = {19},
+  number  = {7},
+  pages   = {1120},
+  doi     = {10.3390/ph19071120},
+  note    = {La plantilla metodológica más cercana: ChEMBL -> RF -> filtro BBB -> docking -> validación}
+}
