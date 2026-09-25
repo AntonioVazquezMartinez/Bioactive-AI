@@ -1,0 +1,47 @@
+# Bioactive AI — dependencias
+# Instalar:
+#   python -m venv env && source env/bin/activate
+#   pip install -r requirements.txt
+#
+# Verificado con Python 3.14.3 en macOS el 2026-09-24.
+
+# --- Quimioinformática ---
+# RDKit da los descriptores 2D (217 en esta versión), los fingerprints Morgan
+# y el mapeo bit -> substructura que necesita la parte de explicabilidad.
+# Usar la API de rdFingerprintGenerator, no GetMorganFingerprintAsBitVect,
+# que está obsoleta. Ojo: radius=2 es ECFP4, el nombre lleva el diámetro.
+rdkit>=2026.3.6
+
+# --- Datos ---
+pandas>=2.2
+numpy>=2.0
+pyarrow>=16.0          # parquet para los intermedios de data/processed/
+
+# --- Modelado ---
+scikit-learn>=1.5
+xgboost>=2.1
+imbalanced-learn>=0.13  # el conjunto está 63.5/36.5; ver cap. 4.7 del marco teórico
+
+# --- Explicabilidad ---
+# Requisito de los asesores, no opcional. Ver docs/referencias/03-explicabilidad.md.
+shap>=0.46
+
+# --- Visualización ---
+matplotlib>=3.9
+seaborn>=0.13
+
+# --- Notebooks ---
+jupyterlab>=4.2
+ipywidgets>=8.1
+
+# --- NO incluidos a propósito ---
+#
+# mordred: el 21% de sus descriptores falla con numpy >= 1.24 porque se eliminó
+#   np.float, y aquí usamos numpy 2.x. Solo agregarlo si hacen falta descriptores
+#   3D específicos, y entonces usar el fork comunitario.
+#
+# chembl_webresource_client: envuelve la API REST de ChEMBL, que devolvía HTTP 500
+#   el 2026-09-22. Para la etapa 2 preferir el dump SQLite del release 37.
+#
+# bit-collision-free-MF: paquete en estado alfa, validado solo con splits
+#   aleatorios. Para fingerprints libres de colisión preferir Sort & Slice.

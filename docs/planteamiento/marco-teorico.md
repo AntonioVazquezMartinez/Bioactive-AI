@@ -359,6 +359,35 @@ La representación de entrada del proyecto tiene su origen en el trabajo de Wein
 
 **InChI e InChIKey** no son descriptores sino **identificadores** `heller2015inchi`: su objetivo de diseño es que la misma etiqueta siempre se refiera a la misma sustancia, pensado para deduplicación y búsqueda. El InChIKey es un hash de 27 caracteres, unidireccional, que requiere una base de consulta para revertirse. Es la llave de unión entre las bases de datos de este proyecto, no una entrada del modelo.
 
+#### Longitud variable: el problema que resuelve la featurización
+
+Una propiedad del SMILES que condiciona toda la arquitectura del modelo es que **su longitud es variable**. Medido sobre los 7,805 compuestos válidos de B3DB (ver [`notebooks/01_EDA.ipynb`](../../notebooks/01_EDA.ipynb)):
+
+| Estadístico | Caracteres |
+|---|---|
+| Mínimo | 1 (`O`, agua; `C`, metano) |
+| Percentil 25 | 36 |
+| Mediana | 49 |
+| Percentil 75 | 70 |
+| Percentil 95 | 117 |
+| Máximo | 383 |
+
+La cadena más larga es 383 veces la más corta, y la longitud correlaciona **0.908** con el número de átomos pesados: es esencialmente un proxy del tamaño molecular, sin información química propia.
+
+A esto se suma que la longitud **no es estable ni para una misma molécula**. La cafeína escrita de dos formas válidas distintas produce cadenas de 28 y 26 caracteres, ambas con el mismo InChIKey. Es la consecuencia práctica del problema de canonicalización descrito arriba: la longitud depende de la herramienta y del orden de recorrido del grafo, no solo de la molécula.
+
+**De aquí se sigue el papel de la featurización.** Los modelos de ensamble que adopta este trabajo exigen que todas las observaciones tengan el mismo número de variables. Los descriptores y los fingerprints convierten una entrada de longitud variable en un vector de longitud fija:
+
+| Molécula | SMILES | Átomos pesados | Fingerprint Morgan | Descriptores RDKit |
+|---|---|---|---|---|
+| Agua | 1 carácter | 1 | 2,048 bits | 217 |
+| Cafeína | 28 caracteres | 14 | 2,048 bits | 217 |
+| Ciclosporina | 224 caracteres | 85 | 2,048 bits | 217 |
+
+Esta es una razón adicional —independiente de la interpretabilidad y del costo computacional— para no usar un modelo de lenguaje sobre SMILES en este proyecto: exigiría relleno o truncamiento, y los límites de longitud de contexto empezarían a afectar a las moléculas grandes precisamente cuando su tamaño es una característica relevante para la permeabilidad.
+
+**Implicación operativa para la deduplicación:** dado que la cadena no es un identificador estable, la deduplicación entre fuentes debe hacerse por InChIKey recalculado desde la estructura, nunca comparando cadenas SMILES. El EDA del Avance 1 aplica ese criterio.
+
 ### 5.2 Taxonomía de descriptores
 
 La referencia canónica `todeschini2000handbook` clasifica los descriptores en familias: **constitucionales** (conteos simples), **topológicos** (derivados del grafo 2D), **geométricos** (requieren coordenadas 3D), **electrónicos** (distribución de carga) y **termodinámicos** `suaygarcia2022`. Una taxonomía complementaria por dimensionalidad va de 0D a 4D, ubicando explícitamente el índice de Wiener y el TPSA como descriptores 2D.
