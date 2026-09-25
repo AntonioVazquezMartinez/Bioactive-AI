@@ -15,6 +15,10 @@ website:
   repo-url: "https://github.com/AntonioVazquezMartinez/Bioactive-AI"
   repo-actions: [source, issue]
   page-navigation: true
+  search:
+    location: navbar
+    type: overlay
+    copy-button: true
   back-to-top-navigation: true
 
   navbar:
@@ -59,9 +63,15 @@ website:
 
 format:
   html:
+    # Quarto trata el slot `light` como predeterminado y su esquema está cerrado
+    # a esas dos llaves: no hay bandera de "oscuro por defecto". Intercambiarlos
+    # sí arranca en oscuro, pero desincroniza el resaltado de sintaxis (el tema
+    # alterno termina con tokens claros sobre fondo blanco). En vez de eso,
+    # `respect-user-color-scheme` hace que manden las preferencias del sistema:
+    # quien tiene el SO en oscuro ve el sitio en oscuro.
     theme:
-      light: flatly
-      dark: darkly
+      light: [flatly, estilos.scss]
+      dark: [darkly, estilos.scss]
     toc: true
     toc-depth: 3
     toc-title: "En esta página"
@@ -75,6 +85,7 @@ format:
 
 bibliography: docs/referencias/bibliografia.bib
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+respect-user-color-scheme: true
 citations-hover: true
 link-citations: true
 lang: es
