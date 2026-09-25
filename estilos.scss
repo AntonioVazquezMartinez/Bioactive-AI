@@ -1,0 +1,141 @@
+/*-- scss:defaults --*/
+
+// Ancho de lectura un poco mayor que el de Bootstrap por defecto: los
+// documentos tienen tablas anchas y párrafos largos.
+$content-padding-top: 1rem !default;
+
+/*-- scss:rules --*/
+
+// ---------------------------------------------------------------------------
+// Tablas anchas en pantallas chicas
+//
+// Varios documentos tienen tablas de 5 a 7 columnas. En móvil desbordaban
+// horizontalmente y arrastraban la página entera, lo que rompía el zoom.
+// Aquí cada tabla scrollea por su cuenta en vez de empujar el layout.
+// ---------------------------------------------------------------------------
+.quarto-container table,
+.cell-output table,
+div.table-responsive {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767px) {
+  table {
+    font-size: 0.85rem;
+  }
+
+  // las celdas no deben partir palabras a la mitad
+  table th,
+  table td {
+    white-space: nowrap;
+  }
+
+  // ...salvo la primera columna, que suele ser texto descriptivo
+  table td:first-child,
+  table th:first-child {
+    white-space: normal;
+    min-width: 8rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Nada debe desbordar el ancho del viewport
+// ---------------------------------------------------------------------------
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+// bloques de código y salidas del notebook
+pre,
+pre.sourceCode,
+.cell-output pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+// las figuras del notebook se escalan al ancho disponible
+.cell-output img,
+figure img,
+p img {
+  max-width: 100%;
+  height: auto;
+}
+
+// las claves BibTeX y los SMILES largos no deben desbordar
+code {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+// ---------------------------------------------------------------------------
+// Búsqueda visible en móvil
+//
+// Con la barra colapsada, el ícono de búsqueda quedaba fuera del área
+// visible y solo aparecía al alejar el zoom. Se fija a la derecha, junto
+// al botón de menú, en vez de vivir dentro del menú colapsable.
+// ---------------------------------------------------------------------------
+@media (max-width: 991px) {
+  .navbar > .container-fluid,
+  .navbar > .container {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  #quarto-search,
+  .navbar .aa-Autocomplete,
+  .navbar-nav.navbar-nav-scroll + #quarto-search {
+    order: 2;
+    margin-left: auto;
+    margin-right: 0.5rem;
+    flex: 0 0 auto;
+  }
+
+  .navbar-toggler {
+    order: 3;
+    flex: 0 0 auto;
+  }
+
+  .navbar-brand-container {
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .navbar-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // el botón de búsqueda necesita área táctil suficiente
+  #quarto-search .aa-DetachedSearchButton,
+  #quarto-search button {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0.35rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Legibilidad de los callouts en tema oscuro
+// ---------------------------------------------------------------------------
+.callout {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+// ---------------------------------------------------------------------------
+// Las advertencias de verificación en blockquote deben destacar: son
+// importantes para no citar datos sin confirmar.
+// ---------------------------------------------------------------------------
+blockquote {
+  border-left-width: 0.3rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+}
