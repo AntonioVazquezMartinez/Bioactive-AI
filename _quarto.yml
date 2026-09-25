@@ -7,6 +7,7 @@ project:
     - bibliografia.qmd
     - contenido/**/*.md
     - contenido/notebooks/01_EDA.ipynb
+    - contenido/notebooks/02_Feature_Eng.ipynb
 
 website:
   title: "Bioactive AI"
@@ -45,6 +46,8 @@ website:
         menu:
           - href: contenido/notebooks/01_EDA.ipynb
             text: "Avance 1 · EDA"
+          - href: contenido/notebooks/02_Feature_Eng.ipynb
+            text: "Avance 2 · Características"
       - href: contenido/datos.md
         text: Datos
       - href: bibliografia.qmd
