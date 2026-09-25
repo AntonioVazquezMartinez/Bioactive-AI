@@ -1,0 +1,19 @@
+---
+title: "Bibliografía"
+subtitle: "Referencias consultadas en la investigación del proyecto"
+toc: false
+nocite: |
+  @*
+---
+
+Las 207 entradas reunidas durante las siete ramas de investigación. El archivo fuente está en [`docs/referencias/bibliografia.bib`](https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main/docs/referencias/bibliografia.bib).
+
+::: {.callout-warning}
+## Verificar antes de citar
+
+Varias entradas corresponden a fuentes que no se pudieron leer completas: el campo `note` de cada una lo indica. Donde no se pudo confirmar un volumen, rango de páginas o DOI desde una fuente efectivamente abierta, **el campo se omitió en vez de reconstruirlo**.
+
+Antes de que cualquiera de estas referencias entre al documento final, hay que verificar su DOI contra [doi.org](https://doi.org) y leer la fuente.
+:::
+
+## Referencias

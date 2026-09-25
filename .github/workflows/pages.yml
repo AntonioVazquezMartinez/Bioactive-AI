@@ -1,0 +1,88 @@
+name: Publicar sitio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "notebooks/**"
+      - "data/external/README.md"
+      - "index.qmd"
+      - "bibliografia.qmd"
+      - "_quarto.yml"
+      - "scripts/prepare_site.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# Un solo despliegue a la vez; los intermedios se descartan.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.10.18"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Preparar el contenido
+        # Quarto arma su lista de archivos antes del pre-render, así que
+        # contenido/ debe existir para que lo detecte.
+        run: python3 scripts/prepare_site.py
+
+      - name: Renderizar
+        # Los notebooks NO se reejecutan: se publican con las salidas guardadas
+        # (execute.enabled false en _quarto.yml). Por eso el job no necesita
+        # RDKit ni el resto del entorno de análisis.
+        run: quarto render
+
+      - name: Verificar enlaces internos
+        run: |
+          python3 - <<'EOF'
+          import glob, os, re, sys
+          rotos = []
+          for f in glob.glob("_site/**/*.html", recursive=True):
+              d = os.path.dirname(f)
+              contenido = open(f, encoding="utf-8").read()
+              for href in re.findall(r'href="([^"#?]+\.html)[^"]*"', contenido):
+                  if href.startswith(("http", "//")):
+                      continue
+                  if not os.path.exists(os.path.normpath(os.path.join(d, href))):
+                      rotos.append(f"{os.path.relpath(f, '_site')} -> {href}")
+          paginas = len(glob.glob("_site/**/*.html", recursive=True))
+          print(f"{paginas} páginas generadas")
+          if rotos:
+              print(f"\n{len(rotos)} enlaces internos rotos:")
+              for r in sorted(set(rotos)):
+                  print("  ", r)
+              sys.exit(1)
+          print("todos los enlaces internos resuelven")
+          EOF
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  desplegar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

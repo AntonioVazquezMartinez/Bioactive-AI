@@ -1,0 +1,84 @@
+project:
+  type: website
+  output-dir: _site
+  pre-render: python3 scripts/prepare_site.py
+  render:
+    - index.qmd
+    - bibliografia.qmd
+    - contenido/**/*.md
+    - contenido/notebooks/01_EDA.ipynb
+
+website:
+  title: "Bioactive AI"
+  description: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector"
+  site-url: "https://antoniovazquezmartinez.github.io/Bioactive-AI/"
+  repo-url: "https://github.com/AntonioVazquezMartinez/Bioactive-AI"
+  repo-actions: [source, issue]
+  page-navigation: true
+  back-to-top-navigation: true
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Inicio
+      - href: contenido/planteamiento/marco-teorico.md
+        text: Marco teórico
+      - text: Investigación
+        menu:
+          - href: contenido/referencias/index.md
+            text: Índice
+          - href: contenido/referencias/01-representaciones-moleculares.md
+            text: "01 · Representaciones moleculares"
+          - href: contenido/referencias/02-datasets-bbb.md
+            text: "02 · Datasets de BBB"
+          - href: contenido/referencias/03-explicabilidad.md
+            text: "03 · Explicabilidad"
+          - href: contenido/referencias/04-datos-neuroactividad.md
+            text: "04 · Datos de neuroactividad"
+          - href: contenido/referencias/05-fuentes-de-datos.md
+            text: "05 · Fuentes de datos"
+      - text: Análisis
+        menu:
+          - href: contenido/notebooks/01_EDA.ipynb
+            text: "Avance 1 · EDA"
+      - href: contenido/datos.md
+        text: Datos
+      - href: bibliografia.qmd
+        text: Bibliografía
+    right:
+      - icon: github
+        href: https://github.com/AntonioVazquezMartinez/Bioactive-AI
+
+  sidebar:
+    style: floating
+    collapse-level: 2
+
+  page-footer:
+    center: |
+      Equipo 7 · Maestría en Inteligencia Artificial Aplicada (TC5035.10) · Tecnológico de Monterrey
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    toc-title: "En esta página"
+    code-fold: show
+    code-tools: false
+    code-overflow: wrap
+    fig-align: center
+    df-print: paged
+    link-external-newwindow: true
+    smooth-scroll: true
+
+bibliography: docs/referencias/bibliografia.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+citations-hover: true
+link-citations: true
+lang: es
+
+execute:
+  freeze: true      # usa las salidas guardadas del notebook; no lo reejecuta
+  enabled: false

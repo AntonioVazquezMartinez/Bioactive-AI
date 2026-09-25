@@ -30,3 +30,12 @@ env/
 .DS_Store
 firebase-debug.log
 *.log
+
+/env/
+/.quarto/
+**/*.quarto_ipynb
+
+# Sitio Quarto (generado por scripts/prepare_site.py y quarto render)
+_site/
+contenido/
+.quarto/
