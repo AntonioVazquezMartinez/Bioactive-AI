@@ -1,0 +1,101 @@
+---
+title: "Bioactive AI"
+subtitle: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector"
+toc: false
+---
+
+Proyecto Integrador de la **Maestría en Inteligencia Artificial Aplicada** (TC5035.10) del Tecnológico de Monterrey, en colaboración con el **Departamento de Bioingeniería** y bajo el patrocinio de la **Dra. Mariana Martínez Ávila**.
+
+## El problema
+
+A partir del SMILES de un compuesto, el proyecto resuelve dos preguntas encadenadas:
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### Etapa 1 — ¿Cruza la barrera?
+
+Clasificar si un compuesto atraviesa la barrera hematoencefálica (BBB+ contra BBB−).
+
+Un resultado negativo **no descarta** al compuesto: existen estrategias para ayudarlo a cruzar, así que esta etapa no opera como filtro duro.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Etapa 2 — ¿Tiene efecto?
+
+Para los compuestos que llegan al cerebro, predecir actividad neuroprotectora frente al daño neurodegenerativo y estimar la diana molecular.
+
+El foco son **productos naturales** de origen vegetal.
+:::
+
+:::
+
+Sobre ambas etapas pesa un requisito que los asesores plantearon como no negociable: **la explicabilidad a nivel de substructura**. No basta con predecir bien; hay que poder decir qué característica estructural explica la predicción.
+
+## Estado
+
+| Componente | Estado |
+|---|---|
+| Marco teórico | Borrador completo, 8 capítulos, 207 referencias |
+| Investigación de referencia | 5 documentos, 7 ramas de investigación |
+| Datos etapa 1 | Descargados y auditados |
+| Datos etapa 2 | Pendientes |
+| EDA (Avance 1) | Ejecutado |
+| Ingeniería de características (Avance 2) | Pendiente |
+| Modelos base (Avance 3) | Pendiente |
+
+## Decisiones técnicas
+
+Tomadas con la evidencia documentada en la [investigación de referencia](contenido/referencias/index.html):
+
+- **Datos, etapa 1:** [B3DB](https://github.com/theochem/B3DB) filtrado por su columna de confiabilidad experimental, entrenando con los grupos A y B. Umbral logBB = −1.0.
+- **Datos, etapa 2:** el volcado SQLite de ChEMBL 37, más NPASS y CMAUP. Etiquetado en dos niveles, pChEMBL ≥ 5 como primario y ≥ 6 como robustez.
+- **Representación:** descriptores 2D de RDKit (217) más Morgan/ECFP4 de 2048 bits. Los embeddings congelados de transformers no superan a esta combinación bajo scaffold split.
+- **Validación:** scaffold split de Bemis-Murcko, nunca aleatorio. Métricas MCC y AUPRC, no exactitud.
+- **Explicabilidad:** al menos dos métodos independientes, reportando como confirmadas solo las substructuras donde coinciden.
+
+## Hallazgos que cambiaron el rumbo
+
+::: {.callout-important}
+## El tamaño efectivo de muestra es la mitad de lo que parece
+
+B3DB tiene 7,807 filas, pero solo **4,022 esqueletos de conectividad distintos**. La morfina aparece ocho veces. Al reportar el tamaño del conjunto hay que dar ambas cifras.
+
+[Ver el análisis →](contenido/notebooks/01_EDA.html)
+:::
+
+::: {.callout-warning}
+## Los filtros PAINS son obligatorios
+
+La curcumina acumula más de 120 ensayos clínicos sin un solo resultado positivo controlado. Ella, el EGCG y el resveratrol alteran la bicapa lipídica de forma inespecífica, un mecanismo que los filtros clásicos no detectan. El modelo los va a rankear alto y hay que filtrarlos antes de reportar cualquier hit.
+
+[Ver el capítulo 3 →](contenido/planteamiento/marco-teorico.md)
+:::
+
+::: {.callout-note}
+## El umbral de TPSA no es transferible
+
+La regla publicada se replica de forma exacta en el subconjunto comparable (precisión 0.966 contra 96.6%), pero el umbral óptimo se mueve de 66.6 Å² a **83.6 Å²** en el conjunto con el que realmente se va a entrenar. No es una constante de la barrera.
+:::
+
+::: {.callout-caution}
+## "Neuroprotección" es una afirmación contestada
+
+De 1,026 tratamientos neuroprotectores probados experimentalmente en ictus, 114 llegaron a ensayos en humanos y **ninguno mostró eficacia clínica establecida**. Las conclusiones de este trabajo se formularán como actividad predicha según mecanismo molecular, nunca como neuroprotección demostrada.
+:::
+
+## Equipo 7
+
+- **Ingrid Pamela Ruíz Puga** (A01021209)
+- **Artemio Santiago Padilla Robles** (A01796613)
+- **José Antonio Vázquez Martínez** (A01797208)
+
+---
+
+::: {.callout-tip collapse="true"}
+## Cómo leer estos documentos
+
+Cada afirmación de la investigación viene etiquetada según el nivel de acceso que se tuvo a la fuente: **leída completa**, **leída parcial** o **sin acceso**. Cada documento cierra con una lista explícita de lo que no se pudo verificar.
+
+No es burocracia: antes de que cualquier cifra entre a un entregable hay que confirmarla contra la fuente primaria, sobre todo si está marcada como parcial o sin acceso.
+:::
