@@ -42,3 +42,6 @@ contenido/
 
 # Artefactos intermedios de Quarto en los reportes
 docs/reportes/**/*.typ
+
+# Guía personal para entender el proyecto (no se versiona)
+docs/guia-del-proyecto.md

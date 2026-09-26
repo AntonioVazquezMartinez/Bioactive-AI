@@ -52,7 +52,7 @@ bioactive-ai/
 
 ## Equipo 7
 
-* **Ingrid Pamela Ruíz Puga** (A01021209)
+* **Ingrid Pamela Ruiz Puga** (A01021209)
 * **Artemio Santiago Padilla Robles** (A01796613)
 * **José Antonio Vázquez Martínez** (A01797208)
 
