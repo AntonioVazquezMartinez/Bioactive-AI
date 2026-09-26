@@ -42,3 +42,7 @@ contenido/
 
 # Artefactos intermedios de Quarto en los reportes
 docs/reportes/**/*.typ
+
+# Conjunto de actividad en SNC: 74 MB, excede el límite práctico de git.
+# Ver data/external/profesora/README.md para obtenerlo.
+data/external/profesora/snc_activity_*.csv
