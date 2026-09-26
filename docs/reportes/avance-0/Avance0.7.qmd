@@ -1,34 +1,11 @@
 ---
-title: "Bioactive AI"
-subtitle: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector a partir de su estructura molecular"
-date: 2026-09-27
-date-format: "D [de] MMMM [de] YYYY"
-abstract-title: ""
-abstract: |
-  **Avance 0. Propuesta de proyecto**
-
-  Proyecto Integrador · Maestría en Inteligencia Artificial Aplicada (TC5035.10)
-
-  Tecnológico de Monterrey · Equipo 7
-
-  **Profesora:** Dra. Mariana Martínez Ávila
-
-  **Integrantes:**
-
-  Ingrid Pamela Ruíz Puga — A01021209
-
-  Artemio Santiago Padilla Robles — A01796613
-
-  José Antonio Vázquez Martínez — A01797208
 lang: es
 bibliography: bibliografia.bib
 csl: apa.csl
 reference-section-title: "Bibliografía"
 format:
   typst:
-    toc: true
-    toc-title: "Índice"
-    toc-depth: 2
+    toc: false
     number-sections: true
     papersize: us-letter
     margin:
@@ -41,6 +18,74 @@ format:
 ```{=typst}
 #set text(hyphenate: false)
 #show table: set par(justify: false)
+
+// ---------------------------------------------------------------- PORTADA
+#place(bottom + center, dy: -0.5cm)[
+  #text(size: 10.5pt)[27 de septiembre de 2026]
+]
+
+#align(center)[
+  #set par(justify: false)
+  #v(0.6cm)
+  #text(size: 13pt, weight: "bold")[Tecnológico de Monterrey]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Escuela de Ingeniería y Ciencias]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Maestría en Inteligencia Artificial Aplicada]
+
+  #v(0.4cm)
+  #text(size: 10.5pt, style: "italic")[Proyecto Integrador · TC5035.10]
+
+  #v(1.3cm)
+  #text(size: 12pt, weight: "bold")[Avance 0. Propuesta de proyecto]
+
+  #v(0.9cm)
+  #line(length: 78%, stroke: 0.6pt)
+  #v(0.7cm)
+
+  #text(size: 22pt, weight: "bold")[Bioactive AI]
+
+  #v(0.5cm)
+  #block(width: 85%)[
+    #text(size: 12.5pt)[
+      Predicción y priorización de compuestos bioactivos con
+      potencial neuroprotector a partir de su estructura molecular
+    ]
+  ]
+
+  #v(0.7cm)
+  #line(length: 78%, stroke: 0.6pt)
+
+  #v(1.3cm)
+  #text(size: 11pt, weight: "bold")[Profesora]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Mariana Martínez Ávila]
+
+  #v(1.1cm)
+  #text(size: 11pt, weight: "bold")[Equipo 7]
+
+  #v(0.35cm)
+  #table(
+    columns: (auto, auto),
+    stroke: none,
+    align: (right, left),
+    inset: (x: 0.6em, y: 0.35em),
+    [Ingrid Pamela Ruíz Puga], [A01021209],
+    [Artemio Santiago Padilla Robles], [A01796613],
+    [José Antonio Vázquez Martínez], [A01797208],
+  )
+
+]
+
+#pagebreak()
+
+// ---------------------------------------------------------------- ÍNDICE
+#outline(title: [Índice], depth: 2, indent: auto)
+
+#pagebreak()
 ```
 
 # Antecedentes
