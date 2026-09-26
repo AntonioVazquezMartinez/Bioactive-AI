@@ -10,20 +10,37 @@ Recibidos el 2026-09-25 de la Dra. Mariana Martínez Ávila, en la carpeta *Arch
 | `etiquetas_dianas_2026-09-25.csv` | 7 KB | Las 39 dianas moleculares, curadas a mano |
 | `DICCIONARIO_permeabilidad_bbb.pdf` | 106 KB | Diccionario de columnas del primero |
 | `DICCIONARIO_actividad_snc.pdf` | 118 KB | Diccionario de columnas del conjunto de actividad |
-| `snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv` | **74 MB** | Etapa 2: actividad en SNC. **No versionado**, ver abajo |
+| `snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv` | **74 MB** | Etapa 2: actividad en SNC. Versionado con **Git LFS**, ver abajo |
 
 **Lean los diccionarios antes de tocar los datos.** Documentan la procedencia columna por columna y varios problemas de calidad que no son evidentes.
 
-## El archivo de actividad no está en git
+## El archivo de actividad usa Git LFS
 
-Pesa 74 MB, por encima del límite práctico de un repositorio. Hay que copiarlo a mano:
+Pesa 74 MB, por encima de lo que conviene guardar directamente en git. Se versiona con [Git LFS](https://git-lfs.com), que deja un puntero de 74 bytes en el historial y guarda el contenido aparte.
+
+**Hay que instalar LFS antes de clonar el repositorio**, o el archivo llegará como un puntero de texto en vez de los datos:
 
 ```bash
-cp "~/Downloads/Archivos Iniciales/snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv" \
-   data/external/profesora/
+brew install git-lfs      # macOS; en Linux: apt install git-lfs
+git lfs install           # una sola vez por máquina
+git clone https://github.com/AntonioVazquezMartinez/Bioactive-AI.git
 ```
 
-Está en `.gitignore`. Si el equipo prefiere versionarlo, la opción es Git LFS, pero conviene decidirlo antes de que el repo crezca.
+Si ya clonaron sin LFS instalado:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+Para comprobar que el archivo bajó completo y no es un puntero:
+
+```bash
+head -c 100 data/external/profesora/snc_activity_*.csv
+# debe verse el encabezado del CSV, no "version https://git-lfs.github.com/..."
+```
+
+> **Cuota:** GitHub da 1 GB de almacenamiento y 1 GB de ancho de banda al mes en LFS para cuentas gratuitas. Este archivo consume 74 MB de almacenamiento, y cada clon completo gasta 74 MB de ancho de banda. Con un equipo de tres no hay problema, pero conviene no agregar muchos archivos pesados más sin revisar la cuota.
 
 ## Qué aporta sobre lo que ya teníamos
 
