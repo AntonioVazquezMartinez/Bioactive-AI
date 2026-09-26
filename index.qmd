@@ -41,7 +41,7 @@ Sobre ambas etapas pesa un requisito que los asesores plantearon como no negocia
 | Datos etapa 1 | Descargados y auditados |
 | Datos etapa 2 | Pendientes |
 | EDA (Avance 1) | Ejecutado |
-| Ingeniería de características (Avance 2) | Pendiente |
+| Ingeniería de características (Avance 2) | Ejecutado |
 | Modelos base (Avance 3) | Pendiente |
 
 ## Decisiones técnicas

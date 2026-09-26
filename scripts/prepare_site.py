@@ -160,7 +160,7 @@ def main() -> int:
 
     # los notebooks se copian reescribiendo los enlaces de sus celdas markdown
     import json
-    for nb_rel in ["notebooks/01_EDA.ipynb"]:
+    for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/02_Feature_Eng.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
