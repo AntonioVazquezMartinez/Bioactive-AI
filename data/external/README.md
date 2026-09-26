@@ -1,5 +1,7 @@
 # Datos externos
 
+> **Los datos autoritativos del proyecto son los de [`profesora/`](profesora/)**, entregados por la Dra. Martínez el 2026-09-25 con sus diccionarios de columnas. Lo que sigue son las descargas que hicimos antes, que quedan como referencia de procedencia y como fuente de los archivos que la patrocinadora no incluyó (el subconjunto de regresión y el de validación externa).
+
 Descargados el 2026-09-24 con `python src/data_prep/download_data.py`. Ese script fija el commit de origen y reporta los SHA-256, así que la descarga es reproducible.
 
 Los archivos ligeros están versionados en el repo. Los pesados están en `.gitignore` y se traen con `--extended`.

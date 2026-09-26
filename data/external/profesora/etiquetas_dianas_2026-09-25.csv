@@ -1,0 +1,40 @@
+﻿gen,diana,grupo_proyecto,diana_categoria,diana_enfermedades,diana_mecanismo,diana_efecto_buscado,respaldo,filas_v3
+ACHE,Acetilcolinesterasa,SNC clásico,Alzheimer,Alzheimer|Demencia|Miastenia gravis,Colinérgico,Inhibición,"Inhibidores aprobados para Alzheimer: donepezilo, rivastigmina, galantamina",13270
+BCHE,Butirilcolinesterasa,SNC clásico,Alzheimer,Alzheimer|Demencia,Colinérgico,Inhibición,La rivastigmina inhibe AChE y BChE,6169
+MAOA,Monoamino oxidasa A,SNC clásico,Depresión,Depresión|Ansiedad,Monoaminérgico,Inhibición,"Inhibidores aprobados como antidepresivos: moclobemida, fenelzina, tranilcipromina",9584
+MAOB,Monoamino oxidasa B,SNC clásico,Parkinson,Parkinson|Depresión,Dopaminérgico,Inhibición,"Inhibidores aprobados para Parkinson: selegilina, rasagilina, safinamida",9190
+GRIN1,"Receptor NMDA, subunidad GluN1",SNC clásico,Alzheimer,Alzheimer|Depresión|Ictus|Epilepsia,Glutamatérgico,Antagonismo,Memantina (Alzheimer) y esketamina (depresión) bloquean el receptor NMDA,391
+GRIN2A,"Receptor NMDA, subunidad GluN2A",SNC clásico,Epilepsia,Epilepsia|Esquizofrenia|Alzheimer,Glutamatérgico,Antagonismo,Mutaciones de GRIN2A causan epilepsias; el bloqueo NMDA (memantina) se usa en Alzheimer,159
+GRIN2B,"Receptor NMDA, subunidad GluN2B",SNC clásico,Depresión,Depresión|Dolor neuropático|Alzheimer,Glutamatérgico,Antagonismo,Antagonistas de GluN2B estudiados en depresión resistente y dolor,2511
+GABRA1,"Receptor GABA-A, subunidad α1",SNC clásico,Epilepsia,Epilepsia|Insomnio|Ansiedad,GABAérgico,Modulación positiva,"Benzodiacepinas (epilepsia, ansiedad) y zolpidem (insomnio, selectivo de α1)",401
+GABRA2,"Receptor GABA-A, subunidad α2",SNC clásico,Ansiedad,Ansiedad|Epilepsia,GABAérgico,Modulación positiva,Media el efecto ansiolítico de las benzodiacepinas,175
+GABRA5,"Receptor GABA-A, subunidad α5",SNC clásico,Deterioro cognitivo,Deterioro cognitivo|Alzheimer,GABAérgico,Modulación negativa,Moduladores negativos (p. ej. basmisanil) en estudio para mejorar la memoria,545
+GABRB2,"Receptor GABA-A, subunidad β2",SNC clásico,Epilepsia,Epilepsia|Esquizofrenia,GABAérgico,Modulación positiva,Mutaciones asociadas a epilepsia; asociación genética con esquizofrenia,1
+GABRG2,"Receptor GABA-A, subunidad γ2",SNC clásico,Epilepsia,Epilepsia|Ansiedad,GABAérgico,Modulación positiva,Mutaciones causan epilepsias genéticas; forma el sitio de las benzodiacepinas,0
+PPARG,PPAR-γ,SNC clásico,Alzheimer,Alzheimer|Parkinson,Metabólico,Activación,Agonistas (pioglitazona) probados en Alzheimer y Parkinson; uso aprobado: diabetes tipo 2,8274
+SIRT1,Sirtuina 1,SNC clásico,Neurodegeneración (general),Alzheimer|Huntington|Parkinson,Metabólico,Activación,Activadores tipo resveratrol en estudio; en Huntington se probó un inhibidor (selisistat),1247
+NFE2L2,Nrf2,SNC clásico,Estrés oxidativo,Esclerosis múltiple|Ataxia de Friedreich|Parkinson|Alzheimer,Antioxidante,Activación,"Activadores aprobados: dimetilfumarato (esclerosis múltiple), omaveloxolona (ataxia de Friedreich)",2036
+KEAP1,Keap1,SNC clásico,Estrés oxidativo,Esclerosis múltiple|Ataxia de Friedreich|Parkinson|Alzheimer,Antioxidante,Inhibición,Inhibir Keap1 libera Nrf2 (mismo eje antioxidante),676
+GSK3B,GSK-3β,SNC clásico,Alzheimer,Alzheimer|Trastorno bipolar|Parálisis supranuclear progresiva,Tau,Inhibición,Fosforila tau; el litio la inhibe; tideglusib probado en Alzheimer y PSP,8312
+MAPT,Tau,SNC clásico,Alzheimer,Alzheimer|Demencia frontotemporal|Parálisis supranuclear progresiva,Tau,Reducir agregación,Forma los ovillos neurofibrilares (tauopatías),2667
+APP,Proteína precursora del amiloide,SNC clásico,Alzheimer,Alzheimer,Amiloide,Reducir niveles,"Origen del péptido Aβ; anticuerpos anti-Aβ aprobados: lecanemab, donanemab",2899
+BACE1,β-secretasa 1,SNC clásico,Alzheimer,Alzheimer,Amiloide,Inhibición,Genera Aβ; sus inhibidores llegaron a fase 3 sin éxito,14626
+SNCA,α-sinucleína,Parkinson/ELA/Huntington,Parkinson,Parkinson|Demencia con cuerpos de Lewy|Atrofia multisistémica,Agregación proteica,Reducir agregación,Forma los cuerpos de Lewy (sinucleinopatías),720
+LRRK2,Quinasa LRRK2,Parkinson/ELA/Huntington,Parkinson,Parkinson,Quinasa,Inhibición,Causa genética más frecuente de Parkinson; inhibidores en ensayos clínicos,7441
+DRD2,Receptor de dopamina D2,Parkinson/ELA/Huntington,Parkinson,Parkinson|Esquizofrenia,Dopaminérgico,Agonismo o antagonismo (según enfermedad),"Agonistas (pramipexol, ropinirol) en Parkinson; antagonistas (antipsicóticos) en esquizofrenia",18215
+COMT,Catecol-O-metiltransferasa,Parkinson/ELA/Huntington,Parkinson,Parkinson,Dopaminérgico,Inhibición,"Inhibidores aprobados junto con L-DOPA: entacapona, opicapona",273
+SOD1,Superóxido dismutasa 1,Parkinson/ELA/Huntington,ELA,ELA,Agregación proteica,Reducir niveles,Mutaciones causan ELA familiar; tofersen (reduce SOD1) aprobado,50
+TARDBP,TDP-43,Parkinson/ELA/Huntington,ELA,ELA|Demencia frontotemporal,Agregación proteica,Reducir agregación,Agregados de TDP-43 en casi todos los casos de ELA,8
+HTT,Huntingtina,Parkinson/ELA/Huntington,Huntington,Huntington,Agregación proteica,Reducir niveles,Su mutación causa la enfermedad de Huntington,174
+TSPO,Proteína translocadora (TSPO),Neuroinflamación,Neuroinflamación,Alzheimer|Parkinson|Esclerosis múltiple|Ansiedad,Inflamatorio,Activación,Marcador PET de activación glial; ligandos como etifoxina son ansiolíticos,723
+TNF,TNF-α,Neuroinflamación,Neuroinflamación,Alzheimer|Depresión|Esclerosis múltiple,Inflamatorio,Inhibición,Citocina proinflamatoria (los anti-TNF empeoran la esclerosis múltiple),25
+IL1B,Interleucina 1β,Neuroinflamación,Neuroinflamación,Alzheimer|Epilepsia,Inflamatorio,Inhibición,Citocina proinflamatoria,347
+IL6,Interleucina 6,Neuroinflamación,Neuroinflamación,Depresión|Alzheimer,Inflamatorio,Inhibición,"Citocina proinflamatoria, elevada en depresión",135
+NOS2,Óxido nítrico sintasa inducible (iNOS),Neuroinflamación,Neuroinflamación,Parkinson|Alzheimer,Inflamatorio,Inhibición,Produce óxido nítrico en microglía activada (estrés nitrosativo),1545
+PTGS2,Ciclooxigenasa 2 (COX-2),Neuroinflamación,Neuroinflamación,Alzheimer|Dolor,Inflamatorio,Inhibición,Diana de los AINE (celecoxib); uso aprobado: dolor e inflamación,9433
+NLRP3,Inflamasoma NLRP3,Neuroinflamación,Neuroinflamación,Alzheimer|Parkinson,Inflamatorio,Inhibición,Activa la IL-1β; inhibidores en ensayos clínicos,1397
+TLR4,Receptor tipo Toll 4,Neuroinflamación,Neuroinflamación,Alzheimer|Parkinson|Ictus,Inflamatorio,Inhibición,Activa la microglía (inmunidad innata),386
+CX3CR1,Receptor de fractalquina,Neuroinflamación,Neuroinflamación,Alzheimer|Parkinson,Inflamatorio,Dirección no establecida,Comunicación neurona–microglía,98
+AIF1,Iba1,Neuroinflamación,Neuroinflamación,Varias (marcador),Inflamatorio,No aplica (marcador),Marcador de microglía activada; no es diana farmacológica,0
+GABA-A (receptor completo),Receptor GABA-A completo,Receptor completo,Epilepsia,Epilepsia|Ansiedad|Insomnio,GABAérgico,Modulación positiva,Sitio de benzodiacepinas y barbitúricos; ChEMBL no distingue la subunidad,1511
+NMDA (receptor completo),Receptor NMDA completo,Receptor completo,Alzheimer,Alzheimer|Depresión|Epilepsia|Ictus,Glutamatérgico,Antagonismo,La memantina actúa sobre el receptor NMDA completo,1601
