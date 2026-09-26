@@ -1,0 +1,244 @@
+---
+title: "Bioactive AI"
+subtitle: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector a partir de su estructura molecular"
+date: 2026-09-27
+date-format: "D [de] MMMM [de] YYYY"
+abstract-title: ""
+abstract: |
+  **Avance 0. Propuesta de proyecto**
+
+  Proyecto Integrador · Maestría en Inteligencia Artificial Aplicada (TC5035.10)
+
+  Tecnológico de Monterrey · Equipo 7
+
+  **Profesora:** Dra. Mariana Martínez Ávila
+
+  **Integrantes:**
+
+  Ingrid Pamela Ruíz Puga — A01021209
+
+  Artemio Santiago Padilla Robles — A01796613
+
+  José Antonio Vázquez Martínez — A01797208
+lang: es
+bibliography: bibliografia.bib
+csl: apa.csl
+reference-section-title: "Bibliografía"
+format:
+  typst:
+    toc: true
+    toc-title: "Índice"
+    toc-depth: 2
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 2.5cm
+      y: 2.5cm
+    fontsize: 11pt
+    section-numbering: "1.1.a"
+---
+
+# Antecedentes
+
+## La organización
+
+El proyecto se desarrolla con el **Departamento de Bioingeniería** de la Escuela de Ingeniería y Ciencias del Tecnológico de Monterrey, bajo el patrocinio de la **Dra. Mariana Martínez Ávila**, Profesora Investigadora con nivel 1 en el Sistema Nacional de Investigadoras e Investigadores (SNII).
+
+La línea de investigación del departamento en la que se inserta este trabajo estudia **compuestos bioactivos de origen natural** —principalmente de origen vegetal— con potencial neuroprotector y nootrópico. Esa línea combina trabajo experimental de laboratorio con revisión de literatura especializada para identificar compuestos candidatos que justifiquen una evaluación biológica más profunda.
+
+## El proceso que el proyecto impacta
+
+El proceso de negocio afectado es la **identificación y priorización de compuestos candidatos** previa al trabajo experimental. En su forma actual sigue tres pasos:
+
+1. **Revisión de literatura.** El equipo de investigación identifica compuestos reportados con actividad relevante, a partir de publicaciones y bases de datos de productos naturales.
+2. **Selección por criterio experto.** Se eligen compuestos para ensayar, combinando el conocimiento farmacológico del grupo con criterios fisicoquímicos clásicos.
+3. **Evaluación experimental.** Los compuestos seleccionados se prueban en ensayos de laboratorio.
+
+Este proceso tiene tres limitaciones que el proyecto busca atender:
+
+**El espacio de búsqueda es inabarcable manualmente.** Solo las bases públicas de productos naturales contienen cientos de miles de estructuras: COCONUT reúne 738,829 moléculas provenientes de 71 colecciones [@chandrasekhar2025coconut] y NPASS registra 204,023 productos naturales con más de un millón de registros de actividad experimental [@lin2026npass]. Revisar ese volumen compuesto por compuesto no es viable.
+
+**La barrera hematoencefálica descarta a la mayoría de los candidatos.** Un compuesto con actividad demostrada *in vitro* no sirve como terapia del sistema nervioso central si no alcanza el tejido cerebral. Esta barrera es una interfaz celular activa que restringe severamente el paso de moléculas [@daneman2015bloodbrain], y el eflujo activo mediado por glicoproteína-P puede impedir la entrada de compuestos que, por sus propiedades fisicoquímicas, parecerían permeables [@loscher2005bloodbrain]. Evaluar experimentalmente la permeabilidad de cada candidato es costoso.
+
+**La tasa histórica de éxito es baja.** Una revisión de 1,026 tratamientos neuroprotectores evaluados experimentalmente en isquemia cerebral encontró que solo 114 llegaron a ensayos en humanos y que **ninguno demostró eficacia clínica establecida** [@ocollins2006experimental]. Priorizar mejor antes de invertir en experimentación no es una optimización marginal: es el cuello de botella del campo.
+
+Existe, sin embargo, precedente de que la ruta funciona. La galantamina, alcaloide aislado de *Galanthus nivalis*, es un inhibidor de acetilcolinesterasa aprobado para el tratamiento de la enfermedad de Alzheimer, con una trayectoria documentada desde el conocimiento etnobotánico hasta el registro sanitario [@heinrich2004galanthamine]. El proyecto busca acelerar el reconocimiento de candidatos con ese perfil.
+
+# Entendimiento del negocio
+
+## Formulación del problema
+
+**¿Es posible predecir, a partir únicamente de la estructura molecular de un compuesto, si llegará al cerebro y si tendrá actividad neuroprotectora, y explicar qué característica estructural sustenta esa predicción?**
+
+El problema se descompone en dos etapas encadenadas, ambas con el SMILES del compuesto como única entrada. El SMILES es una representación textual del grafo molecular, estándar en quimioinformática.
+
+**Etapa 1 — Permeabilidad.** Clasificar si el compuesto atraviesa la barrera hematoencefálica (BBB+) o no (BBB−).
+
+**Etapa 2 — Actividad.** Para los compuestos que alcanzan el tejido cerebral, predecir si presentan actividad sobre dianas moleculares asociadas a neuroprotección, y estimar cuál.
+
+Una precisión de diseño que condiciona la arquitectura: **la etapa 1 no opera como filtro duro sobre la etapa 2**. Un resultado BBB− no descarta al compuesto, porque existen estrategias consolidadas para favorecer el cruce —profármacos, lipidización, aprovechamiento de transportadores endógenos, nanoacarreadores— y por eso la información de ambas etapas se conserva por separado.
+
+![Arquitectura del sistema propuesto. El SMILES se convierte en un vector de longitud fija que alimenta dos modelos supervisados independientes. La etapa 1 no filtra a la etapa 2: sus salidas se combinan en la priorización final, acompañadas de la atribución a fragmentos químicos.](fig-pipeline.png){#fig-pipeline width=100%}
+
+Sobre ambas etapas pesa un requisito que la patrocinadora planteó como no negociable: **la explicabilidad a nivel de substructura**. No basta con predecir correctamente; el modelo debe permitir afirmar qué fragmento químico sustenta la predicción, para que el resultado sea interpretable biológicamente y accionable en el laboratorio.
+
+## Contexto
+
+La barrera hematoencefálica es el obstáculo central del desarrollo de fármacos para el sistema nervioso central. Las moléculas pequeñas la atraviesan por difusión pasiva en cantidades farmacológicamente relevantes solo cuando su masa molecular es inferior a 400–500 Da y forman menos de 8–10 puentes de hidrógeno con el agua [@pardridge2005bottleneck].
+
+Es frecuente encontrar la afirmación de que el 98% de las moléculas pequeñas no atraviesan la barrera. Al rastrear su origen se observa que la cifra se presenta sin cita en la fuente donde alcanzó mayor difusión, y que su sustento cuantitativo proviene de dos estudios que miden qué fracción de los fármacos comercializados tiene indicación clínica para el sistema nervioso central —un indicador indirecto— y no de una medición sistemática de permeabilidad [@pardridge2005bottleneck]. **Este trabajo la trata como una aproximación de orden de magnitud, no como una estadística empírica.**
+
+El problema tiene además una dimensión de salud pública: las enfermedades neurodegenerativas —Alzheimer, Parkinson, esclerosis lateral amiotrófica— carecen de tratamientos que modifiquen su curso. Los anticuerpos anti-amiloide aprobados recientemente muestran una reducción robusta de la carga amiloide pero un beneficio clínico modesto y un riesgo no trivial de anomalías de imagen [@vandyck2023lecanemab], y la hipótesis de la cascada amiloide, dominante durante dos décadas, ha sido cuestionada de forma explícita en la literatura [@herrup2015case]. La búsqueda de mecanismos y compuestos alternativos sigue abierta.
+
+## Objetivos comerciales y su traducción a objetivos del proyecto
+
+La @tbl-objetivos traduce los objetivos de la organización en objetivos técnicos verificables, que es el paso que la metodología CRISP-ML(Q) sitúa en la fase de entendimiento del negocio [@visengeriyeva2023crispml].
+
+| Objetivo comercial | Objetivo del proyecto | Criterio de verificación |
+|--------------------|----------------------|--------------------------|
+| Reducir el tiempo dedicado a revisar literatura compuesto por compuesto | Modelo de clasificación de permeabilidad que puntúe bases completas de productos naturales | El modelo procesa las 738,829 moléculas de COCONUT sin intervención manual |
+| Disminuir el gasto en ensayos sobre candidatos que no alcanzan el cerebro | Clasificador BBB+/BBB− con desempeño medido bajo partición estructural | Coeficiente de correlación de Matthews sobre partición por andamio, con intervalo de confianza reportado |
+| Orientar la selección de compuestos con criterio mecanístico, no solo estadístico | Atribución de la predicción a fragmentos químicos concretos | Coincidencia entre dos métodos de atribución independientes, reportando solo lo concordante |
+| Generar hipótesis publicables sobre relación estructura-actividad | Análisis de enriquecimiento de substructuras entre compuestos activos | Fragmentos enriquecidos con significancia estadística tras corrección por comparaciones múltiples |
+| Extender la búsqueda a compuestos no descritos previamente | Priorización de candidatos con medida explícita de confianza | Evaluación del dominio de aplicabilidad del modelo sobre los compuestos puntuados |
+
+: Traducción de objetivos comerciales a objetivos del proyecto {#tbl-objetivos}
+
+**Un objetivo explícitamente admitido como resultado válido:** si el análisis muestra que no existe un patrón estructural aprendible que distinga a los compuestos permeables o activos, documentarlo con rigor constituye un resultado del proyecto. La patrocinadora lo planteó así desde la primera reunión, y el historial de fracasos de traducción del campo [@ocollins2006experimental] hace que reportar la ausencia de señal sea más valioso que ajustar el modelo hasta obtener una cifra favorable.
+
+## Preguntas clave
+
+1. ¿Qué características estructurales determinan que un compuesto atraviese la barrera hematoencefálica, y coinciden con las reglas fisicoquímicas establecidas en química medicinal?
+2. ¿Qué desempeño alcanza un modelo evaluado sobre compuestos estructuralmente distintos a los de entrenamiento, que es el escenario real de aplicación?
+3. ¿Es posible identificar conjuntos de compuestos que compartan un fragmento químico y presenten el mismo comportamiento, de forma estadísticamente sustentada?
+4. ¿Qué tan lejos del dominio de entrenamiento se encuentran los productos naturales que se pretende puntuar, y cómo se degrada la confianza del modelo en esa región?
+5. ¿Qué compuestos de las bases de productos naturales presentan el perfil más favorable, y con qué nivel de confianza puede afirmarse?
+
+## Involucrados
+
+| Participante | Rol | Etapa de participación | Nivel de involucramiento |
+|--------------|-----|------------------------|--------------------------|
+| Dra. Mariana Martínez Ávila (Departamento de Bioingeniería) | Patrocinadora y profesora del curso | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica de los resultados |
+| Departamento de Bioingeniería | Organización receptora | Planteamiento y cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
+| Ingrid Pamela Ruíz Puga | Integrante del equipo | Todas | Desarrollo del proyecto |
+| Artemio Santiago Padilla Robles | Integrante del equipo | Todas | Desarrollo del proyecto |
+| José Antonio Vázquez Martínez | Integrante del equipo | Todas | Desarrollo del proyecto |
+
+: Participantes en el proyecto y su nivel de involucramiento {#tbl-involucrados}
+
+La asignación de responsabilidades específicas por integrante se definirá al inicio de la fase de modelado, cuando el alcance técnico esté cerrado.
+
+# Entendimiento de los datos
+
+## Origen y contexto
+
+La patrocinadora entregó el 25 de septiembre de 2026 dos conjuntos de datos curados, acompañados de sus respectivos diccionarios de columnas. Ambos se construyeron a partir de bases públicas de acceso abierto y fueron estandarizados, documentados y anotados para este proyecto.
+
+Los datos **no contienen información confidencial ni propiedad de terceros**: provienen de repositorios científicos de acceso abierto. Por esa razón no se requiere convenio de privacidad y esta propuesta no incluye anexos.
+
+### Conjunto 1 — Permeabilidad de la barrera hematoencefálica
+
+Deriva de **B3DB** (Blood-Brain Barrier Database), compilación de medidas publicadas de permeabilidad procedentes de 50 fuentes independientes [@meng2021b3db]. Los datos se distribuyen bajo licencia CC0. A la versión original se le añadió el cruce estructural con **COCONUT**, el catálogo abierto de productos naturales [@chandrasekhar2025coconut], lo que permite distinguir compuestos de origen natural de los sintéticos sin trabajo adicional de integración.
+
+| Característica | Valor |
+|----------------|-------|
+| Filas | 7,811 (un compuesto por fila) |
+| Con etiqueta de clase BBB+/BBB− | 7,805 |
+| Con valor numérico de logBB | 1,058 |
+| Distribución de clases | 4,956 BBB+ (63.5%) · 2,849 BBB− (36.5%) |
+| Esqueletos de conectividad distintos | 4,019 |
+| Productos naturales con estructura idéntica en COCONUT | 3,366 |
+| Con análogo natural que difiere en estereoquímica | 1,005 |
+| Sin equivalente natural conocido | 3,440 |
+
+: Composición del conjunto de permeabilidad {#tbl-bbb}
+
+La variable `logBB` es el logaritmo de la razón entre la concentración del compuesto en cerebro y en plasma. La etiqueta categórica se deriva de ese valor mediante el umbral convencional logBB ≥ −1.
+
+### Conjunto 2 — Actividad en sistema nervioso central
+
+Integra registros de actividad experimental de tres fuentes: **ChEMBL**, base de bioactividad de moléculas tipo fármaco [@zdrazil2024chembl]; **NPASS**, de actividad de productos naturales [@lin2026npass]; y **CMAUP**, de plantas medicinales y sus ingredientes [@hou2024cmaup].
+
+| Característica | Valor |
+|----------------|-------|
+| Registros de actividad | 202,647 |
+| Compuestos únicos (InChIKey calculado desde la estructura) | 105,583 |
+| Provenientes de ChEMBL | 103,877 |
+| Provenientes de NPASS y CMAUP (productos naturales) | 4,472 |
+| Compuestos en ambos grupos | 2,766 |
+| Dianas moleculares anotadas | 39 |
+| Registros con valor de potencia (pChEMBL) | 129,243 |
+| Registros de inactividad declarada | 29,730 |
+
+: Composición del conjunto de actividad en SNC {#tbl-actividad}
+
+Las 39 dianas fueron curadas manualmente a partir de la farmacología conocida, con anotación de enfermedad asociada, mecanismo biológico y efecto terapéutico buscado. Se agrupan en cuatro categorías: sistema nervioso central clásico (20 dianas, entre ellas acetilcolinesterasa, monoamino oxidasa B y β-secretasa 1), neuroinflamación (10, incluyendo COX-2 e inflamasoma NLRP3), Parkinson/ELA/Huntington (7) y receptores completos (2).
+
+La disponibilidad de **29,730 registros de inactividad declarada**, más 54,419 mediciones censuradas que constituyen negativos válidos bajo el umbral de 10 µM, resuelve un problema habitual en estos datos: las bases de bioactividad tienden a publicar resultados positivos, y sin negativos confiables no puede entrenarse un clasificador.
+
+![Composición de los conjuntos de datos. A la izquierda, la distribución de clases del conjunto de permeabilidad. Al centro, la diferencia entre el número de filas y el número de entidades químicas independientes. A la derecha, el origen de los compuestos del conjunto de actividad, donde los productos naturales representan una fracción minoritaria pero son el objetivo final de la priorización.](fig-datos.png){#fig-datos width=100%}
+
+## Auditoría preliminar de calidad
+
+Se realizó una verificación independiente de ambos conjuntos, cuyos hallazgos condicionan el diseño metodológico. Se reportan aquí porque afectan la interpretación de cualquier resultado posterior.
+
+**El tamaño efectivo de muestra es menor que el número de filas.** En el conjunto de permeabilidad, las 7,805 filas corresponden a 4,019 esqueletos de conectividad distintos: numerosos compuestos aparecen varias veces como estereoisómeros. La morfina, por ejemplo, figura ocho veces. **Al reportar el tamaño del conjunto deben darse ambas cifras**, porque el número de filas sobreestima la información independiente por un factor cercano a dos.
+
+**Hay registros con estructuras químicamente inválidas.** Dos compuestos del archivo original de B3DB contienen un carbono con carga imposible y son rechazados por RDKit. El diccionario entregado por la patrocinadora documenta el mismo problema de forma independiente, lo que confirma el hallazgo.
+
+**Los nombres de compuesto no son identificadores confiables.** Se detectaron filas cuyo nombre no corresponde a la estructura registrada. **Toda deduplicación y todo cruce entre fuentes debe hacerse por InChIKey recalculado a partir de la estructura**, nunca por nombre ni por cadena SMILES, dado que la notación SMILES no es única entre herramientas.
+
+**Las etiquetas dependen de la concentración del ensayo.** Un compuesto puede clasificarse como inactivo a una concentración y activo a otra mayor. El fenómeno está documentado: a concentración baja domina el eflujo activo y el compuesto se comporta como no permeable, mientras que a concentración alta el eflujo se satura [@spielvogel2025standardized]. En consecuencia, **la etiqueta BBB+/BBB− no se interpretará como una propiedad intrínseca del compuesto**, sino como una clase bajo las condiciones de ensayo y la convención de umbral de la literatura fuente.
+
+**Las columnas de agrupamiento de B3DB no constituyen una escala de calidad.** El diccionario de la patrocinadora señala que B3DB no publica el criterio con que asigna sus grupos A–D, y la verificación sobre los datos lo confirma: el grupo D tiene más respaldo bibliográfico que el C. Además, el grupo está correlacionado con la etiqueta, por lo que filtrar por él sesga la distribución de clases. Se usará como variable de estratificación y no como criterio de exclusión.
+
+## Técnica de aprendizaje automático
+
+El problema corresponde a **aprendizaje supervisado de clasificación binaria**, en dos modelos encadenados. La justificación de esa elección se apoya en tres consideraciones.
+
+**Por qué supervisado y no no supervisado.** Ambos conjuntos traen etiquetas experimentales: la clase de permeabilidad en el primero y los valores de actividad medidos en el segundo. El objetivo es predecir esas etiquetas para compuestos nuevos, no descubrir estructura latente.
+
+**Por qué clasificación y no regresión.** Solo 1,058 de los 7,805 compuestos tienen valor numérico de logBB, mientras que los 7,805 tienen clase. La pregunta de la organización —si un compuesto llega al cerebro— es además categórica. Se contempla un modelo de regresión sobre el subconjunto con logBB como análisis complementario.
+
+**Por qué modelos de ensamble y no aprendizaje profundo.** Un estudio comparativo evaluó 25 modelos preentrenados de representación molecular frente a fingerprints estructurales clásicos, sobre 25 conjuntos de datos y con partición estructural, y concluyó que casi todos los modelos neuronales muestran una mejora insignificante o nula respecto al fingerprint base [@praski2026benchmarking]. A eso se suma el requisito de explicabilidad: los modelos de ensamble sobre descriptores interpretables permiten atribuir la predicción a fragmentos químicos concretos, mientras que los embeddings densos no [@rudin2019stop].
+
+## Variables de entrada y salida
+
+La entrada disponible es una cadena de texto —el SMILES— de **longitud variable**: en el conjunto de permeabilidad va de 1 a 383 caracteres, con mediana de 49. Los modelos de ensamble requieren que todas las observaciones tengan el mismo número de variables, por lo que la estructura debe convertirse en un vector de longitud fija.
+
+| Bloque | Variables | Descripción |
+|--------|-----------|-------------|
+| Descriptores fisicoquímicos | 217 | Propiedades calculadas con RDKit: área de superficie polar topológica, coeficiente de partición, peso molecular, donadores y aceptores de puente de hidrógeno, entre otras |
+| Fingerprint estructural Morgan/ECFP4 | 2,048 | Vector binario donde cada posición indica la presencia de un fragmento químico, trazable a la substructura que lo activó [@rogers2010ecfp] |
+| Metadatos de procedencia | Variable | Origen del registro y tipo de ensayo, para estratificar y auditar |
+
+: Variables de entrada del modelo {#tbl-entrada}
+
+| Etapa | Variable de salida | Tipo | Valores |
+|-------|-------------------|------|---------|
+| 1 | `bbb_class` | Binaria | BBB+ / BBB− |
+| 1 (complementaria) | `logBB` | Continua | −2.69 a 1.70 |
+| 2 | Actividad por diana | Binaria | Activo / inactivo, con umbral declarado sobre la escala pChEMBL |
+
+: Variables de salida del modelo {#tbl-salida}
+
+Para la etapa 2 se adoptará un **etiquetado en dos niveles**: pChEMBL ≥ 5 (equivalente a 10 µM) como umbral primario, siguiendo la convención de ExCAPE-DB [@sun2017excapedb], y pChEMBL ≥ 6 (1 µM) como comprobación de robustez. Hacer explícita la dependencia del umbral responde directamente a la advertencia sobre la concentración de ensayo.
+
+## Consideraciones metodológicas de validación
+
+Tres decisiones tomadas antes de modelar, derivadas de la revisión de literatura.
+
+**Partición por andamio molecular, nunca aleatoria.** Los andamios frecuentes del conjunto presentan pureza de clase extrema —uno de ellos agrupa 410 compuestos de los cuales el 99.5% son BBB+—, de modo que una partición aleatoria permitiría al modelo reconocer el andamio en lugar de aprender la relación estructura-propiedad. La partición por andamio de Bemis-Murcko [@bemis1996properties] separa estructuras distintas entre entrenamiento y evaluación, y es la práctica establecida para este tipo de datos [@wu2018moleculenet]. Una auditoría reciente de 51 configuraciones de conjuntos de referencia mostró que al endurecer las particiones el modelo mejor clasificado perdió su posición en 15 de 28 casos [@schuh2026auditing].
+
+**Métricas apropiadas al desbalance.** El conjunto presenta una razón cercana a 1.74 compuestos permeables por cada no permeable. La exactitud resulta engañosa bajo desbalance, por lo que se emplearán el coeficiente de correlación de Matthews [@chicco2020] y el área bajo la curva de precisión-exhaustividad calculada sobre la clase minoritaria [@saito2015].
+
+**No se adoptarán cifras de desempeño de la literatura como referencia.** Los valores publicados para un mismo conjunto de referencia varían entre 0.681 y 0.7194 según la fuente, por diferencias en la implementación de la partición. El proyecto construirá su propia línea base [@golbraikh2002].
+
+Adicionalmente, la interpretación de resultados considerará que compuestos ampliamente estudiados como la curcumina se comportan como falsos positivos recurrentes en ensayos bioquímicos: acumulan más de 120 ensayos clínicos sin un solo resultado positivo controlado con placebo [@nelson2017curcumin], y son detectables mediante filtros de subestructura [@baell2010pains]. Ese filtrado se aplicará antes de reportar cualquier candidato.
+
+## Alineación con la metodología
+
+La propuesta sigue la estructura de CRISP-ML(Q) [@visengeriyeva2023crispml]. Las fases de entendimiento del negocio y de los datos corresponden a este Avance 0; la preparación de datos, el modelado y la evaluación se desarrollarán en los avances subsecuentes. El marco de la OCDE para la validación de modelos QSAR [@oecd2007] aporta cinco principios complementarios —criterio definido, algoritmo inequívoco, dominio de aplicabilidad declarado, medidas de ajuste y capacidad predictiva, e interpretación mecanística— que se usarán como lista de verificación del entregable final.
+
+::: {#refs}
+:::

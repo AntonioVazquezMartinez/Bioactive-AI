@@ -39,3 +39,6 @@ firebase-debug.log
 _site/
 contenido/
 .quarto/
+
+# Artefactos intermedios de Quarto en los reportes
+docs/reportes/**/*.typ
