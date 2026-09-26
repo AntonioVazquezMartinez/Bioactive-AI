@@ -18,6 +18,7 @@ format:
 ```{=typst}
 #set text(hyphenate: false)
 #show table: set par(justify: false)
+#show bibliography: set par(justify: false)
 
 // ---------------------------------------------------------------- PORTADA
 #place(bottom + center, dy: -0.5cm)[
@@ -73,7 +74,7 @@ format:
     stroke: none,
     align: (right, left),
     inset: (x: 0.6em, y: 0.35em),
-    [Ingrid Pamela Ruíz Puga], [A01021209],
+    [Ingrid Pamela Ruiz Puga], [A01021209],
     [Artemio Santiago Padilla Robles], [A01796613],
     [José Antonio Vázquez Martínez], [A01797208],
   )
@@ -130,7 +131,7 @@ Una precisión de diseño que condiciona la arquitectura: **la etapa 1 no opera 
 
 ![Arquitectura del sistema propuesto. El SMILES se convierte en un vector de longitud fija que alimenta dos modelos supervisados independientes. La etapa 1 no filtra a la etapa 2: sus salidas se combinan en la priorización final, acompañadas de la atribución a fragmentos químicos.](fig-pipeline.png){#fig-pipeline width=100%}
 
-Sobre ambas etapas pesa un requisito que la patrocinadora planteó como no negociable: **la explicabilidad a nivel de substructura**. No basta con predecir correctamente; el modelo debe permitir afirmar qué fragmento químico sustenta la predicción, para que el resultado sea interpretable biológicamente y accionable en el laboratorio.
+Sobre ambas etapas pesa un requisito que la patrocinadora planteó como no negociable: **la explicabilidad a nivel de subestructura**. No basta con predecir correctamente; el modelo debe permitir afirmar qué fragmento químico sustenta la predicción, para que el resultado sea interpretable biológicamente y accionable en el laboratorio.
 
 ## Contexto
 
@@ -149,7 +150,7 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 | Reducir el tiempo dedicado a revisar literatura compuesto por compuesto | Modelo de clasificación de permeabilidad que puntúe bases completas de productos naturales | El modelo procesa las 738,829 moléculas de COCONUT sin intervención manual |
 | Disminuir el gasto en ensayos sobre candidatos que no alcanzan el cerebro | Clasificador BBB+/BBB− con desempeño medido bajo partición estructural | Coeficiente de correlación de Matthews sobre partición por andamio, con intervalo de confianza reportado |
 | Orientar la selección de compuestos con criterio mecanístico, no solo estadístico | Atribución de la predicción a fragmentos químicos concretos | Coincidencia entre dos métodos de atribución independientes, reportando solo lo concordante |
-| Generar hipótesis publicables sobre relación estructura-actividad | Análisis de enriquecimiento de substructuras entre compuestos activos | Fragmentos enriquecidos con significancia estadística tras corrección por comparaciones múltiples |
+| Generar hipótesis publicables sobre relación estructura-actividad | Análisis de enriquecimiento de subestructuras entre compuestos activos | Fragmentos enriquecidos con significancia estadística tras corrección por comparaciones múltiples |
 | Extender la búsqueda a compuestos no descritos previamente | Priorización de candidatos con medida explícita de confianza | Evaluación del dominio de aplicabilidad del modelo sobre los compuestos puntuados |
 
 : Traducción de objetivos comerciales a objetivos del proyecto {#tbl-objetivos tbl-colwidths="[30,32,38]"}
@@ -170,13 +171,38 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 |:-------------|:----|:------|:-------------------------|
 | Dra. Mariana Martínez Ávila | Patrocinadora y profesora | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica |
 | Depto. de Bioingeniería | Organización receptora | Inicio/cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
-| Ingrid Pamela Ruíz Puga | Integrante | Todas | Desarrollo del proyecto |
+| Ingrid Pamela Ruiz Puga | Integrante | Todas | Desarrollo del proyecto |
 | Artemio S. Padilla Robles | Integrante | Todas | Desarrollo del proyecto |
 | José A. Vázquez Martínez | Integrante | Todas | Desarrollo del proyecto |
 
 : Participantes en el proyecto y su nivel de involucramiento {#tbl-involucrados tbl-colwidths="[28,20,16,36]"}
 
 La asignación de responsabilidades específicas por integrante se definirá al inicio de la fase de modelado, cuando el alcance técnico esté cerrado.
+
+## Alcance, supuestos y riesgos
+
+**Dentro del alcance.** Un clasificador de permeabilidad de la barrera hematoencefálica (etapa 1); un modelo de actividad sobre las 39 dianas curadas por la patrocinadora (etapa 2); la atribución de las predicciones a fragmentos químicos; y la priorización de candidatos de las bases de productos naturales, con una medida explícita de confianza.
+
+**Fuera del alcance.** El proyecto no genera moléculas nuevas y no incluye ensayos de laboratorio: la evaluación experimental de los candidatos es el paso posterior que realiza el equipo de investigación (ver el proceso descrito en los Antecedentes). Tampoco filtra compuestos con la etapa 1, por lo señalado en la formulación del problema.
+
+**Supuestos.**
+
+1. La estructura molecular contiene información suficiente para predecir la permeabilidad y la actividad. Es la hipótesis de trabajo y se contrasta con los datos, no se da por cierta; si no se sostiene, se reporta como resultado.
+2. Los conjuntos entregados por la patrocinadora son la fuente de datos del proyecto.
+3. Las etiquetas describen una clase bajo las condiciones de ensayo y el umbral declarado, no una propiedad intrínseca del compuesto (ver la auditoría de calidad).
+
+La @tbl-riesgos reúne los riesgos que ya se identificaron y la forma en que se atiende cada uno.
+
+| Riesgo | Por qué importa | Cómo se atiende |
+|:-------|:----------------|:----------------|
+| Fuga de información entre entrenamiento y prueba | Estereoisómeros y andamios repetidos inflan el desempeño medido | Partición por andamio de Bemis-Murcko y verificación de que ningún esqueleto de conectividad cruce entre particiones |
+| Ruido en las etiquetas | Las etiquetas provienen de ensayos heterogéneos y dependen de la concentración | Etiquetado en dos niveles (pChEMBL ≥ 5 y ≥ 6) y uso de la columna de grupo de B3DB como variable de estratificación |
+| Productos naturales fuera del dominio de entrenamiento | El modelo podría extrapolar sin aviso sobre el tipo de compuesto que se busca priorizar | Evaluación explícita del dominio de aplicabilidad al puntuar |
+| Falsos positivos por interferencia en ensayos | Compuestos como la curcumina aparecen como activos sin serlo | Filtros de subestructura antes de reportar cualquier candidato |
+| Cobertura desigual entre dianas | Algunas de las 39 dianas tienen muy pocos registros para entrenar un modelo | Se definirá en la preparación de datos qué dianas cuentan con registros suficientes para modelarse |
+| Ausencia de patrón aprendible | Puede que la estructura no explique el comportamiento | Se reporta como resultado del proyecto, sin ajustar el modelo hasta obtener una cifra favorable |
+
+: Riesgos identificados y su tratamiento {#tbl-riesgos tbl-colwidths="[24,36,40]"}
 
 # Entendimiento de los datos
 
@@ -243,6 +269,12 @@ Se realizó una verificación independiente de ambos conjuntos, cuyos hallazgos 
 
 **Las columnas de agrupamiento de B3DB no constituyen una escala de calidad.** El diccionario de la patrocinadora señala que B3DB no publica el criterio con que asigna sus grupos A–D, y la verificación sobre los datos lo confirma: el grupo D tiene más respaldo bibliográfico que el C. Además, el grupo está correlacionado con la etiqueta, por lo que filtrar por él sesga la distribución de clases. Se usará como variable de estratificación y no como criterio de exclusión.
 
+**El conjunto de actividad tiene cobertura desigual y valores sin homogeneizar.** Tres hallazgos sobre el archivo entregado condicionan la preparación de datos:
+
+- **No todas las filas pertenecen a una de las dianas del proyecto.** Una parte considerable de los registros corresponde a ensayos neuronales sobre otras dianas o sobre dianas no identificadas. Además, entre las dianas curadas la cobertura es muy desigual: algunas tienen miles de registros y otras casi ninguno.
+- **El valor de pChEMBL existe únicamente para los registros de ChEMBL.** Las filas de NPASS y CMAUP, que son las de los productos naturales, no lo traen, de modo que habrá que derivarlo del valor y la unidad originales para que ambos grupos usen la misma escala.
+- **Las unidades no están convertidas.** Coexisten varias formas de expresar la unidad (`nM`, `uM`, `ug.mL-1`, entre otras), y las expresadas por masa no pueden pasarse a concentración molar sin el peso molecular del compuesto.
+
 ## Técnica de aprendizaje automático
 
 El problema corresponde a **aprendizaje supervisado de clasificación binaria**, en dos modelos encadenados. La justificación de esa elección se apoya en tres consideraciones.
@@ -251,7 +283,7 @@ El problema corresponde a **aprendizaje supervisado de clasificación binaria**,
 
 **Por qué clasificación y no regresión.** Solo 1,058 de los 7,805 compuestos tienen valor numérico de logBB, mientras que los 7,805 tienen clase. La pregunta de la organización —si un compuesto llega al cerebro— es además categórica. Se contempla un modelo de regresión sobre el subconjunto con logBB como análisis complementario.
 
-**Por qué modelos de ensamble y no aprendizaje profundo.** Un estudio comparativo evaluó 25 modelos preentrenados de representación molecular frente a fingerprints estructurales clásicos, sobre 25 conjuntos de datos y con partición estructural, y concluyó que casi todos los modelos neuronales muestran una mejora insignificante o nula respecto al fingerprint base [@praski2026benchmarking]. A eso se suma el requisito de explicabilidad: los modelos de ensamble sobre descriptores interpretables permiten atribuir la predicción a fragmentos químicos concretos, mientras que los embeddings densos no [@rudin2019stop].
+**Por qué modelos de ensamble y no aprendizaje profundo.** Un estudio comparativo evaluó 25 modelos preentrenados de representación molecular frente a *fingerprints* estructurales clásicos, sobre 25 conjuntos de datos y con partición estructural, y concluyó que casi todos los modelos neuronales muestran una mejora insignificante o nula respecto al *fingerprint* base [@praski2026benchmarking]. A eso se suma el requisito de explicabilidad: los modelos de ensamble sobre descriptores interpretables permiten atribuir la predicción a fragmentos químicos concretos, mientras que los *embeddings* densos no [@rudin2019stop].
 
 ## Variables de entrada y salida
 
@@ -260,7 +292,7 @@ La entrada disponible es una cadena de texto —el SMILES— de **longitud varia
 | Bloque | Variables | Descripción |
 |:-------|----------:|:------------|
 | Descriptores fisicoquímicos | 217 | Propiedades calculadas con RDKit: área de superficie polar topológica, coeficiente de partición, peso molecular, donadores y aceptores de puente de hidrógeno, entre otras |
-| Fingerprint estructural Morgan/ECFP4 | 2,048 | Vector binario donde cada posición indica la presencia de un fragmento químico, trazable a la substructura que lo activó [@rogers2010ecfp] |
+| *Fingerprint* estructural Morgan/ECFP4 | 2,048 | Vector binario donde cada posición indica la presencia de un fragmento químico, trazable a la subestructura que lo activó [@rogers2010ecfp] |
 | Metadatos de procedencia | Variable | Origen del registro y tipo de ensayo, para estratificar y auditar |
 
 : Variables de entrada del modelo {#tbl-entrada tbl-colwidths="[24,12,64]"}
@@ -290,6 +322,22 @@ Adicionalmente, la interpretación de resultados considerará que compuestos amp
 ## Alineación con la metodología
 
 La propuesta sigue la estructura de CRISP-ML(Q) [@visengeriyeva2023crispml]. Las fases de entendimiento del negocio y de los datos corresponden a este Avance 0; la preparación de datos, el modelado y la evaluación se desarrollarán en los avances subsecuentes. El marco de la OCDE para la validación de modelos QSAR [@oecd2007] aporta cinco principios complementarios —criterio definido, algoritmo inequívoco, dominio de aplicabilidad declarado, medidas de ajuste y capacidad predictiva, e interpretación mecanística— que se usarán como lista de verificación del entregable final.
+
+CRISP-ML(Q) organiza el proyecto en seis fases y añade a cada una un paso de aseguramiento de calidad [@visengeriyeva2023crispml]. La @tbl-fases sitúa cada fase en el calendario de entregas del curso. Las fechas de los avances son las del programa; los hitos internos son una propuesta del equipo para llegar a cada entrega con la libreta ejecutada de principio a fin, y pueden ajustarse.
+
+| Fase de CRISP-ML(Q) | Actividades en este proyecto | Entrega y fecha | Hitos internos propuestos |
+|:--------------------|:-----------------------------|:----------------|:--------------------------|
+| **1. Entendimiento del negocio y de los datos** | Formulación del problema, objetivos, involucrados, descripción de los datos y auditoría preliminar de calidad | **Avance 0**, 27 sep | Reunión con los asesores (22 sep) y recepción de los datos de la patrocinadora (25 sep), ambas realizadas |
+| **2. Ingeniería de datos** (a) | Análisis exploratorio de los dos conjuntos; manejo de valores faltantes, atípicos y alta cardinalidad; conclusiones del EDA | **Avance 1**, 4 oct | 1 oct: EDA de permeabilidad. 3 oct: EDA de actividad y ejecución completa de la libreta |
+| **2. Ingeniería de datos** (b) | Descriptores y *fingerprints* a partir del SMILES; escalamiento y transformaciones; selección y extracción de características; partición por andamio con verificación de fuga; conclusiones de la preparación de datos | **Avance 2**, 11 oct | 8 oct: partición verificada. 10 oct: matriz de características final |
+| **3. Ingeniería del modelo** (a) | Modelo de referencia (*baseline*); métrica alineada al desbalance; análisis de sub/sobreajuste; desempeño mínimo aceptable | **Avance 3**, 18 oct | 15 oct: *baseline* de la etapa 1. 17 oct: *baseline* de la etapa 2 |
+| **3. Ingeniería del modelo** (b) | Al menos seis modelos individuales de algoritmos distintos; comparación con al menos dos métricas y tiempos de entrenamiento; ajuste fino de los dos mejores; elección del modelo individual | **Avance 4**, 25 oct | 22 oct: tabla comparativa de los seis modelos. 24 oct: ajuste fino terminado |
+| **3. Ingeniería del modelo** (c) | Ensambles homogéneos y heterogéneos con los mejores modelos individuales; optimización de hiperparámetros; comparativa final | **Avance 5**, 1 nov | 29 oct: ensambles entrenados |
+| **4. Aseguramiento de calidad del modelo** | Evaluación sobre datos no vistos con partición por andamio; gráficos de desempeño con su interpretación; atribución a fragmentos con dos métodos independientes; dominio de aplicabilidad; lista de verificación de la OCDE | **Avance 5**, 1 nov | 30 oct: gráficos de desempeño. 31 oct: verificación contra la lista de la OCDE |
+
+: Fases de CRISP-ML(Q) en el calendario del proyecto {#tbl-fases tbl-colwidths="[21,36,14,29]"}
+
+Las fases 5 (despliegue) y 6 (monitoreo y mantenimiento) quedan fuera del calendario de entregas del curso.
 
 ::: {#refs}
 :::
