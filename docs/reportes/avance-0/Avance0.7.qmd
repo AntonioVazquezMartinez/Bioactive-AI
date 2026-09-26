@@ -38,6 +38,11 @@ format:
     section-numbering: "1.1.a"
 ---
 
+```{=typst}
+#set text(hyphenate: false)
+#show table: set par(justify: false)
+```
+
 # Antecedentes
 
 ## La organización
@@ -95,14 +100,14 @@ El problema tiene además una dimensión de salud pública: las enfermedades neu
 La @tbl-objetivos traduce los objetivos de la organización en objetivos técnicos verificables, que es el paso que la metodología CRISP-ML(Q) sitúa en la fase de entendimiento del negocio [@visengeriyeva2023crispml].
 
 | Objetivo comercial | Objetivo del proyecto | Criterio de verificación |
-|--------------------|----------------------|--------------------------|
+|:-------------------|:----------------------|:-------------------------|
 | Reducir el tiempo dedicado a revisar literatura compuesto por compuesto | Modelo de clasificación de permeabilidad que puntúe bases completas de productos naturales | El modelo procesa las 738,829 moléculas de COCONUT sin intervención manual |
 | Disminuir el gasto en ensayos sobre candidatos que no alcanzan el cerebro | Clasificador BBB+/BBB− con desempeño medido bajo partición estructural | Coeficiente de correlación de Matthews sobre partición por andamio, con intervalo de confianza reportado |
 | Orientar la selección de compuestos con criterio mecanístico, no solo estadístico | Atribución de la predicción a fragmentos químicos concretos | Coincidencia entre dos métodos de atribución independientes, reportando solo lo concordante |
 | Generar hipótesis publicables sobre relación estructura-actividad | Análisis de enriquecimiento de substructuras entre compuestos activos | Fragmentos enriquecidos con significancia estadística tras corrección por comparaciones múltiples |
 | Extender la búsqueda a compuestos no descritos previamente | Priorización de candidatos con medida explícita de confianza | Evaluación del dominio de aplicabilidad del modelo sobre los compuestos puntuados |
 
-: Traducción de objetivos comerciales a objetivos del proyecto {#tbl-objetivos}
+: Traducción de objetivos comerciales a objetivos del proyecto {#tbl-objetivos tbl-colwidths="[30,32,38]"}
 
 **Un objetivo explícitamente admitido como resultado válido:** si el análisis muestra que no existe un patrón estructural aprendible que distinga a los compuestos permeables o activos, documentarlo con rigor constituye un resultado del proyecto. La patrocinadora lo planteó así desde la primera reunión, y el historial de fracasos de traducción del campo [@ocollins2006experimental] hace que reportar la ausencia de señal sea más valioso que ajustar el modelo hasta obtener una cifra favorable.
 
@@ -116,15 +121,15 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 
 ## Involucrados
 
-| Participante | Rol | Etapa de participación | Nivel de involucramiento |
-|--------------|-----|------------------------|--------------------------|
-| Dra. Mariana Martínez Ávila (Departamento de Bioingeniería) | Patrocinadora y profesora del curso | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica de los resultados |
-| Departamento de Bioingeniería | Organización receptora | Planteamiento y cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
-| Ingrid Pamela Ruíz Puga | Integrante del equipo | Todas | Desarrollo del proyecto |
-| Artemio Santiago Padilla Robles | Integrante del equipo | Todas | Desarrollo del proyecto |
-| José Antonio Vázquez Martínez | Integrante del equipo | Todas | Desarrollo del proyecto |
+| Participante | Rol | Etapa | Nivel de involucramiento |
+|:-------------|:----|:------|:-------------------------|
+| Dra. Mariana Martínez Ávila | Patrocinadora y profesora | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica |
+| Depto. de Bioingeniería | Organización receptora | Inicio/cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
+| Ingrid Pamela Ruíz Puga | Integrante | Todas | Desarrollo del proyecto |
+| Artemio S. Padilla Robles | Integrante | Todas | Desarrollo del proyecto |
+| José A. Vázquez Martínez | Integrante | Todas | Desarrollo del proyecto |
 
-: Participantes en el proyecto y su nivel de involucramiento {#tbl-involucrados}
+: Participantes en el proyecto y su nivel de involucramiento {#tbl-involucrados tbl-colwidths="[28,20,16,36]"}
 
 La asignación de responsabilidades específicas por integrante se definirá al inicio de la fase de modelado, cuando el alcance técnico esté cerrado.
 
@@ -141,17 +146,18 @@ Los datos **no contienen información confidencial ni propiedad de terceros**: p
 Deriva de **B3DB** (Blood-Brain Barrier Database), compilación de medidas publicadas de permeabilidad procedentes de 50 fuentes independientes [@meng2021b3db]. Los datos se distribuyen bajo licencia CC0. A la versión original se le añadió el cruce estructural con **COCONUT**, el catálogo abierto de productos naturales [@chandrasekhar2025coconut], lo que permite distinguir compuestos de origen natural de los sintéticos sin trabajo adicional de integración.
 
 | Característica | Valor |
-|----------------|-------|
+|:---------------|------:|
 | Filas | 7,811 (un compuesto por fila) |
 | Con etiqueta de clase BBB+/BBB− | 7,805 |
 | Con valor numérico de logBB | 1,058 |
-| Distribución de clases | 4,956 BBB+ (63.5%) · 2,849 BBB− (36.5%) |
+| Compuestos BBB+ (permeables) | 4,956 (63.5%) |
+| Compuestos BBB− (no permeables) | 2,849 (36.5%) |
 | Esqueletos de conectividad distintos | 4,019 |
 | Productos naturales con estructura idéntica en COCONUT | 3,366 |
 | Con análogo natural que difiere en estereoquímica | 1,005 |
 | Sin equivalente natural conocido | 3,440 |
 
-: Composición del conjunto de permeabilidad {#tbl-bbb}
+: Composición del conjunto de permeabilidad {#tbl-bbb tbl-colwidths="[62,38]"}
 
 La variable `logBB` es el logaritmo de la razón entre la concentración del compuesto en cerebro y en plasma. La etiqueta categórica se deriva de ese valor mediante el umbral convencional logBB ≥ −1.
 
@@ -160,7 +166,7 @@ La variable `logBB` es el logaritmo de la razón entre la concentración del com
 Integra registros de actividad experimental de tres fuentes: **ChEMBL**, base de bioactividad de moléculas tipo fármaco [@zdrazil2024chembl]; **NPASS**, de actividad de productos naturales [@lin2026npass]; y **CMAUP**, de plantas medicinales y sus ingredientes [@hou2024cmaup].
 
 | Característica | Valor |
-|----------------|-------|
+|:---------------|------:|
 | Registros de actividad | 202,647 |
 | Compuestos únicos (InChIKey calculado desde la estructura) | 105,583 |
 | Provenientes de ChEMBL | 103,877 |
@@ -170,7 +176,7 @@ Integra registros de actividad experimental de tres fuentes: **ChEMBL**, base de
 | Registros con valor de potencia (pChEMBL) | 129,243 |
 | Registros de inactividad declarada | 29,730 |
 
-: Composición del conjunto de actividad en SNC {#tbl-actividad}
+: Composición del conjunto de actividad en SNC {#tbl-actividad tbl-colwidths="[62,38]"}
 
 Las 39 dianas fueron curadas manualmente a partir de la farmacología conocida, con anotación de enfermedad asociada, mecanismo biológico y efecto terapéutico buscado. Se agrupan en cuatro categorías: sistema nervioso central clásico (20 dianas, entre ellas acetilcolinesterasa, monoamino oxidasa B y β-secretasa 1), neuroinflamación (10, incluyendo COX-2 e inflamasoma NLRP3), Parkinson/ELA/Huntington (7) y receptores completos (2).
 
@@ -207,20 +213,20 @@ El problema corresponde a **aprendizaje supervisado de clasificación binaria**,
 La entrada disponible es una cadena de texto —el SMILES— de **longitud variable**: en el conjunto de permeabilidad va de 1 a 383 caracteres, con mediana de 49. Los modelos de ensamble requieren que todas las observaciones tengan el mismo número de variables, por lo que la estructura debe convertirse en un vector de longitud fija.
 
 | Bloque | Variables | Descripción |
-|--------|-----------|-------------|
+|:-------|----------:|:------------|
 | Descriptores fisicoquímicos | 217 | Propiedades calculadas con RDKit: área de superficie polar topológica, coeficiente de partición, peso molecular, donadores y aceptores de puente de hidrógeno, entre otras |
 | Fingerprint estructural Morgan/ECFP4 | 2,048 | Vector binario donde cada posición indica la presencia de un fragmento químico, trazable a la substructura que lo activó [@rogers2010ecfp] |
 | Metadatos de procedencia | Variable | Origen del registro y tipo de ensayo, para estratificar y auditar |
 
-: Variables de entrada del modelo {#tbl-entrada}
+: Variables de entrada del modelo {#tbl-entrada tbl-colwidths="[24,12,64]"}
 
 | Etapa | Variable de salida | Tipo | Valores |
-|-------|-------------------|------|---------|
+|:------|:-------------------|:-----|:--------|
 | 1 | `bbb_class` | Binaria | BBB+ / BBB− |
 | 1 (complementaria) | `logBB` | Continua | −2.69 a 1.70 |
 | 2 | Actividad por diana | Binaria | Activo / inactivo, con umbral declarado sobre la escala pChEMBL |
 
-: Variables de salida del modelo {#tbl-salida}
+: Variables de salida del modelo {#tbl-salida tbl-colwidths="[20,24,15,41]"}
 
 Para la etapa 2 se adoptará un **etiquetado en dos niveles**: pChEMBL ≥ 5 (equivalente a 10 µM) como umbral primario, siguiendo la convención de ExCAPE-DB [@sun2017excapedb], y pChEMBL ≥ 6 (1 µM) como comprobación de robustez. Hacer explícita la dependencia del umbral responde directamente a la advertencia sobre la concentración de ensayo.
 
