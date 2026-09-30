@@ -91,6 +91,8 @@ format:
 
 # Antecedentes
 
+**Conceptos básicos.** Antes de describir el proyecto conviene fijar el vocabulario que se usa a lo largo del documento. Un **compuesto** (o **molécula**) es una sustancia química definida por su estructura atómica; aquí ambos términos se usan como sinónimos. Un **producto natural** es un compuesto producido por un organismo vivo —en este proyecto, principalmente plantas—, por oposición a uno obtenido por síntesis química. Una **colección** es una base de datos que reúne, de forma curada, las estructuras de muchos compuestos (por ejemplo, COCONUT agrega compuestos de 71 colecciones distintas). Un **registro de actividad experimental** es el resultado de un ensayo de laboratorio que midió si un compuesto tuvo efecto sobre una diana biológica, y con qué magnitud. La relación entre estos términos recorre el documento: las colecciones agrupan compuestos, entre ellos productos naturales, y de los ensayos sobre esos compuestos surgen los registros de actividad que alimentan la etapa 2 del modelo (ver Entendimiento de los datos).
+
 ## La organización
 
 El proyecto se desarrolla con el **Departamento de Bioingeniería** de la Escuela de Ingeniería y Ciencias del Tecnológico de Monterrey, bajo el patrocinio de la **Dra. Mariana Martínez Ávila**, Profesora Investigadora con nivel 1 en el Sistema Nacional de Investigadoras e Investigadores (SNII).
@@ -109,7 +111,9 @@ Este proceso tiene tres limitaciones que el proyecto busca atender:
 
 **El espacio de búsqueda es inabarcable manualmente.** Solo las bases públicas de productos naturales contienen cientos de miles de estructuras: COCONUT reúne 738,829 moléculas provenientes de 71 colecciones [@chandrasekhar2025coconut] y NPASS registra 204,023 productos naturales con más de un millón de registros de actividad experimental [@lin2026npass]. Revisar ese volumen compuesto por compuesto no es viable.
 
-**La barrera hematoencefálica descarta a la mayoría de los candidatos.** Un compuesto con actividad demostrada *in vitro* no sirve como terapia del sistema nervioso central si no alcanza el tejido cerebral. Esta barrera es una interfaz celular activa que restringe severamente el paso de moléculas [@daneman2015bloodbrain], y el eflujo activo mediado por glicoproteína-P puede impedir la entrada de compuestos que, por sus propiedades fisicoquímicas, parecerían permeables [@loscher2005bloodbrain]. Evaluar experimentalmente la permeabilidad de cada candidato es costoso.
+**La barrera hematoencefálica descarta a la mayoría de los candidatos.** Un compuesto con actividad demostrada *in vitro* no sirve como terapia del sistema nervioso central (SNC) si no alcanza el tejido cerebral. Esta barrera es una interfaz celular activa que restringe severamente el paso de moléculas [@daneman2015bloodbrain], y el eflujo activo mediado por glicoproteína-P[^eflujo] puede impedir la entrada de compuestos que, por sus propiedades fisicoquímicas, parecerían permeables [@loscher2005bloodbrain]. Evaluar experimentalmente la permeabilidad de cada candidato es costoso.
+
+[^eflujo]: Bomba de la familia de transportadores ABC, situada en la membrana del endotelio cerebral, que expulsa de vuelta a la sangre compuestos que ya habían cruzado por difusión pasiva, impidiendo que alcancen concentraciones terapéuticas en el cerebro [@loscher2005bloodbrain].
 
 **La tasa histórica de éxito es baja.** Una revisión de 1,026 tratamientos neuroprotectores evaluados experimentalmente en isquemia cerebral encontró que solo 114 llegaron a ensayos en humanos y que **ninguno demostró eficacia clínica establecida** [@ocollins2006experimental]. Priorizar mejor antes de invertir en experimentación no es una optimización marginal: es el cuello de botella del campo.
 
@@ -121,7 +125,7 @@ Existe, sin embargo, precedente de que la ruta funciona. La galantamina, alcaloi
 
 **¿Es posible predecir, a partir únicamente de la estructura molecular de un compuesto, si llegará al cerebro y si tendrá actividad neuroprotectora, y explicar qué característica estructural sustenta esa predicción?**
 
-El problema se descompone en dos etapas encadenadas, ambas con el SMILES del compuesto como única entrada. El SMILES es una representación textual del grafo molecular, estándar en quimioinformática.
+El problema se descompone en dos etapas independientes, ambas con el SMILES del compuesto como única entrada. El SMILES es una representación textual del grafo molecular, estándar en quimioinformática: por ejemplo, la cadena `CCO` representa el etanol —dos carbonos encadenados y un oxígeno— sin necesidad de dibujar la molécula.
 
 **Etapa 1 — Permeabilidad.** Clasificar si el compuesto atraviesa la barrera hematoencefálica (BBB+) o no (BBB−).
 
@@ -139,7 +143,7 @@ La barrera hematoencefálica es el obstáculo central del desarrollo de fármaco
 
 Es frecuente encontrar la afirmación de que el 98% de las moléculas pequeñas no atraviesan la barrera. Al rastrear su origen se observa que la cifra se presenta sin cita en la fuente donde alcanzó mayor difusión, y que su sustento cuantitativo proviene de dos estudios que miden qué fracción de los fármacos comercializados tiene indicación clínica para el sistema nervioso central —un indicador indirecto— y no de una medición sistemática de permeabilidad [@pardridge2005bottleneck]. **Este trabajo la trata como una aproximación de orden de magnitud, no como una estadística empírica.**
 
-El problema tiene además una dimensión de salud pública: las enfermedades neurodegenerativas —Alzheimer, Parkinson, esclerosis lateral amiotrófica— carecen de tratamientos que modifiquen su curso. Los anticuerpos anti-amiloide aprobados recientemente muestran una reducción robusta de la carga amiloide pero un beneficio clínico modesto y un riesgo no trivial de anomalías de imagen [@vandyck2023lecanemab], y la hipótesis de la cascada amiloide, dominante durante dos décadas, ha sido cuestionada de forma explícita en la literatura [@herrup2015case]. La búsqueda de mecanismos y compuestos alternativos sigue abierta.
+El problema tiene además una dimensión de salud pública: las enfermedades neurodegenerativas —Alzheimer, Parkinson, esclerosis lateral amiotrófica— carecen de tratamientos que modifiquen su curso. El **amiloide-β** es un péptido cuya acumulación en forma de placas en el tejido cerebral es la marca distintiva de la enfermedad de Alzheimer; la **hipótesis de la cascada amiloide** postula que esa acumulación es el evento que desencadena el resto de la patología [@hardy2002amyloid]. Los anticuerpos anti-amiloide aprobados recientemente muestran una reducción robusta de la carga amiloide pero un beneficio clínico modesto y un riesgo no trivial de anomalías de imagen [@vandyck2023lecanemab], y la hipótesis de la cascada amiloide, dominante durante dos décadas, ha sido cuestionada de forma explícita en la literatura [@herrup2015case]. La búsqueda de mecanismos y compuestos alternativos sigue abierta.
 
 ## Objetivos comerciales y su traducción a objetivos del proyecto
 
@@ -148,12 +152,14 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 | Objetivo comercial | Objetivo del proyecto | Criterio de verificación |
 |:-------------------|:----------------------|:-------------------------|
 | Reducir el tiempo dedicado a revisar literatura compuesto por compuesto | Modelo de clasificación de permeabilidad que puntúe bases completas de productos naturales | El modelo procesa las 738,829 moléculas de COCONUT sin intervención manual |
-| Disminuir el gasto en ensayos sobre candidatos que no alcanzan el cerebro | Clasificador BBB+/BBB− con desempeño medido bajo partición estructural | Coeficiente de correlación de Matthews sobre partición por andamio, con intervalo de confianza reportado |
+| Disminuir el gasto en ensayos sobre candidatos que no alcanzan el cerebro | Clasificador BBB+/BBB− con desempeño medido bajo partición estructural | Coeficiente de correlación de Matthews sobre partición por andamio[^andamio], con intervalo de confianza reportado |
 | Orientar la selección de compuestos con criterio mecanístico, no solo estadístico | Atribución de la predicción a fragmentos químicos concretos | Coincidencia entre dos métodos de atribución independientes, reportando solo lo concordante |
 | Generar hipótesis publicables sobre relación estructura-actividad | Análisis de enriquecimiento de subestructuras entre compuestos activos | Fragmentos enriquecidos con significancia estadística tras corrección por comparaciones múltiples |
 | Extender la búsqueda a compuestos no descritos previamente | Priorización de candidatos con medida explícita de confianza | Evaluación del dominio de aplicabilidad del modelo sobre los compuestos puntuados |
 
 : Traducción de objetivos comerciales a objetivos del proyecto {#tbl-objetivos tbl-colwidths="[30,32,38]"}
+
+[^andamio]: Andamio (*scaffold*) de Bemis-Murcko: el esqueleto de anillos y los enlaces que los conectan, sin los grupos sustituyentes que cuelgan de él. Dos compuestos comparten andamio si tienen el mismo esqueleto de anillos [@bemis1996properties].
 
 **Un objetivo explícitamente admitido como resultado válido:** si el análisis muestra que no existe un patrón estructural aprendible que distinga a los compuestos permeables o activos, documentarlo con rigor constituye un resultado del proyecto. La patrocinadora lo planteó así desde la primera reunión, y el historial de fracasos de traducción del campo [@ocollins2006experimental] hace que reportar la ausencia de señal sea más valioso que ajustar el modelo hasta obtener una cifra favorable.
 
@@ -169,7 +175,7 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 
 | Participante | Rol | Etapa | Nivel de involucramiento |
 |:-------------|:----|:------|:-------------------------|
-| Dra. Mariana Martínez Ávila | Patrocinadora y profesora | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica |
+| Dra. Mariana Martínez Ávila | Patrocinadora y profesora | Todas | Como patrocinadora: define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica. Como profesora: evalúa los entregables conforme a las rúbricas del curso |
 | Depto. de Bioingeniería | Organización receptora | Inicio/cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
 | Ingrid Pamela Ruiz Puga | Integrante | Todas | Desarrollo del proyecto |
 | Artemio S. Padilla Robles | Integrante | Todas | Desarrollo del proyecto |
@@ -195,7 +201,7 @@ La @tbl-riesgos reúne los riesgos que ya se identificaron y la forma en que se 
 
 | Riesgo | Por qué importa | Cómo se atiende |
 |:-------|:----------------|:----------------|
-| Fuga de información entre entrenamiento y prueba | Estereoisómeros y andamios repetidos inflan el desempeño medido | Partición por andamio de Bemis-Murcko y verificación de que ningún esqueleto de conectividad cruce entre particiones |
+| Fuga de información entre entrenamiento y prueba | Estereoisómeros[^estereoisomero] y andamios repetidos inflan el desempeño medido | Partición por andamio de Bemis-Murcko y verificación de que ningún esqueleto de conectividad[^esqconect] cruce entre particiones |
 | Ruido en las etiquetas | Las etiquetas provienen de ensayos heterogéneos y dependen de la concentración | Etiquetado en dos niveles (pChEMBL ≥ 5 y ≥ 6) y uso de la columna de grupo de B3DB como variable de estratificación |
 | Productos naturales fuera del dominio de entrenamiento | El modelo podría extrapolar sin aviso sobre el tipo de compuesto que se busca priorizar | Evaluación explícita del dominio de aplicabilidad al puntuar |
 | Falsos positivos por interferencia en ensayos | Compuestos como la curcumina aparecen como activos sin serlo | Filtros de subestructura antes de reportar cualquier candidato |
@@ -203,6 +209,9 @@ La @tbl-riesgos reúne los riesgos que ya se identificaron y la forma en que se 
 | Ausencia de patrón aprendible | Puede que la estructura no explique el comportamiento | Se reporta como resultado del proyecto, sin ajustar el modelo hasta obtener una cifra favorable |
 
 : Riesgos identificados y su tratamiento {#tbl-riesgos tbl-colwidths="[24,36,40]"}
+
+[^estereoisomero]: Molécula con la misma fórmula y conectividad de átomos que otra, pero con distinta disposición espacial (por ejemplo, distinta quiralidad); dos estereoisómeros del mismo compuesto pueden tener actividad biológica distinta.
+[^esqconect]: La estructura de una molécula sin su información de estereoquímica, calculada a partir de los primeros 14 caracteres de su InChIKey. Varios estereoisómeros de un mismo compuesto comparten el mismo esqueleto de conectividad.
 
 # Entendimiento de los datos
 
@@ -277,7 +286,7 @@ Se realizó una verificación independiente de ambos conjuntos, cuyos hallazgos 
 
 ## Técnica de aprendizaje automático
 
-El problema corresponde a **aprendizaje supervisado de clasificación binaria**, en dos modelos encadenados. La justificación de esa elección se apoya en tres consideraciones.
+El problema corresponde a **aprendizaje supervisado de clasificación binaria**, en dos modelos independientes. La justificación de esa elección se apoya en tres consideraciones.
 
 **Por qué supervisado y no no supervisado.** Ambos conjuntos traen etiquetas experimentales: la clase de permeabilidad en el primero y los valores de actividad medidos en el segundo. El objetivo es predecir esas etiquetas para compuestos nuevos, no descubrir estructura latente.
 
