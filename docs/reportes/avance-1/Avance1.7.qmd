@@ -1,0 +1,270 @@
+---
+lang: es
+bibliography: bibliografia.bib
+csl: apa.csl
+reference-section-title: "Bibliografía"
+format:
+  typst:
+    toc: false
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 2.5cm
+      y: 2.5cm
+    fontsize: 11pt
+    section-numbering: "1.1.a"
+---
+
+```{=typst}
+#set text(hyphenate: false)
+#show table: set par(justify: false)
+#show bibliography: set par(justify: false)
+
+// ---------------------------------------------------------------- PORTADA
+#place(bottom + center, dy: -0.5cm)[
+  #text(size: 10.5pt)[4 de octubre de 2026]
+]
+
+#align(center)[
+  #set par(justify: false)
+  #v(0.6cm)
+  #text(size: 13pt, weight: "bold")[Tecnológico de Monterrey]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Escuela de Ingeniería y Ciencias]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Maestría en Inteligencia Artificial Aplicada]
+
+  #v(0.4cm)
+  #text(size: 10.5pt, style: "italic")[Proyecto Integrador · TC5035.10]
+
+  #v(1.3cm)
+  #text(size: 12pt, weight: "bold")[Avance 1. Análisis exploratorio de datos]
+
+  #v(0.9cm)
+  #line(length: 78%, stroke: 0.6pt)
+  #v(0.7cm)
+
+  #text(size: 22pt, weight: "bold")[Bioactive AI]
+
+  #v(0.5cm)
+  #block(width: 85%)[
+    #text(size: 12.5pt)[
+      Predicción y priorización de compuestos bioactivos con
+      potencial neuroprotector a partir de su estructura molecular
+    ]
+  ]
+
+  #v(0.7cm)
+  #line(length: 78%, stroke: 0.6pt)
+
+  #v(1.3cm)
+  #text(size: 11pt, weight: "bold")[Profesora]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Mariana Martínez Ávila]
+
+  #v(1.1cm)
+  #text(size: 11pt, weight: "bold")[Equipo 7]
+
+  #v(0.35cm)
+  #table(
+    columns: (auto, auto),
+    stroke: none,
+    align: (right, left),
+    inset: (x: 0.6em, y: 0.35em),
+    [Ingrid Pamela Ruiz Puga], [A01021209],
+    [Artemio Santiago Padilla Robles], [A01796613],
+    [José Antonio Vázquez Martínez], [A01797208],
+  )
+
+]
+
+#pagebreak()
+
+// ---------------------------------------------------------------- ÍNDICE
+#outline(title: [Índice], depth: 2, indent: auto)
+
+#pagebreak()
+```
+
+# Alcance de este reporte
+
+El entregable formal de este avance, según las especificaciones de la actividad, es la liga al notebook ejecutado de principio a fin: [`notebooks/01_EDA.ipynb`](../../../notebooks/01_EDA.ipynb). Este documento es un acompañante en el mismo formato de reporte que el Avance 0: recoge los hallazgos del notebook organizados según los criterios de la rúbrica, con las cifras tomadas directamente de su ejecución, no recalculadas aparte.
+
+El conjunto analizado es **B3DB**, elegido para la etapa 1 del proyecto (permeabilidad de la barrera hematoencefálica) y descrito en el Avance 0 [@meng2021b3db]. El EDA del conjunto de actividad en SNC (etapa 2) queda pendiente para un avance posterior.
+
+# Estructura de los datos
+
+El archivo principal de B3DB tiene **7,807 filas y 12 columnas**. Dos no parsean como estructura química válida (sección de preprocesamiento), dejando un conjunto de trabajo de **7,805 compuestos**.
+
+De esas 12 columnas, 8 son de texto (`compound_name`, `IUPAC_name`, `SMILES`, `BBB+/BBB-`, `Inchi`, `reference`, `group`, `comments`), 3 son numéricas continuas (`CID`, `logBB`, `threshold`) y `NO.` es un entero identificador de fila. Ninguna es propiamente numérica-continua de entrada al modelo todavía: los descriptores fisicoquímicos —`TPSA` (área de superficie polar topológica, en Å²), `logP` (coeficiente de partición octanol-agua, mide lipofilicidad), `MW` (peso molecular), entre otros— se calculan a partir del SMILES[^smiles] en la sección de Análisis univariante, no vienen en el archivo original.
+
+[^smiles]: Representación textual de una molécula como cadena de caracteres, sin necesidad de dibujarla; por ejemplo, `CCO` representa el etanol —dos carbonos encadenados y un oxígeno—.
+
+## Variable objetivo y variables de agrupamiento
+
+| Variable | Valores | Frecuencia |
+|:---------|:--------|:-----------|
+| `BBB+/BBB-` (clase) | BBB+ / BBB− | 4,956 (63.5%) / 2,849 (36.5%) — razón 1.74:1 |
+| `group` (confiabilidad) | A / B / C / D | 1,058 / 3,621 / 3,075 / 51 |
+
+: Frecuencia de las variables categóricas principales {#tbl-frecuencias tbl-colwidths="[30,30,40]"}
+
+Los cuatro valores de `group` codifican qué tan de acuerdo estuvieron las fuentes originales de B3DB sobre la etiqueta de un compuesto, no una escala de calidad de mejor a peor:
+
+| Grupo | Significado |
+|:--|:--|
+| A | Tiene logBB numérico medido |
+| B | Las fuentes declararon el umbral −1 y coincidieron |
+| C | Coinciden en la etiqueta, pero ninguna declaró el umbral |
+| D | Etiquetas contradictorias entre fuentes |
+
+![Distribución de clases, de grupos de confiabilidad, y balance de clases dentro de cada grupo.](fig-clases.png){#fig-clases width=100%}
+
+## Valores faltantes por columna
+
+De las 12 columnas del archivo original, 6 tienen huecos:
+
+| Columna | Faltantes | % |
+|:--------|----------:|--:|
+| `comments` | 7,787 | 99.8 |
+| `logBB` | 6,747 | 86.4 |
+| `threshold` | 4,184 | 53.6 |
+| `IUPAC_name` | 1,635 | 20.9 |
+| `CID` | 1,635 | 20.9 |
+| `compound_name` | 1,109 | 14.2 |
+
+: Valores faltantes por columna, conjunto de trabajo (n=7,805) {#tbl-faltantes tbl-colwidths="[35,30,35]"}
+
+`comments`, `IUPAC_name` y `CID` tienen huecos grandes, pero ninguna se usa para modelar: son metadatos de referencia. `threshold` falta en las filas de los grupos A, C y D, que no declaran un umbral numérico de logBB, y `logBB` falta fuera del grupo A. Las columnas que sí importan para el modelo —`SMILES`, `BBB+/BBB-`, `Inchi`, `group`— no tienen ningún faltante.
+
+## El tamaño efectivo es menor que el número de filas
+
+Al recalcular el InChIKey[^inchikey] desde el SMILES con RDKit, **0 duplicados por InChIKey completo**, pero **3,783 duplicados por esqueleto de conectividad** (los primeros 14 caracteres del InChIKey, que ignoran estereoquímica). El conjunto tiene **4,022 esqueletos únicos en 7,805 filas**: una molécula como la morfina aparece ocho veces, como estereoisómeros[^estereoisomero] o con nombres distintos. **130 esqueletos (426 compuestos, 5.5%) tienen etiquetas BBB+/BBB− contradictorias entre sus propios estereoisómeros.**
+
+[^inchikey]: Identificador químico estándar derivado de la estructura molecular; a diferencia del SMILES, la misma molécula siempre produce el mismo InChIKey sin importar qué herramienta lo calcule.
+[^estereoisomero]: Molécula con la misma fórmula y conectividad de átomos que otra, pero con distinta disposición espacial (por ejemplo, distinta quiralidad); dos estereoisómeros del mismo compuesto pueden tener actividad biológica distinta.
+
+**Consecuencia directa:** reportar "7,807 compuestos" sin más sobreestima la información independiente por un factor cercano a dos, y un split aleatorio pondría estereoisómeros del mismo compuesto en entrenamiento y en prueba.
+
+# Análisis univariante
+
+Se calcularon 9 descriptores fisicoquímicos por compuesto con RDKit: `TPSA`, `logP` y `MW` (glosados arriba), `HBD` (donadores de puente de hidrógeno), `HBA` (aceptores de puente de hidrógeno), `RotB` (enlaces rotables), `Arom` (anillos aromáticos), `Fsp3` (fracción de carbonos con hibridación sp³) y `HeavyAtoms` (átomos distintos de hidrógeno).
+
+| Descriptor | Media BBB+ | Media BBB− | Mediana BBB+ | Mediana BBB− | DE BBB+ | DE BBB− |
+|:-----------|-----------:|-----------:|--------------:|---------------:|---------:|---------:|
+| TPSA | 60.04 | 133.92 | 54.03 | 115.06 | 37.51 | 81.49 |
+| logP | 2.87 | 1.45 | 2.92 | 1.46 | 1.58 | 2.76 |
+| MW | 339.90 | 464.72 | 330.48 | 424.53 | 121.13 | 211.18 |
+| HBD | 1.23 | 3.37 | 1.00 | 3.00 | 1.09 | 3.01 |
+| HBA | 3.98 | 7.61 | 4.00 | 6.00 | 2.21 | 4.47 |
+| RotB | 3.92 | 6.25 | 4.00 | 6.00 | 2.82 | 4.35 |
+| Arom | 1.27 | 1.40 | 1.00 | 1.00 | 1.03 | 1.16 |
+| Fsp3 | 0.50 | 0.50 | 0.50 | 0.46 | 0.22 | 0.24 |
+| HeavyAtoms | 23.91 | 32.11 | 23.00 | 29.00 | 8.54 | 15.04 |
+
+: Estadísticas descriptivas de los 9 descriptores, por clase {#tbl-describe tbl-colwidths="[18,12,12,15,15,13,13]"}
+
+![Distribución de TPSA, logP, MW, HBD, HBA y Fsp3, separada por clase. Las líneas verticales en TPSA marcan los umbrales de 66.8 y 90 Å² reportados en la literatura.](fig-descriptores.png){#fig-descriptores width=100%}
+
+Las distribuciones de TPSA, HBD y HBA se separan visiblemente entre BBB+ y BBB−; `Fsp3` y `Arom` casi no lo hacen, lo cual se confirma cuantitativamente en la sección siguiente.
+
+# Análisis bi/multivariante
+
+## Poder discriminante individual contra la etiqueta
+
+El **AUC** (área bajo la curva ROC) mide qué tan bien un solo descriptor separa las dos clases por sí mismo, sin necesidad de un modelo: 0.5 equivale a adivinar al azar y 1.0 a una separación perfecta.
+
+| Descriptor | AUC (A+B, n=4,679) | AUC (completo, n=7,805) | AUC publicado (n=1,058) |
+|:-----------|--------------------:|-------------------------:|--------------------------:|
+| TPSA | 0.850 | 0.814 | 0.746 |
+| HBD | 0.811 | 0.777 | 0.699 |
+| HBA | 0.803 | 0.764 | 0.673 |
+| MW | 0.729 | 0.703 | 0.583 |
+| logP | 0.728 | 0.682 | 0.617 |
+| HeavyAtoms | 0.710 | 0.683 | — |
+| RotB | 0.684 | 0.695 | — |
+| Arom | 0.501 | 0.525 | — |
+| Fsp3 | 0.501 | 0.516 | — |
+
+: Área bajo la curva ROC de cada descriptor contra la clase BBB+/BBB−, calculada sobre los datos, contra la cifra publicada sobre el subconjunto con logBB [@tiwari2026umbrales] {#tbl-auc tbl-colwidths="[22,26,26,26]"}
+
+## Correlación entre descriptores
+
+El orden de la tabla anterior no implica que TPSA, HBD, HBA, MW y HeavyAtoms aporten cinco señales independientes. La @fig-correlacion muestra la correlación de Spearman entre los 9 descriptores —se usa Spearman, no Pearson, porque varios son conteos enteros de distribución sesgada—.
+
+![Correlación de Spearman entre los 9 descriptores fisicoquímicos.](fig-correlacion.png){#fig-correlacion width=85%}
+
+Dos pares destacan:
+
+- **MW y HeavyAtoms: ρ = 0.98.** Son casi la misma variable medida dos veces, lo que explica que tengan un poder discriminante casi idéntico en la @tbl-auc: no son dos señales independientes, sino una sola vista desde dos ángulos.
+- **TPSA con HBA (ρ = 0.89) y con HBD (ρ = 0.76).** El TPSA se calcula de forma aditiva sobre los mismos átomos polares que definen a los donadores y aceptores de puente de hidrógeno. Que los tres encabecen la @tbl-auc no son tres hallazgos independientes: es un solo eje de polaridad medido de tres formas distintas.
+- Adicionalmente, **Arom y Fsp3: ρ = −0.74**, con sentido químico directo: más anillos aromáticos implica una molécula más plana, con menos carbonos de hibridación sp³.
+
+**Consecuencia para el Avance 2.** Al construir la matriz de características no conviene tratar estos descriptores como señales independientes; un método de selección debería descartar la redundancia entre MW y HeavyAtoms antes de entrenar, en vez de dejar que el modelo la absorba sin control.
+
+# Preprocesamiento
+
+## Estructuras inválidas
+
+Dos SMILES de los 7,807 no parsean en RDKit (`[C+]` con cuatro enlaces explícitos, una carga imposible). Ambos pertenecen al grupo C, el de menor confiabilidad, y cargan —con nombres de fármacos sin relación entre sí— la misma estructura inválida. **Se descartan para el resto del análisis**; el conjunto de trabajo queda en 7,805 compuestos.
+
+## Deduplicación
+
+Como se documentó en Estructura de los datos, la deduplicación por InChIKey completo no encuentra problemas, pero el esqueleto de conectividad sí revela redundancia estructural real (4,022 esqueletos en 7,805 filas). **No se eliminan filas por esto**: el **scaffold split**[^scaffold] que se construirá en el Avance 2 agrupa por esqueleto, lo cual resuelve el problema sin perder información.
+
+[^scaffold]: Partición que agrupa las moléculas por su **andamio de Murcko** —el esqueleto de anillos y los enlaces que los conectan, sin los grupos sustituyentes que cuelgan de él— y reparte andamios completos entre entrenamiento y prueba, en vez de repartir filas al azar [@bemis1996properties].
+
+## Valores atípicos: ¿ruido o diversidad real?
+
+La regla de Tukey marca como atípico todo valor fuera de [Q1 − 1.5×RIC, Q3 + 1.5×RIC], donde **RIC** es el rango intercuartílico: la distancia entre el percentil 25 (Q1) y el 75 (Q3) de cada descriptor.
+
+| Descriptor | Atípicos (regla de Tukey, 1.5×RIC) | % | Rango real |
+|:-----------|-------------------------------------:|---:|:-----------|
+| HBA | 783 | 10.0 | [0, 33] |
+| HeavyAtoms | 441 | 5.7 | [1, 136] |
+| TPSA | 400 | 5.1 | [0.0, 662.4] |
+| MW | 389 | 5.0 | [6.9, 1882.3] |
+| HBD | 297 | 3.8 | [0, 24] |
+| logP | 217 | 2.8 | [−8.9, 12.6] |
+| RotB | 179 | 2.3 | [0, 53] |
+| Arom | 13 | 0.2 | [0, 8] |
+| Fsp3 | 0 | 0.0 | [0.0, 1.0] |
+
+: Valores atípicos por descriptor según la regla de Tukey {#tbl-atipicos tbl-colwidths="[24,30,16,30]"}
+
+![Dispersión de los 6 descriptores principales por clase, con los valores atípicos marcados.](fig-atipicos.png){#fig-atipicos width=100%}
+
+Los extremos corresponden a estructuras reales, no a errores: ya pasaron el filtro de validez de SMILES. En el extremo superior de MW aparecen antibióticos glicopeptídicos (*teichomycin*, gramicidina), grandes y polares, casi todos BBB−. En el inferior están gases y elementos (metano, agua, nitrógeno, litio, neón), BBB+ por su tamaño mínimo. En el extremo de logP aparecen carotenoides y ésteres de retinol, compuestos naturales muy lipofílicos y BBB−.
+
+**Decisión: no se recortan ni transforman.** Tres razones: (1) son estructuras válidas, no errores de parseo; (2) los modelos de ensamble que adopta este proyecto (Random Forest, XGBoost) son robustos a valores extremos por construcción; y (3) recortarlos sesgaría el conjunto en contra de los productos naturales, que tienden a ser más grandes y complejos que los sintéticos —justo el tipo de compuesto que el proyecto quiere puntuar—.
+
+> **Nota sobre HBA.** Su 10% de atípicos por la regla de Tukey es la proporción más alta de la tabla, pero HBA es un conteo entero de distribución sesgada a la derecha: la regla es más agresiva en variables así, no es evidencia de más error.
+
+## Alta cardinalidad
+
+No aplica: la única variable categórica relevante, `group`, tiene 4 clases.
+
+# Conclusiones
+
+1. **El tamaño efectivo del conjunto es ~4,022 entidades, no 7,805.** Hay que reportar ambas cifras y construir la partición del Avance 2 por esqueleto de conectividad, no de forma aleatoria.
+2. **Los datos respaldan entrenar con los grupos A+B** (4,679 compuestos, 73.0% BBB+): el grupo C tiene una distribución de clases distinta (50.0% BBB+), señal de un criterio de curación diferente, no solo de más ruido. Se conserva como análisis de sensibilidad.
+3. **TPSA, HBD y HBA discriminan bien, pero miden en buena parte lo mismo** (ρ hasta 0.89 entre ellos), y MW/HeavyAtoms son casi la misma variable (ρ = 0.98). El umbral óptimo de TPSA no es transferible entre subconjuntos: 66.6 Å² en el grupo A, 83.6 Å² en A+B, 101.9 Å² en el completo.
+4. **Los valores atípicos son diversidad estructural real** (antibióticos grandes, gases pequeños, carotenoides lipofílicos), no errores, y se conservan sin transformar dado que el proyecto usa modelos de ensamble.
+5. **Desbalance de 1.74:1** (2.70:1 en A+B): se usarán **MCC** (coeficiente de correlación de Matthews) y **AUPRC** (área bajo la curva de precisión-exhaustividad) como métricas principales [@chicco2020; @saito2015], no exactitud ni AUROC solos.
+6. **El scaffold split es viable**: 2,128 andamios de Murcko distintos, 53.2% únicos, sin andamio dominante [@wu2018moleculenet].
+7. **El conjunto de validación externa (Spielvogel et al.) necesita trabajo previo**: no trae SMILES ni InChI, solo nombres; hay que resolverlos antes de poder usarlo.
+
+Ningún número de este documento se toma de la literatura como meta de desempeño; el Avance 3 construirá su propio baseline, siguiendo la validación externa genuina que recomienda la metodología [@golbraikh2002].
+
+# Próximos pasos: Avance 2
+
+1. Descriptores RDKit (217) más Morgan/ECFP4 de 2048 bits.
+2. Construir el scaffold split agrupando por andamio de Murcko, verificando que los estereoisómeros del mismo esqueleto no se separen.
+3. Resolver la redundancia entre descriptores (MW/HeavyAtoms, TPSA/HBA/HBD) antes de seleccionar variables.
+4. Rederivar los umbrales de verificación sobre A+B, no usar los publicados.
+
+::: {#refs}
+:::
