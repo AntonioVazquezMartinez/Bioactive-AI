@@ -19,7 +19,8 @@ The full notes and open questions from the advisor meetings are in `docs/plantea
 
 These come from the research in `docs/referencias/`, which holds the evidence, the caveats and the bibliography. Read the relevant document before changing any of them.
 
-- **Data, stage 1:** B3DB, filtered by its `Group` reliability column (train on A+B). logBB threshold −1.0. Data is CC0, so it can live in the repo.
+- **Data, stage 1:** the sponsor's curated file, `data/external/profesora/bbb_permeability_experimental.csv` — not the B3DB files we downloaded ourselves, which stay as a cross-check. It derives from B3DB but comes standardized and, crucially, cross-matched against COCONUT, which is what lets us separate natural products from synthetics. 7,811 rows, 7,805 with a class. logBB threshold −1.0. B3DB is CC0, so the data can live in the repo.
+- **Do not filter by the `Group` column.** The Avance 1 EDA disproved the reading that group D means "conflicting labels": D has 3+ references (median 3) against C's median of 1, and no duplicated record anywhere in the set carries contradictory labels. The column is confounded with the label — filtering to A+B drops the minority class from 36.5% to 27.0%, which worsens the imbalance instead of removing noise. Use it to stratify, never to exclude.
 - **Data, stage 2:** the ChEMBL 37 SQLite dump, not the REST API (which was returning HTTP 500 as of 2026-09-22). Plus NPASS v3.0 and CMAUP 2.0. Labels in two tiers: pChEMBL ≥ 5 primary, ≥ 6 as a robustness check, keeping the most potent value per compound-target pair.
 - **Features:** RDKit 2D descriptors (217 in current RDKit) plus Morgan/ECFP4, 2048 bits, via `rdFingerprintGenerator` — not the deprecated `GetMorganFingerprintAsBitVect`. Note `radius=2` means ECFP4, since the name carries the diameter. Frozen embeddings from pretrained transformers do not beat this under scaffold splits.
 - **Splits:** scaffold (Bemis-Murcko), never random. Random splits inflate results by 7–13 points. Where the data allows, make splits disjoint by source lab too.
@@ -29,7 +30,17 @@ Do not cite published BBBP performance numbers as a target — the same dataset 
 
 ## Current state
 
-The repo is only a scaffold for now. Directories without real content hold an empty `Nuevo.txt` placeholder so git will track them. There is no code, no `requirements.txt`, no `.gitignore` and no test or lint setup yet. When you add real content to a directory, delete its placeholder. Don't invent build or test commands. Add them here once they exist.
+What exists:
+
+- `notebooks/01_EDA.ipynb` (Avance 1, done) and `notebooks/02_Feature_Eng.ipynb` (Avance 2, in progress).
+- `src/data_prep/` (`download_data.py`, `splits.py`) and `src/features/molecular.py`. No `src/models/` yet.
+- `docs/planteamiento/` (problem statement, marco teórico), `docs/referencias/` (5 research documents plus `bibliografia.bib`), `docs/reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF).
+- `data/external/profesora/` holds the sponsor's data with a README documenting licenses and caveats. The SNC activity file goes through Git LFS (see `.gitattributes`); NPASS is CC BY-NC, so it is non-commercial.
+- `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist.
+
+`models/` and `src/models/` still hold an empty `Nuevo.txt` placeholder so git tracks them. Delete the placeholder when you add real content.
+
+Reports are rendered with Quarto to typst (no LaTeX). The rubric wants a cover page *and* a table of contents as separate pages, which Quarto's `toc` puts adjacent — hence the raw typst block at the top of each `.qmd`. Check every page of a rendered PDF before calling it done; typst sizes table columns by header length and silently produces broken tables.
 
 ## Intended layout and workflow
 
@@ -46,5 +57,5 @@ The work is organized around the course's weekly deliverables ("Avances"):
 ```bash
 python -m venv env
 source env/bin/activate
-pip install -r requirements.txt   # requirements.txt not yet created
+pip install -r requirements.txt
 ```
