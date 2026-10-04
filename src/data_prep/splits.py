@@ -5,9 +5,9 @@ Por qué importa, medido sobre B3DB en el Avance 1:
 - Los andamios grandes tienen **pureza de clase extrema**: el más frecuente
   (410 compuestos, esqueleto esteroideo) es 99.5% BBB+, otro de 59 es 0.0%. Con
   una partición aleatoria, al modelo le basta reconocer el andamio.
-- El tamaño efectivo de muestra es de ~4,022 esqueletos de conectividad, no
-  7,805 filas. La morfina aparece ocho veces. Una partición aleatoria pondría
-  estereoisómeros del mismo compuesto en entrenamiento y prueba.
+- El tamaño efectivo de muestra es de ~4,018 esqueletos de conectividad, no
+  7,805 filas. El ácido fusídico aparece nueve veces. Una partición aleatoria
+  pondría estereoisómeros del mismo compuesto en entrenamiento y prueba.
 
 De ahí que la partición agrupe por andamio de Bemis-Murcko **y** verifique que
 ningún esqueleto de conectividad cruce entre particiones.
@@ -33,7 +33,7 @@ def andamio_murcko(mol: Chem.Mol, generico: bool = False) -> str:
     """Andamio de Bemis-Murcko como SMILES.
 
     Los compuestos acíclicos no tienen andamio y devuelven `SIN_ANDAMIO`: en
-    B3DB son 311 y hay que decidir explícitamente qué hacer con ellos, no
+    B3DB son 312 y hay que decidir explícitamente qué hacer con ellos, no
     dejarlos caer en silencio.
     """
     try:
