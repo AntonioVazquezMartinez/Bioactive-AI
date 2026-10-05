@@ -10,7 +10,7 @@ Bioactive AI is a Tec de Monterrey MNA capstone (TC5035.10, Team 7) with the Bio
 
 The full notes and open questions from the advisor meetings are in `docs/planteamiento/`, and that folder is the source of truth. What matters for code:
 
-- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) for compounds that can reach the brain, predict neuroprotective activity and the likely target. Candidate data sources are CMAUP, NPASS and ChEMBL. The BBB dataset is still to be confirmed. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
+- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) for compounds that can reach the brain, predict neuroprotective activity and the likely target. Candidate data sources are CMAUP, NPASS and ChEMBL. The primary BBB dataset is the sponsor's curated B3DB-derived file documented below. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
 - **Explainability is required, not optional.** The advisors want to know which structural features drive a prediction, so favor interpretable models or substructure-level attributions.
 - **Activity labels depend on concentration.** The same compound can flip between inactive and active depending on the µM tested, so pick and document a threshold when turning activity measurements into labels.
 - **"No learnable pattern" is a valid result.** Report it honestly instead of tuning until something looks good.

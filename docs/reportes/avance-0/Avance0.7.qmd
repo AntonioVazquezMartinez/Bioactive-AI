@@ -268,7 +268,7 @@ La disponibilidad de **29,730 registros de inactividad declarada**, más 54,419 
 
 Se realizó una verificación independiente de ambos conjuntos, cuyos hallazgos condicionan el diseño metodológico. Se reportan aquí porque afectan la interpretación de cualquier resultado posterior.
 
-**El tamaño efectivo de muestra es menor que el número de filas.** En el conjunto de permeabilidad, las 7,805 filas corresponden a 4,019 esqueletos de conectividad distintos: numerosos compuestos aparecen varias veces como estereoisómeros. La morfina, por ejemplo, figura ocho veces. **Al reportar el tamaño del conjunto deben darse ambas cifras**, porque el número de filas sobreestima la información independiente por un factor cercano a dos.
+**El tamaño efectivo de muestra es menor que el número de filas.** En el conjunto de permeabilidad, las 7,805 filas etiquetadas corresponden a 4,018 esqueletos de conectividad distintos; el archivo completo tiene 4,019 `key14` distintos al incluir las seis filas sin clase. Numerosos compuestos aparecen varias veces como estereoisómeros. La morfina, por ejemplo, figura ocho veces. **Al reportar el tamaño del conjunto deben darse ambas cifras**, porque el número de filas sobreestima la información independiente por un factor cercano a dos.
 
 **Hay registros con estructuras químicamente inválidas.** Dos compuestos del archivo original de B3DB contienen un carbono con carga imposible y son rechazados por RDKit. El diccionario entregado por la patrocinadora documenta el mismo problema de forma independiente, lo que confirma el hallazgo.
 

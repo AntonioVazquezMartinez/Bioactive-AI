@@ -449,9 +449,9 @@ B3DB se compiló a partir de 50 recursos publicados `meng2021b3db`. BBBP y TDC B
 
 ### 6.2 Incertidumbre experimental y construcción de etiquetas
 
-La característica que distingue a B3DB es su categorización por confiabilidad: Grupo A (1,058, con logBB numérico), Grupo B (3,621, fuentes que declararon el umbral −1 y coincidieron), Grupo C (3,077, acuerdo sin umbral especificado) y Grupo D (51, etiquetas contradictorias).
+La documentación inicial de B3DB describía grupos A–D según el tipo de evidencia y propuso usarlos para seleccionar observaciones. Sin embargo, el diccionario del archivo curado por la patrocinadora indica que B3DB no publica el criterio completo de asignación y que sus categorías de clasificación y regresión no son intercambiables. La auditoría del archivo recibido encontró, además, que la categoría está asociada con la distribución de BBB+/BBB−: filtrar A+B modifica la prevalencia de BBB− de 36.5% a 27.0%, mientras que la cantidad de referencias no sigue un orden de calidad (D tiene mediana de tres referencias frente a una en C).
 
-Este trabajo entrena sobre A y B, usa C como aumentación y reserva D como conjunto diagnóstico. La justificación es que esa estratificación captura precisamente la inconsistencia entre estudios que la sección 1.5 atribuye a la heterogeneidad de ensayos. El umbral de conversión es **logBB = −1.0**.
+Por ello, para el EDA vigente se incluyen las **7,805 filas etiquetadas** del archivo curado y se conserva A–D para descripción y estratificación, no como escala de confiabilidad ni como criterio automático de exclusión. La comparación de subconjuntos puede plantearse como análisis de sensibilidad, pero no permite por sí sola concluir que las etiquetas de una categoría sean más confiables. En las seis filas que tienen `logBB` pero no clase integrada, el diccionario de la patrocinadora atribuye la falta de unión a una diferencia de forma estereoquímica entre los registros de regresión y clasificación; no se les asigna clase a partir de la conectividad. El umbral de conversión informado para los registros categóricos basados en `logBB` es **−1.0**.
 
 ### 6.3 Desempeño esperable
 

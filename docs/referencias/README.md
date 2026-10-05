@@ -23,7 +23,7 @@ Esta distinción no es burocracia. Cada documento cierra con una lista explícit
 
 ## Decisiones que salieron de esta investigación
 
-**Etapa 1 — permeabilidad BBB.** Usar [B3DB](https://github.com/theochem/B3DB), filtrado por su columna `Group` de confiabilidad experimental. Umbral logBB = −1.0. Datos en CC0, así que se pueden commitear al repo.
+**Etapa 1 — permeabilidad BBB.** La fuente primaria vigente es el archivo curado por la patrocinadora, derivado de B3DB y cruzado con COCONUT: `data/external/profesora/bbb_permeability_experimental.csv`. Se usan las 7,805 filas con etiqueta BBB. Las categorías A–D se conservan para descripción y estratificación, no se filtran como escala de confiabilidad; el criterio completo de asignación no está publicado y filtrar A+B altera la prevalencia de clases. El diccionario de la patrocinadora indica que seis filas con `logbb` no recibieron una clase integrada porque sus registros de clasificación correspondían a otra forma estereoquímica y no coincidieron en la unión por estructura. El umbral logBB = −1.0 es parte de la procedencia de las etiquetas B3DB donde aplica; los datos se distribuyen bajo CC0 según la documentación del proyecto. La recomendación inicial de filtrar por `Group` en [02 — Datasets de BBB](02-datasets-bbb.md) quedó supersedida tras revisar los datos de la patrocinadora.
 
 **Etapa 2 — neuroactividad.** ChEMBL vía el dump SQLite del release 37, no vía API. Complementar con NPASS v3.0 y CMAUP 2.0. Etiquetado en dos niveles: pChEMBL ≥ 5 como primario, ≥ 6 como prueba de robustez.
 

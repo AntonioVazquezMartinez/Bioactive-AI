@@ -71,11 +71,11 @@ Tiene 7,811 filas contra las 7,807 del archivo original de clasificación, porqu
 
 Confirmadas contra los datos, no tomadas del diccionario:
 
-- **El tamaño efectivo es menor que el número de filas.** 7,805 filas con clase corresponden a 4,019 esqueletos de conectividad. La morfina aparece ocho veces.
+- **El tamaño efectivo es menor que el número de filas.** 7,805 filas con clase corresponden a 4,018 esqueletos de conectividad. El archivo completo tiene 4,019 `key14` distintos; las seis filas sin clase añaden un esqueleto único respecto al conjunto etiquetado. La morfina aparece ocho veces.
 - **Dos SMILES del B3DB original no parsean** (mepenzolato y tiotidina, con `[C+](O)`). Ya vienen excluidos de este archivo.
 - **Los nombres de compuesto no son confiables.** El diccionario documenta una fila llamada "ritonavir" cuya estructura es etambutol. Deduplicar siempre por `inchikey`, nunca por nombre.
 - **131 esqueletos tienen clases contradictorias** entre estereoisómeros, afectando 429 filas.
-- **Las columnas de grupo A–D no son una escala de calidad.** B3DB no publica el criterio; el grupo D tiene más respaldo bibliográfico que el C, y el grupo está correlacionado con la etiqueta, así que filtrar por él sesga la distribución de clases.
+- **Las columnas de grupo A–D no son una escala de calidad.** B3DB no publica el criterio; el grupo D tiene más respaldo bibliográfico que el C, y el grupo está correlacionado con la etiqueta, así que filtrar por él sesga la distribución de clases. Para el conjunto etiquetado se conservan todas las categorías y `group` se usa para describir o estratificar, no para excluir automáticamente.
 
 ## Pendiente de confirmar con la patrocinadora
 
