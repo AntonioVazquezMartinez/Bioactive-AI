@@ -15,7 +15,7 @@ Rutas de lectura según de dónde vengas:
 
 - **Vienes de bioingeniería o química** → empieza por el [glosario](contenido/glosario.html), sección *Partición y evaluación*, y sigue con el [Avance 1](contenido/reportes/index.html), que es el análisis de los datos y no supone conocimiento de modelado.
 - **Vienes de inteligencia artificial** → empieza por el [glosario](contenido/glosario.html), secciones *Química y biología* y *Descriptores moleculares*, y sigue con [01 · Representaciones moleculares](contenido/referencias/01-representaciones-moleculares.html), que explica cómo se pasa de una molécula a una tabla.
-- **Quieres el panorama completo** → el [marco teórico](contenido/planteamiento/marco-teorico.html) desarrolla los fundamentos en diez capítulos.
+- **Quieres el panorama completo** → el [marco teórico](contenido/planteamiento/marco-teorico/index.html) desarrolla los fundamentos en tres partes.
 - **Quieres ver lo entregado** → los [reportes de cada avance](contenido/reportes/index.html).
 :::
 
@@ -106,7 +106,7 @@ El conjunto tiene 7,805 filas etiquetadas, pero solo **4,018 esqueletos de conec
 
 La curcumina acumula más de 120 ensayos clínicos sin un solo resultado positivo controlado. Ella, el EGCG y el resveratrol alteran la bicapa lipídica de forma inespecífica, un mecanismo que los filtros clásicos no detectan. El modelo los va a rankear alto y hay que filtrarlos antes de reportar cualquier hit.
 
-[Ver el marco teórico →](contenido/planteamiento/marco-teorico.html)
+[Ver el marco teórico →](contenido/planteamiento/marco-teorico/index.html)
 :::
 
 ::: {.callout-note}

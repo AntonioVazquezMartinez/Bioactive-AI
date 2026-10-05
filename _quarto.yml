@@ -28,8 +28,16 @@ website:
         text: Inicio
       - href: contenido/glosario.md
         text: Glosario
-      - href: contenido/planteamiento/marco-teorico.md
-        text: Marco teórico
+      - text: Marco teórico
+        menu:
+          - href: contenido/planteamiento/marco-teorico/index.md
+            text: Presentación
+          - href: contenido/planteamiento/marco-teorico/01-biologia.md
+            text: "1 · Biología de la barrera y de la enfermedad"
+          - href: contenido/planteamiento/marco-teorico/02-metodos-computacionales.md
+            text: "2 · Métodos computacionales"
+          - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
+            text: "3 · Modelado, explicabilidad y hueco"
       - text: Investigación
         menu:
           - href: contenido/referencias/index.md
@@ -60,9 +68,21 @@ website:
       - icon: github
         href: https://github.com/AntonioVazquezMartinez/Bioactive-AI
 
+  # Barra lateral propia de la sección del marco teórico: es el único bloque
+  # del sitio con varias páginas encadenadas, y da navegación anterior/siguiente.
   sidebar:
-    style: floating
-    collapse-level: 2
+    - title: "Marco teórico"
+      style: floating
+      collapse-level: 2
+      contents:
+        - href: contenido/planteamiento/marco-teorico/index.md
+          text: Presentación
+        - href: contenido/planteamiento/marco-teorico/01-biologia.md
+          text: "1 · Biología"
+        - href: contenido/planteamiento/marco-teorico/02-metodos-computacionales.md
+          text: "2 · Métodos computacionales"
+        - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
+          text: "3 · Modelado y explicabilidad"
 
   page-footer:
     center: |

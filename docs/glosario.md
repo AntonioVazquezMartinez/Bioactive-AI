@@ -119,7 +119,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 | Tema | Documento |
 |:-----|:----------|
-| Fundamentos biológicos y computacionales | [Marco teórico](planteamiento/marco-teorico.md) |
+| Biología de la barrera y de la enfermedad | [Marco teórico · parte 1](planteamiento/marco-teorico/01-biologia.md) |
+| De la estructura química a una tabla | [Marco teórico · parte 2](planteamiento/marco-teorico/02-metodos-computacionales.md) |
+| Modelado, explicabilidad y hueco | [Marco teórico · parte 3](planteamiento/marco-teorico/03-modelado-y-explicabilidad.md) |
 | De SMILES a una tabla de características | [01 · Representaciones moleculares](referencias/01-representaciones-moleculares.md) |
 | Datos de permeabilidad y particiones | [02 · Datasets de BBB](referencias/02-datasets-bbb.md) |
 | Métodos de atribución | [03 · Explicabilidad](referencias/03-explicabilidad.md) |
