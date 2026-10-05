@@ -1,6 +1,6 @@
 # Marco teórico
 
-> **Estado: borrador para revisión del equipo y los asesores.** Se construyó a partir de siete ramas de investigación documentadas en [`docs/referencias/`](../referencias/README.md), que conservan la evidencia completa y las advertencias de acceso. Las citas aparecen como claves BibTeX entre backticks para sustituirse mecánicamente al fijar el formato (APA, IEEE) que pida el Tec; la bibliografía está en [`bibliografia.bib`](../referencias/bibliografia.bib), con 207 entradas al 2026-09-23.
+> **Estado: borrador para revisión del equipo y los asesores.** Se construyó a partir de siete ramas de investigación documentadas en [`docs/referencias/`](../referencias/README.md), que conservan la evidencia completa y las advertencias de acceso. Las citas aparecen como claves BibTeX entre backticks para sustituirse mecánicamente al fijar el formato (APA, IEEE) que pida el Tec; la bibliografía está en [`bibliografia.bib`](../referencias/bibliografia.bib), con 208 entradas.
 >
 > **Antes de entregar:** verificar contra doi.org toda referencia marcada como de acceso parcial o sin acceso. Varias entradas tienen metadatos que nadie del equipo ha leído.
 
@@ -527,4 +527,4 @@ Los antecedentes más próximos:
 
 ## Bibliografía
 
-En [`docs/referencias/bibliografia.bib`](../referencias/bibliografia.bib), con 207 entradas al 2026-09-23. Cada documento de `docs/referencias/` incluye la lista de lo que no se pudo verificar para su ámbito.
+En [`docs/referencias/bibliografia.bib`](../referencias/bibliografia.bib), con 208 entradas. Cada documento de `docs/referencias/` incluye la lista de lo que no se pudo verificar para su ámbito.
