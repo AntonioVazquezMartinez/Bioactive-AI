@@ -48,6 +48,8 @@ website:
             text: "Avance 1 · EDA"
           - href: contenido/notebooks/02_Feature_Eng.ipynb
             text: "Avance 2 · Características"
+      - href: contenido/reportes/index.md
+        text: Entregables
       - href: contenido/datos.md
         text: Datos
       - href: bibliografia.qmd

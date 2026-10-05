@@ -11,6 +11,9 @@ Hace tres cosas sobre copias en contenido/, sin tocar los originales de docs/:
 3. **Reescribe los enlaces** .md e .ipynb a .html. La jerarquía de contenido/
    replica la de docs/, así que los enlaces relativos entre documentos siguen
    siendo válidos sin recalcular profundidades.
+4. **Copia los PDF de los reportes.** Esos no se renderizan: se escriben en
+   Quarto pero con formato typst, y su portada es typst crudo sin equivalente
+   en HTML. Se publican tal cual y la página índice enlaza a ellos.
 
 Lo ejecuta Quarto vía `pre-render`, pero hay que correrlo a mano la primera
 vez: Quarto arma su lista de archivos antes del pre-render, así que el
@@ -55,7 +58,16 @@ DOCUMENTOS = [
     ("data/external/README.md",
      "datos.md",
      "Procedencia, licencias y advertencias de los datos descargados"),
+    ("docs/reportes/README.md",
+     "reportes/index.md",
+     "Los reportes entregados en el Proyecto Integrador"),
 ]
+
+# Los reportes se escriben en Quarto pero se renderizan a typst, no a HTML: su
+# bloque de portada es typst crudo y no tiene equivalente en el sitio. Por eso
+# se publica el PDF tal cual y la página índice enlaza a él.
+PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
+        "docs/reportes/avance-1/Avance1.0.pdf"]
 
 
 def claves_bib() -> set[str]:
@@ -181,6 +193,17 @@ def main() -> int:
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_text(json.dumps(nb, indent=1, ensure_ascii=False), encoding="utf-8")
         print(f"[sitio] {nb_rel} -> contenido/notebooks/{Path(nb_rel).name}  ({cambios} celdas con enlaces reescritos)")
+
+    # los PDF de los reportes se copian sin tocar, conservando la jerarquía
+    for pdf_rel in PDFS:
+        src = RAIZ / pdf_rel
+        if not src.exists():
+            print(f"[sitio] AVISO: no existe {pdf_rel}, se omite")
+            continue
+        dst = BUILD / "reportes" / Path(pdf_rel).parent.name / src.name
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+        print(f"[sitio] {pdf_rel} -> contenido/{dst.relative_to(BUILD)}  ({src.stat().st_size // 1024} KB)")
 
     print(f"[sitio] {total} citas convertidas")
     return 0
