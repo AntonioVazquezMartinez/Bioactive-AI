@@ -6,6 +6,19 @@ toc: false
 
 Proyecto Integrador de la **Maestría en Inteligencia Artificial Aplicada** (TC5035.10) del Tecnológico de Monterrey, en colaboración con el **Departamento de Bioingeniería** y bajo el patrocinio de la **Dra. Mariana Martínez Ávila**.
 
+::: {.callout-tip}
+## Si es tu primera vez aquí
+
+El proyecto cruza química, biología y aprendizaje automático, así que ningún lector llega sabiéndolo todo. El [**glosario**](contenido/glosario.html) define los términos de las tres áreas en las dos direcciones, y es el lugar al que apunta el resto del sitio.
+
+Rutas de lectura según de dónde vengas:
+
+- **Vienes de bioingeniería o química** → empieza por el [glosario](contenido/glosario.html), sección *Partición y evaluación*, y sigue con el [Avance 1](contenido/reportes/index.html), que es el análisis de los datos y no supone conocimiento de modelado.
+- **Vienes de inteligencia artificial** → empieza por el [glosario](contenido/glosario.html), secciones *Química y biología* y *Descriptores moleculares*, y sigue con [01 · Representaciones moleculares](contenido/referencias/01-representaciones-moleculares.html), que explica cómo se pasa de una molécula a una tabla.
+- **Quieres el panorama completo** → el [marco teórico](contenido/planteamiento/marco-teorico.html) desarrolla los fundamentos en diez capítulos.
+- **Quieres ver lo entregado** → los [reportes de cada avance](contenido/reportes/index.html).
+:::
+
 ## El problema
 
 A partir del SMILES de un compuesto, el proyecto resuelve dos preguntas encadenadas:
@@ -30,25 +43,41 @@ El foco son **productos naturales** de origen vegetal.
 
 :::
 
-Sobre ambas etapas pesa un requisito que los asesores plantearon como no negociable: **la explicabilidad a nivel de substructura**. No basta con predecir bien; hay que poder decir qué característica estructural explica la predicción.
+Sobre ambas etapas pesa un requisito que la patrocinadora planteó como no negociable: **la explicabilidad a nivel de substructura**. No basta con predecir bien; hay que poder decir qué característica estructural explica la predicción.
+
+## Cómo fluyen los datos
+
+```{mermaid}
+flowchart LR
+    A["SMILES<br/>una cadena de texto"] --> B["Descriptores RDKit<br/>217 propiedades"]
+    A --> C["Fingerprint ECFP4<br/>2,048 subestructuras"]
+    B --> D["Tabla de características"]
+    C --> D
+    D --> E["Etapa 1<br/>¿cruza la barrera?"]
+    D --> F["Etapa 2<br/>¿tiene actividad?"]
+    E --> G["Priorización<br/>con atribución a fragmentos"]
+    F --> G
+```
+
+Las dos etapas son **independientes**: la primera no filtra a la segunda, sus salidas se combinan al final. Cada término del diagrama está en el [glosario](contenido/glosario.html).
 
 ## Estado
 
 | Componente | Estado |
 |---|---|
-| Marco teórico | Borrador completo, 8 capítulos, 207 referencias |
+| Marco teórico | Borrador completo, 10 capítulos, 208 referencias |
 | Investigación de referencia | 5 documentos, 7 ramas de investigación |
-| Datos etapa 1 | Descargados y auditados |
+| Datos etapa 1 | Conjunto de la patrocinadora, auditado en el Avance 1 |
 | Datos etapa 2 | Pendientes |
 | EDA (Avance 1) | Ejecutado |
-| Ingeniería de características (Avance 2) | Ejecutado |
+| Ingeniería de características (Avance 2) | Ejecutado · pendiente retirar el filtro A+B |
 | Modelos base (Avance 3) | Pendiente |
 
 ## Decisiones técnicas
 
 Tomadas con la evidencia documentada en la [investigación de referencia](contenido/referencias/index.html):
 
-- **Datos, etapa 1:** [B3DB](https://github.com/theochem/B3DB) filtrado por su columna de confiabilidad experimental, entrenando con los grupos A y B. Umbral logBB = −1.0.
+- **Datos, etapa 1:** el conjunto curado por la patrocinadora, derivado de [B3DB](https://github.com/theochem/B3DB) y cruzado con COCONUT. Umbral logBB = −1.0. Las categorías A–D **no** se usan para excluir registros: el Avance 1 mostró que no son una escala de calidad.
 - **Datos, etapa 2:** el volcado SQLite de ChEMBL 37, más NPASS y CMAUP. Etiquetado en dos niveles, pChEMBL ≥ 5 como primario y ≥ 6 como robustez.
 - **Representación:** descriptores 2D de RDKit (217) más Morgan/ECFP4 de 2048 bits. Los embeddings congelados de transformers no superan a esta combinación bajo scaffold split.
 - **Validación:** scaffold split de Bemis-Murcko, nunca aleatorio. Métricas MCC y AUPRC, no exactitud.
@@ -59,9 +88,17 @@ Tomadas con la evidencia documentada en la [investigación de referencia](conten
 ::: {.callout-important}
 ## El tamaño efectivo de muestra es la mitad de lo que parece
 
-B3DB tiene 7,807 filas, pero solo **4,022 esqueletos de conectividad distintos**. La morfina aparece ocho veces. Al reportar el tamaño del conjunto hay que dar ambas cifras.
+El conjunto tiene 7,805 filas etiquetadas, pero solo **4,018 esqueletos de conectividad distintos**. El ácido fusídico aparece nueve veces. Al reportar el tamaño del conjunto hay que dar ambas cifras, y la partición tiene que agrupar por estructura.
 
 [Ver el análisis →](contenido/notebooks/01_EDA.html)
+:::
+
+::: {.callout-important}
+## Los productos naturales cruzan la barrera bastante menos
+
+52.7% contra 71.7% de los sintéticos, una diferencia de 18.9 puntos. Las reglas fisicoquímicas clásicas explican solo cerca de un tercio de esa brecha. Como son justamente los compuestos a priorizar, el desempeño tendrá que reportarse por separado en ambos grupos.
+
+[Ver el Avance 1 →](contenido/reportes/index.html)
 :::
 
 ::: {.callout-warning}
@@ -69,7 +106,7 @@ B3DB tiene 7,807 filas, pero solo **4,022 esqueletos de conectividad distintos**
 
 La curcumina acumula más de 120 ensayos clínicos sin un solo resultado positivo controlado. Ella, el EGCG y el resveratrol alteran la bicapa lipídica de forma inespecífica, un mecanismo que los filtros clásicos no detectan. El modelo los va a rankear alto y hay que filtrarlos antes de reportar cualquier hit.
 
-[Ver el capítulo 3 →](contenido/planteamiento/marco-teorico.md)
+[Ver el marco teórico →](contenido/planteamiento/marco-teorico.html)
 :::
 
 ::: {.callout-note}
