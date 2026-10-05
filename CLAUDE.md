@@ -52,6 +52,31 @@ The work is organized around the course's weekly deliverables ("Avances"):
 - `models/`: serialized trained models (`.pkl`, `.h5`).
 - `docs/`: `planteamiento/` for the week 1–2 problem statement, `reportes/` for the executive summary and outreach piece, and `referencias/` for literature.
 
+## The published site is the project's memory
+
+The site at <https://antoniovazquezmartinez.github.io/Bioactive-AI/> is not a byproduct of the repo — it is where the project explains itself. The test it has to pass: an advisor, the sponsor, a grader or a teammate joining late should be able to open it and understand what the project is doing and why, without reading code, digging through git history or asking anyone. Anything that lives only in someone's head, in a Slack thread or in a commit message fails that test.
+
+Keep it current in the same PR as the change it describes, not in a cleanup pass later. A decision that is reversed in code but still documented on the site is worse than no documentation.
+
+**The site does not auto-discover files.** This is the part that bites. A new document under `docs/` stays invisible until it is added in *two* places:
+
+1. the `DOCUMENTOS` list in `scripts/prepare_site.py` (source path, destination path, subtitle), and
+2. the navbar in `_quarto.yml`.
+
+`scripts/prepare_site.py` copies the documents into `contenido/`, converts the backtick citation keys to `@key`, adds the YAML frontmatter Quarto needs and rewrites `.md`/`.ipynb` links to `.html`. Run it by hand the first time you add a document — Quarto builds its file list before the pre-render hook, so the target has to exist already. `.github/workflows/pages.yml` publishes on push to `main`, but only when one of its watched paths changes; if you add content somewhere else, add that path to the workflow too.
+
+What belongs on the site:
+
+- **A glossary.** Every domain term gets defined the first time it appears, and the glossary is the canonical definition the rest links to. The audience is mixed — the AI side does not know what an efflux transporter or a Murcko scaffold is, and the bioengineering side does not know what AUPRC or a scaffold split is. Write both directions. Terms we have already had to explain: SMILES, InChIKey, connectivity skeleton, TPSA, HBD/HBA, logP, logBB, Fsp3, BBB+/BBB−, Bemis-Murcko scaffold, scaffold split, ECFP4/Morgan, P-glycoprotein efflux, pChEMBL, MCC, AUPRC, PAINS, applicability domain.
+- **Concept and mind maps.** Use Quarto's built-in mermaid blocks rather than image files, so a diagram can be edited in a PR and reviewed as a diff. The two-stage pipeline, the data lineage from each source to the model-ready table, and the map from research document to the decision it supports are the ones worth drawing.
+- **The decision record.** Every technical decision in this file should be traceable on the site to the evidence behind it and, when it changes, to what changed it. `docs/referencias/02-datasets-bbb.md` is the model: the superseded recommendation stays visible and is marked as superseded, instead of being quietly rewritten.
+- **Data provenance.** Where each file came from, its license, its known problems. `data/external/README.md` already does this and is published as the "Datos" page.
+- **The executed notebooks**, which are what the deliverables actually link to.
+
+Current gap worth closing: the reports in `docs/reportes/` are not published at all — `DOCUMENTOS` does not include them, so Avance 0 and Avance 1 exist only as PDFs in the repo.
+
+Write for someone who is competent but has no context. Spell out the acronym the first time, say why a choice was made and not only what it was, and keep the numbers attached to where they came from.
+
 ## Environment
 
 ```bash
