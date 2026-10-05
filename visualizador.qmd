@@ -1,0 +1,209 @@
+---
+title: "Visualizador de moléculas"
+subtitle: "De un SMILES a su estructura, sus descriptores y su geometría 3D"
+toc: false
+---
+
+Pega un **SMILES** y la página lo dibuja, calcula los nueve descriptores que usa el proyecto y muestra la molécula en tres dimensiones. Todo corre en tu navegador: el dibujo y los descriptores los calcula [RDKit](https://www.rdkit.org/) compilado a WebAssembly, el mismo motor que usa el pipeline.
+
+Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [glosario](contenido/glosario.html) los define.
+
+```{=html}
+<div class="vm">
+  <div class="vm-entrada">
+    <input id="vm-smiles" type="text" spellcheck="false"
+           placeholder="Pega un SMILES, por ejemplo CN1C=NC2=C1C(=O)N(C)C(=O)N2C"
+           value="CN1C=NC2=C1C(=O)N(C)C(=O)N2C">
+    <button id="vm-ver">Ver molécula</button>
+  </div>
+  <div class="vm-ejemplos">
+    <span>Ejemplos:</span>
+    <button data-smi="CN1C=NC2=C1C(=O)N(C)C(=O)N2C">cafeína</button>
+    <button data-smi="COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O">curcumina</button>
+    <button data-smi="CN1CC[C@]23c4c5ccc(O)c4O[C@H]2[C@@H](O)C=C[C@H]3[C@H]1C5">morfina</button>
+    <button data-smi="NC(Cc1ccc(O)c(O)c1)C(=O)O">L-DOPA</button>
+    <button data-smi="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@@H](O)CC[C@]4(C)[C@H]3CC[C@]12C">colesterol</button>
+    <button data-smi="OC(=O)CCC(=O)O">ácido succínico</button>
+  </div>
+  <p id="vm-estado" class="vm-estado">Cargando RDKit…</p>
+
+  <div class="vm-paneles">
+    <section class="vm-panel">
+      <h3>Estructura 2D</h3>
+      <div id="vm-2d" class="vm-lienzo"></div>
+      <p class="vm-nota">Dibujada por RDKit en tu navegador.</p>
+    </section>
+    <section class="vm-panel">
+      <h3>Geometría 3D</h3>
+      <div id="vm-3d" class="vm-lienzo vm-3d"></div>
+      <p class="vm-nota" id="vm-3d-nota">—</p>
+    </section>
+  </div>
+
+  <section class="vm-panel vm-ancho">
+    <h3>Descriptores</h3>
+    <div id="vm-desc"></div>
+  </section>
+</div>
+
+<style>
+.vm { margin: 1.5rem 0; }
+.vm-entrada { display: flex; gap: .5rem; flex-wrap: wrap; }
+.vm-entrada input {
+  flex: 1 1 22rem; padding: .6rem .75rem; font-family: var(--bs-font-monospace, monospace);
+  font-size: .9rem; border: 1px solid rgba(128,128,128,.45); border-radius: .3rem;
+  background: transparent; color: inherit;
+}
+.vm-entrada button, .vm-ejemplos button {
+  padding: .6rem 1rem; border: 1px solid rgba(128,128,128,.45); border-radius: .3rem;
+  background: rgba(128,128,128,.12); color: inherit; cursor: pointer; font-size: .9rem;
+}
+.vm-entrada button:hover, .vm-ejemplos button:hover { background: rgba(128,128,128,.28); }
+.vm-ejemplos { margin-top: .6rem; display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.vm-ejemplos span { font-size: .85rem; opacity: .75; }
+.vm-ejemplos button { padding: .3rem .7rem; font-size: .82rem; }
+.vm-estado { margin: .9rem 0; font-size: .88rem; opacity: .85; min-height: 1.2em; }
+.vm-estado.vm-error { color: #c0392b; opacity: 1; font-weight: 600; }
+.vm-paneles { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 1rem; }
+.vm-panel {
+  border: 1px solid rgba(128,128,128,.3); border-radius: .4rem; padding: .9rem; margin-bottom: 1rem;
+}
+.vm-panel h3 { margin: 0 0 .6rem; font-size: 1rem; }
+.vm-lienzo {
+  min-height: 19rem; display: flex; align-items: center; justify-content: center;
+  background: rgba(128,128,128,.06); border-radius: .3rem; overflow: hidden;
+}
+.vm-3d { position: relative; }
+.vm-lienzo svg { max-width: 100%; height: auto; }
+#vm-2d { background: #fff; }   /* RDKit dibuja sobre blanco; se asume, no se disimula */
+.vm-nota { margin: .5rem 0 0; font-size: .8rem; opacity: .7; }
+.vm-ancho { margin-top: 0; }
+#vm-desc table { width: 100%; max-width: 26rem; font-size: .88rem; }
+#vm-desc td { padding: .15rem 0; }
+#vm-desc td:first-child { width: 55%; }
+#vm-desc td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.vm-regla { margin-top: .9rem; padding: .7rem .9rem; border-left: .25rem solid rgba(128,128,128,.5);
+            font-size: .88rem; background: rgba(128,128,128,.08); border-radius: 0 .3rem .3rem 0; }
+</style>
+
+<script src="https://unpkg.com/@rdkit/rdkit@2026.9.1/dist/RDKit_minimal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const estado = (txt, err) => { const e = $("vm-estado"); e.textContent = txt; e.classList.toggle("vm-error", !!err); };
+  let RDKit = null, visor3d = null, peticion = 0;
+
+  // los nueve descriptores del proyecto, con la clave que usa RDKit.js
+  const DESCRIPTORES = [
+    ["TPSA", "tpsa", "Å²", 2], ["logP", "CrippenClogP", "", 2],
+    ["MW", "amw", "g/mol", 1], ["HBD", "NumHBD", "", 0],
+    ["HBA", "NumHBA", "", 0], ["RotB", "NumRotatableBonds", "", 0],
+    ["Arom", "NumAromaticRings", "", 0], ["Fsp3", "FractionCSP3", "", 2],
+    ["HeavyAtoms", "NumHeavyAtoms", "", 0],
+  ];
+
+  function tabla(d) {
+    const filas = DESCRIPTORES.map(([n, k, u, dec]) => {
+      const v = d[k];
+      const txt = (v === undefined || v === null) ? "—" : Number(v).toFixed(dec) + (u ? " " + u : "");
+      return `<tr><td>${n}</td><td>${txt}</td></tr>`;
+    }).join("");
+    // la regla de dos parámetros derivada en el Avance 1 sobre estos mismos datos
+    const cumple = d.tpsa < 67 && d.NumHBD <= 1;
+    const regla = `<div class="vm-regla">
+      <strong>Regla de dos parámetros</strong> (TPSA &lt; 67 Å² y HBD ≤ 1):
+      <strong>${cumple ? "la cumple" : "no la cumple"}</strong>.
+      <br><span style="opacity:.8">Es la regla derivada en el Avance 1 sobre el conjunto de la patrocinadora, no la predicción de un modelo.
+      Sobre las 7,805 filas etiquetadas acierta el 85.3% de los BBB+ que señala, pero solo detecta el 51.5% de ellos:
+      sirve para descartar, no para concluir.</span></div>`;
+    $("vm-desc").innerHTML = `<table>${filas}</table>${regla}`;
+  }
+
+  async function coords3d(smiles) {
+    // 1) PubChem: conformero real de un compuesto conocido. POST porque un SMILES
+    //    con / \\ @ + no sobrevive a ir en la ruta de la URL.
+    try {
+      const r = await fetch("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/SDF?record_type=3d",
+        { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "smiles=" + encodeURIComponent(smiles) });
+      if (r.ok) { const t = await r.text(); if (t.includes("$$$$")) return { sdf: t, fuente: "conformero de PubChem" }; }
+    } catch (e) { /* se intenta la siguiente */ }
+    // 2) CACTUS calcula una geometría para estructuras que PubChem no tiene
+    try {
+      const r = await fetch("https://cactus.nci.nih.gov/chemical/structure/" +
+        encodeURIComponent(smiles) + "/file?format=sdf&get3d=true");
+      if (r.ok) { const t = await r.text(); if (t.includes("$$$$")) return { sdf: t, fuente: "geometría calculada por NCI CACTUS" }; }
+    } catch (e) { /* sin 3D */ }
+    return null;
+  }
+
+  function pintar3d(sdf) {
+    const cont = $("vm-3d");
+    cont.innerHTML = "";
+    visor3d = $3Dmol.createViewer(cont, { backgroundColor: "white", backgroundAlpha: 0 });
+    visor3d.addModel(sdf, "sdf");
+    visor3d.setStyle({}, { stick: { radius: 0.13 }, sphere: { scale: 0.24 } });
+    visor3d.zoomTo();
+    visor3d.render();
+  }
+
+  async function mostrar(smiles) {
+    const mio = ++peticion;
+    smiles = (smiles || "").trim();
+    if (!smiles) { estado("Escribe un SMILES.", true); return; }
+    if (!RDKit) { estado("RDKit todavía no termina de cargar.", true); return; }
+
+    const mol = RDKit.get_mol(smiles);
+    if (!mol || !mol.is_valid()) {
+      if (mol) mol.delete();
+      $("vm-2d").innerHTML = ""; $("vm-desc").innerHTML = ""; $("vm-3d").innerHTML = "";
+      $("vm-3d-nota").textContent = "—";
+      estado("RDKit no pudo interpretar ese SMILES. Revisa paréntesis, corchetes y valencias.", true);
+      return;
+    }
+
+    $("vm-2d").innerHTML = mol.get_svg(420, 340);
+    tabla(JSON.parse(mol.get_descriptors()));
+    const atomos = mol.get_num_atoms();
+    mol.delete();
+
+    estado(`Estructura válida: ${atomos} átomos pesados. Buscando geometría 3D…`);
+    $("vm-3d").innerHTML = "";
+    $("vm-3d-nota").textContent = "Consultando…";
+
+    const r = await coords3d(smiles);
+    if (mio !== peticion) return;            // llegó una petición más nueva
+    if (r) {
+      pintar3d(r.sdf);
+      $("vm-3d-nota").textContent = r.fuente + ". Arrastra para rotar, rueda para acercar.";
+      estado(`Estructura válida: ${atomos} átomos pesados.`);
+    } else {
+      $("vm-3d").innerHTML = '<p style="opacity:.7;font-size:.85rem;text-align:center;padding:1rem">' +
+        "No se encontró geometría 3D para esta estructura.<br>El dibujo 2D y los descriptores sí son válidos.</p>";
+      $("vm-3d-nota").textContent = "Las fuentes de 3D no reconocieron el compuesto.";
+      estado(`Estructura válida: ${atomos} átomos pesados, sin geometría 3D disponible.`);
+    }
+  }
+
+  window.initRDKitModule().then(m => {
+    RDKit = m;
+    estado("RDKit " + RDKit.version() + " listo.");
+    mostrar($("vm-smiles").value);
+  }).catch(e => estado("No se pudo cargar RDKit: " + e, true));
+
+  $("vm-ver").addEventListener("click", () => mostrar($("vm-smiles").value));
+  $("vm-smiles").addEventListener("keydown", e => { if (e.key === "Enter") mostrar($("vm-smiles").value); });
+  document.querySelectorAll(".vm-ejemplos button").forEach(b =>
+    b.addEventListener("click", () => { $("vm-smiles").value = b.dataset.smi; mostrar(b.dataset.smi); }));
+})();
+</script>
+```
+
+## Qué se calcula aquí y qué no
+
+**En tu navegador, sin enviar nada:** la validación del SMILES, el dibujo 2D y los nueve descriptores. Los calcula RDKit compilado a WebAssembly, la misma biblioteca que usa el pipeline del proyecto, así que las cifras coinciden con las de los notebooks.
+
+**Fuera:** la geometría 3D. RDKit compilado para el navegador no incluye el generador de conformaciones, así que las coordenadas se piden a [PubChem](https://pubchem.ncbi.nlm.nih.gov/) y, si el compuesto no está ahí, a [NCI CACTUS](https://cactus.nci.nih.gov/). La página dice siempre de dónde salió la geometría que estás viendo. Si ninguna de las dos reconoce la estructura, el 2D y los descriptores siguen siendo válidos.
+
+**Lo que esta página no hace es predecir.** La regla de dos parámetros que aparece bajo los descriptores es un criterio descriptivo derivado en el [Avance 1](contenido/reportes/index.html), no el modelo del proyecto. Señala correctamente como BBB+ al 85.3% de los compuestos que marca, pero deja fuera a casi la mitad de los que sí cruzan: sirve para descartar, no para concluir.
