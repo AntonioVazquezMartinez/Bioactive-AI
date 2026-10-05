@@ -89,6 +89,17 @@ format:
 #pagebreak()
 ```
 
+# Introducción
+
+La barrera hematoencefálica (BBB, por sus siglas en inglés) regula el paso de sustancias entre la sangre y el encéfalo. Su permeabilidad es relevante para priorizar candidatos neuroprotectores: una molécula que no alcanza el sistema nervioso central (SNC)[^snc] difícilmente ejercerá allí un efecto directo. Sin embargo, una etiqueta BBB− no debe usarse como filtro absoluto del proyecto; la predicción de permeabilidad y la predicción de actividad biológica son evidencias complementarias, no un descarte automático.
+
+El objetivo general es estudiar compuestos bioactivos, incluidos productos naturales. Un producto natural es una sustancia producida por un organismo; molécula o compuesto designa la entidad química definida por sus átomos y enlaces. Una colección como COCONUT organiza estructuras conocidas de productos naturales. En cambio, un registro de actividad experimental describe el resultado de un ensayo y relaciona un compuesto con un sistema biológico, una medida y unas condiciones. Una estructura puede aparecer en muchos registros: contar ensayos no equivale a contar compuestos únicos. Este avance se limita a la permeabilidad BBB; el análisis de actividad neuroprotectora corresponde a otra etapa del proyecto.
+
+La glicoproteína-P puede expulsar ciertas sustancias desde las células endoteliales de la barrera hacia la sangre mediante eflujo activo,[^eflujo] lo que ayuda a entender por qué las propiedades fisicoquímicas no determinan por sí solas la concentración cerebral. Por tanto, los resultados de este EDA describen asociaciones del conjunto y no garantizan exposición cerebral ni eficacia terapéutica.
+
+[^snc]: **SNC:** sistema nervioso central, formado principalmente por el encéfalo y la médula espinal.
+[^eflujo]: **Eflujo activo mediado por glicoproteína-P:** transporte que utiliza energía para devolver ciertos compuestos desde las células endoteliales de la barrera hematoencefálica hacia la sangre; puede reducir su acumulación en el cerebro.
+
 # Alcance de este reporte
 
 El entregable formal de este avance, según las especificaciones de la actividad, es la liga al notebook ejecutado de principio a fin: [`notebooks/01_EDA.ipynb`](../../../notebooks/01_EDA.ipynb). Este documento es un acompañante en el mismo formato de reporte que el Avance 0: recoge los hallazgos del notebook organizados según los criterios de la rúbrica, con las cifras tomadas directamente de su ejecución, no recalculadas aparte.
@@ -103,9 +114,19 @@ El EDA del conjunto de actividad en SNC (etapa 2) queda pendiente para un avance
 
 # Estructura de los datos
 
-El archivo de la patrocinadora tiene **7,811 filas y 16 columnas**, un compuesto por fila, uniendo por estructura los archivos de clasificación y regresión que B3DB publica por separado. De ellas, **7,805 tienen clase asignada** y constituyen el conjunto de trabajo; las 6 restantes traen `logbb` numérico pero su fila de clasificación registró otra forma estereoquímica y no empató al unir.
+El archivo de la patrocinadora tiene **7,811 filas y 16 columnas**, un compuesto por fila, integrando información de clasificación y regresión de B3DB. De ellas, **7,805 tienen clase asignada** y constituyen el conjunto de trabajo para los análisis de clasificación. Las otras seis contienen un valor de `logbb`, pero no una clase BBB; se conservan en el archivo fuente y se excluyen de los análisis que requieren esa etiqueta. El conjunto de trabajo contiene 1,052 valores de `logbb`.
 
-De esas 16 columnas, la mayoría son de texto (identificadores, estructura, clase, referencias y los tres campos del cruce con COCONUT), dos son numéricas continuas (`logbb` y `b3db_threshold`) y una es un conteo (`coconut_matches_key14`). Ninguna es propiamente numérica-continua de entrada al modelo todavía: los descriptores fisicoquímicos —`TPSA` (área de superficie polar topológica, en Å²), `logP` (coeficiente de partición octanol-agua, mide lipofilicidad), `MW` (peso molecular), entre otros— se calculan a partir del SMILES[^smiles] en la sección de Análisis univariante, no vienen en el archivo original.
+El esquema contiene 13 columnas de texto (estructura, identificadores, clase, grupo y referencias), dos columnas numéricas de punto flotante (`logbb` y `b3db_threshold`) y un conteo entero (`coconut_matches_key14`). `logbb` es una medida continua disponible solo para parte de los registros; `b3db_threshold` almacena un umbral numérico que, en esta muestra, siempre vale −1 cuando está presente y por tanto no presenta variación. La tabla siguiente resume las tres variables numéricas originales sobre las 7,805 filas etiquetadas; el número de observaciones válidas se indica por separado para no ocultar los faltantes.
+
+| Variable | n válido | Media | DE | Mediana | Mín.–máx. |
+|:---------|---------:|------:|---:|--------:|:---------|
+| `logbb` | 1,052 | −0.08 | 0.75 | −0.01 | [−2.69, 1.70] |
+| `b3db_threshold` | 3,621 | −1.00 | 0.00 | −1.00 | [−1.00, −1.00] |
+| `coconut_matches_key14` | 7,805 | 1.70 | 3.23 | 1 | [0, 66] |
+
+: Estadísticas descriptivas de las variables numéricas originales en el conjunto etiquetado (n=7,805); DE: desviación estándar {#tbl-numericas-originales tbl-colwidths="[27,14,14,12,15,18]"}
+
+Los descriptores fisicoquímicos —`TPSA` (área de superficie polar topológica, en Å²), `logP` (coeficiente de partición octanol-agua, mide lipofilicidad), `MW` (peso molecular), entre otros— se calculan a partir del SMILES[^smiles] en la sección de Análisis univariante; no forman parte de las columnas originales.
 
 [^smiles]: Representación textual de una molécula como cadena de caracteres, sin necesidad de dibujarla; por ejemplo, `CCO` representa el etanol —dos carbonos encadenados y un oxígeno—.
 
@@ -114,20 +135,18 @@ De esas 16 columnas, la mayoría son de texto (identificadores, estructura, clas
 | Variable | Valores | Frecuencia |
 |:---------|:--------|:-----------|
 | `BBB+/BBB-` (clase) | BBB+ / BBB− | 4,956 (63.5%) / 2,849 (36.5%) — razón 1.74:1 |
-| `group` (confiabilidad) | A / B / C / D | 1,058 / 3,621 / 3,075 / 51 |
+| `group` (clasificación B3DB) | A / B / C / D | 1,058 / 3,621 / 3,075 / 51 |
+| `b3db_uncertainty_regression` | A / B / C / D / faltante | 241 / 659 / 3 / 149 / 6,753 |
 
-: Frecuencia de las variables categóricas principales {#tbl-frecuencias tbl-colwidths="[30,30,40]"}
+: Frecuencia de variables categóricas de baja cardinalidad, conjunto etiquetado (n=7,805) {#tbl-frecuencias tbl-colwidths="[36,27,37]"}
 
-B3DB agrupa sus registros en cuatro categorías pero **no publica el criterio con que las asigna**; el diccionario de la patrocinadora lo señala y advierte que filtrar “solo A” no tiene respaldo documentado. Lo verificable es el patrón dentro de estos datos:
+La categoría de incertidumbre de regresión está disponible en las 1,052 filas etiquetadas con `logbb`; sus 6,753 faltantes corresponden a registros sin esa medición. Los campos restantes de texto con muchos valores distintos —por ejemplo, nombres, identificadores de estructura y referencias— se tratan como identificadores o metadatos de procedencia, no como categorías predictoras ordinarias.
 
-| Grupo | Significado |
-|:--|:--|
-| A | Tiene logBB numérico medido |
-| B | Las fuentes declararon el umbral −1 y coincidieron |
-| C | No hay valor ni umbral; casi todas con una sola referencia |
-| D | No hay valor ni umbral, pero con **3 o más referencias** |
+B3DB agrupa sus registros en cuatro categorías, pero **no publica el criterio completo con que las asigna**; el diccionario de la patrocinadora advierte que filtrar “solo A” no tiene respaldo documentado. En la muestra etiquetada, A reúne 1,058 filas (1,052 con `logbb` y 6 sin ese valor); B reúne 3,621 filas, todas con `b3db_threshold` = −1; C comprende 3,075 filas sin `logbb` ni umbral y con mediana de una referencia; D comprende 51 filas con esas mismas ausencias y mediana de tres referencias. Son patrones observados, no una escala validada de calidad o confiabilidad.
 
-![Distribución de clases, de grupos de confiabilidad, y balance de clases dentro de cada grupo.](fig-clases.png){#fig-clases width=100%}
+Las seis filas sin clase también tienen `logbb`, pero su categoría `group` está vacía; por eso no se incluyen en las frecuencias anteriores. El grupo está asociado con la distribución de clases y no debe interpretarse como orden de calidad. Se conserva para describir y estratificar los análisis, no como regla automática para excluir observaciones.
+
+![Frecuencia de clases, categorías B3DB A–D y balance de clases dentro de cada categoría.](fig-clases.png){#fig-clases width=100%}
 
 ## Valores faltantes por columna
 
@@ -146,13 +165,13 @@ De las 16 columnas, 8 tienen huecos:
 
 : Valores faltantes por columna, conjunto de trabajo (n=7,805) {#tbl-faltantes tbl-colwidths="[42,29,29]"}
 
-Los huecos no son errores: son estructurales. Las cuatro columnas que faltan en el 86.5% son las del lado de **regresión**, y faltan exactamente en los compuestos que no traen logBB medido —solo 1,058 lo traen—. `b3db_threshold` falta en los grupos A, C y D, que no declaran un umbral numérico. Los dos campos de COCONUT faltan en los compuestos sin equivalente natural conocido, lo cual es información en sí misma y se explota más adelante. `compound_name` es el único hueco de metadato puro, y no se usa para modelar.
+Los faltantes de las cuatro columnas del lado de **regresión** (6,753; 86.5%) coinciden con las 6,753 filas sin `logbb` entre las 7,805 etiquetadas. En el archivo completo hay 1,058 valores de `logbb`, pero seis corresponden a filas sin clase y quedan fuera del conjunto de trabajo; por eso aquí se cuentan 1,052. `b3db_threshold` falta en A, C y D; todos los valores presentes (3,621) corresponden a B y son −1. Los campos de COCONUT faltan cuando no hay coincidencia estructural para el tipo de cruce correspondiente. `compound_name` es un metadato descriptivo que no se usa para modelar.
 
 Las columnas que sí importan para el modelo —`smiles_std`, `bbb_class`, `inchikey`, `key14` y `b3db_uncertainty_classification`— **no tienen ningún faltante**.
 
 ## El tamaño efectivo es menor que el número de filas
 
-Al recalcular el InChIKey[^inchikey] desde el SMILES con RDKit quedan **3 pares duplicados por InChIKey completo** —ampicilina con sultamicilina (un profármaco cuya estructura estandarizada colapsa en la del fármaco), más colestipol y probenecid repetidos—, los tres con la misma etiqueta en ambas filas, así que no introducen conflicto.
+Al recalcular el InChIKey[^inchikey] desde el SMILES con RDKit quedan **3 filas redundantes por InChIKey completo**: una asociada a ampicilina/sultamicilina tras la estandarización estructural y dos registros repetidos de otros compuestos. Las etiquetas coinciden en cada estructura duplicada, así que no introducen conflicto.
 
 El problema real está un nivel más abajo: **3,787 duplicados por esqueleto de conectividad** (los primeros 14 caracteres del InChIKey, que ignoran estereoquímica). El conjunto tiene **4,018 esqueletos únicos en 7,805 filas**: una molécula como el ácido fusídico aparece nueve veces, como estereoisómeros[^estereoisomero] o con nombres distintos. **131 esqueletos (429 compuestos, 5.5%) tienen etiquetas BBB+/BBB− contradictorias entre sus propios estereoisómeros.**
 
@@ -217,6 +236,12 @@ Dos pares destacan:
 
 **Consecuencia para el Avance 2.** Al construir la matriz de características no conviene tratar estos descriptores como señales independientes; un método de selección debería descartar la redundancia entre MW y HeavyAtoms antes de entrenar, en vez de dejar que el modelo la absorba sin control.
 
+## Relaciones bivariantes entre descriptores y clase
+
+La matriz de Spearman cuantifica la asociación entre pares de descriptores, pero no muestra por sí sola cómo se distribuyen conjuntamente las observaciones frente a la etiqueta. El gráfico @fig-relaciones complementa ese resumen con TPSA frente a logP y MW frente a HBD, coloreados por clase BBB. Para mantener legible la nube se representa una muestra aleatoria reproducible de hasta 4,000 observaciones; las estadísticas y correlaciones del notebook se calculan sobre el conjunto de trabajo completo. Las clases se solapan en ambos planos, aunque BBB+ tiende a concentrarse en valores menores de TPSA, MW y HBD. Estos patrones son descriptivos y no establecen causalidad ni un límite de decisión validado.
+
+![Relación entre TPSA y logP, y entre MW y HBD, coloreada por etiqueta BBB en una muestra reproducible del conjunto de trabajo.](fig-relaciones.png){#fig-relaciones width=100%}
+
 ## Productos naturales contra sintéticos
 
 El cruce con COCONUT que trae el conjunto de la patrocinadora permite separar los compuestos de origen natural de los sintéticos. Es la pregunta central del proyecto: los compuestos que se quieren priorizar son productos naturales.
@@ -259,13 +284,13 @@ Dos implicaciones para el modelado:
 
 ## Estructuras inválidas
 
-**Los 7,811 SMILES del archivo de la patrocinadora parsean en RDKit sin excepción.** La curación ya retiró las estructuras rotas, y eso se puede verificar de forma independiente: en el archivo crudo de B3DB que el equipo descargó por su cuenta, dos SMILES de los 7,807 no parsean (`[C+]` con cuatro enlaces explícitos, una carga imposible; ambos del grupo C, el de menor confiabilidad, y con la misma estructura inválida bajo nombres de fármacos sin relación entre sí). Ninguno de los dos sobrevive en el archivo de la patrocinadora.
+**Los 7,811 SMILES del archivo de la patrocinadora parsean en RDKit sin excepción.** Como verificación complementaria, dos registros del archivo de clasificación crudo de B3DB no parsean. Al ser inválidos, sus estructuras no se pueden comparar mediante RDKit; por tanto, no se infiere que sean la misma molécula ni se usa esa anomalía para asignar confiabilidad a sus grupos. Ninguno de esos dos SMILES aparece en el archivo curado de la patrocinadora.
 
 La reducción de 7,811 a **7,805** no viene entonces de estructuras inválidas, sino de las 6 filas sin clase asignada señaladas en Estructura de los datos.
 
 ## Deduplicación
 
-Como se documentó en Estructura de los datos, la deduplicación por InChIKey completo encuentra solo 3 pares, todos con etiquetas coincidentes, pero el esqueleto de conectividad sí revela redundancia estructural real (4,018 esqueletos en 7,805 filas). **No se eliminan filas por esto**: el **scaffold split**[^scaffold] que se construirá en el Avance 2 agrupa por esqueleto, lo cual resuelve el problema sin perder información.
+Como se documentó en Estructura de los datos, la deduplicación por InChIKey completo identifica tres filas redundantes, sin etiquetas contradictorias. El esqueleto de conectividad revela redundancia estructural más amplia (4,018 esqueletos únicos en 7,805 filas). **No se eliminan filas por esto**: el **scaffold split**[^scaffold] que se construirá en el Avance 2 agrupa por esqueleto y evita repartir estructuras relacionadas entre particiones.
 
 [^scaffold]: Partición que agrupa las moléculas por su **andamio de Murcko** —el esqueleto de anillos y los enlaces que los conectan, sin los grupos sustituyentes que cuelgan de él— y reparte andamios completos entre entrenamiento y prueba, en vez de repartir filas al azar [@bemis1996properties].
 
@@ -291,33 +316,38 @@ La regla de Tukey marca como atípico todo valor fuera de [Q1 − 1.5×RIC, Q3 +
 
 Los extremos corresponden a estructuras reales, no a errores: ya pasaron el filtro de validez de SMILES. En el extremo superior de MW aparecen antibióticos glicopeptídicos (*teichomycin*, gramicidina), grandes y polares, casi todos BBB−. En el inferior están gases y elementos (metano, agua, nitrógeno, litio, neón), BBB+ por su tamaño mínimo. En el extremo de logP aparecen carotenoides y ésteres de retinol, compuestos naturales muy lipofílicos y BBB−.
 
-**Decisión: no se recortan ni transforman.** Tres razones: (1) son estructuras válidas, no errores de parseo; (2) los modelos de ensamble que adopta este proyecto (Random Forest, XGBoost) son robustos a valores extremos por construcción; y (3) recortarlos sesgaría el conjunto en contra de los productos naturales, que tienden a ser más grandes y complejos que los sintéticos —justo el tipo de compuesto que el proyecto quiere puntuar—.
+**Decisión: no se recortan ni transforman en esta etapa.** Tres razones: (1) son estructuras válidas, no errores de parseo; (2) los modelos de árboles previstos no requieren normalizar los descriptores, aunque su efecto se comprobará durante la validación; y (3) recortarlos sesgaría el conjunto en contra de los productos naturales, que tienden a ser más grandes y complejos que los sintéticos —justo el tipo de compuesto que el proyecto quiere puntuar—. La conservación no supone que cualquier extremo sea inocuo: se inspeccionan los casos y se evaluará su influencia sin decidir transformaciones con datos de prueba.
 
 > **Nota sobre HBA.** Su 10% de atípicos por la regla de Tukey es la proporción más alta de la tabla, pero HBA es un conteo entero de distribución sesgada a la derecha: la regla es más agresiva en variables así, no es evidencia de más error.
 
 ## Alta cardinalidad
 
-No aplica: la única variable categórica relevante, `group`, tiene 4 clases.
+La variable categórica `group` tiene cuatro clases, por lo que no presenta cardinalidad alta. El archivo sí contiene campos de elevada cardinalidad —por ejemplo, nombres, SMILES, InChIKey, `key14` y referencias—, pero son identificadores, estructuras o metadatos de procedencia, no categorías predictoras ordinarias. Se conservan para trazabilidad, deduplicación y agrupación de particiones; no se codifican como variables de entrada, pues permitirían memorizar registros en lugar de aprender patrones generalizables.
 
 # Conclusiones
 
-1. **El tamaño efectivo del conjunto es ~4,018 entidades, no 7,805.** Hay que reportar ambas cifras y construir la partición del Avance 2 por esqueleto de conectividad, no de forma aleatoria.
-2. **Los grupos A–D no sirven como filtro de calidad.** El grupo D tiene más respaldo bibliográfico que el C (mediana de 3 referencias contra 1) y no hay un solo registro duplicado con etiquetas contradictorias (las contradicciones que sí existen son entre estereoisómeros, no entre copias del mismo compuesto). Además, el grupo está correlacionado con la etiqueta: filtrar a A+B baja la clase minoritaria del 36.5% al 27.0%, empeorando el desbalance en vez de limpiar ruido. **Se usará como variable de estratificación, no de exclusión.**
-3. **TPSA, HBD y HBA discriminan bien, pero miden en buena parte lo mismo** (ρ hasta 0.89 entre ellos), y MW/HeavyAtoms son casi la misma variable (ρ = 0.98). El umbral óptimo de TPSA no es transferible entre subconjuntos: 66.6 Å² en el grupo A, 83.6 Å² en A+B, 101.9 Å² en el completo.
-4. **Los valores atípicos son diversidad estructural real** (antibióticos grandes, gases pequeños, carotenoides lipofílicos), no errores, y se conservan sin transformar dado que el proyecto usa modelos de ensamble.
-5. **Desbalance de 1.74:1** (2.70:1 en A+B): se usarán **MCC** (coeficiente de correlación de Matthews) y **AUPRC** (área bajo la curva de precisión-exhaustividad) como métricas principales [@chicco2020; @saito2015], no exactitud ni AUROC solos.
-6. **El scaffold split es viable**: 2,126 andamios de Murcko distintos, 53.2% únicos, sin andamio dominante [@wu2018moleculenet].
-7. **Los productos naturales cruzan la barrera menos que los sintéticos** (52.7% contra 71.7% BBB+) y las reglas fisicoquímicas explican solo un tercio de esa diferencia. Como son los compuestos a priorizar, el desempeño debe reportarse por separado en ambos grupos.
-8. **El conjunto de validación externa (Spielvogel et al.) necesita trabajo previo**: no trae SMILES ni InChI, solo nombres; hay que resolverlos antes de poder usarlo.
+El análisis de la fuente curada por la patrocinadora confirma que la unidad estadística requiere más cuidado que el simple conteo de filas. De las 7,811 filas del archivo, 7,805 tienen etiqueta BBB; las seis restantes contienen `logbb`, pero carecen de clase BBB y se excluyen de los análisis de clasificación, sin atribuir la falta de etiqueta a una causa no documentada. Aunque los SMILES de la fuente curada son parseables, tres filas adicionales repiten un InChIKey completo y, al agrupar por conectividad, se obtienen 4,018 esqueletos únicos. Además, 131 esqueletos —que comprenden 429 registros— reúnen estereoisómeros con etiquetas distintas. Por ello, las filas no deben considerarse observaciones independientes sin matices, y la partición para modelado debe impedir que estructuras relacionadas queden a ambos lados de entrenamiento y prueba.
 
-Ningún número de este documento se toma de la literatura como meta de desempeño; el Avance 3 construirá su propio baseline, siguiendo la validación externa genuina que recomienda la metodología [@golbraikh2002].
+La prevalencia BBB+ es de 63.5% en las observaciones etiquetadas, pero varía notablemente entre las categorías A–D. B3DB no publica el criterio completo de asignación de esos grupos y el análisis no sustenta interpretarlos como una escala de calidad: por ejemplo, D tiene una mediana de tres referencias frente a una en C, mientras que la frecuencia de BBB− difiere considerablemente entre categorías. Tampoco se hallaron etiquetas contradictorias entre duplicados exactos; los desacuerdos detectados aparecen entre estereoisómeros con conectividad compartida. En consecuencia, `group` se conserva como variable descriptiva y posible estrato de análisis de sensibilidad, no como filtro automático ni como etiqueta de confiabilidad. La procedencia debe acompañar las métricas para no atribuir al modelo diferencias que podrían deberse a las fuentes de evidencia.
+
+Los descriptores fisicoquímicos muestran señales exploratorias compatibles con la permeabilidad: TPSA, HBD y HBA presentan las mayores AUC univariantes en el conjunto A+B, mientras que sus correlaciones de Spearman —hasta 0.89— indican que capturan aspectos parcialmente redundantes de la polaridad. MW y HeavyAtoms también están estrechamente asociados (ρ = 0.98). Estos resultados justifican evaluar conjuntamente los descriptores y controlar su redundancia, pero no prueban que cada uno aporte evidencia independiente. Las AUC y los umbrales se calcularon sobre los mismos datos explorados; por lo tanto, son descripciones del conjunto y no estimaciones de generalización. La variación del umbral óptimo de TPSA entre subconjuntos refuerza que no debe presentarse como una constante biológica universal.
+
+El cruce con COCONUT permite responder una pregunta central del proyecto: en esta muestra, 52.7% de los productos naturales son BBB+, frente a 71.7% de los compuestos sin equivalente natural identificado. La regla basada en TPSA y HBD muestra una brecha menor entre ambos grupos que la observada en sus etiquetas, de modo que los descriptores incluidos no bastan para explicar la diferencia. Esta observación no identifica su causa: puede reflejar características químicas no resumidas por esos descriptores, mecanismos como el eflujo o diferencias en qué compuestos fueron ensayados. Dado que los productos naturales son el foco de priorización, el desempeño futuro deberá reportarse por separado según el origen, además del resultado global.
+
+La distribución de andamios —2,126 núcleos Bemis–Murcko, 53.2% observados una sola vez— y la pureza de clase extrema de algunos grupos estructurales hacen preferible evaluar la generalización con particiones agrupadas por andamio, no con una división aleatoria de filas. Los 311 compuestos acíclicos requieren una política reproducible de asignación. Asimismo, los valores marcados por la regla de Tukey son alertas para inspección, no errores por definición; no se recortaron ni eliminaron, pues la validez de una estructura no se decide por su distancia estadística al centro de la distribución. El conjunto externo de Spielvogel conserva 68 positivos, 42 negativos y 44 casos de eflujo, pero carece de SMILES e InChI y aún no permite una evaluación estructural comparable.
+
+En conjunto, el EDA establece una base trazable para diseñar el modelado y señala limitaciones de identidad química, dependencia estructural y heterogeneidad de fuentes. No demuestra todavía rendimiento predictivo ni causalidad. La siguiente etapa deberá usar particiones por estructura, ajustar cualquier selección o umbral únicamente dentro de los datos de entrenamiento y reportar métricas complementarias como MCC y AUPRC junto con sensibilidad y especificidad [@chicco2020; @saito2015]. Si las asociaciones observadas no se sostienen en compuestos no vistos, la ausencia de un patrón generalizable deberá comunicarse como tal, sin ajustar el análisis para obtener una estimación favorable [@wu2018moleculenet; @golbraikh2002].
 
 # Próximos pasos: Avance 2
 
 1. Descriptores RDKit (217) más Morgan/ECFP4 de 2048 bits.
 2. Construir el scaffold split agrupando por andamio de Murcko, verificando que los estereoisómeros del mismo esqueleto no se separen.
 3. Resolver la redundancia entre descriptores (MW/HeavyAtoms, TPSA/HBA/HBD) antes de seleccionar variables.
-4. Rederivar los umbrales de verificación sobre A+B, no usar los publicados.
+4. Estimar cualquier umbral de verificación dentro de entrenamiento y reportar su estabilidad entre grupos, sin excluir observaciones por `group`.
+
+```{=typst}
+#pagebreak()
+```
 
 ::: {#refs}
 :::
