@@ -4,6 +4,7 @@ project:
   pre-render: python3 scripts/prepare_site.py
   render:
     - index.qmd
+    - visualizador.qmd
     - bibliografia.qmd
     - contenido/**/*.md
     - contenido/notebooks/01_EDA.ipynb
@@ -60,6 +61,8 @@ website:
             text: "Avance 2 · Características"
       - href: contenido/reportes/index.md
         text: Entregables
+      - href: visualizador.qmd
+        text: Visualizador
       - href: contenido/datos.md
         text: Datos
       - href: bibliografia.qmd
