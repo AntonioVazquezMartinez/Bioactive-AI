@@ -32,9 +32,18 @@ REPO = "https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main"
 
 # (origen, destino relativo a contenido/, subtítulo)
 DOCUMENTOS = [
-    ("docs/planteamiento/marco-teorico.md",
-     "planteamiento/marco-teorico.md",
-     "Fundamentos biológicos y computacionales del proyecto"),
+    ("docs/planteamiento/marco-teorico/README.md",
+     "planteamiento/marco-teorico/index.md",
+     "Los fundamentos del proyecto, en tres partes"),
+    ("docs/planteamiento/marco-teorico/01-biologia.md",
+     "planteamiento/marco-teorico/01-biologia.md",
+     "La barrera, las enfermedades y los productos naturales"),
+    ("docs/planteamiento/marco-teorico/02-metodos-computacionales.md",
+     "planteamiento/marco-teorico/02-metodos-computacionales.md",
+     "De la estructura química a una tabla que un modelo consuma"),
+    ("docs/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md",
+     "planteamiento/marco-teorico/03-modelado-y-explicabilidad.md",
+     "Qué se ha hecho, cómo se justifica y qué falta"),
     ("docs/planteamiento/reunion-2026-09-22.md",
      "planteamiento/reunion-2026-09-22.md",
      "Notas de la primera reunión con los asesores"),
@@ -125,6 +134,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
                    rf"]({subir_c}notebooks/\1.html)", texto)
     # README.md de referencias -> index.html
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
+    texto = re.sub(r"\]\(((?:\.\./)*)marco-teorico/README\.md\)", r"](\1marco-teorico/index.html)", texto)
     # el README de los datos se publica como datos.html en la raíz de contenido/
     texto = re.sub(r"\]\((?:\.\./)*data/external/README\.md\)", f"]({subir_c}datos.html)", texto)
     # los archivos de data/external/profesora/ NO se publican en el sitio: son

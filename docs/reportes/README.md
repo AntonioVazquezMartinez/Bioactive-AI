@@ -29,6 +29,8 @@ Tres resultados vale la pena destacar:
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
 | Avance 2 · Ingeniería de características | 11 de octubre | Ingeniería de datos (b) |
+
+El Avance 2 ya tiene [notebook en curso](../../notebooks/02_Feature_Eng.ipynb): descriptores, fingerprints y la partición por andamio.
 | Avance 3 · Modelo de referencia | 18 de octubre | Ingeniería del modelo (a) |
 | Avance 4 · Modelos alternativos | 25 de octubre | Ingeniería del modelo (b) |
 | Avance 5 · Ensambles | 1 de noviembre | Ingeniería del modelo (c) |
