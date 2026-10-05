@@ -28,6 +28,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 BUILD = RAIZ / "contenido"
 BIB = RAIZ / "docs" / "referencias" / "bibliografia.bib"
+REPO = "https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main"
 
 # (origen, destino relativo a contenido/, subtítulo)
 DOCUMENTOS = [
@@ -117,7 +118,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
     subir_c = "../" * (profundidad - 1)      # hasta la raíz de contenido/
 
     # la bibliografía .bib se publica como bibliografia.html en la raíz
-    texto = re.sub(r"\]\((?:\.\./)*(?:docs/referencias/)?bibliografia\.bib\)",
+    texto = re.sub(r"\]\((?:\.\./)*(?:docs/)?(?:referencias/)?bibliografia\.bib\)",
                    f"]({subir}bibliografia.html)", texto)
     # los notebooks quedan en contenido/notebooks/
     texto = re.sub(r"\]\((?:\.\./)*notebooks/([\w.]+)\.ipynb\)",
@@ -126,6 +127,12 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
     # el README de los datos se publica como datos.html en la raíz de contenido/
     texto = re.sub(r"\]\((?:\.\./)*data/external/README\.md\)", f"]({subir_c}datos.html)", texto)
+    # los archivos de data/external/profesora/ NO se publican en el sitio: son
+    # el CSV de la patrocinadora, su diccionario y su README, que viven solo en
+    # el repositorio. Un enlace relativo a ellos resuelve en GitHub pero queda
+    # roto en el sitio, así que se apunta al repositorio.
+    texto = re.sub(r"\]\((?:\.\./)*data/external/profesora/([^)]+)\)",
+                   rf"]({REPO}/data/external/profesora/\1)", texto)
     texto = re.sub(r"\]\(README\.md\)", "](index.html)", texto)
     # cualquier otro .md del proyecto -> .html
     texto = re.sub(r"\]\(((?:\.\./)*(?:docs/)?[\w/-]+)\.md\)", r"](\1.html)", texto)
