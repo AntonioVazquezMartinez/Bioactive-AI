@@ -58,6 +58,9 @@ DOCUMENTOS = [
     ("data/external/README.md",
      "datos.md",
      "Procedencia, licencias y advertencias de los datos descargados"),
+    ("docs/glosario.md",
+     "glosario.md",
+     "Los términos de química, datos y modelado que usa el proyecto"),
     ("docs/reportes/README.md",
      "reportes/index.md",
      "Los reportes entregados en el Proyecto Integrador"),
@@ -121,6 +124,8 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
                    rf"]({subir_c}notebooks/\1.html)", texto)
     # README.md de referencias -> index.html
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
+    # el README de los datos se publica como datos.html en la raíz de contenido/
+    texto = re.sub(r"\]\((?:\.\./)*data/external/README\.md\)", f"]({subir_c}datos.html)", texto)
     texto = re.sub(r"\]\(README\.md\)", "](index.html)", texto)
     # cualquier otro .md del proyecto -> .html
     texto = re.sub(r"\]\(((?:\.\./)*(?:docs/)?[\w/-]+)\.md\)", r"](\1.html)", texto)

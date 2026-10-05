@@ -26,6 +26,8 @@ website:
     left:
       - href: index.qmd
         text: Inicio
+      - href: contenido/glosario.md
+        text: Glosario
       - href: contenido/planteamiento/marco-teorico.md
         text: Marco teórico
       - text: Investigación
