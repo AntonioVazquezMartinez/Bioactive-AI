@@ -1,0 +1,253 @@
+---
+title: "Bioactive AI"
+subtitle: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector"
+author: "Equipo 7 · Ingrid Pamela Ruiz Puga · Artemio Santiago Padilla Robles · José Antonio Vázquez Martínez"
+institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey"
+date: last-modified
+date-format: "D [de] MMMM [de] YYYY"
+lang: es
+bibliography: docs/referencias/bibliografia.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+format:
+  revealjs:
+    theme: [default, estilos-slides.scss]
+    slide-number: c/t
+    show-slide-number: all
+    transition: fade
+    controls: true
+    progress: true
+    hash: true
+    history: true
+    preview-links: auto
+    link-external-newwindow: true
+    width: 1280
+    height: 760
+    center: false
+    menu:
+      side: left
+      numbers: true
+---
+
+## De qué trata {.smaller}
+
+A partir del **SMILES** de un compuesto —su estructura química escrita como texto— predecir y priorizar productos naturales con potencial neuroprotector.
+
+::: {.columns}
+::: {.column width="50%"}
+### Etapa 1 · ¿Cruza la barrera?
+
+Clasificar si el compuesto atraviesa la **barrera hematoencefálica**.
+
+7,805 compuestos con clase medida.
+:::
+::: {.column width="50%"}
+### Etapa 2 · ¿Tiene efecto?
+
+Predecir actividad sobre dianas asociadas a neuroprotección, y cuál.
+
+202,647 registros · 39 dianas.
+:::
+:::
+
+::: {.callout-important}
+La etapa 1 **no es un filtro duro**. Un BBB− no descarta al compuesto: existen profármacos, lipidización y nanoacarreadores. Las dos salidas se combinan al final.
+:::
+
+Sobre ambas pesa un requisito que la patrocinadora planteó como no negociable: **explicabilidad a nivel de subestructura**.
+
+## Cómo fluyen los datos
+
+```{mermaid}
+%%| fig-width: 11
+flowchart LR
+    A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
+    A --> C["Fingerprint ECFP4<br/>2,048 bits"]
+    B --> D["Tabla de<br/>características"]
+    C --> D
+    D --> E["Etapa 1<br/>permeabilidad"]
+    D --> F["Etapa 2<br/>actividad"]
+    E --> G["Priorización con<br/>atribución a fragmentos"]
+    F --> G
+```
+
+# Avance 1 · Lo que encontramos en los datos {background-color="#2a3441"}
+
+## El tamaño efectivo es la mitad {.smaller}
+
+::: {.columns}
+::: {.column width="55%"}
+El conjunto tiene **7,805 filas** pero solo **4,018 esqueletos de conectividad** distintos.
+
+El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres distintos.
+
+**131 esqueletos** reúnen estereoisómeros con etiquetas BBB **contradictorias** entre sí.
+:::
+::: {.column width="45%"}
+| | |
+|---|---:|
+| Filas | 7,805 |
+| Estructuras reales | **4,018** |
+| Duplicados por esqueleto | 3,787 |
+:::
+:::
+
+**Consecuencia:** la partición agrupa por estructura y nunca reparte filas al azar. Un *split* aleatorio pondría estereoisómeros del mismo compuesto a ambos lados.
+
+## Las categorías A–D no son una escala de calidad
+
+La investigación inicial recomendaba entrenar solo con A+B, leyendo las categorías de B3DB como confiabilidad. **Medir lo desmintió.**
+
+| | Grupo C | Grupo D |
+|:--|--:|--:|
+| Referencias (mediana) | 1 | **3** |
+
+Y la columna está **confundida con la etiqueta**:
+
+::: {.callout-warning}
+Filtrar a A+B baja la clase minoritaria del **36.5% al 27.0%**. Empeora el desbalance en vez de limpiar ruido.
+:::
+
+Se usa para **estratificar, nunca para excluir**. El conjunto de entrenamiento creció 67%.
+
+## Los productos naturales cruzan menos {.smaller}
+
+::: {.columns}
+::: {.column width="48%"}
+| Origen | n | % BBB+ |
+|:--|--:|--:|
+| Sintético | 4,439 | 71.7 |
+| **Natural** | 3,366 | **52.7** |
+
+Una diferencia de **18.9 puntos**.
+:::
+::: {.column width="52%"}
+Pero la regla fisicoquímica TPSA < 67 Å² y HBD ≤ 1 solo explica **6.6 puntos**.
+
+La química da cuenta de **un tercio**. El resto puede ser eflujo activo, o sesgo en qué compuestos han llegado a ensayarse.
+:::
+:::
+
+::: {.callout-important}
+Como son los compuestos a priorizar, el desempeño tendrá que **reportarse por separado** en ambos grupos.
+:::
+
+# Avance 2 · Características y partición {background-color="#2a3441"}
+
+## La partición, verificada sin fuga {.smaller}
+
+| Partición | n | Andamios | % BBB+ |
+|:--|--:|--:|--:|
+| Entrenamiento | 5,557 | 1,741 | 64.0 |
+| Validación | 749 | 498 | 72.0 |
+| **Prueba** | 1,499 | **1,390** | **57.3** |
+
+**Cero andamios y cero esqueletos cruzados.** La prueba tiene casi un andamio por molécula.
+
+La prueba quedó con 57.3% BBB+ contra 64.0% del entrenamiento: **los andamios raros son menos permeables**. El modelo se evalúa sobre una distribución distinta de aquella en la que aprendió, que es la situación realista.
+
+## El umbral de TPSA no es una constante {.smaller}
+
+| Medición | Umbral óptimo |
+|:--|--:|
+| Publicado (n=1,058) | 66.8 Å² |
+| Avance 1, sobre A+B | 83.6 Å² |
+| Avance 1, conjunto completo | 101.9 Å² |
+| **Avance 2, solo entrenamiento** | **107.0 Å²** |
+
+Cuatro subconjuntos del mismo dataset, cuatro umbrales que difieren en 40 Å².
+
+::: {.callout-note}
+No es una constante de la barrera hematoencefálica: es el óptimo de un subconjunto particular. Se usa el derivado del entrenamiento, y se reporta sobre qué subconjunto se midió cada cifra.
+:::
+
+# Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
+
+## Las dos etapas casi no comparten compuestos
+
+::: {.columns}
+::: {.column width="55%"}
+| | Esqueletos |
+|:--|--:|
+| Con permeabilidad | 4,018 |
+| Con actividad | 99,585 |
+| **En ambos** | **1,033** |
+:::
+::: {.column width="45%"}
+El **1.0%** del conjunto de actividad.
+:::
+:::
+
+La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto. Para el otro 99%, la permeabilidad sería una **predicción sin verificar**.
+
+Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
+
+## El etiquetado deja fuera lo que queremos estudiar {.smaller}
+
+El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente por él descarta:
+
+| Qué se pierde | Registros |
+|:---|---:|
+| NPASS y CMAUP, las bases de **productos naturales** | 15,293 |
+| Mediciones **censuradas** (`> X nM`) | 54,498 |
+| **Inactivos declarados por texto** | 29,730 |
+
+**Solución: etiquetar por tres vías.** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 de los naturales— e inactivo declarado para textos y censurados con corte ≥ 10 µM.
+
+::: {.callout-note}
+Con las tres vías aplicadas, el umbral pChEMBL ≥ 5 deja el conjunto casi equilibrado: 61.7% de activos, razón 1.6 a 1.
+:::
+
+# Cómo trabajamos {background-color="#2a3441"}
+
+## Las decisiones se registran, y algunas se revierten {.smaller}
+
+Doce decisiones técnicas con su contexto, lo que se descartó y lo que cuesta, en el [registro de decisiones](contenido/decisiones.html).
+
+**Dos se revirtieron al medir:**
+
+::: {.columns}
+::: {.column width="50%"}
+**Filtrar por grupo A–D**
+
+Recomendado por la investigación, desmentido por el EDA. La versión anterior sigue visible y marcada.
+:::
+::: {.column width="50%"}
+**Invertir el umbral de etiquetado**
+
+Propuesto tras ver 6.7:1, retractado al recalcular con las tres vías: el desbalance era un artefacto.
+:::
+:::
+
+::: {.callout-important}
+«No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
+:::
+
+## Estado y calendario {.smaller}
+
+| Entrega | Fecha | Estado |
+|:--|:--|:--|
+| Avance 0 · Propuesta | 27 sep | ✅ entregado |
+| Avance 1 · EDA | 4 oct | ✅ entregado |
+| **Avance 2 · Características** | **11 oct** | notebook listo |
+| Avance 3 · Modelo de referencia | 18 oct | pendiente |
+| Avance 4 · Modelos alternativos | 25 oct | pendiente |
+| Avance 5 · Ensambles | 1 nov | pendiente |
+
+**Decisiones abiertas que bloquean el Avance 3:** si reservar los 1,033 compuestos comunes —cuesta el 25.7% de la etapa 1—, y el diseño del experimento PAINS.
+
+## Lo que falta antes de reportar candidatos
+
+1. **Filtro PAINS**, con la evidencia empírica de promiscuidad de nuestros propios datos. La curcumina aparece contra 32 dianas distintas cuando el compuesto mediano toca 1.
+2. **Resolver los 154 nombres de Spielvogel** a estructura: es la única validación externa genuina que tenemos.
+3. **Cuantificar el techo** que imponen los 131 esqueletos con etiquetas contradictorias.
+
+::: {.callout-caution}
+Las conclusiones se formularán como **actividad predicha según mecanismo molecular**, nunca como neuroprotección demostrada. De 1,026 tratamientos neuroprotectores probados en ictus, ninguno mostró eficacia clínica establecida.
+:::
+
+## Gracias {.center}
+
+**Bioactive AI** · Equipo 7
+
+Todo el proyecto, con sus datos, sus notebooks y sus decisiones, en
+[antoniovazquezmartinez.github.io/Bioactive-AI](https://antoniovazquezmartinez.github.io/Bioactive-AI/)

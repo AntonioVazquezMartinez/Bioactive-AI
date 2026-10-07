@@ -74,6 +74,9 @@ DOCUMENTOS = [
     ("docs/linaje-datos.md",
      "linaje-datos.qmd",   # .qmd: lleva diagramas de mermaid, que Quarto trata como código
      "De dónde sale cada número y qué sustenta cada decisión"),
+    ("docs/decisiones.md",
+     "decisiones.md",
+     "Qué se decidió, qué se descartó y qué cambió al medir"),
     ("docs/reportes/README.md",
      "reportes/index.md",
      "Los reportes entregados en el Proyecto Integrador"),
