@@ -15,6 +15,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 RAIZ = Path(__file__).resolve().parents[1]
 SITIO = RAIZ / "_site"
@@ -23,9 +24,13 @@ EXTERNOS = ("http://", "https://", "//", "mailto:", "tel:", "javascript:", "data
 
 
 def enlaces(html: str) -> set[str]:
-    """Los href y src del documento, sin ancla ni cadena de consulta."""
+    """Los href y src del documento, sin ancla ni cadena de consulta.
+
+    Se decodifica el porcentaje —`%20` y compañía— porque en disco el archivo
+    lleva el espacio literal, y un enlace sin decodificar daría falso positivo.
+    """
     crudos = re.findall(r'(?:href|src)="([^"]+)"', html)
-    return {h.split("#")[0].split("?")[0] for h in crudos
+    return {unquote(h.split("#")[0].split("?")[0]) for h in crudos
             if h and not h.startswith(EXTERNOS)}
 
 
@@ -39,7 +44,11 @@ def main() -> int:
         base = os.path.dirname(f)
         for destino in enlaces(open(f, encoding="utf-8").read()):
             revisados += 1
-            if not os.path.exists(os.path.normpath(os.path.join(base, destino))):
+            # una ruta absoluta es relativa a la raíz del sitio, no del sistema:
+            # os.path.join descartaría la base y daría un falso positivo
+            raiz = SITIO if destino.startswith("/") else base
+            ruta = os.path.normpath(os.path.join(raiz, destino.lstrip("/")))
+            if not os.path.exists(ruta):
                 rotos.append(f"{os.path.relpath(f, SITIO)} -> {destino}")
 
     print(f"{len(paginas)} páginas · {revisados} enlaces internos revisados")

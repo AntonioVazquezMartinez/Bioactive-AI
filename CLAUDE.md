@@ -44,6 +44,8 @@ What exists:
 
 Open work lives in GitHub issues, labelled by which deliverable it blocks. Open decisions live in `docs/decisiones.md`. Neither belongs in this file.
 
+Each report folder reaches the bibliography and the CSL through a **symlink** to `docs/referencias/`, because typst refuses paths outside its own root and three copies had already drifted apart. Symlinks work on Linux and macOS; on native Windows without developer mode git checks them out as text files holding the path, and typst then fails on an invalid bibliography. Work on Linux, macOS or WSL.
+
 Reports are rendered with Quarto to typst (no LaTeX). The rubric wants a cover page *and* a table of contents as separate pages, which Quarto's `toc` puts adjacent — hence the raw typst block at the top of each `.qmd`. Check every page of a rendered PDF before calling it done; typst sizes table columns by header length and silently produces broken tables.
 
 ## Intended layout and workflow
