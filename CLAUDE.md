@@ -38,7 +38,7 @@ What exists:
 - `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 210 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md` and `linaje-datos.md`.
 - `data/external/profesora/` holds the sponsor's data with a README documenting licenses and caveats. The SNC activity file goes through Git LFS (see `.gitattributes`); NPASS is CC BY-NC, so it is non-commercial.
 - The site is built from `_quarto.yml` + `scripts/prepare_site.py`; `visualizador.qmd` and `presentacion.qmd` are standalone pages.
-- `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The only checks that run are the link checker in CI and `scripts/verificar_decisiones.py`.
+- `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The checks that run in CI are `scripts/verificar_sitio.py` (every internal link of the built site, not just `.html`) and `scripts/verificar_decisiones.py`. Both run locally too — run them before pushing.
 
 `models/` and `src/models/` still hold an empty `Nuevo.txt` placeholder so git tracks them. Delete the placeholder when you add real content.
 
