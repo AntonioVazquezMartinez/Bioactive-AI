@@ -36,7 +36,7 @@ Un resultado negativo **no descarta** al compuesto: existen estrategias para ayu
 ::: {.g-col-12 .g-col-md-6}
 ### Etapa 2 — ¿Tiene efecto?
 
-Para los compuestos que llegan al cerebro, predecir actividad neuroprotectora frente al daño neurodegenerativo y estimar la diana molecular.
+Predecir si el compuesto presenta actividad neuroprotectora frente al daño neurodegenerativo, y estimar sobre qué diana molecular.
 
 El foco son **productos naturales** de origen vegetal.
 :::

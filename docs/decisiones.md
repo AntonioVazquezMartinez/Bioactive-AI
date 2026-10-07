@@ -225,6 +225,10 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 
 **Disciplina.** Declarar el protocolo antes de correrlo y reportar los tres brazos pase lo que pase. Quedarse con el que da mejor número es sobreajustar a la prueba.
 
+**Qué dice la literatura, con las referencias verificadas.** Los filtros originales son de `baell2010pains`, derivados de ~93,000 compuestos en ensayos AlphaScreen de una sola institución. `capuzzi2017phantom` documenta que tienen baja precisión como predictores de promiscuidad: muchos compuestos con alerta no son *frequent hitters* y muchos *frequent hitters* no llevan alerta. Y `baell2018seven` es el propio autor de los filtros revisando su uso y su mal uso siete años después. Los metadatos de las tres se verificaron contra Crossref el 7 de octubre.
+
+**Evidencia propia, que es más directa.** En nuestro conjunto de actividad el compuesto mediano toca **1 diana** y el percentil 99 toca 4. La curcumina aparece contra **32**, la quercetina contra 31 y el resveratrol contra 28. Una promiscuidad medida sobre nuestros propios datos es más defendible que un prior sobre subestructuras derivado de otro formato de ensayo.
+
 **Un matiz que cambia dónde aplica.** Las alertas PAINS se derivaron de ensayos de actividad tipo AlphaScreen. Una molécula que agrega **no falsea una medición de logBB**, que es distribución fisicoquímica. Así que el experimento tiene sentido fuerte en la etapa 2 y débil en la etapa 1, donde la diferencia observada —11.7 puntos dentro de los naturales— es probablemente química real y no artefacto.
 
 ---
