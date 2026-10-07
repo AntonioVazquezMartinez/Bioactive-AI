@@ -58,7 +58,7 @@ flowchart LR
     D4["Fuente etapa 2:<br/>ChEMBL + NPASS + CMAUP"]
     D5["Fuente etapa 1:<br/>archivo de la patrocinadora"]
     D6["NO filtrar por grupo A–D"]
-    D7["Umbral de etiquetado<br/>por revisar"]
+    D7["Etiquetado por tres vías<br/>umbral ≥ 5 confirmado"]
 
     R1 --> D1
     R2 --> D2
@@ -94,10 +94,12 @@ La decisión documentada era pChEMBL ≥ 5 como primario y ≥ 6 como robustez. 
 
 | Qué queda fuera | Registros |
 |:---|---:|
-| NPASS y CMAUP completos, que son las bases de **productos naturales** | 15,293 |
+| NPASS y CMAUP completos, que son las bases de **productos naturales** (12,809 recuperables por concentración exacta) | 15,293 |
 | Todas las mediciones **censuradas** (`>= X nM`) | 54,498 |
 | Los **inactivos declarados por texto** del artículo original | 29,730 |
 
 Y el umbral mismo cambia el problema: ≥ 5 deja 87.1% de activos, con un desbalance de 6.7 a 1 donde la clase difícil es la inactiva; ≥ 6 deja 63.7%, con 1.8 a 1. La distribución del pChEMBL no tiene un mínimo que sugiera dónde cortar.
 
-**Queda como decisión abierta del proyecto**, con la recomendación de invertir el orden —≥ 6 primario, ≥ 5 robustez— y de etiquetar en dos vías para no perder los productos naturales.
+Al recalcular el desbalance **con las tres vías de etiquetado aplicadas**, y no solo sobre el subconjunto con pChEMBL, la conclusión se invierte: ≥ 5 deja el conjunto casi equilibrado (61.7% de activos, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1).
+
+**El criterio de `CLAUDE.md` se mantiene —≥ 5 primario, ≥ 6 robustez—**, con una condición que antes no estaba escrita: el etiquetado tiene que usar las tres vías. Lo que se corrige no es el umbral sino el procedimiento, que etiquetando solo por pChEMBL perdía los productos naturales.

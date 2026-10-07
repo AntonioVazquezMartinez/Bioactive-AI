@@ -78,7 +78,7 @@ Las dos etapas son **independientes**: la primera no filtra a la segunda, sus sa
 Tomadas con la evidencia documentada en la [investigación de referencia](contenido/referencias/index.html):
 
 - **Datos, etapa 1:** el conjunto curado por la patrocinadora, derivado de [B3DB](https://github.com/theochem/B3DB) y cruzado con COCONUT. Umbral logBB = −1.0. Las categorías A–D **no** se usan para excluir registros: el Avance 1 mostró que no son una escala de calidad.
-- **Datos, etapa 2:** el volcado SQLite de ChEMBL 37, más NPASS y CMAUP. Etiquetado en dos niveles, pChEMBL ≥ 5 como primario y ≥ 6 como robustez.
+- **Datos, etapa 2:** el conjunto de actividad en SNC de la patrocinadora, con ChEMBL, NPASS y CMAUP. Etiquetado **por tres vías** —pChEMBL, concentración exacta e inactivo declarado—, con pChEMBL ≥ 5 como primario y ≥ 6 como robustez. Etiquetar solo por pChEMBL dejaría fuera los productos naturales; ver el [EDA de la etapa 2](contenido/notebooks/01b_EDA_actividad_snc.html).
 - **Representación:** descriptores 2D de RDKit (217) más Morgan/ECFP4 de 2048 bits. Los embeddings congelados de transformers no superan a esta combinación bajo scaffold split.
 - **Validación:** scaffold split de Bemis-Murcko, nunca aleatorio. Métricas MCC y AUPRC, no exactitud.
 - **Explicabilidad:** al menos dos métodos independientes, reportando como confirmadas solo las substructuras donde coinciden.
