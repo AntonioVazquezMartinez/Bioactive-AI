@@ -325,8 +325,9 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
 
 El modelo **no consume el SMILES**. Esa es la idea central del [Avance 2](contenido/notebooks/02_Feature_Eng.html): un SMILES es una cadena de texto de longitud variable, y un modelo supervisado necesita filas de la misma anchura.
 
-La sección de representaciones muestra el camino completo: diecisiete formas de escribir la misma molécula. De todas ellas, el pipeline usa tres —dos marcadas ahí como **en uso**, más los descriptores del panel anterior—:
+La sección de representaciones muestra el camino completo: diecisiete formas de escribir la misma molécula. De todas ellas, el pipeline usa cuatro: tres marcadas ahí como **en uso** (el InChIKey, el esqueleto de conectividad y Morgan/ECFP4) más los descriptores del panel anterior:
 
+- **El InChIKey** para detectar duplicados exactos: la misma molécula produce siempre el mismo InChIKey, a diferencia del SMILES.
 - **El esqueleto de conectividad** para deduplicar y para agrupar la partición. Sin él, el conjunto de permeabilidad parecería tener 7,805 compuestos cuando en realidad tiene 4,018 estructuras distintas.
 - **Los descriptores**, que resumen la molécula entera en números interpretables uno por uno.
 - **El fingerprint Morgan/ECFP4**, que dice qué fragmentos contiene. Es el que hace posible la explicabilidad: un bit con peso alto se traduce de vuelta a la subestructura que lo activó.

@@ -17,6 +17,15 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **SMILES**
 : Forma de escribir una molécula como una cadena de texto, sin dibujarla. `CCO` es el etanol: dos carbonos encadenados y un oxígeno. **Por qué importa:** es la única entrada del sistema. Todo lo demás —descriptores, fingerprints, andamios— se calcula a partir del SMILES. Ojo: una misma molécula admite varios SMILES válidos, así que no sirve como identificador.
 
+**CXSMILES** (SMILES extendido)
+: SMILES con información adicional al final, entre llaves, como coordenadas o etiquetas de átomos. **Por qué importa:** aparece en el [visualizador](../visualizador.qmd) como una de las representaciones; el pipeline no lo usa.
+
+**SMARTS**
+: Lenguaje para escribir patrones de subestructura: no describe una molécula concreta sino *qué buscar* dentro de muchas. **Por qué importa:** es el lenguaje en que se definen los filtros PAINS. El pipeline no lo usa para representar moléculas.
+
+**Molblock (V2000 y V3000)**
+: Formato de archivo clásico de la química computacional: una tabla con los átomos, sus coordenadas y los enlaces. V3000 es la versión moderna, sin el límite de 999 átomos de V2000. **Por qué importa:** es lo que entiende cualquier programa de visualización o de cálculo.
+
 **InChIKey**
 : Identificador estándar de 27 caracteres derivado de la estructura. A diferencia del SMILES, la misma molécula produce siempre el mismo InChIKey sin importar qué programa lo calcule. **Por qué importa:** es la forma correcta de detectar duplicados.
 
@@ -25,6 +34,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Estereoisómero**
 : Molécula con los mismos átomos conectados igual, pero dispuestos distinto en el espacio —por ejemplo, la imagen en espejo de otra—. **Por qué importa:** pueden tener actividad biológica distinta, y de hecho 131 esqueletos de nuestro conjunto reúnen estereoisómeros con etiquetas BBB contradictorias. Pero son tan parecidos que repartirlos entre entrenamiento y prueba sería hacer trampa.
+
+**Estereocentro y configuración CIP (R/S)**
+: Un estereocentro es un átomo, casi siempre un carbono, con cuatro sustituyentes distintos, de modo que existen dos disposiciones espaciales que son imagen en espejo una de otra. Las reglas de Cahn-Ingold-Prelog (CIP) etiquetan cada una como R o S. **Por qué importa:** la morfina tiene cinco estereocentros, y cambiar uno produce un estereoisómero distinto. El [visualizador](../visualizador.qmd) los detecta y los etiqueta.
 
 **Producto natural**
 : Sustancia producida por un organismo vivo, no sintetizada en laboratorio. **Por qué importa:** son los compuestos que el proyecto quiere priorizar. El conjunto los identifica cruzando estructuras contra COCONUT, el catálogo abierto de productos naturales.
@@ -59,6 +71,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Fingerprint / Morgan / ECFP4**
 : Representación de la molécula como un vector de bits, donde cada bit indica la presencia de una subestructura concreta. **Por qué importa:** complementa a los descriptores, que resumen la molécula entera; el fingerprint dice qué fragmentos tiene. Cuidado con el nombre: ECFP4 se genera con `radius=2`, porque el número del nombre es el diámetro, no el radio.
+
+**MACCS**
+: Fingerprint fijo de 166 preguntas sobre la molécula («¿tiene un anillo de siete miembros?», «¿tiene azufre?»), definidas a mano hace décadas. RDKit lo devuelve en 167 bits porque reserva el primero sin usar. **Por qué importa:** es corto y legible, pero menos específico que Morgan. El proyecto no lo usa; está en el visualizador para comparar.
 
 ---
 
