@@ -5,6 +5,7 @@ project:
   render:
     - index.qmd
     - visualizador.qmd
+    - presentacion.qmd
     - bibliografia.qmd
     - contenido/**/*.md
     - contenido/**/*.qmd
@@ -31,8 +32,10 @@ website:
         text: Inicio
       - href: contenido/glosario.md
         text: Glosario
+      - href: contenido/decisiones.md
+        text: Decisiones
       - href: contenido/linaje-datos.qmd
-        text: Linaje y decisiones
+        text: Linaje
       - text: Marco teórico
         menu:
           - href: contenido/planteamiento/marco-teorico/index.md
@@ -67,6 +70,8 @@ website:
             text: "Avance 2 · Características"
       - href: contenido/reportes/index.md
         text: Entregables
+      - href: presentacion.qmd
+        text: Presentación
       - href: visualizador.qmd
         text: Visualizador
       - href: contenido/datos.md

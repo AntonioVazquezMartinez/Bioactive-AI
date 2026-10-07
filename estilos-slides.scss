@@ -1,0 +1,25 @@
+/*-- scss:defaults --*/
+// El mazo hereda la paleta del sitio para que no parezcan dos proyectos.
+$body-bg: #1e252e;
+$body-color: #e8edf3;
+$link-color: #8fb3dd;
+$presentation-heading-color: #ffffff;
+$presentation-heading-font-weight: 600;
+$presentation-font-size-root: 30px;
+
+/*-- scss:rules --*/
+.reveal .slides section { text-align: left; }
+.reveal h1, .reveal h2 { text-transform: none; }
+.reveal table { font-size: .85em; }
+.reveal table th { border-bottom: 2px solid rgba(143,179,221,.5); }
+.reveal .callout { font-size: .85em; margin-top: .6em; }
+
+// mermaid: mismo problema que en el sitio, el tema no lo sigue
+.reveal .cell svg[id^="mermaid"] {
+  .node rect, .node polygon { fill: #2a3441 !important; stroke: #8fb3dd !important; }
+  .nodeLabel, text, span, p { color: #e8edf3 !important; fill: #e8edf3 !important; }
+  .edgePath .path, .flowchart-link { stroke: #8fb3dd !important; }
+  marker path, .marker { fill: #8fb3dd !important; stroke: #8fb3dd !important; }
+}
+
+.reveal section.center { text-align: center; }
