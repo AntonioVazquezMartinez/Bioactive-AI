@@ -68,10 +68,10 @@ Las dos etapas son **independientes**: la primera no filtra a la segunda, sus sa
 | Marco teórico | Borrador completo, 10 capítulos, 208 referencias |
 | Investigación de referencia | 5 documentos, 7 ramas de investigación |
 | Datos etapa 1 | Conjunto de la patrocinadora, auditado en el Avance 1 |
-| Datos etapa 2 | Pendientes |
-| EDA (Avance 1) | Ejecutado |
-| Ingeniería de características (Avance 2) | Ejecutado · pendiente retirar el filtro A+B |
-| Modelos base (Avance 3) | Pendiente |
+| Datos etapa 2 | Entregados el 25 sep: 202,647 registros, 39 dianas · [EDA ejecutado](contenido/notebooks/01b_EDA_actividad_snc.html) |
+| EDA de permeabilidad (Avance 1) | Entregado el 4 oct |
+| Ingeniería de características (Avance 2) | Notebook ejecutado sobre las 7,805 filas · falta el reporte |
+| Modelos base (Avance 3) | Pendiente · vence el 18 oct |
 
 ## Decisiones técnicas
 

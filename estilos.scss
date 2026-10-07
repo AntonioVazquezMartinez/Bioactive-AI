@@ -148,7 +148,26 @@ blockquote {
 // oscuro, quedan casi invisibles. Aquí se fuerzan los colores por esquema.
 // Mermaid escribe estilos en línea sobre los nodos, de ahí los !important.
 // ---------------------------------------------------------------------------
-@mixin mermaid-colores($relleno, $borde, $texto, $linea) {
+@mixin mermaid-colores($relleno, $borde, $texto, $linea, $grupo) {
+  // los subgrafos (`subgraph`) se dibujan con relleno blanco fijo y su título
+  // en un gris claro: sobre fondo oscuro desaparecen los dos.
+  .cluster rect {
+    fill: $grupo !important;
+    stroke: $borde !important;
+    stroke-width: 1px !important;
+  }
+  .cluster-label, .cluster text, .cluster span, .cluster p {
+    color: $texto !important;
+    fill: $texto !important;
+    font-weight: 600;
+  }
+  // la etiqueta de una arista trae su propio fondo en línea
+  .edgeLabel, .edgeLabel div, .edgeLabel span, .edgeLabel p, .edgeLabel foreignObject div {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: $texto !important;
+    fill: $texto !important;
+  }
   .node {
     rect, polygon, circle, ellipse, path {
       fill: $relleno !important;
@@ -159,10 +178,6 @@ blockquote {
   .nodeLabel, .edgeLabel, .label, text, span, p {
     color: $texto !important;
     fill: $texto !important;
-  }
-  .edgeLabel {
-    background-color: transparent !important;
-    rect { fill: transparent !important; }
   }
   .edgePath .path, .flowchart-link, path.path {
     stroke: $linea !important;
@@ -180,12 +195,12 @@ pre.mermaid, .cell-output-display {
 
 body.quarto-light {
   pre.mermaid svg, .cell-output-display svg[id^="mermaid"] {
-    @include mermaid-colores(#eef2f7, #4a6fa5, #1b2733, #4a6fa5);
+    @include mermaid-colores(#eef2f7, #4a6fa5, #1b2733, #4a6fa5, #f6f8fb);
   }
 }
 
 body.quarto-dark {
   pre.mermaid svg, .cell-output-display svg[id^="mermaid"] {
-    @include mermaid-colores(#2a3441, #8fb3dd, #e8edf3, #8fb3dd);
+    @include mermaid-colores(#2a3441, #8fb3dd, #e8edf3, #8fb3dd, #1e252e);
   }
 }

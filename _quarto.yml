@@ -7,7 +7,9 @@ project:
     - visualizador.qmd
     - bibliografia.qmd
     - contenido/**/*.md
+    - contenido/**/*.qmd
     - contenido/notebooks/01_EDA.ipynb
+    - contenido/notebooks/01b_EDA_actividad_snc.ipynb
     - contenido/notebooks/02_Feature_Eng.ipynb
 
 website:
@@ -29,6 +31,8 @@ website:
         text: Inicio
       - href: contenido/glosario.md
         text: Glosario
+      - href: contenido/linaje-datos.qmd
+        text: Linaje y decisiones
       - text: Marco teórico
         menu:
           - href: contenido/planteamiento/marco-teorico/index.md
@@ -56,7 +60,9 @@ website:
       - text: Análisis
         menu:
           - href: contenido/notebooks/01_EDA.ipynb
-            text: "Avance 1 · EDA"
+            text: "Avance 1 · EDA de permeabilidad"
+          - href: contenido/notebooks/01b_EDA_actividad_snc.ipynb
+            text: "EDA de actividad en SNC"
           - href: contenido/notebooks/02_Feature_Eng.ipynb
             text: "Avance 2 · Características"
       - href: contenido/reportes/index.md

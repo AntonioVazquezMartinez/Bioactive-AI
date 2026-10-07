@@ -71,6 +71,9 @@ DOCUMENTOS = [
     ("docs/glosario.md",
      "glosario.md",
      "Los términos de química, datos y modelado que usa el proyecto"),
+    ("docs/linaje-datos.md",
+     "linaje-datos.qmd",   # .qmd: lleva diagramas de mermaid, que Quarto trata como código
+     "De dónde sale cada número y qué sustenta cada decisión"),
     ("docs/reportes/README.md",
      "reportes/index.md",
      "Los reportes entregados en el Proyecto Integrador"),
@@ -194,7 +197,8 @@ def main() -> int:
 
     # los notebooks se copian reescribiendo los enlaces de sus celdas markdown
     import json
-    for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/02_Feature_Eng.ipynb"]:
+    for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/01b_EDA_actividad_snc.ipynb",
+                   "notebooks/02_Feature_Eng.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
