@@ -44,6 +44,12 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
     <h3>Descriptores</h3>
     <div id="vm-desc"></div>
   </section>
+
+  <section class="vm-panel vm-ancho">
+    <h3>Representaciones</h3>
+    <p class="vm-nota" style="margin:0 0 .8rem">La misma molécula escrita de todas las formas que RDKit sabe producir. Las marcadas con <span class="vm-usa">en uso</span> son las que consume el pipeline del proyecto.</p>
+    <div id="vm-repr"></div>
+  </section>
 </div>
 
 <style>
@@ -82,6 +88,36 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
 #vm-desc td { padding: .15rem 0; }
 #vm-desc td:first-child { width: 55%; }
 #vm-desc td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.vm-grupo { margin-bottom: .6rem; border: 1px solid rgba(128,128,128,.25); border-radius: .3rem; }
+.vm-grupo > summary {
+  cursor: pointer; padding: .55rem .8rem; font-weight: 600; font-size: .9rem;
+  background: rgba(128,128,128,.08); border-radius: .3rem; user-select: none;
+}
+.vm-grupo > summary:hover { background: rgba(128,128,128,.16); }
+.vm-grupo[open] > summary { border-bottom: 1px solid rgba(128,128,128,.25); border-radius: .3rem .3rem 0 0; }
+.vm-item { padding: .7rem .8rem; border-top: 1px solid rgba(128,128,128,.14); }
+.vm-item:first-of-type { border-top: none; }
+.vm-item-cab { display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; margin-bottom: .3rem; }
+.vm-item-cab b { font-size: .88rem; }
+.vm-item-cab em { font-size: .78rem; opacity: .72; font-style: normal; }
+.vm-usa {
+  font-size: .68rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  padding: .1rem .4rem; border-radius: .2rem; background: rgba(90,150,110,.28);
+  border: 1px solid rgba(90,150,110,.5); white-space: nowrap;
+}
+.vm-val {
+  display: flex; gap: .5rem; align-items: flex-start;
+}
+.vm-val pre {
+  flex: 1; margin: 0; padding: .45rem .6rem; font-size: .78rem; line-height: 1.45;
+  background: rgba(128,128,128,.1); border-radius: .25rem; overflow-x: auto;
+  max-height: 11rem; white-space: pre-wrap; word-break: break-all;
+}
+.vm-copiar {
+  padding: .3rem .55rem; font-size: .75rem; border: 1px solid rgba(128,128,128,.4);
+  border-radius: .25rem; background: transparent; color: inherit; cursor: pointer; white-space: nowrap;
+}
+.vm-copiar:hover { background: rgba(128,128,128,.2); }
 .vm-regla { margin-top: .9rem; padding: .7rem .9rem; border-left: .25rem solid rgba(128,128,128,.5);
             font-size: .88rem; background: rgba(128,128,128,.08); border-radius: 0 .3rem .3rem 0; }
 </style>
@@ -118,6 +154,83 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
       Sobre las 7,805 filas etiquetadas acierta el 85.3% de los BBB+ que señala, pero solo detecta el 51.5% de ellos:
       sirve para descartar, no para concluir.</span></div>`;
     $("vm-desc").innerHTML = `<table>${filas}</table>${regla}`;
+  }
+
+  // --------------------------------------------------------------- representaciones
+  // Qué produce cada una y para qué sirve. `usa` marca las que consume el
+  // pipeline del proyecto, para que no se confundan con las demás.
+  const GRUPOS = [
+    { titulo: "Identificadores", abierto: true, items: [
+      { n: "SMILES canónico", d: "La forma única que RDKit elige para esta estructura. Dos SMILES distintos de la misma molécula producen el mismo canónico.", f: m => m.get_smiles() },
+      { n: "SMILES isomérico (CXSMILES)", d: "Incluye estereoquímica y propiedades extendidas.", f: m => m.get_cxsmiles() },
+      { n: "InChI", d: "Identificador estándar de IUPAC, legible por capas: fórmula, conexiones, hidrógenos, carga, estereoquímica.", f: m => m.get_inchi() },
+      { n: "InChIKey", d: "El InChI comprimido a 27 caracteres. Es la forma correcta de deduplicar.", usa: true, f: (m, R) => R.get_inchikey_for_inchi(m.get_inchi()) },
+      { n: "Esqueleto de conectividad", d: "Los primeros 14 caracteres del InChIKey. Ignora estereoquímica, así que dos estereoisómeros lo comparten. Con esto se mide el tamaño efectivo del conjunto y se agrupa la partición.", usa: true, f: (m, R) => R.get_inchikey_for_inchi(m.get_inchi()).slice(0, 14) },
+      { n: "Etiquetas de estereocentros", d: "Qué centros quirales detecta RDKit y con qué configuración.", f: m => m.get_stereo_tags() },
+    ]},
+    { titulo: "Búsqueda por subestructura", items: [
+      { n: "SMARTS", d: "Patrón de búsqueda: describe qué buscar, no una molécula concreta. Es el lenguaje de los filtros PAINS.", f: m => m.get_smarts() },
+    ]},
+    { titulo: "Formatos de archivo", items: [
+      { n: "Molblock V2000", d: "El formato clásico de MDL, con la tabla de átomos y enlaces y sus coordenadas 2D. Lo entiende cualquier programa de química.", f: m => m.get_molblock() },
+      { n: "Molblock V3000", d: "La versión moderna, sin el límite de 999 átomos del V2000.", f: m => m.get_v3Kmolblock() },
+      { n: "Con hidrógenos explícitos", d: "RDKit trabaja con hidrógenos implícitos. Al hacerlos explícitos el conteo de átomos cambia, y eso importa al generar geometría 3D.", f: m => { const c = m.copy(); c.add_hs_in_place(); const b = c.get_molblock(); c.delete(); return b; } },
+      { n: "JSON de RDKit", d: "La molécula como estructura de datos, en el formato CommonChem.", f: m => JSON.stringify(JSON.parse(m.get_json()), null, 1) },
+    ]},
+    { titulo: "Fingerprints · lo que consume el modelo", items: [
+      { n: "Morgan / ECFP4, 2,048 bits", d: "Cada bit indica si la molécula contiene una subestructura concreta. Es el fingerprint del proyecto. Ojo: ECFP4 se genera con radius=2, porque el número del nombre es el diámetro.", usa: true, fp: true, f: m => m.get_morgan_fp(JSON.stringify({ radius: 2, nBits: 2048 })) },
+      { n: "MACCS, 167 bits", d: "Un conjunto fijo de 166 preguntas sobre la molécula, definido a mano hace décadas. RDKit lo devuelve en 167 bits porque reserva el primero sin usar. Corto e interpretable, pero poco específico.", fp: true, f: m => m.get_maccs_fp() },
+      { n: "RDKit fingerprint", d: "Basado en caminos lineales dentro de la molécula, no en entornos circulares.", fp: true, f: m => m.get_rdkit_fp() },
+      { n: "Pares de átomos", d: "Codifica pares de átomos y la distancia que los separa en el grafo.", fp: true, f: m => m.get_atom_pair_fp() },
+      { n: "Torsión topológica", d: "Codifica secuencias de cuatro átomos enlazados: captura la forma local de la cadena.", fp: true, f: m => m.get_topological_torsion_fp() },
+      { n: "Pattern fingerprint", d: "Pensado para filtrar candidatos antes de una búsqueda por subestructura, no para modelar.", fp: true, f: m => m.get_pattern_fp() },
+    ]},
+  ];
+
+  function resumenFp(bits) {
+    const n = bits.length, act = (bits.match(/1/g) || []).length;
+    const pos = []; for (let i = 0; i < n && pos.length < 14; i++) if (bits[i] === "1") pos.push(i);
+    return `${act} bits activos de ${n} (${(100*act/n).toFixed(2)}% de densidad)\n` +
+           `primeros activos: ${pos.join(", ")}${act > pos.length ? ", …" : ""}\n\n${bits}`;
+  }
+
+  function representaciones(smiles) {
+    const cont = $("vm-repr");
+    cont.innerHTML = "";
+    GRUPOS.forEach(g => {
+      const det = document.createElement("details");
+      det.className = "vm-grupo";
+      if (g.abierto) det.open = true;
+      det.innerHTML = `<summary>${g.titulo}</summary>`;
+      g.items.forEach(it => {
+        // cada representación se calcula sobre su propia copia: algunas modifican la molécula
+        const m = RDKit.get_mol(smiles);
+        let valor;
+        try { valor = it.f(m, RDKit); } catch (e) { valor = "no disponible: " + e; }
+        m.delete();
+        if (it.fp && /^[01]+$/.test(valor)) valor = resumenFp(valor);
+        const div = document.createElement("div");
+        div.className = "vm-item";
+        const cab = document.createElement("div");
+        cab.className = "vm-item-cab";
+        cab.innerHTML = `<b>${it.n}</b>${it.usa ? ' <span class="vm-usa">en uso</span>' : ""}<em>${it.d}</em>`;
+        const fila = document.createElement("div");
+        fila.className = "vm-val";
+        const pre = document.createElement("pre");
+        pre.textContent = valor;
+        const btn = document.createElement("button");
+        btn.className = "vm-copiar"; btn.textContent = "copiar";
+        btn.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(valor); btn.textContent = "copiado"; }
+          catch (e) { btn.textContent = "no se pudo"; }
+          setTimeout(() => { btn.textContent = "copiar"; }, 1500);
+        });
+        fila.append(pre, btn);
+        div.append(cab, fila);
+        det.append(div);
+      });
+      cont.append(det);
+    });
   }
 
   async function coords3d(smiles) {
@@ -158,6 +271,7 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
     if (!mol || !mol.is_valid()) {
       if (mol) mol.delete();
       $("vm-2d").innerHTML = ""; $("vm-desc").innerHTML = ""; $("vm-3d").innerHTML = "";
+      $("vm-repr").innerHTML = "";
       $("vm-3d-nota").textContent = "—";
       estado("RDKit no pudo interpretar ese SMILES. Revisa paréntesis, corchetes y valencias.", true);
       return;
@@ -165,6 +279,7 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
 
     $("vm-2d").innerHTML = mol.get_svg(420, 340);
     tabla(JSON.parse(mol.get_descriptors()));
+    representaciones(smiles);
     const atomos = mol.get_num_atoms();
     mol.delete();
 
@@ -205,5 +320,18 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
 **En tu navegador, sin enviar nada:** la validación del SMILES, el dibujo 2D y los nueve descriptores. Los calcula RDKit compilado a WebAssembly, la misma biblioteca que usa el pipeline del proyecto, así que las cifras coinciden con las de los notebooks.
 
 **Fuera:** la geometría 3D. RDKit compilado para el navegador no incluye el generador de conformaciones, así que las coordenadas se piden a [PubChem](https://pubchem.ncbi.nlm.nih.gov/) y, si el compuesto no está ahí, a [NCI CACTUS](https://cactus.nci.nih.gov/). La página dice siempre de dónde salió la geometría que estás viendo. Si ninguna de las dos reconoce la estructura, el 2D y los descriptores siguen siendo válidos.
+
+## Por qué importan las representaciones
+
+El modelo **no consume el SMILES**. Esa es la idea central del [Avance 2](contenido/notebooks/02_Feature_Eng.html): un SMILES es una cadena de texto de longitud variable, y un modelo supervisado necesita filas de la misma anchura.
+
+La sección de representaciones muestra el camino completo: diecisiete formas de escribir la misma molécula. De todas ellas, el pipeline usa cuatro: tres marcadas ahí como **en uso** (el InChIKey, el esqueleto de conectividad y Morgan/ECFP4) más los descriptores del panel anterior:
+
+- **El InChIKey** para detectar duplicados exactos: la misma molécula produce siempre el mismo InChIKey, a diferencia del SMILES.
+- **El esqueleto de conectividad** para deduplicar y para agrupar la partición. Sin él, el conjunto de permeabilidad parecería tener 7,805 compuestos cuando en realidad tiene 4,018 estructuras distintas.
+- **Los descriptores**, que resumen la molécula entera en números interpretables uno por uno.
+- **El fingerprint Morgan/ECFP4**, que dice qué fragmentos contiene. Es el que hace posible la explicabilidad: un bit con peso alto se traduce de vuelta a la subestructura que lo activó.
+
+Las demás están para comparar. MACCS es más corto y más fácil de leer pero menos específico; los pares de átomos y la torsión topológica codifican geometría del grafo en vez de entornos circulares; el SMARTS no describe una molécula sino un patrón de búsqueda, y es el lenguaje en el que están escritos los filtros PAINS que habrá que aplicar antes de reportar candidatos.
 
 **Lo que esta página no hace es predecir.** La regla de dos parámetros que aparece bajo los descriptores es un criterio descriptivo derivado en el [Avance 1](contenido/reportes/index.html), no el modelo del proyecto. Señala correctamente como BBB+ al 85.3% de los compuestos que marca, pero deja fuera a casi la mitad de los que sí cruzan: sirve para descartar, no para concluir.
