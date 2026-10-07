@@ -129,7 +129,7 @@ El problema se descompone en dos etapas independientes, ambas con el SMILES del 
 
 **Etapa 1 — Permeabilidad.** Clasificar si el compuesto atraviesa la barrera hematoencefálica (BBB+) o no (BBB−).
 
-**Etapa 2 — Actividad.** Para los compuestos que alcanzan el tejido cerebral, predecir si presentan actividad sobre dianas moleculares asociadas a neuroprotección, y estimar cuál.
+**Etapa 2 — Actividad.** Predecir si el compuesto presenta actividad sobre dianas moleculares asociadas a neuroprotección, y estimar cuál. Se evalúa sobre todos los compuestos, no solo sobre los que la etapa 1 marca como permeables.
 
 Una precisión de diseño que condiciona la arquitectura: **la etapa 1 no opera como filtro duro sobre la etapa 2**. Un resultado BBB− no descarta al compuesto, porque existen estrategias consolidadas para favorecer el cruce —profármacos, lipidización, aprovechamiento de transportadores endógenos, nanoacarreadores— y por eso la información de ambas etapas se conserva por separado.
 
