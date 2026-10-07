@@ -39,10 +39,10 @@ format:
   #v(0.4cm)
   #text(size: 10.5pt, style: "italic")[Proyecto Integrador · TC5035.10]
 
-  #v(1.3cm)
+  #v(1.0cm)
   #text(size: 12pt, weight: "bold")[Avance 1. Análisis exploratorio de datos]
 
-  #v(0.9cm)
+  #v(0.7cm)
   #line(length: 78%, stroke: 0.6pt)
   #v(0.7cm)
 
@@ -59,13 +59,19 @@ format:
   #v(0.7cm)
   #line(length: 78%, stroke: 0.6pt)
 
-  #v(1.3cm)
-  #text(size: 11pt, weight: "bold")[Profesora]
+  #v(0.9cm)
+  #text(size: 11pt, weight: "bold")[Profesora titular]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Grettel Barceló Alonso]
+
+  #v(0.6cm)
+  #text(size: 11pt, weight: "bold")[Patrocinadora]
 
   #v(0.2cm)
   #text(size: 11pt)[Dra. Mariana Martínez Ávila]
 
-  #v(1.1cm)
+  #v(0.8cm)
   #text(size: 11pt, weight: "bold")[Equipo 7]
 
   #v(0.35cm)

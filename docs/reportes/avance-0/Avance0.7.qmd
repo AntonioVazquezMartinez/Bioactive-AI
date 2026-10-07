@@ -39,10 +39,10 @@ format:
   #v(0.4cm)
   #text(size: 10.5pt, style: "italic")[Proyecto Integrador · TC5035.10]
 
-  #v(1.3cm)
+  #v(1.0cm)
   #text(size: 12pt, weight: "bold")[Avance 0. Propuesta de proyecto]
 
-  #v(0.9cm)
+  #v(0.7cm)
   #line(length: 78%, stroke: 0.6pt)
   #v(0.7cm)
 
@@ -59,13 +59,19 @@ format:
   #v(0.7cm)
   #line(length: 78%, stroke: 0.6pt)
 
-  #v(1.3cm)
-  #text(size: 11pt, weight: "bold")[Profesora]
+  #v(0.9cm)
+  #text(size: 11pt, weight: "bold")[Profesora titular]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Grettel Barceló Alonso]
+
+  #v(0.6cm)
+  #text(size: 11pt, weight: "bold")[Patrocinadora]
 
   #v(0.2cm)
   #text(size: 11pt)[Dra. Mariana Martínez Ávila]
 
-  #v(1.1cm)
+  #v(0.8cm)
   #text(size: 11pt, weight: "bold")[Equipo 7]
 
   #v(0.35cm)
@@ -175,7 +181,8 @@ La @tbl-objetivos traduce los objetivos de la organización en objetivos técnic
 
 | Participante | Rol | Etapa | Nivel de involucramiento |
 |:-------------|:----|:------|:-------------------------|
-| Dra. Mariana Martínez Ávila | Patrocinadora y profesora | Todas | Como patrocinadora: define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica. Como profesora: evalúa los entregables conforme a las rúbricas del curso |
+| Dra. Mariana Martínez Ávila | Patrocinadora | Todas | Define el problema y los criterios de éxito; provee los conjuntos de datos curados; valida la interpretación biológica de los resultados |
+| Dra. Grettel Barceló Alonso | Profesora titular del curso | Todas | Imparte TC5035.10 y evalúa los entregables conforme a las rúbricas; retroalimenta sobre la claridad y el rigor de la comunicación |
 | Depto. de Bioingeniería | Organización receptora | Inicio/cierre | Aporta el contexto de la línea de investigación y recibe los resultados |
 | Ingrid Pamela Ruiz Puga | Integrante | Todas | Desarrollo del proyecto |
 | Artemio S. Padilla Robles | Integrante | Todas | Desarrollo del proyecto |

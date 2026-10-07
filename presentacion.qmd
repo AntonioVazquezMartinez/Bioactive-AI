@@ -2,7 +2,7 @@
 title: "Bioactive AI"
 subtitle: "Predicción y priorización de compuestos bioactivos con potencial neuroprotector"
 author: "Equipo 7 · Ingrid Pamela Ruiz Puga · Artemio Santiago Padilla Robles · José Antonio Vázquez Martínez"
-institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey"
+institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey<br/>Profesora titular: Dra. Grettel Barceló Alonso · Patrocinadora: Dra. Mariana Martínez Ávila"
 date: last-modified
 date-format: "D [de] MMMM [de] YYYY"
 lang: es
