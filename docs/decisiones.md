@@ -176,7 +176,7 @@ Eso **corrige la propuesta anterior del equipo**, que fijaba el corte en 10 µM 
 
 El diccionario advierte además que **33,574 de las 41,291 filas con límite de 10 µM vienen de DrugMatrix**, una sola fuente, lo que concentra la evidencia censurada.
 
-**Una recomendación que no sobrevivió a su propia verificación.** Sobre los registros con pChEMBL, ≥ 5 dejaba 87.1% de activos y una razón de 6.7 a 1, lo que llevó a proponer invertir el orden y usar ≥ 6. Al recalcular **con las tres vías aplicadas**, ≥ 5 deja el conjunto casi equilibrado (61.7%, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1). El 6.7 a 1 era un artefacto de mirar solo el subconjunto con curva dosis-respuesta, sesgado hacia activos porque nadie publica curvas de lo que no funciona. **El umbral original se mantiene.**
+**Una recomendación que no sobrevivió a su propia verificación.** Sobre los registros con pChEMBL, ≥ 5 dejaba 87.1% de activos y una razón de 6.7 a 1, lo que llevó a proponer invertir el orden y usar ≥ 6. Al recalcular **con las tres vías aplicadas**, ≥ 5 deja 61.7% de activos (1.6 a 1) y ≥ 6 deja 44.4% (0.8 a 1) **contando por registro sobre todo lo etiquetado, fenotípicos incluidos**. Sobre el conjunto que de verdad se entrenaría —solo con diana, el valor más potente por par esqueleto × gen— sale 70.5% (2.4 a 1) con ≥ 5 y 50.6% (1.0 a 1) con ≥ 6, de modo que ahí ≥ 6 es el equilibrado. El 6.7 a 1 era un artefacto de mirar solo el subconjunto con curva dosis-respuesta, sesgado hacia activos porque nadie publica curvas de lo que no funciona. **El umbral original se mantiene.**
 
 ---
 

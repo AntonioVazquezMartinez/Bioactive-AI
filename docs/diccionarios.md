@@ -1,6 +1,6 @@
 # Lo que documentan los diccionarios
 
-La patrocinadora entregó dos diccionarios en PDF junto con los datos. Esta página recoge lo que establecen sobre cada conjunto, con las cifras que verificamos de forma independiente y las que corrigen nuestro trabajo.
+La patrocinadora entregó dos diccionarios en PDF junto con los datos. Esta página recoge lo que establecen sobre cada conjunto. **Las cifras de identidad y defectos coinciden con nuestro cálculo independiente desde el CSV con RDKit**, lo que vale como verificación cruzada en ambos sentidos.
 
 Los originales: [permeabilidad BBB](https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main/data/external/profesora/DICCIONARIO_permeabilidad_bbb.pdf) y [actividad en SNC](https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main/data/external/profesora/DICCIONARIO_actividad_snc.pdf).
 
@@ -10,7 +10,7 @@ Todo viene de B3DB. El único añadido de la patrocinadora es la estructura esta
 
 ### Identidad
 
-El archivo trae 7,808 InChIKey distintos sobre 7,811 filas: **3 se repiten** —ampicilina con sultamicilina, colestipol, probenecid— y en los tres casos ambas filas coinciden en la clase. Ignorando estereoquímica quedan **4,019 esqueletos**, así que varios estereoisómeros comparten estructura.
+El archivo trae 7,808 InChIKey distintos sobre 7,811 filas: **3 se repiten** —ampicilina con sultamicilina, colestipol, probenecid— y en los tres casos ambas filas coinciden en la clase. Ignorando estereoquímica quedan **4,019 esqueletos** sobre las 7,811 filas. El resto del sitio dice 4,018 porque cuenta sobre las **7,805 con clase asignada**, que es el conjunto de trabajo: la diferencia es un esqueleto que solo aparece entre las seis filas sin clase.
 
 **Los nombres no son identificadores.** Hay una fila llamada «ritonavir» cuya estructura es etambutol sin estereoquímica. Verificado: cinco filas con ese nombre y cuatro esqueletos distintos. El identificador es `inchikey` o `smiles_std`.
 
@@ -45,11 +45,13 @@ Toda cifra por origen debe declarar cuál usa. La alerta PAINS da 7.5% contra 3.
 - **131 esqueletos tienen clases contradictorias**, que afectan 429 filas. El ejemplo que da: el meso-etambutol es BBB+ y los demás isómeros, BBB−.
 - **112 esqueletos tienen más de un valor de logBB**, con diferencias de hasta 1.4 unidades logarítmicas.
 
-Los dos últimos ponen un techo a cualquier modelo que agrupe por esqueleto: si la etiqueta es contradictoria, ninguno acierta las dos.
+Los dos últimos ponen un **límite teórico** a cualquier modelo que agrupe por esqueleto: si dos estereoisómeros comparten estructura y llevan etiquetas opuestas, ninguno acierta ambas. Para las 131 clases contradictorias el mínimo de errores inevitables es de **151 compuestos sobre 7,805**, es decir un techo de exactitud del **98.1%** — no restringe a ningún modelo realista. Para el logBB el efecto no está cuantificado.
 
 ## Actividad en SNC · 225,513 registros
 
 Recibimos 202,647, el **89.9%**. El sufijo `_Entrenamiento` y esa diferencia indican que existe una partición reservada, lo cual está [pendiente de confirmar](consulta-patrocinadora.md).
+
+> Las cifras de esta sección son **del archivo completo**, que es el que describe el diccionario. Las del resto del sitio son de nuestro 89.9%: 114,549 registros con diana en vez de 121,522, y 88,098 sin diana en vez de 98,298.
 
 ### Mediciones censuradas
 
