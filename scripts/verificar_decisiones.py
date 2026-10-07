@@ -27,7 +27,10 @@ def decisiones(texto: str) -> list[dict]:
         if not m:
             continue
         estado = re.search(r"\*\*Estado:\*\* *([^·\n]+)", b)
-        decide = re.search(r"\*\*Decide:\*\* *([^·\n*]+)", b)
+        # solo el `Decide:` de la línea de estado: el de la línea de Pregunta
+        # repite el mismo valor y lo contaba dos veces
+        linea = re.search(r"\*\*Estado:\*\*[^\n]*", b)
+        decide = re.search(r"\*\*Decide:\*\* *([^·\n*]+)", linea.group(0)) if linea else None
         out.append({
             "n": int(m.group(1)),
             "titulo": m.group(2).strip(),
@@ -51,11 +54,16 @@ def main() -> int:
         if not d["decide"]:
             problemas.append(f"#{d['n']} «{d['titulo']}» no declara quién decide")
         # si la decide la patrocinadora, tiene que haber una pregunta que hacerle
-        if "patrocinadora" in d["decide"] and not d["pregunta"]:
-            problemas.append(f"#{d['n']} «{d['titulo']}» la decide la patrocinadora pero no formula la pregunta")
+        if d["decide"] not in ("equipo", "patrocinadora", "ambos"):
+            problemas.append(f"#{d['n']} «{d['titulo']}» declara «{d['decide']}»; debe ser equipo, patrocinadora o ambos")
+        if d["decide"] in ("patrocinadora", "ambos") and not d["pregunta"]:
+            problemas.append(f"#{d['n']} «{d['titulo']}» la decide ella y no formula la pregunta")
 
-    de_ella = [d for d in ds if "patrocinadora" in d["decide"] or "ambos" in d["decide"]]
-    print(f"{len(de_ella)} necesitan a la patrocinadora")
+    # la regla real: lo que tenga pregunta formulada va a la consulta, lo decida quien lo decida
+    de_ella = [d for d in ds if d["pregunta"]]
+    por_decisor = {k: sum(1 for d in ds if d["decide"] == k) for k in ("equipo", "patrocinadora", "ambos")}
+    print(f"decide el equipo: {por_decisor['equipo']} · la patrocinadora: {por_decisor['patrocinadora']} · ambos: {por_decisor['ambos']}")
+    print(f"{len(de_ella)} formulan una pregunta para ella y deben aparecer en la consulta")
 
     if CONSULTA.exists():
         texto = CONSULTA.read_text(encoding="utf-8")

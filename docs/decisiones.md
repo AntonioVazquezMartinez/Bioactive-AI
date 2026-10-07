@@ -47,7 +47,11 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 | [19](#d19) | Licencia de NPASS: CC BY-NC | **Abierta** | **patrocinadora** |
 | [20](#d20) | Partición de la etapa 2 | Propuesta | ambos |
 
-**Diez necesitan a la patrocinadora.** Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10](#d10), [13](#d13) y la parte de naturales de [5](#d5).
+De las veinte, **6 las decide el equipo, 9 la patrocinadora y 5 son compartidas**. Y **15 formulan una pregunta para ella**: las 14 que decide ella o ambos, más la [15](#d15), que decide el equipo pero necesita su conocimiento de las fuentes.
+
+Esa última cifra es la que importa, porque **toda decisión con pregunta formulada tiene que aparecer en la [consulta](consulta-patrocinadora.md)**. Es lo que comprueba `scripts/verificar_decisiones.py`.
+
+Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10](#d10), [13](#d13) y la parte de naturales de [5](#d5).
 
 ---
 
@@ -117,10 +121,12 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 
 ## 5 · La etapa 1 no opera como filtro duro {#d5}
 
-**Estado:** vigente · confirmada por dos vías independientes · **Decide:** ambos
+**Estado:** vigente · confirmada **por los datos**, no por la patrocinadora · **Decide:** ambos
 **Pregunta:** ¿Cómo debería presentarse un compuesto con BBB− predicho pero actividad documentada?
 
-**Decisión.** Las dos etapas corren en paralelo y sus salidas se combinan en la priorización final. Un resultado BBB− **no descarta** al compuesto.
+**Lo que los datos respaldan.** Un resultado BBB− **no descarta** al compuesto. Eso está medido y es firme.
+
+**Lo que no está confirmado.** Que de ahí se siga que las etapas sean *independientes* o *paralelas* es un reencuadre respecto al planteamiento original de los asesores, que las planteó como «si cruza, ¿tiene efecto?». La patrocinadora no lo ha confirmado, así que el registro no lo da por hecho.
 
 **Por qué, razón original.** Existen estrategias consolidadas para favorecer el cruce: profármacos, lipidización, aprovechamiento de transportadores endógenos, nanoacarreadores.
 
@@ -158,7 +164,17 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 
 **Decisión.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 registros naturales; e **inactivo declarado** para los textos y para los censurados con corte ≥ 10 µM.
 
-**Por qué 10 µM.** Es el valor modal del corte censurado —36,653 de 54,498—, la mediana, y la concentración que citan literalmente los inactivos por texto: *«Inhibition < 50% @ 10 uM»*. Es la concentración estándar de cribado, no una conveniencia estadística.
+**El criterio de censura es de la patrocinadora, no nuestro.** La sección 7 de su diccionario trae la tabla hecha sobre las 61,001 filas con `>` o `>=`, y la regla: *«solo sirve como negativo si el límite es igual o mayor que el umbral de "activo" que se use»*.
+
+| Umbral de «activo» | Negativos seguros | Ambiguos |
+|:--|--:|--:|
+| 1 µM | 59,859 (98%) | 1,142 |
+| 10 µM | 54,419 (89%) | 6,582 |
+| 100 µM | 7,474 (12%) | 53,527 |
+
+Eso **corrige la propuesta anterior del equipo**, que fijaba el corte en 10 µM por ser el valor modal. Con 1 µM —que corresponde a pChEMBL ≥ 6— se recuperan 5,440 negativos seguros más. Es un argumento a favor de ≥ 6 que no teníamos y que es suyo.
+
+El diccionario advierte además que **33,574 de las 41,291 filas con límite de 10 µM vienen de DrugMatrix**, una sola fuente, lo que concentra la evidencia censurada.
 
 **Una recomendación que no sobrevivió a su propia verificación.** Sobre los registros con pChEMBL, ≥ 5 dejaba 87.1% de activos y una razón de 6.7 a 1, lo que llevó a proponer invertir el orden y usar ≥ 6. Al recalcular **con las tres vías aplicadas**, ≥ 5 deja el conjunto casi equilibrado (61.7%, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1). El 6.7 a 1 era un artefacto de mirar solo el subconjunto con curva dosis-respuesta, sesgado hacia activos porque nadie publica curvas de lo que no funciona. **El umbral original se mantiene.**
 
@@ -212,6 +228,8 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 **Pregunta:** ¿Marcar o excluir? ¿Hay otros filtros de reactividad o toxicidad aceptables para productos naturales?
 
 **Contexto.** 413 compuestos del conjunto de permeabilidad (5.3%) llevan alerta PAINS. La alerta está **2.1 veces enriquecida en productos naturales** —7.5% contra 3.6%— que son justo los compuestos a priorizar.
+
+**Qué definición de «natural».** El diccionario distingue tres categorías, no dos: 3,366 productos naturales exactos, **1,005 análogos que difieren solo en estereoquímica**, y 3,440 sin equivalente conocido. Las cifras de arriba usan la coincidencia exacta; con coincidencia por esqueleto son 6.9% contra 3.2%. La razón de 2.1× se sostiene con las dos definiciones, pero hay que decir cuál se usó.
 
 **Qué significa la alerta.** PAINS **no quiere decir inactivo**: quiere decir que la actividad medida puede no venir del mecanismo que se supone. Un compuesto PAINS hace cosas, pero muchas y por vías inespecíficas.
 
@@ -288,7 +306,9 @@ Es evidencia de otro tipo. Sirve para «¿este compuesto hace *algo* en un siste
 
 ## 15 · La fuente confundida con el etiquetado {#d15}
 
-**Estado:** vigente · medida el 7 de octubre · **Decide:** equipo, con aviso a la patrocinadora
+**Estado:** vigente · medida el 7 de octubre · **Decide:** equipo
+
+La decide el equipo, pero lleva una pregunta para la patrocinadora porque ella conoce las fuentes.
 
 **La hipótesis.** NPASS y CMAUP son bases de productos naturales y no traen pChEMBL; ChEMBL es sobre todo sintético y sí lo trae. Si el etiquetado usa una vía distinta según la fuente, el modelo podría aprender **la fuente** en vez de la actividad.
 
@@ -332,9 +352,22 @@ Las métricas ya están fijadas —MCC y AUPRC sobre la clase minoritaria, decis
 
 **Estado:** ABIERTA · **Decide:** patrocinadora
 
-**Contexto.** La patrocinadora entregó `etiquetas_dianas_2026-09-25.csv` con 39 dianas, cada una con su gen, categoría de enfermedad, mecanismo, efecto buscado y el respaldo que la justifica. El equipo la ha usado tal cual, sin revisarla.
+**Contexto.** El archivo `etiquetas_dianas_2026-09-25.csv` tiene 39 filas, pero su diccionario distingue **37 dianas identificadas por gen** más **2 receptores completos** —NMDA y GABA-A— que ChEMBL registra sin especificar subunidad. Decir «39 dianas» es impreciso.
 
-**Decide:** patrocinadora · **Pregunta:** ¿La lista sigue vigente? ¿Falta o sobra alguna diana a la luz de lo que vimos en los datos?
+El criterio de curación también está documentado y responde una pregunta que teníamos abierta: las etiquetas se curaron a mano desde la farmacología conocida, y la categoría principal es la enfermedad con más respaldo —fármaco aprobado primero, luego evidencia genética.
+
+**Lo que sí hay que resolver son las dianas sin datos.** Según el diccionario:
+
+| Gen | Diana | Filas |
+|:--|:--|--:|
+| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** |
+| `AIF1` | Iba1 | **0** |
+| `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
+| `TARDBP` | TDP-43 | 8 |
+
+`AIF1` el propio diccionario lo marca como «marcador», sin dirección de efecto, así que no es una diana de intervención.
+
+**Decide:** patrocinadora · **Pregunta:** proponemos excluir del modelado `GABRG2`, `AIF1`, `GABRB2` y `TARDBP` por tener 0, 0, 1 y 8 filas. ¿Lo confirma? ¿Falta o sobra alguna otra diana?
 
 ---
 

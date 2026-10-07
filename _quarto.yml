@@ -36,6 +36,8 @@ website:
         text: Decisiones
       - href: contenido/diccionarios.md
         text: Diccionarios
+      - href: contenido/consulta-patrocinadora.md
+        text: Consulta
       - href: contenido/linaje-datos.qmd
         text: Linaje
       - text: Marco teórico
