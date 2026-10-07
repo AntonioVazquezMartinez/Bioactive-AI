@@ -121,10 +121,12 @@ Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10
 
 ## 5 · La etapa 1 no opera como filtro duro {#d5}
 
-**Estado:** vigente · confirmada por dos vías independientes · **Decide:** ambos
+**Estado:** vigente · confirmada **por los datos**, no por la patrocinadora · **Decide:** ambos
 **Pregunta:** ¿Cómo debería presentarse un compuesto con BBB− predicho pero actividad documentada?
 
-**Decisión.** Las dos etapas corren en paralelo y sus salidas se combinan en la priorización final. Un resultado BBB− **no descarta** al compuesto.
+**Lo que los datos respaldan.** Un resultado BBB− **no descarta** al compuesto. Eso está medido y es firme.
+
+**Lo que no está confirmado.** Que de ahí se siga que las etapas sean *independientes* o *paralelas* es un reencuadre respecto al planteamiento original de los asesores, que las planteó como «si cruza, ¿tiene efecto?». La patrocinadora no lo ha confirmado, así que el registro no lo da por hecho.
 
 **Por qué, razón original.** Existen estrategias consolidadas para favorecer el cruce: profármacos, lipidización, aprovechamiento de transportadores endógenos, nanoacarreadores.
 

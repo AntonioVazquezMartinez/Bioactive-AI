@@ -54,7 +54,9 @@ Su diccionario señala que las dos tablas son independientes y no hace falta cru
 
 Es el único subconjunto donde se puede medir la cadena completa de extremo a extremo. Reservarlo obliga a sacarlo también del entrenamiento de la etapa 1, o habría fuga, y eso cuesta un cuarto de los datos de esa etapa.
 
-Un BBB− no descartará al compuesto.
+Un BBB− no descartará al compuesto: eso lo respaldan los datos.
+
+Lo que sí queremos confirmar con usted es el **encuadre**. El planteamiento inicial fue «si cruza, ¿tiene efecto?», en cascada. Nuestros datos sugieren tratarlas como dos evidencias que se combinan al final, pero es un cambio de diseño y no queremos darlo por hecho.
 
 Defina si priorizamos **validar la cadena completa o conservar los datos de entrenamiento**, y cómo debe presentarse un compuesto con BBB− predicho pero actividad documentada.
 
