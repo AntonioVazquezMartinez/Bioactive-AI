@@ -90,6 +90,8 @@ Use mermaid rather than image files for diagrams, so they can be edited in a PR 
 
 Every reader is missing half the vocabulary: the AI side does not know what an efflux transporter is, the bioengineering side does not know what AUPRC is. **Define a term the first time it appears and link it to `docs/glosario.md`, which is the canonical definition.** If a term is not there yet, add it in the same PR — that is how the glossary stays complete without anyone auditing it.
 
+**Organise a document by its subject, not by how we came to know it.** Headings like «what we hadn't used» or «what confirmed we measured right» describe our process; a reader who wasn't here needs the fact, not our relationship to it. Corrections belong inline, in a sentence, where the fact lives — not in a section of their own. The exception is the decision register, where the superseded version *is* the content.
+
 Say **why** a choice was made and not only what it was. Keep every number attached to where it came from — a figure with no notebook behind it cannot be checked, and this project has already had to retract two conclusions that looked solid until someone recomputed them.
 
 ## Keep this file honest, and keep the project small

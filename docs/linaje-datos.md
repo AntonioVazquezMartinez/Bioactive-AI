@@ -76,30 +76,11 @@ flowchart LR
 
 Las flechas punteadas marcan las decisiones que **los datos revisaron después**: no salieron de la literatura, salieron de medir sobre el conjunto real y encontrar que la recomendación previa no se sostenía.
 
-## Las dos correcciones, con su evidencia
+## Las decisiones que los datos revisaron
 
-### No filtrar por la columna `group`
+Las flechas punteadas del segundo diagrama marcan dos decisiones que no salieron de la literatura sino de medir sobre el conjunto real:
 
-La investigación inicial leyó las categorías A–D de B3DB como una escala de confiabilidad y recomendó entrenar solo con A+B. El [EDA del Avance 1](../notebooks/01_EDA.ipynb) lo desmintió sobre los datos:
+- **No filtrar por la columna `group`** — [decisión 2](decisiones.md#d2)
+- **El etiquetado de la etapa 2 por tres vías** — [decisión 7](decisiones.md#d7)
 
-- El grupo D tiene **mediana de 3 referencias** contra **1** del grupo C: más respaldo, no menos.
-- **Ningún registro duplicado** del conjunto tiene etiquetas contradictorias.
-- La columna está confundida con la etiqueta: filtrar a A+B baja la clase minoritaria del **36.5% al 27.0%**, empeorando el desbalance en vez de limpiar ruido.
-
-La recomendación superada sigue visible en [02 · Datasets de BBB](referencias/02-datasets-bbb.md), marcada como tal.
-
-### El umbral de etiquetado de la etapa 2
-
-La decisión documentada era pChEMBL ≥ 5 como primario y ≥ 6 como robustez. El [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb) muestra que el criterio, aplicado solo, descarta en silencio tres bloques de evidencia:
-
-| Qué queda fuera | Registros |
-|:---|---:|
-| NPASS y CMAUP completos, que son las bases de **productos naturales** (12,809 recuperables por concentración exacta) | 15,293 |
-| Todas las mediciones **censuradas** (`>= X nM`) | 54,498 |
-| Los **inactivos declarados por texto** del artículo original | 29,730 |
-
-Y el umbral mismo cambia el problema: ≥ 5 deja 87.1% de activos, con un desbalance de 6.7 a 1 donde la clase difícil es la inactiva; ≥ 6 deja 63.7%, con 1.8 a 1. La distribución del pChEMBL no tiene un mínimo que sugiera dónde cortar.
-
-Al recalcular el desbalance **con las tres vías de etiquetado aplicadas**, y no solo sobre el subconjunto con pChEMBL, la conclusión se invierte: ≥ 5 deja el conjunto casi equilibrado (61.7% de activos, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1).
-
-**El criterio de `CLAUDE.md` se mantiene —≥ 5 primario, ≥ 6 robustez—**, con una condición que antes no estaba escrita: el etiquetado tiene que usar las tres vías. Lo que se corrige no es el umbral sino el procedimiento, que etiquetando solo por pChEMBL perdía los productos naturales.
+El registro guarda de cada una el contexto, la versión superada y lo que la cambió.
