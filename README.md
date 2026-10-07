@@ -1,5 +1,13 @@
 # Bioactive AI: Plataforma de IA para la predicción y priorización de compuestos bioactivos
 
+[![Publicar sitio](https://github.com/AntonioVazquezMartinez/Bioactive-AI/actions/workflows/pages.yml/badge.svg)](https://github.com/AntonioVazquezMartinez/Bioactive-AI/actions/workflows/pages.yml)
+[![Sitio](https://img.shields.io/website?url=https%3A%2F%2Fantoniovazquezmartinez.github.io%2FBioactive-AI%2F&label=sitio&up_message=en%20l%C3%ADnea&down_message=ca%C3%ADdo&color=brightgreen)](https://antoniovazquezmartinez.github.io/Bioactive-AI/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![RDKit](https://img.shields.io/badge/RDKit-2026.03.6-8C1D40)](https://www.rdkit.org/)
+[![Quarto](https://img.shields.io/badge/Quarto-1.10-39729E?logo=quarto&logoColor=white)](https://quarto.org/)
+[![Datos](https://img.shields.io/badge/datos-CC0%20%2B%20CC%20BY--NC-lightgrey)](https://antoniovazquezmartinez.github.io/Bioactive-AI/contenido/datos.html)
+
+
 Este repositorio contiene el código fuente, los datos, y la documentación del Proyecto Integrador correspondiente a la **Maestría en Inteligencia Artificial Aplicada** del Tecnológico de Monterrey (TC5035.10).
 
 ## Descripción del Proyecto
