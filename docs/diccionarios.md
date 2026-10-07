@@ -43,7 +43,7 @@ Toda cifra por origen debe declarar cuál usa. La alerta PAINS da 7.5% contra 3.
 - **2 compuestos de B3DB no sobreviven**: mepenzolato y tiotidina, con un carbono de carga imposible que RDKit rechaza.
 - **6 filas traen logBB sin clase** —zidovudina, miltefosina y otras cuatro—: tienen clase en B3DB, pero su fila de clasificación registra otra forma estereoquímica y no empató al unir.
 - **131 esqueletos tienen clases contradictorias**, que afectan 429 filas. El ejemplo que da: el meso-etambutol es BBB+ y los demás isómeros, BBB−.
-- **112 esqueletos tienen más de un valor de logBB**, con diferencias de hasta 1.4 unidades logarítmicas.
+- **112 esqueletos tienen más de una medición de logBB**, y de ellos **40 con valores distintos**, con diferencias de hasta 1.4 unidades logarítmicas. El diccionario dice «más de un valor», pero 72 de los 112 repiten el mismo número: el desacuerdo real es 2.8 veces menor de lo que sugiere la cifra.
 
 Los dos últimos ponen un **límite teórico** a cualquier modelo que agrupe por esqueleto: si dos estereoisómeros comparten estructura y llevan etiquetas opuestas, ninguno acierta ambas. Para las 131 clases contradictorias el mínimo de errores inevitables es de **151 compuestos sobre 7,805**, es decir un techo de exactitud del **98.1%** — no restringe a ningún modelo realista. Para el logBB el efecto no está cuantificado.
 
