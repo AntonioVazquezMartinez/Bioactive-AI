@@ -51,27 +51,10 @@ jobs:
         run: quarto render
 
       - name: Verificar enlaces internos
-        run: |
-          python3 - <<'EOF'
-          import glob, os, re, sys
-          rotos = []
-          for f in glob.glob("_site/**/*.html", recursive=True):
-              d = os.path.dirname(f)
-              contenido = open(f, encoding="utf-8").read()
-              for href in re.findall(r'href="([^"#?]+\.html)[^"]*"', contenido):
-                  if href.startswith(("http", "//")):
-                      continue
-                  if not os.path.exists(os.path.normpath(os.path.join(d, href))):
-                      rotos.append(f"{os.path.relpath(f, '_site')} -> {href}")
-          paginas = len(glob.glob("_site/**/*.html", recursive=True))
-          print(f"{paginas} páginas generadas")
-          if rotos:
-              print(f"\n{len(rotos)} enlaces internos rotos:")
-              for r in sorted(set(rotos)):
-                  print("  ", r)
-              sys.exit(1)
-          print("todos los enlaces internos resuelven")
-          EOF
+        run: python3 scripts/verificar_sitio.py
+
+      - name: Verificar el registro de decisiones
+        run: python3 scripts/verificar_decisiones.py
 
       - uses: actions/upload-pages-artifact@v3
         with:
