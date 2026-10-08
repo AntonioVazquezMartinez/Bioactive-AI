@@ -239,7 +239,7 @@ Propuesto tras ver 6.7:1, retractado al recalcular con las tres vías: el desbal
 
 1. **Filtro PAINS**, con la evidencia empírica de promiscuidad de nuestros propios datos. La curcumina aparece contra 32 dianas distintas cuando el compuesto mediano toca 1.
 2. **Resolver los 154 nombres de Spielvogel** a estructura: es la única validación externa genuina que tenemos.
-3. **Cuantificar el techo** que imponen los 131 esqueletos con etiquetas contradictorias.
+3. **Revisar los 131 esqueletos con etiquetas contradictorias**: el techo de exactitud que imponen ya está calculado en 98.1%, así que no limitan al modelo, pero falta decidir si son señal estereoquímica o ruido de curación.
 
 ::: {.callout-caution}
 Las conclusiones se formularán como **actividad predicha según mecanismo molecular**, nunca como neuroprotección demostrada. De 1,026 tratamientos neuroprotectores probados en ictus, ninguno mostró eficacia clínica establecida.

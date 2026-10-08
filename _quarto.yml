@@ -30,6 +30,8 @@ website:
     left:
       - href: index.qmd
         text: Inicio
+      - href: contenido/guia-del-proyecto.md
+        text: Guía
       - href: contenido/glosario.md
         text: Glosario
       - href: contenido/decisiones.md
