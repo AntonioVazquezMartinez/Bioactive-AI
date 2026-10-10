@@ -22,16 +22,16 @@ flowchart TD
     end
 
     subgraph e2["Etapa 2 · actividad"]
-        S1["114,549 con diana de la lista<br/>88,098 fenotípicos van aparte"]
+        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 fenotípicos aparte"]
         S2["99,585 esqueletos de conectividad"]
-        S3["Etiquetado pendiente de fijar<br/>pChEMBL deja fuera 3 bloques"]
+        S3["Cohorte descriptiva: 71,145 pares<br/>esqueleto de conectividad × gen"]
     end
 
     BBB --> B1 --> B2 --> B3 --> B4
     SNC --> S1 --> S2 --> S3
     DIA --> S1
     B4 --> M["Modelo etapa 1"]
-    S3 --> N["Modelo etapa 2"]
+    S3 -. "tras resolver discordancias<br/>y definir la partición" .-> N["Modelo etapa 2"]
     M --> P["Priorización con atribución<br/>a fragmentos"]
     N --> P
     B2 -. "solo 1,033 esqueletos<br/>en ambos conjuntos" .- S2
@@ -58,7 +58,7 @@ flowchart LR
     D4["Fuente etapa 2:<br/>ChEMBL + NPASS + CMAUP"]
     D5["Fuente etapa 1:<br/>archivo de la patrocinadora"]
     D6["NO filtrar por grupo A–D"]
-    D7["Etiquetado por tres vías<br/>umbral ≥ 5 confirmado"]
+    D7["Etiquetado por tres vías<br/>umbral ≥ 5 vigente, por ratificar"]
 
     R1 --> D1
     R2 --> D2
@@ -84,3 +84,5 @@ Las flechas punteadas del segundo diagrama marcan dos decisiones que no salieron
 - **El etiquetado de la etapa 2 por tres vías** — [decisión 7](decisiones.md#d7)
 
 El registro guarda de cada una el contexto, la versión superada y lo que la cambió.
+
+En la etapa 2, los porcentajes de actividad dependen de la unidad: **61.7%** con ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos; para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No deben presentarse como el mismo denominador ni como si la primera cifra describiera el conjunto por diana. La regla cuenta como activos pares con observaciones discordantes y todavía debe revisarse antes de definir el conjunto de entrenamiento. Los conteos de ambos umbrales y las exclusiones se detallan en la [decisión 7](decisiones.md#d7) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).

@@ -176,7 +176,18 @@ Eso **corrige la propuesta anterior del equipo**, que fijaba el corte en 10 µM 
 
 El diccionario advierte además que **33,574 de las 41,291 filas con límite de 10 µM vienen de DrugMatrix**, una sola fuente, lo que concentra la evidencia censurada.
 
-**Una recomendación que no sobrevivió a su propia verificación.** Sobre los registros con pChEMBL, ≥ 5 dejaba 87.1% de activos y una razón de 6.7 a 1, lo que llevó a proponer invertir el orden y usar ≥ 6. Al recalcular **con las tres vías aplicadas**, ≥ 5 deja 61.7% de activos (1.6 a 1) y ≥ 6 deja 44.4% (0.8 a 1) **contando por registro sobre todo lo etiquetado, fenotípicos incluidos**. Sobre el conjunto que de verdad se entrenaría —solo con diana, el valor más potente por par esqueleto × gen— sale 70.5% (2.4 a 1) con ≥ 5 y 50.6% (1.0 a 1) con ≥ 6, de modo que ahí ≥ 6 es el equilibrado. El 6.7 a 1 era un artefacto de mirar solo el subconjunto con curva dosis-respuesta, sesgado hacia activos porque nadie publica curvas de lo que no funciona. **El umbral original se mantiene.**
+**Denominadores verificados.** El 61.7% y el 44.4% son proporciones **por registro etiquetado** en todo el archivo de entrenamiento, no el balance del conjunto de modelado por diana. Incluyen ensayos fenotípicos sin diana de la lista:
+
+| Unidad y población | Denominador | ≥ 5: activos / inactivos | ≥ 6: activos / inactivos |
+|:---|---:|---:|---:|
+| Registro etiquetado, todo el archivo (incluye fenotípicos) | 194,086 | 119,835 / 74,251 · 61.7% activos · 1.6:1 | 86,238 / 107,848 · 44.4% activos · 0.8:1 |
+| Par único de esqueleto de conectividad × gen objetivo (`target_gene`) | 71,145 | 50,177 / 20,968 · 70.5% activos · 2.4:1 | 35,966 / 35,179 · 50.6% activos · 1.0:1 |
+
+La segunda fila resume la población observada después de etiquetar y agrupar; **no es todavía el conjunto de entrenamiento definitivo**. De los 114,549 registros que tienen una categoría de diana, 109,264 reciben etiqueta por alguna de las tres vías. Entre estos últimos, 4,810 no tienen el identificador de gen (`target_gene`) y 327 no tienen un esqueleto calculable desde SMILES. Se excluyen esos 5,137 registros al construir los 104,127 registros agrupables en 71,145 pares.
+
+La regla aplicada en este recuento es explícita: un par se cuenta activo si **al menos una** de sus observaciones etiquetadas es activa (máximo de etiquetas binarias). Con esta regla hay 1,810 pares con etiquetas discordantes para ≥ 5 y 2,426 para ≥ 6. Por ello, las proporciones por pares dependen de cómo se resuelvan esos conflictos y **son descriptivas, no una decisión ya validada para el entrenamiento**. El máximo de etiquetas binarias no selecciona por sí mismo la medición de mayor potencia; esa equivalencia no se presupone aquí y la política de agregación requiere acordarse antes de cerrar el conjunto de modelado.
+
+**Una recomendación que cambió al ampliar la población analizada.** En los registros con pChEMBL, ≥ 5 daba 87.1% de activos y una razón de 6.7 a 1; ese resultado motivó proponer ≥ 6. Al incluir las tres vías, las cifras dependen de la unidad: por registro, ≥ 5 da 61.7% de activos y ≥ 6 da 44.4%; por par de esqueleto × gen, bajo la regla provisional descrita arriba, ≥ 5 da 70.5% y ≥ 6 da 50.6%. La diferencia entre los resultados por registro no identifica por sí sola la causa del cambio. El sesgo de selección en los registros con pChEMBL es una explicación posible, pero estos conteos no demuestran su mecanismo. **Se conserva ≥ 5 como umbral primario de trabajo y ≥ 6 como análisis de robustez, pendiente de ratificación de la patrocinadora; el balance de clases por sí solo no determina el umbral biológico.**
 
 ---
 
