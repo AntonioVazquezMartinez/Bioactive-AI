@@ -35,7 +35,7 @@ What exists:
 
 - `notebooks/`: `01_EDA` (Avance 1, delivered), `01b_EDA_actividad_snc` (stage-2 EDA), `02_Feature_Eng` (Avance 2, notebook done, report pending).
 - `src/data_prep/` (`download_data.py`, `splits.py`) and `src/features/molecular.py`. No `src/models/` yet.
-- `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 210 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md` and `linaje-datos.md`.
+- `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 210 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md`, `fundamentos-desde-cero.md` (theory), `datos-contenido.md` (what each data file holds, its defects and the lineage diagram) and `guia-del-proyecto.md` (project and team).
 - `data/external/profesora/` holds the sponsor's data with a README documenting licenses and caveats. The SNC activity file goes through Git LFS (see `.gitattributes`); NPASS is CC BY-NC, so it is non-commercial.
 - The site is built from `_quarto.yml` + `scripts/prepare_site.py`; `visualizador.qmd` and `presentacion.qmd` are standalone pages.
 - `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The checks that run in CI are `scripts/verificar_sitio.py` (every internal link of the built site, not just `.html`) and `scripts/verificar_decisiones.py`. Both run locally too — run them before pushing.
