@@ -4,7 +4,9 @@
 #   pip install -r requirements.txt
 #
 # Este archivo fija solo cotas mínimas. Las versiones exactas con las que se ejecutó
-# el trabajo están en requirements.lock (Python 3.12, la misma del CI):
+# el trabajo están en requirements.lock. Python 3.12 porque es la versión en la que se
+# ejecutó y se verificó el trabajo (el CI no ejecuta los notebooks); cambiarla obliga a
+# reejecutar todo y revisar cada cifra:
 #   uv venv --python 3.12 env && source env/bin/activate
 #   uv pip install -r requirements.lock
 # Regenerarlo al cambiar este archivo:

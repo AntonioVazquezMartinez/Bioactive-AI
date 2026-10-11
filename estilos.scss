@@ -285,6 +285,7 @@ section.level4.ratificada > h4::after { content: "ratificada"; }
 section.level4.revisada.vigente > h4::after   { content: "vigente · revisada"; }
 section.level4.revisada.propuesta > h4::after { content: "propuesta · revisada"; }
 section.level4.revisada.abierta > h4::after   { content: "abierta · revisada"; }
+section.level4.revisada.ratificada > h4::after { content: "ratificada · revisada"; }
 
 // y una segunda etiqueta, roja, para lo que bloquea el Avance 3
 section.level4.bloquea > h4::before {
