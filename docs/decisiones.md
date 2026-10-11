@@ -182,7 +182,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 171 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
-**Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría (de 106 a 66 descriptores muy asimétricos) pero no es lo que mejor predice, y una sola corrida no distingue entre transformaciones. El PCA al 95% (85 componentes) da un MCC algo mayor con un corte, pero el AUROC del Random Forest empeora y el intervalo del bootstrap cruza el cero. La selección dejó 171 de 206 descriptores.
+**Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría (de 106 a 66 descriptores muy asimétricos) y, en la regresión logística, queda a la par de min–max (MCC 0.484 contra 0.481; una ejecución anterior daba ventaja a min–max), así que una sola corrida no distingue entre transformaciones. El PCA al 95% (85 componentes) da un MCC algo mayor con la regresión logística (0.512 contra 0.500) y algo menor con Random Forest (0.558 contra 0.566); el AUROC del Random Forest empeora (0.872 contra 0.916) y el intervalo del bootstrap de la diferencia cruza el cero. La selección dejó 171 de 206 descriptores.
 
 **Se propone.** Tres modelos con la misma partición:
 
@@ -249,8 +249,8 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | S1.6 | Los valores atípicos son alertas, no errores | Asumido | No se recortan ni eliminan | — |
 | S1.7 | Los 312 compuestos acíclicos sin andamio se asignan con una regla reproducible | Sin comprobar | La regla no está escrita | Escribirla antes del baseline |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |
-| S1.9 | Yeo-Johnson es una buena transformación | Sin comprobar | La matriz guardada la asume; una corrida no la distingue de min–max | Validación cruzada en el Avance 3; cambiarla obliga a recalcular |
-| S1.10 | El PCA no aporta | Sin comprobar | Descartado por explicabilidad; resultado no concluyente ([1.5](#d1-5)) | Mantenerlo como brazo de comparación |
+| S1.9 | Yeo-Johnson es una buena transformación | Sin comprobar | La matriz guardada la asume; en la regresión logística queda a la par de min–max (0.484 contra 0.481) y una corrida no las distingue | Validación cruzada en el Avance 3; cambiarla obliga a recalcular |
+| S1.10 | El PCA no aporta | Sin comprobar | Descartado por explicabilidad; no mejora de forma concluyente (el bootstrap de la diferencia en Random Forest da −0.008, IC 95% −0.070 a +0.055) ([1.5](#d1-5)) | Mantenerlo como brazo de comparación |
 | S1.11 | Las tres características derivadas aportan | Acotado | AUC individual: `tpsa_por_mw` 0.810, `lipo_neta` 0.795, `regla_2p` 0.684 (TPSA: 0.844). `lipo_neta` correlaciona 0.975 con `MolLogP` y lo desplaza | Reevaluar con validación cruzada |
 | S1.12 | Todo lo que aprende de los datos se ajusta solo con entrenamiento | Comprobado | Media tras escalar: 0.0000 en entrenamiento, 0.0048 en evaluación | — |
 | S1.13 | L = 2048 es un tamaño razonable de vocabulario | Acotado | Medido: dentro del ruido del mejor y sin ganancia distinguible con 4096 ([1.7](#d1-7)); falta repetirlo con modelos afinados | Elegir L por modelo en el Avance 3 |
