@@ -2,9 +2,7 @@
 
 Qué es la barrera hematoencefálica, qué enfermedades se quieren atacar y por qué los productos naturales son el punto de partida. Es la parte que no supone conocimiento de modelado.
 
-> **Estado: borrador para revisión del equipo y los asesores.** Se construyó a partir de siete ramas de investigación documentadas en [`docs/referencias/`](../../referencias/README.md), que conservan la evidencia completa y las advertencias de acceso. La bibliografía está en [`bibliografia.bib`](../../referencias/bibliografia.bib), con 208 entradas.
->
-> **Antes de entregar:** verificar contra doi.org toda referencia marcada como de acceso parcial o sin acceso. Varias entradas tienen metadatos que nadie del equipo ha leído.
+> Borrador para revisión; el estado y las advertencias de verificación están en la [presentación](README.md).
 
 ---
 

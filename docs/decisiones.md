@@ -20,7 +20,7 @@ Ninguna decisión se considera cerrada hasta que **la patrocinadora la revise**.
 
 Cada entrada dice además **quién decide**. Las que necesitan a la patrocinadora son las que viajan en la consulta que se le envía; el resto son del equipo.
 
-Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de linaje](linaje-datos.md) muestra qué documento de investigación sustenta cada decisión.
+Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de la investigación](referencias/README.md) muestra qué documento sustenta cada decisión, y los [datos del proyecto](datos-contenido.md) cómo llega cada número a la matriz del modelo.
 
 ## Estado de un vistazo
 
@@ -211,7 +211,7 @@ La regla aplicada en este recuento es explícita: un par se cuenta activo si **a
 
 **Decisión.** El sitio es donde el proyecto se explica a sí mismo. La prueba que tiene que pasar: que un asesor, la patrocinadora o quien califique lo abra y entienda qué se hace y por qué, **sin leer código ni preguntar a nadie**. Se actualiza en el mismo PR del cambio que describe.
 
-**Consecuencias.** Los reportes, el glosario, el linaje de datos y este registro viven ahí. Una decisión revertida en código pero todavía documentada en el sitio es peor que no documentar.
+**Consecuencias.** Los reportes, el glosario, los datos del proyecto y este registro viven ahí. Una decisión revertida en código pero todavía documentada en el sitio es peor que no documentar.
 
 **Trampa conocida.** El sitio **no descubre archivos solo**: un documento nuevo es invisible hasta registrarlo en `scripts/prepare_site.py` y en el navbar de `_quarto.yml`.
 
