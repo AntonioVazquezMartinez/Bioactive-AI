@@ -191,10 +191,10 @@ El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-**Solución: etiquetar por tres vías.** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 de los naturales— e inactivo declarado para textos y censurados con corte ≥ 10 µM.
+**Propuesta de etiquetado por tres vías, pendiente de ratificación:** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 registros de productos naturales— e inactivo declarado para textos y mediciones censuradas con corte ≥ 10 µM.
 
 ::: {.callout-note}
-Con las tres vías aplicadas, el umbral pChEMBL ≥ 5 deja el conjunto casi equilibrado: 61.7% de activos, razón 1.6 a 1.
+Con ≥ 5 hay 119,835 activos de 194,086 registros etiquetados (61.7%; razón 1.6:1), incluidos los fenotípicos. En el recuento exploratorio por estructura de conectividad × gen hay 50,177 pares activos de 71,145 (70.5%; razón 2.4:1). Como análisis de robustez, ≥ 6 da 44.4% por registro y 50.6% por par. El 61.7% es un balance por registro, no el balance por diana. El recuento por pares usa la regla provisional «activo si alguna observación es activa»; quedan pendientes de resolver 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6, así como definir la población y partición finales de entrenamiento. La propuesta de etiquetado y umbrales requiere ratificación de la patrocinadora.
 :::
 
 # Cómo trabajamos {background-color="#2a3441"}
@@ -214,7 +214,7 @@ Recomendado por la investigación, desmentido por el EDA. La versión anterior s
 ::: {.column width="50%"}
 **Invertir el umbral de etiquetado**
 
-Propuesto tras ver 6.7:1, retractado al recalcular con las tres vías: el desbalance era un artefacto.
+Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tres vías cambian los porcentajes. La causa de la diferencia no queda determinada por este análisis.
 :::
 :::
 

@@ -22,16 +22,16 @@ flowchart TD
     end
 
     subgraph e2["Etapa 2 · actividad"]
-        S1["114,549 con diana de la lista<br/>88,098 fenotípicos van aparte"]
+        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 fenotípicos aparte"]
         S2["99,585 esqueletos de conectividad"]
-        S3["Etiquetado pendiente de fijar<br/>pChEMBL deja fuera 3 bloques"]
+        S3["Cohorte descriptiva previa a partición<br/>71,145 pares · regla provisional"]
     end
 
     BBB --> B1 --> B2 --> B3 --> B4
     SNC --> S1 --> S2 --> S3
     DIA --> S1
     B4 --> M["Modelo etapa 1"]
-    S3 --> N["Modelo etapa 2"]
+    S3 -. "tras resolver discordancias<br/>y definir la partición" .-> N["Modelo etapa 2"]
     M --> P["Priorización con atribución<br/>a fragmentos"]
     N --> P
     B2 -. "solo 1,033 esqueletos<br/>en ambos conjuntos" .- S2
@@ -58,7 +58,7 @@ flowchart LR
     D4["Fuente etapa 2:<br/>ChEMBL + NPASS + CMAUP"]
     D5["Fuente etapa 1:<br/>archivo de la patrocinadora"]
     D6["NO filtrar por grupo A–D"]
-    D7["Etiquetado por tres vías<br/>umbral ≥ 5 confirmado"]
+    D7["Etiquetado por tres vías<br/>umbral ≥ 5 vigente, por ratificar"]
 
     R1 --> D1
     R2 --> D2
@@ -76,30 +76,13 @@ flowchart LR
 
 Las flechas punteadas marcan las decisiones que **los datos revisaron después**: no salieron de la literatura, salieron de medir sobre el conjunto real y encontrar que la recomendación previa no se sostenía.
 
-## Las dos correcciones, con su evidencia
+## Las decisiones que los datos revisaron
 
-### No filtrar por la columna `group`
+Las flechas punteadas del segundo diagrama marcan dos decisiones que no salieron de la literatura sino de medir sobre el conjunto real:
 
-La investigación inicial leyó las categorías A–D de B3DB como una escala de confiabilidad y recomendó entrenar solo con A+B. El [EDA del Avance 1](../notebooks/01_EDA.ipynb) lo desmintió sobre los datos:
+- **No filtrar por la columna `group`** — [decisión 2](decisiones.md#d2)
+- **El etiquetado de la etapa 2 por tres vías** — [decisión 7](decisiones.md#d7)
 
-- El grupo D tiene **mediana de 3 referencias** contra **1** del grupo C: más respaldo, no menos.
-- **Ningún registro duplicado** del conjunto tiene etiquetas contradictorias.
-- La columna está confundida con la etiqueta: filtrar a A+B baja la clase minoritaria del **36.5% al 27.0%**, empeorando el desbalance en vez de limpiar ruido.
+El registro guarda de cada una el contexto, la versión superada y lo que la cambió.
 
-La recomendación superada sigue visible en [02 · Datasets de BBB](referencias/02-datasets-bbb.md), marcada como tal.
-
-### El umbral de etiquetado de la etapa 2
-
-La decisión documentada era pChEMBL ≥ 5 como primario y ≥ 6 como robustez. El [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb) muestra que el criterio, aplicado solo, descarta en silencio tres bloques de evidencia:
-
-| Qué queda fuera | Registros |
-|:---|---:|
-| NPASS y CMAUP completos, que son las bases de **productos naturales** (12,809 recuperables por concentración exacta) | 15,293 |
-| Todas las mediciones **censuradas** (`>= X nM`) | 54,498 |
-| Los **inactivos declarados por texto** del artículo original | 29,730 |
-
-Y el umbral mismo cambia el problema: ≥ 5 deja 87.1% de activos, con un desbalance de 6.7 a 1 donde la clase difícil es la inactiva; ≥ 6 deja 63.7%, con 1.8 a 1. La distribución del pChEMBL no tiene un mínimo que sugiera dónde cortar.
-
-Al recalcular el desbalance **con las tres vías de etiquetado aplicadas**, y no solo sobre el subconjunto con pChEMBL, la conclusión se invierte: ≥ 5 deja el conjunto casi equilibrado (61.7% de activos, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1).
-
-**El criterio de `CLAUDE.md` se mantiene —≥ 5 primario, ≥ 6 robustez—**, con una condición que antes no estaba escrita: el etiquetado tiene que usar las tres vías. Lo que se corrige no es el umbral sino el procedimiento, que etiquetando solo por pChEMBL perdía los productos naturales.
+En la etapa 2, los porcentajes de actividad dependen de la unidad: **61.7%** con ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos; para los **71,145 pares únicos de estructura de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No deben presentarse como el mismo denominador ni como si la primera cifra describiera el conjunto por diana. Esta agrupación de conectividad no es un andamio Bemis–Murcko. La regla cuenta como activos pares con observaciones discordantes y todavía debe revisarse antes de definir el conjunto de entrenamiento; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones se detallan en la [decisión 7](decisiones.md#d7) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).

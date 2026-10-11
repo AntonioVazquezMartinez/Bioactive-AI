@@ -1,6 +1,6 @@
 # Consulta de decisiones a la patrocinadora
 
-Versión del 7 de octubre de 2026. Redactada por Ingrid Pamela Ruiz Puga, revisada contra los datos y contra los diccionarios de la patrocinadora.
+Versión del 10 de octubre de 2026. Redactada por Ingrid Pamela Ruiz Puga, revisada contra los datos y contra los diccionarios de la patrocinadora.
 
 Cada punto enlaza a su entrada del [registro de decisiones](decisiones.md), donde está el contexto completo y lo que cuesta cada opción. `scripts/verificar_decisiones.py` comprueba que ninguna decisión con pregunta formulada quede fuera de este documento.
 
@@ -25,11 +25,17 @@ Primero, gracias por los diccionarios: la sección 7 del de actividad resolvió 
 
 El `pChEMBL` solo existe para los registros de ChEMBL. Etiquetar únicamente por él dejaría fuera 15,293 registros de NPASS y CMAUP, 54,498 mediciones censuradas y 29,730 inactivos declarados por texto.
 
-Proponemos tres vías: pChEMBL donde exista; concentración exacta para el resto, que recupera 12,809 registros de productos naturales; e inactivo declarado para los textos y los censurados.
+Proponemos tres vías, pendientes de ratificación: pChEMBL donde exista; concentración exacta para el resto, que recupera 12,809 registros de productos naturales; e inactivo declarado para los textos y los censurados. Para el corte de censura usamos provisionalmente 10 µM, la concentración modal y mediana del conjunto.
 
 **Para los censurados aplicamos su criterio de la sección 7**, no uno nuestro: un `>` solo sirve como negativo si el límite es igual o mayor que el umbral de «activo». Su tabla muestra que con umbral de 1 µM quedan 59,859 negativos seguros (98%) y con 10 µM quedan 54,419 (89%), lo que favorece el umbral más estricto.
 
-Indíquenos **qué criterio de «activo» usa usted** y si los `Not active` declarados por texto son negativos confiables. Esos dos puntos no están en el diccionario.
+Indíquenos **qué criterio de «activo» recomienda** y si los `Not active` declarados por texto son negativos confiables. Esos dos puntos no están en el diccionario.
+
+### Observaciones discordantes para una misma estructura y diana
+
+Al agrupar por los primeros 14 caracteres del InChIKey (clave de conectividad, que no distingue estereoquímica) y por gen, el recuento exploratorio encuentra **1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6**: dentro del mismo par hay al menos una observación etiquetada activa y otra inactiva. Esos conteos usan la regla provisional de marcar el par como activo si cualquier observación es activa; no son una resolución validada ni el tamaño final del entrenamiento.
+
+¿Considera comparables las mediciones de esos pares entre ensayos o fuentes? ¿Existe una jerarquía de evidencia que debamos aplicar —por ejemplo, según tipo de ensayo, concentración, fuente o calidad de la medición—, o hay casos que debamos tratar como inconclusos? Usaremos su criterio biológico para orientar una regla reproducible y compararemos el efecto de esa regla antes de cerrar el conjunto de modelado.
 
 ## B · Forma del modelo de la etapa 2
 
@@ -82,7 +88,7 @@ Indíquenos si procede entrenar **modelos separados, un modelo con el origen com
 
 **Categorías de B3DB** ([2](decisiones.md#d2), en uso). Seguimos su indicación de no usarlas como filtro. Medimos además que filtrar a A+B bajaría la clase BBB− de 36.5% a 27.0%.
 
-**Registros fenotípicos** ([14](decisiones.md#d14)). El 43.5% (88,098) son ensayos neuronales sin diana identificada. Proponemos entrenar con los 114,549 que sí la tienen y mantener estos aparte. Confirme si van dentro del modelo, aparte o fuera.
+**Registros fenotípicos** ([14](decisiones.md#d14)). El 43.5% (88,098) son ensayos neuronales sin diana identificada. Los 114,549 restantes tienen una categoría de diana; 109,264 reciben etiqueta por las tres vías propuestas. Al excluir 4,810 sin gen y 327 sin clave de conectividad calculable, quedan 71,145 pares exploratorios, aún sin resolver discordancias ni construir la partición final. Proponemos mantener los fenotípicos en un análisis aparte, no descartarlos. Confirme si van dentro de un modelo específico, aparte o fuera del alcance.
 
 **Sesgo por fuente** ([15](decisiones.md#d15), medido). NPASS y CMAUP son naturales y no traen pChEMBL; ChEMBL es sobre todo sintético y sí. El 65.4% de los naturales también aparece en ChEMBL, así que el riesgo se concentra en 1,445 compuestos. Su diccionario señala además que 33,574 de las filas censuradas a 10 µM vienen de DrugMatrix. Indíquenos qué otros sesgos de curación conoce entre las tres fuentes.
 
