@@ -10,7 +10,7 @@ Bioactive AI is a Tec de Monterrey MNA capstone (TC5035.10, Team 7) with the Bio
 
 The full notes and open questions from the advisor meetings are in `docs/planteamiento/`, and that folder is the source of truth. What matters for code:
 
-- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) predict neuroprotective activity and the likely target. **A BBB− result does not discard a compound** — that much the data supports, since only 1,033 skeletons have measurements in both sets and the other 99% would be filtered on an unverified prediction. The team therefore runs the two stages in parallel and combines them in the ranking instead of cascading them (decision C.3). Candidate data sources are CMAUP, NPASS and ChEMBL. The primary BBB dataset is the sponsor's curated B3DB-derived file documented below. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
+- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) predict neuroprotective activity and the likely target. **A BBB− result does not discard a compound** — that much the data supports, since only 1,033 skeletons have measurements in both sets and the other 99% would be filtered on an unverified prediction. The team therefore treats the two stages as parallel evidence combined in the ranking, not as a cascade; whether the chain also gets measured end to end on those 1,033 skeletons is a separate proposal still waiting on the sponsor (decision C.3). Candidate data sources are CMAUP, NPASS and ChEMBL. The primary BBB dataset is the sponsor's curated B3DB-derived file documented below. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
 - **Explainability is required, not optional.** The advisors want to know which structural features drive a prediction, so favor interpretable models or substructure-level attributions.
 - **Activity labels depend on concentration.** The same compound can flip between inactive and active depending on the µM tested, so pick and document a threshold when turning activity measurements into labels.
 - **"No learnable pattern" is a valid result.** Report it honestly instead of tuning until something looks good.
@@ -74,7 +74,7 @@ Documentation lives in three places and each has a different job. Keeping them a
 
 Every technical decision in this file has an entry in `docs/decisiones.md` with its context, what was discarded, what it costs, and, when it needs the sponsor, **the literal question** to ask. It does not record who decides.
 
-The register is split by phase (common, 1, 2; ids like `1.3`, `2.5`, `C.2`) and by kind: decisions, proposals and assumptions (each with its status and what to do if it fails). Status vocabulary: *hecha* (settled by the team, not consulted again), *vigente* (we work on this basis, reversible), *propuesta*, *abierta*, *revisada* (decided, measured, changed — keeps the superseded version visible), *ratificada*. **Nothing is ratificada until the sponsor reviews it.** That is not a formality: two decisions have already been reversed by measuring, and the register keeps both versions.
+The register is split by phase (common, 1, 2; ids like `1.3`, `2.5`, `C.2`) and by kind: decisions, proposals and assumptions (each with its status and what to do if it fails). Status vocabulary: *vigente* (we work on this basis, reversible), *propuesta*, *abierta*, *revisada* (decided, measured, changed — keeps the superseded version visible), *ratificada*. **Nothing is ratificada until the sponsor reviews it.** That is not a formality: two decisions have already been reversed by measuring, and the register keeps both versions.
 
 When a decision changes, never rewrite it silently. Mark the previous version as superseded and say what changed it. `scripts/verificar_decisiones.py` checks that every entry declares a valid status.
 
@@ -111,7 +111,12 @@ So: when you learn something that would have saved you an hour, write it here. W
 ## Environment
 
 ```bash
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
+# reproducible: las versiones exactas con las que se ejecutó el trabajo (Python 3.12, la del CI)
+uv venv --python 3.12 env && source env/bin/activate
+uv pip install -r requirements.lock
+
+# o, si no usas uv: cotas mínimas, sin garantía de repetir las cifras
+python -m venv env && source env/bin/activate && pip install -r requirements.txt
 ```
+
+`requirements.txt` fija solo cotas inferiores, y entre versiones cambian en el tercer decimal las cifras de Random Forest; `requirements.lock` (generado con `uv pip compile requirements.txt --python-version 3.12`) fija todo. Ni siquiera eso hace idénticas las corridas entre sistemas operativos: la regresión logística sin escalar o con min–max difiere ~0.016 de MCC entre macOS y Linux, así que **no se decide con una sola corrida**, y la primera celda del notebook 02 imprime las versiones con las que se ejecutó.

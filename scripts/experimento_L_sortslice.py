@@ -4,7 +4,7 @@
 Evidencia de la decisión 1.7 del registro (`docs/decisiones.md`). Sobre la
 partición por andamio del Avance 2 (5,557 / 749 / 1,499) compara L entre 64 y
 4,096 con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de
-conectividad, repetida con 3 semillas, y tres modelos con hiperparámetros fijos
+conectividad (los acíclicos, solo por esqueleto), repetida con 3 semillas, y tres modelos con hiperparámetros fijos
 (regresión logística, Random Forest y XGBoost). El vocabulario se reaprende
 dentro de cada pliegue; **la prueba no se toca**.
 
@@ -69,17 +69,19 @@ def metr(y,s):
     return matthews_corrcoef(y,p), average_precision_score(1-y,1-s), roc_auc_score(y,s)
 tr=np.where(d.particion=='entrenamiento')[0]; va=np.where(d.particion=='validacion')[0]
 y=d['y'].values
-# grupos: andamio unido por esqueleto
+# grupos de la validación cruzada: el esqueleto de conectividad, unido al andamio
+# cuando lo hay. Los acíclicos no tienen andamio: se agrupan solo por esqueleto, de
+# modo que los estereoisómeros de un mismo compuesto nunca caigan en pliegues distintos
+# (darle a cada acíclico su propio grupo los separaba: 127 filas en 44 esqueletos).
+ac=(d['andamio']=='<aciclico>').values
 par={}
 def f(x):
     while par.setdefault(x,x)!=x:
         par[x]=par[par[x]]; x=par[x]
     return x
-for a,e in zip(d['andamio'],d['esqueleto']): par[f('A'+a)]=f('E'+e)
-g=np.array([f('A'+a) for a in d['andamio']])
-# acíclicos: cada uno su propio grupo
-ac=(d['andamio']=='<aciclico>').values
-g=np.where(ac,['X'+str(i) for i in range(len(d))],g)
+for a,e,c in zip(d['andamio'],d['esqueleto'],ac):
+    if not c: par[f('A'+a)]=f('E'+e)
+g=np.array([f('E'+e) for e in d['esqueleto']])
 Ls=[64,128,256,512,1024,2048,4096]
 filas=[]
 for L in Ls:

@@ -8,7 +8,7 @@ Qué contiene cada archivo que entregó la patrocinadora, qué defectos se conoc
 
 ```{mermaid}
 flowchart TD
-    subgraph fuentes["Datos entregados por la patrocinadora"]
+    subgraph fuentes["Datos de la patrocinadora"]
         BBB["bbb_permeability_experimental.csv<br/>7,811 filas · deriva de B3DB<br/>cruzado con COCONUT"]
         SNC["snc_activity_…_Entrenamiento.csv<br/>202,647 registros · ChEMBL + NPASS + CMAUP"]
         DIA["etiquetas_dianas.csv<br/>39 dianas con gen y enfermedad"]

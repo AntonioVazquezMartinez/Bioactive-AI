@@ -3,7 +3,12 @@
 #   python -m venv env && source env/bin/activate
 #   pip install -r requirements.txt
 #
-# Verificado con Python 3.14.3 en macOS el 2026-09-24.
+# Este archivo fija solo cotas mínimas. Las versiones exactas con las que se ejecutó
+# el trabajo están en requirements.lock (Python 3.12, la misma del CI):
+#   uv venv --python 3.12 env && source env/bin/activate
+#   uv pip install -r requirements.lock
+# Regenerarlo al cambiar este archivo:
+#   uv pip compile requirements.txt --python-version 3.12 -o requirements.lock --no-header
 
 # --- Quimioinformática ---
 # RDKit da los descriptores 2D (217 en esta versión), los fingerprints Morgan

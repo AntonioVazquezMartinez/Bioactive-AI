@@ -150,7 +150,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 **Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura reporta que así se infla el resultado entre 7 y 13 puntos.
 
-**Se decidió.** Bemis-Murcko, agrupando también por esqueleto de conectividad para que los estereoisómeros no se separen. Los andamios frecuentes van a entrenamiento y los raros a prueba (convención de DeepChem): 5,557 / 749 / 1,499, sin andamio ni esqueleto compartido.
+**Se decidió.** Bemis-Murcko, agrupando también por esqueleto de conectividad para que los estereoisómeros no se separen. Los andamios frecuentes van a entrenamiento y los raros a prueba (convención de DeepChem): 5,557 / 749 / 1,499, sin andamio ni esqueleto compartido. **Los 312 compuestos acíclicos** (cadenas sin anillos, que no tienen andamio) **van todos a entrenamiento**: no comparten estructura de anillo con nada, así que no filtran información a la prueba, pero tampoco ayudan a medir generalización estructural.
 
 **Consecuencias.** La prueba tiene 1,390 andamios en 1,499 compuestos y 57.3% BBB+ contra 64.0% del entrenamiento: se evalúa sobre una distribución distinta de la que aprendió, que es lo realista. Construida al revés, con los frecuentes en prueba, daba 45 andamios con el benceno ocupando el 26%; la dirección de la asignación es el detalle crítico.
 
@@ -216,26 +216,27 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 **Qué dice la literatura.** No hay un L óptimo universal. `dablander2024sortslice` probó exactamente L ∈ {512, 1024, 2048, 4096}, dice que las opciones comunes son 1024 o 2048, no recomienda una y encuentra que la ventaja de Sort & Slice sobre el plegado por hash crece cuando L baja. El tamaño se decide con los datos propios.
 
-**Qué se midió.** `scripts/experimento_L_sortslice.py` (resultados en `notebooks/datos/resultados_L_sortslice.csv` y sección 5.1 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)): validación cruzada de 5 pliegues agrupada por andamio y esqueleto, 3 semillas (15 evaluaciones por celda), vocabulario reaprendido en cada pliegue, hiperparámetros fijos y la prueba sin tocar. MCC medio:
+**Qué se midió.** `scripts/experimento_L_sortslice.py` (resultados en `notebooks/datos/resultados_L_sortslice.csv` y sección 5.1 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)): validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad (los acíclicos, solo por esqueleto, para que los estereoisómeros no se separen), 3 semillas, vocabulario reaprendido en cada pliegue, hiperparámetros fijos y la prueba sin tocar. MCC medio:
 
 | L | Cobertura (entrenamiento / validación) | Regresión logística | Random Forest | XGBoost |
 |--:|:--|--:|--:|--:|
-| 64 | 36.8% / 33.6% | 0.634 | 0.680 | 0.669 |
-| 128 | 46.1% / 39.9% | 0.647 | 0.687 | 0.680 |
-| 256 | 56.4% / 45.8% | 0.642 | 0.692 | 0.663 |
-| 512 | 67.0% / 55.2% | 0.654 | 0.694 | 0.666 |
-| 1024 | 76.8% / 63.8% | 0.659 | 0.688 | 0.671 |
-| **2048** | **84.8% / 71.0%** | **0.673** | **0.699** | **0.678** |
-| 4096 | 91.9% / 77.2% | 0.674 | 0.694 | 0.686 |
+| 64 | 36.8% / 33.6% | 0.642 | 0.664 | 0.656 |
+| 128 | 46.1% / 39.9% | 0.653 | 0.680 | 0.662 |
+| 256 | 56.4% / 45.8% | 0.654 | 0.671 | 0.655 |
+| 512 | 67.0% / 55.2% | 0.656 | 0.673 | 0.662 |
+| 1024 | 76.8% / 63.8% | 0.666 | 0.678 | 0.664 |
+| **2048** | **84.8% / 71.0%** | **0.669** | **0.677** | **0.662** |
+| 4096 | 91.9% / 77.2% | 0.670 | 0.691 | 0.674 |
 
-- **La curva es plana.** La desviación entre pliegues es de ~0.11 de MCC, mucho mayor que cualquier diferencia entre tamaños. Solo la regresión logística sube de forma sostenida (0.634 a 0.674); los árboles se aplanan desde L ≈ 128 a 512. El AUPRC sobre BBB− y el AUROC cuentan lo mismo.
-- **2048 está dentro del ruido del mejor en MCC.** Con la regla «el menor L a menos de un error estándar del mejor» sale 2048 para la regresión logística (en MCC y en AUPRC) y para el promedio de los tres modelos en MCC; con MCC, Random Forest se conforma con 512. **En AUPRC sobre BBB− el promedio favorece 4096**, pero por 0.001 a 0.003. XGBoost es inconsistente (128 o 4096 según la métrica).
-- **4096 no compensa.** Duplica las columnas y cambia el MCC en +0.001, −0.005 y +0.008, sin distinguirse del ruido.
-- **La validación fija de 749 compuestos no aclara más**: favorece L entre 256 y 512 para los árboles y L = 4096 para la logística, con diferencias dentro del ruido de un conjunto tan chico.
+- **Sube despacio y casi todo cabe en el ruido.** El mejor tamaño medido es 4096 en los tres modelos, pero la desviación entre pliegues es de 0.09 a 0.11 de MCC. Pasar de 2048 a 4096 cambia el MCC en +0.001, +0.014 y +0.012, y el AUPRC sobre BBB− en +0.002, +0.004 y +0.006, a cambio de duplicar las columnas.
+- **El error estándar hay que corregirlo.** Las 15 evaluaciones (3 semillas × 5 pliegues) comparten datos de entrenamiento, así que no son independientes. Con la corrección de Nadeau y Bengio el error estándar es unas 2.2 veces mayor que el ingenuo; con ella, en MCC y por modelo casi cualquier L desde 128 queda a un error estándar del mejor, y la medición no distingue tamaños; solo el promedio de los tres modelos señala 4096 por poco (0.009 de diferencia contra un error estándar de 0.007). Sin la corrección el criterio sesga hacia L grandes.
+- **En AUPRC, 2048 es el menor L dentro del ruido** para la regresión logística y para Random Forest (4096 para XGBoost). Es la métrica que más se parece al uso final: ordenar candidatos.
+- **No se probó más allá de 4096**, y la tendencia no se ha aplanado.
+- **Corrección respecto a una medición anterior.** Los acíclicos se agrupaban uno por uno, lo que separaba estereoisómeros del mismo compuesto en pliegues distintos (127 filas en 44 esqueletos, 2.3% del entrenamiento). Al corregirlo, el MCC cambió entre −0.022 y +0.012 según el modelo y el tamaño, y el criterio de «menor L dentro del ruido» pasó de 2048 a 4096 con el error estándar ingenuo; con el corregido, la lectura es la de arriba.
 
-**Se propone.** Mantener **L = 2048 como valor de trabajo**: queda dentro del ruido del mejor en MCC, conserva la cobertura y coincide con una de las dos opciones comunes; 4096 duplica las columnas por una diferencia que no se distingue del ruido. La prueba no se usa para elegir L. Límites de esta medición: hiperparámetros sin afinar, una sola partición base y un conjunto de 4,018 esqueletos efectivos.
+**Se propone.** Mantener **L = 2048 como valor de trabajo**, como compromiso: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos, conserva el 85% de la cobertura y coincide con una de las dos opciones comunes. **4096 es la alternativa** si el número de columnas no importa. La prueba no se usa para elegir L. Límites de esta medición: hiperparámetros sin afinar, una sola partición base y un conjunto de 4,018 esqueletos efectivos.
 
-**Posibilidad: L = 512 si el modelo es XGBoost (o Random Forest).** Reduce el espacio de características a una cuarta parte (512 columnas en vez de 2048), con lo que hay menos subestructuras que explicar y menos riesgo de sobreajuste con 4,018 esqueletos efectivos. Lo que respalda la medición: con XGBoost el MCC pasa de 0.678 (L = 2048) a 0.666 (L = 512), una diferencia de 0.012 contra una desviación de ~0.11 entre pliegues; con Random Forest, de 0.699 a 0.694. Lo que no respalda: la cobertura baja de 84.8% a 67.0% en entrenamiento (de 71.0% a 55.2% en validación), y XGBoost fue el modelo más inconsistente de los tres (según la métrica, el mejor L fue 128 o 4096). Se decide en el Avance 3, con el modelo ya afinado y la misma comparación.
+**Posibilidad: L = 512 si el modelo es XGBoost.** Reduce el espacio de características a una cuarta parte, con menos subestructuras que explicar y menos riesgo de sobreajuste. Lo que respalda la medición: con XGBoost el MCC es el mismo en 512 y en 2048 (0.662 en los dos) y el AUPRC pasa de 0.874 a 0.870. Con Random Forest la pérdida es de 0.004 de MCC y con la regresión logística de 0.013. Lo que no respalda: la cobertura baja de 84.8% a 67.0% en entrenamiento (de 71.0% a 55.2% en validación). Se decide en el Avance 3, con el modelo ya afinado y la misma comparación.
 
 ### Supuestos
 
@@ -247,13 +248,13 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | S1.4 | «Natural» es una categoría limpia | Acotado | Es coincidencia exacta con COCONUT | Declarar la definición usada |
 | S1.5 | La brecha natural/sintético es química | Sin comprobar | TPSA y HBD explican solo 6.6 de 18.9 puntos | Reportar por separado |
 | S1.6 | Los valores atípicos son alertas, no errores | Asumido | No se recortan ni eliminan | — |
-| S1.7 | Los 312 compuestos acíclicos sin andamio se asignan con una regla reproducible | Sin comprobar | La regla no está escrita | Escribirla antes del baseline |
+| S1.7 | Mandar los 312 acíclicos a entrenamiento es una regla razonable | Sin comprobar | Es el valor por omisión de `scaffold_split` y no sale de ninguna medición; ninguno entra a validación ni a prueba. Dentro del entrenamiento hay 127 filas en 44 esqueletos compartidos (estereoisómeros) | Escribir y justificar la regla antes del baseline; en la validación cruzada se agrupan por esqueleto de conectividad |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |
 | S1.9 | Yeo-Johnson es una buena transformación | Sin comprobar | La matriz guardada la asume; en la regresión logística queda a la par de min–max (0.484 contra 0.481) y una corrida no las distingue | Validación cruzada en el Avance 3; cambiarla obliga a recalcular |
 | S1.10 | El PCA no aporta | Sin comprobar | No adoptado por explicabilidad; no mejora de forma concluyente (el bootstrap de la diferencia en Random Forest da −0.008, IC 95% −0.070 a +0.055) ([1.5](#d1-5)) | Mantenerlo como brazo de comparación |
 | S1.11 | Las tres características derivadas aportan | Acotado | AUC individual: `tpsa_por_mw` 0.810, `lipo_neta` 0.795, `regla_2p` 0.684 (TPSA: 0.844). `lipo_neta` correlaciona 0.975 con `MolLogP` y lo desplaza | Reevaluar con validación cruzada |
 | S1.12 | Todo lo que aprende de los datos se ajusta solo con entrenamiento | Comprobado | Media tras escalar: 0.0000 en entrenamiento, 0.0048 en evaluación | — |
-| S1.13 | L = 2048 es un tamaño razonable de vocabulario | Acotado | Medido: dentro del ruido del mejor y sin ganancia distinguible con 4096 ([1.7](#d1-7)); falta repetirlo con modelos afinados | Elegir L por modelo en el Avance 3 |
+| S1.13 | L = 2048 es un tamaño razonable de vocabulario | Acotado | Medido: el MCC no distingue tamaños desde ~128 y en AUPRC 2048 es el menor L dentro del ruido en dos de tres modelos ([1.7](#d1-7)); falta repetirlo con modelos afinados | Elegir L por modelo en el Avance 3 |
 
 ---
 

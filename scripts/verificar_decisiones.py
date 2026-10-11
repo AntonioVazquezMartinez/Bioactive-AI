@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Comprueba que cada entrada de la bitácora de decisiones declare su estado.
 
-Las entradas son los encabezados `#### 1.2 · Título {#d1-2}`. Las que traen una
-**Pregunta:** pendiente tienen que ser, además, una propuesta o una decisión
-abierta, para que no queden preguntas colgadas en algo ya dado por cerrado.
+Las entradas son los encabezados `#### 1.2 · Título {#d1-2}`. Una decisión vigente
+puede traer una **Pregunta:** de confirmación; lo que no puede es estar
+ratificada y seguir con una pregunta pendiente.
 """
 
 import re

@@ -227,7 +227,8 @@ body.quarto-dark {
 // ---------------------------------------------------------------------------
 section.level4.vigente,
 section.level4.propuesta,
-section.level4.abierta {
+section.level4.abierta,
+section.level4.ratificada {
   --estado: #2e8b57;
   border: 1px solid rgba(128, 128, 128, 0.35);
   border-left: 7px solid var(--estado);
@@ -239,6 +240,7 @@ section.level4.abierta {
 
 section.level4.propuesta { --estado: #3b78d6; }
 section.level4.abierta   { --estado: #e07b1a; }
+section.level4.ratificada { --estado: #7b4fd6; }
 
 // lo que frena el Avance 3 lleva además un contorno rojo
 section.level4.bloquea {
@@ -247,7 +249,8 @@ section.level4.bloquea {
 
 section.level4.vigente > h4,
 section.level4.propuesta > h4,
-section.level4.abierta > h4 {
+section.level4.abierta > h4,
+section.level4.ratificada > h4 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -262,7 +265,8 @@ section.level4.abierta > h4 {
 // etiqueta del estado, a la derecha del título
 section.level4.vigente > h4::after,
 section.level4.propuesta > h4::after,
-section.level4.abierta > h4::after {
+section.level4.abierta > h4::after,
+section.level4.ratificada > h4::after {
   flex: none;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
@@ -277,8 +281,10 @@ section.level4.abierta > h4::after {
 section.level4.vigente > h4::after    { content: "vigente"; }
 section.level4.propuesta > h4::after  { content: "propuesta"; }
 section.level4.abierta > h4::after    { content: "abierta"; }
+section.level4.ratificada > h4::after { content: "ratificada"; }
 section.level4.revisada.vigente > h4::after   { content: "vigente · revisada"; }
 section.level4.revisada.propuesta > h4::after { content: "propuesta · revisada"; }
+section.level4.revisada.abierta > h4::after   { content: "abierta · revisada"; }
 
 // y una segunda etiqueta, roja, para lo que bloquea el Avance 3
 section.level4.bloquea > h4::before {
@@ -295,16 +301,19 @@ section.level4.bloquea > h4::before {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-section.level4 > h4::after { order: 3; }
+section.level4.vigente > h4::after,
+section.level4.propuesta > h4::after,
+section.level4.abierta > h4::after,
+section.level4.ratificada > h4::after { order: 3; }
 
 // la línea «Estado: …» pasa a segundo plano: ya la dice la etiqueta
-section.level4 > p:first-of-type {
+section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > p:first-of-type {
   font-size: 0.9rem;
   opacity: 0.8;
 }
 
 // la pregunta que queda por resolver es lo primero que se busca
-section.level4 > blockquote {
+section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote {
   margin: 0.8rem 0 1rem;
   padding: 0.6rem 1rem;
   border-left: 4px solid var(--estado);
@@ -313,7 +322,7 @@ section.level4 > blockquote {
   font-size: 1rem;
   color: inherit;
 }
-section.level4 > blockquote p {
+section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
   margin: 0;
 }
 
