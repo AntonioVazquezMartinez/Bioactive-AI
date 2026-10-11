@@ -30,4 +30,4 @@ Qué se ha publicado en aprendizaje automático sobre permeabilidad BBB, cómo s
 
 Borrador para revisión del equipo y los asesores. **Antes de entregar** hay que verificar contra doi.org toda referencia marcada como de acceso parcial o sin acceso: varias entradas tienen metadatos que nadie del equipo ha leído.
 
-La bibliografía completa está en [`bibliografia.bib`](../../referencias/bibliografia.bib), con 208 entradas. Cada documento de `docs/referencias/` incluye la lista de lo que no se pudo verificar para su ámbito.
+La bibliografía completa está en [`bibliografia.bib`](../../referencias/bibliografia.bib), con 210 entradas. Cada documento de `docs/referencias/` incluye la lista de lo que no se pudo verificar para su ámbito.

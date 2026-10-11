@@ -259,7 +259,7 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 ## Fase 2 · Actividad {#fase2}
 
-202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es una medición: un compuesto contra una proteína, con tipo (IC50, Ki, EC50), relación (`=`, `>`, `<`), valor y unidad. El pChEMBL es −log₁₀ de la concentración molar: 5 equivale a 10 µM y 6 a 1 µM. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. Todavía no hay matriz de características ni partición. Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) y [diccionarios](diccionarios.md).
+202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es una medición: un compuesto contra una proteína, con tipo (IC50, Ki, EC50), relación (`=`, `>`, `<`), valor y unidad. El pChEMBL es −log₁₀ de la concentración molar: 5 equivale a 10 µM y 6 a 1 µM. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. Todavía no hay matriz de características ni partición. Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) y [datos del proyecto](datos-contenido.md).
 
 ### Decisiones
 

@@ -30,18 +30,22 @@ website:
     left:
       - href: index.qmd
         text: Inicio
-      - href: contenido/guia-del-proyecto.md
-        text: Guía
-      - href: contenido/glosario.md
-        text: Glosario
-      - href: contenido/decisiones.md
-        text: Ruta
-      - href: contenido/diccionarios.md
-        text: Diccionarios
-      - href: contenido/linaje-datos.qmd
-        text: Linaje
-      - text: Marco teórico
+      - text: Proyecto
         menu:
+          - href: contenido/guia-del-proyecto.md
+            text: Guía del proyecto
+          - href: contenido/glosario.md
+            text: Glosario
+          - href: presentacion.qmd
+            text: Presentación
+          - href: visualizador.qmd
+            text: Visualizador
+      - text: Fundamentos
+        menu:
+          - href: contenido/fundamentos-desde-cero.md
+            text: Desde cero
+          - text: "---"
+          - text: "Marco teórico"
           - href: contenido/planteamiento/marco-teorico/index.md
             text: Presentación
           - href: contenido/planteamiento/marco-teorico/01-biologia.md
@@ -50,57 +54,57 @@ website:
             text: "2 · Métodos computacionales"
           - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
             text: "3 · Modelado, explicabilidad y hueco"
-      - text: Investigación
-        menu:
-          - href: contenido/referencias/index.md
-            text: Índice
+          - text: "---"
+          - text: "Investigación"
           - href: contenido/referencias/01-representaciones-moleculares.md
             text: "01 · Representaciones moleculares"
-          - href: contenido/referencias/02-datasets-bbb.md
-            text: "02 · Datasets de BBB"
           - href: contenido/referencias/03-explicabilidad.md
             text: "03 · Explicabilidad"
+      - text: Datos
+        menu:
+          - href: contenido/datos.md
+            text: Procedencia y licencias
+          - href: contenido/datos-contenido.qmd
+            text: Contenido, defectos y linaje
+          - text: "---"
+          - text: "Investigación de fuentes"
+          - href: contenido/referencias/02-datasets-bbb.md
+            text: "02 · Datasets de BBB"
           - href: contenido/referencias/04-datos-neuroactividad.md
             text: "04 · Datos de neuroactividad"
           - href: contenido/referencias/05-fuentes-de-datos.md
-            text: "05 · Fuentes de datos"
-      - text: Análisis
+            text: "05 · Fuentes de datos abiertas"
+      - text: Ruta
         menu:
+          - href: contenido/decisiones.md
+            text: La ruta del proyecto
+          - href: contenido/referencias/index.qmd
+            text: Qué investigación sustenta cada una
+      - text: Entregables
+        menu:
+          - href: contenido/reportes/index.md
+            text: Todos los entregables
+          - text: "---"
+          - text: "Avance 0 · Propuesta"
+          - href: contenido/reportes/avance-0/Avance0.7.pdf
+            text: Reporte (PDF)
+          - text: "---"
+          - text: "Avance 1 · EDA"
+          - href: contenido/reportes/avance-1/Avance1.0.pdf
+            text: Reporte (PDF)
           - href: contenido/notebooks/01_EDA.ipynb
-            text: "Avance 1 · EDA de permeabilidad"
+            text: Análisis · EDA de permeabilidad
           - href: contenido/notebooks/01b_EDA_actividad_snc.ipynb
-            text: "EDA de actividad en SNC"
+            text: Análisis · EDA de actividad en SNC
+          - text: "---"
+          - text: "Avance 2 · Características"
           - href: contenido/notebooks/02_Feature_Eng.ipynb
-            text: "Avance 2 · Características"
-      - href: contenido/reportes/index.md
-        text: Entregables
-      - href: presentacion.qmd
-        text: Presentación
-      - href: visualizador.qmd
-        text: Visualizador
-      - href: contenido/datos.md
-        text: Datos
+            text: Análisis · Ingeniería de características
       - href: bibliografia.qmd
         text: Bibliografía
     right:
       - icon: github
         href: https://github.com/AntonioVazquezMartinez/Bioactive-AI
-
-  # Barra lateral propia de la sección del marco teórico: es el único bloque
-  # del sitio con varias páginas encadenadas, y da navegación anterior/siguiente.
-  sidebar:
-    - title: "Marco teórico"
-      style: floating
-      collapse-level: 2
-      contents:
-        - href: contenido/planteamiento/marco-teorico/index.md
-          text: Presentación
-        - href: contenido/planteamiento/marco-teorico/01-biologia.md
-          text: "1 · Biología"
-        - href: contenido/planteamiento/marco-teorico/02-metodos-computacionales.md
-          text: "2 · Métodos computacionales"
-        - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
-          text: "3 · Modelado y explicabilidad"
 
   page-footer:
     center: |

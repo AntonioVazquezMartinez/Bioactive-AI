@@ -48,8 +48,8 @@ DOCUMENTOS = [
      "planteamiento/reunion-2026-09-22.md",
      "Notas de la primera reunión con los asesores"),
     ("docs/referencias/README.md",
-     "referencias/index.md",
-     "Siete ramas de investigación documental"),
+     "referencias/index.qmd",   # .qmd: lleva un diagrama de mermaid
+     "Cinco documentos de investigación y qué decisión sustenta cada uno"),
     ("docs/referencias/01-representaciones-moleculares.md",
      "referencias/01-representaciones-moleculares.md",
      "De SMILES a una tabla de características"),
@@ -71,18 +71,18 @@ DOCUMENTOS = [
     ("docs/glosario.md",
      "glosario.md",
      "Los términos de química, datos y modelado que usa el proyecto"),
-    ("docs/linaje-datos.md",
-     "linaje-datos.qmd",   # .qmd: lleva diagramas de mermaid, que Quarto trata como código
-     "De dónde sale cada número y qué sustenta cada decisión"),
+    ("docs/datos-contenido.md",
+     "datos-contenido.qmd",   # .qmd: lleva un diagrama de mermaid, que Quarto trata como código
+     "Qué contiene cada archivo, qué defectos tiene y de dónde sale cada número"),
+    ("docs/fundamentos-desde-cero.md",
+     "fundamentos-desde-cero.md",
+     "La teoría de química, biología e inteligencia artificial, sin suponer nada"),
     ("docs/decisiones.md",
      "decisiones.md",
-     "Dónde estamos, qué falta preguntar y qué se decidió, propuso y supuso en cada fase"),
-    ("docs/diccionarios.md",
-     "diccionarios.md",
-     "Qué dicen los diccionarios de la patrocinadora y qué ya habíamos medido"),
+     "Qué se decidió, propuso y supuso en cada fase, y qué falta preguntar"),
     ("docs/guia-del-proyecto.md",
      "guia-del-proyecto.md",
-     "El proyecto explicado desde cero, en una sola lectura"),
+     "Quiénes participan, cómo se organiza el trabajo y qué lecciones costó aprender"),
     ("docs/reportes/README.md",
      "reportes/index.md",
      "Los reportes entregados en el Proyecto Integrador"),
@@ -146,7 +146,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
                    rf"]({subir_c}notebooks/\1.html)", texto)
     # README.md de referencias -> index.html
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
-    texto = re.sub(r"\]\(((?:\.\./)*)marco-teorico/README\.md\)", r"](\1marco-teorico/index.html)", texto)
+    texto = re.sub(r"\]\(((?:\.\./)*(?:planteamiento/)?)marco-teorico/README\.md\)", r"](\1marco-teorico/index.html)", texto)
     texto = re.sub(r"\]\(((?:\.\./)*)reportes/README\.md\)", r"](\1reportes/index.html)", texto)
     # el README de los datos se publica como datos.html en la raíz de contenido/
     texto = re.sub(r"\]\((?:\.\./)*data/external/README\.md\)", f"]({subir_c}datos.html)", texto)
