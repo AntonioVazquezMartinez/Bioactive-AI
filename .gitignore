@@ -28,6 +28,7 @@ env/
 .ruff_cache/
 .mypy_cache/
 .DS_Store
+*:Zone.Identifier
 firebase-debug.log
 *.log
 
