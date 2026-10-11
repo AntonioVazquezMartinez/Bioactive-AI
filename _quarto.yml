@@ -35,11 +35,9 @@ website:
       - href: contenido/glosario.md
         text: Glosario
       - href: contenido/decisiones.md
-        text: Decisiones
+        text: Ruta
       - href: contenido/diccionarios.md
         text: Diccionarios
-      - href: contenido/consulta-patrocinadora.md
-        text: Consulta
       - href: contenido/linaje-datos.qmd
         text: Linaje
       - text: Marco teórico

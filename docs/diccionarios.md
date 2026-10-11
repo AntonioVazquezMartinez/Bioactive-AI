@@ -49,7 +49,7 @@ Los dos últimos ponen un **límite teórico** a cualquier modelo que agrupe por
 
 ## Actividad en SNC · 225,513 registros
 
-Recibimos 202,647, el **89.9%**. El sufijo `_Entrenamiento` y esa diferencia indican que existe una partición reservada, lo cual está [pendiente de confirmar](consulta-patrocinadora.md).
+Recibimos 202,647, el **89.9%**. El sufijo `_Entrenamiento` y esa diferencia indican que existe una partición reservada, lo cual está [pendiente de confirmar](decisiones.md#d2-6).
 
 > Las cifras de esta sección son **del archivo completo**, que es el que describe el diccionario. Las del resto del sitio son de nuestro 89.9%: 114,549 registros con diana en vez de 121,522, y 88,098 sin diana en vez de 98,298.
 
@@ -93,10 +93,10 @@ Cuatro no sostienen un modelo propio:
 - Si existe una partición de prueba reservada, y cómo se construyó.
 - Qué error pesa más en el laboratorio.
 
-Son parte de la [consulta](consulta-patrocinadora.md).
+Son parte de la [ruta del proyecto](decisiones.md#fase2).
 
 ## Una nota sobre el cruce entre conjuntos
 
 > *Es una tabla independiente de la de actividad en SNC: no comparten filas ni hace falta cruzarlas.*
 
-Cierto a nivel de filas. Pero **1,033 esqueletos aparecen en ambos conjuntos** —el 1.0% del de actividad, el 25.7% del de permeabilidad— y son el único subconjunto donde la cadena de dos etapas se puede validar de extremo a extremo. Es un uso que la nota no contempla, y que motiva la [decisión 10](decisiones.md#d10).
+Cierto a nivel de filas. Pero **1,033 esqueletos aparecen en ambos conjuntos** —el 1.0% del de actividad, el 25.7% del de permeabilidad— y son el único subconjunto donde la cadena de dos etapas se puede validar de extremo a extremo. Es un uso que la nota no contempla, y que motiva la [decisión C.3](decisiones.md#dc-3).

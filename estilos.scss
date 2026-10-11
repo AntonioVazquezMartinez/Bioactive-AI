@@ -22,6 +22,17 @@ div.table-responsive {
   -webkit-overflow-scrolling: touch;
 }
 
+// Las cifras y los códigos de una celda no se parten a la mitad: una columna
+// numérica (alineada a la derecha), un identificador como `AIF1` o el número de
+// una entrada enlazada ocupan siempre un solo renglón.
+table td[style*="text-align: right"],
+table th[style*="text-align: right"],
+table td code,
+table td:first-child a {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 767px) {
   table {
     font-size: 0.85rem;
@@ -202,5 +213,115 @@ body.quarto-light {
 body.quarto-dark {
   pre.mermaid svg, .cell-output-display svg[id^="mermaid"] {
     @include mermaid-colores(#2a3441, #8fb3dd, #e8edf3, #8fb3dd, #1e252e);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// La ruta del proyecto: cada decisión es una tarjeta
+//
+// Los encabezados de las entradas llevan como clase su estado (`.vigente`,
+// `.propuesta`, `.abierta`; `.revisada` y `.bloquea` se suman cuando aplican).
+// El color del borde y la etiqueta salen de ahí, de modo que el estado se lee
+// sin buscar la línea «Estado:». Los tonos son translúcidos para que sirvan
+// igual en el tema claro y en el oscuro.
+// ---------------------------------------------------------------------------
+section.level4.vigente,
+section.level4.propuesta,
+section.level4.abierta {
+  --estado: #2e8b57;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-left: 7px solid var(--estado);
+  border-radius: 0.5rem;
+  background: rgba(128, 128, 128, 0.06);
+  padding: 0.2rem 1.2rem 0.6rem;
+  margin: 1.8rem 0;
+}
+
+section.level4.propuesta { --estado: #3b78d6; }
+section.level4.abierta   { --estado: #e07b1a; }
+
+// lo que frena el Avance 3 lleva además un contorno rojo
+section.level4.bloquea {
+  box-shadow: 0 0 0 2px rgba(214, 69, 65, 0.55);
+}
+
+section.level4.vigente > h4,
+section.level4.propuesta > h4,
+section.level4.abierta > h4 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.8rem 0 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--estado);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+// etiqueta del estado, a la derecha del título
+section.level4.vigente > h4::after,
+section.level4.propuesta > h4::after,
+section.level4.abierta > h4::after {
+  flex: none;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--estado);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+section.level4.vigente > h4::after    { content: "vigente"; }
+section.level4.propuesta > h4::after  { content: "propuesta"; }
+section.level4.abierta > h4::after    { content: "abierta"; }
+section.level4.revisada.vigente > h4::after   { content: "vigente · revisada"; }
+section.level4.revisada.propuesta > h4::after { content: "propuesta · revisada"; }
+
+// y una segunda etiqueta, roja, para lo que bloquea el Avance 3
+section.level4.bloquea > h4::before {
+  content: "bloquea el Avance 3";
+  order: 2;
+  margin-left: auto;
+  flex: none;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #d64541;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+section.level4 > h4::after { order: 3; }
+
+// la línea «Estado: …» pasa a segundo plano: ya la dice la etiqueta
+section.level4 > p:first-of-type {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+// la pregunta que queda por resolver es lo primero que se busca
+section.level4 > blockquote {
+  margin: 0.8rem 0 1rem;
+  padding: 0.6rem 1rem;
+  border-left: 4px solid var(--estado);
+  border-radius: 0.3rem;
+  background: rgba(128, 128, 128, 0.12);
+  font-size: 1rem;
+  color: inherit;
+}
+section.level4 > blockquote p {
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  section.level4.vigente > h4,
+  section.level4.propuesta > h4,
+  section.level4.abierta > h4 {
+    flex-direction: column;
+    gap: 0.4rem;
   }
 }

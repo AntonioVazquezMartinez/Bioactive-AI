@@ -80,9 +80,9 @@ Las flechas punteadas marcan las decisiones que **los datos revisaron después**
 
 Las flechas punteadas del segundo diagrama marcan dos decisiones que no salieron de la literatura sino de medir sobre el conjunto real:
 
-- **No filtrar por la columna `group`** — [decisión 2](decisiones.md#d2)
-- **El etiquetado de la etapa 2 por tres vías** — [decisión 7](decisiones.md#d7)
+- **No filtrar por la columna `group`** — [decisión 1.1](decisiones.md#d1-1)
+- **El etiquetado de la etapa 2 por tres vías** — [decisión 2.3](decisiones.md#d2-3)
 
 El registro guarda de cada una el contexto, la versión superada y lo que la cambió.
 
-En la etapa 2, los porcentajes de actividad dependen de la unidad: **61.7%** con ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos; para los **71,145 pares únicos de estructura de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No deben presentarse como el mismo denominador ni como si la primera cifra describiera el conjunto por diana. Esta agrupación de conectividad no es un andamio Bemis–Murcko. La regla cuenta como activos pares con observaciones discordantes y todavía debe revisarse antes de definir el conjunto de entrenamiento; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones se detallan en la [decisión 7](decisiones.md#d7) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
+En la etapa 2, los porcentajes de actividad dependen de la unidad: **61.7%** con ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos; para los **71,145 pares únicos de estructura de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No deben presentarse como el mismo denominador ni como si la primera cifra describiera el conjunto por diana. Esta agrupación de conectividad no es un andamio Bemis–Murcko. La regla cuenta como activos pares con observaciones discordantes y todavía debe revisarse antes de definir el conjunto de entrenamiento; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones se detallan en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).

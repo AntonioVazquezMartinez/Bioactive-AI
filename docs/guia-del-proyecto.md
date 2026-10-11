@@ -311,7 +311,7 @@ Ya con la teoría de la Parte 1, esta parte explica qué hace exactamente Bioact
 
 **La pregunta que responde el proyecto:** dado solamente el SMILES de un compuesto, ¿se puede predecir si llegará al cerebro, si tendrá actividad neuroprotectora, y explicar qué característica estructural sustenta esa predicción?
 
-Esto se divide en dos etapas, ambas recibiendo el mismo SMILES como entrada. El equipo las plantea como **independientes**; ese planteamiento está pendiente de confirmar con la patrocinadora (decisión 5 del registro):
+Esto se divide en dos etapas, ambas recibiendo el mismo SMILES como entrada. El equipo las trata como **independientes y en paralelo**, no como una cascada (ver la ruta del proyecto, [decisión C.3](decisiones.md#dc-3)):
 
 ```
 SMILES ──► vector de longitud fija ──┬─► Etapa 1: ¿cruza la barrera hematoencefálica? (BBB+ / BBB−)
@@ -431,8 +431,8 @@ Como se explicó en la sección 4, una **diana** es la proteína específica sob
 
 Esto es importante porque condiciona qué tan listo está el archivo para entrenar un modelo directamente:
 
-- **Son 37 dianas identificadas por gen y 2 receptores completos**, y la cobertura es muy desigual: `GABRG2` y `AIF1` tienen **0 filas** en nuestro archivo, `GABRB2` tiene 1 y `TARDBP` 7 (8 en el archivo completo del diccionario). Por categoría de enfermedad, Alzheimer reúne 52,676 registros y ELA solo 53. No se puede entrenar un modelo confiable con tan pocos ejemplos; se propone excluir esas cuatro dianas y decidir cuáles de las demás se modelan (decisiones 13 y 17).
-- **El 43.5% de las filas (88,098) no corresponde a ninguna de las dianas de la lista.** Entraron por la ruta `neuronal_assay`: son ensayos fenotípicos sobre sistemas celulares neuronales, donde se midió un efecto sin identificar la proteína responsable. Es otro tipo de evidencia. Se propone entrenar con los 114,549 registros que sí tienen diana y conservar estos aparte (decisión 14).
+- **Son 37 dianas identificadas por gen y 2 receptores completos**, y la cobertura es muy desigual: `GABRG2` y `AIF1` tienen **0 filas** en nuestro archivo, `GABRB2` tiene 1 y `TARDBP` 7 (8 en el archivo completo del diccionario). Por categoría de enfermedad, Alzheimer reúne 52,676 registros y ELA solo 53. No se puede entrenar un modelo confiable con tan pocos ejemplos; se propone excluir esas cuatro dianas y decidir cuáles de las demás se modelan (decisiones 2.1 y 2.2).
+- **El 43.5% de las filas (88,098) no corresponde a ninguna de las dianas de la lista.** Entraron por la ruta `neuronal_assay`: son ensayos fenotípicos sobre sistemas celulares neuronales, donde se midió un efecto sin identificar la proteína responsable. Es otro tipo de evidencia. Se propone entrenar con los 114,549 registros que sí tienen diana y conservar estos aparte (decisión 2.4).
 - **NPASS y CMAUP —justo la fuente de los productos naturales, el objetivo final del proyecto— no traen pChEMBL** (15,293 registros). Esa medida solo la calcula ChEMBL. Etiquetar únicamente por pChEMBL dejaría fuera esas dos bases, por lo que se propone etiquetar por tres vías: pChEMBL donde exista, concentración exacta para el resto (que recupera 12,809 de los 15,293) e inactivo declarado para los textos y los censurados con límite suficiente. Es la decisión 7, pendiente de ratificar por la patrocinadora.
 - **Las unidades de medición no están convertidas a una sola escala**: la mayoría está en nanomolar (nM), pero hay 29,880 registros en micromolar (µM) y 662 en unidades de masa (µg/mL y similares), que no se pueden convertir a una concentración molar sin conocer el peso molecular exacto de cada compuesto.
 - **Algunas mediciones son "censuradas"**: dicen, por ejemplo, "mayor a 10 µM" en vez de dar un número exacto (54,498 registros sin pChEMBL). Es un límite, no un valor medido. **Solo sirve como negativo si su límite es igual o mayor que el umbral de «activo» que se use.** La tabla del diccionario de la patrocinadora, sobre 61,001 filas con `>`: con un umbral de 1 µM, 59,859 son negativos seguros (98%) y 1,142 ambiguos; con 10 µM, 54,419 (89%) y 6,582; con 100 µM, 7,474 (12%) y 53,527. Cuanto más estricto el umbral, más censurados se recuperan como negativos seguros y menos quedan ambiguos.
@@ -476,7 +476,7 @@ Esta tabla resume decisiones de diseño, apoyadas en la teoría de la Parte 1. E
 | Usar descriptores RDKit (217, de los que 203 son utilizables) + fingerprints Morgan/ECFP4 (2,048 bits) | Son interpretables, trazables a un fragmento concreto, y corren rápido en CPU. La evidencia comparativa no muestra ventaja real de representaciones más complejas bajo evaluación correcta (sección 6 y 7). |
 | Partición por andamio de Bemis-Murcko, nunca aleatoria | Evita la fuga de información explicada en la sección 7; un split aleatorio infla los resultados entre 7 y 13 puntos. |
 | Los andamios grandes (frecuentes) van a entrenamiento, los raros a prueba | Así la prueba mide generalización real a química poco común, que es el escenario en el que se usará el modelo con productos naturales nuevos. |
-| Etapa 2: etiquetado por tres vías (pChEMBL, concentración exacta e inactivo declarado), con corte en pChEMBL ≥ 5 y ≥ 6 como comprobación de robustez | pChEMBL 5 equivale a 10 µM y 6 a 1 µM. Etiquetar solo por pChEMBL dejaría fuera los productos naturales de NPASS y CMAUP. Un censurado solo cuenta como negativo si su límite es igual o mayor que el umbral usado, y el umbral no se elige por el balance de clases, que depende de qué registros se miren. Pendiente de ratificar por la patrocinadora (decisión 7). |
+| Etapa 2: etiquetado por tres vías (pChEMBL, concentración exacta e inactivo declarado), con corte en pChEMBL ≥ 5 y ≥ 6 como comprobación de robustez | pChEMBL 5 equivale a 10 µM y 6 a 1 µM. Etiquetar solo por pChEMBL dejaría fuera los productos naturales de NPASS y CMAUP. Un censurado solo cuenta como negativo si su límite es igual o mayor que el umbral usado, y el umbral no se elige por el balance de clases, que depende de qué registros se miren. Pendiente de ratificar por la patrocinadora (decisión 2.3). |
 | Modelos de ensamble (Random Forest, XGBoost), no deep learning | Evidencia comparable, menor costo, e interpretabilidad directa (sección 6). |
 | Al menos dos métodos de atribución independientes, reportando solo donde coinciden | El desacuerdo entre métodos de explicabilidad es la norma, no la excepción (sección 8). |
 | Métricas principales: MCC y AUPRC, no exactitud | El desbalance de clases hace que la exactitud sea engañosa (sección 7). |
@@ -532,15 +532,16 @@ Se verificó que cero andamios y cero esqueletos de conectividad se repiten entr
 
 ## 20. Pendientes y preguntas abiertas
 
-Lo abierto vive en dos sitios, y esta guía no los duplica: las **decisiones**, con su estado y quién decide, en [`decisiones.md`](decisiones.md), y la **consulta a la patrocinadora** en [`consulta-patrocinadora.md`](consulta-patrocinadora.md). El trabajo pendiente vive en los issues de GitHub, etiquetados por el avance que bloquean.
+Lo abierto vive en una sola página, y esta guía no la duplica: [`decisiones.md`](decisiones.md), con las **preguntas abiertas**, y cada decisión, propuesta y supuesto con su estado y quién decide. El trabajo pendiente vive en los issues de GitHub, etiquetados por el avance que bloquean.
 
 Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 
-- Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 7).
-- Un modelo por diana, por categoría de enfermedad o multitarea (decisión 13).
-- Reservar o no los 1,033 compuestos con medición en las dos etapas (decisión 10): cuesta el 25.7% de los datos de la etapa 1.
+- Qué dianas se excluyen por falta de datos (decisión 2.1), antes de elegir la forma del modelo.
+- Un modelo por diana, por categoría de enfermedad o multitarea (decisión 2.2).
+- Qué criterio de «activo» corresponde en la etapa 2 (decisión 2.3).
+- Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo (decisión 2.6).
+- Medir la cadena de dos etapas sobre los 1,033 compuestos comunes como experimento aparte (decisión C.3), sin reservarlos.
 - Modelos separados para naturales y sintéticos, o el origen como variable.
-- Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 
 **Pendientes técnicos del equipo:** el reporte del Avance 2, el notebook del Avance 3 (baseline) y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas.
 
