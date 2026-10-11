@@ -20,7 +20,7 @@ Ninguna decisión se considera cerrada hasta que **la patrocinadora la revise**.
 
 Cada entrada dice además **quién decide**. Las que necesitan a la patrocinadora son las que viajan en la consulta que se le envía; el resto son del equipo.
 
-Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de linaje](linaje-datos.md) muestra qué documento de investigación sustenta cada decisión.
+Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de la investigación](referencias/README.md) muestra qué documento sustenta cada decisión, y los [datos del proyecto](datos-contenido.md) cómo llega cada número a la matriz del modelo.
 
 ## Estado de un vistazo
 
@@ -37,7 +37,7 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 | [9](#d9) | El sitio publicado como memoria del proyecto | Vigente | equipo |
 | [10](#d10) | ¿Reservar los 1,033 compuestos comunes? | **Abierta** | **patrocinadora** |
 | [11](#d11) | PAINS: marcar en vez de excluir | Propuesta | **patrocinadora** |
-| [12](#d12) | Escalamiento y selección de características | **Abierta** | equipo |
+| [12](#d12) | Escalamiento y selección de características | **Abierta** | **patrocinadora** |
 | [13](#d13) | **Forma del modelo de la etapa 2** | **Abierta** | **patrocinadora** |
 | [14](#d14) | Los 88,098 registros fenotípicos | Propuesta | **patrocinadora** |
 | [15](#d15) | La fuente confundida con el etiquetado | Vigente · medida | equipo |
@@ -150,7 +150,7 @@ Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10
 ## 7 · Etiquetado de la etapa 2 por tres vías {#d7}
 
 **Estado:** ABIERTA · **revisada** el 7 de octubre · **Decide:** patrocinadora
-**Pregunta:** ¿Qué criterio de «activo» usa usted? ¿Son confiables los inactivos declarados por texto? ¿Cómo trata las mediciones censuradas?
+**Pregunta:** ¿Qué criterio de «activo» recomienda? ¿Son confiables los inactivos declarados por texto? ¿Cómo debemos tratar las mediciones censuradas? Cuando un mismo esqueleto de conectividad y gen tiene observaciones activas e inactivas, ¿qué tipos de ensayo considera comparables y qué evidencia debe tener prioridad?
 
 **Lo que se decía antes.** «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin especificar cómo etiquetar los registros sin pChEMBL.
 
@@ -162,7 +162,7 @@ Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-**Decisión.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 registros naturales; e **inactivo declarado** para los textos y para los censurados con corte ≥ 10 µM.
+**Propuesta de trabajo, pendiente de ratificación.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 registros naturales; e **inactivo declarado** para los textos y para los censurados con corte ≥ 10 µM. La regla de censura sigue el criterio que describe el diccionario; usar 10 µM como corte operativo es la propuesta del equipo, no una decisión ratificada por la patrocinadora.
 
 **El criterio de censura es de la patrocinadora, no nuestro.** La sección 7 de su diccionario trae la tabla hecha sobre las 61,001 filas con `>` o `>=`, y la regla: *«solo sirve como negativo si el límite es igual o mayor que el umbral de "activo" que se use»*.
 
@@ -176,7 +176,18 @@ Eso **corrige la propuesta anterior del equipo**, que fijaba el corte en 10 µM 
 
 El diccionario advierte además que **33,574 de las 41,291 filas con límite de 10 µM vienen de DrugMatrix**, una sola fuente, lo que concentra la evidencia censurada.
 
-**Una recomendación que no sobrevivió a su propia verificación.** Sobre los registros con pChEMBL, ≥ 5 dejaba 87.1% de activos y una razón de 6.7 a 1, lo que llevó a proponer invertir el orden y usar ≥ 6. Al recalcular **con las tres vías aplicadas**, ≥ 5 deja el conjunto casi equilibrado (61.7%, 1.6 a 1) y ≥ 6 se pasa de largo (44.4%, 0.8 a 1). El 6.7 a 1 era un artefacto de mirar solo el subconjunto con curva dosis-respuesta, sesgado hacia activos porque nadie publica curvas de lo que no funciona. **El umbral original se mantiene.**
+**Denominadores verificados.** El 61.7% y el 44.4% son proporciones **por registro etiquetado** en todo el archivo de entrenamiento, no el balance del conjunto de modelado por diana. Incluyen ensayos fenotípicos sin diana de la lista:
+
+| Unidad y población | Denominador | ≥ 5: activos / inactivos | ≥ 6: activos / inactivos |
+|:---|---:|---:|---:|
+| Registro etiquetado, todo el archivo (incluye fenotípicos) | 194,086 | 119,835 / 74,251 · 61.7% activos · 1.6:1 | 86,238 / 107,848 · 44.4% activos · 0.8:1 |
+| Par único de esqueleto de conectividad × gen objetivo (`target_gene`) | 71,145 | 50,177 / 20,968 · 70.5% activos · 2.4:1 | 35,966 / 35,179 · 50.6% activos · 1.0:1 |
+
+La segunda fila resume la población observada después de etiquetar y agrupar; **no es todavía el conjunto de entrenamiento definitivo**. De los 114,549 registros que tienen una categoría de diana, 109,264 reciben etiqueta por alguna de las tres vías. Entre estos últimos, 4,810 no tienen el identificador de gen (`target_gene`) y 327 no tienen un esqueleto calculable desde SMILES. Se excluyen esos 5,137 registros al construir los 104,127 registros agrupables en 71,145 pares.
+
+La regla aplicada en este recuento es explícita: un par se cuenta activo si **al menos una** de sus observaciones etiquetadas es activa (máximo de etiquetas binarias). Con esta regla hay 1,810 pares con etiquetas discordantes para ≥ 5 y 2,426 para ≥ 6. Por ello, las proporciones por pares dependen de cómo se resuelvan esos conflictos y **son descriptivas, no una decisión ya validada para el entrenamiento**. El máximo de etiquetas binarias no selecciona por sí mismo la medición de mayor potencia; esa equivalencia no se presupone aquí. La patrocinadora debe aclarar la comparabilidad biológica de los ensayos y posibles prioridades de evidencia; el equipo deberá definir y justificar la regla operativa, evaluar su sensibilidad y acordarla antes de cerrar el conjunto de modelado.
+
+**Una recomendación que cambió al ampliar la población analizada.** En los registros con pChEMBL, ≥ 5 daba 87.1% de activos y una razón de 6.7 a 1; ese resultado motivó proponer ≥ 6. Al incluir las tres vías, las cifras dependen de la unidad: por registro, ≥ 5 da 61.7% de activos y ≥ 6 da 44.4%; por par de esqueleto de conectividad × gen, bajo la regla provisional descrita arriba, ≥ 5 da 70.5% y ≥ 6 da 50.6%. La diferencia entre los resultados por registro no identifica por sí sola la causa del cambio. El sesgo de selección en los registros con pChEMBL es una explicación posible, pero estos conteos no demuestran su mecanismo. **Se conserva ≥ 5 como umbral primario de trabajo y ≥ 6 como análisis de robustez, pendiente de ratificación de la patrocinadora; el balance de clases por sí solo no determina el umbral biológico.**
 
 ---
 
@@ -200,7 +211,7 @@ El diccionario advierte además que **33,574 de las 41,291 filas con límite de 
 
 **Decisión.** El sitio es donde el proyecto se explica a sí mismo. La prueba que tiene que pasar: que un asesor, la patrocinadora o quien califique lo abra y entienda qué se hace y por qué, **sin leer código ni preguntar a nadie**. Se actualiza en el mismo PR del cambio que describe.
 
-**Consecuencias.** Los reportes, el glosario, el linaje de datos y este registro viven ahí. Una decisión revertida en código pero todavía documentada en el sitio es peor que no documentar.
+**Consecuencias.** Los reportes, el glosario, los datos del proyecto y este registro viven ahí. Una decisión revertida en código pero todavía documentada en el sitio es peor que no documentar.
 
 **Trampa conocida.** El sitio **no descubre archivos solo**: un documento nuevo es invisible hasta registrarlo en `scripts/prepare_site.py` y en el navbar de `_quarto.yml`.
 
@@ -253,7 +264,10 @@ El diccionario advierte además que **33,574 de las 41,291 filas con límite de 
 
 ## 12 · Escalamiento y selección de características {#d12}
 
-**Estado:** ABIERTA · **Decide:** equipo · la rúbrica del Avance 2 las pide explícitamente
+**Estado:** ABIERTA · **Decide:** patrocinadora · la rúbrica del Avance 2 las pide explícitamente
+**Pregunta:** ¿Se escalan los descriptores y se reduce la dimensión, o se trabaja con la matriz sin transformar? ¿Acepta perder la trazabilidad a subestructuras a cambio de PCA?
+
+**Cómo se entrega mientras se decide.** Como propuesta con alternativa: el Avance 2 deja la matriz filtrada en dos versiones, transformada (Yeo-Johnson) y sin transformar, con las mismas columnas en el mismo orden, para que el Avance 3 pueda usar cualquiera sin recalcular.
 
 **El problema.** La rúbrica pide «escalamiento y transformaciones; selección y extracción de características». El notebook del Avance 2 las menciona sin ejecutarlas.
 
@@ -298,7 +312,7 @@ El diccionario advierte además que **33,574 de las 41,291 filas con límite de 
 
 Es evidencia de otro tipo. Sirve para «¿este compuesto hace *algo* en un sistema neuronal?», no para «¿actúa sobre esta diana?», que es lo que plantea la etapa 2.
 
-**Propuesta del equipo.** Entrenar sobre los 114,549 registros con diana identificada y conservar los 88,098 aparte, para una pregunta distinta. No se descartan.
+**Propuesta revisada del equipo.** Los 114,549 registros tienen una categoría de diana, pero solo 109,264 reciben etiqueta por las tres vías planteadas. Después se excluyen de la agregación por pares 4,810 registros sin identificador de gen y 327 sin estructura válida para calcular la clave de conectividad; quedan 104,127 registros agrupables en 71,145 pares antes de resolver discordancias y definir la partición. **Este conteo no es el tamaño final del entrenamiento.** Los 88,098 registros fenotípicos sin diana de la lista se conservan aparte para una pregunta distinta; no se descartan.
 
 **Decide:** patrocinadora · **Pregunta:** ¿Los quiere dentro del modelo, aparte o fuera?
 

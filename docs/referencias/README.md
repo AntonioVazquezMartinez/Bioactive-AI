@@ -1,6 +1,6 @@
 # Investigación de referencia — Bioactive AI
 
-Investigación documental realizada el 2026-09-22 para fundamentar las decisiones técnicas del proyecto. Se organizó en cuatro ramas independientes; cada una tiene su documento.
+Investigación documental realizada el 2026-09-22 para fundamentar las decisiones técnicas del proyecto. Se organizó en cinco documentos independientes. Los de teoría (01, 03) se leen con los [fundamentos](../fundamentos-desde-cero.md); los de datos (02, 04, 05), con los [datos del proyecto](../datos-contenido.md).
 
 | Documento | Pregunta que responde |
 |---|---|
@@ -8,6 +8,7 @@ Investigación documental realizada el 2026-09-22 para fundamentar las decisione
 | [02 — Datasets de BBB](02-datasets-bbb.md) | ¿Qué datos usar para la etapa 1? |
 | [03 — Explicabilidad](03-explicabilidad.md) | ¿Cómo justificar *por qué* el modelo predice lo que predice? |
 | [04 — Datos de neuroactividad](04-datos-neuroactividad.md) | ¿Qué datos usar para la etapa 2? |
+| [05 — Fuentes de datos abiertas](05-fuentes-de-datos.md) | ¿Qué otras bases abiertas conviene (o no) integrar? |
 
 La bibliografía consolidada está en [`bibliografia.bib`](bibliografia.bib).
 
@@ -38,6 +39,43 @@ Esta distinción no es burocracia. Cada documento cierra con una lista explícit
 **Explicabilidad.** Al menos dos métodos independientes, reportando como confirmadas solo las substructuras donde coinciden. Modelo interpretable simple entrenado en paralelo como control.
 
 **Validación.** Scaffold split, nunca aleatorio. Idealmente también disjunto por fuente o laboratorio.
+
+## Qué documento sustenta cada decisión
+
+```{mermaid}
+flowchart LR
+    R1["01 · Representaciones<br/>moleculares"]
+    R2["02 · Datasets de BBB"]
+    R3["03 · Explicabilidad"]
+    R4["04 · Datos de<br/>neuroactividad"]
+    R5["05 · Fuentes de datos"]
+
+    A1["EDA Avance 1"]
+    A2["EDA etapa 2"]
+
+    D1["Descriptores RDKit<br/>+ ECFP4 2,048"]
+    D2["Scaffold split<br/>nunca aleatorio"]
+    D3["Dos métodos de<br/>atribución que coincidan"]
+    D4["Fuente etapa 2:<br/>ChEMBL + NPASS + CMAUP"]
+    D5["Fuente etapa 1:<br/>archivo de la patrocinadora"]
+    D6["NO filtrar por grupo A–D"]
+    D7["Etiquetado por tres vías<br/>umbral ≥ 5 vigente, por ratificar"]
+
+    R1 --> D1
+    R2 --> D2
+    R2 --> D5
+    R3 --> D3
+    R4 --> D4
+    R5 --> D4
+    R5 --> D5
+    A1 --> D6
+    A2 --> D7
+
+    D6 -.->|"corrige"| R2
+    D7 -.->|"corrige"| R4
+```
+
+Las flechas punteadas marcan las dos decisiones que **los datos revisaron después**: no salieron de la literatura sino de medir sobre el conjunto real. Son [no filtrar por `group`](../decisiones.md#d2) y [el etiquetado por tres vías](../decisiones.md#d7); el registro guarda de cada una el contexto, la versión superada y lo que la cambió.
 
 ## Tres advertencias transversales
 

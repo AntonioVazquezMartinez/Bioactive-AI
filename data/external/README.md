@@ -1,6 +1,6 @@
 # Datos externos
 
-> **Los datos autoritativos del proyecto son los de [`profesora/`](https://github.com/AntonioVazquezMartinez/Bioactive-AI/tree/main/data/external/profesora)**, entregados por la Dra. Martínez el 2026-09-25 con sus diccionarios de columnas. Lo que sigue son las descargas que hicimos antes, que quedan como referencia de procedencia y como fuente de los archivos que la patrocinadora no incluyó (el subconjunto de regresión y el de validación externa).
+> **Los datos autoritativos del proyecto son los de [`profesora/`](https://github.com/AntonioVazquezMartinez/Bioactive-AI/tree/main/data/external/profesora)**, entregados por la Dra. Martínez el 2026-09-25 con sus diccionarios de columnas. Lo que sigue son las descargas que hicimos antes, que quedan como referencia de procedencia y como fuente del único conjunto que ella no incluyó: la validación externa. Su archivo de permeabilidad ya trae la regresión unida a la clasificación. Qué contiene cada archivo y qué defectos tiene: [contenido de los datos](../../docs/datos-contenido.md).
 
 Descargados el 2026-09-24 con `python src/data_prep/download_data.py`. Ese script fija el commit de origen y reporta los SHA-256, así que la descarga es reproducible.
 
@@ -31,18 +31,7 @@ Los conteos se midieron sobre el archivo descargado, no se tomaron del paper:
 - **Cero SMILES faltantes.**
 - Columnas: `NO., compound_name, IUPAC_name, SMILES, CID, logBB, BBB+/BBB-, Inchi, threshold, reference, group, comments`.
 
-**Distribución por grupo de confiabilidad** (la columna `group`, el motivo principal para elegir B3DB):
-
-| Grupo | Compuestos | Significado |
-|---|---|---|
-| A | 1,058 | Tienen logBB numérico |
-| B | 3,621 | Fuentes que declararon el umbral −1 y coincidieron |
-| C | 3,077 | Coinciden en la etiqueta, sin declarar umbral |
-| D | 51 | Etiquetas contradictorias entre fuentes |
-
-Solo los 3,621 registros del grupo B declaran umbral en la columna `threshold`, todos −1.0. Los demás lo tienen vacío.
-
-**Plan de uso:** entrenar con A+B (4,679 registros), usar C como aumentación, reservar D como conjunto diagnóstico de casos ambiguos.
+**Las categorías A–D (columna `group`) no son una escala de confiabilidad y no se usan para filtrar.** El grupo D, por ejemplo, tiene más referencias que el C, no etiquetas contradictorias, y quedarse con A+B baja la clase BBB− del 36.5% al 27.0%. La evidencia está en [el contenido de los datos](../../docs/datos-contenido.md).
 
 ### Aclaración sobre el conteo: 7,807 contra 7,982
 
@@ -73,6 +62,19 @@ El README de B3DB dice que el conjunto tiene 7,982 compuestos, mientras que el a
 > El separador del CSV es **punto y coma**, no coma.
 
 ---
+
+## Licencias
+
+| Fuente | Para qué se usa | Licencia | Implicación |
+|:--|:--|:--|:--|
+| B3DB | Etapa 1 (permeabilidad) | CC0 | Sin restricción |
+| COCONUT | Identificar productos naturales | CC0 | Sin restricción |
+| ChEMBL | Etapa 2 (actividad) | CC BY-SA 3.0 | Requiere atribución; las obras derivadas comparten licencia |
+| NPASS | Etapa 2, productos naturales | **CC BY-NC 4.0** | **No comercial.** Permite uso y redistribución académica con atribución |
+| CMAUP | Etapa 2, plantas medicinales | CC BY (del artículo) | Términos de la base sin confirmar |
+| Spielvogel et al. 2025 | Validación externa | CC BY 4.0 | Requiere atribución |
+
+Un proyecto académico cumple con todas. Solo NPASS exigiría revisión si el proyecto tuviera continuidad comercial; es una [pregunta para la patrocinadora](../../docs/consulta-patrocinadora.md).
 
 ## Pendientes de descarga
 
