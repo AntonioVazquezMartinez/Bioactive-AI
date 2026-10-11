@@ -76,7 +76,7 @@ B3DB dice que caracterizan la incertidumbre de las mediciones, pero no publica e
 
 Al revisar los duplicados exactos del archivo, ninguno tiene etiquetas en conflicto. Las dos columnas de grupo, clasificación y regresión, **no son comparables entre sí**: los 1,058 compuestos presentes en ambos archivos son todos grupo A en clasificación, pero en regresión se reparten entre los cuatro y difieren en el **77%** de los casos.
 
-**Por qué no se filtra.** El grupo está asociado con la etiqueta, y quedarse con A+B baja la clase minoritaria (BBB−) del 36.5% al **27.0%**: el filtro acentúa el desbalance en vez de limpiar ruido. Se usa para describir y estratificar, nunca para excluir ([decisión 2](decisiones.md#d2)).
+**No se filtra por grupo**: quedarse con A+B baja la clase BBB− del 36.5% al 27.0%, así que se usa para describir y estratificar. El razonamiento completo está en la [decisión 2](decisiones.md#d2).
 
 ### Origen natural
 
@@ -98,6 +98,21 @@ Toda cifra por origen debe declarar cuál usa y sobre qué base: las tres catego
 | **Productos naturales** (estructura idéntica en COCONUT) | **3,366** | **52.7%** |
 
 La diferencia es de 19 puntos, y la regla fisicoquímica clásica (TPSA < 67 Å² y HBD ≤ 1) explica unos 6.6. Queda algo más en juego —posiblemente eflujo activo, o un sesgo en qué compuestos se han llegado a ensayar— que el modelo tendrá que poder capturar. Como los naturales son justo lo que el proyecto quiere priorizar, **el desempeño se reporta por separado para naturales y sintéticos**: un buen número global podría esconder que le va peor justo ahí.
+
+### Reglas fisicoquímicas sobre nuestros datos
+
+El umbral clásico de TPSA es ≤ 90 Å². La literatura reporta un óptimo más estricto, **66.8 Å²**, y una regla de dos condiciones, **TPSA < 67 Å² y HBD ≤ 1**, con 96.6% de precisión para BBB+. Verificada sobre los datos de este proyecto (Avance 1):
+
+| Conjunto | Regla TPSA < 67 Å² y HBD ≤ 1 | Lectura |
+|:--|:--|:--|
+| Grupo A (subconjunto con logBB, el de la literatura) | precisión 0.966 · sensibilidad 0.589 · AUC 0.720 | reproduce la cifra publicada, pero solo marca como BBB+ al 54% de los compuestos |
+| Conjunto completo (7,805) | precisión 0.853 · sensibilidad 0.515 · AUC 0.680 | el AUC queda por debajo de TPSA < 90 Å² (0.729) y de TPSA < 67 Å² sola (0.701) |
+
+La regla es muy precisa cuando acierta, pero **no supera a las alternativas simples en todo el conjunto**: sirve como referencia obligatoria y como verificación de las explicaciones del modelo, no como modelo ganador. Y el umbral óptimo **no es una constante**: cambia con el subconjunto que lo calcula, 66.6 Å² en el grupo A, 83.6 en A+B, 101.9 en el conjunto completo y 107.0 solo con entrenamiento (Avance 2), y aún no tiene intervalos de confianza. Hay que decir siempre sobre qué datos se calculó.
+
+### Por qué la partición agrupa por andamio
+
+En nuestros datos la misma molécula base aparece repetida: la morfina está **ocho veces**, como estereoisómeros distintos o con nombres distintos. Y hay grupos enteros que comparten andamio y casi siempre la misma etiqueta: uno de 410 compuestos es 99.5% BBB+. Con una partición aleatoria, el modelo solo necesitaría reconocer el andamio, sin aprender la relación real entre estructura y permeabilidad, y nadie lo notaría.
 
 ### Defectos conocidos
 
@@ -137,7 +152,7 @@ La cobertura es muy desigual: Alzheimer reúne 52,676 registros y ELA solo 53. C
 | `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
 | `TARDBP` | TDP-43 | 8 en el archivo completo |
 
-El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298). Entraron por la ruta `neuronal_assay`: son ensayos fenotípicos sobre sistemas celulares neuronales, donde se midió un efecto sin identificar la proteína responsable. Es otra clase de evidencia; se propone entrenar con los 114,549 registros que sí tienen diana y conservar estos aparte ([decisión 14](decisiones.md#d14)).
+El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 14](decisiones.md#d14).
 
 ### Cómo se mide la actividad
 
@@ -145,13 +160,7 @@ El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (4
 - **Las unidades no están convertidas a una sola escala**: la mayoría está en nM, pero hay 29,880 registros en µM y 662 en unidades de masa (µg/mL y similares) que no se pueden pasar a concentración molar sin el peso molecular de cada compuesto.
 - **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. Sobre las 61,001 filas con `>` o `>=` (54,498 de ellas sin pChEMBL):
 
-| Umbral de «activo» | Negativos seguros | Ambiguos |
-|:--|--:|--:|
-| 1 µM | 59,859 (98%) | 1,142 |
-| 10 µM | 54,419 (89%) | 6,582 |
-| 100 µM | 7,474 (12%) | 53,527 |
-
-Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
+Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 7](decisiones.md#d7)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
 
 ### Qué denominador usa cada porcentaje
 

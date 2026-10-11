@@ -71,21 +71,9 @@ El trabajo se entrega en avances semanales (ver `docs/Entregas_canvas.md` para e
 
 
 
-## 5. Decisiones técnicas ya tomadas, y por qué
+## 5. Decisiones técnicas
 
-Esta tabla resume decisiones de diseño, apoyadas en la teoría de la Parte 1. El contexto, las alternativas descartadas y el estado de cada una (algunas están pendientes de ratificar por la patrocinadora) están en [`decisiones.md`](decisiones.md):
-
-| Decisión | Por qué |
-|---|---|
-| Usar descriptores RDKit (217, de los que 203 son utilizables) + fingerprints Morgan/ECFP4 (2,048 bits) | Son interpretables, trazables a un fragmento concreto, y corren rápido en CPU. La evidencia comparativa no muestra ventaja real de representaciones más complejas bajo evaluación correcta ([fundamentos](fundamentos-desde-cero.md), secciones 6 y 7). |
-| Partición por andamio de Bemis-Murcko, nunca aleatoria | Evita la fuga de información explicada en los [fundamentos](fundamentos-desde-cero.md), sección 7; un split aleatorio infla los resultados entre 7 y 13 puntos. |
-| Los andamios grandes (frecuentes) van a entrenamiento, los raros a prueba | Así la prueba mide generalización real a química poco común, que es el escenario en el que se usará el modelo con productos naturales nuevos. |
-| Etapa 2: etiquetado por tres vías (pChEMBL, concentración exacta e inactivo declarado), con corte en pChEMBL ≥ 5 y ≥ 6 como comprobación de robustez | pChEMBL 5 equivale a 10 µM y 6 a 1 µM. Etiquetar solo por pChEMBL dejaría fuera los productos naturales de NPASS y CMAUP. Un censurado solo cuenta como negativo si su límite es igual o mayor que el umbral usado, y el umbral no se elige por el balance de clases, que depende de qué registros se miren. Pendiente de ratificar por la patrocinadora (decisión 7). |
-| Modelos de ensamble (Random Forest, XGBoost), no deep learning | Evidencia comparable, menor costo, e interpretabilidad directa ([fundamentos](fundamentos-desde-cero.md), sección 6). |
-| Al menos dos métodos de atribución independientes, reportando solo donde coinciden | El desacuerdo entre métodos de explicabilidad es la norma, no la excepción ([fundamentos](fundamentos-desde-cero.md), sección 8). |
-| Métricas principales: MCC y AUPRC, no exactitud | El desbalance de clases hace que la exactitud sea engañosa ([fundamentos](fundamentos-desde-cero.md), sección 7). |
-| Construir un baseline propio, sin usar cifras publicadas como meta | Los valores publicados para el mismo conjunto de datos varían mucho según quién los reporte y cómo implementó la partición. |
-| Contrastar toda explicación del modelo contra TPSA < 67 Å² y HBD ≤ 1 | Son las reglas que dominan empíricamente ([fundamentos](fundamentos-desde-cero.md), sección 3); una explicación que las contradiga sin razón es sospechosa. |
+Cada decisión técnica, con su contexto, lo que se descartó, lo que cuesta, su estado y quién la toma, está en el [registro de decisiones](decisiones.md); esta guía no las repite. El resumen de una línea por decisión está en la tabla al inicio del registro, y la teoría que las sustenta, en los [fundamentos](fundamentos-desde-cero.md).
 
 ## 6. Estado actual del repositorio
 
@@ -112,17 +100,13 @@ Se verificó que cero andamios y cero esqueletos de conectividad se repiten entr
 
 ## 7. Trampas y advertencias para no repetir errores
 
-1. Nunca reportar el tamaño del conjunto de permeabilidad solo como "7,805 filas"; siempre acompañarlo del número real de moléculas distintas (4,018).
-2. Nunca deduplicar ni cruzar bases de datos usando el nombre del compuesto o el texto del SMILES; usar siempre el InChIKey recalculado.
-3. Al concatenar los archivos de B3DB, hay 11 filas duplicadas que hay que quitar primero.
-4. Cualquier umbral (como el de TPSA) debe calcularse **solo con los datos de entrenamiento**, nunca con todo el conjunto, o se estaría usando información de la prueba de forma indebida.
-5. Los grupos A–D de B3DB no son una escala simple de calidad; no hay que tratarlos como tal sin justificación.
-6. La etiqueta BBB+/BBB− no es una propiedad fija del compuesto ([fundamentos](fundamentos-desde-cero.md), sección 2); un resultado BBB− no descarta un candidato.
-7. Desconfiar de resultados muy favorables para compuestos de la familia de la curcumina y similares ([fundamentos](fundamentos-desde-cero.md), sección 5); aplicar filtros PAINS antes de reportar un candidato.
-8. **Usar siempre el archivo de la patrocinadora** (`data/external/profesora/bbb_permeability_experimental.csv`) como fuente de la etapa 1, no los archivos de B3DB que el equipo descargó por su cuenta. Esos quedan solo como verificación cruzada de conteos (ver recuadro abajo, es justo el error que ya cometimos una vez).
-9. Un registro censurado de actividad (`> X nM`) solo sirve como negativo si su límite es igual o mayor que el umbral de «activo» que se use; la regla se aplica por umbral, no con un corte fijo.
-10. No elegir el umbral de actividad por el balance de clases que deja: ese balance cambia según qué registros se miren (todos, solo con pChEMBL, solo con diana, por par compuesto-diana), y lo que justifica el corte es la concentración.
-11. Las cifras de los diccionarios de la patrocinadora son del archivo completo (225,513 filas de actividad); el que recibimos tiene 202,647, el 89.9%. Hay que decir cuál se usa en cada cifra.
+Las trampas sobre los datos —el tamaño efectivo, los nombres como identificadores, los grupos A–D, las mediciones censuradas, el archivo completo contra el recibido— están en [los datos del proyecto](datos-contenido.md), junto a la evidencia. Las que quedan son de método:
+
+1. Cualquier umbral, como el de TPSA, se calcula **solo con los datos de entrenamiento**, nunca con todo el conjunto, o se usa información de la prueba.
+2. Un resultado BBB− no descarta un candidato: la etiqueta depende de la concentración ([fundamentos](fundamentos-desde-cero.md), sección 2).
+3. Desconfiar de resultados muy favorables para la curcumina y su familia, y aplicar filtros PAINS antes de reportar un candidato ([fundamentos](fundamentos-desde-cero.md), sección 5).
+4. **Usar siempre el archivo de la patrocinadora** como fuente de la etapa 1, no los archivos de B3DB que el equipo descargó. Esos quedan solo como verificación cruzada (ver el recuadro siguiente: es justo el error que ya cometimos una vez).
+5. No elegir el umbral de actividad por el balance de clases que deja, que cambia según qué registros se miren; lo que justifica el corte es la concentración ([decisión 7](decisiones.md#d7)).
 
 > ### Qué pasó el 4 de octubre, y por qué no se puede repetir
 >

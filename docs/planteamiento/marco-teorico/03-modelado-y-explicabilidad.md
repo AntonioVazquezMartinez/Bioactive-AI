@@ -2,9 +2,7 @@
 
 Qué se ha hecho en aprendizaje automático sobre permeabilidad BBB, cómo se justifica una predicción a nivel de subestructura, y qué trabajo no existe todavía y este proyecto pretende hacer.
 
-> **Estado: borrador para revisión del equipo y los asesores.** Se construyó a partir de siete ramas de investigación documentadas en [`docs/referencias/`](../../referencias/README.md), que conservan la evidencia completa y las advertencias de acceso. La bibliografía está en [`bibliografia.bib`](../../referencias/bibliografia.bib), con 208 entradas.
->
-> **Antes de entregar:** verificar contra doi.org toda referencia marcada como de acceso parcial o sin acceso. Varias entradas tienen metadatos que nadie del equipo ha leído.
+> Borrador para revisión; el estado y las advertencias de verificación están en la [presentación](README.md).
 
 ---
 
