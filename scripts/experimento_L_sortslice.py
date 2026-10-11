@@ -8,7 +8,8 @@ conectividad, repetida con 3 semillas, y tres modelos con hiperparámetros fijos
 (regresión logística, Random Forest y XGBoost). El vocabulario se reaprende
 dentro de cada pliegue; **la prueba no se toca**.
 
-Salida: `data/processed/resultados_L_sortslice.csv` (no se versiona).
+Salida: `notebooks/datos/resultados_L_sortslice.csv`, que sí se versiona: el
+notebook 02 (sección 5.1) lo lee para mostrar la comparación sin volver a correrla.
 Requiere las dependencias de `requirements.txt`. Tarda unos 10 minutos.
 """
 import sys, warnings, time
@@ -101,9 +102,10 @@ for L in Ls:
         m.fit(Xt,y[tr]); s=m.predict_proba(Xv)[:,1]
         mcc,ap,au=metr(y[va],s)
         filas.append(dict(L=L,seed=0,fold=-1,modelo=nom,MCC=mcc,AUPRC_neg=ap,AUROC=au,eval='val'))
-    filas.append(dict(L=L,seed=0,fold=-1,modelo='cobertura',MCC=cov_tr,AUPRC_neg=cov_va,AUROC=total,eval='cov'))
+    filas.append(dict(L=L,seed=0,fold=-1,modelo='cobertura',eval='cov',
+                      cob_entrenamiento=cov_tr,cob_validacion=cov_va,vocabulario_total=total))
     print(f'L={L} listo en {time.time()-t0:.0f}s; vocabulario total en train={total}',flush=True)
-salida = RAIZ / 'data/processed/resultados_L_sortslice.csv'
+salida = RAIZ / 'notebooks/datos/resultados_L_sortslice.csv'
 salida.parent.mkdir(parents=True, exist_ok=True)
 pd.DataFrame(filas).to_csv(salida, index=False)
 print('escrito', salida)

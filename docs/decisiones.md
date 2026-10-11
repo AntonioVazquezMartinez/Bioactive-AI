@@ -216,7 +216,7 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 **Qué dice la literatura.** No hay un L óptimo universal. `dablander2024sortslice` probó exactamente L ∈ {512, 1024, 2048, 4096}, dice que las opciones comunes son 1024 o 2048, no recomienda una y encuentra que la ventaja de Sort & Slice sobre el plegado por hash crece cuando L baja. El tamaño se decide con los datos propios.
 
-**Qué se midió.** `scripts/experimento_L_sortslice.py`: validación cruzada de 5 pliegues agrupada por andamio y esqueleto, 3 semillas (15 evaluaciones por celda), vocabulario reaprendido en cada pliegue, hiperparámetros fijos y la prueba sin tocar. MCC medio:
+**Qué se midió.** `scripts/experimento_L_sortslice.py` (resultados en `notebooks/datos/resultados_L_sortslice.csv` y sección 5.1 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)): validación cruzada de 5 pliegues agrupada por andamio y esqueleto, 3 semillas (15 evaluaciones por celda), vocabulario reaprendido en cada pliegue, hiperparámetros fijos y la prueba sin tocar. MCC medio:
 
 | L | Cobertura (entrenamiento / validación) | Regresión logística | Random Forest | XGBoost |
 |--:|:--|--:|--:|--:|
@@ -229,11 +229,11 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | 4096 | 91.9% / 77.2% | 0.674 | 0.694 | 0.686 |
 
 - **La curva es plana.** La desviación entre pliegues es de ~0.11 de MCC, mucho mayor que cualquier diferencia entre tamaños. Solo la regresión logística sube de forma sostenida (0.634 a 0.674); los árboles se aplanan desde L ≈ 128 a 512. El AUPRC sobre BBB− y el AUROC cuentan lo mismo.
-- **2048 está dentro del ruido del mejor.** Con la regla «el menor L a menos de un error estándar del mejor», sale 2048 para la regresión logística (en MCC y en AUPRC), para el promedio de los tres modelos en MCC y para Random Forest en AUPRC; con MCC, Random Forest se conforma con 512. XGBoost es inconsistente (128 o 4096 según la métrica).
+- **2048 está dentro del ruido del mejor en MCC.** Con la regla «el menor L a menos de un error estándar del mejor» sale 2048 para la regresión logística (en MCC y en AUPRC) y para el promedio de los tres modelos en MCC; con MCC, Random Forest se conforma con 512. **En AUPRC sobre BBB− el promedio favorece 4096**, pero por 0.001 a 0.003. XGBoost es inconsistente (128 o 4096 según la métrica).
 - **4096 no compensa.** Duplica las columnas y cambia el MCC en +0.001, −0.005 y +0.008, sin distinguirse del ruido.
 - **La validación fija de 749 compuestos no aclara más**: favorece L entre 256 y 512 para los árboles y L = 4096 para la logística, con diferencias dentro del ruido de un conjunto tan chico.
 
-**Se propone.** Mantener **L = 2048 como valor de trabajo**: es el menor tamaño que ningún modelo supera de forma distinguible, conserva la cobertura y coincide con una de las dos opciones comunes. La prueba no se usa para elegir L. Límites de esta medición: hiperparámetros sin afinar, una sola partición base y un conjunto de 4,018 esqueletos efectivos.
+**Se propone.** Mantener **L = 2048 como valor de trabajo**: queda dentro del ruido del mejor en MCC, conserva la cobertura y coincide con una de las dos opciones comunes; 4096 duplica las columnas por una diferencia que no se distingue del ruido. La prueba no se usa para elegir L. Límites de esta medición: hiperparámetros sin afinar, una sola partición base y un conjunto de 4,018 esqueletos efectivos.
 
 **Posibilidad: L = 512 si el modelo es XGBoost (o Random Forest).** Reduce el espacio de características a una cuarta parte (512 columnas en vez de 2048), con lo que hay menos subestructuras que explicar y menos riesgo de sobreajuste con 4,018 esqueletos efectivos. Lo que respalda la medición: con XGBoost el MCC pasa de 0.678 (L = 2048) a 0.666 (L = 512), una diferencia de 0.012 contra una desviación de ~0.11 entre pliegues; con Random Forest, de 0.699 a 0.694. Lo que no respalda: la cobertura baja de 84.8% a 67.0% en entrenamiento (de 71.0% a 55.2% en validación), y XGBoost fue el modelo más inconsistente de los tres (según la métrica, el mejor L fue 128 o 4096). Se decide en el Avance 3, con el modelo ya afinado y la misma comparación.
 
