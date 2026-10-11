@@ -11,6 +11,12 @@ Investigación documental realizada el 2026-09-22 para fundamentar las decisione
 
 La bibliografía consolidada está en [`bibliografia.bib`](bibliografia.bib).
 
+## Material de apoyo para el sitio
+
+`SMILES Notation Tutorial.pdf` es el Apéndice F del manual *Sustainable Futures / P2 Framework Manual 2012* de la EPA de Estados Unidos (EPA-748-B12-001), citado como `epa2012smiles` en [`bibliografia.bib`](bibliografia.bib). Es una introducción corta a cómo se escribe una molécula como cadena de texto, con ejemplos de átomos, enlaces, ramas y anillos.
+
+**Se puede usar en el sitio.** Sirve para explicar SMILES a quien viene del lado de bioingeniería, por ejemplo desde el [glosario](../glosario.md) o el visualizador. Dos precauciones: es un tutorial de divulgación y no la fuente primaria de la notación, que es `weininger1988`; y no verificamos la URL de origen ni la licencia exacta del documento, así que antes de incrustarlo o copiarlo al sitio hay que confirmarlas. Citarlo con su clave no tiene ese problema.
+
 ## Cómo leer estos documentos
 
 Cada afirmación viene etiquetada según el nivel de acceso que se tuvo a la fuente:
