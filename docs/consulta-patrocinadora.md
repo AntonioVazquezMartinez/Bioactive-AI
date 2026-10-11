@@ -72,6 +72,8 @@ Indíquenos si procede entrenar **modelos separados, un modelo con el origen com
 
 ## El resto de las decisiones
 
+**Escalamiento y selección de características** ([12](decisiones.md#d12)). Para los modelos de árboles no hace falta escalar; para el modelo lineal de control sí. Un PCA mejora el MCC con un solo corte, pero cada componente mezcla muchos descriptores y no se traduce a una subestructura. Entregamos ambas versiones de la matriz y le preguntamos si prefiere priorizar la explicabilidad o la reducción de dimensión.
+
 **Archivo de actividad** ([30](decisiones.md#d30)). Se llama `..._Entrenamiento.csv`. Su diccionario describe 225,513 filas y recibimos 202,647, el **89.9%**, lo que indica que reservó cerca de un 10%. Necesitamos saber si existe una partición de prueba ya definida y cómo se hizo. Si fue aleatoria, hay compuestos casi idénticos en ambos lados y no sería comparable con una partición por andamio. Si existe, no construiremos la nuestra.
 
 **Representación** ([4](decisiones.md#d4), en uso). Descriptores RDKit (203 utilizables de 217) más Morgan/ECFP4 de 2,048 bits. Evaluamos Sort & Slice, que evita colisiones de bits y permite atribuir una predicción a una subestructura concreta. Cubre el 84.8% de las subestructuras en entrenamiento y el 68.0% en prueba, y esa brecha crece con el vocabulario. Indíquenos si conoce una representación más eficiente o interpretable para productos naturales.

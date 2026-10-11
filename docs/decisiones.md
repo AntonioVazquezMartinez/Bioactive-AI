@@ -37,7 +37,7 @@ Si un término no se entiende, el [glosario](glosario.md) lo define. El [mapa de
 | [9](#d9) | El sitio publicado como memoria del proyecto | Vigente | equipo |
 | [10](#d10) | ¿Reservar los 1,033 compuestos comunes? | **Abierta** | **patrocinadora** |
 | [11](#d11) | PAINS: marcar en vez de excluir | Propuesta | **patrocinadora** |
-| [12](#d12) | Escalamiento y selección de características | **Abierta** | equipo |
+| [12](#d12) | Escalamiento y selección de características | **Abierta** | **patrocinadora** |
 | [13](#d13) | **Forma del modelo de la etapa 2** | **Abierta** | **patrocinadora** |
 | [14](#d14) | Los 88,098 registros fenotípicos | Propuesta | **patrocinadora** |
 | [15](#d15) | La fuente confundida con el etiquetado | Vigente · medida | equipo |
@@ -253,7 +253,10 @@ El diccionario advierte además que **33,574 de las 41,291 filas con límite de 
 
 ## 12 · Escalamiento y selección de características {#d12}
 
-**Estado:** ABIERTA · **Decide:** equipo · la rúbrica del Avance 2 las pide explícitamente
+**Estado:** ABIERTA · **Decide:** patrocinadora · la rúbrica del Avance 2 las pide explícitamente
+**Pregunta:** ¿Se escalan los descriptores y se reduce la dimensión, o se trabaja con la matriz sin transformar? ¿Acepta perder la trazabilidad a subestructuras a cambio de PCA?
+
+**Cómo se entrega mientras se decide.** Como propuesta con alternativa: el Avance 2 deja la matriz filtrada en dos versiones, transformada (Yeo-Johnson) y sin transformar, con las mismas columnas en el mismo orden, para que el Avance 3 pueda usar cualquiera sin recalcular.
 
 **El problema.** La rúbrica pide «escalamiento y transformaciones; selección y extracción de características». El notebook del Avance 2 las menciona sin ejecutarlas.
 
