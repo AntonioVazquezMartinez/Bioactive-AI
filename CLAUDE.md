@@ -10,7 +10,7 @@ Bioactive AI is a Tec de Monterrey MNA capstone (TC5035.10, Team 7) with the Bio
 
 The full notes and open questions from the advisor meetings are in `docs/planteamiento/`, and that folder is the source of truth. What matters for code:
 
-- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) predict neuroprotective activity and the likely target. **A BBB− result does not discard a compound** — that much the data supports, since only 1,033 skeletons have measurements in both sets and the other 99% would be filtered on an unverified prediction. Whether the stages are therefore independent, or sequential without filtering, is a framing the sponsor has not confirmed: see decision 5. Candidate data sources are CMAUP, NPASS and ChEMBL. The primary BBB dataset is the sponsor's curated B3DB-derived file documented below. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
+- **Two-stage pipeline, SMILES in:** (1) classify BBB permeability (BBB+ / BBB-); (2) predict neuroprotective activity and the likely target. **A BBB− result does not discard a compound** — that much the data supports, since only 1,033 skeletons have measurements in both sets and the other 99% would be filtered on an unverified prediction. The team therefore treats the two stages as parallel evidence combined in the ranking, not as a cascade; whether the chain also gets measured end to end on those 1,033 skeletons is a separate proposal still waiting on the sponsor (decision C.3). Candidate data sources are CMAUP, NPASS and ChEMBL. The primary BBB dataset is the sponsor's curated B3DB-derived file documented below. A BBB- result doesn't rule a compound out, so don't treat stage 1 as a hard filter.
 - **Explainability is required, not optional.** The advisors want to know which structural features drive a prediction, so favor interpretable models or substructure-level attributions.
 - **Activity labels depend on concentration.** The same compound can flip between inactive and active depending on the µM tested, so pick and document a threshold when turning activity measurements into labels.
 - **"No learnable pattern" is a valid result.** Report it honestly instead of tuning until something looks good.
@@ -22,7 +22,7 @@ Quick reference. The full context of each one — what was discarded, what it co
 - **Data, stage 1:** the sponsor's curated file, `data/external/profesora/bbb_permeability_experimental.csv` — not the B3DB files we downloaded ourselves, which stay as a cross-check. It derives from B3DB but comes standardized and, crucially, cross-matched against COCONUT, which is what lets us separate natural products from synthetics. 7,811 rows, 7,805 with a class. logBB threshold −1.0. B3DB is CC0, so the data can live in the repo.
 - **Do not filter by the `Group` column.** The Avance 1 EDA disproved the reading that group D means "conflicting labels": D has 3+ references (median 3) against C's median of 1, and no duplicated record anywhere in the set carries contradictory labels. The column is confounded with the label — filtering to A+B drops the minority class from 36.5% to 27.0%, which worsens the imbalance instead of removing noise. Use it to stratify, never to exclude.
 - **Data, stage 2:** the sponsor's SNC activity file (202,647 records from ChEMBL, NPASS and CMAUP), with the ChEMBL 37 SQLite dump as a fallback — not the REST API, which was returning HTTP 500 as of 2026-09-22. Labels on two axes, which are easy to confuse: **how to label** (three routes, next bullet) and **where to cut** (pChEMBL ≥ 5 primary, ≥ 6 as a robustness check), keeping the most potent value per compound-target pair.
-- **Label through three routes, not pChEMBL alone** — vigente, pending the sponsor's ratification (decision 7 is open). pChEMBL only exists for ChEMBL records, so labelling by it silently drops all 15,293 NPASS and CMAUP rows — the natural products this project exists to prioritize — plus 54,498 censored measurements and 29,730 text-declared inactives. Use pChEMBL where it exists, exact concentration for the rest (which recovers 12,809 of the natural-product rows), and declared-inactive for the text comments and for censored records whose cutoff is ≥ 10 µM, the standard screening concentration. With all three applied, ≥ 5 leaves the set near balance at 1.6:1; the 6.7:1 that argued for ≥ 6 was an artifact of looking only at the dose-response subset.
+- **Label through three routes, not pChEMBL alone** — a proposal pending the sponsor's ratification (decision 2.3). pChEMBL only exists for ChEMBL records, so labelling by it silently drops all 15,293 NPASS and CMAUP rows — the natural products this project exists to prioritize — plus 54,498 censored measurements and 29,730 text-declared inactives. Use pChEMBL where it exists, exact concentration for the rest (which recovers 12,809 of the natural-product rows), and declared-inactive for the text comments and for censored records whose cutoff is ≥ 10 µM, the standard screening concentration. With all three applied, ≥ 5 leaves the set near balance at 1.6:1; the 6.7:1 that argued for ≥ 6 was an artifact of looking only at the dose-response subset.
 - **Features:** RDKit 2D descriptors (217 in current RDKit) plus Morgan/ECFP4, 2048 bits, via `rdFingerprintGenerator` — not the deprecated `GetMorganFingerprintAsBitVect`. Note `radius=2` means ECFP4, since the name carries the diameter. Frozen embeddings from pretrained transformers do not beat this under scaffold splits.
 - **Splits:** scaffold (Bemis-Murcko), never random. Random splits inflate results by 7–13 points. Where the data allows, make splits disjoint by source lab too.
 - **Explainability:** at least two independent attribution methods, reporting only the substructures they agree on. Train a simple interpretable model alongside as a control. Sanity-check every structural claim against TPSA (<67 Å²) and HBD (≤1) first, since those dominate empirically.
@@ -35,7 +35,7 @@ What exists:
 
 - `notebooks/`: `01_EDA` (Avance 1, delivered), `01b_EDA_actividad_snc` (stage-2 EDA), `02_Feature_Eng` (Avance 2, notebook done, report pending).
 - `src/data_prep/` (`download_data.py`, `splits.py`) and `src/features/molecular.py`. No `src/models/` yet.
-- `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 211 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md`, `fundamentos-desde-cero.md` (theory), `datos-contenido.md` (what each data file holds, its defects and the lineage diagram) and `guia-del-proyecto.md` (project and team).
+- `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 211 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md` (the single page: decisions, proposals and assumptions by phase, each with the question still open; update it with each Avance), `fundamentos-desde-cero.md` (theory), `datos-contenido.md` (what each data file holds, its defects and the lineage diagram) and `guia-del-proyecto.md` (project and team).
 - `data/external/profesora/` holds the sponsor's data with a README documenting licenses and caveats. The SNC activity file goes through Git LFS (see `.gitattributes`); NPASS is CC BY-NC, so it is non-commercial.
 - The site is built from `_quarto.yml` + `scripts/prepare_site.py`; `visualizador.qmd` and `presentacion.qmd` are standalone pages.
 - `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The checks that run in CI are `scripts/verificar_sitio.py` (every internal link of the built site, not just `.html`) and `scripts/verificar_decisiones.py`. Both run locally too — run them before pushing.
@@ -72,11 +72,11 @@ Documentation lives in three places and each has a different job. Keeping them a
 
 ### The decision register
 
-Every technical decision in this file has an entry in `docs/decisiones.md` with its context, what was discarded, what it costs, and two fields that make it actionable: **who decides** (team, sponsor, or both) and, when the sponsor decides, **the literal question** to ask.
+Every technical decision in this file has an entry in `docs/decisiones.md` with its context, what was discarded, what it costs, and, when it needs the sponsor, **the literal question** to ask. It does not record who decides.
 
-Status vocabulary: *vigente* (we work on this basis, reversible), *propuesta*, *abierta*, *revisada* (decided, measured, changed — keeps the superseded version visible), *ratificada*. **Nothing is ratificada until the sponsor reviews it.** That is not a formality: two decisions have already been reversed by measuring, and the register keeps both versions.
+The register is split by phase (common, 1, 2; ids like `1.3`, `2.5`, `C.2`) and by kind: decisions, proposals and assumptions (each with its status and what to do if it fails). Status vocabulary: *vigente* (we work on this basis, reversible), *propuesta*, *abierta*, *revisada* (decided, measured, changed — keeps the superseded version visible), *ratificada*. **Nothing is ratificada until the sponsor reviews it.** That is not a formality: two decisions have already been reversed by measuring, and the register keeps both versions.
 
-When a decision changes, never rewrite it silently. Mark the previous version as superseded and say what changed it. `scripts/verificar_decisiones.py` checks that every decision needing the sponsor states its question and appears in the consultation.
+When a decision changes, never rewrite it silently. Mark the previous version as superseded and say what changed it. `scripts/verificar_decisiones.py` checks that every entry declares a valid status.
 
 ### The site does not auto-discover files
 
@@ -111,7 +111,12 @@ So: when you learn something that would have saved you an hour, write it here. W
 ## Environment
 
 ```bash
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
+# reproducible: las versiones exactas con las que se ejecutó el trabajo (Python 3.12, la del CI)
+uv venv --python 3.12 env && source env/bin/activate
+uv pip install -r requirements.lock
+
+# o, si no usas uv: cotas mínimas, sin garantía de repetir las cifras
+python -m venv env && source env/bin/activate && pip install -r requirements.txt
 ```
+
+`requirements.txt` fija solo cotas inferiores, y entre versiones cambian en el tercer decimal las cifras de Random Forest; `requirements.lock` (generado con `uv pip compile requirements.txt --python-version 3.12`) fija todo. Se usa **Python 3.12 por ser la versión en la que el trabajo se ejecutó y se verificó**, no por el CI (que no ejecuta los notebooks): pasar a otra obliga a reejecutar los notebooks y el experimento de L y a revisar cada cifra. Ni siquiera eso hace idénticas las corridas entre sistemas operativos: la regresión logística con min–max difiere ~0.016 de MCC entre macOS y Linux (0.497 contra 0.481) y sin escalar ~0.003, así que **no se decide con una sola corrida**, y la primera celda del notebook 02 imprime las versiones con las que se ejecutó.

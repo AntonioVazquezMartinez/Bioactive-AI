@@ -109,6 +109,6 @@ Los fingerprints lo permiten porque cada posición corresponde a un fragmento co
 
 **SHAP** reparte el crédito de una predicción entre las variables, con una idea de la teoría de juegos. Tiene límites: al plegar un fingerprint, fragmentos distintos pueden compartir posición (una **colisión**), y que una variable pese en el modelo no significa que sea la causa biológica; es una pista fuerte, no una prueba.
 
-**La regla del proyecto**: al menos dos métodos independientes, reportando como confirmados solo los fragmentos en que coinciden, y un modelo interpretable por diseño entrenado en paralelo como control. Toda explicación se contrasta antes contra TPSA < 67 Å² y HBD ≤ 1; si las contradice sin razón, es señal de revisar el modelo, no de haber descubierto algo ([decisión 8](decisiones.md#d8)).
+**La regla del proyecto**: al menos dos métodos independientes, reportando como confirmados solo los fragmentos en que coinciden, y un modelo interpretable por diseño entrenado en paralelo como control. Toda explicación se contrasta antes contra TPSA < 67 Å² y HBD ≤ 1; si las contradice sin razón, es señal de revisar el modelo, no de haber descubierto algo ([decisión C.2](decisiones.md#dc-2)).
 
 Los métodos y sus críticas: [marco teórico, parte 3](planteamiento/marco-teorico/03-modelado-y-explicabilidad.md), §7, y la [investigación sobre explicabilidad](referencias/03-explicabilidad.md).

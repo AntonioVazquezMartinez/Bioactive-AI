@@ -74,7 +74,7 @@ El README de B3DB dice que el conjunto tiene 7,982 compuestos, mientras que el a
 | CMAUP | Etapa 2, plantas medicinales | CC BY (del artículo) | Términos de la base sin confirmar |
 | Spielvogel et al. 2025 | Validación externa | CC BY 4.0 | Requiere atribución |
 
-Un proyecto académico cumple con todas. Solo NPASS exigiría revisión si el proyecto tuviera continuidad comercial; es una [pregunta para la patrocinadora](../../docs/consulta-patrocinadora.md).
+Un proyecto académico cumple con todas. Solo NPASS exigiría revisión si el proyecto tuviera continuidad comercial; es una [pregunta para la patrocinadora](../../docs/decisiones.md#dc-6).
 
 ## Pendientes de descarga
 

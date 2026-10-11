@@ -30,7 +30,7 @@ Sus tres resultados —el tamaño efectivo es menor que el número de filas, las
 
 **Análisis:** [notebook de características](../../notebooks/02_Feature_Eng.ipynb): descriptores, fingerprints, partición por andamio, normalización y selección de características.
 
-Se entrega como **propuesta**: la normalización y la reducción de dimensión son la [decisión 12](../decisiones.md#d12), que decide la patrocinadora. El notebook ejecuta una opción, deja nombrada la alternativa y guarda la matriz filtrada en dos versiones, transformada y sin transformar.
+Se entrega como **propuesta**: la normalización y la reducción de dimensión son la [decisión 1.5](../decisiones.md#d1-5), que decide la patrocinadora. El notebook ejecuta una opción, deja nombrada la alternativa y guarda la matriz filtrada en dos versiones, transformada y sin transformar.
 
 ## Próximas entregas
 

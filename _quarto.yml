@@ -74,12 +74,10 @@ website:
             text: "04 · Datos de neuroactividad"
           - href: contenido/referencias/05-fuentes-de-datos.md
             text: "05 · Fuentes de datos abiertas"
-      - text: Decisiones
+      - text: Ruta
         menu:
           - href: contenido/decisiones.md
-            text: Registro de decisiones
-          - href: contenido/consulta-patrocinadora.md
-            text: Consulta a la patrocinadora
+            text: La ruta del proyecto
           - href: contenido/referencias/index.qmd
             text: Qué investigación sustenta cada una
       - text: Entregables

@@ -79,10 +79,7 @@ DOCUMENTOS = [
      "La teoría de química, biología e inteligencia artificial, sin suponer nada"),
     ("docs/decisiones.md",
      "decisiones.md",
-     "Qué se decidió, qué se descartó y qué cambió al medir"),
-    ("docs/consulta-patrocinadora.md",
-     "consulta-patrocinadora.md",
-     "Las decisiones que necesitan su respuesta antes del Avance 3"),
+     "Qué se decidió, propuso y supuso en cada fase, y qué falta preguntar"),
     ("docs/guia-del-proyecto.md",
      "guia-del-proyecto.md",
      "Quiénes participan, cómo se organiza el trabajo y qué lecciones costó aprender"),
@@ -150,6 +147,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
     # README.md de referencias -> index.html
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
     texto = re.sub(r"\]\(((?:\.\./)*(?:planteamiento/)?)marco-teorico/README\.md\)", r"](\1marco-teorico/index.html)", texto)
+    texto = re.sub(r"\]\(((?:\.\./)*)reportes/README\.md\)", r"](\1reportes/index.html)", texto)
     # el README de los datos se publica como datos.html en la raíz de contenido/
     texto = re.sub(r"\]\((?:\.\./)*data/external/README\.md\)", f"]({subir_c}datos.html)", texto)
     # los archivos de data/external/profesora/ NO se publican en el sitio: son

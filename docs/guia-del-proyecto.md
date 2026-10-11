@@ -32,7 +32,7 @@ Qué hace Bioactive AI, quién participa, cómo se organiza el trabajo y qué le
 
 **La pregunta que responde el proyecto:** dado solamente el SMILES de un compuesto, ¿se puede predecir si llegará al cerebro, si tendrá actividad neuroprotectora, y explicar qué característica estructural sustenta esa predicción?
 
-Esto se divide en dos etapas, ambas recibiendo el mismo SMILES como entrada. El equipo las plantea como **independientes**; ese planteamiento está pendiente de confirmar con la patrocinadora (decisión 5 del registro):
+Esto se divide en dos etapas, ambas recibiendo el mismo SMILES como entrada. El equipo las trata como **independientes y en paralelo**, no como una cascada:
 
 ```
 SMILES ──► vector de longitud fija ──┬─► Etapa 1: ¿cruza la barrera hematoencefálica? (BBB+ / BBB−)
@@ -106,17 +106,17 @@ Las trampas sobre los datos —el tamaño efectivo, los nombres como identificad
 2. Un resultado BBB− no descarta un candidato: la etiqueta depende de la concentración ([fundamentos](fundamentos-desde-cero.md), sección 2).
 3. Desconfiar de resultados muy favorables para la curcumina y su familia, y aplicar filtros PAINS antes de reportar un candidato ([fundamentos](fundamentos-desde-cero.md), sección 5).
 4. **Usar siempre el archivo de la patrocinadora** como fuente de la etapa 1, no los archivos de B3DB que el equipo descargó. Esos quedan solo como verificación cruzada.
-5. No elegir el umbral de actividad por el balance de clases que deja, que cambia según qué registros se miren; lo que justifica el corte es la concentración ([decisión 7](decisiones.md#d7)).
+5. No elegir el umbral de actividad por el balance de clases que deja, que cambia según qué registros se miren; lo que justifica el corte es la concentración ([decisión 2.3](decisiones.md#d2-3)).
 
 ## 8. Pendientes y preguntas abiertas {#g8}
 
-Lo abierto vive en dos sitios, y esta guía no los duplica: las **decisiones**, con su estado y quién decide, en [`decisiones.md`](decisiones.md), y la **consulta a la patrocinadora** en [`consulta-patrocinadora.md`](consulta-patrocinadora.md). El trabajo pendiente vive en los issues de GitHub, etiquetados por el avance que bloquean.
+Lo abierto vive en dos sitios, y esta guía no los duplica: la **ruta del proyecto**, con cada decisión, propuesta y supuesto por fase y la pregunta que queda por resolver, en [`decisiones.md`](decisiones.md). El trabajo pendiente vive en los issues de GitHub, etiquetados por el avance que bloquean.
 
 Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 
-- Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 7).
-- Un modelo por diana, por categoría de enfermedad o multitarea (decisión 13).
-- Reservar o no los 1,033 compuestos con medición en las dos etapas (decisión 10): cuesta el 25.7% de los datos de la etapa 1.
+- Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 2.3).
+- Un modelo por diana, por categoría de enfermedad o multitarea (decisión 2.2).
+- Reservar o no los 1,033 compuestos con medición en las dos etapas (decisión C.3): cuesta el 25.7% de los datos de la etapa 1.
 - Modelos separados para naturales y sintéticos, o el origen como variable.
 - Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 

@@ -75,7 +75,7 @@ flowchart LR
     D7 -.->|"corrige"| R4
 ```
 
-Las flechas punteadas marcan las dos decisiones que **los datos revisaron después**: no salieron de la literatura sino de medir sobre el conjunto real. Son [no filtrar por `group`](../decisiones.md#d2) y [el etiquetado por tres vías](../decisiones.md#d7); el registro guarda de cada una el contexto, la versión superada y lo que la cambió.
+Las flechas punteadas marcan las dos decisiones que **los datos revisaron después**: no salieron de la literatura sino de medir sobre el conjunto real. Son [no filtrar por `group`](../decisiones.md#d1-1) y [el etiquetado por tres vías](../decisiones.md#d2-3); el registro guarda de cada una el contexto, la versión superada y lo que la cambió.
 
 ## Tres advertencias transversales
 

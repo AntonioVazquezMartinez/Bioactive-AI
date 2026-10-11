@@ -8,7 +8,7 @@ Qué contiene cada archivo que entregó la patrocinadora, qué defectos se conoc
 
 ```{mermaid}
 flowchart TD
-    subgraph fuentes["Datos entregados por la patrocinadora"]
+    subgraph fuentes["Datos de la patrocinadora"]
         BBB["bbb_permeability_experimental.csv<br/>7,811 filas · deriva de B3DB<br/>cruzado con COCONUT"]
         SNC["snc_activity_…_Entrenamiento.csv<br/>202,647 registros · ChEMBL + NPASS + CMAUP"]
         DIA["etiquetas_dianas.csv<br/>39 dianas con gen y enfermedad"]
@@ -37,7 +37,7 @@ flowchart TD
     B2 -. "solo 1,033 esqueletos<br/>en ambos conjuntos" .- S2
 ```
 
-La línea punteada es el hallazgo del [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb): los dos conjuntos **casi no comparten compuestos**. Solo 1,033 esqueletos tienen medición en ambos, el 1.0% del conjunto de actividad y el 25.7% del de permeabilidad. Es el único subconjunto donde la cadena de dos etapas se puede validar de extremo a extremo, y por eso la etapa 1 no opera como filtro duro. El diccionario dice que las dos tablas son independientes y no hace falta cruzarlas: es cierto a nivel de filas, pero no contempla este uso, que motiva la [decisión 10](decisiones.md#d10).
+La línea punteada es el hallazgo del [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb): los dos conjuntos **casi no comparten compuestos**. Solo 1,033 esqueletos tienen medición en ambos, el 1.0% del conjunto de actividad y el 25.7% del de permeabilidad. Es el único subconjunto donde la cadena de dos etapas se puede validar de extremo a extremo, y por eso la etapa 1 no opera como filtro duro. El diccionario dice que las dos tablas son independientes y no hace falta cruzarlas: es cierto a nivel de filas, pero no contempla este uso, que motiva la [decisión C.3](decisiones.md#dc-3).
 
 ## Etapa 1 · permeabilidad
 
@@ -76,7 +76,7 @@ B3DB dice que caracterizan la incertidumbre de las mediciones, pero no publica e
 
 Al revisar los duplicados exactos del archivo, ninguno tiene etiquetas en conflicto. Las dos columnas de grupo, clasificación y regresión, **no son comparables entre sí**: los 1,058 compuestos presentes en ambos archivos son todos grupo A en clasificación, pero en regresión se reparten entre los cuatro y difieren en el **77%** de los casos.
 
-**No se filtra por grupo**: quedarse con A+B baja la clase BBB− del 36.5% al 27.0%, así que se usa para describir y estratificar. El razonamiento completo está en la [decisión 2](decisiones.md#d2).
+**No se filtra por grupo**: quedarse con A+B baja la clase BBB− del 36.5% al 27.0%, así que se usa para describir y estratificar. El razonamiento completo está en la [decisión 1.1](decisiones.md#d1-1).
 
 ### Origen natural
 
@@ -117,7 +117,7 @@ En nuestros datos la misma molécula base aparece repetida: la morfina está **o
 ### Defectos conocidos
 
 - **2 compuestos de B3DB no sobreviven**: mepenzolato y tiotidina, con un carbono de carga imposible que RDKit rechaza. La patrocinadora ya los excluyó, de modo que los 7,811 SMILES de su archivo son válidos. Solo aparecen en los archivos crudos de B3DB.
-- **6 filas traen logBB sin clase** —zidovudina, miltefosina y otras cuatro—: tienen clase en B3DB, pero su fila de clasificación registra otra forma estereoquímica y no empató al unir. Se excluyen del entrenamiento de clasificación ([decisión 18](decisiones.md#d18)).
+- **6 filas traen logBB sin clase** —zidovudina, miltefosina y otras cuatro—: tienen clase en B3DB, pero su fila de clasificación registra otra forma estereoquímica y no empató al unir. Se excluyen del entrenamiento de clasificación ([decisión 1.4](decisiones.md#d1-4)).
 - **131 esqueletos tienen clases contradictorias**, que afectan 429 filas. El ejemplo del diccionario: el meso-etambutol es BBB+ y los demás isómeros, BBB−. Hay que decidir si es un caso genuino de «la forma exacta importa» o un error de etiquetado.
 - **112 esqueletos tienen más de una medición de logBB**, y de ellos **40 con valores distintos**, con diferencias de hasta 1.4 unidades logarítmicas. El diccionario dice «más de un valor», pero 72 de los 112 repiten el mismo número: el desacuerdo real es 2.8 veces menor de lo que sugiere la cifra.
 
@@ -127,7 +127,7 @@ Los dos últimos ponen un **límite teórico** a cualquier modelo que agrupe por
 
 El archivo (`snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv`) combina tres fuentes: **ChEMBL** (bioactividad de moléculas tipo fármaco), **NPASS** y **CMAUP** (productos naturales). Pesa 74 MB y se versiona con Git LFS.
 
-> **Archivo completo y archivo recibido.** El diccionario describe **225,513 registros**; recibimos **202,647**, el 89.9%. El sufijo `_Entrenamiento` y esa diferencia indican que existe una partición reservada, [pendiente de confirmar](consulta-patrocinadora.md). Las cifras del diccionario son del archivo completo y las del resto del sitio son del nuestro: 114,549 registros con diana en vez de 121,522, y 88,098 sin diana en vez de 98,298. Cada cifra declara cuál usa.
+> **Archivo completo y archivo recibido.** El diccionario describe **225,513 registros**; recibimos **202,647**, el 89.9%. El sufijo `_Entrenamiento` y esa diferencia indican que existe una partición reservada, [pendiente de confirmar](decisiones.md#d2-6). Las cifras del diccionario son del archivo completo y las del resto del sitio son del nuestro: 114,549 registros con diana en vez de 121,522, y 88,098 sin diana en vez de 98,298. Cada cifra declara cuál usa.
 
 | Dato (archivo recibido) | Valor |
 |:--|--:|
@@ -152,19 +152,19 @@ La cobertura es muy desigual: Alzheimer reúne 52,676 registros y ELA solo 53. C
 | `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
 | `TARDBP` | TDP-43 | 8 en el archivo completo |
 
-El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 14](decisiones.md#d14).
+El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
 
 ### Cómo se mide la actividad
 
-- **NPASS y CMAUP no traen pChEMBL** (15,293 registros), porque solo ChEMBL lo calcula. Etiquetar solo por pChEMBL dejaría fuera justo los productos naturales, de ahí el etiquetado por tres vías de la [decisión 7](decisiones.md#d7), pendiente de ratificar.
+- **NPASS y CMAUP no traen pChEMBL** (15,293 registros), porque solo ChEMBL lo calcula. Etiquetar solo por pChEMBL dejaría fuera justo los productos naturales, de ahí el etiquetado por tres vías de la [decisión 2.3](decisiones.md#d2-3), pendiente de ratificar.
 - **Las unidades no están convertidas a una sola escala**: la mayoría está en nM, pero hay 29,880 registros en µM y 662 en unidades de masa (µg/mL y similares) que no se pueden pasar a concentración molar sin el peso molecular de cada compuesto.
 - **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. Sobre las 61,001 filas con `>` o `>=` (54,498 de ellas sin pChEMBL):
 
-Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 7](decisiones.md#d7)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
+Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 2.3](decisiones.md#d2-3)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
 
 ### Qué denominador usa cada porcentaje
 
-Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 7](decisiones.md#d7) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
+Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
 
 ## Lo que los diccionarios no documentan
 
@@ -173,4 +173,4 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
 - Si existe una partición de prueba reservada, y cómo se construyó.
 - Qué error pesa más en el laboratorio.
 
-Son parte de la [consulta](consulta-patrocinadora.md).
+Son parte de la [ruta del proyecto](decisiones.md#fase2).
