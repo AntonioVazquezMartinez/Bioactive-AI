@@ -150,7 +150,7 @@ Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10
 ## 7 · Etiquetado de la etapa 2 por tres vías {#d7}
 
 **Estado:** ABIERTA · **revisada** el 7 de octubre · **Decide:** patrocinadora
-**Pregunta:** ¿Qué criterio de «activo» usa usted? ¿Son confiables los inactivos declarados por texto? ¿Cómo trata las mediciones censuradas?
+**Pregunta:** ¿Qué criterio de «activo» recomienda? ¿Son confiables los inactivos declarados por texto? ¿Cómo debemos tratar las mediciones censuradas? Cuando un mismo esqueleto de conectividad y gen tiene observaciones activas e inactivas, ¿qué tipos de ensayo considera comparables y qué evidencia debe tener prioridad?
 
 **Lo que se decía antes.** «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin especificar cómo etiquetar los registros sin pChEMBL.
 
@@ -162,7 +162,7 @@ Por urgencia, las cuatro que cambian cómo se construye el modelo: [7](#d7), [10
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-**Decisión.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 registros naturales; e **inactivo declarado** para los textos y para los censurados con corte ≥ 10 µM.
+**Propuesta de trabajo, pendiente de ratificación.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 registros naturales; e **inactivo declarado** para los textos y para los censurados con corte ≥ 10 µM. La regla de censura sigue el criterio que describe el diccionario; usar 10 µM como corte operativo es la propuesta del equipo, no una decisión ratificada por la patrocinadora.
 
 **El criterio de censura es de la patrocinadora, no nuestro.** La sección 7 de su diccionario trae la tabla hecha sobre las 61,001 filas con `>` o `>=`, y la regla: *«solo sirve como negativo si el límite es igual o mayor que el umbral de "activo" que se use»*.
 
@@ -185,9 +185,9 @@ El diccionario advierte además que **33,574 de las 41,291 filas con límite de 
 
 La segunda fila resume la población observada después de etiquetar y agrupar; **no es todavía el conjunto de entrenamiento definitivo**. De los 114,549 registros que tienen una categoría de diana, 109,264 reciben etiqueta por alguna de las tres vías. Entre estos últimos, 4,810 no tienen el identificador de gen (`target_gene`) y 327 no tienen un esqueleto calculable desde SMILES. Se excluyen esos 5,137 registros al construir los 104,127 registros agrupables en 71,145 pares.
 
-La regla aplicada en este recuento es explícita: un par se cuenta activo si **al menos una** de sus observaciones etiquetadas es activa (máximo de etiquetas binarias). Con esta regla hay 1,810 pares con etiquetas discordantes para ≥ 5 y 2,426 para ≥ 6. Por ello, las proporciones por pares dependen de cómo se resuelvan esos conflictos y **son descriptivas, no una decisión ya validada para el entrenamiento**. El máximo de etiquetas binarias no selecciona por sí mismo la medición de mayor potencia; esa equivalencia no se presupone aquí y la política de agregación requiere acordarse antes de cerrar el conjunto de modelado.
+La regla aplicada en este recuento es explícita: un par se cuenta activo si **al menos una** de sus observaciones etiquetadas es activa (máximo de etiquetas binarias). Con esta regla hay 1,810 pares con etiquetas discordantes para ≥ 5 y 2,426 para ≥ 6. Por ello, las proporciones por pares dependen de cómo se resuelvan esos conflictos y **son descriptivas, no una decisión ya validada para el entrenamiento**. El máximo de etiquetas binarias no selecciona por sí mismo la medición de mayor potencia; esa equivalencia no se presupone aquí. La patrocinadora debe aclarar la comparabilidad biológica de los ensayos y posibles prioridades de evidencia; el equipo deberá definir y justificar la regla operativa, evaluar su sensibilidad y acordarla antes de cerrar el conjunto de modelado.
 
-**Una recomendación que cambió al ampliar la población analizada.** En los registros con pChEMBL, ≥ 5 daba 87.1% de activos y una razón de 6.7 a 1; ese resultado motivó proponer ≥ 6. Al incluir las tres vías, las cifras dependen de la unidad: por registro, ≥ 5 da 61.7% de activos y ≥ 6 da 44.4%; por par de esqueleto × gen, bajo la regla provisional descrita arriba, ≥ 5 da 70.5% y ≥ 6 da 50.6%. La diferencia entre los resultados por registro no identifica por sí sola la causa del cambio. El sesgo de selección en los registros con pChEMBL es una explicación posible, pero estos conteos no demuestran su mecanismo. **Se conserva ≥ 5 como umbral primario de trabajo y ≥ 6 como análisis de robustez, pendiente de ratificación de la patrocinadora; el balance de clases por sí solo no determina el umbral biológico.**
+**Una recomendación que cambió al ampliar la población analizada.** En los registros con pChEMBL, ≥ 5 daba 87.1% de activos y una razón de 6.7 a 1; ese resultado motivó proponer ≥ 6. Al incluir las tres vías, las cifras dependen de la unidad: por registro, ≥ 5 da 61.7% de activos y ≥ 6 da 44.4%; por par de esqueleto de conectividad × gen, bajo la regla provisional descrita arriba, ≥ 5 da 70.5% y ≥ 6 da 50.6%. La diferencia entre los resultados por registro no identifica por sí sola la causa del cambio. El sesgo de selección en los registros con pChEMBL es una explicación posible, pero estos conteos no demuestran su mecanismo. **Se conserva ≥ 5 como umbral primario de trabajo y ≥ 6 como análisis de robustez, pendiente de ratificación de la patrocinadora; el balance de clases por sí solo no determina el umbral biológico.**
 
 ---
 
@@ -309,7 +309,7 @@ La regla aplicada en este recuento es explícita: un par se cuenta activo si **a
 
 Es evidencia de otro tipo. Sirve para «¿este compuesto hace *algo* en un sistema neuronal?», no para «¿actúa sobre esta diana?», que es lo que plantea la etapa 2.
 
-**Propuesta del equipo.** Entrenar sobre los 114,549 registros con diana identificada y conservar los 88,098 aparte, para una pregunta distinta. No se descartan.
+**Propuesta revisada del equipo.** Los 114,549 registros tienen una categoría de diana, pero solo 109,264 reciben etiqueta por las tres vías planteadas. Después se excluyen de la agregación por pares 4,810 registros sin identificador de gen y 327 sin estructura válida para calcular la clave de conectividad; quedan 104,127 registros agrupables en 71,145 pares antes de resolver discordancias y definir la partición. **Este conteo no es el tamaño final del entrenamiento.** Los 88,098 registros fenotípicos sin diana de la lista se conservan aparte para una pregunta distinta; no se descartan.
 
 **Decide:** patrocinadora · **Pregunta:** ¿Los quiere dentro del modelo, aparte o fuera?
 

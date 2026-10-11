@@ -194,7 +194,7 @@ El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente
 **Propuesta de etiquetado por tres vías, pendiente de ratificación:** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 registros de productos naturales— e inactivo declarado para textos y mediciones censuradas con corte ≥ 10 µM.
 
 ::: {.callout-note}
-Con ≥ 5 hay 119,835 activos de 194,086 registros etiquetados (61.7%; razón 1.6:1), incluidos los fenotípicos. En el recuento exploratorio por esqueleto × gen hay 50,177 pares activos de 71,145 (70.5%; razón 2.4:1). Como análisis de robustez, ≥ 6 da 44.4% por registro y 50.6% por par. El 61.7% es un balance por registro, no el balance por diana. El recuento por pares marca activo un par si alguna observación es activa; quedan pendientes de resolver 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6, así como definir la población y partición finales de entrenamiento.
+Con ≥ 5 hay 119,835 activos de 194,086 registros etiquetados (61.7%; razón 1.6:1), incluidos los fenotípicos. En el recuento exploratorio por estructura de conectividad × gen hay 50,177 pares activos de 71,145 (70.5%; razón 2.4:1). Como análisis de robustez, ≥ 6 da 44.4% por registro y 50.6% por par. El 61.7% es un balance por registro, no el balance por diana. El recuento por pares usa la regla provisional «activo si alguna observación es activa»; quedan pendientes de resolver 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6, así como definir la población y partición finales de entrenamiento. La propuesta de etiquetado y umbrales requiere ratificación de la patrocinadora.
 :::
 
 # Cómo trabajamos {background-color="#2a3441"}
