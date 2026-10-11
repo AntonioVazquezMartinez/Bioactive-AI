@@ -38,11 +38,13 @@ What exists:
 - `docs/`: `planteamiento/` (problem statement, marco teórico in three parts), `referencias/` (5 research documents plus `bibliografia.bib`, 210 entries), `reportes/avance-0/` and `avance-1/` (Quarto `.qmd` + rendered PDF), plus `glosario.md`, `decisiones.md` and `linaje-datos.md`.
 - `data/external/profesora/` holds the sponsor's data with a README documenting licenses and caveats. The SNC activity file goes through Git LFS (see `.gitattributes`); NPASS is CC BY-NC, so it is non-commercial.
 - The site is built from `_quarto.yml` + `scripts/prepare_site.py`; `visualizador.qmd` and `presentacion.qmd` are standalone pages.
-- `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The only checks that run are the link checker in CI and `scripts/verificar_decisiones.py`.
+- `requirements.txt` and `.gitignore` exist. There is still no test or lint setup — don't invent build or test commands, add them here once they exist. The checks that run in CI are `scripts/verificar_sitio.py` (every internal link of the built site, not just `.html`) and `scripts/verificar_decisiones.py`. Both run locally too — run them before pushing.
 
 `models/` and `src/models/` still hold an empty `Nuevo.txt` placeholder so git tracks them. Delete the placeholder when you add real content.
 
 Open work lives in GitHub issues, labelled by which deliverable it blocks. Open decisions live in `docs/decisiones.md`. Neither belongs in this file.
+
+Each report folder reaches the bibliography and the CSL through a **symlink** to `docs/referencias/`, because typst refuses paths outside its own root and three copies had already drifted apart. Symlinks work on Linux and macOS; on native Windows without developer mode git checks them out as text files holding the path, and typst then fails on an invalid bibliography. Work on Linux, macOS or WSL.
 
 Reports are rendered with Quarto to typst (no LaTeX). The rubric wants a cover page *and* a table of contents as separate pages, which Quarto's `toc` puts adjacent — hence the raw typst block at the top of each `.qmd`. Check every page of a rendered PDF before calling it done; typst sizes table columns by header length and silently produces broken tables.
 
