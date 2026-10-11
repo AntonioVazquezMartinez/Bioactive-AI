@@ -19,6 +19,7 @@ pyarrow>=16.0          # parquet para los intermedios de data/processed/
 
 # --- Modelado ---
 scikit-learn>=1.5
+joblib>=1.4          # persistir el escalador y los selectores ajustados
 xgboost>=2.1
 imbalanced-learn>=0.13  # el conjunto está 63.5/36.5; ver cap. 4.7 del marco teórico
 
