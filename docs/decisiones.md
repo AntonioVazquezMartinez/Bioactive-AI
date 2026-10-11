@@ -192,7 +192,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 | **Random Forest** | Baseline estándar; tolera descriptores correlacionados | No |
 | **Gradient boosting** (XGBoost o LightGBM) | Suele ser el más fuerte con descriptores tabulares | No |
 
-Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación se elige por validación cruzada en el Avance 3. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA se descartó por explicabilidad y se guarda ajustado como brazo de comparación. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
+Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación se elige por validación cruzada en el Avance 3. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
 
 #### 1.6 · Naturales y sintéticos: ¿modelos separados u origen como variable? {#d1-6 .abierta}
 
@@ -250,7 +250,7 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | S1.7 | Los 312 compuestos acíclicos sin andamio se asignan con una regla reproducible | Sin comprobar | La regla no está escrita | Escribirla antes del baseline |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |
 | S1.9 | Yeo-Johnson es una buena transformación | Sin comprobar | La matriz guardada la asume; en la regresión logística queda a la par de min–max (0.484 contra 0.481) y una corrida no las distingue | Validación cruzada en el Avance 3; cambiarla obliga a recalcular |
-| S1.10 | El PCA no aporta | Sin comprobar | Descartado por explicabilidad; no mejora de forma concluyente (el bootstrap de la diferencia en Random Forest da −0.008, IC 95% −0.070 a +0.055) ([1.5](#d1-5)) | Mantenerlo como brazo de comparación |
+| S1.10 | El PCA no aporta | Sin comprobar | No adoptado por explicabilidad; no mejora de forma concluyente (el bootstrap de la diferencia en Random Forest da −0.008, IC 95% −0.070 a +0.055) ([1.5](#d1-5)) | Mantenerlo como brazo de comparación |
 | S1.11 | Las tres características derivadas aportan | Acotado | AUC individual: `tpsa_por_mw` 0.810, `lipo_neta` 0.795, `regla_2p` 0.684 (TPSA: 0.844). `lipo_neta` correlaciona 0.975 con `MolLogP` y lo desplaza | Reevaluar con validación cruzada |
 | S1.12 | Todo lo que aprende de los datos se ajusta solo con entrenamiento | Comprobado | Media tras escalar: 0.0000 en entrenamiento, 0.0048 en evaluación | — |
 | S1.13 | L = 2048 es un tamaño razonable de vocabulario | Acotado | Medido: dentro del ruido del mejor y sin ganancia distinguible con 4096 ([1.7](#d1-7)); falta repetirlo con modelos afinados | Elegir L por modelo en el Avance 3 |
