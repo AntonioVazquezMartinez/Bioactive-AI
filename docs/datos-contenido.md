@@ -97,7 +97,7 @@ Toda cifra por origen debe declarar cuál usa y sobre qué base: las tres catego
 | Sin equivalente natural exacto (incluye análogos, así que no todos son sintéticos en sentido estricto) | 4,439 | 71.7% |
 | **Productos naturales** (estructura idéntica en COCONUT) | **3,366** | **52.7%** |
 
-La diferencia es de 19 puntos, y la regla fisicoquímica clásica (TPSA < 67 Å² y HBD ≤ 1) explica unos 6.6. Queda algo más en juego —posiblemente eflujo activo, o un sesgo en qué compuestos se han llegado a ensayar— que el modelo tendrá que poder capturar. Como los naturales son justo lo que el proyecto quiere priorizar, **el desempeño se reporta por separado para naturales y sintéticos**: un buen número global podría esconder que le va peor justo ahí.
+La diferencia es de 19 puntos. La regla fisicoquímica clásica (TPSA < 67 Å² y HBD ≤ 1) la cumple una proporción de naturales 6.6 puntos menor que la de los demás: es otra diferencia de proporciones, menor que la de la etiqueta, y no una parte de ella, así que no alcanza para explicarla. Además, la brecha casi no existe en el grupo A de B3DB (87.6% contra 88.4% BBB+, con logBB medido) y sí en B y C, de modo que puede reflejar de dónde viene la etiqueta ([decisión 1.6](decisiones.md#d1-6)). Quedan en juego el eflujo activo, descriptores no medidos o un sesgo en qué compuestos se han llegado a ensayar. Como los naturales son justo lo que el proyecto quiere priorizar, **el desempeño se reporta por separado para naturales y para el resto**, y dentro de cada grupo de B3DB: un buen número global podría esconder que le va peor justo ahí.
 
 ### Reglas fisicoquímicas sobre nuestros datos
 
