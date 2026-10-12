@@ -133,7 +133,7 @@ def convertir_citas(texto: str, claves: set[str]) -> tuple[str, int]:
 # apuntando al `.md`, que en el sitio no existe. Pasaba desapercibido porque los
 # documentos de docs/ llegan a Quarto como entradas del proyecto y Quarto los
 # resuelve por su cuenta; desde un notebook, que llega ya convertido, no.
-FRAG = r"(#[\w.-]*)?"
+FRAG = r"(#[^)\s]*)?"
 
 
 def reescribir_enlaces(texto: str, profundidad: int) -> str:

@@ -178,7 +178,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 #### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .propuesta .revisada}
 
-**Estado:** propuesta
+**Estado:** propuesta · revisada el 12 de octubre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 171 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
@@ -192,14 +192,15 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 |:--|--:|--:|--:|--:|
 | sin escalar | 0.687 | 0.867 | 0.704 | 0.901 |
 | estandarización | 0.690 | 0.864 | 0.705 | 0.901 |
-| **min-max** | **0.695** | **0.878** | 0.704 | 0.901 |
+| min-max | 0.695 | 0.878 | 0.704 | 0.901 |
 | Yeo-Johnson | 0.665 | 0.862 | 0.705 | 0.901 |
 
-- **En Random Forest la transformación es irrelevante**, y ahora medido: las diferencias van de 0.000 a 0.001 contra errores estándar de 0.001 a 0.006. La invariancia de los árboles deja de ser solo un argumento.
-- **En la regresión logística gana min–max**, y lo que la medición distingue en MCC es que **Yeo-Johnson es la peor**: pierde 0.030, la única diferencia fuera del error estándar corregido (0.019). En AUPRC min–max gana a las tres, todas fuera del ruido. Estandarización y no escalar quedan dentro del ruido de min–max en MCC.
-- **Corregir la asimetría y predecir mejor son cosas distintas.** Yeo-Johnson es la que más endereza las distribuciones y la que peor predice: comprime las colas, y en estos descriptores la señal está en la cola —el umbral útil de TPSA cae en 107 Å².
+- **Ningún intervalo del 95% excluye el cero.** Con quince evaluaciones que comparten datos de entrenamiento, la medición no establece que una transformación supere a otra. La diferencia mayor —min–max contra Yeo-Johnson en la regresión logística— es de 0.030 de MCC con un error estándar corregido de 0.019: t = 1.6, intervalo [−0.010, +0.071]. Lo que esta medición aporta es sobre todo **la cota**: la incertidumbre es mayor que todas las diferencias entre transformaciones menos una.
+- **En Random Forest la transformación es irrelevante, y eso sí queda establecido**: diferencias de 0.000 a 0.001 con intervalos de ±0.002 a ±0.005, tan estrechos que descartan cualquier efecto que importe. La invariancia de los árboles deja de ser solo un argumento.
+- **Yeo-Johnson es consistentemente la peor para la regresión logística**: por debajo de min–max en 12 de los 15 pliegues y de estandarización en 13. La dirección es estable; la magnitud no alcanza significancia con esta cantidad de evaluaciones dependientes. Entre las otras tres la medición **no distingue** en MCC (+0.005 y +0.009).
+- **Corregir la asimetría y predecir mejor parecen ser cosas distintas**, y el por qué queda como **hipótesis, no como explicación**: puede ser que la potencia comprima las colas, donde vive parte de la señal (el umbral útil de TPSA cae en 107 Å²), o que sus parámetros, ajustados en cada pliegue, extrapolen mal en variables de cola pesada. Ninguna de las dos está medida. Lo acotable: comparar Yeo-Johnson con estandarización aísla el paso de potencia, porque `PowerTransformer(standardize=True)` es potencia y luego estandarización, y ese contraste da +0.025 (t = 1.5); el costo está en la potencia, no en el escalado que la acompaña.
 
-El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la diferencia se toma pareada por pliegue.
+El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la diferencia se toma pareada por pliegue. Se reportan intervalos y no un veredicto de «dentro del ruido»: ese umbral de un error estándar sirve para elegir el menor L —ahí ser laxo es conservador— pero no para afirmar que una diferencia existe, donde apenas es t = 1.
 
 **Lo que esto no cambia todavía.** El Avance 2 seleccionó sus 171 columnas sobre la matriz de Yeo-Johnson y guardó ese artefacto. Cambiar la transformación de trabajo obliga a repetir la selección —los filtros de varianza y correlación operan sobre los valores transformados, así que las 171 pueden no ser las mismas— y a reejecutar el notebook. Queda para el Avance 3, con los modelos afinados. Las dos versiones de la matriz, transformada y sin transformar, siguen guardadas con las mismas columnas.
 
@@ -211,7 +212,7 @@ El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la
 | **Random Forest** | Baseline estándar; tolera descriptores correlacionados | No |
 | **Gradient boosting** (XGBoost o LightGBM) | Suele ser el más fuerte con descriptores tabulares | No |
 
-Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación de la logística ya se eligió por validación cruzada —min–max— y lo que queda para el Avance 3 es rehacer la selección sobre ella. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
+Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación de la logística **sigue sin decidirse**: la validación cruzada no separa no escalar, estandarización y min–max, y solo deja a Yeo-Johnson como la que conviene evitar. Se resuelve en el Avance 3, con los modelos afinados y suficientes evaluaciones para cerrar los intervalos, y arrastra rehacer la selección de la §9. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
 
 #### 1.6 · Naturales y sintéticos: ¿modelos separados u origen como variable? {#d1-6 .abierta}
 

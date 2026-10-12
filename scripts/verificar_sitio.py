@@ -52,8 +52,8 @@ def anclas(html: str) -> set[str]:
     Quarto genera el `id` de cada encabezado, así que un `#ancla` roto es un
     enlace a una sección que se renombró o se borró.
     """
-    return (set(re.findall(r'\sid="([^"#]+)"', html))
-            | set(re.findall(r'<a\b[^>]*\sname="([^"#]+)"', html)))
+    return (set(unquote(i) for i in re.findall(r'\sid="([^"#]+)"', html))
+            | set(unquote(i) for i in re.findall(r'<a\b[^>]*\sname="([^"#]+)"', html)))
 
 
 def main() -> int:
@@ -68,7 +68,11 @@ def main() -> int:
         # una ruta absoluta es relativa a la raíz del sitio, no del sistema:
         # os.path.join descartaría la base y daría un falso positivo
         raiz = SITIO if destino.startswith("/") else base
-        return os.path.normpath(os.path.join(raiz, destino.lstrip("/")))
+        ruta = os.path.normpath(os.path.join(raiz, destino.lstrip("/")))
+        # un enlace a un directorio sirve su index.html, y es ahí donde está el
+        # ancla: sin esto los fragmentos de `../reportes/` no se comprobaban
+        indice = os.path.join(ruta, "index.html")
+        return indice if os.path.isdir(ruta) and os.path.exists(indice) else ruta
 
     rotos, sin_ancla, revisados, fragmentos = [], [], 0, 0
     for f in paginas:

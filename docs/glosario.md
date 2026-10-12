@@ -114,7 +114,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores.
 
 **Yeo-Johnson**
-: Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística: comprime las colas, que es donde está la señal. Corregir la asimetría y predecir mejor no son lo mismo.
+: Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística —queda por debajo en 12 de 15 pliegues, aunque la diferencia no alcanza significancia—. Corregir la asimetría y predecir mejor no son lo mismo. Por qué, no se ha medido: la hipótesis es que la potencia comprime las colas, que es donde está la señal.
 
 **B3DB**
 : Base de datos abierta de permeabilidad de la barrera hematoencefálica, con 7,807 compuestos clasificados. Es el origen de nuestros datos de la etapa 1. Datos en CC0.
