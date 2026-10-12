@@ -37,7 +37,7 @@ flowchart TD
     B2 -. "solo 1,033 esqueletos<br/>en ambos conjuntos" .- S2
 ```
 
-La línea punteada es el hallazgo del [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb): los dos conjuntos **casi no comparten compuestos**. Solo 1,033 esqueletos tienen medición en ambos, el 1.0% del conjunto de actividad y el 25.7% del de permeabilidad. Es el único subconjunto donde la cadena de dos etapas se puede validar de extremo a extremo, y por eso la etapa 1 no opera como filtro duro. El diccionario dice que las dos tablas son independientes y no hace falta cruzarlas: es cierto a nivel de filas, pero no contempla este uso, que motiva la [decisión C.3](decisiones.md#dc-3).
+La línea punteada es el hallazgo del [EDA de la etapa 2](../notebooks/01b_EDA_actividad_snc.ipynb): los dos conjuntos **casi no comparten compuestos**. Solo 1,033 esqueletos tienen medición en ambos, el 1.0% del conjunto de actividad y el 25.7% del de permeabilidad. Por eso la etapa 1 no opera como filtro duro: para el 99% de los esqueletos con actividad no hay permeabilidad medida, y filtrar con una predicción sin verificar eliminaría candidatos con actividad documentada. Es también el único subconjunto donde se puede comprobar contra datos reales si combinar las dos predicciones ayuda. El diccionario dice que las dos tablas son independientes y no hace falta cruzarlas: es cierto a nivel de filas, pero no contempla este uso, que motiva la [decisión C.3](decisiones.md#dc-3).
 
 ## Etapa 1 · permeabilidad
 

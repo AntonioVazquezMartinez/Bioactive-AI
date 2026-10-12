@@ -116,7 +116,7 @@ Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 
 - Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 2.3).
 - Un modelo por diana, por categoría de enfermedad o multitarea (decisión 2.2).
-- Reservar o no los 1,033 compuestos con medición en las dos etapas (decisión C.3): cuesta el 25.7% de los datos de la etapa 1.
+- Si vale la pena comprobar con los 1,033 compuestos que tienen las dos mediciones si combinar las dos predicciones mejora la selección (decisión C.3). No se reservan: el experimento va aparte y no toca el entrenamiento.
 - Modelos separados para naturales y sintéticos, o el origen como variable.
 - Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 
