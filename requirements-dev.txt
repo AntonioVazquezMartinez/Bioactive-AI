@@ -1,0 +1,4 @@
+# Herramientas de desarrollo y del CI (.github/workflows/checks.yml). No son del análisis,
+# por eso no están en requirements.txt ni en el lock.
+ruff>=0.17
+pytest>=9.0
