@@ -26,7 +26,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta |
 | [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Propuesta |
-| [1.6](#d1-6) | Naturales y sintéticos: ¿modelos separados u origen como variable? | Abierta |
+| [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Propuesta |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta |
 
 **Fase 2 · Actividad**
@@ -40,6 +40,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
 | [2.6](#d2-6) | La partición de prueba que pudo reservarse | Abierta · bloquea el Avance 3 |
 | [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
+| [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta |
 
 Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (ninguna todavía). Si una pregunta de la 2.1 a la 2.3 o la 2.6 no llega a tiempo, el Avance 3 avanza con la propuesta del equipo, marcada como no ratificada.
 
@@ -214,17 +215,27 @@ El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la
 
 Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación de la logística **sigue sin decidirse**: la validación cruzada no separa no escalar, estandarización y min–max, y solo deja a Yeo-Johnson como la que conviene evitar. Se resuelve en el Avance 3, con los modelos afinados y suficientes evaluaciones para cerrar los intervalos, y arrastra rehacer la selección de la §9. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
 
-#### 1.6 · Naturales y sintéticos: ¿modelos separados u origen como variable? {#d1-6 .abierta}
+#### 1.6 · Naturales en la fase 1: evaluar por origen, no entrenar por separado {#d1-6 .propuesta}
 
-**Estado:** abierta
+**Estado:** propuesta
 
-> **Pregunta:** ¿Procede entrenar modelos separados, un modelo con el origen como variable, o ambos? ¿Los 1,005 compuestos con análogo natural que difiere solo en estereoquímica cuentan como naturales? ¿Qué rango de TPSA es razonable para naturales neuroactivos?
+> **Pregunta:** ¿Se confirma un solo modelo con el desempeño reportado por origen (naturales y resto) en vez de entrenar por separado? ¿Hay una razón biológica para que el origen natural cambie la permeabilidad y justifique un modelo aparte? ¿Los 1,005 compuestos con análogo natural que difiere solo en estereoquímica cuentan como naturales? ¿Qué rango de TPSA es razonable para naturales neuroactivos?
 
-**Qué pasó.** El 43.1% del conjunto son productos naturales por coincidencia exacta con COCONUT, y cruzan 18.9 puntos menos (52.7% contra 71.7% BBB+). La regla TPSA < 67 Å² y HBD ≤ 1 explica 6.6 puntos de esa brecha; el resto está sin explicar (eflujo, descriptores no medidos o sesgo de qué se ensayó). El diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente conocido.
+**Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido. Los naturales cruzan unos 19 puntos menos (52.7% contra 71.7% BBB+, notebook 01 del Avance 1).
+
+**La brecha no es uniforme.** Repartida por el grupo de confiabilidad de B3DB, casi no existe donde hay un logBB medido y aparece donde la etiqueta viene de una clasificación publicada:
+
+| Grupo de B3DB | No natural (BBB+) | Natural (BBB+) |
+|:--|--:|--:|
+| A (con logBB medido) | 87.6% | 88.4% |
+| B | 77.2% | 55.9% |
+| C | 58.1% | 40.9% |
+
+El grupo D tiene 51 compuestos y no permite concluir. Esto es descriptivo y no prueba la causa, pero sugiere que la brecha puede reflejar de dónde viene la etiqueta y no solo la química. La regla TPSA < 67 Å² y HBD ≤ 1 la cumple una proporción de naturales 6.6 puntos menor que la de los demás: es menos que la brecha de la etiqueta, así que esa regla no alcanza para explicarla (quedan el eflujo, descriptores no medidos o el sesgo de qué se ensayó).
+
+**Se propone.** Un solo modelo, con el desempeño reportado por separado en naturales y en el resto y declarando siempre qué definición de «natural» se usó. No entrenar por separado: la permeabilidad depende de la estructura y no del origen, habría 3,366 compuestos de un lado y 4,439 del otro, y el segundo grupo mezcla análogos, fármacos y moléculas que simplemente no están en COCONUT. Tampoco el origen como variable, porque en parte sería una pista de la procedencia de la etiqueta. Se revisa solo si la evaluación por origen muestra que el modelo falla en naturales.
 
 **Umbral de TPSA.** El óptimo sube con la diversidad del conjunto: 66.8 Å² (publicado), 66.6 (grupo A), 83.6 (A+B), 101.9 (completo) y 107.0 (entrenamiento). Aún no hay intervalos de confianza.
-
-**Mientras tanto.** Se reporta el desempeño por separado en naturales y sintéticos, y se declara siempre qué definición de «natural» se usó.
 
 #### 1.7 · Tamaño L del vocabulario de Sort & Slice {#d1-7 .propuesta}
 
@@ -284,7 +295,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 | S1.2 | Los grupos A–D son una escala de confiabilidad | Desmentido | Ver [1.1](#d1-1). BBB− es 12.1% en A y 92.2% en D | Estratificar, no excluir |
 | S1.3 | El umbral de TPSA publicado es una constante | Acotado | Cambia con el subconjunto (ver [1.6](#d1-6)) | Derivarlo solo sobre entrenamiento |
 | S1.4 | «Natural» es una categoría limpia | Acotado | Es coincidencia exacta con COCONUT | Declarar la definición usada |
-| S1.5 | La brecha natural/sintético es química | Sin comprobar | TPSA y HBD explican solo 6.6 de 18.9 puntos | Reportar por separado |
+| S1.5 | La brecha entre naturales y el resto es química | Sin comprobar | Es de ~19 puntos, pero no existe en el grupo A (87.6% contra 88.4% BBB+) y sí en B y C ([1.6](#d1-6)); la regla TPSA/HBD difiere solo 6.6 puntos entre los dos | Reportar por separado y mirar la brecha dentro de cada grupo |
 | S1.6 | Los valores atípicos son alertas, no errores | Asumido | No se recortan ni eliminan | — |
 | S1.7 | Mandar los 312 acíclicos a entrenamiento es una regla razonable | Sin comprobar | Es el valor por omisión de `scaffold_split` y no sale de ninguna medición; ninguno entra a validación ni a prueba. Dentro del entrenamiento hay 127 filas en 44 esqueletos compartidos (estereoisómeros) | Escribir y justificar la regla antes del baseline; en la validación cruzada se agrupan por esqueleto de conectividad |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |
@@ -404,6 +415,16 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Se propone.** El criterio de la fase 1: Bemis-Murcko sobre los 99,585 esqueletos, agrupando por esqueleto de conectividad y verificando que no haya fuga, y además disjunta por fuente si los datos lo permiten. Es la mitigación natural de la [2.5](#d2-5): si entrenamiento y prueba no comparten fuente, un modelo que aprendió la fuente se delata. Depende de la [2.6](#d2-6).
 
+#### 2.8 · Origen natural en la fase 2: cómo se define y si se entrena aparte {#d2-8 .abierta}
+
+**Estado:** abierta
+
+> **Pregunta:** ¿Cómo debe definirse «natural» en la fase 2: por la fuente (NPASS y CMAUP), por cruce de las estructuras con COCONUT, o por ambos? ¿Se entrena un modelo aparte para naturales, uno con el origen como variable, o solo se reporta el desempeño por origen? ¿Hay una razón biológica para tratar distinto a los naturales en la actividad?
+
+**Qué pasó.** Priorizar productos naturales con actividad neuroprotectora es el objetivo del proyecto, y es esta fase la que lo cumple. Pero el archivo de actividad no trae una marca de «natural»: lo más cercano es la **fuente**, porque NPASS y CMAUP son bases de naturales y ChEMBL es sobre todo sintético. Esa fuente está confundida con la vía de etiquetado ([2.5](#d2-5)): los 15,293 registros de NPASS y CMAUP no traen pChEMBL. Además, el 65.4% de los naturales también aparece en ChEMBL, así que la fuente no separa limpiamente el origen, y solo 1,445 esqueletos existen únicamente en NPASS y CMAUP. A diferencia de la fase 1, aquí hay un desplazamiento de dominio real: casi todo el entrenamiento es ChEMBL y el uso final son naturales.
+
+**Se propone.** Primero comprobar si las estructuras del archivo de actividad se pueden cruzar con COCONUT, como en la fase 1; si se puede, definir «natural» por ese cruce y usar la fuente solo como comprobación. Entrenar un solo modelo y reportar el desempeño por origen, con la partición disjunta por fuente de la [2.7](#d2-7) para ver si el modelo falla al pasar de ChEMBL a naturales. Un modelo aparte, o ponderar a los naturales, solo si esa evaluación lo muestra. El cruce con COCONUT de estas estructuras no se ha hecho ni se ha verificado que sea posible.
+
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |
@@ -418,4 +439,5 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 | S2.8 | El archivo recibido es el conjunto completo | Acotado | 89.9% de lo descrito en el diccionario ([2.6](#d2-6)) | Pedir la partición reservada |
 | S2.9 | La fuente no explica la etiqueta | Acotado | Perfecta por registro, rota para el 65.4% de los naturales ([2.5](#d2-5)) | Calibrar con los 2,727 solapados; partición disjunta por fuente |
 | S2.10 | La matriz de características sirve para la fase 2 | Desmentido por ahora | Todo el Avance 2 es de la fase 1 | Replicar el pipeline sobre los 99,585 esqueletos |
+| S2.11 | La fuente (NPASS y CMAUP) identifica a los productos naturales | Sin comprobar | El 65.4% de los naturales también está en ChEMBL y solo 1,445 esqueletos son exclusivos de NPASS y CMAUP ([2.8](#d2-8)) | Definir «natural» por cruce con COCONUT si se puede |
 
