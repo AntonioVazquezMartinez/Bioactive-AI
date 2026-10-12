@@ -110,7 +110,7 @@ with Corrida('L', decision='1.7', params=PARAMS, semillas=[0, 1, 2], datos=[DATO
     pd.DataFrame(filas).to_csv(salida, index=False)
     print('escrito', salida)
 
-    cvd = pd.DataFrame(filas); cvd = cvd[cvd.eval == 'cv']
+    cvd = pd.DataFrame(filas); cvd = cvd[cvd['eval'] == 'cv']
     c.metricas({'cv_media': {f'L={L}': {m: {k: float(v) for k, v in g_[['MCC', 'AUPRC_neg', 'AUROC']].mean().items()}
                                          for m, g_ in cvd[cvd.L == L].groupby('modelo')} for L in Ls},
                 'filas_cv': int(len(cvd))})
