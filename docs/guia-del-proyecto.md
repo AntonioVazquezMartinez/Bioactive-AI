@@ -117,7 +117,7 @@ Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 - Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 2.3).
 - Un modelo por diana, por categoría de enfermedad o multitarea (decisión 2.2).
 - Si vale la pena comprobar con los 1,033 compuestos que tienen las dos mediciones si combinar las dos predicciones mejora la selección (decisión C.3). No se reservan: el experimento va aparte y no toca el entrenamiento.
-- Modelos separados para naturales y sintéticos, o el origen como variable.
+- Naturales: en la fase 1, un solo modelo con el desempeño reportado por origen y por grupo (propuesta, decisión 1.6); en la fase 2, cómo definir «natural» y si se entrena aparte (decisión 2.8).
 - Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 
 **Pendientes técnicos del equipo:** el reporte del Avance 2, el notebook del Avance 3 (baseline) y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas.
