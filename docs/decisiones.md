@@ -176,13 +176,32 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 **Se propone.** Excluirlas de la clasificación y no imputar una etiqueta desde la conectividad, porque la estereoquímica puede cambiar la clase.
 
-#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .propuesta}
+#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .propuesta .revisada}
 
 **Estado:** propuesta
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 171 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
-**Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría (de 106 a 66 descriptores muy asimétricos) y, en la regresión logística, queda a la par de min–max (MCC 0.484 contra 0.481; una ejecución anterior daba ventaja a min–max), así que una sola corrida no distingue entre transformaciones. El PCA al 95% (85 componentes) da un MCC algo mayor con la regresión logística (0.512 contra 0.500) y algo menor con Random Forest (0.558 contra 0.566); el AUROC del Random Forest empeora (0.872 contra 0.916) y el intervalo del bootstrap de la diferencia cruza el cero. La selección dejó 171 de 206 descriptores.
+**Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría, de 106 a 66 descriptores muy asimétricos. El PCA al 95% (85 componentes) da un MCC algo mayor con la regresión logística (0.512 contra 0.500) y algo menor con Random Forest (0.558 contra 0.566); el AUROC del Random Forest empeora (0.872 contra 0.916) y el intervalo del bootstrap de la diferencia cruza el cero. La selección dejó 171 de 206 descriptores.
+
+**Qué cambió, y con qué.** La versión anterior de esta entrada decía que Yeo-Johnson quedaba *a la par* de min–max en la regresión logística, con MCC 0.484 contra 0.481. Esa comparación era de **una sola corrida sobre una sola partición de validación**, y su orden cambiaba con el entorno: min–max daba 0.481 en Linux, 0.489 en macOS con Python 3.12 y 0.497 en macOS con Python 3.14, contra un 0.484 estable de Yeo-Johnson. La conclusión dependía de quién ejecutara.
+
+`scripts/experimento_escalado.py` la repite con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad, 3 semillas, la transformación **reajustada dentro de cada pliegue** y la prueba sin tocar (resultados en `notebooks/datos/resultados_escalado.csv`, sección 8.2 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)). MCC medio y AUPRC sobre BBB−:
+
+| Transformación | LogReg, MCC | LogReg, AUPRC | RF, MCC | RF, AUPRC |
+|:--|--:|--:|--:|--:|
+| sin escalar | 0.687 | 0.867 | 0.704 | 0.901 |
+| estandarización | 0.690 | 0.864 | 0.705 | 0.901 |
+| **min-max** | **0.695** | **0.878** | 0.704 | 0.901 |
+| Yeo-Johnson | 0.665 | 0.862 | 0.705 | 0.901 |
+
+- **En Random Forest la transformación es irrelevante**, y ahora medido: las diferencias van de 0.000 a 0.001 contra errores estándar de 0.001 a 0.006. La invariancia de los árboles deja de ser solo un argumento.
+- **En la regresión logística gana min–max**, y lo que la medición distingue en MCC es que **Yeo-Johnson es la peor**: pierde 0.030, la única diferencia fuera del error estándar corregido (0.019). En AUPRC min–max gana a las tres, todas fuera del ruido. Estandarización y no escalar quedan dentro del ruido de min–max en MCC.
+- **Corregir la asimetría y predecir mejor son cosas distintas.** Yeo-Johnson es la que más endereza las distribuciones y la que peor predice: comprime las colas, y en estos descriptores la señal está en la cola —el umbral útil de TPSA cae en 107 Å².
+
+El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la diferencia se toma pareada por pliegue.
+
+**Lo que esto no cambia todavía.** El Avance 2 seleccionó sus 171 columnas sobre la matriz de Yeo-Johnson y guardó ese artefacto. Cambiar la transformación de trabajo obliga a repetir la selección —los filtros de varianza y correlación operan sobre los valores transformados, así que las 171 pueden no ser las mismas— y a reejecutar el notebook. Queda para el Avance 3, con los modelos afinados. Las dos versiones de la matriz, transformada y sin transformar, siguen guardadas con las mismas columnas.
 
 **Se propone.** Tres modelos con la misma partición:
 
@@ -192,7 +211,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 | **Random Forest** | Baseline estándar; tolera descriptores correlacionados | No |
 | **Gradient boosting** (XGBoost o LightGBM) | Suele ser el más fuerte con descriptores tabulares | No |
 
-Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación se elige por validación cruzada en el Avance 3. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
+Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. La transformación de la logística ya se eligió por validación cruzada —min–max— y lo que queda para el Avance 3 es rehacer la selección sobre ella. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
 
 #### 1.6 · Naturales y sintéticos: ¿modelos separados u origen como variable? {#d1-6 .abierta}
 

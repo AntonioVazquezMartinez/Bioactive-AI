@@ -184,3 +184,34 @@ def umbral_youden(y: np.ndarray, puntuacion: np.ndarray, mayor_es_positivo: bool
     j = tpr - fpr
     umbral = thr[int(np.argmax(j))]
     return (umbral if mayor_es_positivo else -umbral), roc_auc_score(y, s)
+
+
+def grupos_cv(df: pd.DataFrame, col_andamio: str = "andamio",
+              col_esqueleto: str = "esqueleto") -> np.ndarray:
+    """Grupos para una validación cruzada que no filtre estructura.
+
+    El grupo es el **esqueleto de conectividad**, unido al andamio cuando lo hay:
+    así ni dos estereoisómeros ni dos compuestos del mismo andamio caen en
+    pliegues distintos. Los acíclicos no entran a la unión —todos comparten el
+    marcador `SIN_ANDAMIO`, que los fusionaría en un solo grupo gigante— y
+    quedan agrupados solo por su esqueleto.
+
+    Darle a cada acíclico un grupo propio, que fue el primer intento, separaba
+    estereoisómeros del mismo compuesto: 127 filas en 44 esqueletos compartidos.
+    De ahí que la regla sea esta y no esa.
+
+    Es el mismo criterio que `scaffold_split` aplica a la partición principal,
+    pero devuelto como etiqueta de grupo para `StratifiedGroupKFold`.
+    """
+    padre: dict[str, str] = {}
+
+    def raiz(x: str) -> str:
+        while padre.setdefault(x, x) != x:
+            padre[x] = padre[padre[x]]
+            x = padre[x]
+        return x
+
+    for andamio, esqueleto in zip(df[col_andamio], df[col_esqueleto]):
+        if andamio != SIN_ANDAMIO:
+            padre[raiz("A" + andamio)] = raiz("E" + esqueleto)
+    return np.array([raiz("E" + e) for e in df[col_esqueleto]])

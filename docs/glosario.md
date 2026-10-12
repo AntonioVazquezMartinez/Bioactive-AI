@@ -100,9 +100,21 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **MCC** (coeficiente de correlación de Matthews)
 : Métrica que resume la matriz de confusión completa en un número de −1 a 1. Solo da un valor alto si al modelo le va bien en las dos clases a la vez. **Por qué importa:** junto con el AUPRC, es la métrica principal del proyecto.
 
+**Validación cruzada agrupada**
+: Partir el entrenamiento en k pliegues y medir k veces, rotando cuál se usa para evaluar, **manteniendo juntos los compuestos que comparten estructura**. **Por qué importa:** es la forma de comparar dos opciones sin que la conclusión dependa de una sola partición. Sin agrupar, dos estereoisómeros del mismo compuesto caerían en pliegues distintos y el resultado saldría inflado por la misma razón que una partición aleatoria.
+
+**Error estándar corregido** (Nadeau y Bengio)
+: Cuando se repite la validación cruzada con varias semillas, las mediciones **comparten datos de entrenamiento** y no son independientes, así que el error estándar ingenuo las trata como si lo fueran y sale demasiado estrecho. La corrección multiplica la varianza por (1/n + n_prueba/n_entrenamiento) y, con 5 pliegues y 15 mediciones, resulta unas 2.2 veces mayor. **Por qué importa:** sin ella, diferencias que son ruido parecen reales, y en este proyecto eso ya habría sesgado dos decisiones —el tamaño del vocabulario y la transformación— hacia la opción más grande.
+
 ---
 
 ## Datos y metodología
+
+**Escalado** (estandarización y min–max)
+: Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores.
+
+**Yeo-Johnson**
+: Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística: comprime las colas, que es donde está la señal. Corregir la asimetría y predecir mejor no son lo mismo.
 
 **B3DB**
 : Base de datos abierta de permeabilidad de la barrera hematoencefálica, con 7,807 compuestos clasificados. Es el origen de nuestros datos de la etapa 1. Datos en CC0.
