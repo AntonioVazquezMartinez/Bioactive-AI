@@ -44,3 +44,6 @@ contenido/
 # Artefactos intermedios de Quarto en los reportes
 docs/reportes/**/*.typ
 
+
+# MLflow local: solo visor, la fuente de verdad es experimentos/
+mlruns/
