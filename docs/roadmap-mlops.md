@@ -39,7 +39,7 @@ Que cada resultado del proyecto se pueda **repetir, comparar y rastrear hasta la
 
 | Necesidad | Opciones | Recomendación | Por qué |
 |:--|:--|:--|:--|
-| Seguimiento de experimentos | MLflow local · Weights & Biases · DVC experiments · solo archivos | **MLflow con almacén local (SQLite) más un resumen versionado en git** | Sin servidor ni cuenta, interfaz para explorar, y el resumen en git es lo que se comparte entre máquinas |
+| Seguimiento de experimentos | MLflow local · MLflow en servidor compartido · Weights & Biases · DVC experiments · solo archivos | **Git como fuente de verdad (una carpeta de texto por corrida) y MLflow local como visor que la importa** | Todos ven y reproducen lo mismo sin servidor ni cuenta; MLflow aporta la interfaz, no la verdad |
 | Pipeline | Makefile · `just` · DVC · Snakemake | **Makefile** | Ya hay scripts; basta encadenarlos. DVC solo si los datos derivados empiezan a pesar |
 | Versionado de datos | Git LFS (hoy) · DVC | **Seguir con LFS para el archivo de la patrocinadora y un manifiesto de `sha256` para el resto** | Un solo mecanismo; cambiar de herramienta no resuelve nada hoy |
 | Entorno | `requirements.lock` · devcontainer o Docker | **Mantener el lock y añadir un devcontainer (Linux, Python 3.12)** | Es lo único que quita la diferencia de sistema operativo, que ya midió su efecto |
@@ -47,6 +47,19 @@ Que cada resultado del proyecto se pueda **repetir, comparar y rastrear hasta la
 | Pruebas | pytest | **pytest** | Estándar |
 | CI | GitHub Actions | **Un workflow nuevo en cada PR** | Ya se usa Actions para el sitio |
 | Registro de modelos | MLflow Registry · carpeta `models/` con tarjeta | **Carpeta `models/` con una tarjeta por modelo, hasta que haya más de uno que comparar** | Los modelos son pequeños y sklearn los guarda en un archivo |
+
+## Cómo se comparten, se ven y se reproducen los registros
+
+El almacén local de MLflow vive en la máquina de cada persona, así que **no es lo que se comparte**. Lo que se comparte es git:
+
+1. **Qué se versiona.** Una carpeta pequeña por corrida, `experimentos/<id>/`, con `params.yaml`, `metricas.json`, `entorno.json` (commit, sistema operativo, versiones, huella del lock y de los datos) y `comando.txt`; y `experimentos/registro.csv`, una fila por corrida. Son archivos de texto de unos kilobytes. El `id` lleva fecha, autor y la decisión a la que sirve (por ejemplo `2026-10-14-art-1.7-L`), de modo que dos personas nunca escriben el mismo archivo y no hay conflictos al fusionar. `registro.csv` se regenera con `make registro`, no se edita a mano.
+2. **Cómo se ven.** Tres niveles, de menos a más:
+   - `make registro` imprime la tabla comparativa en la terminal;
+   - `make mlflow-ui` importa `experimentos/` a un almacén local de MLflow (de forma idempotente) y abre la interfaz: ahí se comparan corridas, curvas y artefactos de las de todo el equipo, no solo las propias;
+   - la página de experimentos del sitio (Fase 2.4), generada desde `registro.csv`, que ven todos y también la patrocinadora.
+3. **Cómo se reproducen.** `make reproducir ID=<id>` lee `entorno.json`, comprueba el manifiesto de datos y la huella del lock, vuelve a correr con `params.yaml` y compara las métricas. En la misma plataforma deben coincidir; en otra, quedar dentro del error estándar de la validación cruzada (ya hay un caso medido: macOS y Linux difieren ~0.016 de MCC en la regresión logística con min–max). Si no coincide, el comando lo dice y señala qué cambió.
+4. **Qué no se versiona.** Matrices derivadas, modelos pesados y artefactos grandes: se regeneran con la corrida o se comparten por un Release con su `sha256`. El resumen de una corrida nunca contiene registros de los datos (licencias de NPASS y ChEMBL).
+5. **Si hiciera falta un servidor compartido.** Se puede añadir después sin cambiar nada de lo anterior, porque lo que manda es git: un MLflow en una máquina del equipo (frágil, depende de que esté encendida), o un servicio externo con nivel gratuito como DagsHub, que ofrece seguimiento remoto ligado al repositorio (a cambio de depender de un tercero). Con tres personas y tres Avances no compensa hoy.
 
 ## Fases
 
@@ -71,8 +84,9 @@ El baseline necesita comparar muchas configuraciones sin perder el hilo.
 
 | # | Entregable | Aceptación | Esfuerzo |
 |:--|:--|:--|:--|
-| 1.1 | **Resumen versionado** `experimentos/registro.csv` (una fila por corrida: id, fecha, decisión, métrica principal, enlace) generado por `tracking.py` | Se puede comparar entre máquinas sin abrir MLflow | S |
-| 1.2 | **MLflow local** documentado (`mlflow ui`) y `mlruns/` ignorado | Cada integrante explora sus corridas | S |
+| 1.1 | **Resumen versionado** `experimentos/registro.csv` (una fila por corrida: id, fecha, decisión, métrica principal, enlace) generado por `tracking.py` y `make registro` | Se puede comparar entre máquinas sin abrir MLflow | S |
+| 1.2 | **MLflow como visor local**: `scripts/importar_mlflow.py` carga `experimentos/` (idempotente), `make mlflow-ui`, y `mlruns/` ignorado | Cada integrante ve en la interfaz las corridas de todo el equipo | S |
+| 1.2b | **`make reproducir ID=…`** con la comparación de métricas descrita arriba | Repetir una corrida ajena en la misma plataforma da las mismas cifras | M |
 | 1.3 | **Devcontainer** (Linux, Python 3.12, el lock) | Dos integrantes obtienen las mismas cifras en la regresión logística | M |
 | 1.4 | **Estructura de `src/models/`**: entrenamiento y evaluación con el arnés, modelos de `docs/decisiones.md` (1.5) | El baseline de tres modelos sale de un comando | M |
 | 1.5 | **Ligar corridas y decisiones**: cada entrada de la ruta cita las corridas que la sostienen | Se llega de una decisión a sus cifras en un clic | S |
@@ -95,7 +109,7 @@ Orquestadores (Airflow, Prefect), Kubernetes, almacenes de características, ent
 ## Riesgos
 
 - **Sistemas operativos distintos.** Mientras no haya devcontainer, las cifras de la regresión logística pueden cambiar entre macOS y Linux. Mitigación: comparar siempre con el arnés de validación cruzada y no con una corrida.
-- **MLflow es por máquina.** El almacén local no se comparte; por eso el resumen en git (1.1) es lo que importa.
+- **MLflow es por máquina.** El almacén local no se comparte; por eso git es la fuente de verdad y MLflow solo un visor que se reconstruye desde `experimentos/`.
 - **Cuota de LFS** (1 GB de ancho de banda al mes): no añadir archivos pesados sin avisar.
 - **Sobreingeniería.** Con tres personas y tres Avances, cada herramienta nueva compite con el trabajo del modelo. Si una fase se atrasa, se recorta por el final.
 - **Licencias.** Cualquier artefacto que viaje fuera del repositorio debe revisarse contra la entrada C.6.
@@ -105,4 +119,5 @@ Orquestadores (Airflow, Prefect), Kubernetes, almacenes de características, ent
 1. ¿Se acepta un devcontainer como entorno de referencia para quien use macOS o Windows, aunque se pierda velocidad?
 2. ¿Dónde viven los resúmenes de corridas (`experimentos/registro.csv` en git) y quién los revisa en cada PR?
 3. ¿Se exige que todo resultado citado en el reporte tenga una corrida registrada?
-4. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? Las issues abiertas (#24 a #32) siguen hablando del Avance 2 y 3 y la #31 se refiere a una consulta que ya no existe como documento.
+4. ¿Basta con git más el visor local, o el equipo prefiere un servidor compartido (propio o un servicio externo) desde el principio?
+5. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? Las issues abiertas (#24 a #32) siguen hablando del Avance 2 y 3 y la #31 se refiere a una consulta que ya no existe como documento.
