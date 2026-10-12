@@ -70,6 +70,8 @@ Documentation lives in three places and each has a different job. Keeping them a
 
 **Update them in the same PR as the change they describe**, never in a cleanup pass later. A decision reversed in code but still documented is worse than no documentation. If a PR changes a number, a decision or a file layout, the PR carries the doc change too.
 
+**Close the issue from the PR body, and in English.** GitHub only acts on `Closes #N` / `Fixes #N` / `Resolves #N`; the Spanish «Cierra #N» reads fine and does nothing, so five finished issues (#51, #52, #55, #56, #57) sat open after their PRs merged and had to be closed by hand. The rest of the repo is in Spanish — this one line is not.
+
 ### The decision register
 
 Every technical decision in this file has an entry in `docs/decisiones.md` with its context, what was discarded, what it costs, and, when it needs the sponsor, **the literal question** to ask. It does not record who decides.
