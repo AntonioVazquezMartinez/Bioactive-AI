@@ -114,12 +114,16 @@ class Corrida:
         self.datos = [Path(d) for d in datos or []]
         self._metricas: dict | None = None
         self._inicio = 0.0
+        self._entorno: dict = {}
 
     def metricas(self, valores: dict) -> None:
         """Las métricas de la corrida (escalares o dicts de escalares; nada de registros)."""
         self._metricas = dict(valores)
 
     def __enter__(self) -> Corrida:
+        # El entorno se captura antes de que el script escriba su producto: si no, un script
+        # cuyo resultado es un archivo versionado siempre registraría `arbol_sucio: true`.
+        self._entorno = entorno(self.raiz, self.datos)
         self.carpeta.mkdir(parents=True)  # FileExistsError si ya existe: no se sobrescribe
         self._inicio = time.time()
         return self
@@ -131,7 +135,7 @@ class Corrida:
         if self._metricas is None:
             _borrar(self.carpeta)
             raise RuntimeError("la corrida terminó sin llamar a metricas()")
-        env = entorno(self.raiz, self.datos)
+        env = self._entorno
         env["decision"] = self.decision
         env["duracion_s"] = round(time.time() - self._inicio, 1)
         (self.carpeta / "params.yaml").write_text(
@@ -139,9 +143,19 @@ class Corrida:
                             "params": self.params}, allow_unicode=True, sort_keys=False))
         _json(self.carpeta / "metricas.json", self._metricas)
         _json(self.carpeta / "entorno.json", env)
-        (self.carpeta / "comando.txt").write_text(shlex.join([sys.executable, *sys.argv]) + "\n")
+        (self.carpeta / "comando.txt").write_text(_comando(self.raiz) + "\n")
         _a_mlflow(self, env)
         return False
+
+
+def _comando(raiz: Path) -> str:
+    """El comando sin rutas de la máquina: versión de Python y el script relativo al repositorio."""
+    guion, *resto = sys.argv or [""]
+    try:
+        guion = str(Path(guion).resolve().relative_to(raiz))
+    except ValueError:
+        pass
+    return shlex.join([f"python{platform.python_version()}", guion, *resto])
 
 
 def _json(ruta: Path, objeto: dict) -> None:
