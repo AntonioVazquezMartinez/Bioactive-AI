@@ -59,7 +59,14 @@ El almacén local de MLflow vive en la máquina de cada persona, así que **no e
    - la página de experimentos del sitio (Fase 2.4), generada desde `registro.csv`, que ven todos y también la patrocinadora.
 3. **Cómo se reproducen.** `make reproducir ID=<id>` lee `entorno.json`, comprueba el manifiesto de datos y la huella del lock, vuelve a correr con `params.yaml` y compara las métricas. En la misma plataforma deben coincidir; en otra, quedar dentro del error estándar de la validación cruzada (ya hay un caso medido: macOS y Linux difieren ~0.016 de MCC en la regresión logística con min–max). Si no coincide, el comando lo dice y señala qué cambió.
 4. **Qué no se versiona.** Matrices derivadas, modelos pesados y artefactos grandes: se regeneran con la corrida o se comparten por un Release con su `sha256`. El resumen de una corrida nunca contiene registros de los datos (licencias de NPASS y ChEMBL).
-5. **Si hiciera falta un servidor compartido.** Se puede añadir después sin cambiar nada de lo anterior, porque lo que manda es git: un MLflow en una máquina del equipo (frágil, depende de que esté encendida), o un servicio externo con nivel gratuito como DagsHub, que ofrece seguimiento remoto ligado al repositorio (a cambio de depender de un tercero). Con tres personas y tres Avances no compensa hoy.
+5. **Si hiciera falta un servidor compartido.** Se puede añadir después sin cambiar nada de lo anterior, porque lo que manda es git. Se revisó DagsHub (octubre de 2026, en sus páginas oficiales de precios y de MLflow) y **hoy no conviene**:
+   - El plan gratuito da 20 GB, repositorios privados ilimitados *solo para uso no comercial* y **hasta 2 colaboradores** en los privados. El seguimiento es ilimitado en repositorios públicos, pero **de solo 100 experimentos en los privados**; ese tope se alcanza rápido si cada configuración de una validación cruzada cuenta como experimento. No menciona ninguna condición para estudiantes o académicos.
+   - Cada repositorio trae su propio servidor MLflow (`https://dagshub.com/<usuario>/<repo>.mlflow`) con registro de modelos, pero **solo quien tiene permiso de escritura puede ver la interfaz y registrar corridas**: la patrocinadora no vería nada sin ocupar uno de los dos lugares de colaborador o sin hacer público el repositorio. Para enseñarle resultados sirve más la página del sitio (Fase 2.4).
+   - El plan de equipo cuesta 119 dólares por persona al mes, relevante si la entrada C.6 resultara en aspiraciones comerciales.
+   - Es una empresa pequeña (unos 12 empleados según Crunchbase) y depender de ella añade un riesgo que git no tiene.
+   - **No se verificó** si se puede conectar el repositorio de GitHub, si «2 colaboradores» incluye al dueño, ni dónde se alojan los datos.
+
+   Lo razonable es repetirlo solo si el equipo quiere una interfaz compartida en vivo, como un experimento de una hora con un repositorio público que reciba únicamente métricas. La alternativa de un MLflow en una máquina del equipo es frágil: depende de que esté encendida.
 
 ## Fases
 
