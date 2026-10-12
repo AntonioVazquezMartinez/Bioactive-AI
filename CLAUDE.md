@@ -96,7 +96,7 @@ Every reader is missing half the vocabulary: the AI side does not know what an e
 
 Two kinds of document are the exception, and in them the superseded version **is** the content: the decision register, and the research documents under `docs/referencias/`. There a recommendation that was later disproved stays visible as its own marked section, because the point is to show what changed and why — `02-datasets-bbb.md` is the model.
 
-Say **why** a choice was made and not only what it was. Keep every number attached to where it came from — a figure with no notebook behind it cannot be checked, and this project has already had to retract two conclusions that looked solid until someone recomputed them.
+Say **why** a choice was made and not only what it was. Keep every number attached to where it came from — a figure with no notebook behind it cannot be checked, and this project has already had to retract two conclusions that looked solid until someone recomputed them. The record-level phase-2 figures the register cites come from `scripts/cifras_fase2.py`; run it rather than copying a number out of prose, which is how the censoring table in decision 2.3 ended up 12% off the delivered file.
 
 ## Keep this file honest, and keep the project small
 
