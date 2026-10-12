@@ -2,7 +2,7 @@
 
 Bitácora de lo que se decide en cada fase y de las posibilidades que siguen abiertas. Se alimenta **por fase, no por avance**: la fase 1 es la permeabilidad de la barrera hematoencefálica (BBB+/BBB−) y la fase 2, la actividad neuroprotectora por diana. Ambas parten de los archivos que entregó la patrocinadora el 25 de septiembre. Cada fase tiene sus **decisiones** (lo que se resolvió o se propone), sus **supuestos** (lo que se dio por cierto para avanzar y puede ser falso) y, en cada entrada, la pregunta que queda por resolver.
 
-Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adopta sigue siendo reversible, y dos decisiones ya se revirtieron al medir. Cuando algo cambia se deja la versión anterior visible. Los términos están en el [glosario](glosario.md).
+Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adopta sigue siendo reversible, y dos decisiones ya se revirtieron al medir. Cuando algo cambia se deja la versión anterior visible. Los términos están en el [glosario](glosario.md). Ver también la [entrada que no existe](#d9-9).
 
 ## Estado de un vistazo
 
