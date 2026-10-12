@@ -13,6 +13,12 @@ de dominio), con validación cruzada de 5 pliegues agrupada por andamio y
 esqueleto de conectividad, repetida con 3 semillas, y los dos modelos que usaba
 la sección 8.2 con sus mismos hiperparámetros.
 
+Mide dos cosas, no una: el **desempeño** y el **tiempo de ajuste**. El segundo
+importa porque es la razón que la rúbrica del Avance 2 da para escalar
+—«acelerar la convergencia de algunos algoritmos»— y porque en estos
+descriptores, con amplitudes de hasta 18,796, el problema está mal condicionado
+y `lbfgs` se arrastra sin escalar.
+
 Dos cosas que hacen válida la comparación:
 
 - **La transformación se reajusta dentro de cada pliegue.** Ajustarla sobre todo
@@ -121,18 +127,24 @@ def main() -> None:
                     Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
                     Xb = t.transform(X[evalua])
                 for mod_n, mod in modelos(semilla).items():
+                    t1 = time.perf_counter()
                     mod.fit(Xa, y[ajuste])
+                    ajuste_s = time.perf_counter() - t1
                     mcc, ap, au = metricas(y[evalua], mod.predict_proba(Xb)[:, 1])
                     filas.append(dict(transformacion=nombre, modelo=mod_n, seed=semilla,
-                                      fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au, eval="cv"))
+                                      fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au,
+                                      ajuste_s=ajuste_s, eval="cv"))
         # la validación fija, para poder comparar con la medición anterior
         t = transformadores()[nombre]
         Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
         for mod_n, mod in modelos(42).items():
+            t1 = time.perf_counter()
             mod.fit(Xt, y[tr])
+            ajuste_s = time.perf_counter() - t1
             mcc, ap, au = metricas(y[va], mod.predict_proba(Xv)[:, 1])
             filas.append(dict(transformacion=nombre, modelo=mod_n, seed=42, fold=-1,
-                              MCC=mcc, AUPRC_neg=ap, AUROC=au, eval="val"))
+                              MCC=mcc, AUPRC_neg=ap, AUROC=au, ajuste_s=ajuste_s,
+                              eval="val"))
         print(f"{nombre} listo en {time.time()-t0:.0f}s", flush=True)
 
     salida = RAIZ / "notebooks/datos/resultados_escalado.csv"
