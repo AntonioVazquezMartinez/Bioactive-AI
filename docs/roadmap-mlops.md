@@ -5,8 +5,8 @@ Plan de trabajo para dotar al proyecto de seguimiento de experimentos y reproduc
 ## Cómo retomar
 
 1. Leer `CLAUDE.md` y la página de decisiones (`docs/decisiones.md`): el trabajo de MLOps tiene que servir a lo que ahí se decide, no al revés.
-2. Entorno: `uv venv --python 3.12 env && source env/bin/activate && uv pip install -r requirements.lock`.
-3. Comprobar que todo corre antes de tocar nada: `python3 scripts/prepare_site.py && quarto render && python3 scripts/verificar_sitio.py && python3 scripts/verificar_decisiones.py`.
+2. Entorno: `uv venv --python 3.12 env && source env/bin/activate && uv pip install -r requirements.lock`. El lock debe compilarse con `--universal`: sin él queda resuelto solo para Linux y falla en macOS con «your requirements are unsatisfiable» (el de `main` está en ese caso hasta que se fusione el #47, que lo regenera).
+3. Comprobar que todo corre antes de tocar nada: `python3 scripts/prepare_site.py && quarto render && python3 scripts/verificar_sitio.py && python3 scripts/verificar_decisiones.py`. Requiere tener **Quarto instalado** (quarto.org); sin él corren `prepare_site.py` y `verificar_decisiones.py`, pero no `quarto render` ni `verificar_sitio.py`.
 4. El ejemplo a imitar es `scripts/experimento_L_sortslice.py`: un script, validación cruzada agrupada, resultados en un CSV versionado (`notebooks/datos/`) y un notebook que solo los lee.
 5. Trabajar en una rama y una copia aparte (`git worktree`) si hay otra sesión usando la misma carpeta.
 
@@ -18,7 +18,7 @@ Que cada resultado del proyecto se pueda **repetir, comparar y rastrear hasta la
 
 | Qué | Hoy | Falta |
 |:--|:--|:--|
-| Entorno | `requirements.lock` con Python 3.12; la primera celda del notebook 02 imprime las versiones | Nada garantiza el mismo sistema operativo: la regresión logística con min–max difiere ~0.016 de MCC entre macOS y Linux |
+| Entorno | `requirements.lock` con Python 3.12; la primera celda del notebook 02 imprime las versiones | Nada garantiza el mismo entorno: la regresión logística con min–max da **0.481 en Linux con Python 3.12, 0.489 en macOS con 3.12 y 0.497 en macOS con 3.14** (según las mediciones del #47): unos 0.008 por el sistema operativo y otros 0.008 por la versión de Python |
 | Seguimiento de experimentos | Un script y un CSV (`experimento_L_sortslice.py`); cifras sueltas en notebooks | Convención común, identificador de corrida, registro de parámetros, semillas, versión del código y de los datos |
 | Datos | Archivos de la patrocinadora en git (el de actividad por LFS); `data/processed/` ignorado | Huella (`sha256`) de cada archivo y comprobación automática |
 | Pruebas | Ninguna | Pruebas de la partición (sin fuga), de las funciones de `src/`, y de que la prueba no se use para elegir nada |
@@ -31,7 +31,7 @@ Que cada resultado del proyecto se pueda **repetir, comparar y rastrear hasta la
 
 1. **Lo mínimo que se mantenga.** Nada que requiera un servidor, una cuenta de pago o más de una persona pendiente.
 2. **Lo que se compara se mide igual.** Un solo arnés de validación cruzada agrupada por andamio y esqueleto, con el error estándar corregido por dependencia entre pliegues (Nadeau y Bengio), que sirva para elegir L, la transformación, el modelo.
-3. **La prueba se toca una vez.** El código debe negarse a evaluar en la prueba salvo con una marca explícita de evaluación final, y dejar registro de cada vez que se usa. Ya hubo una contaminación así en el Avance 2 (decisiones mirando validación y prueba juntas).
+3. **La prueba se toca una vez.** El código debe negarse a evaluar en la prueba salvo con una marca explícita de evaluación final, y dejar registro de cada vez que se usa. Ya hubo una contaminación así en el Avance 2: en `6e0491b` la celda del escalado hacía `idx_ev = np.where(~tr.values)[0]`, es decir, validación **y prueba** juntas, y sobre eso se comparaban las transformaciones y los métodos de selección; se corrigió en `fade019`.
 4. **Nada de datos en servicios externos.** NPASS es CC BY-NC y ChEMBL exige compartir igual lo derivado (entrada C.6): los seguidores en la nube reciben métricas, nunca registros.
 5. **Lo regenerable no entra a git; lo pequeño y decisivo, sí.** Los resúmenes de corridas (CSV o JSON) se versionan; las matrices derivadas y los artefactos pesados, no.
 
@@ -57,13 +57,13 @@ El almacén local de MLflow vive en la máquina de cada persona, así que **no e
    - `make registro` imprime la tabla comparativa en la terminal;
    - `make mlflow-ui` importa `experimentos/` a un almacén local de MLflow (de forma idempotente) y abre la interfaz: ahí se comparan corridas, curvas y artefactos de las de todo el equipo, no solo las propias;
    - la página de experimentos del sitio (Fase 2.4), generada desde `registro.csv`, que ven todos y también la patrocinadora.
-3. **Cómo se reproducen.** `make reproducir ID=<id>` lee `entorno.json`, comprueba el manifiesto de datos y la huella del lock, vuelve a correr con `params.yaml` y compara las métricas. En la misma plataforma deben coincidir; en otra, quedar dentro del error estándar de la validación cruzada (ya hay un caso medido: macOS y Linux difieren ~0.016 de MCC en la regresión logística con min–max). Si no coincide, el comando lo dice y señala qué cambió.
+3. **Cómo se reproducen.** `make reproducir ID=<id>` lee `entorno.json`, comprueba el manifiesto de datos y la huella del lock, vuelve a correr con `params.yaml` y compara las métricas. En la misma plataforma deben coincidir; en otra, quedar dentro del error estándar de la validación cruzada (ya hay un caso medido: la regresión logística con min–max da **0.481 en Linux con Python 3.12, 0.489 en macOS con 3.12 y 0.497 en macOS con 3.14** (según las mediciones del #47): unos 0.008 por el sistema operativo y otros 0.008 por la versión de Python; para una tolerancia conviene el número limpio, ~0.008 a igual versión de Python). Si no coincide, el comando lo dice y señala qué cambió.
 4. **Qué no se versiona.** Matrices derivadas, modelos pesados y artefactos grandes: se regeneran con la corrida o se comparten por un Release con su `sha256`. El resumen de una corrida nunca contiene registros de los datos (licencias de NPASS y ChEMBL).
 5. **Si hiciera falta un servidor compartido.** Se puede añadir después sin cambiar nada de lo anterior, porque lo que manda es git. Se revisó DagsHub (octubre de 2026, en sus páginas oficiales de precios y de MLflow) y **hoy no conviene**:
    - El plan gratuito da 20 GB, repositorios privados ilimitados *solo para uso no comercial* y **hasta 2 colaboradores** en los privados. El seguimiento es ilimitado en repositorios públicos, pero **de solo 100 experimentos en los privados**; ese tope se alcanza rápido si cada configuración de una validación cruzada cuenta como experimento. No menciona ninguna condición para estudiantes o académicos.
    - Cada repositorio trae su propio servidor MLflow (`https://dagshub.com/<usuario>/<repo>.mlflow`) con registro de modelos, pero **solo quien tiene permiso de escritura puede ver la interfaz y registrar corridas**: la patrocinadora no vería nada sin ocupar uno de los dos lugares de colaborador o sin hacer público el repositorio. Para enseñarle resultados sirve más la página del sitio (Fase 2.4).
    - El plan de equipo cuesta 119 dólares por persona al mes, relevante si la entrada C.6 resultara en aspiraciones comerciales.
-   - Es una empresa pequeña (unos 12 empleados según Crunchbase) y depender de ella añade un riesgo que git no tiene.
+   - Lo que de verdad sostiene la decisión es que, como la fuente de verdad es git, probarlo no compromete nada: la dependencia es reversible. Si el equipo lo quiere más adelante, se añade sin cambiar lo anterior.
    - **No se verificó** si se puede conectar el repositorio de GitHub, si «2 colaboradores» incluye al dueño, ni dónde se alojan los datos.
 
    Lo razonable es repetirlo solo si el equipo quiere una interfaz compartida en vivo, como un experimento de una hora con un repositorio público que reciba únicamente métricas. La alternativa de un MLflow en una máquina del equipo es frágil: depende de que esté encendida.
@@ -80,7 +80,7 @@ El baseline necesita comparar muchas configuraciones sin perder el hilo.
 |:--|:--|:--|:--|
 | 0.1 | **Convención de una corrida**: carpeta `experimentos/<id>/` con `params.yaml`, `metricas.json`, `entorno.json` (commit y si el árbol estaba sucio, versiones, sistema operativo, huella del lock y de los datos) y semillas | Cualquier corrida se puede repetir leyendo su carpeta | M |
 | 0.2 | **`src/tracking.py`**: función que crea la corrida, escribe lo anterior y, si MLflow está instalado, lo registra también | Un experimento nuevo se registra con tres líneas | M |
-| 0.3 | **Arnés de validación cruzada** (`src/evaluation/cv.py`): pliegues agrupados por andamio y esqueleto (acíclicos por esqueleto), semillas repetidas, error estándar corregido, comparación pareada. Generaliza lo que hoy vive en `experimento_L_sortslice.py` | El experimento de L y la §8.2 salen del mismo arnés con las mismas cifras | M |
+| 0.3 | **Arnés de validación cruzada** (`src/evaluation/cv.py`): pliegues agrupados por andamio y esqueleto (acíclicos por esqueleto), semillas repetidas, error estándar corregido, comparación pareada. Generaliza lo que hoy vive en `experimento_L_sortslice.py` | El experimento de L y el de escalado (§8.2), reejecutados desde el arnés, dan cada uno sus mismas cifras de hoy. La factorización ya empezó: `grupos_cv` está en `src/data_prep/splits.py` (#47) | M |
 | 0.4 | **Guarda de la prueba**: la evaluación en prueba exige `final=True` y deja registro | Un intento sin la marca falla con un mensaje claro | S |
 | 0.5 | **Manifiesto de datos** (`data/MANIFEST.json` con `sha256`) y script de comprobación | La comprobación falla si un archivo cambió | S |
 | 0.6 | **Checks en cada PR** (`.github/workflows/checks.yml`): sitio, los dos verificadores, `ruff`, `pytest` | Un PR roto no se puede fusionar sin verlo | M |
@@ -123,8 +123,10 @@ Orquestadores (Airflow, Prefect), Kubernetes, almacenes de características, ent
 
 ## Decisiones que necesita el equipo
 
-1. ¿Se acepta un devcontainer como entorno de referencia para quien use macOS o Windows, aunque se pierda velocidad?
-2. ¿Dónde viven los resúmenes de corridas (`experimentos/registro.csv` en git) y quién los revisa en cada PR?
-3. ¿Se exige que todo resultado citado en el reporte tenga una corrida registrada?
-4. ¿Basta con git más el visor local, o el equipo prefiere un servidor compartido (propio o un servicio externo) desde el principio?
-5. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? Las issues abiertas (#24 a #32) siguen hablando del Avance 2 y 3 y la #31 se refiere a una consulta que ya no existe como documento.
+Voto de Artemio (12 de octubre) entre paréntesis; falta el del resto del equipo.
+
+1. ¿Se acepta un devcontainer como entorno de referencia para quien use macOS o Windows, aunque se pierda velocidad? *(Artemio: sí.)*
+2. ¿Dónde viven los resúmenes de corridas (`experimentos/registro.csv` en git) y quién los revisa en cada PR? *(Artemio: en git, y se revisan en el PR como cualquier otro archivo.)*
+3. ¿Se exige que todo resultado citado en el reporte tenga una corrida registrada? *(Artemio: sí.)*
+4. ¿Basta con git más el visor local, o el equipo prefiere un servidor compartido (propio o un servicio externo) desde el principio? *(Artemio: git más visor local por ahora.)*
+5. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? *(Artemio: sí.)* Las issues abiertas (#24 a #32) siguen hablando de los Avances 2 y 3. Ya se actualizaron las anclas de las #26, #29, #31 y #32 a la numeración nueva de la Ruta, y la #31 explica que la consulta se fusionó en esa página y que `verificar_decisiones.py` ya no comprueba que una pregunta aparezca en un documento aparte.
