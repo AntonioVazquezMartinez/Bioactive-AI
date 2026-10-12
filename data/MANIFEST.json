@@ -1,0 +1,38 @@
+{
+  "data/external/b3db/B3DB_classification.tsv": {
+    "bytes": 2635683,
+    "sha256": "47a160aea1551423ead2aab70b301fb1646aea03cf151fd614eb37c78fa55b82"
+  },
+  "data/external/b3db/B3DB_classification_external.tsv": {
+    "bytes": 63728,
+    "sha256": "84940d866f7cb53b361c38e787143c20b65641b57040006e020609f9d6f242cf"
+  },
+  "data/external/b3db/B3DB_regression.tsv": {
+    "bytes": 378224,
+    "sha256": "1be4e33ab1fa1d99897541b6e0a9a00cd6061cf970a36dc838e640407735eba1"
+  },
+  "data/external/profesora/DICCIONARIO_actividad_snc.pdf": {
+    "bytes": 118035,
+    "sha256": "b19238458d9ba430abd4c42e60b88dc0932b4bb7043e12499482901833826da2"
+  },
+  "data/external/profesora/DICCIONARIO_permeabilidad_bbb.pdf": {
+    "bytes": 106435,
+    "sha256": "4ae94710b520096cfe8e55276870b1a34d975f5a74ca0aa7eea015eaf53b580a"
+  },
+  "data/external/profesora/bbb_permeability_experimental.csv": {
+    "bytes": 1651616,
+    "sha256": "ecbf6bb74a88a6dad11c6befb75f68038c9b93f51dbca5fe66d12bb555fd6e2e"
+  },
+  "data/external/profesora/etiquetas_dianas_2026-09-25.csv": {
+    "bytes": 7389,
+    "sha256": "f38834629699f080ca3ff6c123d84761368a2135d859da9c24ee76322b2b5210"
+  },
+  "data/external/profesora/snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv": {
+    "bytes": 74173475,
+    "sha256": "8dfeeec3f1a223e70c086e645e8e3b2423ea29f5b045d7897d8d7ee8a5ba8fd6"
+  },
+  "data/external/spielvogel2025/bbb_penetration_database.csv": {
+    "bytes": 19547,
+    "sha256": "c1ac19440694964989c957dda39480fb7f6461b9c03830e1b12062efd7f6b96b"
+  }
+}

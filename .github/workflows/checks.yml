@@ -62,6 +62,9 @@ jobs:
       - name: Instalar el entorno del lock
         run: pip install -r requirements.lock -r requirements-dev.txt
 
+      - name: Manifiesto de datos
+        run: python3 scripts/verificar_datos.py
+
       - name: Ruff
         run: ruff check
 
