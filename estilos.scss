@@ -220,7 +220,7 @@ body.quarto-dark {
 // La ruta del proyecto: cada decisión es una tarjeta
 //
 // Los encabezados de las entradas llevan como clase su estado (`.vigente`,
-// `.propuesta`, `.abierta`; `.revisada` y `.bloquea` se suman cuando aplican).
+// `.propuesta`, `.abierta`; `.revisada` y `.definir` se suman cuando aplican).
 // El color del borde y la etiqueta salen de ahí, de modo que el estado se lee
 // sin buscar la línea «Estado:». Los tonos son translúcidos para que sirvan
 // igual en el tema claro y en el oscuro.
@@ -242,8 +242,8 @@ section.level4.propuesta { --estado: #3b78d6; }
 section.level4.abierta   { --estado: #e07b1a; }
 section.level4.ratificada { --estado: #7b4fd6; }
 
-// lo que frena el Avance 3 lleva además un contorno rojo
-section.level4.bloquea {
+// lo que espera la definición de la patrocinadora lleva además un contorno rojo
+section.level4.definir {
   box-shadow: 0 0 0 2px rgba(214, 69, 65, 0.55);
 }
 
@@ -287,9 +287,9 @@ section.level4.revisada.propuesta > h4::after { content: "propuesta · revisada"
 section.level4.revisada.abierta > h4::after   { content: "abierta · revisada"; }
 section.level4.revisada.ratificada > h4::after { content: "ratificada · revisada"; }
 
-// y una segunda etiqueta, roja, para lo que bloquea el Avance 3
-section.level4.bloquea > h4::before {
-  content: "bloquea el Avance 3";
+// y una segunda etiqueta, roja, para lo que espera su definición
+section.level4.definir > h4::before {
+  content: "necesita su definición";
   order: 2;
   margin-left: auto;
   flex: none;
