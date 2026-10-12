@@ -12,7 +12,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 |:--|:--|:--|
 | [C.1](#dc-1) | MCC y AUPRC sobre la clase minoritaria | Vigente |
 | [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente |
-| [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección (solo si la patrocinadora lo considera útil) | Propuesta |
+| [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta |
 | [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta |
 | [C.5](#dc-5) | Qué error cuesta más y cómo presentar el ranking | Abierta |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta |
@@ -77,9 +77,9 @@ Lo que vale para las dos fases.
 
 **Qué pasó.** Hay dos modelos, uno de permeabilidad y uno de actividad, y el ranking final usará los dos. Falta saber si juntarlos ayuda. Solo 1,033 esqueletos tienen medición en los dos conjuntos (1.0% de la fase 2, 25.7% de la fase 1), así que son el único lugar donde se puede comprobar contra datos reales. Reservarlos obligaría a sacarlos también del entrenamiento de la fase 1, o habría fuga, y costaría una cuarta parte de sus datos.
 
-**Se propone.** Condicionada a que la patrocinadora considere que vale la pena: no hacer nada de esto hasta que la patrocinadora diga si el experimento vale la pena. Cada fase se entrena y evalúa con su protocolo ([1.2](#d1-2), [2.7](#d2-7)), sin reservar nada. Si la patrocinadora lo aprueba, el experimento va en dos pasos:
+**Se propone.** Condicionada a que la patrocinadora considere que vale la pena. Cada fase se entrena y evalúa con su protocolo ([1.2](#d1-2), [2.7](#d2-7)), sin reservar nada. Si la patrocinadora lo aprueba, el experimento va en dos pasos:
 
-1. **Con datos solamente, sin modelos.** Cruzar las mediciones reales de los 1,033: permeabilidad medida (BBB+ o BBB−) contra actividad medida, por diana. Muestra si hay algo que combinar: si casi todos los activos son BBB+, la permeabilidad aporta poco al ranking; si hay muchos activos BBB−, cambia el orden. Se puede hacer en cuanto se apruebe, porque no depende de las etiquetas de actividad ni de ningún modelo.
+1. **Con datos solamente, sin modelos.** Cruzar las mediciones reales de los 1,033: permeabilidad medida (BBB+ o BBB−) contra actividad medida, por diana. Se plantea sin umbral: comparar la distribución de la potencia medida entre los BBB+ y los BBB−. Si los BBB− son tan potentes como los BBB+, la permeabilidad cambiaría el orden del ranking; si no, aporta poco. No hay que decidir qué es «activo», porque ese corte depende de la decisión [2.3](#d2-3), abierta, y con ≥ 5 queda 61.7% de activos y con ≥ 6, 44.4%: una lectura del tipo «casi todos los activos son BBB+» podría salir verdadera con un corte y falsa con el otro. Así se puede hacer en cuanto se apruebe, sin esperar a la 2.3 ni a ningún modelo.
 2. **Con los modelos ya entrenados.** Medir si la combinación acierta más que cada predicción sola. Como el modelo de la fase 1 habrá visto parte de esos compuestos, se usan predicciones fuera de muestra (validación cruzada agrupada por andamio). Necesita el modelo de actividad, que depende de las etiquetas pendientes de la decisión [2.3](#d2-3), y los modelos afinados de los Avances 3 a 5. Cuántos de los 1,033 caen en la prueba de ambas fases no está medido.
 
 Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos con las dos mediciones, probablemente los más estudiados), así que un buen resultado ahí no se generaliza sin más.
