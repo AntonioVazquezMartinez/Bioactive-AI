@@ -44,6 +44,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Transportador de eflujo / glicoproteína-P**
 : Proteína de la barrera que agarra ciertas moléculas que ya entraron y las devuelve a la sangre, gastando energía. **Por qué importa:** explica por qué las propiedades fisicoquímicas no bastan. Un compuesto puede tener el perfil ideal para cruzar y aun así no acumularse en el cerebro porque lo expulsan activamente.
 
+**Diana**
+: La proteína sobre la que se mide si un compuesto actúa; en inglés *target*. En este proyecto son 39, casi todas identificadas por su gen (`MAPT`, `ACHE`, `TARDBP`), y cada una está asociada a una enfermedad del sistema nervioso. **Por qué importa:** la etapa 2 no predice «actividad» en abstracto sino actividad **contra una diana**, y una medición solo es comparable con otra de la misma. Cuando un ensayo observa un efecto en células nerviosas sin saber qué proteína lo produjo, se llama **fenotípico** y no tiene diana: son 88,098 de los 202,647 registros.
+
 **PAINS** (*Pan-Assay Interference Compounds*)
 : Compuestos que dan positivo en casi cualquier ensayo por mecanismos inespecíficos, no porque actúen sobre la diana. **Por qué importa:** la curcumina es el caso clásico, con más de 120 ensayos clínicos sin un resultado positivo controlado. El modelo los va a rankear alto, así que hay que filtrarlos antes de reportar cualquier candidato.
 
@@ -71,6 +74,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Fingerprint / Morgan / ECFP4**
 : Representación de la molécula como un vector de bits, donde cada bit indica la presencia de una subestructura concreta. **Por qué importa:** complementa a los descriptores, que resumen la molécula entera; el fingerprint dice qué fragmentos tiene. Cuidado con el nombre: ECFP4 se genera con `radius=2`, porque el número del nombre es el diámetro, no el radio.
+
+**Sort & Slice**
+: Forma de construir un fingerprint que, en vez de repartir las subestructuras en un número fijo de casillas mediante una función de dispersión, las ordena por frecuencia en el conjunto de entrenamiento y se queda con las L más comunes, una por columna. **Por qué importa:** el fingerprint plegado mete subestructuras distintas en el mismo bit, y entonces un bit importante no se puede traducir a una estructura concreta —justo lo que la explicabilidad necesita—. Aquí no hay colisiones: cada columna es una sola subestructura y se puede dibujar. El costo es que el vocabulario se aprende de los datos, así que se ajusta **solo con entrenamiento** y las subestructuras que solo aparecen en la prueba quedan fuera. El tamaño L es la decisión [1.7](decisiones.md#d1-7).
 
 **MACCS**
 : Fingerprint fijo de 166 preguntas sobre la molécula («¿tiene un anillo de siete miembros?», «¿tiene azufre?»), definidas a mano hace décadas. RDKit lo devuelve en 167 bits porque reserva el primero sin usar. **Por qué importa:** es corto y legible, pero menos específico que Morgan. El proyecto no lo usa; está en el visualizador para comparar.
@@ -111,7 +117,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 ## Datos y metodología
 
 **Escalado** (estandarización y min–max)
-: Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores.
+: Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores. **Y el costo no es de acierto, es de convergencia:** sin escalar, la regresión logística de este proyecto **no converge** —agota su presupuesto de iteraciones y avisa— y tarda mucho más (1,110 segundos contra 40 en una de las máquinas del equipo), mientras que el Random Forest tarda lo mismo con o sin escalado, porque no itera.
 
 **Yeo-Johnson**
 : Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística —queda por debajo en 12 de 15 pliegues, aunque la diferencia no alcanza significancia—. Corregir la asimetría y predecir mejor no son lo mismo. Por qué, no se ha medido: la hipótesis es que la potencia comprime las colas, que es donde está la señal.
@@ -127,6 +133,15 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **ChEMBL y pChEMBL**
 : ChEMBL es la base de datos de bioactividad. El pChEMBL es la potencia de un compuesto sobre una diana en escala logarítmica: pChEMBL ≥ 5 significa actividad a concentración micromolar o menor. **Por qué importa:** es la fuente de la etapa 2, y el pChEMBL es el umbral con el que se convertirán las mediciones en etiquetas de actividad.
+
+**NPASS y CMAUP**
+: Las dos bases de productos naturales de la etapa 2, con 11,992 y 3,301 registros contra los 187,354 de ChEMBL. **Por qué importa:** son justo los compuestos que el proyecto quiere priorizar, y **ninguna trae pChEMBL**, porque ese valor lo calcula ChEMBL. Etiquetar solo por pChEMBL los descartaría a todos, que es la razón del etiquetado por tres vías de la [decisión 2.3](decisiones.md#d2-3). NPASS es CC BY-NC, así que su uso es académico y no comercial.
+
+**Medición censurada**
+: Una medición que no da un número sino una cota: «> 10 µM» quiere decir que se probó hasta esa concentración y no se vio efecto, sin saber dónde aparecería. Son 54,498 de los 202,647 registros. **Por qué importa:** no se pueden tirar, porque son evidencia de que algo *no* funciona, y son la mayor fuente de negativos. Pero solo sirven como negativo si la cota llega al umbral de «activo»: un «> 1 µM» no dice nada si «activo» se definió en 10 µM. Es la regla de la sección 7 del diccionario de la patrocinadora.
+
+**Inactivo declarado**
+: Un registro donde el ensayo original dice en texto que el compuesto no actuó. Son 29,730, y en este archivo son **todos la misma cosa**: `> 10 µM`, con el texto «Not active» y la referencia `CHEMBL1909046`. **Por qué importa:** no son una vía de etiquetado aparte de la censura, como podría parecer, sino las mismas filas vistas de otra manera —el texto confirma lo que la cota ya decía—. Y pesan muchísimo: con el corte de «activo» en 10 µM son el 61% de todos los negativos seguros del conjunto, es decir tres de cada cinco negativos salen de un solo experimento. Es parte de lo que está en juego en la [decisión 2.3](decisiones.md#d2-3).
 
 **QSAR** (*Quantitative Structure-Activity Relationship*)
 : La disciplina de predecir propiedades biológicas a partir de la estructura química. Es el campo al que pertenece este proyecto, con décadas de literatura y buenas prácticas propias.

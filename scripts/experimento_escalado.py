@@ -13,6 +13,13 @@ de dominio), con validación cruzada de 5 pliegues agrupada por andamio y
 esqueleto de conectividad, repetida con 3 semillas, y los dos modelos que usaba
 la sección 8.2 con sus mismos hiperparámetros.
 
+Mide tres cosas, no una: el **desempeño**, el **tiempo de ajuste** y la
+**convergencia misma** —iteraciones de `lbfgs` y si avisó de no haber convergido—,
+más el número de condición de la matriz. El tiempo solo sería evidencia indirecta:
+las iteraciones y el aviso son la prueba de lo que la rúbrica del Avance 2 pide al
+escalar, «acelerar la convergencia de algunos algoritmos», y el número de
+condición mide lo que la frase «mal condicionado» afirma.
+
 Dos cosas que hacen válida la comparación:
 
 - **La transformación se reajusta dentro de cada pliegue.** Ajustarla sobre todo
@@ -38,6 +45,7 @@ sys.path.insert(0, str(RAIZ / "src"))
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, matthews_corrcoef, roc_auc_score
 from sklearn.model_selection import StratifiedGroupKFold
@@ -121,18 +129,38 @@ def main() -> None:
                     Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
                     Xb = t.transform(X[evalua])
                 for mod_n, mod in modelos(semilla).items():
-                    mod.fit(Xa, y[ajuste])
+                    t1 = time.perf_counter()
+                    with warnings.catch_warnings(record=True) as avisos:
+                        warnings.simplefilter("always", ConvergenceWarning)
+                        mod.fit(Xa, y[ajuste])
+                    ajuste_s = time.perf_counter() - t1
+                    # `n_iter_` solo existe en los modelos iterativos; el bosque no itera
+                    n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
+                    sin_converger = any(issubclass(a.category, ConvergenceWarning)
+                                        for a in avisos)
                     mcc, ap, au = metricas(y[evalua], mod.predict_proba(Xb)[:, 1])
                     filas.append(dict(transformacion=nombre, modelo=mod_n, seed=semilla,
-                                      fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au, eval="cv"))
+                                      fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au,
+                                      ajuste_s=ajuste_s, n_iter=n_iter,
+                                      sin_converger=sin_converger, eval="cv"))
         # la validación fija, para poder comparar con la medición anterior
         t = transformadores()[nombre]
         Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
         for mod_n, mod in modelos(42).items():
-            mod.fit(Xt, y[tr])
+            t1 = time.perf_counter()
+            with warnings.catch_warnings(record=True) as avisos:
+                warnings.simplefilter("always", ConvergenceWarning)
+                mod.fit(Xt, y[tr])
+            ajuste_s = time.perf_counter() - t1
+            n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
+            sin_converger = any(issubclass(a.category, ConvergenceWarning) for a in avisos)
             mcc, ap, au = metricas(y[va], mod.predict_proba(Xv)[:, 1])
             filas.append(dict(transformacion=nombre, modelo=mod_n, seed=42, fold=-1,
-                              MCC=mcc, AUPRC_neg=ap, AUROC=au, eval="val"))
+                              MCC=mcc, AUPRC_neg=ap, AUROC=au, ajuste_s=ajuste_s,
+                              n_iter=n_iter, sin_converger=sin_converger, eval="val"))
+        # el número de condición es de la matriz, no del modelo: una fila por transformación
+        filas.append(dict(transformacion=nombre, modelo="matriz", seed=42, fold=-1,
+                          condicion=float(np.linalg.cond(Xt)), eval="cond"))
         print(f"{nombre} listo en {time.time()-t0:.0f}s", flush=True)
 
     salida = RAIZ / "notebooks/datos/resultados_escalado.csv"
