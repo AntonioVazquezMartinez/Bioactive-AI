@@ -43,9 +43,9 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
 | [2.6](#d2-6) | La partición de prueba que pudo reservarse | Abierta · **necesita su definición** |
 | [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
-| [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta |
+| [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta · **necesita su definición** |
 
-Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (ninguna todavía). La marca **«necesita su definición»** no es un estado: señala las seis entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
+Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (ninguna todavía). La marca **«necesita su definición»** no es un estado: señala las siete entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
 
 ---
 
@@ -460,9 +460,9 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Se propone.** El criterio de la fase 1: Bemis-Murcko sobre los 99,585 esqueletos, agrupando por esqueleto de conectividad y verificando que no haya fuga, y además disjunta por fuente si los datos lo permiten. Es la mitigación natural de la [2.5](#d2-5): si entrenamiento y prueba no comparten fuente, un modelo que aprendió la fuente se delata. Depende de la [2.6](#d2-6).
 
-#### 2.8 · Origen natural en la fase 2: cómo se define y si se entrena aparte {#d2-8 .abierta}
+#### 2.8 · Origen natural en la fase 2: cómo se define y si se entrena aparte {#d2-8 .abierta .definir}
 
-**Estado:** abierta
+**Estado:** abierta · necesita su definición
 
 > **Pregunta:** ¿Puede aportar el cruce con COCONUT del archivo de actividad, como ya lo hizo con el de permeabilidad? Ese archivo trae `coconut_id_exact_match` y el de actividad no trae ninguna columna de origen natural, así que hoy lo único disponible es la fuente, que no separa limpiamente. Y con esa definición resuelta: ¿hay una razón biológica para tratar distinto a los productos naturales en la actividad, o basta con reportar el desempeño por origen?
 
