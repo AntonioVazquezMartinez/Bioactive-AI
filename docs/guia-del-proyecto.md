@@ -79,12 +79,12 @@ Cada decisión técnica, con su contexto, lo que se descartó, lo que cuesta, su
 
 El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 
-| Avance | Entregable | Estado (7 de octubre de 2026) |
+| Avance | Entregable | Estado (11 de octubre de 2026) |
 |---|---|---|
 | 0 | Propuesta del proyecto | Entregado (PDF) |
 | 1 | Análisis exploratorio de datos (`notebooks/01_EDA.ipynb`) | Entregado el 4 de octubre |
 | — | EDA de la etapa 2 (`notebooks/01b_EDA_actividad_snc.ipynb`) | Hecho; acompaña al Avance 1 y no es un entregable |
-| 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Notebook ejecutado y fusionado como propuesta, con la decisión de normalización por acordar con la patrocinadora; falta el reporte · vence el 11 de octubre |
+| 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Notebook ejecutado; PDF complementario en borrador. El EDA continúa una semana y se cierra el reporte en paralelo; escalamiento medido por modelo, consulta 1.5 para interpretabilidad frente a PCA |
 | 3 | Modelo de referencia (baseline) | Pendiente · vence el 18 de octubre |
 | 4–5 | Modelos alternativos y modelo final | Pendiente |
 
@@ -120,4 +120,4 @@ Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 - Naturales: en la fase 1, un solo modelo con el desempeño reportado por origen y por grupo (propuesta, decisión 1.6); en la fase 2, cómo definir «natural» y si se entrena aparte (decisión 2.8).
 - Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 
-**Pendientes técnicos del equipo:** el reporte del Avance 2, el notebook del Avance 3 (baseline) y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas.
+**Pendientes técnicos del equipo:** extender el EDA una semana y terminar en paralelo la documentación de ingeniería de características; completar el baseline para el 18 de octubre y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas. El notebook del Avance 2 ya está ejecutado; las respuestas prioritarias de la patrocinadora están previstas para el 16 de octubre.
