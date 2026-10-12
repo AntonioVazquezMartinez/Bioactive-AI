@@ -130,3 +130,5 @@ Voto de Artemio (12 de octubre) entre paréntesis; falta el del resto del equipo
 3. ¿Se exige que todo resultado citado en el reporte tenga una corrida registrada? *(Artemio: sí.)*
 4. ¿Basta con git más el visor local, o el equipo prefiere un servidor compartido (propio o un servicio externo) desde el principio? *(Artemio: git más visor local por ahora.)*
 5. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? *(Artemio: sí.)* Las issues abiertas (#24 a #32) siguen hablando de los Avances 2 y 3. Ya se actualizaron las anclas de las #26, #29, #31 y #32 a la numeración nueva de la Ruta, y la #31 explica que la consulta se fusionó en esa página y que `verificar_decisiones.py` ya no comprueba que una pregunta aparezca en un documento aparte.
+
+<!-- prueba de los checks por PR: este cambio no se fusiona -->
