@@ -128,8 +128,16 @@ def convertir_citas(texto: str, claves: set[str]) -> tuple[str, int]:
     return "\n".join(salida), n
 
 
+# un enlace puede traer ancla: `decisiones.md#d1-5`. El fragmento se captura y se
+# reemite, porque sin esto la reescritura no reconocía el enlace y lo dejaba
+# apuntando al `.md`, que en el sitio no existe. Pasaba desapercibido porque los
+# documentos de docs/ llegan a Quarto como entradas del proyecto y Quarto los
+# resuelve por su cuenta; desde un notebook, que llega ya convertido, no.
+FRAG = r"(#[\w.-]*)?"
+
+
 def reescribir_enlaces(texto: str, profundidad: int) -> str:
-    """.md e .ipynb -> .html.
+    """.md e .ipynb -> .html, conservando el `#ancla` si lo hay.
 
     Hay dos raíces distintas: la del sitio (donde vive bibliografia.html) y la de
     contenido/ (donde viven los documentos y los notebooks). Confundirlas rompe
@@ -142,8 +150,8 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
     texto = re.sub(r"\]\((?:\.\./)*(?:docs/)?(?:referencias/)?bibliografia\.bib\)",
                    f"]({subir}bibliografia.html)", texto)
     # los notebooks quedan en contenido/notebooks/
-    texto = re.sub(r"\]\((?:\.\./)*notebooks/([\w.]+)\.ipynb\)",
-                   rf"]({subir_c}notebooks/\1.html)", texto)
+    texto = re.sub(rf"\]\((?:\.\./)*notebooks/([\w.]+)\.ipynb{FRAG}\)",
+                   rf"]({subir_c}notebooks/\1.html\2)", texto)
     # README.md de referencias -> index.html
     texto = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", texto)
     texto = re.sub(r"\]\(((?:\.\./)*(?:planteamiento/)?)marco-teorico/README\.md\)", r"](\1marco-teorico/index.html)", texto)
@@ -158,7 +166,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
                    rf"]({REPO}/data/external/profesora/\1)", texto)
     texto = re.sub(r"\]\(README\.md\)", "](index.html)", texto)
     # cualquier otro .md del proyecto -> .html
-    texto = re.sub(r"\]\(((?:\.\./)*(?:docs/)?[\w/-]+)\.md\)", r"](\1.html)", texto)
+    texto = re.sub(rf"\]\(((?:\.\./)*(?:docs/)?[\w/-]+)\.md{FRAG}\)", r"](\1.html\2)", texto)
     # docs/ se aplana en contenido/, no en la raíz del sitio
     texto = texto.replace("](../../docs/", f"]({subir_c}")
     texto = texto.replace("](docs/", f"]({subir_c}")
@@ -220,7 +228,7 @@ def main() -> int:
                 continue
             original = "".join(celda["source"])
             # desde contenido/notebooks/ hay que subir un nivel para llegar a la raíz
-            nuevo = re.sub(r"\]\((?:\.\./)*docs/([\w/-]+)\.md\)", r"](../\1.html)", original)
+            nuevo = re.sub(rf"\]\((?:\.\./)*docs/([\w/-]+)\.md{FRAG}\)", r"](../\1.html\2)", original)
             nuevo = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", nuevo)
             if nuevo != original:
                 celda["source"] = [l + "\n" for l in nuevo.split("\n")[:-1]] + [nuevo.split("\n")[-1]]
