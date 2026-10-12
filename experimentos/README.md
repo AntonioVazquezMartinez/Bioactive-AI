@@ -10,9 +10,9 @@ Una carpeta por corrida, `experimentos/<id>/`, escrita por `src/tracking.py` y v
 | `entorno.json` | commit y si el árbol estaba sucio, sistema, Python, versiones, `sha256` del lock y de los datos |
 | `comando.txt` | el comando que la lanzó |
 
-El `id` es `AAAA-MM-DD-<autor>-<decisión>-<nombre>`, por ejemplo `2026-10-14-ingrid-1.7-L`. El
+El `id` es `AAAA-MM-DD-<autor>-<decisión>-<nombre>`, por ejemplo `2026-10-14-ingrid-1.7-L`. La fecha del `id` es la local de quien corre (el commit que registra puede caer en otro día en UTC). El
 autor sale de `BIOACTIVE_AUTOR` o del primer nombre de `git config user.name`. Una corrida no se
-sobrescribe, y si el script falla su carpeta se borra: se repite con otra fecha o nombre.
+sobrescribe, el entorno (commit y árbol sucio) se captura al empezar, antes de que el script escriba su propio producto, y si el script falla su carpeta se borra: se repite con otra fecha o nombre.
 
 ```python
 from tracking import Corrida   # los scripts ponen src/ en sys.path
