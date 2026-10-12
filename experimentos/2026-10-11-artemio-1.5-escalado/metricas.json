@@ -1,0 +1,75 @@
+{
+  "convergencia": {
+    "Yeo-Johnson": {
+      "ajuste_s_mediano": 0.018670125005883165,
+      "iteraciones_mediana": 137.0,
+      "sin_converger": 0
+    },
+    "estandarización": {
+      "ajuste_s_mediano": 0.01926679100142792,
+      "iteraciones_mediana": 144.0,
+      "sin_converger": 0
+    },
+    "min-max": {
+      "ajuste_s_mediano": 0.007207916991319507,
+      "iteraciones_mediana": 53.0,
+      "sin_converger": 0
+    },
+    "sin escalar": {
+      "ajuste_s_mediano": 0.4387009170022793,
+      "iteraciones_mediana": 3000.0,
+      "sin_converger": 15
+    }
+  },
+  "cv_media": {
+    "Yeo-Johnson": {
+      "LogReg": {
+        "AUPRC_neg": 0.8615726108902254,
+        "AUROC": 0.9014126534899579,
+        "MCC": 0.6651958621161002
+      },
+      "RF": {
+        "AUPRC_neg": 0.9010228445987889,
+        "AUROC": 0.9331871455836818,
+        "MCC": 0.7046535378207455
+      }
+    },
+    "estandarización": {
+      "LogReg": {
+        "AUPRC_neg": 0.8640541808917476,
+        "AUROC": 0.9028024184989311,
+        "MCC": 0.6902804866851241
+      },
+      "RF": {
+        "AUPRC_neg": 0.9013744224986728,
+        "AUROC": 0.9329240957485168,
+        "MCC": 0.7048110777462587
+      }
+    },
+    "min-max": {
+      "LogReg": {
+        "AUPRC_neg": 0.8782807218021806,
+        "AUROC": 0.9132721715393117,
+        "MCC": 0.6954864082647707
+      },
+      "RF": {
+        "AUPRC_neg": 0.9013596525935831,
+        "AUROC": 0.9331797168533947,
+        "MCC": 0.7044586655517299
+      }
+    },
+    "sin escalar": {
+      "LogReg": {
+        "AUPRC_neg": 0.8668513062093005,
+        "AUROC": 0.9050524108931586,
+        "MCC": 0.6867438933083517
+      },
+      "RF": {
+        "AUPRC_neg": 0.9011310654229493,
+        "AUROC": 0.9330763003979782,
+        "MCC": 0.7035194490591208
+      }
+    }
+  },
+  "filas_cv": 120
+}
