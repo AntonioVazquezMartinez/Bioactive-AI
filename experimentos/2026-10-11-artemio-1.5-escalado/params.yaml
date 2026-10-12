@@ -1,0 +1,21 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  transformaciones:
+  - sin escalar
+  - estandarización
+  - min-max
+  - Yeo-Johnson
+  pliegues: 5
+  columnas: 206
+  partición:
+    fraccion_prueba: 0.2
+    fraccion_validacion: 0.1
+    semilla: 42
+    acíclicos_a: entrenamiento
+  modelos:
+    LogReg: max_iter=3000
+    RF: n_estimators=200

@@ -23,6 +23,7 @@ import numpy as np, pandas as pd
 from scipy import sparse
 from rdkit.Chem import rdFingerprintGenerator
 from features.molecular import a_mol
+from tracking import Corrida
 from data_prep.splits import andamio_murcko, esqueleto_conectividad, grupos_cv, scaffold_split
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.linear_model import LogisticRegression
@@ -74,31 +75,42 @@ y=d['y'].values
 # que es la misma regla que usa la partición principal
 g=grupos_cv(d)
 Ls=[64,128,256,512,1024,2048,4096]
-filas=[]
-for L in Ls:
-    t0=time.time()
-    voc,total=vocab(tr,L)
-    cov_tr=cobertura(tr,voc); cov_va=cobertura(va,voc)
-    # validación cruzada agrupada, vocabulario reajustado por pliegue
-    for seed in (0,1,2):
-        cv=StratifiedGroupKFold(n_splits=5,shuffle=True,random_state=seed)
-        for k,(a,bb) in enumerate(cv.split(tr,y[tr],g[tr])):
-            ia,ib=tr[a],tr[bb]
-            vf,_=vocab(ia,L); Xa,Xb=mat(ia,vf),mat(ib,vf)
-            for nom,m in modelos(seed).items():
-                m.fit(Xa,y[ia]); s=m.predict_proba(Xb)[:,1]
-                mcc,ap,au=metr(y[ib],s)
-                filas.append(dict(L=L,seed=seed,fold=k,modelo=nom,MCC=mcc,AUPRC_neg=ap,AUROC=au,eval='cv'))
-    # validación fija
-    Xt,Xv=mat(tr,voc),mat(va,voc)
-    for nom,m in modelos(0).items():
-        m.fit(Xt,y[tr]); s=m.predict_proba(Xv)[:,1]
-        mcc,ap,au=metr(y[va],s)
-        filas.append(dict(L=L,seed=0,fold=-1,modelo=nom,MCC=mcc,AUPRC_neg=ap,AUROC=au,eval='val'))
-    filas.append(dict(L=L,seed=0,fold=-1,modelo='cobertura',eval='cov',
-                      cob_entrenamiento=cov_tr,cob_validacion=cov_va,vocabulario_total=total))
-    print(f'L={L} listo en {time.time()-t0:.0f}s; vocabulario total en train={total}',flush=True)
-salida = RAIZ / 'notebooks/datos/resultados_L_sortslice.csv'
-salida.parent.mkdir(parents=True, exist_ok=True)
-pd.DataFrame(filas).to_csv(salida, index=False)
-print('escrito', salida)
+DATOS = RAIZ / 'data/external/profesora/bbb_permeability_experimental.csv'
+PARAMS = dict(Ls=Ls, pliegues=5, partición=dict(fraccion_prueba=0.2, fraccion_validacion=0.1,
+              semilla=42, acíclicos_a='entrenamiento'),
+              modelos=dict(LogReg='C=0.1, max_iter=3000', RF='n_estimators=300',
+                           XGB='n_estimators=300, max_depth=6, learning_rate=0.1, subsample=0.8, colsample_bytree=0.5'))
+with Corrida('L', decision='1.7', params=PARAMS, semillas=[0, 1, 2], datos=[DATOS]) as c:
+    filas=[]
+    for L in Ls:
+        t0=time.time()
+        voc,total=vocab(tr,L)
+        cov_tr=cobertura(tr,voc); cov_va=cobertura(va,voc)
+        # validación cruzada agrupada, vocabulario reajustado por pliegue
+        for seed in (0,1,2):
+            cv=StratifiedGroupKFold(n_splits=5,shuffle=True,random_state=seed)
+            for k,(a,bb) in enumerate(cv.split(tr,y[tr],g[tr])):
+                ia,ib=tr[a],tr[bb]
+                vf,_=vocab(ia,L); Xa,Xb=mat(ia,vf),mat(ib,vf)
+                for nom,m in modelos(seed).items():
+                    m.fit(Xa,y[ia]); s=m.predict_proba(Xb)[:,1]
+                    mcc,ap,au=metr(y[ib],s)
+                    filas.append(dict(L=L,seed=seed,fold=k,modelo=nom,MCC=mcc,AUPRC_neg=ap,AUROC=au,eval='cv'))
+        # validación fija
+        Xt,Xv=mat(tr,voc),mat(va,voc)
+        for nom,m in modelos(0).items():
+            m.fit(Xt,y[tr]); s=m.predict_proba(Xv)[:,1]
+            mcc,ap,au=metr(y[va],s)
+            filas.append(dict(L=L,seed=0,fold=-1,modelo=nom,MCC=mcc,AUPRC_neg=ap,AUROC=au,eval='val'))
+        filas.append(dict(L=L,seed=0,fold=-1,modelo='cobertura',eval='cov',
+                          cob_entrenamiento=cov_tr,cob_validacion=cov_va,vocabulario_total=total))
+        print(f'L={L} listo en {time.time()-t0:.0f}s; vocabulario total en train={total}',flush=True)
+    salida = RAIZ / 'notebooks/datos/resultados_L_sortslice.csv'
+    salida.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(filas).to_csv(salida, index=False)
+    print('escrito', salida)
+
+    cvd = pd.DataFrame(filas); cvd = cvd[cvd['eval'] == 'cv']
+    c.metricas({'cv_media': {f'L={L}': {m: {k: float(v) for k, v in g_[['MCC', 'AUPRC_neg', 'AUROC']].mean().items()}
+                                         for m, g_ in cvd[cvd.L == L].groupby('modelo')} for L in Ls},
+                'filas_cv': int(len(cvd))})

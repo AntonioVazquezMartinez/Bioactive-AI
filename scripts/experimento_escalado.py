@@ -54,6 +54,7 @@ from sklearn.preprocessing import MinMaxScaler, PowerTransformer, StandardScaler
 from data_prep.splits import (andamio_murcko, esqueleto_conectividad, grupos_cv,
                               scaffold_split)
 from features.molecular import a_mol, descriptores_rdkit, limpiar_descriptores
+from tracking import Corrida
 
 SEMILLAS = (0, 1, 2)
 PLIEGUES = 5
@@ -115,58 +116,79 @@ def main() -> None:
     tr = np.where((d["particion"] == "entrenamiento").values)[0]
     va = np.where((d["particion"] == "validacion").values)[0]
 
-    filas = []
-    for nombre in transformadores():
-        t0 = time.time()
-        for semilla in SEMILLAS:
-            cv = StratifiedGroupKFold(n_splits=PLIEGUES, shuffle=True, random_state=semilla)
-            for k, (ia, ib) in enumerate(cv.split(tr, y[tr], g[tr])):
-                ajuste, evalua = tr[ia], tr[ib]
-                t = transformadores()[nombre]
-                if t is None:
-                    Xa, Xb = X[ajuste], X[evalua]
-                else:
-                    Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
-                    Xb = t.transform(X[evalua])
-                for mod_n, mod in modelos(semilla).items():
-                    t1 = time.perf_counter()
-                    with warnings.catch_warnings(record=True) as avisos:
-                        warnings.simplefilter("always", ConvergenceWarning)
-                        mod.fit(Xa, y[ajuste])
-                    ajuste_s = time.perf_counter() - t1
-                    # `n_iter_` solo existe en los modelos iterativos; el bosque no itera
-                    n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
-                    sin_converger = any(issubclass(a.category, ConvergenceWarning)
-                                        for a in avisos)
-                    mcc, ap, au = metricas(y[evalua], mod.predict_proba(Xb)[:, 1])
-                    filas.append(dict(transformacion=nombre, modelo=mod_n, seed=semilla,
-                                      fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au,
-                                      ajuste_s=ajuste_s, n_iter=n_iter,
-                                      sin_converger=sin_converger, eval="cv"))
-        # la validación fija, para poder comparar con la medición anterior
-        t = transformadores()[nombre]
-        Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
-        for mod_n, mod in modelos(42).items():
-            t1 = time.perf_counter()
-            with warnings.catch_warnings(record=True) as avisos:
-                warnings.simplefilter("always", ConvergenceWarning)
-                mod.fit(Xt, y[tr])
-            ajuste_s = time.perf_counter() - t1
-            n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
-            sin_converger = any(issubclass(a.category, ConvergenceWarning) for a in avisos)
-            mcc, ap, au = metricas(y[va], mod.predict_proba(Xv)[:, 1])
-            filas.append(dict(transformacion=nombre, modelo=mod_n, seed=42, fold=-1,
-                              MCC=mcc, AUPRC_neg=ap, AUROC=au, ajuste_s=ajuste_s,
-                              n_iter=n_iter, sin_converger=sin_converger, eval="val"))
-        # el número de condición es de la matriz, no del modelo: una fila por transformación
-        filas.append(dict(transformacion=nombre, modelo="matriz", seed=42, fold=-1,
-                          condicion=float(np.linalg.cond(Xt)), eval="cond"))
-        print(f"{nombre} listo en {time.time()-t0:.0f}s", flush=True)
+    datos = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
+    params = dict(transformaciones=list(transformadores()), pliegues=PLIEGUES,
+                  columnas=int(X.shape[1]),
+                  partición=dict(fraccion_prueba=0.2, fraccion_validacion=0.1, semilla=42,
+                                 acíclicos_a="entrenamiento"),
+                  modelos=dict(LogReg="max_iter=3000", RF="n_estimators=200"))
+    with Corrida("escalado", decision="1.5", params=params, semillas=list(SEMILLAS),
+                 datos=[datos]) as c:
+        filas = []
+        for nombre in transformadores():
+            t0 = time.time()
+            for semilla in SEMILLAS:
+                cv = StratifiedGroupKFold(n_splits=PLIEGUES, shuffle=True, random_state=semilla)
+                for k, (ia, ib) in enumerate(cv.split(tr, y[tr], g[tr])):
+                    ajuste, evalua = tr[ia], tr[ib]
+                    t = transformadores()[nombre]
+                    if t is None:
+                        Xa, Xb = X[ajuste], X[evalua]
+                    else:
+                        Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
+                        Xb = t.transform(X[evalua])
+                    for mod_n, mod in modelos(semilla).items():
+                        t1 = time.perf_counter()
+                        with warnings.catch_warnings(record=True) as avisos:
+                            warnings.simplefilter("always", ConvergenceWarning)
+                            mod.fit(Xa, y[ajuste])
+                        ajuste_s = time.perf_counter() - t1
+                        # `n_iter_` solo existe en los modelos iterativos; el bosque no itera
+                        n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
+                        sin_converger = any(issubclass(a.category, ConvergenceWarning)
+                                            for a in avisos)
+                        mcc, ap, au = metricas(y[evalua], mod.predict_proba(Xb)[:, 1])
+                        filas.append(dict(transformacion=nombre, modelo=mod_n, seed=semilla,
+                                          fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au,
+                                          ajuste_s=ajuste_s, n_iter=n_iter,
+                                          sin_converger=sin_converger, eval="cv"))
+            # la validación fija, para poder comparar con la medición anterior
+            t = transformadores()[nombre]
+            Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
+            for mod_n, mod in modelos(42).items():
+                t1 = time.perf_counter()
+                with warnings.catch_warnings(record=True) as avisos:
+                    warnings.simplefilter("always", ConvergenceWarning)
+                    mod.fit(Xt, y[tr])
+                ajuste_s = time.perf_counter() - t1
+                n_iter = int(np.ravel(mod.n_iter_)[0]) if hasattr(mod, "n_iter_") else None
+                sin_converger = any(issubclass(a.category, ConvergenceWarning) for a in avisos)
+                mcc, ap, au = metricas(y[va], mod.predict_proba(Xv)[:, 1])
+                filas.append(dict(transformacion=nombre, modelo=mod_n, seed=42, fold=-1,
+                                  MCC=mcc, AUPRC_neg=ap, AUROC=au, ajuste_s=ajuste_s,
+                                  n_iter=n_iter, sin_converger=sin_converger, eval="val"))
+            # el número de condición es de la matriz, no del modelo: una fila por transformación
+            filas.append(dict(transformacion=nombre, modelo="matriz", seed=42, fold=-1,
+                              condicion=float(np.linalg.cond(Xt)), eval="cond"))
+            print(f"{nombre} listo en {time.time()-t0:.0f}s", flush=True)
 
-    salida = RAIZ / "notebooks/datos/resultados_escalado.csv"
-    salida.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(filas).to_csv(salida, index=False)
-    print("escrito", salida)
+        salida = RAIZ / "notebooks/datos/resultados_escalado.csv"
+        salida.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(filas).to_csv(salida, index=False)
+        print("escrito", salida)
+
+        cvd = pd.DataFrame(filas)
+        cvd = cvd[cvd["eval"] == "cv"]
+        lr = cvd[cvd["modelo"] == "LogReg"]
+        c.metricas({"cv_media": {t: {m: {k: float(v)
+                                         for k, v in g_[["MCC", "AUPRC_neg", "AUROC"]].mean().items()}
+                                     for m, g_ in cvd[cvd.transformacion == t].groupby("modelo")}
+                                 for t in transformadores()},
+                    "convergencia": {t: {"iteraciones_mediana": float(s["n_iter"].median()),
+                                         "sin_converger": int(s["sin_converger"].sum()),
+                                         "ajuste_s_mediano": float(s["ajuste_s"].median())}
+                                     for t, s in lr.groupby("transformacion")},
+                    "filas_cv": int(len(cvd))})
 
 
 if __name__ == "__main__":
