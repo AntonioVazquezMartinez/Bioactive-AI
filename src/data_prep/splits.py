@@ -17,8 +17,6 @@ Ver `docs/referencias/02-datasets-bbb.md` §"Desempeño realista y splits".
 
 from __future__ import annotations
 
-from collections import defaultdict
-
 import numpy as np
 import pandas as pd
 from rdkit import Chem, RDLogger

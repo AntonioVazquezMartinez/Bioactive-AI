@@ -1,0 +1,15 @@
+# Solo configura herramientas; el proyecto no es un paquete instalable.
+
+[tool.ruff]
+# Los notebooks entregados no se lintean: sus salidas no se tocan (ver CLAUDE.md).
+include = ["src/**/*.py", "scripts/**/*.py", "tests/**/*.py"]
+line-length = 100
+
+[tool.ruff.lint]
+# Solo lo que detecta errores reales (errores de sintaxis, nombres sin definir, imports
+# sin usar). Ni estilo ni formato: no se reformatea código ya revisado.
+select = ["E9", "F"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
