@@ -62,8 +62,8 @@ Globalmente los naturales cruzan la barrera 18.9 puntos menos. Pero repartido po
 | C | 58.1% | 40.9% | **+17.2** [+13.7, +20.7] |
 
 Puede ser química real —los transportadores son estereoselectivos y los naturales son estructuralmente
-distintos— o puede ser un artefacto de cómo se armó el archivo. Los datos no lo distinguen, y usted
-fue quien lo curó.
+distintos— o puede ser un artefacto de cómo se armó el archivo. Los datos no lo distinguen. El
+archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es lo que aquí falta.
 
 ::: {.bio-pregunta data-id="p3" data-titulo="Brecha de los naturales (entrada 1.6)" data-opciones="Hay una razón de curación que lo explica|Es química real|No lo sé; déjenlo como limitación"}
 :::
@@ -94,17 +94,21 @@ sesgo, el modelo lo aprende como si fuera biología.
 
 ## 5 · ¿Se excluyen las cuatro dianas sin datos?
 
-De las 39 dianas que usted curó, cuatro no tienen con qué entrenar:
+De las 39 dianas que usted curó, cuatro no tienen con qué entrenar. Las dos columnas son cuentas
+distintas: **declarados** es lo que dice su propio archivo de dianas, sobre el conjunto completo;
+**en el nuestro** es lo que trae el archivo que recibimos, que es el 89.9% de aquel.
 
-| Gen | Diana | Registros |
-|:--|:--|--:|
-| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** |
-| `AIF1` | Iba1 | **0** |
-| `GABRB2` | Receptor GABA-A, subunidad β2 | **1** |
-| `TARDBP` | TDP-43 | **8** |
+| Gen | Diana | Declarados | En el nuestro |
+|:--|:--|--:|--:|
+| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** | 0 |
+| `AIF1` | Iba1 | **0** | 0 |
+| `GABRB2` | Receptor GABA-A, subunidad β2 | **1** | 1 |
+| `TARDBP` | TDP-43 | **8** | 7 |
 
-Las otras 35 van de 98 a 16,197 registros. La propuesta del equipo es excluir las cuatro, pero la
-lista es suya: puede faltar o sobrar alguna otra.
+La propuesta del equipo es excluir esas cuatro. Pero la lista es suya, y **hay dos casos
+fronterizos que convendría que mirara**: `TNF` con 25 registros declarados (22 en el nuestro) y
+`SOD1` con 50 (46). No están tan lejos de `TARDBP`. De ahí para arriba las demás llegan hasta
+18,215 declarados.
 
 ::: {.bio-pregunta data-id="e2" data-titulo="Dianas sin datos (entrada 2.1)" data-opciones="Sí, excluir las cuatro|Excluir solo algunas|Falta o sobra alguna otra diana"}
 :::
@@ -141,8 +145,12 @@ ensayos que no darán nada.
 
 # Enviar
 
-Al terminar, este botón arma el texto con lo que respondió. Cópielo a un correo o descárguelo; el
-equipo lo pasa a la ruta del proyecto tal cual, con su fecha.
+Al terminar, este botón arma el texto con lo que respondió. Cópielo a un correo o descárguelo.
+
+**Lo que responda aquí no cierra nada todavía:** el equipo lo lleva a la reunión y ahí se confirma.
+Una decisión queda registrada como *ratificada* solo cuando aparece en la minuta, que es el acuerdo
+que el equipo tiene consigo mismo para no dar por cerrado lo que no se habló. Contestar antes sirve
+para que la reunión se dedique a lo que haga falta discutir, no a repetir lo que ya tenga claro.
 
 ::: {#bio-salida}
 :::

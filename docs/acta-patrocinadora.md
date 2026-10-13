@@ -80,7 +80,9 @@ estandarización, así que las dos fases dejarían de ser comparables. Mientras 
 | C | 58.1% | 40.9% | **+17.2** [+13.7, +20.7] |
 
 - [ ] **Hay una razón de curación que lo explica:** ______________________________
-- [ ] **Es química real**, y entonces conviene considerar entrenar aparte
+- [ ] **Es química real**
+
+*La [1.6](decisiones.md#d1-6) propone de todos modos **un solo modelo**, con el desempeño reportado por origen dentro de cada grupo; entrenar aparte solo si esa evaluación muestra que falla en naturales.*
 - [ ] No lo sabe; queda como limitación declarada en el reporte
 
 **Notas:**

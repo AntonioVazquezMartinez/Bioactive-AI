@@ -135,7 +135,7 @@ Mueve el corte de la regla «TPSA < corte ⇒ BBB+» y cambia de subconjunto. Es
 :::
 
 ::: {.callout-note}
-Además de cambiar con el subconjunto, el óptimo es **plano**: con un bootstrap de 2,000 remuestras, catorce cortes repartidos entre 81 y 107 Å² no se distinguen del mejor. Citar «101.9 Å²» exagera lo que la medición sostiene.
+Además de cambiar con el subconjunto, el óptimo es **plano**: con un bootstrap de 2,000 remuestras **de esqueletos** —no de filas, porque no son independientes— 28 cortes repartidos entre 75 y 110 Å² no se distinguen del mejor. Citar «101.9 Å²» exagera lo que la medición sostiene.
 :::
 
 # Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
@@ -262,7 +262,7 @@ El detalle de cada una, con su contexto y lo que se descartó, está en [La ruta
 | Avance 4 · Modelos alternativos | 25 oct | pendiente |
 | Avance 5 · Ensambles | 1 nov | pendiente |
 
-**Siete entradas esperan la definición de la patrocinadora**, cuatro de ellas en la fase 2. El Avance 3 se puede construir sobre la fase 1 sin ninguna de las siete.
+**Siete entradas esperan la definición de la patrocinadora**, cinco de ellas en la fase 2 (2.1, 2.2, 2.3, 2.6 y 2.8) y dos comunes (1.6 y C.5). El Avance 3 se puede construir sobre la fase 1 sin ninguna de las siete.
 
 ## Lo que falta antes de reportar candidatos
 

@@ -51,7 +51,19 @@ function construir(nodo) {
     radio.name = `op-${id}`;
     radio.value = texto;
     radio.checked = estado[id].opcion === texto;
-    radio.onchange = () => { estado[id].opcion = texto; guardar(estado); pintarSalida(); };
+    // Un radio normal no se puede desmarcar, y quien se equivoca de opción queda
+    // atrapado con ella salvo que borre toda la página. Volver a hacer clic en la
+    // que ya está marcada la deja «sin responder», que es una respuesta válida.
+    radio.onclick = () => {
+      if (estado[id].opcion === texto) {
+        radio.checked = false;
+        estado[id].opcion = null;
+      } else {
+        estado[id].opcion = texto;
+      }
+      guardar(estado);
+      pintarSalida();
+    };
     etiqueta.append(radio, document.createTextNode(" " + texto));
     grupo.appendChild(etiqueta);
   });

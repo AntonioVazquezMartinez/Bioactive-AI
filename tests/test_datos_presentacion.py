@@ -95,3 +95,92 @@ def test_la_meseta_sale_de_un_bootstrap_y_no_de_una_tolerancia(datos):
         cortes = opt["cortes_meseta"]
         assert opt["corte"] in cortes, f"{nombre}: el mejor corte no está en su propia meseta"
         assert [min(cortes), max(cortes)] == opt["meseta"]
+
+
+# ---------------------------------------------------------------------------
+# Las cifras que la patrocinadora va a leer
+#
+# `consulta.qmd` y `docs/acta-patrocinadora.md` son texto: sus números están
+# escritos a mano y no pasan por `datos.js`. Si los datos cambian, se desfasan en
+# silencio, que es justo lo que el resto de este archivo quiere evitar. Esto los
+# ata: cada cifra que esos dos documentos afirman tiene que seguir saliendo del
+# generador. Cuando una falla, el arreglo es corregir el documento, no la prueba.
+# ---------------------------------------------------------------------------
+
+CONSULTA = RAIZ / "consulta.qmd"
+ACTA = RAIZ / "docs/acta-patrocinadora.md"
+
+
+def mil(n: int) -> str:
+    return f"{n:,}"
+
+
+def cifras_esperadas(datos: dict) -> dict[str, str]:
+    a = datos["actividad"]
+    dianas = sorted(a["dianas"], key=lambda d: d["declaradas"])
+    resto = [d for d in dianas if d["declaradas"] >= 10]
+    return {
+        "registros recibidos": mil(a["registros"]),
+        "registros del diccionario": mil(a["registros_diccionario"]),
+        "diferencia entre los dos archivos": mil(a["registros_diccionario"] - a["registros"]),
+        "censurados que sirven a 10 µM": mil(a["cortes"]["10"]["seguros"]),
+        "censurados que sirven a 1 µM": mil(a["cortes"]["1"]["seguros"]),
+        "ambiguos a 10 µM": mil(a["cortes"]["10"]["ambiguos"]),
+        "ambiguos a 1 µM": mil(a["cortes"]["1"]["ambiguos"]),
+        "filas de una sola referencia": mil(a["cortes"]["10"]["de_una_referencia"]),
+        "la diana con más registros declarados": mil(resto[-1]["declaradas"]),
+        "la diana escasa más grande que las excluidas": mil(resto[0]["declaradas"]),
+    }
+
+
+@pytest.mark.parametrize("documento", [CONSULTA, ACTA], ids=["consulta", "acta"])
+def test_las_cifras_que_ella_lee_siguen_saliendo_del_generador(datos, documento):
+    if not documento.exists():
+        pytest.skip(f"no está {documento.name}")
+    texto = documento.read_text(encoding="utf-8")
+    esperadas = cifras_esperadas(datos)
+    # El acta no repite el detalle de las dianas: su tabla es la de las cuatro
+    # excluidas, que comprueba la prueba siguiente.
+    if documento is ACTA:
+        for k in ("la diana con más registros declarados",
+                  "la diana escasa más grande que las excluidas"):
+            esperadas.pop(k, None)
+    faltantes = {k: v for k, v in esperadas.items() if v not in texto}
+    assert not faltantes, (
+        f"{documento.name} cita cifras que ya no corresponden a recursos/datos.js: "
+        + "; ".join(f"{k} debería decir {v}" for k, v in faltantes.items())
+    )
+
+
+@pytest.mark.parametrize("documento", [CONSULTA, ACTA], ids=["consulta", "acta"])
+def test_las_cuatro_dianas_excluidas_son_las_que_dicen_los_datos(datos, documento):
+    if not documento.exists():
+        pytest.skip(f"no está {documento.name}")
+    texto = documento.read_text(encoding="utf-8")
+    vacias = [d["gen"] for d in datos["actividad"]["dianas"] if d["declaradas"] < 10]
+    assert len(vacias) == 4, f"ya no son cuatro las dianas sin datos, son {len(vacias)}"
+    faltan = [g for g in vacias if g not in texto]
+    assert not faltan, f"{documento.name} no nombra {', '.join(faltan)}"
+
+
+def test_el_mejor_corte_lo_es_de_verdad_en_la_serie(datos):
+    """Que `optimos` y `series` no se contradigan: sin esto la meseta podría
+    describir un máximo que la curva publicada no tiene."""
+    for nombre, opt in datos["tpsa"]["optimos"].items():
+        serie = datos["tpsa"]["series"][nombre]
+        js = []
+        for tp, fn, fp, tn in serie:
+            sens = tp / (tp + fn) if tp + fn else 0
+            esp = tn / (tn + fp) if tn + fp else 0
+            js.append(sens + esp - 1)
+        i = datos["tpsa"]["cortes"].index(opt["corte"])
+        assert js[i] == pytest.approx(max(js)), f"{nombre}: el corte declarado no maximiza J"
+        assert opt["j"] == pytest.approx(max(js), abs=5e-4), f"{nombre}: J publicado no cuadra"
+
+
+def test_el_bootstrap_agrupa_por_esqueleto(datos):
+    """Las filas no son independientes; remuestrear compuestos angosta los
+    intervalos y subestima la meseta. Tiene que remuestrear esqueletos."""
+    for nombre, opt in datos["tpsa"]["optimos"].items():
+        assert opt.get("unidad") == "esqueleto de conectividad", f"{nombre}: unidad equivocada"
+        assert 0 < opt["clusteres"] <= datos["tpsa"]["n"][nombre], f"{nombre}: clústeres raros"

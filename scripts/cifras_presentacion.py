@@ -108,15 +108,28 @@ def indice_j(filas: list[list[int]]) -> list[float]:
     return js
 
 
-def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, mejor: int) -> dict:
-    """Qué cortes no se distinguen del mejor, con bootstrap sobre los compuestos.
+def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, grupo: pd.Series,
+                     mejor: int) -> dict:
+    """Qué cortes no se distinguen del mejor, con bootstrap **por esqueleto**.
 
-    La primera versión de esto usaba una tolerancia fija de 0.005 en J, que es un
-    número inventado: decía «indistinguible» sin medición detrás. Aquí se compara
-    cada corte contra el mejor **en la misma remuestra**, que es lo que elimina la
-    varianza común, y se queda con los cortes cuyo intervalo del 95% de la
-    diferencia incluye el cero. Eso sí es una afirmación comprobable: *no se
-    distingue del mejor con esta cantidad de datos*.
+    La primera versión usaba una tolerancia fija de 0.005 en J, que es un número
+    inventado: decía «indistinguible» sin medición detrás. La segunda remuestreaba
+    compuestos, y eso también estaba mal: las 7,805 filas son 4,018 esqueletos de
+    conectividad, con andamios de hasta 410 compuestos, así que tratarlas como
+    independientes da intervalos demasiado angostos y **subestima** la meseta,
+    justo en la dirección contraria a la que conviene equivocarse. Aquí se
+    remuestrean **esqueletos enteros**, que es la misma unidad con la que el
+    proyecto parte los datos (decisiones 1.2, 1.5 y 1.7).
+
+    Cada corte se compara contra el mejor **dentro de la misma remuestra**, que
+    elimina la varianza común, y se conservan aquellos cuyo intervalo del 95% de
+    la diferencia incluye el cero: *no se distingue del mejor con estos datos*.
+
+    **Un sesgo que queda y conviene declarar:** el corte de referencia es el que
+    gana en la muestra completa, no el ganador de cada remuestra. Eso favorece
+    levemente a ese corte y, por tanto, ensancha un poco la meseta. Se prefiere
+    así porque la alternativa —el mejor de cada remuestra— compara contra un
+    objetivo móvil y mezcla dos preguntas distintas.
 
     El truco para que 2,000 remuestras sean baratas: un compuesto entra en la
     predicción del corte `c` si `tpsa < c`, o sea desde `k = floor(tpsa) + 1` en
@@ -125,12 +138,21 @@ def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, mejor: int) -> dict:
     """
     import numpy as np
 
-    k = np.floor(tpsa.to_numpy()) .astype(int) + 1
+    k = np.floor(tpsa.to_numpy()).astype(int) + 1
     k = np.clip(k, 0, len(CORTES_TPSA))
     pos = positivo.to_numpy().astype(bool)
-    n, P, N = len(k), int(pos.sum()), int((~pos).sum())
+    P, N = int(pos.sum()), int((~pos).sum())
     if not P or not N:
-        return {"meseta": [mejor, mejor], "contigua": True, "remuestreos": 0}
+        return {"meseta": [mejor, mejor], "contigua": True, "remuestreos": 0,
+                "unidad": "esqueleto de conectividad", "clusteres": 0}
+
+    # las filas de cada esqueleto, para remuestrear el esqueleto completo
+    codigos = pd.factorize(grupo.to_numpy())[0]
+    orden = np.argsort(codigos, kind="stable")
+    cortes_cluster = np.searchsorted(codigos[orden], np.arange(codigos.max() + 2))
+    clusteres = [orden[cortes_cluster[i]:cortes_cluster[i + 1]]
+                 for i in range(codigos.max() + 1)]
+    n_cl = len(clusteres)
 
     def js_de(idx):
         kp = np.bincount(k[idx][pos[idx]], minlength=len(CORTES_TPSA) + 1)
@@ -146,7 +168,8 @@ def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, mejor: int) -> dict:
     i_mejor = CORTES_TPSA.index(mejor)
     difs = np.empty((REMUESTREOS, len(CORTES_TPSA)))
     for b in range(REMUESTREOS):
-        idx = rng.integers(0, n, n)
+        elegidos = rng.integers(0, n_cl, n_cl)
+        idx = np.concatenate([clusteres[c] for c in elegidos])
         js = js_de(idx)
         difs[b] = js[i_mejor] - js          # pareado dentro de la misma remuestra
 
@@ -162,10 +185,13 @@ def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, mejor: int) -> dict:
         "cortes_meseta": sin_distinguir,
         "contigua": len(sin_distinguir) == len(rango),
         "remuestreos": REMUESTREOS,
+        "unidad": "esqueleto de conectividad",
+        "clusteres": n_cl,
     }
 
 
-def optimo(filas: list[list[int]], tpsa: pd.Series, positivo: pd.Series) -> dict:
+def optimo(filas: list[list[int]], tpsa: pd.Series, positivo: pd.Series,
+           grupo: pd.Series) -> dict:
     """El corte que maximiza el índice J de Youden, y la meseta a su alrededor.
 
     El óptimo por sí solo engaña: en el conjunto completo J vale 0.4824 en 101 Å²
@@ -177,7 +203,7 @@ def optimo(filas: list[list[int]], tpsa: pd.Series, positivo: pd.Series) -> dict
     mejor = CORTES_TPSA[js.index(mejor_j)]
     tp, fn, fp, tn = filas[CORTES_TPSA.index(mejor)]
     return {"corte": mejor, "j": round(mejor_j, 3), "mcc": round(mcc(tp, fn, fp, tn), 3),
-            **meseta_bootstrap(tpsa, positivo, mejor)}
+            **meseta_bootstrap(tpsa, positivo, grupo, mejor)}
 
 
 def permeabilidad() -> dict:
@@ -271,10 +297,12 @@ def permeabilidad() -> dict:
     for nombre, sub in subconjuntos.items():
         filas = barrido(sub["tpsa"], sub["positivo"])
         tpsa["series"][nombre] = filas
-        tpsa["optimos"][nombre] = optimo(filas, sub["tpsa"], sub["positivo"])
+        tpsa["optimos"][nombre] = optimo(filas, sub["tpsa"], sub["positivo"],
+                                         sub["esqueleto"])
         tpsa["n"][nombre] = len(sub)
         o = tpsa["optimos"][nombre]
         print(f"    {nombre:<14} n={len(sub):>5,} · óptimo {o['corte']} Å²"
+              f" · {o['clusteres']:,} esqueletos"
               f" · no se distingue de {o['meseta'][0]}–{o['meseta'][1]}"
               f"{'' if o['contigua'] else ' (no contigua)'}")
 
