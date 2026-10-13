@@ -55,6 +55,8 @@ DIANAS = RAIZ / "data/external/profesora/etiquetas_dianas_2026-09-25.csv"
 ACTIVIDAD = (RAIZ / "data/external/profesora"
              / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv")
 SALIDA = RAIZ / "recursos/datos.js"
+ESCALADO = RAIZ / "notebooks/datos/resultados_escalado.csv"
+VOCABULARIO = RAIZ / "notebooks/datos/resultados_L_sortslice.csv"
 
 CORTES_TPSA = list(range(0, 201))
 CENSURA = (">", ">=", ">>")
@@ -398,6 +400,68 @@ def actividad() -> dict:
     }
 
 
+def experimentos() -> dict:
+    """Los dos experimentos del Avance 2, resumidos desde sus CSV versionados.
+
+    No se vuelven a correr aquí: `scripts/experimento_escalado.py` y
+    `scripts/experimento_L_sortslice.py` ya dejaron sus resultados, con su
+    corrida registrada en `experimentos/`. Esto solo los agrega para que las
+    diapositivas los dibujen, de modo que si alguien repite un experimento la
+    presentación cambia con él.
+
+    El error estándar se corrige por Nadeau y Bengio, porque las 15 evaluaciones
+    (3 semillas × 5 pliegues) comparten datos de entrenamiento y el ingenuo las
+    trataría como independientes. El factor sale de la proporción entre el
+    pliegue de evaluación y el de entrenamiento.
+    """
+    import numpy as np
+
+    fuera: dict = {}
+
+    if ESCALADO.exists():
+        e = pd.read_csv(ESCALADO)
+        cv = e[e["eval"] == "cv"]
+        filas = []
+        for (trans, modelo), g in cv.groupby(["transformacion", "modelo"]):
+            filas.append({
+                "transformacion": trans, "modelo": modelo,
+                "mcc": round(g["MCC"].mean(), 4),
+                "auprc": round(g["AUPRC_neg"].mean(), 4),
+                "iteraciones": int(g["n_iter"].median()) if g["n_iter"].notna().any() else None,
+                "sin_converger": int(g["sin_converger"].sum()) if g["sin_converger"].notna().any() else 0,
+                "evaluaciones": len(g),
+                "segundos": round(g["ajuste_s"].median(), 4) if g["ajuste_s"].notna().any() else None,
+            })
+        fuera["escalado"] = sorted(filas, key=lambda f: (f["modelo"], -f["mcc"]))
+        print(f"  escalado: {len(filas)} combinaciones de {len(cv)} evaluaciones")
+
+    if VOCABULARIO.exists():
+        v = pd.read_csv(VOCABULARIO)
+        cv = v[v["eval"] == "cv"]
+        # corrección de Nadeau y Bengio para pliegues que comparten entrenamiento
+        n_pl = cv["fold"].nunique() or 5
+        factor = np.sqrt(1 + (1 / n_pl) / (1 - 1 / n_pl))
+        filas = []
+        for (L, modelo), g in cv.groupby(["L", "modelo"]):
+            ee = g["MCC"].std(ddof=1) / np.sqrt(len(g))
+            filas.append({"L": int(L), "modelo": modelo,
+                          "mcc": round(g["MCC"].mean(), 4),
+                          "auprc": round(g["AUPRC_neg"].mean(), 4),
+                          "ee": round(float(ee * factor), 4)})
+        cob = v[v["eval"] == "cov"]
+        fuera["vocabulario"] = {
+            "puntos": sorted(filas, key=lambda f: (f["modelo"], f["L"])),
+            "cobertura": [{"L": int(r.L), "entrenamiento": round(float(r.cob_entrenamiento), 3),
+                           "validacion": round(float(r.cob_validacion), 3)}
+                          for r in cob.itertuples()] if len(cob) else [],
+            "vocabulario_total": int(cob["vocabulario_total"].iloc[0]) if len(cob) else None,
+        }
+        print(f"  vocabulario: {len(filas)} combinaciones · "
+              f"{fuera['vocabulario']['vocabulario_total']:,} subestructuras en total")
+
+    return fuera
+
+
 def main() -> None:
     for ruta in (PERMEABILIDAD, ACTIVIDAD):
         if not ruta.exists():
@@ -418,6 +482,8 @@ def main() -> None:
     print(f"\nCruce de fases: {len(ambos):,} esqueletos en ambas "
           f"({100 * len(ambos) / len(de_actividad):.1f}% de la fase 2, "
           f"{100 * len(ambos) / len(de_permeabilidad):.1f}% de la fase 1)")
+    print("Experimentos del Avance 2…")
+    datos["experimentos"] = experimentos()
     datos["generado"] = date.today().isoformat()
     datos["huellas"] = {PERMEABILIDAD.name: sha256(PERMEABILIDAD)[:16],
                         ACTIVIDAD.name: sha256(ACTIVIDAD)[:16]}

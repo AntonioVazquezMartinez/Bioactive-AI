@@ -120,6 +120,53 @@ Puede ser química real o un artefacto de curación, y los datos no lo distingue
 
 # Avance 2 · Características y partición {background-color="#2a3441"}
 
+## De SMILES a números: 217 descriptores y un fingerprint {.smaller}
+
+::: {.columns}
+::: {.column width="52%"}
+**217 descriptores 2D de RDKit**, de los que quedan **203 utilizables** tras auditar la matriz por cuatro criterios.
+
+El que casi rompe todo: `Ipc` llega a **10⁴¹**. Es finito en float64, pero no cabe en float32 y scikit-learn convierte internamente. Un chequeo de `isfinite` **no lo detecta**, así que costó una ejecución entera antes de encontrarlo.
+:::
+::: {.column width="48%"}
+**Morgan/ECFP4**, 2,048 bits, con `rdFingerprintGenerator`.
+
+Cuidado con el nombre: se genera con `radius=2` porque el número del nombre es el **diámetro**, no el radio.
+
+Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. Se usan juntos.
+:::
+:::
+
+::: {.callout-note}
+Los *embeddings* congelados de transformers se descartaron: no superan a esta combinación bajo partición por andamio.
+:::
+
+## El fingerprint plegado rompe la explicabilidad {.smaller}
+
+Un fingerprint plegado reparte las subestructuras en un número fijo de casillas con una función de dispersión, así que **dos subestructuras distintas pueden caer en el mismo bit**. Si ese bit resulta importante, no se puede traducir a una estructura concreta — que es exactamente lo que la patrocinadora pidió como no negociable.
+
+**Sort & Slice** ordena las subestructuras por frecuencia en el entrenamiento y se queda con las L más comunes, **una por columna**. Sin colisiones: cada columna se puede dibujar.
+
+El costo es que el vocabulario **se aprende de los datos**, así que se ajusta solo con entrenamiento y las subestructuras que solo aparecen en la prueba quedan fuera.
+
+## ¿Cuánto vocabulario hace falta? {.smaller}
+
+::: {.bio-grafica data-grafica="vocabulario"}
+:::
+
+::: {.callout-note}
+Se mantiene **L = 2048** como valor de trabajo: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos. Lo que falta decidir con la patrocinadora no es el número sino la estrategia —desempeño, parsimonia o relevancia química de las subestructuras raras— y ahí su conocimiento de los productos naturales es lo que inclina la balanza.
+:::
+
+## Escalar no es por el acierto, es por la convergencia {.smaller}
+
+::: {.bio-grafica data-grafica="escalado"}
+:::
+
+::: {.callout-important}
+El argumento fácil sería «los árboles no necesitan escalar». Es cierto para Random Forest, pero el proyecto entrena una **regresión logística como modelo interpretable de control**, y esa sí es sensible a la escala. Había que medirlo.
+:::
+
 ## La partición, verificada sin fuga {.smaller}
 
 | Partición | n | Andamios | % BBB+ |

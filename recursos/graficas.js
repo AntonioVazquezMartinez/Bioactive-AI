@@ -540,9 +540,145 @@ function costo(destino, D) {
 }
 
 // ---------------------------------------------------------------------------
+// 10 · Escalar no cambia el acierto; cambia que el modelo converja (1.5)
+// ---------------------------------------------------------------------------
+function escalado(destino, D) {
+  const E = (D.experimentos || {}).escalado;
+  if (!E) { destino.textContent = "Faltan los resultados del experimento de escalado."; return; }
+  const W = 760, H = 250;
+  const svg = lienzo(W, H, "MCC e iteraciones de cada transformación de escalado");
+  const log = E.filter((f) => f.modelo === "LogReg");
+  const rf = E.filter((f) => f.modelo === "RF");
+  const orden = ["sin escalar", "estandarización", "min-max", "Yeo-Johnson"];
+  const por = (lista, k) => orden.map((o) => lista.find((f) => f.transformacion === o) || {})[k];
+
+  // panel izquierdo: el MCC, que apenas se mueve
+  const izq = 120, anchoP = 230, arriba = 46, alto = H - arriba - 54;
+  const maxMCC = 0.75;
+  svg.appendChild(h("text", { x: izq, y: 22, fill: PAL.texto, "font-size": 15, "font-weight": 700 },
+    "MCC medio · 15 evaluaciones"));
+  orden.forEach((o, i) => {
+    const y = arriba + i * (alto / 4);
+    const l = log.find((f) => f.transformacion === o) || {};
+    const r = rf.find((f) => f.transformacion === o) || {};
+    svg.append(
+      h("text", { x: izq - 10, y: y + 20, "text-anchor": "end", fill: PAL.texto, "font-size": 13 }, o),
+      h("rect", { x: izq, y: y + 2, width: (l.mcc / maxMCC) * anchoP, height: 12, fill: PAL.resto, rx: 2 }),
+      h("rect", { x: izq, y: y + 17, width: (r.mcc / maxMCC) * anchoP, height: 12, fill: PAL.natural, rx: 2 }),
+      h("text", { x: izq + anchoP + 8, y: y + 13, fill: PAL.tenue, "font-size": 12 }, l.mcc?.toFixed(3)),
+      h("text", { x: izq + anchoP + 8, y: y + 28, fill: PAL.tenue, "font-size": 12 }, r.mcc?.toFixed(3)),
+    );
+  });
+
+  // panel derecho: las iteraciones de la regresión logística, que sí se mueven
+  const izq2 = izq + anchoP + 110, anchoI = 150;
+  const maxIt = Math.max(...log.map((f) => f.iteraciones || 0));
+  svg.appendChild(h("text", { x: izq2, y: 22, fill: PAL.texto, "font-size": 15, "font-weight": 700 },
+    "Iteraciones hasta converger"));
+  orden.forEach((o, i) => {
+    const y = arriba + i * (alto / 4);
+    const l = log.find((f) => f.transformacion === o) || {};
+    const falla = l.sin_converger > 0;
+    svg.append(
+      h("rect", { x: izq2, y: y + 6, width: Math.max((l.iteraciones / maxIt) * anchoI, 2), height: 18,
+                  fill: falla ? PAL.alerta : PAL.resto, rx: 2 }),
+      h("text", { x: izq2 + anchoI + 8, y: y + 20, fill: falla ? PAL.alerta : PAL.tenue,
+                  "font-size": 12, "font-weight": falla ? 700 : 400 },
+        falla ? `${num(l.iteraciones)} · no converge` : num(l.iteraciones)),
+    );
+  });
+
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  const malo = log.find((f) => f.sin_converger > 0) || {};
+  pie.innerHTML =
+    `<span class="punto" style="background:${PAL.resto}"></span> regresión logística &nbsp;` +
+    `<span class="punto" style="background:${PAL.natural}"></span> Random Forest &nbsp;·&nbsp; ` +
+    `El acierto apenas distingue las cuatro. Lo que sí distingue es que <strong>sin escalar la ` +
+    `regresión logística agota sus ${num(malo.iteraciones || 0)} iteraciones y avisa de no haber ` +
+    `convergido en los ${malo.sin_converger} pliegues</strong>; su ${malo.mcc?.toFixed(3)} no es un ` +
+    `desempeño, es donde se rindió el optimizador. Esa, y no el MCC, es la razón para escalar.`;
+  destino.append(svg, pie);
+}
+
+// ---------------------------------------------------------------------------
+// 11 · Cuánto vocabulario de Sort & Slice hace falta (1.7)
+// ---------------------------------------------------------------------------
+function vocabulario(destino, D) {
+  const V = (D.experimentos || {}).vocabulario;
+  if (!V) { destino.textContent = "Faltan los resultados del experimento de vocabulario."; return; }
+  const W = 760, H = 300, izq = 56, der = 110, arriba = 20;
+  const altoA = 150, hueco = 42, altoB = 54;
+  const svg = lienzo(W, H, "Desempeño y cobertura según el tamaño del vocabulario");
+  const Ls = [...new Set(V.puntos.map((p) => p.L))].sort((a, b) => a - b);
+  const x = (L) => izq + (Math.log2(L) - Math.log2(Ls[0])) /
+    (Math.log2(Ls[Ls.length - 1]) - Math.log2(Ls[0])) * (W - izq - der);
+  const lo = 0.60, hi = 0.72;
+  const y = (v) => arriba + altoA - ((v - lo) / (hi - lo)) * altoA;
+  const colores = { LogReg: PAL.resto, RF: PAL.natural, XGB: PAL.negativo };
+
+  [0.60, 0.64, 0.68, 0.72].forEach((v) => svg.append(
+    h("line", { x1: izq, y1: y(v), x2: W - der, y2: y(v), stroke: PAL.rejilla, "stroke-width": 1 }),
+    h("text", { x: izq - 8, y: y(v) + 4, "text-anchor": "end", fill: PAL.tenue, "font-size": 11 }, v.toFixed(2)),
+  ));
+
+  const etiquetas = [];
+  Object.keys(colores).forEach((m) => {
+    const ps = V.puntos.filter((p) => p.modelo === m).sort((a, b) => a.L - b.L);
+    if (!ps.length) return;
+    // banda de ±1 error estándar corregido: la medición casi no distingue tamaños
+    const arriba_ = ps.map((p) => `${x(p.L).toFixed(1)},${y(p.mcc + p.ee).toFixed(1)}`);
+    const abajo = ps.slice().reverse().map((p) => `${x(p.L).toFixed(1)},${y(p.mcc - p.ee).toFixed(1)}`);
+    svg.appendChild(h("polygon", { points: [...arriba_, ...abajo].join(" "), fill: colores[m], opacity: 0.12 }));
+    svg.appendChild(h("path", {
+      d: ps.map((p, i) => `${i ? "L" : "M"}${x(p.L).toFixed(1)},${y(p.mcc).toFixed(1)}`).join(""),
+      fill: "none", stroke: colores[m], "stroke-width": 2.2,
+    }));
+    const ult = ps[ps.length - 1];
+    etiquetas.push({ m, x: x(ult.L) + 8, y: y(ult.mcc) + 4 });
+  });
+  // Los tres modelos terminan casi al mismo MCC, así que sus nombres se encimarían.
+  // Se separan verticalmente lo mínimo para que se lean, conservando el orden.
+  etiquetas.sort((a, b) => a.y - b.y);
+  etiquetas.forEach((e, i) => {
+    if (i && e.y - etiquetas[i - 1].y < 15) e.y = etiquetas[i - 1].y + 15;
+    svg.appendChild(h("text", { x: e.x, y: e.y, fill: colores[e.m], "font-size": 12 }, e.m));
+  });
+
+  // franja de cobertura, abajo y con su propia escala
+  const yB = arriba + altoA + hueco;
+  svg.appendChild(h("text", { x: izq, y: yB - 10, fill: PAL.tenue, "font-size": 12 },
+    "Cobertura del vocabulario · entrenamiento y validación"));
+  V.cobertura.forEach((c) => {
+    svg.append(
+      h("rect", { x: x(c.L) - 11, y: yB + altoB * (1 - c.entrenamiento), width: 10,
+                  height: altoB * c.entrenamiento, fill: PAL.resto, opacity: 0.55, rx: 1 }),
+      h("rect", { x: x(c.L) + 1, y: yB + altoB * (1 - c.validacion), width: 10,
+                  height: altoB * c.validacion, fill: PAL.negativo, opacity: 0.75, rx: 1 }),
+    );
+  });
+  Ls.forEach((L) => svg.appendChild(h("text", {
+    x: x(L), y: yB + altoB + 18, "text-anchor": "middle", fill: PAL.tenue, "font-size": 12,
+  }, L === 2048 ? "2048" : `${L}`)));
+
+  const dosmil = V.cobertura.find((c) => c.L === 2048) || {};
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    `De ${num(V.vocabulario_total)} subestructuras distintas en el entrenamiento, L se queda con las ` +
+    `más frecuentes. <strong>Las bandas son ±1 error estándar corregido</strong> por la dependencia ` +
+    `entre pliegues: se tocan en casi todo el rango, así que la medición apenas distingue tamaños desde ` +
+    `~128. Con L = 2048 la cobertura es ${(100 * dosmil.entrenamiento).toFixed(1)}% en entrenamiento y ` +
+    `${(100 * dosmil.validacion).toFixed(1)}% en validación; esa brecha crece con L, porque el ` +
+    `vocabulario se aprende solo del entrenamiento.`;
+  destino.append(svg, pie);
+}
+
+// ---------------------------------------------------------------------------
 
 const GRAFICAS = { grupos, naturales, tpsa, etapas, etiquetado,
-                   archivo, dianas, enfermedades, costo };
+                   archivo, dianas, enfermedades, costo,
+                   escalado, vocabulario };
 
 function dibujar() {
   if (!window.DATOS) return;
