@@ -244,6 +244,23 @@ El argumento fácil sería «los árboles no necesitan escalar». Es cierto para
 En la Ruta: [1.5](contenido/decisiones.html#d1-5) (propuesta · revisada). Esta medición cambió la razón del escalado, y la versión anterior sigue visible.
 :::
 
+## ¿Qué entra al modelo y qué no? {.smaller}
+
+De las 217 columnas de descriptores a la matriz con la que se entrena:
+
+| Paso | Qué pasa | Cuántas quedan |
+|:--|:--|--:|
+| Descriptores utilizables | Se quitan 5 constantes, 8 con valores faltantes y `Ipc` | 203 |
+| Características derivadas | Se suman `tpsa_por_mw` (AUC 0.810) y `lipo_neta` (0.795); `regla_2p` (0.684) no supera a TPSA (0.844) | 206 |
+| Filtro de varianza | Se quita una columna casi constante | 205 |
+| Filtro de correlación | Se retiran 34 columnas casi iguales a otra; `lipo_neta` correlaciona 0.975 con logP y lo reemplaza | **171** |
+
+**Lo que no entra como predictor:** `group` y el indicador de origen natural. Se codifican aparte, pero la matriz principal solo lleva estructura y descriptores. `group` está confundida con la etiqueta, así que usarla de entrada sería fuga; y cómo tratar los 1,005 análogos de los naturales sigue abierto ([1.6](contenido/decisiones.html#d1-6)).
+
+::: {.callout-note}
+Los cortes de **0.01** de varianza y **0.95** de correlación son propuestas operativas medidas en estos datos, no valores ratificados. Si cambian, se repite la selección. En la Ruta: [1.5](contenido/decisiones.html#d1-5) y el supuesto S1.11.
+:::
+
 ## Lo que medimos y descartamos {.smaller}
 
 Cinco opciones que se probaron con los datos del proyecto:
