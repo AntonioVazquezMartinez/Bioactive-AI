@@ -411,8 +411,9 @@ def experimentos() -> dict:
 
     El error estándar se corrige por Nadeau y Bengio, porque las 15 evaluaciones
     (3 semillas × 5 pliegues) comparten datos de entrenamiento y el ingenuo las
-    trataría como independientes. El factor sale de la proporción entre el
-    pliegue de evaluación y el de entrenamiento.
+    trataría como independientes. El error ingenuo se multiplica por
+    sqrt(1 + J · n_prueba/n_entrenamiento), con J las 15 evaluaciones y la
+    proporción entre el pliegue de evaluación y el de entrenamiento (1/4).
     """
     import numpy as np
 
@@ -440,9 +441,11 @@ def experimentos() -> dict:
         cv = v[v["eval"] == "cv"]
         # corrección de Nadeau y Bengio para pliegues que comparten entrenamiento
         n_pl = cv["fold"].nunique() or 5
-        factor = np.sqrt(1 + (1 / n_pl) / (1 - 1 / n_pl))
+        # J es el número de evaluaciones (semillas × pliegues), no el de pliegues
+        prop = (1 / n_pl) / (1 - 1 / n_pl)
         filas = []
         for (L, modelo), g in cv.groupby(["L", "modelo"]):
+            factor = np.sqrt(1 + len(g) * prop)
             ee = g["MCC"].std(ddof=1) / np.sqrt(len(g))
             filas.append({"L": int(L), "modelo": modelo,
                           "mcc": round(g["MCC"].mean(), 4),
