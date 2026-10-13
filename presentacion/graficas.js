@@ -131,7 +131,7 @@ function grupos(destino, D) {
 // 2 · La brecha natural/sintético existe en B y C, no en A
 // ---------------------------------------------------------------------------
 function naturales(destino, D) {
-  const W = 760, H = 320, izq = 56, arriba = 34, abajo = 76;
+  const W = 760, H = 278, izq = 56, arriba = 28, abajo = 70;
   const svg = lienzo(W, H);
   const gs = D.naturales.filter((g) => ["A", "B", "C"].includes(g.grupo));
   const alto = H - arriba - abajo;
@@ -194,7 +194,7 @@ function naturales(destino, D) {
 // 3 · El umbral de TPSA no es una constante, y además es plano
 // ---------------------------------------------------------------------------
 function tpsa(destino, D) {
-  const W = 760, H = 290, izq = 52, der = 20, arriba = 22, abajo = 42;
+  const W = 760, H = 248, izq = 52, der = 20, arriba = 20, abajo = 38;
   const T = D.tpsa;
   const nombres = {
     completo: "Conjunto completo", ab: "Solo A+B",

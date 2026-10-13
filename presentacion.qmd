@@ -135,7 +135,7 @@ Mueve el corte de la regla «TPSA < corte ⇒ BBB+» y cambia de subconjunto. Es
 :::
 
 ::: {.callout-note}
-No es una constante de la barrera: es el óptimo de un subconjunto, y además es **plano**. En el conjunto completo cualquier corte entre 81 y 110 Å² es indistinguible del mejor, así que citar «101.9 Å²» con un decimal exagera lo que la medición sostiene.
+Además de cambiar con el subconjunto, el óptimo es **plano**: entre 81 y 110 Å² ningún corte se distingue del mejor. Citar «101.9 Å²» exagera lo que la medición sostiene.
 :::
 
 # Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
