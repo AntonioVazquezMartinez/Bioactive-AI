@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Los datos que alimentan las gráficas interactivas de la presentación.
 
-Escribe `presentacion/datos.js`, que la presentación carga con una etiqueta
+Escribe `recursos/datos.js`, que la presentación carga con una etiqueta
 `<script>`. Cada número que se ve en una gráfica sale de aquí, recalculado
 desde los archivos de la patrocinadora, y no de una cifra copiada a mano.
 
@@ -24,8 +24,15 @@ Lo que calcula, y para qué gráfica:
 - **Etiquetado.** Qué cuesta cortar «activo» en 1 µM o en 10 µM, con el peso
   que tiene una sola referencia de ChEMBL entre los negativos.
 
-El subconjunto «entrenamiento» obliga a repetir la partición por andamio, así
-que el script tarda cerca de un minuto; los demás son inmediatos.
+**Qué no recalcula, y hay que decirlo.** El reparto de activos e inactivos
+(`balance`: 61.7% con ≥ 5 y 44.4% con ≥ 6) viene del notebook 01b, porque
+depende de toda la canalización de etiquetado por tres vías y no de un conteo.
+Está marcado en el código donde se usa. Todo lo demás —incluidos los 99,585
+esqueletos de la fase 2 y los 1,033 que comparte con la fase 1, que antes
+estaban escritos a mano— sale de los archivos en cada corrida.
+
+El script tarda cerca de dos minutos: la partición por andamio, el bootstrap de
+las mesetas y los esqueletos de conectividad del archivo de actividad.
 """
 
 from __future__ import annotations
@@ -44,9 +51,10 @@ RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "src"))
 
 PERMEABILIDAD = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
+DIANAS = RAIZ / "data/external/profesora/etiquetas_dianas_2026-09-25.csv"
 ACTIVIDAD = (RAIZ / "data/external/profesora"
              / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv")
-SALIDA = RAIZ / "presentacion/datos.js"
+SALIDA = RAIZ / "recursos/datos.js"
 
 CORTES_TPSA = list(range(0, 201))
 CENSURA = (">", ">=", ">>")
@@ -87,28 +95,89 @@ def barrido(tpsa: pd.Series, positivo: pd.Series) -> list[list[int]]:
     return filas
 
 
-TOLERANCIA_J = 0.005   # dentro de esto, dos cortes no se distinguen
+REMUESTREOS = 2000     # bootstrap sobre los compuestos, para la meseta
+SEMILLA_BOOTSTRAP = 42
 
 
-def optimo(filas: list[list[int]]) -> dict:
-    """El corte que maximiza el índice J de Youden, y la meseta a su alrededor.
-
-    El óptimo por sí solo engaña: en el conjunto completo J vale 0.4824 en 101 Å²
-    y 0.4833 en 107, una diferencia de 0.0009 que no distingue nada. Por eso se
-    devuelve también el rango de cortes que quedan dentro de `TOLERANCIA_J` del
-    mejor, que es lo que de verdad se puede afirmar.
-    """
+def indice_j(filas: list[list[int]]) -> list[float]:
     js = []
     for tp, fn, fp, tn in filas:
         sens = tp / (tp + fn) if tp + fn else 0
         esp = tn / (tn + fp) if tn + fp else 0
         js.append(sens + esp - 1)
+    return js
+
+
+def meseta_bootstrap(tpsa: pd.Series, positivo: pd.Series, mejor: int) -> dict:
+    """Qué cortes no se distinguen del mejor, con bootstrap sobre los compuestos.
+
+    La primera versión de esto usaba una tolerancia fija de 0.005 en J, que es un
+    número inventado: decía «indistinguible» sin medición detrás. Aquí se compara
+    cada corte contra el mejor **en la misma remuestra**, que es lo que elimina la
+    varianza común, y se queda con los cortes cuyo intervalo del 95% de la
+    diferencia incluye el cero. Eso sí es una afirmación comprobable: *no se
+    distingue del mejor con esta cantidad de datos*.
+
+    El truco para que 2,000 remuestras sean baratas: un compuesto entra en la
+    predicción del corte `c` si `tpsa < c`, o sea desde `k = floor(tpsa) + 1` en
+    adelante. Así la matriz de confusión de todos los cortes sale de dos
+    histogramas acumulados por remuestra, en vez de recorrer 201 cortes.
+    """
+    import numpy as np
+
+    k = np.floor(tpsa.to_numpy()) .astype(int) + 1
+    k = np.clip(k, 0, len(CORTES_TPSA))
+    pos = positivo.to_numpy().astype(bool)
+    n, P, N = len(k), int(pos.sum()), int((~pos).sum())
+    if not P or not N:
+        return {"meseta": [mejor, mejor], "contigua": True, "remuestreos": 0}
+
+    def js_de(idx):
+        kp = np.bincount(k[idx][pos[idx]], minlength=len(CORTES_TPSA) + 1)
+        kn = np.bincount(k[idx][~pos[idx]], minlength=len(CORTES_TPSA) + 1)
+        tp = np.cumsum(kp)[: len(CORTES_TPSA)]
+        fp = np.cumsum(kn)[: len(CORTES_TPSA)]
+        tot_p, tot_n = kp.sum(), kn.sum()
+        sens = tp / tot_p if tot_p else np.zeros_like(tp, dtype=float)
+        esp = (tot_n - fp) / tot_n if tot_n else np.zeros_like(fp, dtype=float)
+        return sens + esp - 1
+
+    rng = np.random.default_rng(SEMILLA_BOOTSTRAP)
+    i_mejor = CORTES_TPSA.index(mejor)
+    difs = np.empty((REMUESTREOS, len(CORTES_TPSA)))
+    for b in range(REMUESTREOS):
+        idx = rng.integers(0, n, n)
+        js = js_de(idx)
+        difs[b] = js[i_mejor] - js          # pareado dentro de la misma remuestra
+
+    bajo, alto = np.percentile(difs, [2.5, 97.5], axis=0)
+    sin_distinguir = [c for c, lo, hi in zip(CORTES_TPSA, bajo, alto) if lo <= 0 <= hi]
+    if not sin_distinguir:
+        sin_distinguir = [mejor]
+    rango = range(min(sin_distinguir), max(sin_distinguir) + 1)
+    return {
+        "meseta": [min(sin_distinguir), max(sin_distinguir)],
+        # el conjunto exacto, porque casi nunca es contiguo y pintar solo el
+        # mínimo y el máximo daría una banda llena donde hay huecos
+        "cortes_meseta": sin_distinguir,
+        "contigua": len(sin_distinguir) == len(rango),
+        "remuestreos": REMUESTREOS,
+    }
+
+
+def optimo(filas: list[list[int]], tpsa: pd.Series, positivo: pd.Series) -> dict:
+    """El corte que maximiza el índice J de Youden, y la meseta a su alrededor.
+
+    El óptimo por sí solo engaña: en el conjunto completo J vale 0.4824 en 101 Å²
+    y 0.4833 en 107, una diferencia de 0.0009. La meseta dice hasta dónde llega
+    esa indistinguibilidad, y sale de un bootstrap, no de una tolerancia a ojo.
+    """
+    js = indice_j(filas)
     mejor_j = max(js)
     mejor = CORTES_TPSA[js.index(mejor_j)]
-    meseta = [c for c, j in zip(CORTES_TPSA, js) if mejor_j - j <= TOLERANCIA_J]
     tp, fn, fp, tn = filas[CORTES_TPSA.index(mejor)]
     return {"corte": mejor, "j": round(mejor_j, 3), "mcc": round(mcc(tp, fn, fp, tn), 3),
-            "meseta": [min(meseta), max(meseta)]}
+            **meseta_bootstrap(tpsa, positivo, mejor)}
 
 
 def permeabilidad() -> dict:
@@ -202,12 +271,35 @@ def permeabilidad() -> dict:
     for nombre, sub in subconjuntos.items():
         filas = barrido(sub["tpsa"], sub["positivo"])
         tpsa["series"][nombre] = filas
-        tpsa["optimos"][nombre] = optimo(filas)
+        tpsa["optimos"][nombre] = optimo(filas, sub["tpsa"], sub["positivo"])
         tpsa["n"][nombre] = len(sub)
-        print(f"    {nombre:<14} n={len(sub):>5,} · óptimo {tpsa['optimos'][nombre]['corte']} Å²")
+        o = tpsa["optimos"][nombre]
+        print(f"    {nombre:<14} n={len(sub):>5,} · óptimo {o['corte']} Å²"
+              f" · no se distingue de {o['meseta'][0]}–{o['meseta'][1]}"
+              f"{'' if o['contigua'] else ' (no contigua)'}")
 
-    return {"esqueletos": esqueletos, "grupos": grupos, "filtrado_ab": filtrado,
+    return {"_esqueletos_permeabilidad": sorted(d["key14"].unique()),
+            "esqueletos": esqueletos, "grupos": grupos, "filtrado_ab": filtrado,
             "naturales": naturales, "naturales_global": naturales_global, "tpsa": tpsa}
+
+
+def esqueletos_actividad(df: pd.DataFrame) -> set[str]:
+    """Los esqueletos de conectividad del archivo de actividad.
+
+    `inchikey_source` viene vacío en los 187,354 registros de ChEMBL, así que se
+    calcula desde `smiles_raw`. Se resuelve sobre los SMILES **únicos** (108,076
+    de 202,647 filas), que es lo que lo vuelve barato: unos doce segundos.
+    """
+    from rdkit import Chem, RDLogger
+
+    RDLogger.DisableLog("rdApp.*")
+    unicos = df["smiles_raw"].dropna().unique()
+    fuera = set()
+    for s in unicos:
+        m = Chem.MolFromSmiles(s)
+        if m is not None:
+            fuera.add(Chem.MolToInchiKey(m)[:14])
+    return fuera
 
 
 def actividad() -> dict:
@@ -228,9 +320,43 @@ def actividad() -> dict:
             "pct_una_referencia": round(100 * (seguros & texto).sum() / seguros.sum(), 1),
         }
 
+    # volúmenes por enfermedad: de ahí sale la pregunta de la forma del modelo
+    categorias = df["diana_categoria"].value_counts()
+    enfermedades = [{"nombre": k, "n": int(v)} for k, v in categorias.items()
+                    if k != "Sin diana de la lista"]
+
+    # Las 39 dianas curadas a mano. Dos cuentas distintas y hay que no confundirlas:
+    # `filas_v3` es la que declara el archivo de la patrocinadora, sobre el archivo
+    # completo; `nuestras` es la que sale de unir por `target_gene` en el que
+    # recibimos. Los dos receptores completos (NMDA y GABA-A) no son genes, así que
+    # esa unión no los encuentra y su cuenta propia queda en None en vez de en cero:
+    # publicarlos como «0 registros» los haría parecer candidatos a excluir sin serlo.
+    dianas = []
+    if DIANAS.exists():
+        dd = pd.read_csv(DIANAS)
+        por_gen = df["target_gene"].value_counts()
+        for _, fila in dd.iterrows():
+            gen = str(fila["gen"])
+            es_gen = "receptor completo" not in gen
+            dianas.append({"gen": gen, "diana": str(fila["diana"]),
+                           "categoria": str(fila["diana_categoria"]),
+                           "declaradas": int(fila["filas_v3"]),
+                           "nuestras": int(por_gen.get(gen, 0)) if es_gen else None})
+        dianas.sort(key=lambda d: d["declaradas"])
+
+    print("  resolviendo esqueletos de conectividad…")
+    esqueletos = esqueletos_actividad(df)
+
     print(f"  {len(df):,} registros · {int(censurado.sum()):,} censurados")
+    print(f"  {len(esqueletos):,} esqueletos de conectividad")
+    print(f"  {len(dianas)} dianas · "
+          f"{sum(1 for d in dianas if d['declaradas'] < 10)} con menos de 10 registros declarados")
     return {
         "registros": len(df),
+        "esqueletos": sorted(esqueletos),   # se usa para cruzar con la fase 1
+        "registros_diccionario": 225513,   # el archivo completo, sección 1 del diccionario
+        "enfermedades": enfermedades,
+        "dianas": dianas,
         "naturales": int(df["source"].isin(["npass", "cmaup"]).sum()),
         "naturales_exactos": int((df["source"].isin(["npass", "cmaup"])
                                   & relacion.eq("=")).sum()),
@@ -253,8 +379,17 @@ def main() -> None:
     datos = permeabilidad()
     print("Actividad…")
     datos["actividad"] = actividad()
-    datos["etapas"] = {"permeabilidad": datos["esqueletos"]["esqueletos"],
-                       "actividad": 99585, "ambos": 1033}
+
+    # el cruce entre las dos fases: antes estaban escritos a mano el 99,585 y el
+    # 1,033, que son justo las cifras de las que cuelga la decisión C.3
+    de_actividad = set(datos["actividad"].pop("esqueletos"))
+    de_permeabilidad = set(datos.pop("_esqueletos_permeabilidad"))
+    ambos = de_actividad & de_permeabilidad
+    datos["etapas"] = {"permeabilidad": len(de_permeabilidad),
+                       "actividad": len(de_actividad), "ambos": len(ambos)}
+    print(f"\nCruce de fases: {len(ambos):,} esqueletos en ambas "
+          f"({100 * len(ambos) / len(de_actividad):.1f}% de la fase 2, "
+          f"{100 * len(ambos) / len(de_permeabilidad):.1f}% de la fase 1)")
     datos["generado"] = date.today().isoformat()
     datos["huellas"] = {PERMEABILIDAD.name: sha256(PERMEABILIDAD)[:16],
                         ACTIVIDAD.name: sha256(ACTIVIDAD)[:16]}

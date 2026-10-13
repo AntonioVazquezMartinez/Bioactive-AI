@@ -135,7 +135,7 @@ Mueve el corte de la regla «TPSA < corte ⇒ BBB+» y cambia de subconjunto. Es
 :::
 
 ::: {.callout-note}
-Además de cambiar con el subconjunto, el óptimo es **plano**: entre 81 y 110 Å² ningún corte se distingue del mejor. Citar «101.9 Å²» exagera lo que la medición sostiene.
+Además de cambiar con el subconjunto, el óptimo es **plano**: con un bootstrap de 2,000 remuestras, catorce cortes repartidos entre 81 y 107 Å² no se distinguen del mejor. Citar «101.9 Å²» exagera lo que la medición sostiene.
 :::
 
 # Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
@@ -195,6 +195,44 @@ Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tr
 «No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
 :::
 
+## ¿El archivo de actividad ya trae una prueba apartada? {.smaller}
+
+::: {.bio-grafica data-grafica="archivo"}
+:::
+
+::: {.callout-important}
+**Entrada 2.6.** Es lo primero que necesitamos saber, porque si existe no hay que construir otra, y si se separó al azar no sirve como evaluación estructural. Es un sí o un no que solo ella puede dar.
+:::
+
+## Cuatro de las 39 dianas no tienen con qué entrenar {.smaller}
+
+::: {.bio-grafica data-grafica="dianas"}
+:::
+
+::: {.callout-important}
+**Entrada 2.1.** La propuesta del equipo es excluir esas cuatro, pero la lista la curó ella: ¿sobra o falta alguna otra? Sin la lista fija no se puede elegir la forma del modelo.
+:::
+
+## Los volúmenes por enfermedad van de 52,676 a 53 {.smaller}
+
+::: {.bio-grafica data-grafica="enfermedades"}
+:::
+
+::: {.callout-important}
+**Entrada 2.2.** ¿Un modelo por diana, uno por categoría de enfermedad o uno multitarea? Y antes que eso: **qué dianas importan para su pregunta de investigación**, que no sale de los datos.
+:::
+
+## ¿Qué error le cuesta más? {.smaller}
+
+Mueve el corte y mira el intercambio con los datos del proyecto:
+
+::: {.bio-grafica data-grafica="costo"}
+:::
+
+::: {.callout-important}
+**Entrada C.5.** Si el laboratorio puede ensayar veinte compuestos este semestre, ¿prefiere veinte donde acierte cuatro de cada cinco, o cien donde acierte una de cada dos? Y qué espera recibir al final: una lista, un modelo que pueda correr, o el material de un artículo.
+:::
+
 ## Las siete preguntas que necesitamos de ella {.smaller}
 
 Son las entradas marcadas «necesita su definición». Sin su criterio el equipo solo puede avanzar con un supuesto propio.
@@ -219,7 +257,7 @@ El detalle de cada una, con su contexto y lo que se descartó, está en [La ruta
 |:--|:--|:--|
 | Avance 0 · Propuesta | 27 sep | ✅ entregado |
 | Avance 1 · EDA | 4 oct | ✅ entregado |
-| Avance 2 · Características | 11 oct | ✅ entregado |
+| Avance 2 · Características | 11 oct | notebook entregado · falta el reporte |
 | **Avance 3 · Modelo de referencia** | **18 oct** | en curso |
 | Avance 4 · Modelos alternativos | 25 oct | pendiente |
 | Avance 5 · Ensambles | 1 nov | pendiente |
@@ -244,6 +282,6 @@ Todo el proyecto, con sus datos, sus notebooks y sus decisiones, en
 [antoniovazquezmartinez.github.io/Bioactive-AI](https://antoniovazquezmartinez.github.io/Bioactive-AI/)
 
 ```{=html}
-<script src="presentacion/datos.js"></script>
-<script src="presentacion/graficas.js"></script>
+<script src="recursos/datos.js"></script>
+<script src="recursos/graficas.js"></script>
 ```

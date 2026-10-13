@@ -19,7 +19,6 @@ const PAL = {
   natural: "#4caf7d",
   resto: "#8fb3dd",
   alerta: "#d64541",
-  apagado: "#49566605",
 };
 
 const NS = "http://www.w3.org/2000/svg";
@@ -38,12 +37,16 @@ function h(tag, attrs = {}, ...kids) {
   return e;
 }
 
-function lienzo(w, hgt) {
-  return h("svg", {
+function lienzo(w, hgt, titulo) {
+  const s = h("svg", {
     viewBox: `0 0 ${w} ${hgt}`,
     preserveAspectRatio: "xMidYMid meet",
     style: "width:100%;height:auto;overflow:visible",
+    role: "img",
+    "aria-label": titulo || "gráfica",
   });
+  if (titulo) s.appendChild(h("title", {}, titulo));
+  return s;
 }
 
 const num = (n) => n.toLocaleString("es-MX");
@@ -59,7 +62,7 @@ function mcc(tp, fn, fp, tn) {
 // ---------------------------------------------------------------------------
 function grupos(destino, D) {
   const W = 760, H = 300, izq = 48, abajo = 52, arriba = 28;
-  const svg = lienzo(W, H);
+  const svg = lienzo(W, H, "Tamaño y reparto de clases de cada grupo A–D de B3DB");
   const gs = D.grupos;
   const maxN = Math.max(...gs.map((g) => g.n));
   const ancho = (W - izq - 24) / gs.length;
@@ -132,7 +135,7 @@ function grupos(destino, D) {
 // ---------------------------------------------------------------------------
 function naturales(destino, D) {
   const W = 760, H = 278, izq = 56, arriba = 28, abajo = 70;
-  const svg = lienzo(W, H);
+  const svg = lienzo(W, H, "Porcentaje de compuestos que cruzan la barrera, naturales contra el resto, dentro de cada grupo");
   const gs = D.naturales.filter((g) => ["A", "B", "C"].includes(g.grupo));
   const alto = H - arriba - abajo;
   const ancho = (W - izq - 40) / gs.length;
@@ -177,16 +180,19 @@ function naturales(destino, D) {
       h("text", {
         x: cx, y: arriba - 12, "text-anchor": "middle",
         fill: sinBrecha ? PAL.natural : PAL.alerta, "font-size": 13,
-      }, sinBrecha ? "sin brecha" : "brecha"),
+      }, sinBrecha ? "sin brecha detectable" : "brecha"),
     );
   });
 
   const leyenda = document.createElement("div");
   leyenda.className = "lectura";
+  const d = D.naturales.find((g) => g.grupo === "D");
   leyenda.innerHTML =
     `<span class="punto" style="background:${PAL.resto}"></span> resto &nbsp;&nbsp;` +
     `<span class="punto" style="background:${PAL.natural}"></span> naturales &nbsp;&nbsp;·&nbsp;&nbsp;` +
-    `% BBB+ dentro de cada grupo de B3DB. El grupo A es el que trae <strong>logBB medido</strong>.`;
+    `% BBB+ dentro de cada grupo de B3DB. El grupo A es el que trae <strong>logBB medido</strong>, ` +
+    `y en él la brecha queda <strong>acotada a unos ±5 puntos</strong>, no demostrada en cero. ` +
+    (d ? `El grupo D se omite: con ${d.res_n} y ${d.nat_n} compuestos no permite concluir.` : "");
   destino.append(svg, leyenda);
 }
 
@@ -203,7 +209,7 @@ function tpsa(destino, D) {
   let cual = "completo";
   let corte = T.optimos.completo.corte;
 
-  const svg = lienzo(W, H);
+  const svg = lienzo(W, H, "Índice J de Youden según el corte de TPSA");
   const capa = h("g");
   svg.appendChild(capa);
   const alto = H - arriba - abajo, ancho = W - izq - der;
@@ -214,6 +220,7 @@ function tpsa(destino, D) {
   lectura.className = "lectura";
   const control = document.createElement("input");
   Object.assign(control, { type: "range", min: 0, max: 200, step: 1, className: "bio-rango" });
+  control.setAttribute("aria-label", "Corte de TPSA en Å²");
   const pestanas = document.createElement("div");
   pestanas.className = "bio-pestanas";
 
@@ -238,16 +245,23 @@ function tpsa(destino, D) {
       h("text", { x: px(c), y: H - abajo + 20, "text-anchor": "middle", fill: PAL.tenue, "font-size": 12 }, `${c}`),
     ));
 
-    // la meseta: todos los cortes que no se distinguen del mejor
+    // Los cortes que el bootstrap no distingue del mejor. Se pintan uno por uno
+    // y no como una banda de extremo a extremo: casi nunca son contiguos, y una
+    // banda llena afirmaría de los huecos lo que la medición no dice.
     const [m0, m1] = opt.meseta;
     capa.appendChild(h("rect", {
       x: px(m0), y: arriba, width: px(m1) - px(m0), height: alto,
-      fill: PAL.positivo, opacity: 0.14,
+      fill: PAL.positivo, opacity: 0.06,
     }));
+    const paso = px(1) - px(0);
+    (opt.cortes_meseta || []).forEach((c) => capa.appendChild(h("rect", {
+      x: px(c) - paso / 2, y: arriba, width: Math.max(paso, 1.2), height: alto,
+      fill: PAL.positivo, opacity: 0.22,
+    })));
     capa.appendChild(h("text", {
-      x: (px(m0) + px(m1)) / 2, y: arriba + 14, "text-anchor": "middle",
-      fill: PAL.positivo, "font-size": 12,
-    }, `indistinguible: ${m0}–${m1} Å²`));
+      x: (px(m0) + px(m1)) / 2, y: arriba + 13, "text-anchor": "middle",
+      fill: PAL.positivo, "font-size": 11,
+    }, `${(opt.cortes_meseta || []).length} cortes entre ${m0} y ${m1} Å² no se distinguen del mejor`));
 
     capa.appendChild(h("path", {
       d: js.map((j, i) => `${i ? "L" : "M"}${px(T.cortes[i]).toFixed(1)},${py(j).toFixed(1)}`).join(""),
@@ -292,7 +306,7 @@ function tpsa(destino, D) {
 // ---------------------------------------------------------------------------
 function etapas(destino, D) {
   const W = 760, H = 210, izq = 160, der = 190, arriba = 24;
-  const svg = lienzo(W, H);
+  const svg = lienzo(W, H, "Tamaño de las dos fases y los esqueletos que comparten");
   const E = D.etapas;
   const ancho = W - izq - der;
   const filas = [["Fase 2 · actividad", E.actividad], ["Fase 1 · permeabilidad", E.permeabilidad]];
@@ -316,11 +330,12 @@ function etapas(destino, D) {
 
   const pie = document.createElement("div");
   pie.className = "lectura";
+  const pct2 = (100 * E.ambos) / E.actividad, pct1 = (100 * E.ambos) / E.permeabilidad;
   pie.innerHTML =
     `<span class="punto" style="background:${PAL.alerta}"></span> los <strong>${num(E.ambos)}</strong> ` +
-    `esqueletos con medición en los dos conjuntos. La misma cifra es el <strong>1.0%</strong> de una fase ` +
-    `y el <strong>25.7%</strong> de la otra: esa asimetría es el problema. Para el 99% restante, la ` +
-    `permeabilidad sería una predicción sin verificar.`;
+    `esqueletos con medición en los dos conjuntos. La misma cifra es el ` +
+    `<strong>${pct2.toFixed(1)}%</strong> de una fase y el <strong>${pct1.toFixed(1)}%</strong> de la ` +
+    `otra: esa asimetría es el problema. Para el resto, la permeabilidad sería una predicción sin verificar.`;
   destino.append(svg, pie);
 }
 
@@ -378,8 +393,156 @@ function etiquetado(destino, D) {
 }
 
 // ---------------------------------------------------------------------------
+// 6 · El archivo que recibimos no es el que describe el diccionario (2.6)
+// ---------------------------------------------------------------------------
+function archivo(destino, D) {
+  const W = 760, H = 150, izq = 150, der = 150;
+  const A = D.actividad;
+  const svg = lienzo(W, H, "Registros que describe el diccionario contra los que recibimos");
+  const ancho = W - izq - der;
+  const falta = A.registros_diccionario - A.registros;
+  const wRecibido = (A.registros / A.registros_diccionario) * ancho;
 
-const GRAFICAS = { grupos, naturales, tpsa, etapas, etiquetado };
+  svg.append(
+    h("text", { x: izq - 14, y: 38, "text-anchor": "end", fill: PAL.texto, "font-size": 16 }, "Diccionario"),
+    h("rect", { x: izq, y: 14, width: ancho, height: 34, fill: PAL.resto, opacity: 0.35, rx: 3 }),
+    h("text", { x: izq + ancho + 12, y: 37, fill: PAL.tenue, "font-size": 15 }, `${num(A.registros_diccionario)}`),
+
+    h("text", { x: izq - 14, y: 100, "text-anchor": "end", fill: PAL.texto, "font-size": 16 }, "Lo que recibimos"),
+    h("rect", { x: izq, y: 76, width: wRecibido, height: 34, fill: PAL.resto, opacity: 0.55, rx: 3 }),
+    h("rect", {
+      x: izq + wRecibido, y: 76, width: ancho - wRecibido, height: 34,
+      fill: PAL.alerta, opacity: 0.75, rx: 3,
+    }),
+    h("text", { x: izq + ancho + 12, y: 99, fill: PAL.tenue, "font-size": 15 }, `${num(A.registros)}`),
+    h("text", {
+      x: izq + wRecibido + (ancho - wRecibido) / 2, y: 130, "text-anchor": "middle",
+      fill: PAL.alerta, "font-size": 14, "font-weight": 700,
+    }, `faltan ${num(falta)}`),
+  );
+
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    `El archivo se llama <code>…_Entrenamiento.csv</code> y trae el <strong>` +
+    `${((100 * A.registros) / A.registros_diccionario).toFixed(1)}%</strong> de lo que describe el ` +
+    `diccionario. Si esos ${num(falta)} son una prueba ya apartada, <strong>no construimos otra</strong>; ` +
+    `si se separaron al azar, hay compuestos casi idénticos a los dos lados y no sirve como evaluación ` +
+    `estructural.`;
+  destino.append(svg, pie);
+}
+
+// ---------------------------------------------------------------------------
+// 7 · Cuatro de las 39 dianas no tienen con qué entrenar (2.1)
+// ---------------------------------------------------------------------------
+function dianas(destino, D) {
+  const lista = D.actividad.dianas;
+  const vacias = lista.filter((d) => d.declaradas < 10);
+  const resto = lista.filter((d) => d.declaradas >= 10);
+  const caja = document.createElement("div");
+
+  const tabla = document.createElement("table");
+  tabla.className = "bio-tabla";
+  tabla.innerHTML =
+    "<thead><tr><th>Gen</th><th>Diana</th><th>Registros</th></tr></thead><tbody>" +
+    vacias.map((d) => `<tr class="mala"><td><code>${d.gen}</code></td><td>${d.diana}</td>` +
+      `<td class="n">${d.declaradas}</td></tr>`).join("") +
+    `<tr class="tenue"><td colspan="2">las otras ${resto.length}, de menor a mayor</td>` +
+    `<td class="n">${num(resto[0].declaradas)} – ${num(resto[resto.length - 1].declaradas)}</td></tr>` +
+    "</tbody>";
+
+  const pie = document.createElement("p");
+  pie.className = "lectura";
+  pie.innerHTML =
+    `Las 39 dianas las curó la patrocinadora a mano desde la farmacología conocida. ` +
+    `<strong>Cuatro no tienen con qué entrenar.</strong> Las cifras son las que declara su propio ` +
+    `archivo de dianas, sobre el conjunto completo; en el que recibimos son algo menores.`;
+  caja.append(tabla, pie);
+  destino.appendChild(caja);
+}
+
+// ---------------------------------------------------------------------------
+// 8 · Los volúmenes por enfermedad difieren en tres órdenes (2.2)
+// ---------------------------------------------------------------------------
+function enfermedades(destino, D) {
+  const es = D.actividad.enfermedades;
+  const W = 760, H = 30 + es.length * 23, izq = 190, der = 96;
+  const svg = lienzo(W, H, "Registros disponibles por enfermedad");
+  const ancho = W - izq - der;
+  const max = es[0].n;
+
+  es.forEach((e, i) => {
+    const y = 14 + i * 23;
+    const w = Math.max((e.n / max) * ancho, 1.5);
+    const pocos = e.n < 500;
+    svg.append(
+      h("text", { x: izq - 12, y: y + 13, "text-anchor": "end", fill: PAL.texto, "font-size": 14 }, e.nombre),
+      h("rect", { x: izq, y, width: w, height: 17, fill: pocos ? PAL.alerta : PAL.resto, opacity: pocos ? 0.95 : 0.6, rx: 2 }),
+      h("text", { x: izq + w + 8, y: y + 13, fill: pocos ? PAL.alerta : PAL.tenue, "font-size": 13 }, num(e.n)),
+    );
+  });
+
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    `A escala real. Alzheimer tiene <strong>${num(es[0].n)}</strong> registros y ELA ` +
+    `<strong>${num(es[es.length - 1].n)}</strong>: tres órdenes de magnitud. Las de abajo no sostienen un ` +
+    `modelo propio, y un modelo multitarea es la única forma de incluirlas, a costa de mezclar señales.`;
+  destino.append(svg, pie);
+}
+
+// ---------------------------------------------------------------------------
+// 9 · Qué error cuesta más, con la única regla que hoy está medida (C.5)
+// ---------------------------------------------------------------------------
+function costo(destino, D) {
+  const T = D.tpsa;
+  const serie = T.series.completo;
+  // la lista crece con el corte: más candidatos marcados, menos precisión
+  const puntos = T.cortes.map((c) => {
+    const [tp, fn, fp] = serie[c];
+    return { corte: c, lista: tp + fp, aciertos: tp, fallidos: fp, perdidos: fn };
+  }).filter((p) => p.lista >= 20);
+
+  // arranca en el corte de la regla publicada (67 Å²), que es el que aparece en el
+  // resto del mazo y en el visualizador, para que se reconozca de dónde viene
+  let i = Math.max(0, puntos.findIndex((p) => p.corte >= 67));
+  const caja = document.createElement("div");
+  const control = document.createElement("input");
+  Object.assign(control, { type: "range", min: 0, max: puntos.length - 1, step: 1, className: "bio-rango" });
+  control.setAttribute("aria-label", "Qué tan larga es la lista de candidatos");
+  const rejilla = document.createElement("div");
+  const pie = document.createElement("p");
+  pie.className = "lectura";
+
+  function pinta() {
+    const p = puntos[i];
+    const prec = (100 * p.aciertos) / p.lista;
+    const exh = (100 * p.aciertos) / (p.aciertos + p.perdidos);
+    rejilla.className = "bio-rejilla";
+    rejilla.innerHTML =
+      `<div class="bio-tarjeta"><div class="t">La lista que recibe el laboratorio</div>
+         <div class="v">${num(p.lista)}</div><div class="n">compuestos marcados</div></div>` +
+      `<div class="bio-tarjeta"><div class="t">De esos, sí cruzan la barrera</div>
+         <div class="v">${num(p.aciertos)}</div><div class="n">precisión ${prec.toFixed(0)}%</div></div>` +
+      `<div class="bio-tarjeta alerta"><div class="t">Ensayos que no darán nada</div>
+         <div class="v">${num(p.fallidos)}</div><div class="n">y ${num(p.perdidos)} reales quedan fuera (${(100 - exh).toFixed(0)}% perdido)</div></div>`;
+    pie.innerHTML =
+      `Con el corte en <strong>TPSA &lt; ${p.corte} Å²</strong>. Es la única regla que el proyecto tiene ` +
+      `medida hoy, no el modelo final, pero la forma del dilema es la misma: <strong>acortar la lista sube ` +
+      `la precisión y deja fuera más candidatos reales</strong>. Dónde conviene pararse depende de qué ` +
+      `cuesta más en su laboratorio, y eso no lo decide la estadística.`;
+    control.value = i;
+  }
+  control.oninput = () => { i = +control.value; pinta(); };
+  pinta();
+  caja.append(rejilla, control, pie);
+  destino.appendChild(caja);
+}
+
+// ---------------------------------------------------------------------------
+
+const GRAFICAS = { grupos, naturales, tpsa, etapas, etiquetado,
+                   archivo, dianas, enfermedades, costo };
 
 function dibujar() {
   if (!window.DATOS) return;
