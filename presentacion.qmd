@@ -80,7 +80,7 @@ El conjunto tiene **7,805 filas** pero solo **4,018 esqueletos de conectividad**
 
 El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres distintos.
 
-**131 esqueletos** reúnen estereoisómeros con etiquetas BBB **contradictorias** entre sí.
+**131 esqueletos** reúnen estereoisómeros con etiquetas BBB **contradictorias** entre sí: 429 filas que imponen 151 errores inevitables.
 :::
 ::: {.column width="45%"}
 | | |
@@ -93,42 +93,24 @@ El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres dis
 
 **Consecuencia:** la partición agrupa por estructura y nunca reparte filas al azar. Un *split* aleatorio pondría estereoisómeros del mismo compuesto a ambos lados.
 
-## Las categorías A–D no son una escala de calidad
+## Las categorías A–D no son una escala de calidad {.smaller}
 
-La investigación inicial recomendaba entrenar solo con A+B, leyendo las categorías de B3DB como confiabilidad. **Medir lo desmintió.**
+La investigación inicial recomendaba entrenar solo con A+B, leyendo las categorías de B3DB como confiabilidad. **Medir lo desmintió:** el grupo D tiene mediana de 3 referencias contra 1 del C, y la columna está confundida con la etiqueta. Pruébalo:
 
-| | Grupo C | Grupo D |
-|:--|--:|--:|
-| Referencias (mediana) | 1 | **3** |
-
-Y la columna está **confundida con la etiqueta**:
-
-::: {.callout-warning}
-Filtrar a A+B baja la clase minoritaria del **36.5% al 27.0%**. Empeora el desbalance en vez de limpiar ruido.
+::: {.bio-grafica data-grafica="grupos"}
 :::
 
-Se usa para **estratificar, nunca para excluir**. El conjunto de entrenamiento creció 67%.
+Filtrar empeora el desbalance en vez de limpiar ruido. Se usa para **estratificar, nunca para excluir**, y el entrenamiento creció 67%.
 
-## Los productos naturales cruzan menos {.smaller}
+## La brecha de los naturales no está donde parecía {.smaller}
 
-::: {.columns}
-::: {.column width="48%"}
-| Origen | n | % BBB+ |
-|:--|--:|--:|
-| Sintético | 4,439 | 71.7 |
-| **Natural** | 3,366 | **52.7** |
+En conjunto, los naturales cruzan **18.9 puntos menos** (52.7% contra 71.7% BBB+). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
 
-Una diferencia de **18.9 puntos**.
-:::
-::: {.column width="52%"}
-Pero la regla fisicoquímica TPSA < 67 Å² y HBD ≤ 1 solo explica **6.6 puntos**.
-
-La química da cuenta de **un tercio**. El resto puede ser eflujo activo, o sesgo en qué compuestos han llegado a ensayarse.
-:::
+::: {.bio-grafica data-grafica="naturales"}
 :::
 
 ::: {.callout-important}
-Como son los compuestos a priorizar, el desempeño tendrá que **reportarse por separado** en ambos grupos.
+Puede ser química real o un artefacto de curación, y los datos no lo distinguen. Es la pregunta **1.6** para la patrocinadora, que fue quien armó el archivo. El desempeño se reportará por origen **dentro de cada grupo**, no solo en el global.
 :::
 
 # Avance 2 · Características y partición {background-color="#2a3441"}
@@ -147,39 +129,23 @@ La prueba quedó con 57.3% BBB+ contra 64.0% del entrenamiento: **los andamios r
 
 ## El umbral de TPSA no es una constante {.smaller}
 
-| Medición | Umbral óptimo |
-|:--|--:|
-| Publicado (n=1,058) | 66.8 Å² |
-| Avance 1, sobre A+B | 83.6 Å² |
-| Avance 1, conjunto completo | 101.9 Å² |
-| **Avance 2, solo entrenamiento** | **107.0 Å²** |
+Mueve el corte de la regla «TPSA < corte ⇒ BBB+» y cambia de subconjunto. Es el **mismo** dataset en los cuatro casos:
 
-Cuatro subconjuntos del mismo dataset, cuatro umbrales que difieren en 40 Å².
+::: {.bio-grafica data-grafica="tpsa"}
+:::
 
 ::: {.callout-note}
-No es una constante de la barrera hematoencefálica: es el óptimo de un subconjunto particular. Se usa el derivado del entrenamiento, y se reporta sobre qué subconjunto se midió cada cifra.
+No es una constante de la barrera: es el óptimo de un subconjunto, y además es **plano**. En el conjunto completo cualquier corte entre 81 y 110 Å² es indistinguible del mejor, así que citar «101.9 Å²» con un decimal exagera lo que la medición sostiene.
 :::
 
 # Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
 
 ## Las dos etapas casi no comparten compuestos
 
-::: {.columns}
-::: {.column width="55%"}
-| | Esqueletos |
-|:--|--:|
-| Con permeabilidad | 4,018 |
-| Con actividad | 99,585 |
-| **En ambos** | **1,033** |
-:::
-::: {.column width="45%"}
-El **1.0%** del conjunto de actividad.
-:::
+::: {.bio-grafica data-grafica="etapas"}
 :::
 
-La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto. Para el otro 99%, la permeabilidad sería una **predicción sin verificar**.
-
-Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
+La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto, y reservarlo costaría **la cuarta parte** de la fase 1. Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
 
 ## El etiquetado deja fuera lo que queremos estudiar {.smaller}
 
@@ -191,17 +157,24 @@ El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-**Propuesta de etiquetado por tres vías, pendiente de ratificación:** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 registros de productos naturales— e inactivo declarado para textos y mediciones censuradas con corte ≥ 10 µM.
+Los dos últimos **no se suman**: las 29,730 con texto están dentro de las censuradas. La propuesta es etiquetar por tres vías —pChEMBL donde exista, concentración exacta para el resto (recupera 12,809 naturales) e inactivo declarado— y falta una sola decisión: dónde se corta «activo».
+
+## Dónde cortar «activo» es una sola decisión {.smaller}
+
+La regla de censura del diccionario ata el corte de los inactivos al de los activos: mover uno mueve al otro.
+
+::: {.bio-grafica data-grafica="etiquetado"}
+:::
 
 ::: {.callout-note}
-Con ≥ 5 hay 119,835 activos de 194,086 registros etiquetados (61.7%; razón 1.6:1), incluidos los fenotípicos. En el recuento exploratorio por estructura de conectividad × gen hay 50,177 pares activos de 71,145 (70.5%; razón 2.4:1). Como análisis de robustez, ≥ 6 da 44.4% por registro y 50.6% por par. El 61.7% es un balance por registro, no el balance por diana. El recuento por pares usa la regla provisional «activo si alguna observación es activa»; quedan pendientes de resolver 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6, así como definir la población y partición finales de entrenamiento. La propuesta de etiquetado y umbrales requiere ratificación de la patrocinadora.
+Los porcentajes de activos son por registro e incluyen fenotípicos; por par esqueleto × gen salen 70.5% con ≥ 5 y 50.6% con ≥ 6. El umbral no se elige por balance de clases. Pendiente de ratificación.
 :::
 
 # Cómo trabajamos {background-color="#2a3441"}
 
 ## Las decisiones se registran, y algunas se revierten {.smaller}
 
-Doce decisiones técnicas con su contexto, lo que se descartó y lo que cuesta, en el [registro de decisiones](contenido/decisiones.html).
+**Veintidós entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). Ninguna está *ratificada*: eso ocurre con la minuta de la reunión con la patrocinadora.
 
 **Dos se revirtieron al medir:**
 
@@ -222,24 +195,42 @@ Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tr
 «No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
 :::
 
+## Las siete preguntas que necesitamos de ella {.smaller}
+
+Son las entradas marcadas «necesita su definición». Sin su criterio el equipo solo puede avanzar con un supuesto propio.
+
+| | Entrada | Qué se le pregunta |
+|:--|:--|:--|
+| 1 | **2.6** Partición reservada | El archivo se llama `_Entrenamiento` y trae el 89.9% de lo que describe el diccionario. ¿Ya hay una prueba apartada, y cómo se hizo? |
+| 2 | **2.1** Dianas sin datos | `GABRG2`, `AIF1`, `GABRB2` y `TARDBP` tienen 0, 0, 1 y 8 registros. ¿Se excluyen? |
+| 3 | **2.3** Criterio de «activo» | ¿10 µM o 1 µM? Una sola decisión, con las consecuencias de la diapositiva anterior |
+| 4 | **2.2** Forma del modelo | ¿Por diana, por categoría o multitarea? Los volúmenes van de 52,676 a 53 registros |
+| 5 | **2.8** Naturales en la fase 2 | ¿Puede aportar el cruce con COCONUT del archivo de actividad, como ya lo hizo con el de permeabilidad? |
+| 6 | **1.6** Naturales en la fase 1 | ¿Por qué la brecha es nula en el grupo A y de 21 y 17 puntos en B y C? |
+| 7 | **C.5** Qué se entrega | Si el laboratorio puede ensayar veinte compuestos, ¿veinte con 80% de acierto o cien con 50%? |
+
+::: {.callout-note}
+El detalle de cada una, con su contexto y lo que se descartó, está en [La ruta del proyecto](contenido/decisiones.html). Se cierran con la **minuta de la reunión**.
+:::
+
 ## Estado y calendario {.smaller}
 
 | Entrega | Fecha | Estado |
 |:--|:--|:--|
 | Avance 0 · Propuesta | 27 sep | ✅ entregado |
 | Avance 1 · EDA | 4 oct | ✅ entregado |
-| **Avance 2 · Características** | **11 oct** | notebook listo |
-| Avance 3 · Modelo de referencia | 18 oct | pendiente |
+| Avance 2 · Características | 11 oct | ✅ entregado |
+| **Avance 3 · Modelo de referencia** | **18 oct** | en curso |
 | Avance 4 · Modelos alternativos | 25 oct | pendiente |
 | Avance 5 · Ensambles | 1 nov | pendiente |
 
-**Decisiones abiertas que bloquean el Avance 3:** si reservar los 1,033 compuestos comunes —cuesta el 25.7% de la etapa 1—, y el diseño del experimento PAINS.
+**Siete entradas esperan la definición de la patrocinadora**, cuatro de ellas en la fase 2. El Avance 3 se puede construir sobre la fase 1 sin ninguna de las siete.
 
 ## Lo que falta antes de reportar candidatos
 
 1. **Filtro PAINS**, con la evidencia empírica de promiscuidad de nuestros propios datos. La curcumina aparece contra 32 dianas distintas cuando el compuesto mediano toca 1.
 2. **Resolver los 154 nombres de Spielvogel** a estructura: es la única validación externa genuina que tenemos.
-3. **Revisar los 131 esqueletos con etiquetas contradictorias**: el techo de exactitud que imponen ya está calculado en 98.1%, así que no limitan al modelo, pero falta decidir si son señal estereoquímica o ruido de curación.
+3. **Los 131 esqueletos con etiquetas contradictorias**: imponen 151 errores inevitables sobre 7,805, un techo de **exactitud** del 98.1% que no aprieta a nadie. Falta el techo en **MCC**, que es la métrica del proyecto, y decidir si son señal estereoquímica o ruido de curación.
 
 ::: {.callout-caution}
 Las conclusiones se formularán como **actividad predicha según mecanismo molecular**, nunca como neuroprotección demostrada. De 1,026 tratamientos neuroprotectores probados en ictus, ninguno mostró eficacia clínica establecida.
@@ -251,3 +242,8 @@ Las conclusiones se formularán como **actividad predicha según mecanismo molec
 
 Todo el proyecto, con sus datos, sus notebooks y sus decisiones, en
 [antoniovazquezmartinez.github.io/Bioactive-AI](https://antoniovazquezmartinez.github.io/Bioactive-AI/)
+
+```{=html}
+<script src="presentacion/datos.js"></script>
+<script src="presentacion/graficas.js"></script>
+```

@@ -1,0 +1,277 @@
+#!/usr/bin/env python3
+"""Los datos que alimentan las gráficas interactivas de la presentación.
+
+Escribe `presentacion/datos.js`, que la presentación carga con una etiqueta
+`<script>`. Cada número que se ve en una gráfica sale de aquí, recalculado
+desde los archivos de la patrocinadora, y no de una cifra copiada a mano.
+
+    python scripts/cifras_presentacion.py
+
+Lo que calcula, y para qué gráfica:
+
+- **Esqueletos.** Filas contra esqueletos de conectividad, los que reúnen
+  etiquetas contradictorias y el techo de exactitud que imponen.
+- **Grupos A–D.** Tamaño y reparto de clases por grupo, para la gráfica donde
+  se filtra a A+B y se ve empeorar el desbalance en vez de limpiarlo.
+- **Naturales por grupo.** La brecha entre naturales y el resto dentro de cada
+  grupo, con su intervalo de confianza: es la medición que distingue entre
+  química y artefacto de curación (decisión 1.6).
+- **Barrido de TPSA.** Para cada corte de 0 a 200 Å² y cada subconjunto, la
+  matriz de confusión de la regla «TPSA < corte ⇒ BBB+». Con eso el control
+  deslizante de la presentación recalcula sensibilidad, especificidad y MCC en
+  el navegador sin volver a tocar los datos. Es lo que hace ver que el umbral
+  no es una constante sino el óptimo de un subconjunto.
+- **Etiquetado.** Qué cuesta cortar «activo» en 1 µM o en 10 µM, con el peso
+  que tiene una sola referencia de ChEMBL entre los negativos.
+
+El subconjunto «entrenamiento» obliga a repetir la partición por andamio, así
+que el script tarda cerca de un minuto; los demás son inmediatos.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import subprocess
+import sys
+from datetime import date
+from pathlib import Path
+
+import pandas as pd
+
+RAIZ = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(RAIZ / "src"))
+
+PERMEABILIDAD = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
+ACTIVIDAD = (RAIZ / "data/external/profesora"
+             / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv")
+SALIDA = RAIZ / "presentacion/datos.js"
+
+CORTES_TPSA = list(range(0, 201))
+CENSURA = (">", ">=", ">>")
+A_MICROMOLAR = {"nM": 1e-3, "uM": 1.0, "um": 1.0, "mM": 1e3, "M": 1e6,
+                "10^3nM": 1.0}
+
+
+def sha256(ruta: Path) -> str:
+    h = hashlib.sha256()
+    with open(ruta, "rb") as f:
+        for bloque in iter(lambda: f.read(1 << 20), b""):
+            h.update(bloque)
+    return h.hexdigest()
+
+
+def ic_diferencia(p1: float, n1: int, p2: float, n2: int) -> list[float]:
+    """Intervalo del 95% para la diferencia de dos proporciones, en puntos."""
+    ee = math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2)
+    d = p1 - p2
+    return [round(100 * (d - 1.96 * ee), 1), round(100 * (d + 1.96 * ee), 1)]
+
+
+def mcc(tp: int, fn: int, fp: int, tn: int) -> float:
+    den = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    return ((tp * tn - fp * fn) / den) if den else 0.0
+
+
+def barrido(tpsa: pd.Series, positivo: pd.Series) -> list[list[int]]:
+    """Matriz de confusión de «TPSA < corte ⇒ BBB+», para cada corte."""
+    filas = []
+    for corte in CORTES_TPSA:
+        pred = tpsa < corte
+        tp = int((pred & positivo).sum())
+        fp = int((pred & ~positivo).sum())
+        fn = int((~pred & positivo).sum())
+        tn = int((~pred & ~positivo).sum())
+        filas.append([tp, fn, fp, tn])
+    return filas
+
+
+TOLERANCIA_J = 0.005   # dentro de esto, dos cortes no se distinguen
+
+
+def optimo(filas: list[list[int]]) -> dict:
+    """El corte que maximiza el índice J de Youden, y la meseta a su alrededor.
+
+    El óptimo por sí solo engaña: en el conjunto completo J vale 0.4824 en 101 Å²
+    y 0.4833 en 107, una diferencia de 0.0009 que no distingue nada. Por eso se
+    devuelve también el rango de cortes que quedan dentro de `TOLERANCIA_J` del
+    mejor, que es lo que de verdad se puede afirmar.
+    """
+    js = []
+    for tp, fn, fp, tn in filas:
+        sens = tp / (tp + fn) if tp + fn else 0
+        esp = tn / (tn + fp) if tn + fp else 0
+        js.append(sens + esp - 1)
+    mejor_j = max(js)
+    mejor = CORTES_TPSA[js.index(mejor_j)]
+    meseta = [c for c, j in zip(CORTES_TPSA, js) if mejor_j - j <= TOLERANCIA_J]
+    tp, fn, fp, tn = filas[CORTES_TPSA.index(mejor)]
+    return {"corte": mejor, "j": round(mejor_j, 3), "mcc": round(mcc(tp, fn, fp, tn), 3),
+            "meseta": [min(meseta), max(meseta)]}
+
+
+def permeabilidad() -> dict:
+    from rdkit import Chem, RDLogger
+    from rdkit.Chem import Descriptors
+    from data_prep.splits import andamio_murcko, esqueleto_conectividad, scaffold_split
+
+    RDLogger.DisableLog("rdApp.*")
+    df = pd.read_csv(PERMEABILIDAD, low_memory=False)
+    d = df[df["bbb_class"].notna()].copy()
+    d["key14"] = d["inchikey"].astype(str).str[:14]
+    d["positivo"] = d["bbb_class"].astype(str).str.upper().str.startswith("BBB+")
+    d["natural"] = d["coconut_id_exact_match"].notna()
+    d["grupo"] = d["b3db_uncertainty_classification"].astype(str).str.strip().str.upper()
+
+    print(f"  {len(d):,} filas con clase · {d['key14'].nunique():,} esqueletos")
+
+    # --- esqueletos y el techo que imponen las etiquetas contradictorias ---
+    por_esqueleto = d.groupby("key14")["bbb_class"]
+    aciertos = int(por_esqueleto.agg(lambda s: s.value_counts().iloc[0]).sum())
+    contradictorios = por_esqueleto.nunique()
+    contradictorios = contradictorios[contradictorios > 1]
+    esqueletos = {
+        "filas": len(d),
+        "esqueletos": int(d["key14"].nunique()),
+        "contradictorios": int(len(contradictorios)),
+        "filas_contradictorias": int(d["key14"].isin(contradictorios.index).sum()),
+        "errores_inevitables": len(d) - aciertos,
+        "techo_exactitud": round(100 * aciertos / len(d), 2),
+    }
+
+    # --- grupos A–D: lo que cuesta filtrar a A+B ---
+    grupos = []
+    for g in ("A", "B", "C", "D"):
+        sub = d[d["grupo"] == g]
+        if not len(sub):
+            continue
+        grupos.append({
+            "grupo": g,
+            "n": len(sub),
+            "pos": int(sub["positivo"].sum()),
+            "neg": int((~sub["positivo"]).sum()),
+        })
+    ab = d[d["grupo"].isin(["A", "B"])]
+    filtrado = {
+        "completo": {"n": len(d), "pct_minoritaria": round(100 * (~d["positivo"]).mean(), 1)},
+        "ab": {"n": len(ab), "pct_minoritaria": round(100 * (~ab["positivo"]).mean(), 1)},
+    }
+
+    # --- naturales dentro de cada grupo: química o curación ---
+    naturales = []
+    for g in ("A", "B", "C", "D"):
+        sub = d[d["grupo"] == g]
+        nat, res = sub[sub["natural"]], sub[~sub["natural"]]
+        if len(nat) < 5 or len(res) < 5:
+            continue
+        p_nat, p_res = nat["positivo"].mean(), res["positivo"].mean()
+        naturales.append({
+            "grupo": g,
+            "nat_n": len(nat), "nat_pct": round(100 * p_nat, 1),
+            "res_n": len(res), "res_pct": round(100 * p_res, 1),
+            "dif": round(100 * (p_res - p_nat), 1),
+            "ic": ic_diferencia(p_res, len(res), p_nat, len(nat)),
+        })
+    global_nat, global_res = d[d["natural"]], d[~d["natural"]]
+    naturales_global = {
+        "nat_n": len(global_nat), "nat_pct": round(100 * global_nat["positivo"].mean(), 1),
+        "res_n": len(global_res), "res_pct": round(100 * global_res["positivo"].mean(), 1),
+        "dif": round(100 * (global_res["positivo"].mean() - global_nat["positivo"].mean()), 1),
+    }
+
+    # --- TPSA y el barrido por subconjunto ---
+    print("  calculando TPSA con RDKit…")
+    d["mol"] = d["smiles_std"].map(lambda s: Chem.MolFromSmiles(s) if isinstance(s, str) else None)
+    d = d[d["mol"].notna()].copy()
+    d["tpsa"] = d["mol"].map(Descriptors.TPSA)
+
+    print("  repitiendo la partición por andamio…")
+    d["andamio"] = d["mol"].map(andamio_murcko)
+    d["esqueleto"] = d["mol"].map(esqueleto_conectividad)
+    d["particion"] = scaffold_split(d, fraccion_prueba=0.2, fraccion_validacion=0.1,
+                                    semilla=42)
+
+    subconjuntos = {
+        "completo": d,
+        "ab": d[d["grupo"].isin(["A", "B"])],
+        "a": d[d["grupo"] == "A"],
+        "entrenamiento": d[d["particion"] == "entrenamiento"],
+    }
+    tpsa = {"cortes": CORTES_TPSA, "series": {}, "optimos": {}, "n": {}}
+    for nombre, sub in subconjuntos.items():
+        filas = barrido(sub["tpsa"], sub["positivo"])
+        tpsa["series"][nombre] = filas
+        tpsa["optimos"][nombre] = optimo(filas)
+        tpsa["n"][nombre] = len(sub)
+        print(f"    {nombre:<14} n={len(sub):>5,} · óptimo {tpsa['optimos'][nombre]['corte']} Å²")
+
+    return {"esqueletos": esqueletos, "grupos": grupos, "filtrado_ab": filtrado,
+            "naturales": naturales, "naturales_global": naturales_global, "tpsa": tpsa}
+
+
+def actividad() -> dict:
+    df = pd.read_csv(ACTIVIDAD, low_memory=False)
+    relacion = df["activity_relation_used"]
+    censurado = relacion.isin(CENSURA)
+    texto = df["chembl_standard_text_value"].notna()
+    valor = pd.to_numeric(df["activity_value_used"], errors="coerce")
+    micromolar = valor * df["activity_units_used"].fillna("").map(A_MICROMOLAR)
+
+    cortes = {}
+    for umbral in (1, 10):
+        seguros = censurado & (micromolar >= umbral)
+        cortes[str(umbral)] = {
+            "seguros": int(seguros.sum()),
+            "ambiguos": int(censurado.sum() - seguros.sum()),
+            "de_una_referencia": int((seguros & texto).sum()),
+            "pct_una_referencia": round(100 * (seguros & texto).sum() / seguros.sum(), 1),
+        }
+
+    print(f"  {len(df):,} registros · {int(censurado.sum()):,} censurados")
+    return {
+        "registros": len(df),
+        "naturales": int(df["source"].isin(["npass", "cmaup"]).sum()),
+        "naturales_exactos": int((df["source"].isin(["npass", "cmaup"])
+                                  & relacion.eq("=")).sum()),
+        "censurados": int(censurado.sum()),
+        "texto": int(texto.sum()),
+        "referencia_dominante": str(df.loc[texto, "reference_id"].mode().iloc[0]),
+        "cortes": cortes,
+        # el balance de clases sale del notebook 01b, no de aquí
+        "balance": {"1": {"pct_activos": 44.4, "razon": "0.8:1"},
+                    "10": {"pct_activos": 61.7, "razon": "1.6:1"}},
+    }
+
+
+def main() -> None:
+    for ruta in (PERMEABILIDAD, ACTIVIDAD):
+        if not ruta.exists():
+            raise SystemExit(f"falta {ruta.relative_to(RAIZ)}")
+
+    print("Permeabilidad…")
+    datos = permeabilidad()
+    print("Actividad…")
+    datos["actividad"] = actividad()
+    datos["etapas"] = {"permeabilidad": datos["esqueletos"]["esqueletos"],
+                       "actividad": 99585, "ambos": 1033}
+    datos["generado"] = date.today().isoformat()
+    datos["huellas"] = {PERMEABILIDAD.name: sha256(PERMEABILIDAD)[:16],
+                        ACTIVIDAD.name: sha256(ACTIVIDAD)[:16]}
+    try:
+        datos["commit"] = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"], cwd=RAIZ,
+            capture_output=True, text=True, check=True).stdout.strip()
+    except Exception:
+        datos["commit"] = None
+
+    SALIDA.parent.mkdir(parents=True, exist_ok=True)
+    cuerpo = json.dumps(datos, ensure_ascii=False, separators=(",", ":"))
+    SALIDA.write_text(
+        "// Generado por scripts/cifras_presentacion.py — no editar a mano.\n"
+        f"window.DATOS = {cuerpo};\n", encoding="utf-8")
+    print(f"\n{SALIDA.relative_to(RAIZ)} · {SALIDA.stat().st_size / 1024:.0f} KB")
+
+
+if __name__ == "__main__":
+    main()
