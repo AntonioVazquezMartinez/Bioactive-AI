@@ -10,7 +10,7 @@ También revisa que las cifras que el mazo afirma sigan estando en el JSON, para
 borrar un campo del generador no deje gráficas vacías sin que nadie se entere.
 """
 
-import hashlib
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -19,6 +19,15 @@ import pytest
 
 RAIZ = Path(__file__).resolve().parents[1]
 DATOS = RAIZ / "recursos/datos.js"
+
+# El archivo de actividad va por Git LFS y en CI se obtiene como puntero, no como
+# contenido: hashearlo daría la huella del puntero. `verificar_datos.huella` ya
+# resuelve ese caso leyendo el `oid` del puntero, así que se reutiliza en vez de
+# repetir la lógica —y de que las dos versiones se separen con el tiempo—.
+_spec = importlib.util.spec_from_file_location(
+    "verificar_datos", RAIZ / "scripts/verificar_datos.py")
+_vd = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_vd)
 
 
 def cargar() -> dict:
@@ -44,12 +53,8 @@ def test_las_huellas_corresponden_a_los_archivos_actuales(datos):
     for nombre, esperada in huellas.items():
         ruta = RAIZ / "data/external/profesora" / nombre
         if not ruta.exists():
-            pytest.skip(f"{nombre} no está disponible aquí (Git LFS)")
-        h = hashlib.sha256()
-        with open(ruta, "rb") as f:
-            for bloque in iter(lambda: f.read(1 << 20), b""):
-                h.update(bloque)
-        if not h.hexdigest().startswith(esperada):
+            pytest.skip(f"{nombre} no está en esta copia del repositorio")
+        if not _vd.huella(ruta)["sha256"].startswith(esperada):
             desfasados.append(nombre)
 
     assert not desfasados, (
