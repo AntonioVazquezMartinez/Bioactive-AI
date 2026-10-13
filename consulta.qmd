@@ -1,0 +1,160 @@
+---
+title: "Consulta a la patrocinadora"
+subtitle: "Siete definiciones que el equipo no puede deducir de los datos"
+lang: es
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+Dra. Martínez: esta página reúne las **siete decisiones que dependen de su criterio**. Cada una trae
+el contexto medido, la recomendación del equipo y la casilla para responder.
+
+**No se envía nada solo.** Al final, el botón arma un texto con sus respuestas que puede copiar a un
+correo o descargar. Lo que escriba vive únicamente en su navegador hasta entonces.
+
+Puede contestar lo que tenga claro y dejar el resto para la reunión. El detalle completo de cada
+decisión —qué se descartó, qué cuesta y qué la cambió— está en [la ruta del
+proyecto](contenido/decisiones.html).
+
+::: {.callout-note}
+**Cuatro son elecciones** y **tres son peticiones**: información o un archivo que solo usted tiene.
+Están separadas porque se responden distinto.
+:::
+
+# Lo que solo usted tiene
+
+## 1 · ¿El archivo de actividad ya trae una prueba apartada?
+
+El archivo se llama `..._Entrenamiento.csv` y trae **202,647 de los 225,513 registros** que describe
+su diccionario, el 89.9%. Faltan 22,866.
+
+Si esos registros son una prueba que usted ya apartó, el equipo **no construye otra**. Si se
+separaron al azar, hay compuestos casi idénticos a los dos lados y no sirve para medir si el modelo
+generaliza a estructuras nuevas; habría que decirlo como limitación.
+
+::: {.bio-pregunta data-id="p1" data-titulo="Partición reservada (entrada 2.6)" data-opciones="Sí, hay una partición reservada|No, la diferencia es por otra razón|Hay que revisarlo"}
+:::
+
+## 2 · ¿Puede aportar el cruce con COCONUT del archivo de actividad?
+
+El archivo de permeabilidad llegó con tres columnas de COCONUT, y ese cruce es lo que sostiene el
+hallazgo central del Avance 1. El de actividad no trae ninguna: sus únicas columnas de procedencia
+son `source` e `inchikey_source`.
+
+El equipo podría cruzarlo por su cuenta desde los SMILES, pero sería **otra versión del catálogo y
+otra regla de estandarización**, así que las dos fases dejarían de ser comparables entre sí.
+Mientras tanto se usa la fuente —NPASS y CMAUP— como definición provisional de «natural».
+
+::: {.bio-pregunta data-id="p2" data-titulo="Cruce con COCONUT (entrada 2.8)" data-opciones="Sí, lo puedo generar|No, que lo haga el equipo|Hay otra forma de identificar los naturales"}
+:::
+
+## 3 · La brecha de los naturales aparece solo donde la etiqueta no es medida
+
+Globalmente los naturales cruzan la barrera 18.9 puntos menos. Pero repartido por grupo de B3DB,
+**la brecha desaparece justo en el grupo A**, que es el que trae un logBB medido:
+
+| Grupo de B3DB | No natural | Natural | Diferencia (IC 95%) |
+|:--|--:|--:|:--|
+| **A** · con logBB medido | 87.6% | 88.4% | **−0.8** [−4.8, +3.2] |
+| B | 77.2% | 55.9% | **+21.4** [+18.3, +24.5] |
+| C | 58.1% | 40.9% | **+17.2** [+13.7, +20.7] |
+
+Puede ser química real —los transportadores son estereoselectivos y los naturales son estructuralmente
+distintos— o puede ser un artefacto de cómo se armó el archivo. Los datos no lo distinguen. El
+archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es lo que aquí falta.
+
+::: {.bio-pregunta data-id="p3" data-titulo="Brecha de los naturales (entrada 1.6)" data-opciones="Hay una razón de curación que lo explica|Es química real|No lo sé; déjenlo como limitación"}
+:::
+
+# Elecciones
+
+## 4 · ¿Dónde se corta «activo»?
+
+**Es una sola decisión, no dos.** La regla de censura de su diccionario ata el corte de los
+inactivos al de los activos: un `>` solo sirve como negativo si su límite llega al umbral de
+«activo», así que mover uno mueve el otro.
+
+| | **10 µM** (pChEMBL ≥ 5) | **1 µM** (pChEMBL ≥ 6) |
+|:--|--:|--:|
+| Censurados que sirven de negativo | 48,480 | 53,359 |
+| Quedan ambiguos | 6,018 | 1,139 |
+| Activos por registro | 61.7% | 44.4% |
+| Razón de clases | 1.6:1 | 0.8:1 |
+| **De una sola referencia de ChEMBL** | **61.3%** | 55.7% |
+
+El argumento más fuerte contra el corte en 10 µM no es el balance de clases: con ese corte **29,730
+de los 48,480 negativos —tres de cada cinco— salen de un solo experimento**, todos con el mismo
+texto «Not active» y la misma referencia. Ninguna partición arregla eso: si ese experimento tiene un
+sesgo, el modelo lo aprende como si fuera biología.
+
+::: {.bio-pregunta data-id="e1" data-titulo="Criterio de «activo» (entrada 2.3)" data-opciones="10 µM (pChEMBL ≥ 5)|1 µM (pChEMBL ≥ 6)|Otro criterio"}
+:::
+
+## 5 · ¿Se excluyen las cuatro dianas sin datos?
+
+De las 39 dianas que usted curó, cuatro no tienen con qué entrenar. Las dos columnas son cuentas
+distintas: **declarados** es lo que dice su propio archivo de dianas, sobre el conjunto completo;
+**en el nuestro** es lo que trae el archivo que recibimos, que es el 89.9% de aquel.
+
+| Gen | Diana | Declarados | En el nuestro |
+|:--|:--|--:|--:|
+| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** | 0 |
+| `AIF1` | Iba1 | **0** | 0 |
+| `GABRB2` | Receptor GABA-A, subunidad β2 | **1** | 1 |
+| `TARDBP` | TDP-43 | **8** | 7 |
+
+La propuesta del equipo es excluir esas cuatro. Pero la lista es suya, y **hay dos casos
+fronterizos que convendría que mirara**: `TNF` con 25 registros declarados (22 en el nuestro) y
+`SOD1` con 50 (46). No están tan lejos de `TARDBP`. De ahí para arriba las demás llegan hasta
+18,215 declarados.
+
+::: {.bio-pregunta data-id="e2" data-titulo="Dianas sin datos (entrada 2.1)" data-opciones="Sí, excluir las cuatro|Excluir solo algunas|Falta o sobra alguna otra diana"}
+:::
+
+## 6 · ¿Un modelo por diana, por categoría o multitarea?
+
+Los volúmenes difieren en tres órdenes de magnitud:
+
+Alzheimer 52,676 · Parkinson 32,372 · Neuroinflamación 12,331 · Depresión 10,888 · Estrés oxidativo
+2,456 · Epilepsia 1,862 · Neurodegeneración 1,110 · Deterioro cognitivo 488 · Ansiedad 160 ·
+Huntington 153 · **ELA 53**.
+
+Con 53 registros, ELA no sostiene un modelo propio. Un modelo multitarea comparte representación
+entre dianas y es la única forma de incluir las pequeñas, a costa de mezclar señales.
+
+**Y antes que la forma: ¿qué dianas son prioritarias para su pregunta de investigación?** Eso no
+sale de los datos, y cambia qué conviene construir.
+
+::: {.bio-pregunta data-id="e3" data-titulo="Forma del modelo (entrada 2.2)" data-opciones="Uno por diana, donde haya volumen|Uno por categoría de enfermedad|Multitarea|Otra"}
+:::
+
+## 7 · ¿Qué espera recibir, y qué error le cuesta más?
+
+De esta respuesta cuelgan el punto de operación de los dos modelos y la forma del entregable. Es la
+única pregunta de esta página que el equipo no puede ni aproximar con una medición.
+
+Si el laboratorio puede ensayar unos **veinte compuestos** este semestre, ¿prefiere una lista de
+veinte donde acierte cuatro de cada cinco, o una de cien donde acierte una de cada dos? Acortar la
+lista sube la precisión y **deja fuera más candidatos reales**; alargarla encuentra más, a costa de
+ensayos que no darán nada.
+
+::: {.bio-pregunta data-id="e4" data-titulo="Qué se entrega y qué error cuesta (entrada C.5)" data-opciones="Lista corta y precisa|Lista amplia|Depende" data-extra="¿Qué espera recibir al final: una lista de candidatos, un modelo que pueda correr usted, o el material de un artículo?"}
+:::
+
+# Enviar
+
+Al terminar, este botón arma el texto con lo que respondió. Cópielo a un correo o descárguelo.
+
+**Lo que responda aquí no cierra nada todavía:** el equipo lo lleva a la reunión y ahí se confirma.
+Una decisión queda registrada como *ratificada* solo cuando aparece en la minuta, que es el acuerdo
+que el equipo tiene consigo mismo para no dar por cerrado lo que no se habló. Contestar antes sirve
+para que la reunión se dedique a lo que haga falta discutir, no a repetir lo que ya tenga claro.
+
+::: {#bio-salida}
+:::
+
+```{=html}
+<script src="recursos/consulta.js"></script>
+```

@@ -166,6 +166,22 @@ Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, e
 
 Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
 
+### Defectos conocidos del archivo de actividad
+
+- **`inchikey_source` viene vacío en los 187,354 registros de ChEMBL** y solo trae valor en los de
+  NPASS y CMAUP. Así que no sirve para cruzar fuentes: cualquier solapamiento entre naturales y
+  ChEMBL hay que calcularlo desde `smiles_raw`, que sí está en los 202,647 registros y resuelve a
+  108,068 estructuras únicas. Contado por `inchikey_source` hay 4,174 esqueletos naturales;
+  contado por estructura, 4,172, porque dos SMILES no parsean.
+- **El archivo no trae ninguna columna de origen natural.** Lo más cercano es `source`, y no separa
+  limpiamente: el 65.4% de los esqueletos naturales (2,727 de 4,172) aparece también en ChEMBL y
+  solo 1,445 son exclusivos de NPASS y CMAUP. Es la [decisión 2.8](decisiones.md#d2-8).
+- **Las 29,730 filas con texto `Not active` son un solo documento de ChEMBL**, `CHEMBL1909046`,
+  repartido en 20 ensayos sobre 6 dianas. Todas están censuradas con `>` y todas con límite de
+  10 µM, así que están dentro de las 54,498 censuradas y no se suman aparte. A 10 µM esa sola
+  referencia aporta el 61% de los negativos seguros: es el argumento más fuerte contra ese corte
+  ([decisión 2.3](decisiones.md#d2-3)).
+
 ## Lo que los diccionarios no documentan
 
 - Si los `Not active` declarados por texto son negativos confiables.

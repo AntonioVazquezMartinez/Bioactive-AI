@@ -25,3 +25,9 @@ with Corrida("L", decision="1.7", params={"L": 64}, semillas=[0, 1, 2], datos=[r
 Si MLflow está instalado, la corrida también se registra en `mlruns/` (ignorado por git), que es
 solo un visor. Una corrida no decide: se compara con validación cruzada agrupada, no con una
 partición.
+
+**Commitea cada corrida antes de lanzar la siguiente.** `entorno.json` toma `arbol_sucio` de
+`git status --porcelain`, que cuenta los archivos sin seguimiento: una carpeta de `experimentos/`
+recién creada ensucia el árbol para la corrida que venga después y la hace registrar
+`arbol_sucio: true` sin que nadie haya tocado el código. Al retropoblar las dos mediciones de la
+fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran en `false`.

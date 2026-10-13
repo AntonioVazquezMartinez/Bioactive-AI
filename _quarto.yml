@@ -2,10 +2,15 @@ project:
   type: website
   output-dir: _site
   pre-render: python3 scripts/prepare_site.py
+  # Quarto no copia por su cuenta lo que una etiqueta <script src> referencia.
+  # `recursos/` lleva los datos y el código de las páginas interactivas.
+  resources:
+    - recursos/
   render:
     - index.qmd
     - visualizador.qmd
     - presentacion.qmd
+    - consulta.qmd
     - bibliografia.qmd
     - contenido/**/*.md
     - contenido/**/*.qmd
@@ -78,6 +83,8 @@ website:
         menu:
           - href: contenido/decisiones.md
             text: La ruta del proyecto
+          - href: consulta.qmd
+            text: Consulta a la patrocinadora
           - href: contenido/referencias/index.qmd
             text: Qué investigación sustenta cada una
       - text: Entregables
