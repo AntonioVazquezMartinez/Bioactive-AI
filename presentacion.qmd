@@ -248,7 +248,7 @@ Son las entradas marcadas «necesita su definición». Sin su criterio el equipo
 | 7 | **C.5** Qué se entrega | Si el laboratorio puede ensayar veinte compuestos, ¿veinte con 80% de acierto o cien con 50%? |
 
 ::: {.callout-note}
-El detalle de cada una, con su contexto y lo que se descartó, está en [La ruta del proyecto](contenido/decisiones.html). Se cierran con la **minuta de la reunión**.
+El detalle de cada una está en [La ruta del proyecto](contenido/decisiones.html), y se pueden responder por adelantado en la [consulta](consulta.html). Se cierran con la **minuta de la reunión**.
 :::
 
 ## Estado y calendario {.smaller}

@@ -4,7 +4,7 @@ Bitácora de lo que se decide en cada fase y de las posibilidades que siguen abi
 
 Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adopta sigue siendo reversible, y dos decisiones ya se revirtieron al medir. Cuando algo cambia se deja la versión anterior visible. Los términos están en el [glosario](glosario.md).
 
-**Cómo se cierra una entrada.** Pasa a *ratificada* con la minuta de la reunión con la patrocinadora: de ahí se toman las respuestas y se registran aquí, en sus términos y con la fecha. Mientras no haya minuta, lo que el equipo adopta se queda en *propuesta*, lo que obliga a declararlo como no ratificado en el reporte donde se use. **Las entradas marcadas «necesita su definición» son las que más urge que ella defina**, porque sin su criterio el equipo solo puede avanzar con un supuesto propio.
+**Cómo se cierra una entrada.** Pasa a *ratificada* con la minuta de la reunión con la patrocinadora: de ahí se toman las respuestas y se registran aquí, en sus términos y con la fecha. Mientras no haya minuta, lo que el equipo adopta se queda en *propuesta*, lo que obliga a declararlo como no ratificado en el reporte donde se use. **Las entradas marcadas «necesita su definición» son las que más urge que ella defina**, porque sin su criterio el equipo solo puede avanzar con un supuesto propio. Esas siete están reunidas, con su contexto y una casilla para responder, en la [consulta a la patrocinadora](../consulta.qmd); contestar ahí no cierra nada —sigue siendo la minuta la que ratifica— pero deja la reunión para lo que haga falta discutir.
 
 ## Estado de un vistazo
 
