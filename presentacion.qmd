@@ -22,7 +22,11 @@ format:
     link-external-newwindow: true
     width: 1280
     height: 760
-    center: false
+    # Once de las 24 diapositivas dejaban entre 300 y 456 px vacíos de 760 —más
+    # de la mitad del alto— porque el contenido se apoyaba arriba. Centrado
+    # vertical desaparece el hueco; el costo es que el título cambia de altura
+    # entre diapositivas, que es el intercambio habitual y aquí sale a cuenta.
+    center: true
     menu:
       side: left
       numbers: true
@@ -59,6 +63,7 @@ Sobre ambas pesa un requisito que la patrocinadora planteó como no negociable: 
 
 ```{mermaid}
 %%| fig-width: 11
+%%{init: {"themeVariables": {"fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "16px"}}}%%
 flowchart LR
     A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
     A --> C["Fingerprint ECFP4<br/>2,048 bits"]
@@ -274,7 +279,7 @@ El detalle de cada una está en [La ruta del proyecto](contenido/decisiones.html
 Las conclusiones se formularán como **actividad predicha según mecanismo molecular**, nunca como neuroprotección demostrada. De 1,026 tratamientos neuroprotectores probados en ictus, ninguno mostró eficacia clínica establecida.
 :::
 
-## Gracias {.center}
+## Gracias {.texto-centrado}
 
 **Bioactive AI** · Equipo 7
 

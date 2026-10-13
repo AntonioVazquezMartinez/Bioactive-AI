@@ -20,9 +20,25 @@ $presentation-font-size-root: 30px;
   .nodeLabel, text, span, p { color: #e8edf3 !important; fill: #e8edf3 !important; }
   .edgePath .path, .flowchart-link { stroke: #8fb3dd !important; }
   marker path, .marker { fill: #8fb3dd !important; stroke: #8fb3dd !important; }
+
+  // Mermaid se dibuja en el navegador y calcula el tamaño de cada caja midiendo
+  // su texto. Lo mide con su propia tipografía y el tema de reveal la sustituye
+  // después por la del mazo, así que la caja queda hecha para un texto y el que
+  // se ve es otro: las etiquetas se salen. Se fija aquí la misma familia y el
+  // mismo tamaño que el bloque le declara a mermaid en `%%{init}%%`, para que
+  // medir y dibujar coincidan sin depender de cuándo cargue la tipografía.
+  .nodeLabel, .edgeLabel, foreignObject span, foreignObject div, text {
+    font-family: Helvetica, Arial, sans-serif !important;
+    font-size: 16px !important;
+  }
 }
 
-.reveal section.center { text-align: center; }
+// Centrar el texto es una elección por diapositiva, no el efecto de `center:
+// true`: reveal le pone la clase `center` a todas cuando el mazo centra en
+// vertical, así que la clase de autor lleva otro nombre.
+.reveal section.texto-centrado,
+.reveal section.texto-centrado h1,
+.reveal section.texto-centrado h2 { text-align: center; }
 
 // ---------------------------------------------------------------------------
 // Gráficas interactivas (`presentacion/graficas.js`)

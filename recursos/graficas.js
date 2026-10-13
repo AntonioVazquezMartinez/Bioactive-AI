@@ -134,7 +134,7 @@ function grupos(destino, D) {
 // 2 · La brecha natural/sintético existe en B y C, no en A
 // ---------------------------------------------------------------------------
 function naturales(destino, D) {
-  const W = 760, H = 278, izq = 56, arriba = 28, abajo = 70;
+  const W = 760, H = 262, izq = 56, arriba = 24, abajo = 66;
   const svg = lienzo(W, H, "Porcentaje de compuestos que cruzan la barrera, naturales contra el resto, dentro de cada grupo");
   const gs = D.naturales.filter((g) => ["A", "B", "C"].includes(g.grupo));
   const alto = H - arriba - abajo;
