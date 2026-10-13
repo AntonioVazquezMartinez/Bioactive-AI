@@ -52,6 +52,13 @@ $presentation-font-size-root: 30px;
 
   svg { display: block; }
 
+  // Para las diapositivas donde el texto de la decisión va debajo de la gráfica:
+  // acota el alto sin deformarla y la centra.
+  &.baja svg { width: auto !important; max-width: 100%; margin: 0 auto; }
+  &.baja.g360 svg { max-height: 360px; }
+  &.baja.g290 svg { max-height: 290px; }
+  &.baja.g260 svg { max-height: 260px; }
+
   .lectura {
     margin-top: .5em;
     font-size: .62em;
