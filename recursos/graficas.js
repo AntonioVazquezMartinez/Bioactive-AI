@@ -613,11 +613,21 @@ function vocabulario(destino, D) {
   const Ls = [...new Set(V.puntos.map((p) => p.L))].sort((a, b) => a - b);
   const x = (L) => izq + (Math.log2(L) - Math.log2(Ls[0])) /
     (Math.log2(Ls[Ls.length - 1]) - Math.log2(Ls[0])) * (W - izq - der);
-  const lo = 0.60, hi = 0.72;
+  // La escala sale de las bandas, no de un rango escrito a mano. El error estándar
+  // corregido cambió de tamaño una vez —pasó a ser 2.2 veces el ingenuo y no 1.1,
+  // al contar las 15 evaluaciones y no los 5 pliegues— y con el rango fijo las
+  // bandas se salieron del marco sin que nada avisara.
+  const extremos = V.puntos.flatMap((p) => [p.mcc - p.ee, p.mcc + p.ee]);
+  const lo = Math.floor(Math.min(...extremos) * 40) / 40;
+  const hi = Math.ceil(Math.max(...extremos) * 40) / 40;
   const y = (v) => arriba + altoA - ((v - lo) / (hi - lo)) * altoA;
   const colores = { LogReg: PAL.resto, RF: PAL.natural, XGB: PAL.negativo };
 
-  [0.60, 0.64, 0.68, 0.72].forEach((v) => svg.append(
+  const marcas = [];
+  for (let v = Math.ceil(lo * 20) / 20; v <= hi + 1e-9; v += 0.05) {
+    marcas.push(Math.round(v * 100) / 100);
+  }
+  marcas.forEach((v) => svg.append(
     h("line", { x1: izq, y1: y(v), x2: W - der, y2: y(v), stroke: PAL.rejilla, "stroke-width": 1 }),
     h("text", { x: izq - 8, y: y(v) + 4, "text-anchor": "end", fill: PAL.tenue, "font-size": 11 }, v.toFixed(2)),
   ));
@@ -667,8 +677,8 @@ function vocabulario(destino, D) {
   pie.innerHTML =
     `De ${num(V.vocabulario_total)} subestructuras distintas en el entrenamiento, L se queda con las ` +
     `más frecuentes. <strong>Las bandas son ±1 error estándar corregido</strong> por la dependencia ` +
-    `entre pliegues: se tocan en casi todo el rango, así que la medición apenas distingue tamaños desde ` +
-    `~128. Con L = 2048 la cobertura es ${(100 * dosmil.entrenamiento).toFixed(1)}% en entrenamiento y ` +
+    `entre pliegues: se tocan en todo el rango medido, así que esta medición no distingue un tamaño de ` +
+    `otro por el MCC. Con L = 2048 la cobertura es ${(100 * dosmil.entrenamiento).toFixed(1)}% en entrenamiento y ` +
     `${(100 * dosmil.validacion).toFixed(1)}% en validación; esa brecha crece con L, porque el ` +
     `vocabulario se aprende solo del entrenamiento.`;
   destino.append(svg, pie);
