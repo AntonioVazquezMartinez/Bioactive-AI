@@ -677,8 +677,9 @@ function vocabulario(destino, D) {
   pie.innerHTML =
     `De ${num(V.vocabulario_total)} subestructuras distintas en el entrenamiento, L se queda con las ` +
     `más frecuentes. <strong>Las bandas son ±1 error estándar corregido</strong> por la dependencia ` +
-    `entre pliegues: se tocan en todo el rango medido, así que esta medición no distingue un tamaño de ` +
-    `otro por el MCC. Con L = 2048 la cobertura es ${(100 * dosmil.entrenamiento).toFixed(1)}% en entrenamiento y ` +
+    `entre pliegues: se tocan en todo el rango medido, así que por sí solas no distinguen tamaños. La ` +
+    `comparación pareada, que es la que decide, sí separa a L = 64 en Random Forest (t ≈ 3) y a ningún ` +
+    `otro. Con L = 2048 la cobertura es ${(100 * dosmil.entrenamiento).toFixed(1)}% en entrenamiento y ` +
     `${(100 * dosmil.validacion).toFixed(1)}% en validación; esa brecha crece con L, porque el ` +
     `vocabulario se aprende solo del entrenamiento.`;
   destino.append(svg, pie);
