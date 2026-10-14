@@ -128,7 +128,7 @@ El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres dis
 En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente) para la partición, y [1.8](contenido/decisiones.html#d1-8) (abierta) para los 131 esqueletos contradictorios.
 :::
 
-## ¿Sirve filtrar por las categorías A–D? {.smaller}
+## ¿Sirve filtrar por A–D? No, empeora el desbalance {.smaller}
 
 La investigación inicial leía las categorías de B3DB como confiabilidad y recomendaba entrenar solo con A y B. Antes de adoptarlo miramos qué pasa al filtrar. Pruébalo:
 
@@ -182,7 +182,7 @@ En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente). Todo lo que se apre
 :::
 
 ::: {.callout-note}
-Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**. Con un bootstrap de 2,000 remuestras **de esqueletos** —no de filas, porque no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas verdes). Citar «101.9 Å²» exagera lo que la medición sostiene. **Lo que decidimos:** derivarlo solo con entrenamiento y no presentarlo como constante. Supuesto S1.3 de la [Ruta](contenido/decisiones.html).
+Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**: con un bootstrap de **esqueletos** —no de filas, que no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas verdes). **Decisión:** derivarlo solo con entrenamiento y no citarlo como constante. En la Ruta: supuesto S1.3.
 :::
 
 # 3 · Cómo convertimos moléculas en números {background-color="#2a3441"}
@@ -207,7 +207,7 @@ Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmen
 :::
 
 ::: {.callout-note}
-Los *embeddings* congelados de transformers se descartaron: no superan a esta combinación bajo partición por andamio.
+Los *embeddings* congelados de transformers se descartaron: según la literatura, no superan a esta combinación bajo partición por andamio (no lo medimos nosotros).
 :::
 
 ::: {.callout-note}
@@ -251,7 +251,7 @@ De las 217 columnas de descriptores a la matriz con la que se entrena:
 | Paso | Qué pasa | Cuántas quedan |
 |:--|:--|--:|
 | Descriptores utilizables | Se quitan 5 constantes, 8 con valores faltantes y `Ipc` | 203 |
-| Características derivadas | Se suman `tpsa_por_mw` (AUC 0.810) y `lipo_neta` (0.795); `regla_2p` (0.684) no supera a TPSA (0.844) | 206 |
+| Características derivadas | Se suman las tres: `tpsa_por_mw`, `lipo_neta` y `regla_2p`. Ninguna supera al TPSA solo (AUC 0.844), pero ninguna es una copia de él: su correlación máxima con un descriptor base es de 0.755, 0.975 y 0.602 | 206 |
 | Filtro de varianza | Se quita una columna casi constante | 205 |
 | Filtro de correlación | Se retiran 34 columnas casi iguales a otra; `lipo_neta` correlaciona 0.975 con logP y lo reemplaza | **171** |
 
@@ -277,21 +277,21 @@ Cinco opciones que se probaron con los datos del proyecto:
 Son decisiones técnicas del equipo. No necesitan su respuesta, pero quedan a la vista por si ella las objeta.
 :::
 
-## Lo que descartamos sin medirlo {.smaller}
+## Lo que descartamos sin entrenar un modelo para compararlo {.smaller}
 
-Aquí la razón es el razonamiento o la literatura, **no una medición nuestra**, y por eso se separa de la anterior:
+Aquí **no hay un experimento comparativo**: nadie entrenó un modelo con Box–Cox, por ejemplo. La razón es un conteo en nuestros datos, un argumento o la literatura, y la última columna dice cuál:
 
 | Se descartó | Por qué | Con qué se sostiene |
 |:--|:--|:--|
-| Logaritmo y Box–Cox | 193 de los 203 descriptores tienen valores ≤ 0 | Los propios datos |
+| Logaritmo y Box–Cox | 193 de los 203 descriptores tienen valores ≤ 0 | Un conteo en nuestros datos |
 | Chi-cuadrado | Exige valores no negativos y los descriptores son firmados | Razonamiento |
 | Análisis factorial | Buscamos conservar la correspondencia entre columna y propiedad química, no factores latentes | Razonamiento |
 | Discretizar los descriptores | Pierde diferencias dentro de cada intervalo y los cortes no están justificados; el TPSA ya mostró que no son constantes | Razonamiento |
 | *Embeddings* congelados de transformers | No superan a descriptores más fingerprint bajo partición por andamio | Literatura |
-| Dejar que la etapa 1 filtre a la etapa 2 | Solo 1,033 esqueletos tienen medición en las dos; para el resto sería una predicción sin verificar | Los propios datos |
+| Dejar que la etapa 1 filtre a la etapa 2 | Solo 1,033 esqueletos tienen medición en las dos; para el resto sería una predicción sin verificar | Un conteo en nuestros datos |
 
 ::: {.callout-note}
-La diferencia importa: lo medido puede revisarse con nuevos datos; lo razonado, solo con un argumento mejor.
+La diferencia importa: un resultado comparado se revisa repitiendo el experimento con otros datos; un descarte por conteo o por razonamiento, solo con un argumento mejor.
 :::
 
 # 4 · La etapa 2: el archivo de actividad {background-color="#2a3441"}
