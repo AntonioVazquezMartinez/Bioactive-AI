@@ -184,3 +184,65 @@ def test_el_bootstrap_agrupa_por_esqueleto(datos):
     for nombre, opt in datos["tpsa"]["optimos"].items():
         assert opt.get("unidad") == "esqueleto de conectividad", f"{nombre}: unidad equivocada"
         assert 0 < opt["clusteres"] <= datos["tpsa"]["n"][nombre], f"{nombre}: clústeres raros"
+
+
+# ---------------------------------------------------------------------------
+# Los dos experimentos del Avance 2
+#
+# `datos.js` guarda la huella de los archivos de la patrocinadora, pero no la de
+# los CSV de los experimentos: si uno se vuelve a correr, el mazo sigue dibujando
+# la versión anterior sin que nada avise. Esto los recalcula desde el CSV, que es
+# además la única prueba del error estándar corregido —el factor de Nadeau y
+# Bengio ya estuvo mal una vez (contaba los 5 pliegues donde van las 15
+# evaluaciones, 1.118 en lugar de 2.179) y ninguna prueba lo vio—.
+# ---------------------------------------------------------------------------
+
+VOCABULARIO = RAIZ / "notebooks/datos/resultados_L_sortslice.csv"
+ESCALADO = RAIZ / "notebooks/datos/resultados_escalado.csv"
+
+
+def test_el_barrido_de_l_es_el_de_su_csv(datos):
+    if not VOCABULARIO.exists():
+        pytest.skip("no está resultados_L_sortslice.csv")
+    import numpy as np
+    import pandas as pd
+
+    cv = pd.read_csv(VOCABULARIO).query("eval == 'cv'")
+    prop = (1 / cv["fold"].nunique()) / (1 - 1 / cv["fold"].nunique())
+    publicado = {(p["L"], p["modelo"]): p
+                 for p in datos["experimentos"]["vocabulario"]["puntos"]}
+
+    for (L, modelo), g in cv.groupby(["L", "modelo"]):
+        p = publicado.get((int(L), modelo))
+        assert p, f"falta L={L} con {modelo} en datos.js"
+        assert p["mcc"] == pytest.approx(g["MCC"].mean(), abs=5e-5)
+        # Nadeau y Bengio: el ingenuo por sqrt(1 + J · n_prueba/n_entrenamiento),
+        # con J las evaluaciones de la celda, no los pliegues.
+        ingenuo = g["MCC"].std(ddof=1) / np.sqrt(len(g))
+        assert p["ee"] == pytest.approx(ingenuo * np.sqrt(1 + len(g) * prop), abs=5e-5), (
+            f"L={L} con {modelo}: el error estándar publicado no es el corregido"
+        )
+        assert p["ee"] > ingenuo * 2, "el error publicado no está corregido por dependencia"
+
+
+def test_el_escalado_es_el_de_su_csv(datos):
+    if not ESCALADO.exists():
+        pytest.skip("no está resultados_escalado.csv")
+    import pandas as pd
+
+    cv = pd.read_csv(ESCALADO).query("eval == 'cv'")
+    publicado = {(f["transformacion"], f["modelo"]): f
+                 for f in datos["experimentos"]["escalado"]}
+
+    for (trans, modelo), g in cv.groupby(["transformacion", "modelo"]):
+        f = publicado.get((trans, modelo))
+        assert f, f"falta «{trans}» con {modelo} en datos.js"
+        assert f["mcc"] == pytest.approx(g["MCC"].mean(), abs=5e-5)
+        assert f["evaluaciones"] == len(g)
+        assert f["sin_converger"] == int(g["sin_converger"].sum() or 0)
+
+    # el hallazgo del que cuelga la 1.4: sin escalar no converge, con escalar sí
+    sin = publicado[("sin escalar", "LogReg")]
+    assert sin["sin_converger"] == sin["evaluaciones"], (
+        "la gráfica afirma que la regresión logística no converge en ningún pliegue sin escalar"
+    )
