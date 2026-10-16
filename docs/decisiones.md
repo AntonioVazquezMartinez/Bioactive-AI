@@ -112,7 +112,7 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 **Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística. Un falso activo manda al laboratorio a ensayar algo que no funciona (tiempo y reactivos); un falso inactivo descarta un candidato real y nadie se entera. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación no.
 
-**Por qué está preguntada así.** La versión anterior preguntaba «¿qué error pesa más?», que es la pregunta correcta y es casi imposible de contestar en frío. Planteada como una elección entre dos listas concretas se responde de inmediato y da lo mismo: la proporción entre precisión y exhaustividad que el laboratorio tolera, que es el punto de operación. La segunda mitad —qué espera recibir— es la que más arrastra: de ella dependen la forma del entregable, buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2). Es también la única pregunta de esta página que el equipo no puede contestar ni aproximar con una medición.
+**Qué arrastra la segunda mitad.** Lo que espera recibir define la forma del entregable, buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2). Es también la única pregunta de esta página que el equipo no puede contestar ni aproximar con una medición.
 
 #### C.6 · Licencia y uso académico de los resultados {#dc-6 .propuesta}
 
@@ -199,9 +199,7 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 **Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría, de 106 a 66 descriptores muy asimétricos. El PCA al 95% (85 componentes) da un MCC algo mayor con la regresión logística (0.512 contra 0.500) y algo menor con Random Forest (0.558 contra 0.566); el AUROC del Random Forest empeora (0.872 contra 0.916) y el intervalo del bootstrap de la diferencia cruza el cero. La selección dejó 171 de 206 descriptores.
 
-**Qué cambió, y con qué.** La versión anterior de esta entrada decía que Yeo-Johnson quedaba *a la par* de min–max en la regresión logística, con MCC 0.484 contra 0.481. Esa comparación era de **una sola corrida sobre una sola partición de validación**, y su orden cambiaba con el entorno: min–max daba 0.481 en Linux, 0.489 en macOS con Python 3.12 y 0.497 en macOS con Python 3.14, contra un 0.484 estable de Yeo-Johnson. La conclusión dependía de quién ejecutara.
-
-`scripts/experimento_escalado.py` la repite con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad, 3 semillas, la transformación **reajustada dentro de cada pliegue** y la prueba sin tocar (resultados en `notebooks/datos/resultados_escalado.csv`, sección 8.2 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)). MCC medio y AUPRC sobre BBB−:
+**Medición.** `scripts/experimento_escalado.py` compara las transformaciones con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad, 3 semillas, la transformación **reajustada dentro de cada pliegue** y la prueba sin tocar (resultados en `notebooks/datos/resultados_escalado.csv`, sección 8.2 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)). MCC medio y AUPRC sobre BBB−:
 
 | Transformación | LogReg, MCC | LogReg, AUPRC | RF, MCC | RF, AUPRC |
 |:--|--:|--:|--:|--:|
