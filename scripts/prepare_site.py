@@ -92,7 +92,8 @@ DOCUMENTOS = [
 # bloque de portada es typst crudo y no tiene equivalente en el sitio. Por eso
 # se publica el PDF tal cual y la página índice enlaza a él.
 PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
-        "docs/reportes/avance-1/Avance1.0.pdf"]
+        "docs/reportes/avance-1/Avance1.0.pdf",
+        "docs/reportes/avance-2/Avance2.0.pdf"]
 
 
 def claves_bib() -> set[str]:
