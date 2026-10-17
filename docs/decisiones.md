@@ -392,13 +392,27 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 
 **Estado:** propuesta · revisada el 7 de octubre · necesita su definición
 
-> **Pregunta:** ¿Dónde se corta «activo», en 10 µM o en 1 µM? **Es una sola decisión, no dos:** su propia regla de censura ata el corte de los inactivos al de los activos, así que mover uno mueve al otro y cambia el balance de clases. La tabla de abajo muestra qué cuesta cada opción.
+> **Pregunta:** ¿«Activo» se define con un corte de potencia —10 µM como principal y 1 µM como sensibilidad—, o prefiere que el modelo prediga la potencia como número y que el corte se derive después de los resultados? **Es una sola decisión, no dos:** su propia regla de censura ata el corte de los inactivos al de los activos, así que mover uno mueve al otro y cambia el balance de clases. La tabla de abajo muestra qué cuesta cada opción.
 >
 > *Secundarias:* ¿son confiables los inactivos declarados por texto? Si un mismo esqueleto y gen tienen observaciones activas e inactivas, ¿qué ensayos son comparables y qué evidencia tiene prioridad? ¿«Activo» incluye cualquier dirección del efecto, inhibir o activar?
 
-**Qué pasó.** Primero se planteó «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin decir cómo etiquetar lo que no tiene pChEMBL. El EDA mostró que el pChEMBL solo existe para ChEMBL: etiquetar solo por él descarta 15,293 registros de NPASS y CMAUP (los naturales) y 54,498 mediciones censuradas (`> X nM`), de las cuales 29,730 traen además un texto que las declara inactivas. **Los dos últimos grupos no se suman:** los 29,730 están dentro de los 54,498, así que para esas filas la segunda y la tercera vía son la misma fila vista de dos maneras.
+**Qué pasó.** Primero se planteó «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin decir cómo etiquetar lo que no tiene pChEMBL. El EDA mostró que el pChEMBL solo existe para ChEMBL: etiquetar solo por él descarta 15,293 registros de NPASS y CMAUP (bases de naturales; ChEMBL también contiene naturales, ver la [2.8](#d2-8)) y 54,498 mediciones censuradas (`> X nM`), de las cuales 29,730 traen además un texto que las declara inactivas. **Los dos últimos grupos no se suman:** los 29,730 están dentro de los 54,498, así que para esas filas la segunda y la tercera vía son la misma fila vista de dos maneras.
 
-**Se propone.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 naturales —los que traen relación `=`, contra 2,484 censurados o aproximados—; e **[inactivo declarado](glosario.md)** para los textos y para las **[mediciones censuradas](glosario.md)** cuyo límite llegue al umbral. Las cifras de esta entrada se recalculan con `scripts/cifras_fase2.py`.
+**Se propone.** La variable objetivo es la etiqueta de un **par esqueleto de conectividad × gen**, construida con las columnas de la sección 5 del diccionario (`activity_relation_used`, `activity_value_used`, `activity_units_used`).
+
+*Cada medición.* El valor se pasa a µM (nM × 0.001); las unidades de masa por volumen (663 filas) se excluyen porque piden el peso molecular. Con el corte T (10 µM, o 1 µM como sensibilidad) se clasifica según su relación:
+
+| Relación | Condición | Resultado |
+|:--|:--|:--|
+| `=` o `~` | valor ≤ T | activa |
+| `<` o `<=` | valor ≤ T | activa |
+| `=` o `~` | valor > T | inactiva |
+| `>` o `>=` | límite ≥ T | inactiva (incluye los «Not active», que son `> 10 µM`) |
+| cualquier otra | | sin decisión: no cuenta |
+
+*Cada par.* Activo si alguna de sus mediciones es activa; inactivo si ninguna es activa y alguna es inactiva; sin etiqueta si todas quedan sin decisión. Los pares discordantes quedan como activos y se reporta cuántos son (abajo). Donde hay pChEMBL, 10 µM equivale a ≥ 5 y 1 µM a ≥ 6.
+
+*Fuentes.* La vía de **concentración exacta para NPASS y CMAUP**, que recuperaba 12,809 de los 15,293 registros de esas bases, queda en suspenso: en su respuesta posterior a la reunión del 15 de octubre la patrocinadora descartó inferir activo o inactivo entre bases, porque el corte no significa lo mismo con distinto tejido, línea celular o ensayo, y sugirió revisar los registros por tejido y tipo de experimento. Mientras tanto se etiqueta ChEMBL con las tres vías (pChEMBL, concentración para lo que no lo trae, inactivo declarado) y el desempeño se reporta por fuente. Predecir la potencia como número es la alternativa sin corte.
 
 **Cuidado con el «10 µM», que aparece como dos cosas distintas.** Una es el **umbral de «activo»**: 10 µM equivale a pChEMBL ≥ 5 y 1 µM a pChEMBL ≥ 6. La otra es el **límite de un censurado**, el número que viene después del `>` en cada fila. La regla del diccionario de la patrocinadora (sección 7) las ata: un `>` solo sirve como negativo si su límite es igual o mayor que el umbral de «activo». Por eso no se pueden contestar por separado.
 
