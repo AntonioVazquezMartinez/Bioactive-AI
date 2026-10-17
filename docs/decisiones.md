@@ -400,7 +400,7 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 
 **Se propone.** La variable objetivo es la etiqueta de un **par esqueleto de conectividad × gen**, construida con las columnas de la sección 5 del diccionario (`activity_relation_used`, `activity_value_used`, `activity_units_used`).
 
-*Cada medición.* El valor se pasa a µM (nM × 0.001); las unidades de masa por volumen (663 filas) se excluyen porque piden el peso molecular. Con el corte T (10 µM, o 1 µM como sensibilidad) se clasifica según su relación:
+*Cada medición.* El valor se pasa a µM (nM × 0.001); las 662 filas en masa por volumen se excluyen porque piden el peso molecular, y las 68 en unidades molares escritas de otra forma (`10^3nM`, `M`, `um`…) se convierten. Con el corte T (10 µM, o 1 µM como sensibilidad) se clasifica según su relación:
 
 | Relación | Condición | Resultado |
 |:--|:--|:--|
@@ -410,7 +410,7 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 | `>` o `>=` | límite ≥ T | inactiva (incluye los «Not active», que son `> 10 µM`) |
 | cualquier otra | | sin decisión: no cuenta |
 
-*Cada par.* Activo si alguna de sus mediciones es activa; inactivo si ninguna es activa y alguna es inactiva; sin etiqueta si todas quedan sin decisión. Los pares discordantes quedan como activos y se reporta cuántos son (abajo). Donde hay pChEMBL, 10 µM equivale a ≥ 5 y 1 µM a ≥ 6.
+*Cada par.* Activo si alguna de sus mediciones es activa; inactivo si ninguna es activa y alguna es inactiva; sin etiqueta si todas quedan sin decisión. Los pares discordantes quedan como activos y se reporta cuántos son (abajo). La llave es el esqueleto de conectividad (`key14`) × gen, no `source_compound_id`: ChEMBL y NPASS/CMAUP no comparten ningún identificador, así que con él un mismo compuesto medido en dos fuentes entraría como dos pares y su contradicción sería invisible. Donde hay pChEMBL, 10 µM equivale a ≥ 5 y 1 µM a ≥ 6.
 
 *Fuentes.* La vía de **concentración exacta para NPASS y CMAUP**, que recuperaba 12,809 de los 15,293 registros de esas bases, queda en suspenso: en su respuesta posterior a la reunión del 15 de octubre la patrocinadora descartó inferir activo o inactivo entre bases, porque el corte no significa lo mismo con distinto tejido, línea celular o ensayo, y sugirió revisar los registros por tejido y tipo de experimento. Mientras tanto se etiqueta ChEMBL con las tres vías (pChEMBL, concentración para lo que no lo trae, inactivo declarado) y el desempeño se reporta por fuente. Predecir la potencia como número es la alternativa sin corte.
 
