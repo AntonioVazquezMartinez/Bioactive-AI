@@ -141,15 +141,19 @@ La fuente, el tipo de ensayo, el tejido y el artículo **no entran como caracter
 
 ## 11. Qué queda por confirmar
 
-1. **Con la patrocinadora.**
-   - **Etiquetar las tres fuentes con el mismo corte.** En su respuesta posterior a la reunión del 15 de octubre descartó «hacer la inferencia, al menos no de forma directa». Este documento lo lee como respuesta a lo que se le preguntó en la reunión (construir el valor en las otras bases para partir en activo e inactivo), y no como rechazo de las columnas ya informadas por la fuente, y propone etiquetar las tres. Es una decisión del equipo, no una respuesta suya, y se mantiene la sensibilidad «solo ChEMBL». Pregunta: *las columnas de la sección 5 dan una concentración y una relación en las tres bases; ¿descartó usarlas con el mismo corte, o solo inferir lo que no viene informado, como las 2,001 relaciones de NPASS?*
-   - El **método del 10% reservado**, que Jorge va a compartir.
-   - El **cruce con COCONUT** del archivo de actividad, para calcular el origen natural en toda la tabla.
-   - Qué se entrega y qué error pesa más ([C.5](decisiones.md#dc-5)).
-2. **Con Jorge.** Anotar la ruta `cns_target` con tipo de ensayo, formato, tejido y línea celular.
+Nada de esta lista bloquea el modelado: las cinco entradas que esperaban a la patrocinadora quedaron vigentes por decisión del equipo (el 17 de octubre), cada una con lo que la haría cambiar. Lo que sigue es lo que **se le informa** y lo que **falta construir**.
+
+1. **Con la patrocinadora: informar, no esperar.**
+   - **Que las tres fuentes se etiquetan con el mismo corte** ([2.3](decisiones.md#d2-3)). En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa». Aquí se lee como respuesta a lo que se le preguntó en la reunión (construir el valor en las otras bases para partir en activo e inactivo), y no como rechazo de las columnas que cada fuente ya informa. Es una lectura del equipo, no una respuesta suya, así que se le muestra con filas reales y con la pregunta literal: *las columnas de la sección 5 dan una concentración y una relación en las tres bases; ¿descartó usarlas con el mismo corte, o solo inferir lo que no viene informado, como las 2,001 relaciones de NPASS?* Si dice que descartó usarlas, el análisis «solo ChEMBL» pasa a ser el principal; no hay que reconstruir nada, porque ya se reporta al lado.
+   - **Su petición de revisar la distribución por tejido y tipo de experimento.** La respuesta es un hallazgo: esas columnas están vacías en las filas que se modelan (la ruta `cns_target`, 108,640 filas), así que no se puede revisar con este archivo.
+   - **Que estrés oxidativo es 47.7% NPASS y CMAUP.** Si además se descartara el etiquetado de esas dos fuentes, la categoría que ella pidió conservar pasaría de 2,456 filas a 1,285. Sus dos decisiones se restan entre sí.
+   - **El método con que se separó el 10%**, que Jorge va a compartir, y el experimento que Artemio ofreció: comparar el desempeño contra ese 10% y contra la partición por andamio, que debería salir inflado.
+   - Lo que **ya no se le pregunta**: el cruce con COCONUT del archivo de actividad lo calcula el equipo ([2.8](decisiones.md#d2-8)), y el punto de operación del entregable no se fija: se entrega la curva ([C.5](decisiones.md#dc-5)).
+2. **Con Jorge.** Anotar la ruta `cns_target` con tipo de ensayo, formato, tejido y línea celular, o el volcado de ChEMBL 37 como plan B (los dos caminos están en la sección 9). No es necesario para entrenar; sirve para comprobar si el tejido y el tipo de ensayo explican los conflictos.
 3. **Del lado del equipo.**
-   - Artemio arma `scripts/cifras_etiqueta_fase2.py` con las cifras de este documento. Hasta entonces salen de scripts temporales; dos conteos de una versión anterior (NPASS 4,153 contra 4,132, ChEMBL 72,650 contra 72,538) difirieron en 0.15% y se cierran con ese script.
-   - La 2.3 del registro necesita recalcular por par el párrafo «un solo experimento pesa demasiado» (61% por registro; 14.1% por par con T = 10 µM y 7.9% con T = 1 µM) y reflejar esta definición: tres fuentes, 10 µM, sin inactivos por texto y conflictos fuera.
+   - **El control de atajo** ([#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32)) tiene que correrse antes de citar cualquier cifra por fuente: es lo que sostiene la decisión de etiquetar las tres.
+   - **La sección 8** de este documento describe la potencia como un ejercicio sobre mediciones exactas con la mediana por par. La [2.9](decisiones.md#d2-9) propone en cambio un solo modelo de regresión con los censurados como observaciones censuradas, y la [2.10](decisiones.md#d2-10) guarda el objetivo como intervalo. Hay que alinearlas cuando se decida la 2.9 (Avance 4).
+   - **Las cifras** de este documento salen de `scripts/cifras_etiqueta_fase2.py`, que las reproduce (70,384 pares). La diferencia con una versión anterior eran las filas en µg/mL, que no pueden etiquetarse sin el peso molecular.
 
 ## 12. Cómo se calcularon las cifras
 
