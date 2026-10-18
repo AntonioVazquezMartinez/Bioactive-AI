@@ -36,16 +36,16 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 
 | # | Decisión | Estado |
 |:--|:--|:--|
-| [2.1](#d2-1) | Excluir las dianas sin datos | Propuesta · **necesita su definición** |
+| [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
 | [2.2](#d2-2) | Forma del modelo: por diana, por categoría o multitarea | Abierta · **necesita su definición** |
 | [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Propuesta · **necesita su definición** |
 | [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
-| [2.6](#d2-6) | La partición de prueba que pudo reservarse | Abierta · **necesita su definición** |
+| [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
 | [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
 | [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta · **necesita su definición** |
 
-Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (ninguna todavía). La marca **«necesita su definición»** no es un estado: señala las siete entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
+Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió; las primeras son la 2.1 y la 2.6, del 15 de octubre de 2026). La marca **«necesita su definición»** no es un estado: señala las entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
 
 ---
 
@@ -363,22 +363,30 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 
 ### Propuestas
 
-#### 2.1 · Excluir las dianas sin datos {#d2-1 .propuesta .definir}
+#### 2.1 · El alcance: cinco categorías de enfermedad {#d2-1 .ratificada .revisada}
 
-**Estado:** propuesta · necesita su definición · se resuelve antes de la [2.2](#d2-2)
+**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes preguntaba por cuatro dianas sueltas
 
-> **Pregunta:** ¿Se confirma excluir `GABRG2`, `AIF1`, `GABRB2` y `TARDBP`? ¿Falta o sobra alguna otra diana?
+**Qué se decidió.** El alcance de la fase 2 son **cinco categorías**: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás se remueven. La patrocinadora lo cerró en la reunión del 15 de octubre: «sí se pueden resumir a esas… y si los demás adelante los pueden remover» ([acta](acta-patrocinadora.md#e3)).
 
-**Qué pasó.** El archivo de dianas tiene 39 filas: 37 dianas por gen y 2 receptores completos (NMDA y GABA-A, sin subunidad). Las etiquetas se curaron a mano desde la farmacología conocida; la categoría principal es la enfermedad con más respaldo, fármaco aprobado primero y luego evidencia genética. Cuatro no tienen datos para un modelo:
+| Categoría | Registros | |
+|:--|--:|:--|
+| Alzheimer | 52,676 | queda |
+| Parkinson | 32,372 | queda |
+| Neuroinflamación | 12,331 | queda |
+| Depresión | 10,888 | queda |
+| **Estrés oxidativo** | **2,456** | **queda, por decisión suya** |
+| Epilepsia · Neurodegeneración · Deterioro cognitivo · Ansiedad · Huntington · ELA | 3,826 en total | fuera |
 
-| Gen | Diana | Filas |
-|:--|:--|--:|
-| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** |
-| `AIF1` | Iba1 (el diccionario lo marca «marcador», sin dirección de efecto) | **0** |
-| `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
-| `TARDBP` | TDP-43 | 8 |
+Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: el recorte cuesta 3,826 filas.
 
-**Se propone.** Excluir las cuatro. Primero se fija la lista y después la forma del modelo.
+**El criterio, que es lo que ella pidió dos veces.** Preguntó «¿cuál es el criterio para eliminar el resto, solo porque tienen pocas entradas?» y «¿cómo debería ser esa distribución para que no haga ruido?», con una cota propia: menos del 10% no le parece confiable. La regla que queda es **≥ 50 registros por categoría**, ofrecida como conservadora. No es una cota derivada: por debajo de unas decenas de pares un modelo propio no se sostiene, y ELA tiene 53 registros y Huntington 153. Se escribe como regla y no como lista para que el día que lleguen datos nuevos no haya que volver a preguntar.
+
+**Estrés oxidativo entra por decisión suya, y su razonamiento es el criterio biológico que el equipo no podía deducir:** la escala va de lo general a lo específico, «es solo un dolor de cabeza o te está tratando Alzheimer», y el estrés oxidativo es el extremo general —«toda enfermedad, desde la gripa, desde hacer ejercicio, el acné»—. Con 2,456 registros es la categoría más chica que queda, y ella misma la dejó revisable: si el análisis la muestra anómala, se reconsidera.
+
+**Las cuatro dianas sin datos quedan resueltas sin preguntarle.** Era la pregunta anterior de esta entrada, y el alcance la contesta: `GABRB2` y `GABRG2` son de Epilepsia y `TARDBP` de ELA, categorías que salen. Solo `AIF1` está en una categoría que queda, y se excluye por sí sola: tiene 0 filas y la etiqueta de la propia patrocinadora dice «marcador de microglía activada; **no es diana farmacológica**».
+
+**Lo que hay que mostrarle, porque sus dos decisiones se restan entre sí.** Estrés oxidativo es **47.7% NPASS y CMAUP**. Si además se descartara el etiquetado de esas dos fuentes (su correo del 16, [2.3](#d2-3)), la categoría que defendió pasaría de 2,456 filas a 1,285. No lo vio, y conviene decírselo antes de que decida otra cosa sobre la 2.3.
 
 #### 2.2 · Forma del modelo: por diana, por categoría o multitarea {#d2-2 .abierta .definir}
 
@@ -446,13 +454,19 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
 
-#### 2.6 · La partición de prueba que pudo reservarse {#d2-6 .abierta .definir}
+#### 2.6 · La partición de prueba que sí se había reservado {#d2-6 .ratificada .revisada}
 
-**Estado:** abierta · necesita su definición
+**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes era una pregunta abierta
 
-> **Pregunta:** ¿El archivo de actividad ya trae una partición de prueba reservada y cómo se hizo?
+**Qué se decidió.** Sí había una partición reservada, **se hizo al azar y sin criterio**, y la patrocinadora entrega el archivo completo para que el equipo la rehaga. «Partamos de la base de datos completa que se las podemos pasar… ustedes que son los expertos tengan la base completa y hagan bien esas separaciones» ([acta](acta-patrocinadora.md#p1)).
 
-**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`. El diccionario describe 225,513 filas y el archivo tiene 202,647, el 89.9%: se reservó cerca de un 10%. Si esa partición fue aleatoria, hay compuestos casi idénticos a ambos lados y no es comparable con una por andamio. Si existe, no se construye otra.
+**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647, el 89.9%. La sospecha era correcta. Al explicarle por qué el azar no sirve —si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada— lo aceptó sin reservas: «lo hicimos muy a la ligera… si hay una forma de hacerlo con mejores criterios, adelante».
+
+**Su condición, que repitió cuatro veces:** que se reserve una prueba que el modelo nunca vea. Su razón no es metodológica sino práctica: no espera que aparezca otra base de datos con la que validar después. Eso se respeta en la [2.7](#d2-7), que ya particiona por andamio.
+
+**La limitación que hay que declarar en el reporte.** Un 10% extraído al azar del mismo archivo comparte andamios, ensayos y artículos con el 90%: es una partición interna con otro nombre. Prueba filas nuevas, no química nueva ni protocolos nuevos. Si el reporte final la llama «validación externa», sobrevende lo que compra. Con el archivo completo en mano el punto es casi histórico, pero queda escrito porque ella descansa mucho en ese conjunto.
+
+**Pendiente de Jorge Uribe:** el método con que separó el 10%, y verificar con el equipo si introduce sesgo (ofrecido en el correo del 16 de octubre).
 
 #### 2.7 · Partición de la fase 2 {#d2-7 .propuesta}
 

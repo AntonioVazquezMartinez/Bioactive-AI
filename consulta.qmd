@@ -105,13 +105,11 @@ distintas: **declarados** es lo que dice su propio archivo de dianas, sobre el c
 | `GABRB2` | Receptor GABA-A, subunidad β2 | **1** | 1 |
 | `TARDBP` | TDP-43 | **8** | 7 |
 
-La propuesta del equipo es excluir esas cuatro. Pero la lista es suya, y **hay dos casos
-fronterizos que convendría que mirara**: `TNF` con 25 registros declarados (22 en el nuestro) y
-`SOD1` con 50 (46). No están tan lejos de `TARDBP`. De ahí para arriba las demás llegan hasta
-18,215 declarados.
-
-::: {.bio-pregunta data-id="e2" data-titulo="Dianas sin datos (entrada 2.1)" data-opciones="Sí, excluir las cuatro|Excluir solo algunas|Falta o sobra alguna otra diana"}
-:::
+**Resuelta en la reunión del 15 de octubre de 2026, ya no hace falta contestarla.** Al fijar el
+alcance en cinco categorías, tres de las cuatro quedaron fuera por su categoría: `GABRB2` y
+`GABRG2` son de Epilepsia y `TARDBP` de ELA. La cuarta, `AIF1`, está en Neuroinflamación, que sí
+queda, pero se excluye por sí sola: tiene 0 filas y su propia etiqueta dice «marcador de microglía
+activada; no es diana farmacológica». Queda registrada en la [2.1](contenido/decisiones.html#d2-1).
 
 ## 6 · ¿Un modelo por diana, por categoría o multitarea?
 
@@ -121,8 +119,10 @@ Alzheimer 52,676 · Parkinson 32,372 · Neuroinflamación 12,331 · Depresión 1
 2,456 · Epilepsia 1,862 · Neurodegeneración 1,110 · Deterioro cognitivo 488 · Ansiedad 160 ·
 Huntington 153 · **ELA 53**.
 
-Con 53 registros, ELA no sostiene un modelo propio. Un modelo multitarea comparte representación
-entre dianas y es la única forma de incluir las pequeñas, a costa de mezclar señales.
+**El alcance ya quedó fijo** en Alzheimer, Parkinson, neuroinflamación, depresión y estrés
+oxidativo ([2.1](contenido/decisiones.html#d2-1)), así que lo que falta no es qué enfermedades sino
+**la forma del modelo**. Un modelo multitarea comparte representación entre dianas, a costa de
+mezclar señales; uno por diana solo se sostiene donde hay volumen.
 
 **Y antes que la forma: ¿qué dianas son prioritarias para su pregunta de investigación?** Eso no
 sale de los datos, y cambia qué conviene construir.
