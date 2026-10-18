@@ -305,9 +305,11 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 
 **Estado:** abierta
 
-> **Pregunta:** 131 esqueletos de conectividad reúnen estereoisómeros con clases BBB distintas. ¿Es una diferencia real de permeabilidad entre formas estereoquímicas, o son etiquetas que vienen de ensayos que no deberían compararse? Si es lo primero, ¿vale la pena conservar la estereoquímica en la representación?
+> **Pregunta:** 131 esqueletos de conectividad reúnen estereoisómeros con clases BBB distintas. ¿Es una diferencia real de permeabilidad entre formas estereoquímicas, o son etiquetas que vienen de ensayos que no deberían compararse? En 42 de los 131 hay una tercera posibilidad y conviene descartarla primero: el nombre de la fila también se usa en el archivo para otra estructura, así que puede llevar la etiqueta de otro compuesto. Si es lo primero, ¿vale la pena conservar la estereoquímica en la representación?
 
 **Qué pasó.** Las 7,805 filas con clase son 4,018 esqueletos de conectividad, y en 131 de ellos (429 filas, el 5.5% del conjunto) dos estereoisómeros del mismo compuesto llevan etiquetas opuestas. La partición los mantiene juntos para que no haya fuga ([1.2](#d1-2)), así que no contaminan la evaluación, pero sí acotan el techo: un modelo que trabaja sobre descriptores sin estereoquímica no puede separarlos ni en principio, y cada par discordante aporta un error inevitable.
+
+**No todos son el mismo caso, y el corte no es por cuántos nombres lleva cada uno.** De los 131, **26 llevan un solo nombre** y 105 llevan varios, lo que por sí solo es esperable —el etambutol y el meso-etambutol son nombres distintos de la misma conectividad—. Lo que separa los casos es otra cosa: **42 de los 131 usan un nombre que el archivo asigna además a otra estructura**, y se reparten en los dos grupos —**34 de los 105** y **8 de los 26**—, así que los 26 «limpios» no lo son todos (S1.14). El ejemplo del propio esqueleto del etambutol: una de sus cuatro filas se llama «ritonavir» y el ritonavir real tiene dos anillos de tiazol y 721 de peso molecular, contra los 204 de esa fila. Para esos 42 lo que está en duda es la identidad antes que la etiqueta, y es la patrocinadora quien puede decir de dónde salió el nombre ([los datos del proyecto](datos-contenido.md)).
 
 **Cuánto pesa, y en qué métrica.** En **exactitud** ya está medido y no aprieta: son **151 errores inevitables sobre 7,805**, un techo del **98.1%** que ningún modelo realista alcanza, así que no explica nada de lo que falte ([los datos del proyecto](datos-contenido.md)). En **MCC y AUPRC sobre la clase minoritaria**, que son las métricas del proyecto por la [C.1](#dc-1), no está medido, y ahí sí podría apretar: los 429 compuestos no se reparten por igual entre las dos clases. Eso es lo que falta del [issue #28](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/28), cuyo enunciado pide calcular un techo que en exactitud ya existe.
 
@@ -330,6 +332,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 | S1.11 | Las tres características derivadas aportan | Acotado | AUC individual: `tpsa_por_mw` 0.810, `lipo_neta` 0.795, `regla_2p` 0.684 (TPSA: 0.844). `lipo_neta` correlaciona 0.975 con `MolLogP` y lo desplaza | Reevaluar con validación cruzada |
 | S1.12 | Todo lo que aprende de los datos se ajusta solo con entrenamiento | Comprobado | Media tras escalar: 0.0000 en entrenamiento, 0.0048 en evaluación | — |
 | S1.13 | L = 2048 es un tamaño razonable de vocabulario | Acotado | Medido: el MCC no distingue tamaños desde ~128 y en AUPRC 2048 es el menor L dentro del ruido en dos de tres modelos ([1.7](#d1-7)); falta repetirlo con modelos afinados | Elegir L por modelo en el Avance 3 |
+| S1.14 | El nombre del compuesto lo identifica | Desmentido | 1,109 filas (14.2%) no traen nombre; de las que sí, 347 de los 5,091 nombres apuntan a más de una estructura (945 filas) y 1,075 esqueletos cargan más de un nombre; «ritonavir» aparece con cuatro estructuras ([1.8](#d1-8), `scripts/cifras_nombres_fase1.py`) | Cruzar siempre por estructura, nunca por nombre; afecta a la S1.8 |
 
 ---
 

@@ -74,6 +74,9 @@ DOCUMENTOS = [
     ("docs/datos-contenido.md",
      "datos-contenido.qmd",   # .qmd: lleva un diagrama de mermaid, que Quarto trata como código
      "Qué contiene cada archivo, qué defectos tiene y de dónde sale cada número"),
+    ("docs/diccionario-matriz.md",
+     "diccionario-matriz.md",
+     "Qué columna es cada cosa en la matriz que entra al modelo"),
     ("docs/fundamentos-desde-cero.md",
      "fundamentos-desde-cero.md",
      "La teoría de química, biología e inteligencia artificial, sin suponer nada"),
