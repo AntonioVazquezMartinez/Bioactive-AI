@@ -28,7 +28,7 @@ De los 203 utilizables:
 | Topológicos | 19 | índices de conectividad y forma: `Chi`, `Kappa`, `HallKier`, `BertzCT`, `BalabanJ` | |
 | Fisicoquímicos globales | 16 | TPSA, peso molecular, `MolLogP`, `qed`, `LabuteASA` | |
 
-**Dos tercios de la matriz son conteos de subestructuras**, no propiedades físicas. Eso importa al explicar una predicción: un `fr_*` alto significa «esta molécula tiene tres de estos grupos», no «esta propiedad vale tanto».
+**Las dos primeras familias son conteos de subestructuras y no propiedades físicas: 137 de los 203 utilizables, dos tercios, y 126 de las 171 que llegan a la matriz de trabajo, el 74%.** Eso importa al explicar una predicción: un `fr_*` alto significa «esta molécula tiene tres de estos grupos», no «esta propiedad vale tanto».
 
 Rangos de los que más se citan, sobre las 7,805 filas etiquetadas:
 
@@ -53,12 +53,12 @@ No son reglas validadas: son candidatas evaluadas en el notebook con su AUC y su
 
 ## Dos ausencias que sorprenden
 
-De los cinco descriptores que `CLAUDE.md` nombra como los de mayor poder discriminante, **dos no llegan a las 171**:
+De los cinco descriptores que el proyecto usa para verificar cualquier afirmación estructural —TPSA, donadores y aceptores de hidrógeno, `MolLogP` y el peso molecular—, **dos no llegan a las 171**:
 
 - **`MolLogP`** correlaciona **0.975** con `lipo_neta`, la derivada que lo contiene. El filtro conserva la derivada, que tiene mayor F de ANOVA, y descarta el original.
 - **`MolWt`** correlaciona **0.999** con `HeavyAtomMolWt`: son la misma variable medida dos veces.
 
-Sobreviven TPSA, donadores y aceptores de hidrógeno, que son los que el proyecto usa para verificar cualquier afirmación estructural.
+Sobreviven TPSA, donadores y aceptores de hidrógeno, que son los tres que `CLAUDE.md` nombra como dominantes empíricamente. Que `MolLogP` no llegue ya estaba registrado en parte: la [S1.11](decisiones.md#supuestos-fase-1) mide que `lipo_neta` lo desplaza.
 
 ## Columnas casi vacías, y por qué siguen ahí
 
