@@ -106,11 +106,11 @@ La fase de [análisis exploratorio de datos (EDA)](../../glosario.md) se extende
 
 En ese periodo falta completar la lectura de la diversidad estructural —incluida la concentración de clases en andamios grandes—, precisar el alcance de la estratificación por `group` ante el posible riesgo de fuga de información[^fuga] y aclarar la pertinencia del conjunto externo. También se incorpora la cuestión abierta de los 131 esqueletos de conectividad (429 filas) con estereoisómeros[^estereoisomero] de etiquetas opuestas: los datos muestran la discordancia, pero no permiten distinguir por sí solos una diferencia estereoquímica real de una inconsistencia entre ensayos. Esta pregunta requiere criterio farmacológico y se mantiene abierta en la decisión 1.8 del [registro](../../decisiones.md#d1-8).
 
-La ingeniería de características se documenta con lo que ya está medido en el [notebook 02](../../../notebooks/02_Feature_Eng.ipynb). Los valores derivados del EDA —por ejemplo, umbrales exploratorios— se identifican como dependientes de los datos y no como reglas biológicas universales. Las consultas con la patrocinadora siguen abiertas en el [registro de decisiones](../../decisiones.md), en particular la prioridad entre interpretabilidad y PCA (1.5), la evaluación por origen natural (1.6), el tamaño del vocabulario (1.7) y la lectura farmacológica de etiquetas discordantes entre estereoisómeros (1.8).
+La ingeniería de características se documenta con lo que ya está medido en el [notebook 02](../../../notebooks/02_Feature_Eng.ipynb). Los valores derivados del EDA —por ejemplo, umbrales exploratorios— se identifican como dependientes de los datos y no como reglas biológicas universales. Cuáles de las decisiones dependen del criterio de la patrocinadora está marcado en el [registro](../../decisiones.md), que es la lista única.
 
 Este documento acompaña el notebook ejecutado de principio a fin. Las cifras provienen de sus celdas y de la actualización metodológica documentada en el registro; no se generaron datos o experimentos nuevos para escribir el reporte.
 
-Como las decisiones 1.5–1.7 todavía requieren revisión, esas consultas deben cerrarse antes de dar por terminado el reporte; este documento se conserva como borrador de trabajo hasta entonces. La rúbrica solicita la liga al notebook y que se ejecute secuencialmente, por lo que el PDF es complementario y no sustituye el entregable formal.
+Ninguna entrada del registro detiene este reporte: las que siguen como propuestas se trabajan sobre su versión vigente y se señalan como no ratificadas donde aparecen. La rúbrica solicita la liga al notebook y que se ejecute secuencialmente, por lo que el PDF es complementario y no sustituye el entregable formal.
 
 # Datos de entrada y preparación
 
