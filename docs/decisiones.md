@@ -475,13 +475,13 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 |:--|--:|
 | Las 14 con 1,000 pares o más, sobre los 70,384 pares | **94.3%** |
 | Las 13 con 1,000 o más, sobre los 54,369 que quedan al reservar la prueba | 93.5% |
-| **Las 11 que además tienen clase minoritaria en todos los pliegues** | **86.2%** |
+| **Las 11 que además tienen clase minoritaria en todos los pliegues** | **85.6%** (46,534 de 54,369) |
 | Las 21 con 200 o más | 99.3% |
 | Las 5 restantes | 466 pares en total |
 
 Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midió contra una sola diana.** Solo 8,934 compuestos (15.0%) tienen dos dianas o más, y aportan el 28.1% de los pares.
 
-**Se propone.** **Un modelo por diana para las que pasan el criterio** —once, el 86.2% de los pares ajustables— y **un multitarea** sobre las 26, que deja de ser solo un brazo de comparación: es donde viven `LRRK2` y `GRIN2B`, que tienen volumen pero no clase minoritaria. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
+**Se propone.** **Un modelo por diana para las que pasan el criterio** —once, el 85.6% de los pares ajustables— y **un multitarea** sobre las 26, que deja de ser solo un brazo de comparación: es donde viven `LRRK2` y `GRIN2B`, que tienen volumen pero no clase minoritaria. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
 
 **Por categoría de enfermedad, no.** La categoría agrupa genes que no comparten mecanismo: en Alzheimer conviven `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear). Un modelo sobre esa mezcla aprende el promedio de tres farmacologías. Y como cada gen pertenece a exactamente una categoría, «por categoría» es solo una agrupación más gruesa de los mismos genes, sin nada que la haga preferible. **La categoría se usa para reportar**, que es donde sí aporta: permite decir «el modelo acierta mejor en Alzheimer que en neuroinflamación», que es la lectura que importa para priorizar candidatos.
 
