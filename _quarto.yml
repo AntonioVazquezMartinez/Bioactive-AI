@@ -72,6 +72,8 @@ website:
             text: Procedencia y licencias
           - href: contenido/datos-contenido.qmd
             text: Contenido, defectos y linaje
+          - href: contenido/diccionario-matriz.md
+            text: Diccionario de la matriz
           - text: "---"
           - text: "Investigación de fuentes"
           - href: contenido/referencias/02-datasets-bbb.md
@@ -108,6 +110,8 @@ website:
             text: Análisis · EDA de actividad en SNC
           - text: "---"
           - text: "Avance 2 · Características"
+          - href: contenido/reportes/avance-2/Avance2.0.pdf
+            text: Reporte (PDF)
           - href: contenido/notebooks/02_Feature_Eng.ipynb
             text: Análisis · Ingeniería de características
           - href: contenido/notebooks/02b_Feature_Eng_actividad.ipynb

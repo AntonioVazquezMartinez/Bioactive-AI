@@ -26,11 +26,13 @@ Sus tres resultados —el tamaño efectivo es menor que el número de filas, las
 
 ## Avance 2 · Ingeniería de características
 
-**Vence el 11 de octubre de 2026 · reporte pendiente ([issue 24](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/24))**
+**Entregable formal:** notebook ejecutado de principio a fin, con fecha de entrega del 11 de octubre. El PDF es un reporte complementario y permanece en borrador mientras se integran los comentarios del EDA y se consultan las decisiones pendientes ([issue #24](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/24)).
 
 **Análisis:** [notebook de características](../../notebooks/02_Feature_Eng.ipynb): descriptores, fingerprints, partición por andamio, normalización y selección de características.
 
-Se entrega como **propuesta**: la normalización y la reducción de dimensión son la [decisión 1.5](../decisiones.md#d1-5), que decide la patrocinadora. El notebook ejecuta una opción, deja nombrada la alternativa y guarda la matriz filtrada en dos versiones, transformada y sin transformar.
+El EDA se extiende una semana, en paralelo con el cierre documental de ingeniería de características; no se pospone el notebook, que ya está ejecutado. El escalamiento medido se aplica a la regresión logística por convergencia y se omite en los árboles. Qué entradas necesitan el criterio de la patrocinadora está en [la Ruta](../decisiones.md), que es la lista única: aquí no se repite, porque dos listas de lo mismo se desincronizan.
+
+Las integraciones de registro de corridas, manifiesto de datos y pruebas del flujo (#67, #71 y #73) refuerzan la trazabilidad sin alterar las salidas científicas del notebook. También se integró el registro retrospectivo de las mediciones de escalamiento y del vocabulario Sort & Slice de tamaño L, con sus parámetros, métricas y entorno.
 
 ## Próximas entregas
 

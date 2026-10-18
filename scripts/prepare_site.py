@@ -74,6 +74,9 @@ DOCUMENTOS = [
     ("docs/datos-contenido.md",
      "datos-contenido.qmd",   # .qmd: lleva un diagrama de mermaid, que Quarto trata como código
      "Qué contiene cada archivo, qué defectos tiene y de dónde sale cada número"),
+    ("docs/diccionario-matriz.md",
+     "diccionario-matriz.md",
+     "Qué columna es cada cosa en la matriz que entra al modelo"),
     ("docs/fundamentos-desde-cero.md",
      "fundamentos-desde-cero.md",
      "La teoría de química, biología e inteligencia artificial, sin suponer nada"),
@@ -95,7 +98,8 @@ DOCUMENTOS = [
 # bloque de portada es typst crudo y no tiene equivalente en el sitio. Por eso
 # se publica el PDF tal cual y la página índice enlaza a él.
 PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
-        "docs/reportes/avance-1/Avance1.0.pdf"]
+        "docs/reportes/avance-1/Avance1.0.pdf",
+        "docs/reportes/avance-2/Avance2.0.pdf"]
 
 
 def claves_bib() -> set[str]:
