@@ -17,6 +17,7 @@ project:
     - contenido/notebooks/01_EDA.ipynb
     - contenido/notebooks/01b_EDA_actividad_snc.ipynb
     - contenido/notebooks/02_Feature_Eng.ipynb
+    - contenido/notebooks/02b_Feature_Eng_actividad.ipynb
 
 website:
   title: "Bioactive AI"
@@ -109,6 +110,8 @@ website:
           - text: "Avance 2 · Características"
           - href: contenido/notebooks/02_Feature_Eng.ipynb
             text: Análisis · Ingeniería de características
+          - href: contenido/notebooks/02b_Feature_Eng_actividad.ipynb
+            text: Análisis · Características de actividad
       - href: bibliografia.qmd
         text: Bibliografía
     right:
