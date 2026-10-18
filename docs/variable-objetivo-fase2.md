@@ -104,6 +104,7 @@ Con T = 1 µM, las tres fuentes dan 67,266 pares etiquetados y 49.4% de activos 
 5. **Relaciones inferidas.** 2,001 filas de NPASS no traían relación; el equipo de la patrocinadora asignó `=` con una regla que el diccionario da con 98.4% de acierto. Se usan como vienen; la sensibilidad sin ellas está en la sección 9.
 6. **Filas marcadas por ChEMBL.** 5,287 filas (2.6%) llevan «Outside typical range» en `chembl_data_validity_comment`. Se mantienen y se repite el análisis sin ellas.
 7. **Copias.** 1,014 filas tuvieron copias idénticas que ya se quitaron (`n_registros_identicos` > 1); no hace falta deduplicar de nuevo.
+8. **El corte cae donde la medición es menos fiable.** Entre las mediciones exactas de las cinco categorías (sin los inactivos por texto y con pActividad entre 2 y 12), el 20.7% queda a menos de 0.5 unidades logarítmicas de 10 µM (18.2% en ChEMBL) y el 24.3% a esa distancia de 1 µM. Y entre los pares con al menos dos mediciones exactas (12,612), el rango mediano es 0.43 unidades, el 25.5% supera una unidad y el 9.0% tiene mediciones a los dos lados de 10 µM. Una etiqueta binaria con corte fijo es, por tanto, poco estable justo para esos pares; es la razón de fondo de la [2.9](decisiones.md#d2-9). *Cifras calculadas con las funciones de `scripts/cifras_etiqueta_fase2.py`; falta incorporarlas al script para que tengan una corrida versionada.*
 
 ## 8. Ejercicio de predicción de la potencia
 
