@@ -53,12 +53,12 @@ No son reglas validadas: son candidatas evaluadas en el notebook con su AUC y su
 
 ## Dos ausencias que sorprenden
 
-De los cinco descriptores que el proyecto usa para verificar cualquier afirmación estructural —TPSA, donadores y aceptores de hidrógeno, `MolLogP` y el peso molecular—, **dos no llegan a las 171**:
+Cinco descriptores fisicoquímicos clásicos —TPSA, donadores y aceptores de hidrógeno, `MolLogP` y el peso molecular— son los que cualquiera esperaría encontrar en la matriz. **Dos no llegan a las 171**:
 
 - **`MolLogP`** correlaciona **0.975** con `lipo_neta`, la derivada que lo contiene. El filtro conserva la derivada, que tiene mayor F de ANOVA, y descarta el original.
 - **`MolWt`** correlaciona **0.999** con `HeavyAtomMolWt`: son la misma variable medida dos veces.
 
-Sobreviven TPSA, donadores y aceptores de hidrógeno, que son los tres que `CLAUDE.md` nombra como dominantes empíricamente. Que `MolLogP` no llegue ya estaba registrado en parte: el supuesto S1.11 de [la Ruta](decisiones.md) mide que `lipo_neta` lo desplaza. Las filas de esa tabla no tienen ancla propia, así que el enlace va a la página.
+Sobreviven TPSA, donadores y aceptores de hidrógeno, y entre ellos están los dos que `CLAUDE.md` exige para verificar cualquier afirmación estructural: TPSA < 67 Å² y donadores ≤ 1. Los aceptores llegan a la matriz pero no forman parte de esa regla. Que `MolLogP` no llegue ya estaba registrado en parte: el supuesto S1.11 de [la Ruta](decisiones.md) mide que `lipo_neta` lo desplaza. Las filas de esa tabla no tienen ancla propia, así que el enlace va a la página.
 
 ## Columnas casi vacías, y por qué siguen ahí
 
