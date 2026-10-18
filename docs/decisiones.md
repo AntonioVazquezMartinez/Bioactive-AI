@@ -398,11 +398,13 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 #### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .propuesta .revisada .definir}
 
-**Estado:** propuesta · revisada el 7 de octubre · necesita su definición
+**Estado:** propuesta · revisada el 7 y el 17 de octubre · necesita su definición
 
-> **Pregunta:** ¿Dónde se corta «activo», en 10 µM o en 1 µM? **Es una sola decisión, no dos:** su propia regla de censura ata el corte de los inactivos al de los activos, así que mover uno mueve al otro y cambia el balance de clases. La tabla de abajo muestra qué cuesta cada opción.
+> **Pregunta, ya estrecha:** las columnas de la sección 5 del diccionario dan una concentración y una relación **en las tres fuentes**. En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa». ¿Descartó usar esas columnas con el mismo corte, o solo inferir lo que no viene informado, como las 2,001 relaciones de NPASS? Se le muestra con filas reales de cada fuente a la vista.
 >
-> *Secundarias:* ¿son confiables los inactivos declarados por texto? Si un mismo esqueleto y gen tienen observaciones activas e inactivas, ¿qué ensayos son comparables y qué evidencia tiene prioridad? ¿«Activo» incluye cualquier dirección del efecto, inhibir o activar?
+> *Y una petición nueva:* un **desenlace** —qué compuestos rescataron neuronas en sus ensayos y a qué concentración— que es lo que haría estimable el umbral que ella quiere ([P4](acta-patrocinadora.md#p4)).
+
+**El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
 
 **Qué pasó.** Primero se planteó «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin decir cómo etiquetar lo que no tiene pChEMBL. El EDA mostró que el pChEMBL solo existe para ChEMBL: etiquetar solo por él descarta 15,293 registros de NPASS y CMAUP (los naturales) y 54,498 mediciones censuradas (`> X nM`), de las cuales 29,730 traen además un texto que las declara inactivas. **Los dos últimos grupos no se suman:** los 29,730 están dentro de los 54,498, así que para esas filas la segunda y la tercera vía son la misma fila vista de dos maneras.
 
@@ -420,14 +422,17 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 Cortar en 1 µM es más exigente con los activos y, por la misma regla, más generoso con los negativos: recupera 4,879 censurados más y deja el conjunto casi balanceado. Cortar en 10 µM conserva más activos y desperdicia seis mil censurados. El 10 µM del equipo se había propuesto por ser el valor modal de los límites, que no es una razón farmacológica.
 
-**Un solo experimento pesa demasiado, y es el argumento más fuerte contra el corte en 10 µM.** Las 29,730 filas con texto de inactividad son exactamente el mismo conjunto: todas censuradas con `>`, todas con límite de 10 µM, todas con el texto «Not active» y **todas de la misma referencia, `CHEMBL1909046`**. Son 36,653 los censurados con límite en 10 µM, así que esa referencia sola aporta el 81% de ellos. El efecto sobre el conjunto de entrenamiento:
+**Un solo experimento pesaba demasiado, y resultó que no tanto: la cifra era por registro y el modelo entrena por par.** Las 29,730 filas con texto de inactividad son exactamente el mismo conjunto: todas censuradas con `>`, todas con límite de 10 µM, todas con el texto «Not active» y **todas de la misma referencia, `CHEMBL1909046`**, que es el panel de toxicogenómica DrugMatrix. Son 36,653 los censurados con límite en 10 µM, así que esa referencia sola aporta el 81% de ellos.
 
-| Si «activo» se corta en | Negativos seguros | De `CHEMBL1909046` |
+| Unidad, con el corte en 10 µM | Negativos | De `CHEMBL1909046` |
 |:--|--:|--:|
-| **10 µM** | 48,480 | 29,730 (**61%**) |
-| **1 µM** | 53,359 | 29,730 (56%) |
+| Registro etiquetado | 48,480 | 29,730 · **61%** |
+| **Par compuesto-diana** | 19,488 | 2,756 · **14.1%** |
+| Par, sin los inactivos por texto *(definición vigente)* | 18,107 | 13 · **0.1%** |
 
-Con el corte en 10 µM, tres de cada cinco negativos del conjunto vienen de un solo experimento con un solo protocolo. Eso no lo arregla ninguna partición: si ese experimento tiene un sesgo sistemático, el modelo lo aprende como si fuera biología. Es una razón para preferir 1 µM que no tiene que ver con el balance de clases, y es parte de lo que hay que poner delante de la patrocinadora al preguntarle el corte.
+Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae a una cuarta parte. Y la definición que adopta la [propuesta](variable-objetivo-fase2.md) los deja fuera por otra razón —el `>` de 10 µM lo asignó el equipo que armó el archivo, no el ensayo original— con lo que la objeción **se extingue por construcción**.
+
+Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% «el argumento más fuerte contra el corte en 10 µM», y lo era solo mientras la unidad fuera el registro. Deja de ser una razón para preferir 1 µM.
 
 **Por qué estas cifras no son las de antes, y las dos están bien.** La versión anterior de esta tabla contaba 61,001 filas censuradas y daba 59,859 / 54,419 / 7,474 negativos seguros, todas tomadas de la **sección 7 del diccionario de la patrocinadora**, que describe el **archivo completo de 225,513 registros**. El que recibimos tiene 202,647, el 89.9% ([2.6](#d2-6)). La razón entre los dos archivos es 1.113 y las razones entre cada par de cifras van de 1.109 a 1.127, así que la diferencia es de población y no de método: los porcentajes coinciden exactos (98%, 89%, 12%). Aquí se usan las del archivo recibido, que son las que el modelo va a ver, y cada cifra del sitio declara de cuál de los dos archivos sale, como en [los datos del proyecto](datos-contenido.md).
 
@@ -443,6 +448,23 @@ Con el corte en 10 µM, tres de cada cinco negativos del conjunto vienen de un s
 El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 registros con categoría de diana, 109,264 reciben etiqueta; se excluyen 4,810 sin gen y 327 sin esqueleto calculable, y quedan 104,127 agrupables en 71,145 pares. El recuento marca un par como activo si alguna observación lo es, y con esa regla hay 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6. El máximo de etiquetas no selecciona la medición más potente.
 
 **Umbral.** Con pChEMBL, ≥ 5 daba 87.1% de activos (6.7:1) y llevó a proponer ≥ 6; con las tres vías la razón baja a 1.6:1 por registro. El sesgo de los registros con pChEMBL es una explicación posible, no demostrada. Se conserva ≥ 5 como primario y ≥ 6 como robustez: el balance de clases no determina el umbral biológico.
+
+**La llave del par es el esqueleto × gen, y no el identificador del compuesto.** `source_compound_id` usa prefijos distintos por fuente —`CHEMBL…` contra `NPC…`— y **no comparte ni un valor** entre ellas, así que con esa llave un compuesto medido en dos fuentes entra como dos pares independientes y sus contradicciones quedan invisibles: son **164 pares** en conflicto entre ChEMBL y las fuentes naturales que así no se verían. Se usa el [esqueleto de conectividad](glosario.md#par-compuesto-diana) × `target_gene`, que además es la misma llave que `grupos_cv` usa en `src/data_prep/splits.py` para la validación cruzada agrupada, de modo que la unidad de etiquetado y la de partición coinciden.
+
+**Y «por fuente» no se puede reportar sobre el par, porque la fuente no es un atributo del par.** Con la llave por esqueleto, 827 de los 828 pares de CMAUP comparten par con otra fuente, y 42.4% de los de NPASS: **CMAUP tiene exactamente un par propio**. Así que el desempeño se reporta en **estratos disjuntos por procedencia de la evidencia**, que sí son aditivos:
+
+| Estrato | Pares | Activos |
+|:--|--:|--:|
+| Solo ChEMBL | 62,414 | 75.6% |
+| Solo NPASS | 2,114 | 12.1% |
+| Solo CMAUP | 1 | — |
+| Mixtos | 1,592 | 37.5% |
+
+La brecha real entre ChEMBL y los naturales es de **63 puntos**, no los 52 que sugería contar cada par en todas sus fuentes. Es el riesgo de la [2.5](#d2-5) cuantificado sobre la unidad correcta, y lo que vigila el control de atajo del [issue #32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32).
+
+**El corte es una convención declarada, no un hallazgo, y conviene decir por qué 10 µM.** El archivo **no tiene columna de desenlace**: nada registra si un compuesto funcionó, así que no hay nada contra lo que calibrar y un umbral no es estimable. Todo candidato que se puede construir falla por eso: un percentil de la distribución de la diana es circular, y la moda del límite de censura está condicionada al fracaso —se midió, y deja seis dianas con 93–96% de activos, peor que el corte global—. Lo que sí sostiene el 10 µM es otra cosa: es aproximadamente **la concentración libre máxima alcanzable con una dosis oral convencional sin toxicidad**, y por encima de ella la actividad medida rara vez se traduce in vivo y dominan los artefactos de agregación que mira la [C.4](#dc-4). Es una cota de alcanzabilidad, no una constante biológica — y es un argumento mejor que «es el valor modal».
+
+**Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
 
 #### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
 
