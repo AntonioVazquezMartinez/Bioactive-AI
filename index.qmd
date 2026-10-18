@@ -96,7 +96,7 @@ El conjunto tiene 7,805 filas etiquetadas, pero solo **4,018 esqueletos de conec
 ::: {.callout-important}
 ## Los productos naturales cruzan la barrera bastante menos
 
-52.7% contra 71.7% de los sintéticos, una diferencia de 18.9 puntos. Las reglas fisicoquímicas clásicas explican solo cerca de un tercio de esa brecha. Como son justamente los compuestos a priorizar, el desempeño tendrá que reportarse por separado en ambos grupos.
+52.7% contra 71.7% de los sintéticos, una diferencia de 18.9 puntos. Las reglas fisicoquímicas clásicas no bastan para explicarla: la regla de TPSA y de donadores de hidrógeno la cumplen 6.6 puntos menos de naturales, una diferencia aparte, no una parte de los 18.9. Como son justamente los compuestos a priorizar, el desempeño tendrá que reportarse por separado en ambos grupos.
 
 [Ver el Avance 1 →](contenido/reportes/index.html)
 :::

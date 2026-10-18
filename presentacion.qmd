@@ -22,7 +22,11 @@ format:
     link-external-newwindow: true
     width: 1280
     height: 760
-    center: false
+    # Once de las 24 diapositivas dejaban entre 300 y 456 px vacíos de 760 —más
+    # de la mitad del alto— porque el contenido se apoyaba arriba. Centrado
+    # vertical desaparece el hueco; el costo es que el título cambia de altura
+    # entre diapositivas, que es el intercambio habitual y aquí sale a cuenta.
+    center: true
     menu:
       side: left
       numbers: true
@@ -55,10 +59,23 @@ La etapa 1 **no es un filtro duro**. Un BBB− no descarta al compuesto: existen
 
 Sobre ambas pesa un requisito que la patrocinadora planteó como no negociable: **explicabilidad a nivel de subestructura**.
 
+## Lo que nos dieron {.smaller}
+
+Todo lo que sigue sale de tres archivos de la patrocinadora:
+
+| Archivo | Qué contiene | De dónde viene |
+|:--|:--|:--|
+| **Permeabilidad** | 7,811 compuestos, 7,805 con clase BBB+ / BBB− | Deriva de B3DB, estandarizado y cruzado con COCONUT, lo que permite separar naturales de sintéticos |
+| **Actividad** | 202,647 registros de 105,583 compuestos | ChEMBL (fármacos) más NPASS y CMAUP (productos naturales) |
+| **Dianas** | 39 dianas con su gen y su enfermedad | Curadas a mano por ella desde la farmacología conocida |
+
+Un archivo por etapa, y uno que dice qué se mide en la segunda. **Cada tramo que sigue parte de una pregunta sobre estos archivos, muestra lo que miramos y termina en una entrada de la Ruta**, el registro donde queda cada decisión con lo que se descartó.
+
 ## Cómo fluyen los datos
 
 ```{mermaid}
 %%| fig-width: 11
+%%{init: {"themeVariables": {"fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "16px"}}}%%
 flowchart LR
     A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
     A --> C["Fingerprint ECFP4<br/>2,048 bits"]
@@ -70,9 +87,23 @@ flowchart LR
     F --> G
 ```
 
-# Avance 1 · Lo que encontramos en los datos {background-color="#2a3441"}
+## El recorrido {.smaller}
 
-## El tamaño efectivo es la mitad {.smaller}
+1. **Los datos de permeabilidad.** Cuántos compuestos distintos hay, si sirve el grupo A–D, si los naturales se comportan distinto.
+2. **Cómo evaluamos sin hacernos trampa.** Cómo se parte el conjunto y qué tan firme es un umbral.
+3. **Cómo convertimos moléculas en números.** Qué se probó, qué se descartó y por qué.
+4. **La etapa 2.** Qué hay en el archivo de actividad y qué no sabemos todavía.
+5. **La Ruta del proyecto.** Donde quedó todo lo anterior, y lo que le pedimos revisar.
+
+::: {.callout-note}
+Cada decisión se cuenta igual: **la pregunta, lo que miramos, lo que vimos y lo que decidimos**, con su entrada en la Ruta y su estado. Nada está *ratificado* hasta que ella lo revise.
+:::
+
+# 1 · Los datos de permeabilidad {background-color="#2a3441"}
+
+Qué hay en el archivo, y qué decidimos al mirarlo.
+
+## ¿Cuántos compuestos distintos hay? La mitad {.smaller}
 
 ::: {.columns}
 ::: {.column width="55%"}
@@ -80,7 +111,7 @@ El conjunto tiene **7,805 filas** pero solo **4,018 esqueletos de conectividad**
 
 El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres distintos.
 
-**131 esqueletos** reúnen estereoisómeros con etiquetas BBB **contradictorias** entre sí.
+**131 esqueletos** reúnen estereoisómeros con etiquetas BBB **contradictorias** entre sí: 429 filas que imponen 151 errores inevitables.
 :::
 ::: {.column width="45%"}
 | | |
@@ -91,49 +122,43 @@ El ácido fusídico aparece nueve veces, como estereoisómeros o con nombres dis
 :::
 :::
 
-**Consecuencia:** la partición agrupa por estructura y nunca reparte filas al azar. Un *split* aleatorio pondría estereoisómeros del mismo compuesto a ambos lados.
+**Lo que decidimos:** la partición agrupa por estructura y nunca reparte filas al azar. Un *split* aleatorio pondría estereoisómeros del mismo compuesto a ambos lados.
 
-## Las categorías A–D no son una escala de calidad
-
-La investigación inicial recomendaba entrenar solo con A+B, leyendo las categorías de B3DB como confiabilidad. **Medir lo desmintió.**
-
-| | Grupo C | Grupo D |
-|:--|--:|--:|
-| Referencias (mediana) | 1 | **3** |
-
-Y la columna está **confundida con la etiqueta**:
-
-::: {.callout-warning}
-Filtrar a A+B baja la clase minoritaria del **36.5% al 27.0%**. Empeora el desbalance en vez de limpiar ruido.
+::: {.callout-note}
+En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente) para la partición, y [1.8](contenido/decisiones.html#d1-8) (abierta) para los 131 esqueletos contradictorios.
 :::
 
-Se usa para **estratificar, nunca para excluir**. El conjunto de entrenamiento creció 67%.
+## ¿Sirve filtrar por A–D? No, empeora el desbalance {.smaller}
 
-## Los productos naturales cruzan menos {.smaller}
+La investigación inicial leía las categorías de B3DB como confiabilidad y recomendaba entrenar solo con A y B. Antes de adoptarlo miramos qué pasa al filtrar. Pruébalo:
 
-::: {.columns}
-::: {.column width="48%"}
-| Origen | n | % BBB+ |
-|:--|--:|--:|
-| Sintético | 4,439 | 71.7 |
-| **Natural** | 3,366 | **52.7** |
-
-Una diferencia de **18.9 puntos**.
+::: {.bio-grafica .baja .g360 data-grafica="grupos"}
 :::
-::: {.column width="52%"}
-Pero la regla fisicoquímica TPSA < 67 Å² y HBD ≤ 1 solo explica **6.6 puntos**.
 
-La química da cuenta de **un tercio**. El resto puede ser eflujo activo, o sesgo en qué compuestos han llegado a ensayarse.
+**Lo que vimos:** el grupo D tiene mediana de 3 referencias contra 1 del C, y ningún registro duplicado tiene etiquetas contradictorias. La columna está confundida con la etiqueta: filtrar a A+B baja la clase minoritaria de 36.5% a 27.0%, es decir, **empeora el desbalance en vez de limpiar ruido**.
+
+**Lo que decidimos:** se usa para **estratificar, nunca para excluir**, y el entrenamiento pasó de 4,679 a 7,805 compuestos (+67%).
+
+::: {.callout-note}
+En la Ruta: [1.1](contenido/decisiones.html#d1-1) (vigente · revisada). La recomendación anterior sigue visible, marcada como superada.
 :::
+
+## ¿Los naturales cruzan peor? Depende del grupo {.smaller}
+
+En conjunto, los naturales cruzan **18.9 puntos menos** (52.7% contra 71.7% BBB+). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
+
+::: {.bio-grafica data-grafica="naturales"}
 :::
 
 ::: {.callout-important}
-Como son los compuestos a priorizar, el desempeño tendrá que **reportarse por separado** en ambos grupos.
+Puede ser química real o un artefacto de curación, y los datos no lo distinguen. Es la entrada [1.6](contenido/decisiones.html#d1-6) y **la que necesita su definición**: ella fue quien armó el archivo. El desempeño se reportará por origen **dentro de cada grupo**, no solo en el global.
 :::
 
-# Avance 2 · Características y partición {background-color="#2a3441"}
+# 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
 
-## La partición, verificada sin fuga {.smaller}
+Cómo se parte el conjunto, y qué tan firme es un número que parece exacto.
+
+## ¿Cómo se parte el conjunto sin hacer trampa? {.smaller}
 
 | Partición | n | Andamios | % BBB+ |
 |:--|--:|--:|--:|
@@ -145,41 +170,140 @@ Como son los compuestos a priorizar, el desempeño tendrá que **reportarse por 
 
 La prueba quedó con 57.3% BBB+ contra 64.0% del entrenamiento: **los andamios raros son menos permeables**. El modelo se evalúa sobre una distribución distinta de aquella en la que aprendió, que es la situación realista.
 
-## El umbral de TPSA no es una constante {.smaller}
-
-| Medición | Umbral óptimo |
-|:--|--:|
-| Publicado (n=1,058) | 66.8 Å² |
-| Avance 1, sobre A+B | 83.6 Å² |
-| Avance 1, conjunto completo | 101.9 Å² |
-| **Avance 2, solo entrenamiento** | **107.0 Å²** |
-
-Cuatro subconjuntos del mismo dataset, cuatro umbrales que difieren en 40 Å².
-
 ::: {.callout-note}
-No es una constante de la barrera hematoencefálica: es el óptimo de un subconjunto particular. Se usa el derivado del entrenamiento, y se reporta sobre qué subconjunto se midió cada cifra.
+En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente). Todo lo que se aprende de los datos —vocabularios, umbrales, escaladores— se ajusta solo con entrenamiento.
 :::
 
-# Etapa 2 · El conjunto de actividad {background-color="#2a3441"}
+## El mejor corte de TPSA cambia con los datos, y muchos valen lo mismo {.smaller}
+
+**TPSA** mide la polaridad de la molécula. La regla es «si TPSA < corte, se predice BBB+». La curva dice qué tan bien separa esa regla las dos clases con cada corte: es el **índice J** (sensibilidad + especificidad − 1), donde 0 es azar y 1 es perfecto. El pico es el «umbral óptimo». Mueve el corte y cambia de subconjunto; es el **mismo** dataset en los cuatro casos:
+
+::: {.bio-grafica .baja .g260 data-grafica="tpsa"}
+:::
+
+::: {.callout-note}
+Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**: con un bootstrap de **esqueletos** —no de filas, que no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas verdes). **Decisión:** derivarlo solo con entrenamiento y no citarlo como constante. En la Ruta: supuesto S1.3.
+:::
+
+# 3 · Cómo convertimos moléculas en números {background-color="#2a3441"}
+
+Qué se construyó, qué se probó y qué se descartó, con la evidencia de cada cosa.
+
+## De SMILES a números: 217 descriptores y un fingerprint {.smaller}
+
+::: {.columns}
+::: {.column width="52%"}
+**217 descriptores 2D de RDKit**, de los que quedan **203 utilizables** tras auditar la matriz por cuatro criterios.
+
+El que casi rompe todo: `Ipc` llega a **10⁴¹**. Es finito en float64, pero no cabe en float32 y scikit-learn convierte internamente. Un chequeo de `isfinite` **no lo detecta**, así que costó una ejecución entera antes de encontrarlo.
+:::
+::: {.column width="48%"}
+**Morgan/ECFP4**, 2,048 bits, con `rdFingerprintGenerator`.
+
+Cuidado con el nombre: se genera con `radius=2` porque el número del nombre es el **diámetro**, no el radio.
+
+Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. Se usan juntos.
+:::
+:::
+
+::: {.callout-note}
+Los *embeddings* congelados de transformers se descartaron: según la literatura, no superan a esta combinación bajo partición por andamio (no lo medimos nosotros).
+:::
+
+::: {.callout-note}
+En la Ruta: [1.3](contenido/decisiones.html#d1-3) (vigente).
+:::
+
+## ¿Por qué no el fingerprint plegado? Rompe la explicabilidad {.smaller}
+
+Un fingerprint plegado reparte las subestructuras en un número fijo de casillas con una función de dispersión, así que **dos subestructuras distintas pueden caer en el mismo bit**. Si ese bit resulta importante, no se puede traducir a una estructura concreta — que es exactamente lo que la patrocinadora pidió como no negociable.
+
+**Sort & Slice** ordena las subestructuras por frecuencia en el entrenamiento y se queda con las L más comunes, **una por columna**. Sin colisiones: cada columna se puede dibujar.
+
+El costo es que el vocabulario **se aprende de los datos**, así que se ajusta solo con entrenamiento y las subestructuras que solo aparecen en la prueba quedan fuera.
+
+## ¿Cuánto vocabulario hace falta? {.smaller}
+
+::: {.bio-grafica data-grafica="vocabulario"}
+:::
+
+::: {.callout-note}
+Se mantiene **L = 2048** como valor de trabajo: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos. Lo que falta decidir con la patrocinadora no es el número sino la estrategia —desempeño, parsimonia o relevancia química de las subestructuras raras— y ahí su conocimiento de los productos naturales es lo que inclina la balanza. En la Ruta: [1.7](contenido/decisiones.html#d1-7) (propuesta).
+:::
+
+## Escalar no es por el acierto, es por la convergencia {.smaller}
+
+::: {.bio-grafica data-grafica="escalado"}
+:::
+
+::: {.callout-important}
+El argumento fácil sería «los árboles no necesitan escalar». Es cierto para Random Forest, pero el proyecto entrena una **regresión logística como modelo interpretable de control**, y esa sí es sensible a la escala. Había que medirlo.
+:::
+
+::: {.callout-note}
+En la Ruta: [1.5](contenido/decisiones.html#d1-5) (propuesta · revisada). Esta medición cambió la razón del escalado, y la versión anterior sigue visible.
+:::
+
+## ¿Qué entra al modelo y qué no? {.smaller}
+
+De las 217 columnas de descriptores a la matriz con la que se entrena:
+
+| Paso | Qué pasa | Cuántas quedan |
+|:--|:--|--:|
+| Descriptores utilizables | Se quitan 5 constantes, 8 con valores faltantes y `Ipc` | 203 |
+| Características derivadas | Se suman las tres: `tpsa_por_mw`, `lipo_neta` y `regla_2p`. Ninguna supera al TPSA solo (AUC 0.844), pero ninguna es una copia de él: su correlación máxima con un descriptor base es de 0.755, 0.975 y 0.602 | 206 |
+| Filtro de varianza | Se quita una columna casi constante | 205 |
+| Filtro de correlación | Se retiran 34 columnas casi iguales a otra; `lipo_neta` correlaciona 0.975 con logP y lo reemplaza | **171** |
+
+**Lo que no entra como predictor:** `group` y el indicador de origen natural. Se codifican aparte, pero la matriz principal solo lleva estructura y descriptores. `group` está confundida con la etiqueta, así que usarla de entrada sería fuga; y cómo tratar los 1,005 análogos de los naturales sigue abierto ([1.6](contenido/decisiones.html#d1-6)).
+
+::: {.callout-note}
+Los cortes de **0.01** de varianza y **0.95** de correlación son propuestas operativas medidas en estos datos, no valores ratificados. Si cambian, se repite la selección. En la Ruta: [1.5](contenido/decisiones.html#d1-5) y el supuesto S1.11.
+:::
+
+## Lo que medimos y descartamos {.smaller}
+
+Cinco opciones que se probaron con los datos del proyecto:
+
+| Se probó | Lo que vimos | Qué hicimos |
+|:--|:--|:--|
+| Entrenar solo con grupos A+B | La clase minoritaria baja de 36.5% a 27.0% | Se usa todo el conjunto ([1.1](contenido/decisiones.html#d1-1)) |
+| No escalar la regresión logística | No converge en ninguno de los 15 pliegues; con min–max, 53 iteraciones | Se escala ([1.5](contenido/decisiones.html#d1-5)) |
+| Yeo–Johnson | Por debajo de min–max en 12 de 15 pliegues y de estandarización en 13, sin llegar a significancia | No se adopta ([S1.9](contenido/decisiones.html)) |
+| PCA | Con Random Forest, el MCC cambia −0.008 (IC 95%: −0.070 a +0.055) y las componentes dejan de ser fragmentos | Solo como comparación ([1.5](contenido/decisiones.html#d1-5)) |
+| El descriptor `Ipc` | Llega a 10⁴¹ y no cabe en float32 | Se excluye ([1.3](contenido/decisiones.html#d1-3)) |
+
+::: {.callout-note}
+Son decisiones técnicas del equipo. No necesitan su respuesta, pero quedan a la vista por si ella las objeta.
+:::
+
+## Lo que descartamos sin entrenar un modelo para compararlo {.smaller}
+
+Aquí **no hay un experimento comparativo**: nadie entrenó un modelo con Box–Cox, por ejemplo. La razón es un conteo en nuestros datos, un argumento o la literatura, y la última columna dice cuál:
+
+| Se descartó | Por qué | Con qué se sostiene |
+|:--|:--|:--|
+| Logaritmo y Box–Cox | 193 de los 203 descriptores tienen valores ≤ 0 | Un conteo en nuestros datos |
+| Chi-cuadrado | Exige valores no negativos y los descriptores son firmados | Razonamiento |
+| Análisis factorial | Buscamos conservar la correspondencia entre columna y propiedad química, no factores latentes | Razonamiento |
+| Discretizar los descriptores | Pierde diferencias dentro de cada intervalo y los cortes no están justificados; el TPSA ya mostró que no son constantes | Razonamiento |
+| *Embeddings* congelados de transformers | No superan a descriptores más fingerprint bajo partición por andamio | Literatura |
+| Dejar que la etapa 1 filtre a la etapa 2 | Solo 1,033 esqueletos tienen medición en las dos; para el resto sería una predicción sin verificar | Un conteo en nuestros datos |
+
+::: {.callout-note}
+La diferencia importa: un resultado comparado se revisa repitiendo el experimento con otros datos; un descarte por conteo o por razonamiento, solo con un argumento mejor.
+:::
+
+# 4 · La etapa 2: el archivo de actividad {background-color="#2a3441"}
+
+Qué hay, qué no cuadra y qué necesitamos saber antes de elegir cómo modelarlo.
 
 ## Las dos etapas casi no comparten compuestos
 
-::: {.columns}
-::: {.column width="55%"}
-| | Esqueletos |
-|:--|--:|
-| Con permeabilidad | 4,018 |
-| Con actividad | 99,585 |
-| **En ambos** | **1,033** |
-:::
-::: {.column width="45%"}
-El **1.0%** del conjunto de actividad.
-:::
+::: {.bio-grafica data-grafica="etapas"}
 :::
 
-La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto. Para el otro 99%, la permeabilidad sería una **predicción sin verificar**.
-
-Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
+La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto, y reservarlo costaría **la cuarta parte** de la fase 1. Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
 
 ## El etiquetado deja fuera lo que queremos estudiar {.smaller}
 
@@ -191,17 +315,78 @@ El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-**Propuesta de etiquetado por tres vías, pendiente de ratificación:** pChEMBL donde exista, concentración exacta para el resto —recupera 12,809 registros de productos naturales— e inactivo declarado para textos y mediciones censuradas con corte ≥ 10 µM.
+Los dos últimos **no se suman**: las 29,730 con texto están dentro de las censuradas. La propuesta es etiquetar por tres vías —pChEMBL donde exista, concentración exacta para el resto (recupera 12,809 naturales) e inactivo declarado— y falta una sola decisión: dónde se corta «activo».
 
-::: {.callout-note}
-Con ≥ 5 hay 119,835 activos de 194,086 registros etiquetados (61.7%; razón 1.6:1), incluidos los fenotípicos. En el recuento exploratorio por estructura de conectividad × gen hay 50,177 pares activos de 71,145 (70.5%; razón 2.4:1). Como análisis de robustez, ≥ 6 da 44.4% por registro y 50.6% por par. El 61.7% es un balance por registro, no el balance por diana. El recuento por pares usa la regla provisional «activo si alguna observación es activa»; quedan pendientes de resolver 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6, así como definir la población y partición finales de entrenamiento. La propuesta de etiquetado y umbrales requiere ratificación de la patrocinadora.
+## ¿Dónde se corta «activo»? Una sola decisión {.smaller}
+
+La regla de censura del diccionario ata el corte de los inactivos al de los activos: mover uno mueve al otro.
+
+::: {.bio-grafica data-grafica="etiquetado"}
 :::
 
-# Cómo trabajamos {background-color="#2a3441"}
+::: {.callout-note}
+Los porcentajes de activos son por registro e incluyen fenotípicos; por par esqueleto × gen salen 70.5% con ≥ 5 y 50.6% con ≥ 6. El umbral no se elige por balance de clases. Pendiente de ratificación.
+:::
 
-## Las decisiones se registran, y algunas se revierten {.smaller}
+::: {.callout-important}
+En la Ruta: [2.3](contenido/decisiones.html#d2-3) (propuesta · **necesita su definición**).
+:::
 
-Doce decisiones técnicas con su contexto, lo que se descartó y lo que cuesta, en el [registro de decisiones](contenido/decisiones.html).
+## ¿El archivo de actividad ya trae una prueba apartada? {.smaller}
+
+::: {.bio-grafica data-grafica="archivo"}
+:::
+
+::: {.callout-important}
+**Entrada [2.6](contenido/decisiones.html#d2-6).** Es lo primero que necesitamos saber, porque si existe no hay que construir otra, y si se separó al azar no sirve como evaluación estructural. Es un sí o un no que solo ella puede dar.
+:::
+
+## ¿Con qué dianas se puede entrenar? {.smaller}
+
+Una **diana** es la proteína sobre la que actúa un compuesto. Las 39 de la lista, 37 genes y dos receptores completos (NMDA y GABA-A), las curó ella a mano; cada una tiene una categoría de enfermedad. Un modelo necesita ejemplos de cada diana para aprender algo. Contamos cuántos hay:
+
+::: {.bio-grafica data-grafica="dianas"}
+:::
+
+::: {.callout-important}
+**Entrada [2.1](contenido/decisiones.html#d2-1).** Las cuatro de arriba no tienen datos para un modelo; el equipo propone excluirlas. Pero la lista es suya: ¿sobra o falta alguna? Hay que fijarla **antes** de elegir la forma del modelo.
+:::
+
+## ¿Un modelo por diana, por enfermedad o uno solo? {.smaller}
+
+Cada diana pertenece a una categoría de enfermedad. Los registros se reparten así:
+
+::: {.bio-grafica .baja .g290 data-grafica="enfermedades"}
+:::
+
+| Opción | Lo que da | Lo que cuesta |
+|:--|:--|:--|
+| Un modelo **por diana** | Cada modelo aprende una sola cosa | Las dianas con pocos registros no sostienen un modelo propio |
+| Uno **por categoría** de enfermedad | Junta las dianas de una misma enfermedad | Ni Huntington (153) ni ELA (53) alcanzan por sí solas |
+| Uno **multitarea** | Comparte representación e incluye las dianas pequeñas | Mezcla señales de dianas distintas |
+
+::: {.callout-important}
+**Entrada [2.2](contenido/decisiones.html#d2-2).** Antes de la forma del modelo: **qué dianas importan para su pregunta de investigación**, porque eso no sale de los datos.
+:::
+
+## ¿Qué error le cuesta más? {.smaller}
+
+Mueve el corte y mira el intercambio con los datos del proyecto:
+
+::: {.bio-grafica data-grafica="costo"}
+:::
+
+::: {.callout-important}
+**Entrada [C.5](contenido/decisiones.html#dc-5).** Si el laboratorio puede ensayar veinte compuestos este semestre, ¿prefiere veinte donde acierte cuatro de cada cinco, o cien donde acierte una de cada dos? Y qué espera recibir al final: una lista, un modelo que pueda correr, o el material de un artículo.
+:::
+
+# 5 · La Ruta del proyecto {background-color="#2a3441"}
+
+Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
+
+## Todo queda registrado, y algunas decisiones se revirtieron {.smaller}
+
+**Veintidós entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). Ninguna está *ratificada*: eso ocurre con la minuta de la reunión con la patrocinadora.
 
 **Dos se revirtieron al medir:**
 
@@ -222,32 +407,55 @@ Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tr
 «No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
 :::
 
+## Las siete preguntas que necesitamos de ella {.smaller}
+
+Son las entradas marcadas «necesita su definición». Sin su criterio el equipo solo puede avanzar con un supuesto propio.
+
+| | Entrada | Qué se le pregunta |
+|:--|:--|:--|
+| 1 | **2.6** Partición reservada | El archivo se llama `_Entrenamiento` y trae el 89.9% de lo que describe el diccionario. ¿Ya hay una prueba apartada, y cómo se hizo? |
+| 2 | **2.1** Dianas sin datos | `GABRG2`, `AIF1`, `GABRB2` y `TARDBP` tienen 0, 0, 1 y 8 registros. ¿Se excluyen? |
+| 3 | **2.3** Criterio de «activo» | ¿10 µM o 1 µM? Una sola decisión, con las consecuencias de la diapositiva anterior |
+| 4 | **2.2** Forma del modelo | ¿Por diana, por categoría o multitarea? Los volúmenes van de 52,676 a 53 registros |
+| 5 | **2.8** Naturales en la fase 2 | ¿Puede aportar el cruce con COCONUT del archivo de actividad, como ya lo hizo con el de permeabilidad? |
+| 6 | **1.6** Naturales en la fase 1 | ¿Por qué la brecha es nula en el grupo A y de 21 y 17 puntos en B y C? |
+| 7 | **C.5** Qué se entrega | Si el laboratorio puede ensayar veinte compuestos, ¿veinte con 80% de acierto o cien con 50%? |
+
+::: {.callout-note}
+El detalle de cada una está en [La ruta del proyecto](contenido/decisiones.html), y se pueden responder por adelantado en la [consulta](consulta.html). Se cierran con la **minuta de la reunión**.
+:::
+
 ## Estado y calendario {.smaller}
 
 | Entrega | Fecha | Estado |
 |:--|:--|:--|
 | Avance 0 · Propuesta | 27 sep | ✅ entregado |
 | Avance 1 · EDA | 4 oct | ✅ entregado |
-| **Avance 2 · Características** | **11 oct** | notebook listo |
-| Avance 3 · Modelo de referencia | 18 oct | pendiente |
+| Avance 2 · Características | 11 oct | notebook entregado · falta el reporte |
+| **Avance 3 · Modelo de referencia** | **18 oct** | en curso |
 | Avance 4 · Modelos alternativos | 25 oct | pendiente |
 | Avance 5 · Ensambles | 1 nov | pendiente |
 
-**Decisiones abiertas que bloquean el Avance 3:** si reservar los 1,033 compuestos comunes —cuesta el 25.7% de la etapa 1—, y el diseño del experimento PAINS.
+**Siete entradas esperan la definición de la patrocinadora**, cinco en la fase 2 (2.1, 2.2, 2.3, 2.6 y 2.8), una en la fase 1 (1.6) y una común a las dos (C.5). El Avance 3 se puede construir sobre la fase 1 sin ninguna de las siete.
 
 ## Lo que falta antes de reportar candidatos
 
 1. **Filtro PAINS**, con la evidencia empírica de promiscuidad de nuestros propios datos. La curcumina aparece contra 32 dianas distintas cuando el compuesto mediano toca 1.
 2. **Resolver los 154 nombres de Spielvogel** a estructura: es la única validación externa genuina que tenemos.
-3. **Revisar los 131 esqueletos con etiquetas contradictorias**: el techo de exactitud que imponen ya está calculado en 98.1%, así que no limitan al modelo, pero falta decidir si son señal estereoquímica o ruido de curación.
+3. **Los 131 esqueletos con etiquetas contradictorias**: imponen 151 errores inevitables sobre 7,805, un techo de **exactitud** del 98.1% que no aprieta a nadie. Falta el techo en **MCC**, que es la métrica del proyecto, y decidir si son señal estereoquímica o ruido de curación.
 
 ::: {.callout-caution}
 Las conclusiones se formularán como **actividad predicha según mecanismo molecular**, nunca como neuroprotección demostrada. De 1,026 tratamientos neuroprotectores probados en ictus, ninguno mostró eficacia clínica establecida.
 :::
 
-## Gracias {.center}
+## Gracias {.texto-centrado}
 
 **Bioactive AI** · Equipo 7
 
 Todo el proyecto, con sus datos, sus notebooks y sus decisiones, en
 [antoniovazquezmartinez.github.io/Bioactive-AI](https://antoniovazquezmartinez.github.io/Bioactive-AI/)
+
+```{=html}
+<script src="recursos/datos.js"></script>
+<script src="recursos/graficas.js"></script>
+```

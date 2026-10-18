@@ -158,13 +158,29 @@ El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (4
 
 - **NPASS y CMAUP no traen pChEMBL** (15,293 registros), porque solo ChEMBL lo calcula. Etiquetar solo por pChEMBL dejaría fuera justo los productos naturales, de ahí el etiquetado por tres vías de la [decisión 2.3](decisiones.md#d2-3), pendiente de ratificar.
 - **Las unidades no están convertidas a una sola escala**: la mayoría está en nM, pero hay 29,880 registros en µM y 662 en unidades de masa (µg/mL y similares) que no se pueden pasar a concentración molar sin el peso molecular de cada compuesto.
-- **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. Sobre las 61,001 filas con `>` o `>=` (54,498 de ellas sin pChEMBL):
+- **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. Sobre las 54,498 filas con `>` o `>=` (todas sin pChEMBL):
 
-Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 2.3](decisiones.md#d2-3)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
+Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 2.3](decisiones.md#d2-3)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **4,879 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 36,653 filas con límite de 10 µM, **29,730 vienen de un solo documento de ChEMBL** (`CHEMBL1909046`, DrugMatrix): una sola fuente concentra la mayor parte de la evidencia censurada.
 
 ### Qué denominador usa cada porcentaje
 
 Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
+
+### Defectos conocidos del archivo de actividad
+
+- **`inchikey_source` viene vacío en los 187,354 registros de ChEMBL** y solo trae valor en los de
+  NPASS y CMAUP. Así que no sirve para cruzar fuentes: cualquier solapamiento entre naturales y
+  ChEMBL hay que calcularlo desde `smiles_raw`, que sí está en los 202,647 registros y resuelve a
+  108,068 estructuras únicas. Contado por `inchikey_source` hay 4,174 esqueletos naturales;
+  contado por estructura, 4,172, porque dos SMILES no parsean.
+- **El archivo no trae ninguna columna de origen natural.** Lo más cercano es `source`, y no separa
+  limpiamente: el 65.4% de los esqueletos naturales (2,727 de 4,172) aparece también en ChEMBL y
+  solo 1,445 son exclusivos de NPASS y CMAUP. Es la [decisión 2.8](decisiones.md#d2-8).
+- **Las 29,730 filas con texto `Not active` son un solo documento de ChEMBL**, `CHEMBL1909046`,
+  repartido en 20 ensayos sobre 6 dianas. Todas están censuradas con `>` y todas con límite de
+  10 µM, así que están dentro de las 54,498 censuradas y no se suman aparte. A 10 µM esa sola
+  referencia aporta el 61% de los negativos seguros: es el argumento más fuerte contra ese corte
+  ([decisión 2.3](decisiones.md#d2-3)).
 
 ## Lo que los diccionarios no documentan
 

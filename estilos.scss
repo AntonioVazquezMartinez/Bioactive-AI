@@ -335,3 +335,92 @@ section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
     gap: 0.4rem;
   }
 }
+
+// ---------------------------------------------------------------------------
+// La página de consulta (`consulta.qmd` + `recursos/consulta.js`)
+//
+// Un formulario que no envía a ningún lado: arma el texto que la patrocinadora
+// se lleva. Los colores salen de las variables del tema para que funcione igual
+// en claro y en oscuro, que es donde fallan los formularios improvisados.
+// ---------------------------------------------------------------------------
+.bio-pregunta-caja {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-left: 5px solid #3b78d6;
+  border-radius: 0.4rem;
+  background: rgba(128, 128, 128, 0.06);
+
+  .bio-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+
+    label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    input[type="radio"] { margin-top: 0.3rem; flex: none; cursor: pointer; }
+  }
+
+  .bio-extra {
+    margin: 0.9rem 0 0.3rem;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+
+  textarea {
+    width: 100%;
+    margin-top: 0.7rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid rgba(128, 128, 128, 0.45);
+    border-radius: 0.3rem;
+    background: rgba(128, 128, 128, 0.07);
+    color: inherit;
+    font: inherit;
+    font-size: 0.95em;
+    resize: vertical;
+  }
+}
+
+#bio-salida {
+  .bio-resumen {
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+    color: #e07b1a;
+    &.completo { color: #2e8b57; }
+  }
+
+  .bio-salida {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid rgba(128, 128, 128, 0.45);
+    border-radius: 0.3rem;
+    background: rgba(128, 128, 128, 0.07);
+    color: inherit;
+    font-family: var(--bs-font-monospace, monospace);
+    font-size: 0.8em;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  .bio-acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+
+  .bio-boton {
+    padding: 0.45rem 1rem;
+    border: 1px solid rgba(59, 120, 214, 0.6);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9em;
+    cursor: pointer;
+
+    &:hover { background: rgba(59, 120, 214, 0.15); }
+    &.activo { background: #3b78d6; border-color: #3b78d6; color: #fff; font-weight: 600; }
+  }
+}
