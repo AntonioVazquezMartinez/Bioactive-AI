@@ -1,6 +1,6 @@
 ---
 title: "Consulta a la patrocinadora"
-subtitle: "Siete definiciones que el equipo no puede deducir de los datos"
+subtitle: "Lo que el equipo decidió, y dónde quiere que usted corrija"
 lang: es
 format:
   html:
@@ -8,24 +8,29 @@ format:
     toc-depth: 2
 ---
 
-Dra. Martínez: esta página reúne las **siete decisiones que dependen de su criterio**. Cada una trae
-el contexto medido, la recomendación del equipo y la casilla para responder.
+Dra. Martínez: esta página reunía siete decisiones esperando su criterio. **Ya ninguna espera.** Dos
+las cerró usted en la reunión del 15 de octubre y las otras cinco las decidió el equipo, porque en
+cada una esperar costaba más que equivocarse: tres resultaron contestables con una medición que
+nadie había hecho, y en las otras dos su respuesta no cambiaba lo que había que construir.
 
-**No se envía nada solo.** Al final, el botón arma un texto con sus respuestas que puede copiar a un
+Así que esta página ya no le pide definiciones. **Le muestra qué se decidió, con qué evidencia y qué
+lo haría cambiar**, para que corrija lo que quiera corregir. Cada casilla sigue abierta, pero ahora
+significa «no estoy de acuerdo» y no «el equipo está detenido esperándome».
+
+**No se envía nada solo.** Al final, el botón arma un texto con sus comentarios que puede copiar a un
 correo o descargar. Lo que escriba vive únicamente en su navegador hasta entonces.
 
-Puede contestar lo que tenga claro y dejar el resto para la reunión. El detalle completo de cada
-decisión —qué se descartó, qué cuesta y qué la cambió— está en [la ruta del
-proyecto](contenido/decisiones.html).
-
 ::: {.callout-note}
-**Cuatro son elecciones** y **tres son peticiones**: información o un archivo que solo usted tiene.
-Están separadas porque se responden distinto.
+**Nada de lo que decidimos es irreversible.** Ninguna entrada se declara *ratificada* sin su
+revisión, y cada una dice en [la ruta del proyecto](contenido/decisiones.html) qué la haría cambiar.
+Si una le parece mal, cambiarla cuesta poco: lo escribimos así a propósito.
 :::
 
-# Lo que solo usted tiene
+# Lo que solo usted tiene, y cómo se resolvió sin ello
 
 ## 1 · ¿El archivo de actividad ya trae una prueba apartada?
+
+> **Resuelta el 15 de octubre, y es la que más nos ayudó.** Sí había una partición, se hizo al azar, y usted entregó el archivo completo para que el equipo la rehaga por andamio. Queda en la [2.6](contenido/decisiones.html#d2-6).
 
 El archivo se llama `..._Entrenamiento.csv` y trae **202,647 de los 225,513 registros** que describe
 su diccionario, el 89.9%. Faltan 22,866.
@@ -39,6 +44,8 @@ generaliza a estructuras nuevas; habría que decirlo como limitación.
 
 ## 2 · ¿Puede aportar el cruce con COCONUT del archivo de actividad?
 
+> **Decidido por el equipo: lo calculamos nosotros.** Con la fuente como aproximación nos equivocábamos en dos de cada tres compuestos, así que esperarlo costaba más que la discrepancia de usar otra versión del catálogo. Si usted lo aporta, pasa a ser la definición y el nuestro queda como comprobación. [2.8](contenido/decisiones.html#d2-8).
+
 El archivo de permeabilidad llegó con tres columnas de COCONUT, y ese cruce es lo que sostiene el
 hallazgo central del Avance 1. El de actividad no trae ninguna: sus únicas columnas de procedencia
 son `source` e `inchikey_source`.
@@ -51,6 +58,8 @@ Mientras tanto se usa la fuente —NPASS y CMAUP— como definición provisional
 :::
 
 ## 3 · La brecha de los naturales aparece solo donde la etiqueta no es medida
+
+> **Decidido por el equipo: queda como limitación declarada.** Su respuesta no cambiaba qué construir —un modelo, evaluado por origen dentro de cada grupo A–D— porque es esa evaluación la que distingue curación de química. [1.6](contenido/decisiones.html#d1-6).
 
 Globalmente los naturales cruzan la barrera 18.9 puntos menos. Pero repartido por grupo de B3DB,
 **la brecha desaparece justo en el grupo A**, que es el que trae un logBB medido:
@@ -68,9 +77,11 @@ archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es 
 ::: {.bio-pregunta data-id="p3" data-titulo="Brecha de los naturales (entrada 1.6)" data-opciones="Hay una razón de curación que lo explica|Es química real|No lo sé; déjenlo como limitación"}
 :::
 
-# Elecciones
+# Lo que el equipo eligió
 
 ## 4 · ¿Dónde se corta «activo»?
+
+> **Decidido por el equipo: 10 µM principal y 1 µM de sensibilidad**, sobre las tres fuentes. No es un hallazgo sino una convención: 10 µM es la concentración a la que los ensayos dejaron de mirar —el 67.4% de las mediciones censuradas lo está exactamente ahí— y es el corte de la sección 7 de su diccionario. Sin una columna de desenlace, un umbral no se estima: se elige. Lo medible favorece 1 µM, y los dos se reportan al lado. [2.3](contenido/decisiones.html#d2-3).
 
 **Es una sola decisión, no dos.** La regla de censura de su diccionario ata el corte de los
 inactivos al de los activos: un `>` solo sirve como negativo si su límite llega al umbral de
@@ -105,15 +116,18 @@ distintas: **declarados** es lo que dice su propio archivo de dianas, sobre el c
 | `GABRB2` | Receptor GABA-A, subunidad β2 | **1** | 1 |
 | `TARDBP` | TDP-43 | **8** | 7 |
 
-La propuesta del equipo es excluir esas cuatro. Pero la lista es suya, y **hay dos casos
-fronterizos que convendría que mirara**: `TNF` con 25 registros declarados (22 en el nuestro) y
-`SOD1` con 50 (46). No están tan lejos de `TARDBP`. De ahí para arriba las demás llegan hasta
-18,215 declarados.
+**Resuelta en la reunión del 15 de octubre de 2026, ya no hace falta contestarla.** Al fijar el
+alcance en cinco categorías, tres de las cuatro quedaron fuera por su categoría: `GABRB2` y
+`GABRG2` son de Epilepsia y `TARDBP` de ELA. La cuarta, `AIF1`, está en Neuroinflamación, que sí
+queda, pero se excluye por sí sola: tiene 0 filas y su propia etiqueta dice «marcador de microglía
+activada; no es diana farmacológica». Queda registrada en la [2.1](contenido/decisiones.html#d2-1).
 
-::: {.bio-pregunta data-id="e2" data-titulo="Dianas sin datos (entrada 2.1)" data-opciones="Sí, excluir las cuatro|Excluir solo algunas|Falta o sobra alguna otra diana"}
-:::
+Para dimensionarlo: de esas cuatro para arriba, las demás dianas van de 25 registros declarados
+—`TNF`— hasta **18,215**. El salto es grande, y es lo que hacía a las cuatro un caso aparte.
 
 ## 6 · ¿Un modelo por diana, por categoría o multitarea?
+
+> **Decidido por el equipo: por diana, para las 14 con mil pares o más**, con multitarea como comparación. Lo decide que el 85% de los compuestos se midió contra una sola diana. [2.2](contenido/decisiones.html#d2-2).
 
 Los volúmenes difieren en tres órdenes de magnitud:
 
@@ -121,8 +135,10 @@ Alzheimer 52,676 · Parkinson 32,372 · Neuroinflamación 12,331 · Depresión 1
 2,456 · Epilepsia 1,862 · Neurodegeneración 1,110 · Deterioro cognitivo 488 · Ansiedad 160 ·
 Huntington 153 · **ELA 53**.
 
-Con 53 registros, ELA no sostiene un modelo propio. Un modelo multitarea comparte representación
-entre dianas y es la única forma de incluir las pequeñas, a costa de mezclar señales.
+**El alcance ya quedó fijo** en Alzheimer, Parkinson, neuroinflamación, depresión y estrés
+oxidativo ([2.1](contenido/decisiones.html#d2-1)), así que lo que falta no es qué enfermedades sino
+**la forma del modelo**. Un modelo multitarea comparte representación entre dianas, a costa de
+mezclar señales; uno por diana solo se sostiene donde hay volumen.
 
 **Y antes que la forma: ¿qué dianas son prioritarias para su pregunta de investigación?** Eso no
 sale de los datos, y cambia qué conviene construir.
@@ -131,6 +147,8 @@ sale de los datos, y cambia qué conviene construir.
 :::
 
 ## 7 · ¿Qué espera recibir, y qué error le cuesta más?
+
+> **Decidido por el equipo: no se fija un punto de operación.** Se entrega la curva de precisión contra profundidad, con un corte sugerido en veinte compuestos. Así mover el corte no cuesta reentrenar nada, y usted lo ajusta cuando vea los resultados. [C.5](contenido/decisiones.html#dc-5).
 
 De esta respuesta cuelgan el punto de operación de los dos modelos y la forma del entregable. Es la
 única pregunta de esta página que el equipo no puede ni aproximar con una medición.

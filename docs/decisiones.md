@@ -4,7 +4,9 @@ Bitácora de lo que se decide en cada fase y de las posibilidades que siguen abi
 
 Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adopta sigue siendo reversible, y dos decisiones ya se revirtieron al medir. Cuando algo cambia se deja la versión anterior visible. Los términos están en el [glosario](glosario.md).
 
-**Cómo se cierra una entrada.** Pasa a *ratificada* con la minuta de la reunión con la patrocinadora: de ahí se toman las respuestas y se registran aquí, en sus términos y con la fecha. Mientras no haya minuta, lo que el equipo adopta se queda en *propuesta*, lo que obliga a declararlo como no ratificado en el reporte donde se use. **Las entradas marcadas «necesita su definición» son las que más urge que ella defina**, porque sin su criterio el equipo solo puede avanzar con un supuesto propio. Esas siete están reunidas, con su contexto y una casilla para responder, en la [consulta a la patrocinadora](../consulta.qmd); contestar ahí no cierra nada —sigue siendo la minuta la que ratifica— pero deja la reunión para lo que haga falta discutir.
+**Cómo se cierra una entrada.** Pasa a *ratificada* con la minuta de la reunión con la patrocinadora: de ahí se toman las respuestas y se registran aquí, en sus términos y con la fecha. Lo que el equipo adopta por su cuenta se queda en *vigente*, que es reversible y obliga a declararlo como no ratificado en el reporte donde se use.
+
+**El 17 de octubre de 2026 el registro dejó de tener entradas bloqueadas esperando su criterio.** Había siete, y durante semanas fueron el cuello de botella: dos las ratificó ella el 15 de octubre, y las otras cinco —[C.5](#dc-5), [1.6](#d1-6), [2.2](#d2-2), [2.3](#d2-3) y [2.8](#d2-8)— las decidió el equipo. El motivo no es impaciencia: en cada una, esperar costaba más que equivocarse. Tres de ellas resultaron contestables con una medición que nadie había hecho, y en las otras dos la respuesta no cambiaba lo que había que construir. **Cada una dice ahora qué la haría cambiar**, que es la forma de dejarlas abiertas sin dejarlas detenidas, y ninguna se declara ratificada. La [consulta a la patrocinadora](../consulta.qmd) sigue en pie, pero ya no pide definiciones: muestra lo decidido y lo que costó, para que ella corrija lo que quiera corregir.
 
 ## Estado de un vistazo
 
@@ -16,8 +18,9 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente |
 | [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta |
 | [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta |
-| [C.5](#dc-5) | Qué se entrega al final y qué error cuesta más | Abierta · **necesita su definición** |
+| [C.5](#dc-5) | El entregable es una lista priorizada, y el punto de operación va como curva | Vigente |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta |
+| [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta |
 
 **Fase 1 · Permeabilidad**
 
@@ -28,7 +31,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta |
 | [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Propuesta |
-| [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Propuesta · **necesita su definición** |
+| [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta |
 
@@ -36,16 +39,18 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 
 | # | Decisión | Estado |
 |:--|:--|:--|
-| [2.1](#d2-1) | Excluir las dianas sin datos | Propuesta · **necesita su definición** |
-| [2.2](#d2-2) | Forma del modelo: por diana, por categoría o multitarea | Abierta · **necesita su definición** |
-| [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Propuesta · **necesita su definición** |
+| [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
+| [2.2](#d2-2) | Por diana, con multitarea como comparación | Vigente · revisada |
+| [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Vigente · revisada |
 | [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
-| [2.6](#d2-6) | La partición de prueba que pudo reservarse | Abierta · **necesita su definición** |
-| [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
-| [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta · **necesita su definición** |
+| [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
+| [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada |
+| [2.8](#d2-8) | El cruce con COCONUT lo calcula el equipo | Vigente · revisada |
+| [2.9](#d2-9) | Clasificar con un corte o predecir la potencia | Propuesta |
+| [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente |
 
-Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (ninguna todavía). La marca **«necesita su definición»** no es un estado: señala las siete entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
+Estados: **vigente** (se trabaja sobre ella, y es reversible), **revisada** (se decidió, se midió y cambió; conserva visible la versión superada), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió; son la 2.1 y la 2.6, del 15 de octubre de 2026). **Ninguna entrada espera ya su definición para avanzar**, y cada una declara qué la haría cambiar.
 
 ---
 
@@ -100,17 +105,21 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 **Se propone.** PAINS no entra al entrenamiento ni a la prueba, para no sesgar contra los naturales. Se aplica a la salida: cada candidato del ranking lleva su alerta y el ranking se reporta con y sin esos compuestos. Nunca se filtra la prueba. El protocolo de tres brazos (sin filtrar, filtrado solo en entrenamiento y evaluación estratificada) puede retomarse si el ranking resulta dominado por alertas, declarándolo antes de correrlo. Una molécula que agrega no falsea un logBB, así que en la fase 1 la alerta es información; en la fase 2 sí condiciona cómo leer el ranking.
 
-#### C.5 · Qué se entrega al final y qué error cuesta más {#dc-5 .abierta .definir}
+#### C.5 · El entregable es una lista priorizada, y el punto de operación se entrega como curva {#dc-5 .vigente}
 
-**Estado:** abierta · necesita su definición
+**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026
 
-> **Pregunta:** Si el laboratorio puede ensayar unos veinte compuestos este semestre, ¿prefiere una lista corta de veinte donde acierte cuatro de cada cinco, o una de cien donde acierte una de cada dos? ¿Y qué espera recibir: una lista de candidatos, un modelo que pueda correr ella misma, o el material de un artículo?
->
-> *Secundarias:* ¿el ranking se presenta como lista ordenada, con un corte, o agrupado por diana? ¿Cómo se presenta un compuesto con BBB− predicho y actividad documentada?
+**Qué se decidió.** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
 
-**Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística. Un falso activo manda al laboratorio a ensayar algo que no funciona (tiempo y reactivos); un falso inactivo descarta un candidato real y nadie se entera. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación no.
+**Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística: un falso activo manda al laboratorio a ensayar algo que no funciona, y un falso inactivo descarta un candidato real sin que nadie se entere. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación era lo que faltaba.
 
-**Qué arrastra la segunda mitad.** Lo que espera recibir define la forma del entregable, buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2). Es también la única pregunta de esta página que el equipo no puede contestar ni aproximar con una medición.
+**Por qué se decide y no se pregunta.** Era la única entrada que el equipo no podía ni medir ni aproximar, y por eso se planteó como una elección entre dos listas concretas. Pero preguntarla tenía un supuesto escondido: que hay que elegir **un** punto de operación. No hay que elegirlo. Entregando la curva, mover el corte no cuesta reentrenar nada: es leer otra fila de la misma tabla. Así la pregunta deja de bloquear y se convierte en algo que ella puede ajustar cuando vea los resultados, que es cuando de verdad se puede contestar.
+
+**Qué arrastra.** La forma del entregable define buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2).
+
+**Qué lo cambiaría.** Que pida un modelo ejecutable en vez de una lista —lo que arrastra empaquetado y la [C.6](#dc-6)— o que el laboratorio tenga una capacidad de ensayo muy distinta de veinte compuestos, que mueve el corte sugerido pero no la forma del entregable.
+
+**El caso que hay que saber presentar:** un compuesto con BBB− predicho y actividad documentada. No se descarta, porque la [1.1 del planteamiento](#comun) trata las dos fases como evidencia paralela y no como cascada: aparece en la lista con las dos predicciones visibles y la advertencia de que la permeabilidad es predicha y no medida.
 
 #### C.6 · Licencia y uso académico de los resultados {#dc-6 .propuesta}
 
@@ -118,7 +127,7 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 > **Pregunta:** ¿Se autoriza publicar los resultados, y qué datos derivados, bajo uso académico no comercial? ¿Hay aspiraciones comerciales? NPASS (CC BY-NC) lo impediría.
 
-**Esta entrada va aparte de las demás.** No es un criterio técnico sino administrativo, y la mitad de lo que falta no depende de ella sino del departamento y del Tec: propiedad intelectual, orden de autoría, foro. Tratarla en la misma sesión que el criterio de «activo» hace que ninguna de las dos se cierre. Se plantea por escrito y con tiempo, no en la reunión donde se resuelven las entradas marcadas «necesita su definición».
+**Esta entrada va aparte de las demás.** No es un criterio técnico sino administrativo, y la mitad de lo que falta no depende de ella sino del departamento y del Tec: propiedad intelectual, orden de autoría, foro. Tratarla en la misma sesión que el criterio de «activo» hace que ninguna de las dos se cierre. Se plantea por escrito y con tiempo, no en la reunión donde se discuten los criterios técnicos.
 
 **Se propone.** Los archivos de la patrocinadora son la fuente y el producto puede ser un texto académico de investigación. Qué hace falta:
 
@@ -131,6 +140,30 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 | **Reproducibilidad.** Versiones de RDKit y librerías, semillas, huella de los datos | Parcial: hay `requirements.txt` |
 | **Lo que un revisor pedirá.** Baseline propio con intervalos de confianza, partición por andamio y por fuente, validación externa, «activo» definido y un resultado sin patrón reportado tal cual | En curso |
 | **Marco institucional.** Políticas de propiedad intelectual y autoría del Tec y del departamento, orden de autoría, foro | Por confirmar |
+
+#### C.7 · La ventana terapéutica: potencia contra citotoxicidad {#dc-7 .propuesta}
+
+**Estado:** propuesta
+
+> **Pregunta:** ¿El ranking final debe considerar la citotoxicidad, y con qué dato? ¿Tiene mediciones de viabilidad celular de los compuestos que le interesan?
+
+**Qué pasó.** El proyecto predice potencia y permeabilidad, y con eso ordena candidatos. Falta el otro extremo: un compuesto no sirve por ser potente, sirve porque su concentración efectiva está lejos de la tóxica. Eso es la **ventana terapéutica**, y hoy no se puede calcular:
+
+| | |
+|:--|--:|
+| Compuestos con medición de eficacia | 85,685 |
+| Compuestos con medición citotóxica | 674 |
+| **Con ambas** | **203** |
+
+Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `MNTD`) y 483 con `assay_type` de toxicidad, de 202,647. El eje no existe en este archivo.
+
+**Por qué importa más aquí que en un proyecto cualquiera.** Muchos productos naturales son potentes **precisamente porque son citotóxicos**: así los usa la planta. Y el proyecto ya lo midió sin proponérselo en la [C.4](#dc-4): los naturales llevan alerta PAINS 2.1 veces más seguido, y la curcumina aparece contra 32 dianas, la quercetina contra 31 y el resveratrol contra 28. Un ranking de naturales que ignore la citotoxicidad va a poner arriba justo a los promiscuos tóxicos. No es un riesgo teórico, es el resultado esperado dado lo que ya se midió.
+
+**Se propone.** **No modelar la toxicidad**, sino usarla como **bandera sobre el ranking de salida**, con el mismo patrón que la [C.4](#dc-4) ya adoptó para los PAINS: no entra al entrenamiento ni a la prueba, acompaña a cada candidato y el ranking se reporta con y sin los marcados. Modelarla exigiría armonizar líneas celulares y desenlaces distintos, que es el mismo problema de comparabilidad de la [2.3](#d2-3) en un eje nuevo.
+
+**De dónde saldría el dato, en orden de costo.** Primero el volcado de ChEMBL 37, que ya es la alternativa declarada de la fase 2: la citotoxicidad de estos mismos compuestos está ahí y el recorte que recibimos la filtró, así que es el mejor solapamiento posible y una sola procedencia. Después **Tox21**, público y de dominio público vía PubChem BioAssay, que incluye contra-tamices de viabilidad y ensayos de la vía Nrf2/ARE —la diana de estrés oxidativo—, con la duda de cuánto solapa su biblioteca de químicos ambientales con nuestros naturales, que se mide antes de invertir. **ToxCast** al final, por volumen.
+
+**Si no se resuelve:** el ranking se entrega declarando que ordena por potencia y permeabilidad, y que no distingue un compuesto selectivo de uno citotóxico. Eso cambia qué significa el entregable, así que toca la [C.3](#dc-3) y la [C.5](#dc-5).
 
 ### Supuestos
 
@@ -227,13 +260,17 @@ El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la
 
 Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. Para la logística **se propone escalar**, porque sin escalar no converge, y **min–max como opción de partida**, no como conclusión: entre las tres formas de escalar la medición no da base para elegir, y la alternativa de no escalar deja un modelo que agotó sus iteraciones. Yeo-Johnson es la única con un motivo medido para evitarla, y aun así por una diferencia que no alcanza significancia. **Cuál de las tres se adopta lo cierra el equipo**, no la patrocinadora: la medición no las distingue en desempeño y la razón para escalar resultó ser la convergencia, así que no queda un criterio que dependa de su conocimiento del dominio. Lo que sí depende de ella es la pregunta de arriba, entre explicabilidad y reducción de dimensión, porque eso se decide por lo que quiere poder leer en el resultado y no por una cifra. Se resuelve en el Avance 3, con los modelos afinados y suficientes evaluaciones para cerrar los intervalos. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas; cambiar la transformación de trabajo obliga a repetir la selección de la §9 —los filtros de varianza y de correlación operan sobre los valores transformados, así que las 171 columnas pueden no ser las mismas— y a reejecutar el notebook. El PCA no se adopta, por explicabilidad, y se guarda ajustado como brazo de comparación. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
 
-#### 1.6 · Naturales en la fase 1: evaluar por origen, no entrenar por separado {#d1-6 .propuesta .definir}
+#### 1.6 · Naturales en la fase 1: evaluar por origen, no entrenar por separado {#d1-6 .vigente}
 
-**Estado:** propuesta · necesita su definición
+**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026
 
-> **Pregunta:** Los naturales cruzan la barrera igual que el resto en el grupo A de B3DB, que es el que tiene logBB medido, y 21 y 17 puntos menos en B y C, que vienen de una clasificación publicada. ¿Conoce alguna razón de curación que lo explique, o hay que leerlo como química? De ahí cuelga el resto: si es curación, un solo modelo con el desempeño reportado por origen basta; si es química, habría que considerar entrenar aparte.
->
-> *Secundarias, si queda tiempo:* ¿Los 1,005 compuestos con análogo natural que difiere solo en estereoquímica cuentan como naturales? ¿Qué rango de TPSA es razonable para naturales neuroactivos?
+**Qué se decidió.** Un solo modelo, con el desempeño reportado por origen **dentro de cada grupo A–D** y no solo en el global. La causa de la brecha —curación o química— queda como **limitación declarada**, no como pregunta abierta.
+
+**Por qué se decide y no se pregunta.** La pregunta era si existe una razón de curación que explique que los naturales crucen igual en el grupo A y 21 y 17 puntos menos en B y C. Solo ella podría saberlo, pero la respuesta **no cambia lo que hay que hacer**: con cualquiera de las dos lecturas la decisión es la misma —un modelo, evaluado por origen dentro de cada grupo— porque es esa evaluación la que distingue las dos explicaciones. Si el modelo rinde peor en naturales solo en B y C, está aprendiendo ruido de curación; si falla también en A, es química. La medición contesta lo que la pregunta pedía.
+
+**Qué lo cambiaría.** Que la evaluación por origen muestre que el modelo falla en naturales dentro del grupo A, que es el que tiene logBB medido. Ahí sí habría que considerar entrenar aparte.
+
+**Dos cosas que quedan como supuesto declarado,** por si alguien las necesita: los 1,005 compuestos con análogo natural que difiere solo en estereoquímica **no** cuentan como naturales, porque la definición que sostiene el hallazgo del Avance 1 es la coincidencia exacta con COCONUT; y no se fija un rango de TPSA propio para naturales, porque el óptimo ya se midió y sube con la diversidad del conjunto.
 
 **Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido. Los naturales cruzan unos 19 puntos menos (52.7% contra 71.7% BBB+, notebook 01 del Avance 1).
 
@@ -358,40 +395,126 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 
 El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concentra en 1,445 compuestos. Los 2,727 solapados sirven de calibración: donde hay pChEMBL y concentración exacta se puede ajustar el corte de concentración y medir cuánto discrepan. **Pendiente:** hacer esa calibración antes de fijar la [2.3](#d2-3).
 
+#### 2.1 · El alcance: cinco categorías de enfermedad {#d2-1 .ratificada .revisada}
+
+**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes preguntaba por cuatro dianas sueltas
+
+**Qué se decidió.** El alcance de la fase 2 son **cinco categorías**: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás se remueven. La patrocinadora lo cerró en la reunión del 15 de octubre: «sí se pueden resumir a esas… y si los demás adelante los pueden remover» (acta de la reunión, documento interno).
+
+| Categoría | Registros | |
+|:--|--:|:--|
+| Alzheimer | 52,676 | queda |
+| Parkinson | 32,372 | queda |
+| Neuroinflamación | 12,331 | queda |
+| Depresión | 10,888 | queda |
+| **Estrés oxidativo** | **2,456** | **queda, por decisión suya** |
+| Epilepsia · Neurodegeneración · Deterioro cognitivo · Ansiedad · Huntington · ELA | 3,826 en total | fuera |
+
+Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: el recorte cuesta 3,826 filas.
+
+**El criterio, que es lo que ella pidió dos veces.** Preguntó «¿cuál es el criterio para eliminar el resto, solo porque tienen pocas entradas?» y «¿cómo debería ser esa distribución para que no haga ruido?», con una cota propia: menos del 10% no le parece confiable. La regla que queda es **≥ 50 registros por categoría**, ofrecida como conservadora. No es una cota derivada: por debajo de unas decenas de pares un modelo propio no se sostiene, y ELA tiene 53 registros y Huntington 153. Se escribe como regla y no como lista para que el día que lleguen datos nuevos no haya que volver a preguntar.
+
+**Estrés oxidativo entra por decisión suya, y su razonamiento es el criterio biológico que el equipo no podía deducir:** la escala va de lo general a lo específico, «es solo un dolor de cabeza o te está tratando Alzheimer», y el estrés oxidativo es el extremo general —«toda enfermedad, desde la gripa, desde hacer ejercicio, el acné»—. Con 2,456 registros es la categoría más chica que queda, y ella misma la dejó revisable: si el análisis la muestra anómala, se reconsidera.
+
+**Las cuatro dianas sin datos quedan resueltas sin preguntarle.** Era la pregunta anterior de esta entrada, y el alcance la contesta: `GABRB2` y `GABRG2` son de Epilepsia y `TARDBP` de ELA, categorías que salen. Solo `AIF1` está en una categoría que queda, y se excluye por sí sola: tiene 0 filas y la etiqueta de la propia patrocinadora dice «marcador de microglía activada; **no es diana farmacológica**».
+
+**Lo que hay que mostrarle, porque sus dos decisiones se restan entre sí.** Estrés oxidativo es **47.7% NPASS y CMAUP**. Si además se descartara el etiquetado de esas dos fuentes (su correo del 16, [2.3](#d2-3)), la categoría que defendió pasaría de 2,456 filas a 1,285. No lo vio, y conviene decírselo antes de que decida otra cosa sobre la 2.3.
+
+#### 2.6 · La partición de prueba que sí se había reservado {#d2-6 .ratificada .revisada}
+
+**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes era una pregunta abierta
+
+**Qué se decidió.** Sí había una partición reservada, **se hizo al azar y sin criterio**, y la patrocinadora entrega el archivo completo para que el equipo la rehaga. «Partamos de la base de datos completa que se las podemos pasar… ustedes que son los expertos tengan la base completa y hagan bien esas separaciones» (acta de la reunión, documento interno).
+
+**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647, el 89.9%. La sospecha era correcta. Al explicarle por qué el azar no sirve —si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada— lo aceptó sin reservas: «lo hicimos muy a la ligera… si hay una forma de hacerlo con mejores criterios, adelante».
+
+**Su condición, que repitió cuatro veces:** que se reserve una prueba que el modelo nunca vea. Su razón no es metodológica sino práctica: no espera que aparezca otra base de datos con la que validar después. Eso se respeta en la [2.7](#d2-7), que reserva el 20% y lo deja fuera de la validación cruzada.
+
+**La limitación que hay que declarar en el reporte.** Un 10% extraído al azar del mismo archivo comparte andamios, ensayos y artículos con el 90%: es una partición interna con otro nombre. Prueba filas nuevas, no química nueva ni protocolos nuevos. Si el reporte final la llama «validación externa», sobrevende lo que compra. Con el archivo completo en mano el punto es casi histórico, pero queda escrito porque ella descansa mucho en ese conjunto.
+
+**Pendiente de Jorge Uribe:** el método con que separó el 10%, y verificar con el equipo si introduce sesgo (ofrecido en el correo del 16 de octubre).
+
+#### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
+
+**Estado:** vigente · decisión del equipo, no necesita a la patrocinadora
+
+*No hay nada que preguntarle.* Se registra porque fija el formato del artefacto que todo el modelado de la fase 2 va a leer, y porque tres de sus reglas de agregación difieren de lo que dice la [propuesta de variable objetivo](variable-objetivo-fase2.md).
+
+**Qué pasó.** La matriz de la fase 2 (`src/data_prep/pares_fase2.py`, construida con `scripts/construir_pares_fase2.py`) deja 70,384 pares sobre 59,532 compuestos y 26 dianas. La decisión no es cómo agregarla sino **qué se guarda**: no una etiqueta, sino el intervalo donde cae la potencia, con la binaria derivada de él.
+
+| Columna | Qué es |
+|:--|:--|
+| `pActividad` | la potencia como número, 6 − log10 µM; `NaN` si el par solo tiene cotas |
+| `limite_inferior`, `limite_superior` | el intervalo, con ±∞ donde no hay cota |
+| `activo_10um`, `activo_1um` | la etiqueta binaria, **derivada** del intervalo |
+
+**Por qué.** Es la lección de la fase 1 aplicada al revés. El Avance 2 seleccionó sus 171 columnas sobre la matriz transformada con Yeo-Johnson y congeló ese artefacto, así que cambiar la transformación obliga a repetir la selección y a reejecutar el notebook ([1.5](#d1-5)). Guardar solo `activo_10um` tendría el mismo defecto: adoptar la regresión de la [2.9](#d2-9) obligaría a reconstruir todo. Con el intervalo guardado, la clasificación, la regresión sobre exactas y la censurada leen el mismo archivo, y **el umbral pasa a ser una decisión de lectura**.
+
+**Y el intervalo reproduce la regla del diccionario sin programarla aparte.** En escala de potencia un `> L µM` es cota superior, así que «inactivo con umbral T» es `limite_superior ≤ 6 − log10 T`. Un `> 1 µM` da cota superior 6, que no alcanza para declarar inactivo con T = 10 µM y sí con T = 1 µM: es la sección 7 del diccionario como consecuencia, y no como caso especial.
+
+**Tres reglas de agregación que difieren de la propuesta**, y conviene que se vean porque mueven cifras:
+
+1. **Mediana de las mediciones exactas, no el valor más potente.** El máximo sesga hacia la clase positiva, que es el primer problema que la propuesta declara de su propia regla. La dispersión no se pierde: queda en `rango_exactas`, así que un análisis de robustez puede excluir los pares dispersos sin volver a leer el archivo.
+2. **Conflicto es evidencia incompatible, no dispersión.** Con la mediana, dos mediciones a los lados del corte son ruido de medición y no contradicción. Un par se marca en conflicto cuando su mediana cae fuera de lo que permiten sus cotas, o cuando las cotas se cruzan. Así bajan de **1,784 a 1,126**, y solo 15 dan un intervalo vacío. Eso alivia el segundo problema de la propuesta: quitar los conflictos pesaba más en NPASS y CMAUP (32% y 39% de sus pares con varias mediciones).
+3. **El empate en el umbral se resuelve a favor de activo.** Una medición exacta justo en el umbral es activa por la convención de «concentración igual o menor»; un censurado `> 10 µM` con el mismo umbral es inactivo por la regla del diccionario. Tienen la misma relación numérica con el corte y significan lo contrario, y lo que los distingue es que el censurado no tiene cota inferior. Resolverlo así mueve **409 pares** con el corte de 10 µM, porque los valores redondos son frecuentes. Lo encontró una prueba, no una lectura.
+
+**Dos recortes declarados.** La potencia se recorta a **[2, 12]**, que no es un percentil elegido a mano: es el rango del pChEMBL observado en este archivo (2.35 a 12.00), y ChEMBL no asignó pChEMBL a ninguna de las 319 filas que caen fuera —su propia tubería ya las marcó—. Y las filas en unidades de masa quedan fuera, porque sin peso molecular no hay conversión a molar: son 181 de las que podrían formar par, y por eso el conteo da 70,384 y no 70,497.
+
+**Cifras del artefacto.** 57,832 pares con potencia y 12,552 solo con cotas; 67,736 con etiqueta a 10 µM (72.8% activos, 2,648 sin decidir) y 69,632 a 1 µM (50.2%, 752 sin decidir); 24,230 grupos para la partición. Los descriptores quedan **201 de 217** utilizables, dos menos que los 203 de la fase 1, porque el conjunto de compuestos es otro y cambia qué columnas salen constantes o no finitas. Esa cifra pertenece al diccionario de la matriz y se mueve ahí cuando el #83 se fusione.
+
 ### Propuestas
 
-#### 2.1 · Excluir las dianas sin datos {#d2-1 .propuesta .definir}
+#### 2.2 · Por diana, con multitarea como comparación {#d2-2 .vigente .revisada}
 
-**Estado:** propuesta · necesita su definición · se resuelve antes de la [2.2](#d2-2)
+**Estado:** vigente · revisada el 17 de octubre: antes era abierta, y la [2.1](#d2-1) la desbloqueó
 
-> **Pregunta:** ¿Se confirma excluir `GABRG2`, `AIF1`, `GABRB2` y `TARDBP`? ¿Falta o sobra alguna otra diana?
+**Qué se decidió.** Un modelo por diana para **once** dianas, el multitarea para las quince restantes, y el orden lo decide el **volumen**: de más pares a menos, empezando por `BACE1`, `DRD2`, `ACHE`, `MAOB` y `MAOA`. No se espera una lista de prioridades suya.
 
-**Qué pasó.** El archivo de dianas tiene 39 filas: 37 dianas por gen y 2 receptores completos (NMDA y GABA-A, sin subunidad). Las etiquetas se curaron a mano desde la farmacología conocida; la categoría principal es la enfermedad con más respaldo, fármaco aprobado primero y luego evidencia genética. Cuatro no tienen datos para un modelo:
+**Once y no catorce, y la diferencia la encontró una comprobación que faltaba.** El 18 de octubre, al reservar la prueba del 20% y mirar los pliegues diana por diana —lo pidió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86)—, el conteo de «1,000 pares o más» bajó de 14 a **13** sobre lo que queda para ajustar. Y de esas 13, dos no sostienen un modelo propio aunque tengan volumen: `LRRK2` (96.8% de activos) deja un pliegue con **13** negativos y `GRIN2B` (96.9%, y solo 172 grupos para 1,592 pares) deja uno con **5**. Con esa clase minoritaria no hay métrica por pliegue con error estándar interpretable ni punto de operación elegible, así que las dos pasan al multitarea y se reportan como subgrupo. El criterio queda escrito como condición y no como número: **mil pares o más y cincuenta casos de la clase minoritaria en todos los pliegues.**
 
-| Gen | Diana | Filas |
-|:--|:--|--:|
-| `GABRG2` | Receptor GABA-A, subunidad γ2 | **0** |
-| `AIF1` | Iba1 (el diccionario lo marca «marcador», sin dirección de efecto) | **0** |
-| `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
-| `TARDBP` | TDP-43 | 8 |
+**Qué pasó.** Con el alcance fijo y la matriz de pares construida, los volúmenes ya no se cuentan en registros sino en pares, que es la unidad del modelo:
 
-**Se propone.** Excluir las cuatro. Primero se fija la lista y después la forma del modelo.
+| Dianas | Pares que cubren |
+|:--|--:|
+| Las 14 con 1,000 pares o más, sobre los 70,384 pares | **94.3%** |
+| Las 13 con 1,000 o más, sobre los 54,369 que quedan al reservar la prueba | 93.5% |
+| **Las 11 que además tienen clase minoritaria en todos los pliegues** | **85.6%** (46,534 de 54,369) |
+| Las 21 con 200 o más | 99.3% |
+| Las 5 restantes | 466 pares en total |
 
-#### 2.2 · Forma del modelo: por diana, por categoría o multitarea {#d2-2 .abierta .definir}
+Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midió contra una sola diana.** Solo 8,934 compuestos (15.0%) tienen dos dianas o más, y aportan el 28.1% de los pares.
 
-**Estado:** abierta · necesita su definición · después de la [2.1](#d2-1)
+**Se propone.** **Un modelo por diana para las que pasan el criterio** —once, el 85.6% de los pares ajustables— y **un multitarea** sobre las 26, que deja de ser solo un brazo de comparación: es donde viven `LRRK2` y `GRIN2B`, que tienen volumen pero no clase minoritaria. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
 
-> **Pregunta:** Con la lista ya fijada, ¿un modelo por diana, uno por categoría de enfermedad o uno multitarea con todas? ¿Qué dianas son prioritarias?
+**Por categoría de enfermedad, no.** La categoría agrupa genes que no comparten mecanismo: en Alzheimer conviven `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear). Un modelo sobre esa mezcla aprende el promedio de tres farmacologías. Y como cada gen pertenece a exactamente una categoría, «por categoría» es solo una agrupación más gruesa de los mismos genes, sin nada que la haga preferible. **La categoría se usa para reportar**, que es donde sí aporta: permite decir «el modelo acierta mejor en Alzheimer que en neuroinflamación», que es la lectura que importa para priorizar candidatos.
 
-**Qué pasó.** Los volúmenes difieren en tres órdenes de magnitud: Alzheimer 52,676 registros, Parkinson 32,372, neuroinflamación 12,331, depresión 10,888, Huntington 153 y ELA 53. Con 53 registros ELA no sostiene un modelo propio; con 52,676 Alzheimer sí. Un modelo multitarea comparte representación entre dianas y es la única forma de incluir las pequeñas, a costa de mezclar señales.
+**Qué lo cambiaría.** Que ella señale dianas prioritarias, y entonces cambia solo el **orden** en que se entrenan, no la forma ni el resultado: son modelos independientes, así que reordenarlos no cuesta rehacer nada. Por eso no vale la pena esperar esa respuesta. Lo que sí cambiaría la forma es que pida una diana que no pasa el criterio —`GRIN1`, con 88 pares y un pliegue sin negativos, es el caso extremo—: ahí la respuesta no es entrenarle un modelo, es decirle con la cifra por qué no se puede y ofrecerle el subgrupo del multitarea.
 
-#### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .propuesta .revisada .definir}
+**Lo que esto arrastra.** Once modelos son once conjuntos de hiperparámetros sobre la misma partición, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 34.8% en `MAOA` a 96.9% en `GRIN2B`, así que el punto de operación no puede ser el mismo para todas: la curva de la [C.5](#dc-5) se entrega por diana.
 
-**Estado:** propuesta · revisada el 7 de octubre · necesita su definición
+La tabla por diana con pares, grupos y el mínimo de cada clase en los pliegues está en la sección 6.3 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb), que es de donde salen estas cifras.
 
-> **Pregunta:** ¿Dónde se corta «activo», en 10 µM o en 1 µM? **Es una sola decisión, no dos:** su propia regla de censura ata el corte de los inactivos al de los activos, así que mover uno mueve al otro y cambia el balance de clases. La tabla de abajo muestra qué cuesta cada opción.
->
-> *Secundarias:* ¿son confiables los inactivos declarados por texto? Si un mismo esqueleto y gen tienen observaciones activas e inactivas, ¿qué ensayos son comparables y qué evidencia tiene prioridad? ¿«Activo» incluye cualquier dirección del efecto, inhibir o activar?
+#### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .vigente .revisada}
+
+**Estado:** vigente · revisada el 7 y el 17 de octubre · decidida por el equipo
+
+**Qué se decidió.** Las **tres fuentes** se etiquetan con las columnas de la sección 5 del diccionario, que vienen informadas y homogéneas para las tres. Corte **10 µM** como principal y **1 µM** como análisis de sensibilidad, reportado siempre al lado. Sin los inactivos declarados por texto, y con los pares en conflicto marcados ([2.10](#d2-10)).
+
+**Por qué se decide y no se espera su respuesta.** En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa», contestando a lo que se le preguntó en la reunión: construir el valor en las otras dos bases. Su preocupación es legítima —el umbral no significa lo mismo en todos los ensayos— pero el remedio que propuso no se puede ejecutar y el que implica tampoco alcanza:
+
+- **Revisar por tejido y tipo de experimento no es posible** sobre la población que se modela: esas columnas están vacías en las 108,640 filas de la ruta `cns_target`, y en el 99.6% de los pares en conflicto el tejido no está ni anotado.
+- **Quedarse solo con ChEMBL no compra comparabilidad.** Dentro de ChEMBL hay 8,984 ensayos distintos, y el desacuerdo entre mediciones del mismo par es ligeramente **peor** ahí solo (28.7% discrepan más de 10×) que juntando las tres fuentes (26.0%).
+- **Y cuesta la mitad de la categoría que ella defendió:** estrés oxidativo es 47.7% NPASS y CMAUP.
+
+Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL hasta el redondeo**: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. Etiquetar por concentración no es una inferencia entre bases, es la misma aritmética aplicada fila por fila: ninguna etiqueta se traslada de una base a otra, cada fila se etiqueta con su propio valor.
+
+**Lo que sí se solapa, y con la llave que importa.** Una versión anterior de este párrafo añadía que «los compuestos casi no se solapan: 283 SMILES entre ChEMBL y NPASS». La cifra es correcta por SMILES exacto y engañosa aquí, porque la llave del par es el **esqueleto de conectividad**, no el SMILES: con ella hay 1,592 pares mixtos y el 42.4% de los pares con evidencia de NPASS comparte par con otra fuente. El solapamiento es sustancial, y por eso el desempeño se reporta en estratos disjuntos y no «por fuente».
+
+**El riesgo se vigila en lugar de evitarse.** «Solo ChEMBL» queda como análisis de sensibilidad, el desempeño se reporta por estrato de procedencia ([2.10](#d2-10)), y el control de atajo del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) decide: si un modelo que solo ve la procedencia se acerca al que ve química, la fuente está filtrando la etiqueta y se vuelve a ChEMBL.
+
+**Qué lo cambiaría.** Que el control de atajo dispare; que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
+
+**El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
 
 **Qué pasó.** Primero se planteó «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin decir cómo etiquetar lo que no tiene pChEMBL. El EDA mostró que el pChEMBL solo existe para ChEMBL: etiquetar solo por él descarta 15,293 registros de NPASS y CMAUP (los naturales) y 54,498 mediciones censuradas (`> X nM`), de las cuales 29,730 traen además un texto que las declara inactivas. **Los dos últimos grupos no se suman:** los 29,730 están dentro de los 54,498, así que para esas filas la segunda y la tercera vía son la misma fila vista de dos maneras.
 
@@ -409,14 +532,21 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 
 Cortar en 1 µM es más exigente con los activos y, por la misma regla, más generoso con los negativos: recupera 4,879 censurados más y deja el conjunto casi balanceado. Cortar en 10 µM conserva más activos y desperdicia seis mil censurados. El 10 µM del equipo se había propuesto por ser el valor modal de los límites, que no es una razón farmacológica.
 
-**Un solo experimento pesa demasiado, y es el argumento más fuerte contra el corte en 10 µM.** Las 29,730 filas con texto de inactividad son exactamente el mismo conjunto: todas censuradas con `>`, todas con límite de 10 µM, todas con el texto «Not active» y **todas de la misma referencia, `CHEMBL1909046`**. Son 36,653 los censurados con límite en 10 µM, así que esa referencia sola aporta el 81% de ellos. El efecto sobre el conjunto de entrenamiento:
+**Un solo experimento pesaba demasiado, y resultó que no tanto: la cifra era por registro y el modelo entrena por par.** Las 29,730 filas con texto de inactividad son exactamente el mismo conjunto: todas censuradas con `>`, todas con límite de 10 µM, todas con el texto «Not active» y **todas de la misma referencia, `CHEMBL1909046`**, que es el panel de toxicogenómica DrugMatrix. Son 36,653 los censurados con límite en 10 µM, así que esa referencia sola aporta el 81% de ellos.
 
-| Si «activo» se corta en | Negativos seguros | De `CHEMBL1909046` |
+| Unidad, con el corte en 10 µM | Negativos | De `CHEMBL1909046` |
 |:--|--:|--:|
-| **10 µM** | 48,480 | 29,730 (**61%**) |
-| **1 µM** | 53,359 | 29,730 (56%) |
+| Registro etiquetado | 48,480 | 29,730 · **61%** |
+| **Par compuesto-diana** | 20,281 | 2,187 · **10.8%** |
+| Par, sin los inactivos por texto *(definición vigente)* | 18,107 | 13 · **0.1%** |
 
-Con el corte en 10 µM, tres de cada cinco negativos del conjunto vienen de un solo experimento con un solo protocolo. Eso no lo arregla ninguna partición: si ese experimento tiene un sesgo sistemático, el modelo lo aprende como si fuera biología. Es una razón para preferir 1 µM que no tiene que ver con el balance de clases, y es parte de lo que hay que poner delante de la patrocinadora al preguntarle el corte.
+Las dos últimas filas las imprime `scripts/cifras_etiqueta_fase2.py` en sus dos variantes. La fila del medio decía antes 19,488 y 2,756 · 14.1%, de una versión del conteo anterior a que la llave del par y los filtros quedaran fijos; es la cifra que Pame no pudo reproducir al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
+
+Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae casi a una sexta parte (61% a 10.8%). Y la definición vigente los deja fuera, con lo que baja al 0.1%: **el riesgo se quita al excluirlos, no se demostró que no existiera**, y se vigila con la sensibilidad «con los inactivos por texto», que el script imprime al lado de la principal.
+
+**La razón para excluirlos no es que el límite sea inventado.** Una versión anterior de esta entrada decía que el `>` de 10 µM «lo asignó el equipo que armó el archivo, no el ensayo original». El comentario de ChEMBL de esas 29,730 filas dice literalmente «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite viene del ensayo y la codificación como `> 10 µM` es una traducción fiel. Lo que sostiene la exclusión es la **concentración en un solo documento**: las 29,730 filas son una sola campaña de tamizaje (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta, así que dejarlas dentro hace que un protocolo defina el 61% de la clase negativa por registro. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
+
+Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% «el argumento más fuerte contra el corte en 10 µM», y lo era solo mientras la unidad fuera el registro. Deja de ser una razón para preferir 1 µM.
 
 Las cifras son las del archivo recibido (202,647 registros, el 89.9% del completo de 225,513, [2.6](#d2-6)), que es el que verá el modelo. Los porcentajes coinciden con los del diccionario de la patrocinadora (98%, 89%, 12%).
 
@@ -433,6 +563,29 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Umbral.** Con pChEMBL, ≥ 5 daba 87.1% de activos (6.7:1) y llevó a proponer ≥ 6; con las tres vías la razón baja a 1.6:1 por registro. El sesgo de los registros con pChEMBL es una explicación posible, no demostrada. Se conserva ≥ 5 como primario y ≥ 6 como robustez: el balance de clases no determina el umbral biológico.
 
+**La llave del par es el esqueleto × gen, y no el identificador del compuesto.** `source_compound_id` usa prefijos distintos por fuente —`CHEMBL…` contra `NPC…`— y **no comparte ni un valor** entre ellas, así que con esa llave un compuesto medido en dos fuentes entra como dos pares independientes y sus contradicciones quedan invisibles: son **164 pares** en conflicto entre ChEMBL y las fuentes naturales que así no se verían. Se usa el [esqueleto de conectividad](glosario.md) × `target_gene`, que además es la misma llave que `grupos_cv` usa en `src/data_prep/splits.py` para la validación cruzada agrupada, de modo que la unidad de etiquetado y la de partición coinciden.
+
+**Y «por fuente» no se puede reportar sobre el par, porque la fuente no es un atributo del par.** Con la llave por esqueleto, 827 de los 828 pares de CMAUP comparten par con otra fuente, y 42.4% de los de NPASS: **CMAUP tiene exactamente un par propio**. Así que el desempeño se reporta en **estratos disjuntos por procedencia de la evidencia**, que sí son aditivos:
+
+| Estrato | Pares | Activos |
+|:--|--:|--:|
+| Solo ChEMBL | 62,414 | 75.6% |
+| Solo NPASS | 2,114 | 12.1% |
+| Solo CMAUP | 1 | — |
+| Mixtos | 1,592 | 37.5% |
+
+La brecha real entre ChEMBL y los naturales es de **63 puntos**, no los 52 que sugería contar cada par en todas sus fuentes. Es el riesgo de la [2.5](#d2-5) cuantificado sobre la unidad correcta, y lo que vigila el control de atajo del [issue #32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32).
+
+**El corte es una convención del protocolo de tamizaje, heredada del archivo.** El archivo **no tiene columna de desenlace**: nada registra si un compuesto funcionó, así que no hay nada contra lo que calibrar y un umbral no es estimable. Todo candidato que se puede construir falla por eso: un percentil de la distribución de la diana es circular, y la moda del límite de censura está condicionada al fracaso —se midió, y deja seis dianas con 93–96% de activos, peor que el corte global—. Lo que sí está medido es de dónde sale el 10 µM. De las 54,377 mediciones censuradas del archivo, el **67.4% está censurada exactamente en 10 µM**, y el comentario de ChEMBL de las 29,730 filas con texto lo dice literalmente, «Inhibition < 50% @ 10 uM». Eso sostiene una sola afirmación: **es la concentración a la que estos ensayos dejaron de mirar**. Llamarla «la concentración estándar de tamizaje de bibliotecas» sería generalizar una medición de este archivo a una práctica de la industria que nadie verificó —el mismo error del párrafo siguiente en pequeño—, así que no se dice.
+
+**Una versión anterior de este párrafo decía otra cosa, y estaba mal.** Afirmaba que 10 µM es «aproximadamente la concentración libre máxima alcanzable con una dosis oral convencional sin toxicidad». No tenía fuente y se retira. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86), con el argumento de que las concentraciones libres cerebrales de los fármacos del SNC quedan en general por debajo de 1 µM, así que el razonamiento favorecería 1 µM.
+
+Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en vez de cambiar una afirmación sin respaldo por otra. Lo que se encontró al buscarla es indirecto y apunta en su dirección: la concentración libre cerebral es la que gobierna la unión a la diana, y en 18 inhibidores de los transportadores de serotonina y dopamina la concentración libre quedó a 3.3 ± 2.1 y 4.1 ± 4.0 veces de la Ki, mientras que la concentración **total** quedaba 408 ± 368 y 410 ± 395 veces por encima («Unbound Brain Concentration Determines Receptor Occupancy…», *Drug Metabolism and Disposition*, 2009; leído del resumen, no del texto completo, y medido en rata). Como las Ki de las dianas del SNC son nanomolares, eso sitúa las concentraciones libres muy por debajo de 10 µM. Es suficiente para no apoyar el corte en farmacología; no es suficiente para apoyarlo en la dirección contraria. **De modo que la entrada no se apoya en ningún argumento farmacológico**, ni a favor ni en contra.
+
+**Y lo medible favorece 1 µM, así que 10 µM queda como principal solo por convención.** Tres criterios van en contra del 10 µM: con 1 µM sirven 4,879 censurados más (53,359 contra 48,480), el conjunto queda casi balanceado (0.8:1 contra 1.6:1) y se etiquetan más pares (67,266 contra 66,121). Uno va a favor: con 10 µM cae a ±0.5 unidades logarítmicas del corte el 20.7% de las mediciones exactas, contra el 24.3% con 1 µM (sección 7 de [la propuesta](variable-objetivo-fase2.md)). Se conserva 10 µM como principal porque es el corte de la sección 7 del diccionario y mantiene la comparabilidad con lo que la patrocinadora revisó, **y porque la [2.10](#d2-10) guarda el objetivo como intervalo: cambiar de principal es cambiar qué columna se lee, no reconstruir la matriz**. Los dos se reportan siempre al lado.
+
+**Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
+
 #### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
 
 **Estado:** propuesta
@@ -443,33 +596,75 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
 
-#### 2.6 · La partición de prueba que pudo reservarse {#d2-6 .abierta .definir}
+#### 2.7 · Partición de la fase 2 {#d2-7 .vigente .revisada}
 
-**Estado:** abierta · necesita su definición
+**Estado:** vigente · construida el 18 de octubre de 2026 · revisada: antes proponía además disjuntar por fuente
 
-> **Pregunta:** ¿El archivo de actividad ya trae una partición de prueba reservada y cómo se hizo?
+**Qué se decidió, y ya está construido.** El criterio de la fase 1 —andamio de Bemis-Murcko agrupado con el esqueleto de conectividad, con verificación de fuga— con las mismas fracciones: 70% entrenamiento, 10% validación, 20% **prueba reservada**, que es la condición que la patrocinadora repitió cuatro veces ([2.6](#d2-6), ratificada). La calcula `particion_de_pares` en `src/data_prep/pares_fase2.py` y viaja en `fase2_pares.parquet`, no en una celda del notebook: si viviera ahí, cada reejecución podría moverla.
 
-**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`. El diccionario describe 225,513 filas y el archivo tiene 202,647, el 89.9%: se reservó cerca de un 10%. Si esa partición fue aleatoria, hay compuestos casi idénticos a ambos lados y no es comparable con una por andamio. Si existe, no se construye otra.
+| Partición | Pares | Grupos | Activos a 10 µM |
+|:--|--:|--:|--:|
+| Entrenamiento | 49,425 | 6,640 | 71.6% |
+| Validación | 6,986 | 3,617 | 69.6% |
+| **Prueba** | **13,973** | 13,973 | 78.7% |
 
-#### 2.7 · Partición de la fase 2 {#d2-7 .propuesta}
+Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los 54,369 pares etiquetados de entrenamiento y validación, y no toca la prueba.
 
-**Estado:** propuesta
+**Lo que cuesta, medido y no escondido.** Tres cosas, todas en la sección 6.1 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb):
 
-> **Pregunta:** ¿Hay agrupaciones por familia química o laboratorio de origen que respetar, más allá del andamio?
+- **La prueba son 13,973 pares en 13,973 grupos**, un andamio por par: es la semántica de `scaffold_split` —los andamios frecuentes alimentan el modelo y los raros evalúan química nueva— llevada al límite por la cola larga de la fase 2, donde el 59.8% de los grupos tiene un solo par. Mide generalización, no representatividad.
+- **Tiene 7 puntos más de activos que el entrenamiento**, así que no es una prueba más difícil sino otra población. La fase 1 tiene la misma propiedad y mayor (57.3% contra 64.0%), porque agrupar por estructura no estratifica por clase. Cada métrica se reporta con la tasa base de su partición al lado.
+- **Y los naturales se concentran en entrenamiento:** solo el 5.2% de los pares con evidencia de NPASS cae en la prueba, porque comparten andamios en familias grandes. La evaluación por origen sobre la prueba descansa en 346 pares, suficiente para una señal gruesa y no para comparar con intervalos.
 
-**Se propone.** El criterio de la fase 1: Bemis-Murcko sobre los 99,585 esqueletos, agrupando por esqueleto de conectividad y verificando que no haya fuga, y además disjunta por fuente si los datos lo permiten. Es la mitigación natural de la [2.5](#d2-5): si entrenamiento y prueba no comparten fuente, un modelo que aprendió la fuente se delata. Depende de la [2.6](#d2-6).
+**Disjuntar por fuente se descarta, y por qué.** La versión anterior lo proponía como mitigación de la [2.5](#d2-5). No se puede: la fuente no es un atributo del par, y 827 de los 828 pares de CMAUP comparten par con otra fuente ([2.3](#d2-3)). Lo que hace ese trabajo es el **control de atajo** del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) más el reporte por estrato disjunto de procedencia.
 
-#### 2.8 · Origen natural en la fase 2: cómo se define y si se entrena aparte {#d2-8 .abierta .definir}
+**Y disjuntar por artículo tampoco, en su versión estricta.** Con las referencias que el artefacto ya guarda, conectando dos pares que comparten al menos una: **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, lo que lo hace parecer fácil, pero los compuestos medidos en varios artículos enlazan las referencias entre sí. Queda en su lugar reportar el desempeño **por referencia** dentro de la validación cruzada. Lo midió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
 
-**Estado:** abierta · necesita su definición
+**Qué lo cambiaría.** Que haga falta evaluar los naturales sobre la prueba con intervalos, y entonces la partición se estratifica por origen —cuesta reconstruir el artefacto y reejecutar el notebook, no rehacer el modelado—; o que ella señale una agrupación por familia química o laboratorio que el andamio no capture.
 
-> **Pregunta:** ¿Puede aportar el cruce con COCONUT del archivo de actividad, como ya lo hizo con el de permeabilidad? Ese archivo trae `coconut_id_exact_match` y el de actividad no trae ninguna columna de origen natural, así que hoy lo único disponible es la fuente, que no separa limpiamente. Y con esa definición resuelta: ¿hay una razón biológica para tratar distinto a los productos naturales en la actividad, o basta con reportar el desempeño por origen?
+#### 2.8 · El cruce con COCONUT lo calcula el equipo {#d2-8 .vigente .revisada}
+
+**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada: antes se le pedía a ella
+
+**Qué se decidió.** El equipo **calcula el cruce con COCONUT por su cuenta**, desde `smiles_raw`, en lugar de esperarlo. Hasta que esté, la **fuente** es la definición provisional de «natural» y se declara como tal en todo lo que se reporte. Un solo modelo, con el desempeño reportado por origen; la fuente nunca entra como característica.
+
+**Por qué se decide y no se pide.** La versión anterior de esta entrada argumentaba que pedírselo «cuesta una pregunta» y rehacerlo «cuesta una fuente de discrepancia permanente». Que los dos cruces no serán idénticos sigue siendo cierto, pero la comparación estaba mal planteada: con la fuente como proxy, **el 65.4% de los esqueletos naturales también está en ChEMBL**, así que la definición provisional se equivoca en dos de cada tres. Una discrepancia declarada entre dos versiones de COCONUT es un error mucho menor, y sobre todo **medible**: se puede reportar cuántos compuestos cambian de clase entre las dos definiciones. Esperar deja sin forma de contestarse la pregunta central del proyecto, que es si el modelo sirve para productos naturales.
+
+**Qué lo cambiaría.** Que ella aporte el cruce, y entonces pasa a ser la definición y el nuestro queda como comprobación. Eso no obliga a rehacer nada: la definición de origen es una columna de metadatos, no una característica del modelo.
 
 **Qué pasó.** Priorizar productos naturales con actividad neuroprotectora es el objetivo del proyecto, y es esta fase la que lo cumple. Pero el archivo de actividad no trae una marca de «natural»: lo más cercano es la **fuente**, porque NPASS y CMAUP son bases de naturales y ChEMBL es sobre todo sintético. Esa fuente está confundida con la vía de etiquetado ([2.5](#d2-5)): los 15,293 registros de NPASS y CMAUP no traen pChEMBL. Además, el 65.4% de los esqueletos naturales (2,727 de 4,172) también aparece en ChEMBL, así que la fuente no separa limpiamente el origen, y solo 1,445 esqueletos existen únicamente en NPASS y CMAUP. Ojo con el método: `inchikey_source` viene vacío en los 187,354 registros de ChEMBL, así que el solapamiento se calcula desde `smiles_raw`. A diferencia de la fase 1, aquí hay un desplazamiento de dominio real: casi todo el entrenamiento es ChEMBL y el uso final son naturales.
 
 **Por qué se le pregunta a ella y no lo resuelve el equipo.** El archivo de permeabilidad llegó ya cruzado contra COCONUT, con tres columnas (`coconut_id_exact_match`, `coconut_ids_key14_match`, `coconut_matches_key14`), y ese cruce es el que sostiene el hallazgo central del Avance 1. El de actividad no trae ninguna: las únicas columnas de procedencia son `source` y `inchikey_source`, y el diccionario no menciona COCONUT. El equipo podría intentarlo por su cuenta desde `smiles_raw`, que está en los 202,647 registros, pero sería un cruce distinto del suyo —otra versión del catálogo, otra regla de estandarización— y los dos no serían comparables entre fases, que es justamente lo que el proyecto necesita. Pedírselo cuesta una pregunta; rehacerlo cuesta una fuente de discrepancia permanente.
 
 **Se propone, mientras tanto.** Usar la **fuente como definición provisional** de «natural», declarándola como tal en todo lo que se reporte. Entrenar un solo modelo y reportar el desempeño por origen, con la partición disjunta por fuente de la [2.7](#d2-7) para ver si falla al pasar de ChEMBL a naturales. Un modelo aparte, o ponderar a los naturales, solo si esa evaluación lo muestra. Si llega el cruce, la definición pasa a ser ese cruce y la fuente queda como comprobación.
+
+#### 2.9 · Clasificar con un corte o predecir la potencia {#d2-9 .propuesta}
+
+**Estado:** propuesta · se decide en el Avance 4, no bloquea el Avance 3
+
+> **Pregunta:** ninguna para la patrocinadora. Es decisión del equipo, y de hecho **resuelve** una de las suyas: con regresión, el corte pasa a ser una decisión de lectura y la [2.3](#d2-3) deja de necesitar su ratificación.
+
+**Qué pasó.** La [2.3](#d2-3) construye una etiqueta binaria con un corte global, y hay tres razones medidas para dudar de ese formato: el corte no es estimable sin desenlace, el mismo corte deja `LRRK2` en 98.1% de activos y `NFE2L2` en 50.7%, y la clasificación tira el orden dentro de cada clase —un compuesto a 0.05 µM y otro a 9 µM reciben la misma etiqueta— cuando lo que se entrega es un **ranking**.
+
+**Qué cuesta cada forma:**
+
+| Forma | Pares | Negativos | Qué pierde |
+|:--|--:|--:|:--|
+| Clasificación a 10 µM | 66,121 | 18,107 · 27.4% | el orden dentro de cada clase |
+| Regresión sobre exactas | 56,229 | 9,169 · 16.3% | **8,938 negativos**, el 49.4% de la clase |
+| **Regresión censurada** | **66,121** | — | nada de la población |
+
+La regresión sobre mediciones exactas no pierde al azar: el 98.0% de los pares activos tiene medición exacta y solo el 50.6% de los negativos, porque la mitad de la evidencia de inactividad **existe solo como censurada**. Un segundo modelo entrenado así tendría un ranking optimista de un modo difícil de auditar.
+
+**Se propone.** Un solo modelo: **regresión sobre [pActividad](glosario.md) con los censurados como observaciones censuradas por la izquierda**, no borrados. Un `>` de 10 µM no es dato faltante, es la información «pActividad < 5», y el propio diccionario de la patrocinadora lo pide así: «en regresión no deben usarse como si el valor fuera exacto: se excluyen o **se usa un método para valores censurados**». No es maquinaria nueva: XGBoost lo trae como objetivo `survival:aft` con límite inferior y superior por observación, y XGBoost ya es candidato en la [1.5](#d1-5).
+
+Con eso la clasificación sale gratis umbralando la predicción, así que el MCC y el AUPRC de la [C.1](#dc-1) siguen reportándose y comparándose contra el baseline. **La clasificación a 10 µM se conserva como baseline del Avance 3**, que es el papel que le toca: ser el piso que la censurada tiene que superar. Dos modelos principales no, porque producirían dos rankings y nada diría cuál obedecer.
+
+**Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. SHAP corre sobre `survival:aft`, pero atribuye sobre log-potencia, que es más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo»; la [C.2](#dc-2) pide dos métodos que concuerden y sigue siendo viable, pero el relato cambia. Y las métricas de clasificación saldrían de un modelo que no las optimizó directamente.
+
+**Por qué conviene aunque cueste.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es una clase y no un número, la combinación pierde resolución; y la forma principista de combinarlas no es sumar dos puntajes, es **comparar la potencia predicha contra la exposición alcanzable**, que es lo que la fase 1 predice. Un compuesto BBB− alcanza menos concentración en cerebro, así que necesita más potencia para servir.
+
+**Y es la respuesta a lo que la patrocinadora pidió** —«a partir de qué valor ya se vuelve algo significativo»— hasta donde se puede contestar sin desenlace: el modelo dice qué potencia espera, y el desempeño en función de la potencia dice desde dónde el modelo separa bien.
 
 ### Supuestos
 

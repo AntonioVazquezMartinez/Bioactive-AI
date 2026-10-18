@@ -83,6 +83,9 @@ DOCUMENTOS = [
     ("docs/decisiones.md",
      "decisiones.md",
      "Qué se decidió, propuso y supuso en cada fase, y qué falta preguntar"),
+    ("docs/variable-objetivo-fase2.md",
+     "variable-objetivo-fase2.md",
+     "Cómo se construye la etiqueta «activo» de la fase 2, y qué problemas tiene"),
     ("docs/guia-del-proyecto.md",
      "guia-del-proyecto.md",
      "Quiénes participan, cómo se organiza el trabajo y qué lecciones costó aprender"),
@@ -220,7 +223,8 @@ def main() -> int:
     # los notebooks se copian reescribiendo los enlaces de sus celdas markdown
     import json
     for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/01b_EDA_actividad_snc.ipynb",
-                   "notebooks/02_Feature_Eng.ipynb"]:
+                   "notebooks/02_Feature_Eng.ipynb",
+                   "notebooks/02b_Feature_Eng_actividad.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
@@ -234,6 +238,11 @@ def main() -> int:
             # desde contenido/notebooks/ hay que subir un nivel para llegar a la raíz
             nuevo = re.sub(rf"\]\((?:\.\./)*docs/([\w/-]+)\.md{FRAG}\)", r"](../\1.html\2)", original)
             nuevo = re.sub(r"\]\(((?:\.\./)*)referencias/README\.md\)", r"](\1referencias/index.html)", nuevo)
+            # un notebook enlazando a otro: quedan vecinos en contenido/notebooks/,
+            # así que el enlace es el nombre a secas. Sin esta regla el `.ipynb`
+            # sobrevive al sitio y `verificar_sitio.py` lo marca como roto.
+            nuevo = re.sub(rf"\]\((?:\.\./)*notebooks/([\w.]+)\.ipynb{FRAG}\)",
+                           r"](\1.html\2)", nuevo)
             if nuevo != original:
                 celda["source"] = [l + "\n" for l in nuevo.split("\n")[:-1]] + [nuevo.split("\n")[-1]]
                 cambios += 1
