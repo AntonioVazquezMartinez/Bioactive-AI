@@ -8,22 +8,32 @@ obtuvo 347 / 949 / 1,077 / 5,095 donde el documento decía 348 / 952 / 1,076 /
 5,092. Ninguna de las dos estaba mal de aritmética; **la diferencia es la
 normalización del nombre**, que nadie había escrito:
 
-- Las siete filas llamadas «-» no son un nombre, así que quedan fuera. Dentro,
-  «-» cuenta como un nombre con siete estructuras y mueve los cuatro números.
-- El nombre se compara sin espacios al borde y sin distinción de mayúsculas.
-  Hay tres nombres que solo difieren en el espacio.
+- **Las filas sin nombre quedan fuera**, y son muchas: 1,109 nulas (el 14.2%
+  de las 7,805) más siete llamadas «-». Con «-» dentro cuenta como un nombre
+  con siete estructuras y mueve los cuatro números.
+- **El nombre se compara sin espacios al borde.** Son tres los nombres que se
+  juntan por eso (5,094 → 5,091). Pasarlo además a minúsculas no mueve nada en
+  este archivo, y se hace igual para que la regla no dependa de eso.
 
 Las dos perillas explican las tres respuestas que hubo, y están medidas:
 
 | Normalización | «-» | nombres | >1 estructura | filas | esqueletos |
 |:--|:--|--:|--:|--:|--:|
 | cruda | dentro | 5,095 | 347 | 949 | 1,077 |
+| cruda | fuera | 5,094 | 346 | 942 | 1,076 |
 | sin espacios | dentro | 5,092 | 348 | 952 | 1,076 |
-| sin espacios y minúsculas | fuera | 5,091 | 347 | 945 | 1,075 |
+| sin espacios | fuera | 5,091 | 347 | 945 | 1,075 |
 
-La tercera es la que este script usa y la que el proyecto cita. La segunda es
-la que se había publicado y la primera la que obtuvo la revisión del #83:
-ninguna estaba mal de aritmética.
+La última es la que este script usa y la que el proyecto cita. La tercera es la
+que se había publicado y la primera la que obtuvo la revisión del #83: ninguna
+estaba mal de aritmética.
+
+**Los nulos se quitan con `dropna()` y no con `astype(str)`**, que es una
+dependencia de versión escondida: con el dtype `str` de pandas 3 un nulo sigue
+nulo, y con pandas 2 —que `requirements.txt` permite— `astype(str)` lo
+convierte en el nombre literal `'nan'`, que entonces aparece como un nombre con
+cientos de estructuras y da 348 ambiguos, 2,054 filas y 1,343 esqueletos. El
+lock fija pandas 3.0.6, así que hoy no falla; lo señaló Pame en el #83.
 
 Con esas dos reglas declaradas, las cifras son reproducibles:
 
@@ -38,10 +48,20 @@ RAIZ = Path(__file__).resolve().parents[1]
 META = RAIZ / "data/processed/bbb_meta.parquet"
 
 
+def _normalizar(nombre: pd.Series) -> pd.Series:
+    """Sin espacios al borde y en minúsculas, conservando los nulos como nulos.
+
+    No se usa `astype(str)`: con pandas 2 convierte cada nulo en la cadena
+    `'nan'`, que pasa a ser un nombre con cientos de estructuras.
+    """
+    return nombre.where(nombre.notna()).str.strip().str.lower()
+
+
 def cifras(meta: pd.DataFrame) -> dict:
-    """Las cuatro cifras, con el nombre normalizado y sin las filas «-»."""
-    nombre = meta["compound_name"].astype(str).str.strip().str.lower()
-    d = pd.DataFrame({"nombre": nombre, "esqueleto": meta["esqueleto"]})
+    """Las cuatro cifras, sin las filas sin nombre ni las llamadas «-»."""
+    nombre = _normalizar(meta["compound_name"])
+    d = pd.DataFrame({"nombre": nombre, "esqueleto": meta["esqueleto"]}).dropna(
+        subset="nombre")
     guion = d["nombre"].eq("-")
     d = d[~guion]
 
@@ -50,6 +70,7 @@ def cifras(meta: pd.DataFrame) -> dict:
     por_esqueleto = d.groupby("esqueleto")["nombre"].nunique()
     return {
         "filas": len(meta),
+        "filas_nulas": int(meta["compound_name"].isna().sum()),
         "filas_sin_nombre": int(guion.sum()),
         "nombres": int(d["nombre"].nunique()),
         "nombres_ambiguos": len(ambiguos),
@@ -65,8 +86,10 @@ def main() -> None:
     meta = pd.read_parquet(META)
     c = cifras(meta)
 
-    print(f"{c['filas']:,} filas · {c['nombres']:,} nombres distintos"
-          f" (fuera las {c['filas_sin_nombre']} filas llamadas «-»)\n")
+    print(f"{c['filas']:,} filas, y {c['filas_nulas']:,} de ellas"
+          f" ({c['filas_nulas'] / c['filas']:.1%}) no traen nombre")
+    print(f"{c['nombres']:,} nombres distintos, fuera esas y las"
+          f" {c['filas_sin_nombre']} llamadas «-»\n")
     print(f"  nombres con más de una estructura   {c['nombres_ambiguos']:>6,}"
           f"  ({c['nombres_ambiguos'] / c['nombres']:.1%} de los nombres)")
     print(f"  filas que abarcan                   "
@@ -74,8 +97,9 @@ def main() -> None:
     print(f"  esqueletos con más de un nombre     "
           f"{c['esqueletos_con_varios_nombres']:>6,}")
 
-    nombre = meta["compound_name"].astype(str).str.strip().str.lower()
-    d = pd.DataFrame({"nombre": nombre, "esqueleto": meta["esqueleto"]})
+    nombre = _normalizar(meta["compound_name"])
+    d = pd.DataFrame({"nombre": nombre, "esqueleto": meta["esqueleto"]}).dropna(
+        subset="nombre")
     d = d[d["nombre"].ne("-")]
     peores = (d.groupby("nombre")["esqueleto"].nunique()
               .sort_values(ascending=False).head(5))
