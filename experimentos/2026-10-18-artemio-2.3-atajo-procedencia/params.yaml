@@ -1,0 +1,17 @@
+decision: '2.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelo: RandomForest(200, min_samples_leaf=2)
+  pliegues: 5
+  semillas:
+  - 0
+  - 1
+  - 2
+  umbral_um: 10.0
+  conjuntos:
+  - procedencia
+  - química
+  - ambos

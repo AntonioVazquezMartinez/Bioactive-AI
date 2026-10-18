@@ -1,0 +1,22 @@
+{
+  "arbol_sucio": true,
+  "commit": "822f8b67d88c3aecb5277962a50657bd5c360431",
+  "datos_sha256": {
+    "data/processed/fase2_descriptores_limpios.parquet": "7491515858cad9a3d30b321c04d07906065aca21b820b78411674d850d499d1f",
+    "data/processed/fase2_pares.parquet": "177773855b1c16be6c4ad2d4358dbb9d879eea2584412152b98b17eccf90bc5a"
+  },
+  "decision": "2.3",
+  "duracion_s": 98.0,
+  "lock_sha256": "6356d9016158dfabdaefadf7d096cfb09f26f3b1e32f89534945d271602ff58e",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.12",
+  "sistema": "macOS-27.0.1-arm64-arm-64bit"
+}
