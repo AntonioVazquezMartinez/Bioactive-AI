@@ -81,7 +81,7 @@ archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es 
 
 ## 4 · ¿Dónde se corta «activo»?
 
-> **Decidido por el equipo: 10 µM principal y 1 µM de sensibilidad**, sobre las tres fuentes. No es un hallazgo sino una convención declarada, y lo que la sostiene es que 10 µM es la concentración libre máxima alcanzable con una dosis oral convencional. Sin una columna de desenlace, un umbral no se estima: se elige. [2.3](contenido/decisiones.html#d2-3).
+> **Decidido por el equipo: 10 µM principal y 1 µM de sensibilidad**, sobre las tres fuentes. No es un hallazgo sino una convención: 10 µM es la concentración a la que los ensayos dejaron de mirar —el 67.4% de las mediciones censuradas lo está exactamente ahí— y es el corte de la sección 7 de su diccionario. Sin una columna de desenlace, un umbral no se estima: se elige. Lo medible favorece 1 µM, y los dos se reportan al lado. [2.3](contenido/decisiones.html#d2-3).
 
 **Es una sola decisión, no dos.** La regla de censura de su diccionario ata el corte de los
 inactivos al de los activos: un `>` solo sirve como negativo si su límite llega al umbral de
