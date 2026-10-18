@@ -393,6 +393,8 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 | **Solo en NPASS/CMAUP** | **1,445** |
 | En ambas fuentes | 2,727 |
 
+**Medido el 18 de octubre: el riesgo era real, y mayor de lo que esta entrada suponía.** El control del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) muestra que un modelo que solo ve la procedencia alcanza 0.280 de MCC —el 65% de lo que consigue la química— y que **dentro de los pares que solo tiene NPASS el AUROC de la química cae a 0.569**, contra 0.827 dentro de ChEMBL. El desarrollo está en la [2.3](#d2-3); aquí basta decir que el confundido por compuesto no era tan benigno como el reparto de esqueletos sugería.
+
 El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concentra en 1,445 compuestos. Los 2,727 solapados sirven de calibración: donde hay pChEMBL y concentración exacta se puede ajustar el corte de concentración y medir cuánto discrepan. **Pendiente:** hacer esa calibración antes de fijar la [2.3](#d2-3).
 
 #### 2.1 · El alcance: cinco categorías de enfermedad {#d2-1 .ratificada .revisada}
@@ -510,9 +512,31 @@ Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL ha
 
 **Lo que sí se solapa, y con la llave que importa.** Una versión anterior de este párrafo añadía que «los compuestos casi no se solapan: 283 SMILES entre ChEMBL y NPASS». La cifra es correcta por SMILES exacto y engañosa aquí, porque la llave del par es el **esqueleto de conectividad**, no el SMILES: con ella hay 1,592 pares mixtos y el 42.4% de los pares con evidencia de NPASS comparte par con otra fuente. El solapamiento es sustancial, y por eso el desempeño se reporta en estratos disjuntos y no «por fuente».
 
-**El riesgo se vigila en lugar de evitarse.** «Solo ChEMBL» queda como análisis de sensibilidad, el desempeño se reporta por estrato de procedencia ([2.10](#d2-10)), y el control de atajo del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) decide: si un modelo que solo ve la procedencia se acerca al que ve química, la fuente está filtrando la etiqueta y se vuelve a ChEMBL.
+**El riesgo se vigila en lugar de evitarse.** «Solo ChEMBL» queda como análisis de sensibilidad, el desempeño se reporta por estrato de procedencia ([2.10](#d2-10)), y el control de atajo del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) decide.
 
-**Qué lo cambiaría.** Que el control de atajo dispare; que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
+**El control ya se corrió, y el resultado no es el que esperábamos.** `scripts/experimento_atajo.py`, Random Forest sobre los 54,369 pares de entrenamiento y validación, cinco pliegues agrupados y tres semillas, con tres conjuntos de características:
+
+| Lo que el modelo ve | MCC | AUROC |
+|:--|--:|--:|
+| Solo la procedencia (el estrato, sin mirar la molécula) | 0.280 | 0.579 |
+| Solo química (los 201 descriptores) | 0.428 | 0.837 |
+| Las dos | **0.451** | 0.843 |
+
+**El criterio que la entrada se había fijado no dispara:** la química supera a la procedencia por 0.148 de MCC, así que no basta con saber de qué base viene el compuesto. Pero la procedencia sola llega al 65% del MCC de la química, que es más de lo que debería poder una columna de tres valores, y añadirla a la química todavía suma 0.023. La fuente **sí** lleva señal de la etiqueta.
+
+**Y la segunda medición es la que importa, porque es la pregunta del proyecto.** Un modelo con química puede inferir la procedencia —los productos naturales tienen esqueletos distintos— y usarla de atajo sin que la columna exista. Eso se ve midiendo **dentro de cada estrato**, donde ya no hay fuente que distinguir. Con AUROC, que no depende del umbral y por tanto es comparable entre estratos con tasas base muy distintas:
+
+| Estrato | Pares | Activos | AUROC de la química |
+|:--|--:|--:|--:|
+| Solo ChEMBL | 50,671 | 74.8% | **0.827** |
+| Mixtos | 1,588 | 40.3% | 0.612 |
+| **Solo NPASS** | **2,109** | **12.3%** | **0.569** ± 0.047 |
+
+**El modelo funciona sobre ChEMBL y casi no funciona sobre los productos naturales**, que son el objeto del proyecto. Una parte grande de la brecha de 63 puntos era que el modelo predice la procedencia.
+
+**Qué significa, y qué no.** No invalida etiquetar las tres fuentes: la alternativa —«solo ChEMBL»— no tendría productos naturales en absoluto, así que no mejora nada de esto. Lo que invalida es **reportar un desempeño agregado como si describiera a los naturales**. A partir de aquí toda métrica va acompañada de su desglose por estrato, y la cifra que contesta la pregunta del proyecto es la de `solo_npass`, no la global. La corrida está en `experimentos/2026-10-18-artemio-2.3-atajo-procedencia/`.
+
+**Qué lo cambiaría.** Que el AUROC dentro de `solo_npass` siga indistinguible del azar con los modelos afinados, y entonces la conclusión no es cambiar el etiquetado sino **decir que el modelo no sirve para productos naturales**, que es un resultado válido ([el planteamiento](../CLAUDE.md) lo pide así); que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
 
 **El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
 
