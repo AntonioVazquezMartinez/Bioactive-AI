@@ -43,8 +43,27 @@ ahí ya no hay fuente que distinguir.
 Esta segunda parte es la que contesta la pregunta del proyecto —si el modelo
 sirve para productos naturales— y no se puede leer de la primera.
 
-Salida: `notebooks/datos/resultados_atajo.csv`, versionado, y una corrida en
-`experimentos/`. Tarda unos 3 minutos.
+## Dos correcciones de la primera versión
+
+La primera versión concluyó que «el modelo no funciona sobre los naturales»
+con un AUROC de 0.569 dentro de `solo_npass`, y Pame señaló dos problemas al
+revisar el [#90]:
+
+1. **El modelo no recibe la diana**, solo los descriptores. Dentro de
+   `solo_npass` conviven dianas con tasas base muy distintas, así que ese
+   0.569 mezclaba «no separa naturales» con «no sabe de qué diana se trata».
+   Esta versión compara **ChEMBL contra NPASS a igual diana**, en las siete que
+   tienen al menos 100 pares de NPASS y las dos clases, y añade un cuarto
+   conjunto de características con la diana dentro.
+2. **Tres semillas sobre los mismos pares no son tres réplicas.** La
+   desviación entre los 15 pliegues no es un error estándar y no sirve para
+   decir si algo se distingue de 0.5. Los intervalos salen de un **bootstrap
+   por grupos** —se remuestrean los grupos de la partición, no las filas, que
+   es la unidad independiente— sobre las predicciones fuera de pliegue.
+
+Salida: `notebooks/datos/resultados_atajo.csv` con las métricas por corte y
+`notebooks/datos/atajo_por_diana.csv` con la comparación por diana, los dos
+versionados, y una corrida en `experimentos/`. Tarda unos 5 minutos.
 
     python scripts/experimento_atajo.py
 """
@@ -71,6 +90,38 @@ SALIDA = RAIZ / "notebooks/datos/resultados_atajo.csv"
 SEMILLAS = (0, 1, 2)
 PLIEGUES = 5
 ESTRATOS = ("solo_chembl", "solo_npass", "mixto")
+SALIDA_DIANA = RAIZ / "notebooks/datos/atajo_por_diana.csv"
+# Una diana entra a la comparación si NPASS le aporta al menos esto y las dos
+# clases: por debajo, el intervalo es tan ancho que no distingue nada.
+MIN_PARES = 100
+REMUESTRAS = 2000
+
+
+def auroc_con_intervalo(y: np.ndarray, p: np.ndarray, grupos: np.ndarray,
+                        semilla: int = 0) -> tuple[float, float, float]:
+    """AUROC y su intervalo del 95%, remuestreando **grupos** y no filas.
+
+    La fila no es la unidad independiente: los pares del mismo andamio comparten
+    química y van juntos en la partición. Un bootstrap sobre filas daría un
+    intervalo demasiado estrecho, que es la forma fácil de concluir que algo se
+    distingue del azar cuando no se distingue.
+    """
+    if len(np.unique(y)) < 2:
+        return float("nan"), float("nan"), float("nan")
+    rng = np.random.default_rng(semilla)
+    unicos = np.unique(grupos)
+    por_grupo = {g: np.flatnonzero(grupos == g) for g in unicos}
+    muestras = []
+    for _ in range(REMUESTRAS):
+        elegidos = rng.choice(unicos, size=len(unicos), replace=True)
+        idx = np.concatenate([por_grupo[g] for g in elegidos])
+        if len(np.unique(y[idx])) < 2:
+            continue
+        muestras.append(roc_auc_score(y[idx], p[idx]))
+    if not muestras:
+        return roc_auc_score(y, p), float("nan"), float("nan")
+    lo, hi = np.percentile(muestras, [2.5, 97.5])
+    return roc_auc_score(y, p), float(lo), float(hi)
 
 
 def modelo(semilla: int) -> RandomForestClassifier:
@@ -117,43 +168,54 @@ def _medir(corrida: Corrida) -> None:
 
     # Entrenamiento y validación; la prueba reservada no se toca (2.7).
     d = pares[pares["activo_10um"].notna() & pares["particion"].ne("prueba")]
-    d = d.merge(desc, on="smiles", how="inner")
+    d = d.merge(desc, on="smiles", how="inner").reset_index(drop=True)
     y = d["activo_10um"].astype(int).to_numpy()
     grupos = d["grupo_cv"].to_numpy()
     estrato = d["estrato"].to_numpy()
+    diana = d["target_gene"].to_numpy()
 
     columnas = [c for c in desc.columns if c != "smiles"]
     X_quimica = d[columnas].to_numpy(dtype=np.float32)
     # El estrato como indicadores: es todo lo que un modelo «de procedencia» ve.
     X_fuente = pd.get_dummies(d["estrato"]).reindex(
         columns=ESTRATOS, fill_value=False).to_numpy(dtype=np.float32)
+    # La diana como indicadores. Sin ella el modelo no sabe contra qué se mide,
+    # y las tasas base por diana van de 34.8% a 96.9%, así que parte de lo que
+    # parece «no separa» puede ser «no sabe de qué diana se trata».
+    X_diana = pd.get_dummies(d["target_gene"]).to_numpy(dtype=np.float32)
     conjuntos = {
         "procedencia": X_fuente,
         "química": X_quimica,
+        "química+diana": np.hstack([X_quimica, X_diana]),
         "ambos": np.hstack([X_quimica, X_fuente]),
     }
 
     print(f"{len(d):,} pares · {len(columnas)} descriptores · "
           f"{d['grupo_cv'].nunique():,} grupos · {y.mean():.1%} activos", flush=True)
 
+    # --- validación cruzada, guardando la predicción fuera de pliegue --------
+    # Cada par recibe exactamente una predicción por semilla y conjunto, hecha
+    # por un modelo que no lo vio. Son las que permiten cortar después por
+    # diana y por estrato sin reentrenar, y las que alimentan el bootstrap.
     filas = []
-    for semilla in SEMILLAS:
+    fdp = {n: np.full((len(SEMILLAS), len(y)), np.nan) for n in conjuntos}
+    for s, semilla in enumerate(SEMILLAS):
         cv = StratifiedGroupKFold(n_splits=PLIEGUES, shuffle=True, random_state=semilla)
         for pliegue, (ajuste, val) in enumerate(cv.split(X_quimica, y, grupos), 1):
             for nombre, X in conjuntos.items():
                 clf = modelo(semilla).fit(X[ajuste], y[ajuste])
                 p = clf.predict_proba(X[val])[:, 1]
-                fila = {"semilla": semilla, "pliegue": pliegue, "conjunto": nombre,
-                        "estrato": "todos", "n": len(val), **metricas(y[val], p)}
-                filas.append(fila)
-                # Y dentro de cada estrato, donde ya no hay fuente que distinguir.
+                fdp[nombre][s, val] = p
+                filas.append({"semilla": semilla, "pliegue": pliegue,
+                              "conjunto": nombre, "estrato": "todos",
+                              "n": len(val), **metricas(y[val], p)})
                 for e in ESTRATOS:
                     sel = estrato[val] == e
                     if sel.sum() < 50 or len(np.unique(y[val][sel])) < 2:
                         continue
                     filas.append({"semilla": semilla, "pliegue": pliegue,
-                                  "conjunto": nombre, "estrato": e, "n": int(sel.sum()),
-                                  **metricas(y[val][sel], p[sel])})
+                                  "conjunto": nombre, "estrato": e,
+                                  "n": int(sel.sum()), **metricas(y[val][sel], p[sel])})
             print(f"  semilla {semilla} pliegue {pliegue} listo", flush=True)
 
     res = pd.DataFrame(filas)
@@ -161,33 +223,89 @@ def _medir(corrida: Corrida) -> None:
     res.to_csv(SALIDA, index=False)
     print(f"\n[guardado] {SALIDA.relative_to(RAIZ)}")
 
-    resumen = (res.groupby(["estrato", "conjunto"])[["mcc", "auprc_minoritaria", "auroc"]]
-               .agg(["mean", "std"]).round(4))
-    print("\nPromedio de las 15 evaluaciones")
-    print(resumen.to_string())
+    # Las predicciones se promedian entre semillas: tres semillas sobre los
+    # mismos pares no son tres réplicas, así que no dan un error estándar, pero
+    # promediarlas sí reduce la varianza del propio Random Forest.
+    medias = {n: np.nanmean(v, axis=0) for n, v in fdp.items()}
 
     global_ = res[res["estrato"].eq("todos")].groupby("conjunto")["mcc"].mean()
     brecha = global_["química"] - global_["procedencia"]
-    print(f"\nMCC: procedencia {global_['procedencia']:.4f} ·"
-          f" química {global_['química']:.4f} · ambos {global_['ambos']:.4f}")
-    print(f"La química supera a la procedencia por {brecha:.4f} de MCC")
-    print("El control dispara si esa diferencia es pequeña:"
-          " querría decir que basta la fuente")
+    print(f"\nMCC sobre todo el conjunto · procedencia {global_['procedencia']:.4f}"
+          f" · química {global_['química']:.4f}"
+          f" · química+diana {global_['química+diana']:.4f}"
+          f" · ambos {global_['ambos']:.4f}")
+    print(f"La química supera a la procedencia por {brecha:.4f} de MCC."
+          " El control dispararía si fuera pequeña")
 
-    quimica = res[res.conjunto.eq("química")]
+    # --- AUROC por estrato, con intervalo por bootstrap de grupos -----------
+    print("\nAUROC por estrato, intervalo del 95% remuestreando grupos")
+    por_estrato = []
+    for nombre in conjuntos:
+        for e in ("todos", *ESTRATOS):
+            sel = np.ones(len(y), bool) if e == "todos" else (estrato == e)
+            if sel.sum() < MIN_PARES or len(np.unique(y[sel])) < 2:
+                continue
+            a, lo, hi = auroc_con_intervalo(y[sel], medias[nombre][sel], grupos[sel])
+            por_estrato.append({"conjunto": nombre, "estrato": e, "n": int(sel.sum()),
+                                "activos": float(y[sel].mean()),
+                                "auroc": a, "ic_bajo": lo, "ic_alto": hi})
+            if nombre in ("química", "química+diana"):
+                print(f"  {nombre:<14} {e:<12} n={sel.sum():>6,}"
+                      f"  activos {y[sel].mean():>5.1%}"
+                      f"  AUROC {a:.3f}  [{lo:.3f}, {hi:.3f}]")
+
+    # --- Y la comparación que separa las dos explicaciones ------------------
+    # A igual diana, ¿separa el modelo los pares de NPASS tan bien como los de
+    # ChEMBL? Si sí, el 0.569 agregado era composición de dianas; si no, el
+    # modelo no sirve para naturales y hay que decirlo.
+    print(f"\nA igual diana, ChEMBL contra NPASS (dianas con ≥{MIN_PARES}"
+          " pares de NPASS y las dos clases)")
+    por_diana = []
+    for g in sorted(set(diana)):
+        for e in ("solo_chembl", "solo_npass"):
+            sel = (diana == g) & (estrato == e)
+            if sel.sum() < MIN_PARES or len(np.unique(y[sel])) < 2:
+                continue
+            a, lo, hi = auroc_con_intervalo(y[sel], medias["química"][sel], grupos[sel])
+            por_diana.append({"diana": g, "estrato": e, "n": int(sel.sum()),
+                              "activos": float(y[sel].mean()),
+                              "auroc": a, "ic_bajo": lo, "ic_alto": hi})
+    pdi = pd.DataFrame(por_diana)
+    # Solo las dianas donde se puede comparar: las dos fuentes presentes.
+    completas = pdi.groupby("diana")["estrato"].nunique().loc[lambda s: s == 2].index
+    pdi = pdi[pdi["diana"].isin(completas)]
+    pdi.to_csv(SALIDA_DIANA, index=False)
+    print(f"[guardado] {SALIDA_DIANA.relative_to(RAIZ)}\n")
+    for g in completas:
+        f = pdi[pdi.diana.eq(g)].set_index("estrato")
+        print(f"  {g:<8}"
+              + "   ".join(
+                  f"{e.replace('solo_', ''):<6} n={int(f.loc[e, 'n']):>5,}"
+                  f" act {f.loc[e, 'activos']:>5.1%}"
+                  f" AUROC {f.loc[e, 'auroc']:.3f} [{f.loc[e, 'ic_bajo']:.3f},"
+                  f" {f.loc[e, 'ic_alto']:.3f}]"
+                  for e in ("solo_chembl", "solo_npass")))
+
+    pe = pd.DataFrame(por_estrato).set_index(["conjunto", "estrato"])
     corrida.metricas({
         "mcc_procedencia": float(global_["procedencia"]),
         "mcc_quimica": float(global_["química"]),
+        "mcc_quimica_diana": float(global_["química+diana"]),
         "mcc_ambos": float(global_["ambos"]),
         "brecha_quimica_menos_procedencia": float(brecha),
-        # El desglose va en AUROC y no en MCC: el MCC usa el umbral fijo de 0.5
-        # y los estratos tienen tasas base muy distintas (74.8%% contra 12.3%%),
-        # así que compararlos con un umbral común castiga al minoritario por una
-        # razón que no es su señal.
-        "auroc_por_estrato": {
-            e: float(quimica[quimica.estrato.eq(e)]["auroc"].mean())
-            for e in ESTRATOS if quimica.estrato.eq(e).any()},
-        "auroc_global": float(quimica[quimica.estrato.eq("todos")]["auroc"].mean()),
+        "auroc_quimica": {
+            e: {"auroc": round(float(pe.loc[("química", e), "auroc"]), 4),
+                "ic95": [round(float(pe.loc[("química", e), "ic_bajo"]), 4),
+                         round(float(pe.loc[("química", e), "ic_alto"]), 4)]}
+            for e in ("todos", *ESTRATOS) if ("química", e) in pe.index},
+        "auroc_quimica_diana_npass": round(
+            float(pe.loc[("química+diana", "solo_npass"), "auroc"]), 4)
+        if ("química+diana", "solo_npass") in pe.index else None,
+        "dianas_comparables": len(completas),
+        "auroc_por_diana_npass_mediana": round(float(
+            pdi[pdi.estrato.eq("solo_npass")]["auroc"].median()), 4),
+        "auroc_por_diana_chembl_mediana": round(float(
+            pdi[pdi.estrato.eq("solo_chembl")]["auroc"].median()), 4),
     })
 
 

@@ -1,12 +1,41 @@
 {
-  "auroc_global": 0.8368877739072579,
-  "auroc_por_estrato": {
-    "mixto": 0.6116831294248432,
-    "solo_chembl": 0.8265164636889616,
-    "solo_npass": 0.5690432703890232
+  "auroc_por_diana_chembl_mediana": 0.7762,
+  "auroc_por_diana_npass_mediana": 0.6267,
+  "auroc_quimica": {
+    "mixto": {
+      "auroc": 0.6104,
+      "ic95": [
+        0.5703,
+        0.6577
+      ]
+    },
+    "solo_chembl": {
+      "auroc": 0.8314,
+      "ic95": [
+        0.8215,
+        0.8412
+      ]
+    },
+    "solo_npass": {
+      "auroc": 0.5737,
+      "ic95": [
+        0.5336,
+        0.6092
+      ]
+    },
+    "todos": {
+      "auroc": 0.8414,
+      "ic95": [
+        0.8326,
+        0.8501
+      ]
+    }
   },
+  "auroc_quimica_diana_npass": 0.6127,
   "brecha_quimica_menos_procedencia": 0.14801582729826074,
-  "mcc_ambos": 0.4512002030890022,
+  "dianas_comparables": 7,
+  "mcc_ambos": 0.4512188302876376,
   "mcc_procedencia": 0.2803484199077135,
-  "mcc_quimica": 0.4283642472059742
+  "mcc_quimica": 0.4283642472059742,
+  "mcc_quimica_diana": 0.4925942648939191
 }
