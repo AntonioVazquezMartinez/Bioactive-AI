@@ -6,7 +6,7 @@ de permeabilidad. Deja tres artefactos en `data/processed/`:
 
 | Archivo | Qué trae | Filas |
 |:--|:--|--:|
-| `fase2_pares.parquet` | identidad del par, metadatos y las cuatro columnas objetivo | 70,384 |
+| `fase2_pares.parquet` | identidad del par, metadatos, las cuatro columnas objetivo y la partición | 70,384 |
 | `fase2_descriptores.parquet` | los 217 descriptores 2D de RDKit, **por compuesto** | 59,781 |
 | `fase2_descriptores_limpios.parquet` | los mismos tras `limpiar_descriptores` | 59,781 |
 
@@ -24,6 +24,13 @@ resumen: la binaria se deriva del intervalo de potencia, así que cambiar el
 umbral —o adoptar la regresión de la decisión 2.9— no obliga a reconstruir
 nada. La fase 1 aprendió esa lección al revés: congeló las 171 columnas sobre
 la matriz de Yeo-Johnson y cambiar la transformación obliga a repetir todo.
+
+**La partición se calcula aquí a propósito.** La patrocinadora puso una sola
+condición al entregar el archivo completo: que se reserve una prueba que el
+modelo nunca vea. Si esa partición viviera en una celda del notebook, cada
+reejecución podría moverla; guardada en el artefacto, es la misma para todos.
+La *guarda* que hace fallar una evaluación en prueba sin marcarla es otra cosa
+y sigue abierta (issue #54).
 
 Lo que este script **no** decide, porque es del modelado: si se quitan los
 pares en `conflicto`, si se usa la etiqueta o la potencia, y qué se hace con los
@@ -49,7 +56,9 @@ def main() -> None:
 
     import sys
     sys.path.insert(0, str(RAIZ))
-    from src.data_prep.pares_fase2 import grupos_de_pares, tabla_de_pares
+    from src.data_prep.pares_fase2 import (grupos_de_pares,
+                                           particion_de_pares, tabla_de_pares)
+    from src.data_prep.splits import SIN_ANDAMIO, verificar_fuga
     from src.features.molecular import (a_mol, descriptores_rdkit,
                                         limpiar_descriptores)
 
@@ -63,6 +72,7 @@ def main() -> None:
 
     pares = tabla_de_pares(actividad)
     pares["grupo_cv"] = grupos_de_pares(pares)
+    pares["particion"] = particion_de_pares(pares)
 
     print(f"Pares compuesto-diana: {len(pares):,}")
     print(f"  compuestos distintos          {pares['esqueleto'].nunique():>7,}")
@@ -82,6 +92,18 @@ def main() -> None:
     for estrato, n in pares["estrato"].value_counts().items():
         activos = pares.loc[pares["estrato"].eq(estrato), "activo_10um"].mean()
         print(f"  {estrato:<13} {n:>7,} · activos {activos:.1%}")
+
+    print("\nLa partición, con la prueba reservada que pidió la patrocinadora")
+    marca = pares.assign(andamio=pares["andamio"].fillna(SIN_ANDAMIO),
+                         y=pares["activo_10um"])
+    informe = verificar_fuga(marca[marca["y"].notna()])
+    for nombre, n in pares["particion"].value_counts().items():
+        activos = pares.loc[pares["particion"].eq(nombre), "activo_10um"].mean()
+        print(f"  {nombre:<13} {n:>7,} · activos {activos:.1%}")
+    print(f"  sin fuga: {informe['sin_fuga']} ·"
+          f" andamios cruzados {informe['andamios_cruzados']} ·"
+          f" esqueletos cruzados {informe['esqueletos_cruzados']}")
+    print("  la prueba no se mira hasta el Avance 5; la guarda es el issue #54")
 
     print("\nTasa de activos por diana, que es la cifra que no hay que esconder")
     por_diana = (pares.groupby("target_gene")

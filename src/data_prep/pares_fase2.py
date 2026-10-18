@@ -101,6 +101,18 @@ def _estrato(fuentes: pd.Series) -> str:
     return f"solo_{unicas.pop()}"
 
 
+def _identificadores(serie: pd.Series) -> str:
+    """Los identificadores distintos del par, separados por «;».
+
+    Se guardan además de sus conteos porque `n_referencias` dice cuántos
+    artículos sostienen el par y no **cuáles**, y la validación por artículo
+    disjunto —que la propuesta de variable objetivo plantea en su sección 9—
+    necesita los identificadores para poder agrupar por ellos. Ordenados para
+    que el archivo sea reproducible byte a byte.
+    """
+    return ";".join(sorted(serie.dropna().astype(str).unique()))
+
+
 def tabla_de_pares(actividad: pd.DataFrame,
                    categorias: tuple[str, ...] = CINCO_CATEGORIAS,
                    recorte: tuple[float, float] = RANGO_POTENCIA,
@@ -168,7 +180,14 @@ def tabla_de_pares(actividad: pd.DataFrame,
         estrato=("source", _estrato),
         n_referencias=("reference_id", "nunique"),
         n_ensayos=("assay_chembl_id", "nunique"),
+        referencias=("reference_id", _identificadores),
+        ensayos=("assay_chembl_id", _identificadores),
     ).reset_index()
+
+    # La fuente como marca de origen natural es un proxy que yerra —la 2.8 mide
+    # que en dos de cada tres esqueletos—, así que la columna lleva en el nombre
+    # de dónde sale y no se llama `natural`.
+    pares["natural_por_fuente"] = pares["estrato"].ne("solo_chembl")
 
     # El intervalo: una exacta lo colapsa a un punto; si solo hay cotas, quedan
     # las cotas.
@@ -229,3 +248,35 @@ def grupos_de_pares(pares: pd.DataFrame) -> np.ndarray:
 
     return grupos_cv(pares.assign(
         andamio=pares["andamio"].fillna(SIN_ANDAMIO)), "andamio", "esqueleto")
+
+
+def particion_de_pares(pares: pd.DataFrame, fraccion_prueba: float = 0.2,
+                       fraccion_validacion: float = 0.1,
+                       semilla: int = 42) -> pd.Series:
+    """Entrenamiento, validación y prueba, con las fracciones de la fase 1.
+
+    **La prueba existe porque es la única condición que la patrocinadora puso**
+    al entregar el archivo completo: que se reserve un conjunto que el modelo
+    nunca vea ([2.6](../../docs/decisiones.md#d2-6)). Una validación cruzada de
+    cinco pliegues no la cumple —ahí cada par entra en la evaluación de algún
+    pliegue—, así que la partición se calcula aquí y se guarda en el artefacto,
+    no en el notebook: si vive en una celda, cada reejecución puede moverla.
+
+    Delega en `scaffold_split`, que agrupa por andamio de Bemis-Murcko y
+    comprueba que ningún esqueleto de conectividad cruce. Eso mantiene juntos
+    **todos los pares del mismo compuesto**, que es lo que hace falta aquí:
+    un compuesto medido contra seis dianas son seis pares, y repartirlos
+    filtraría su química entre particiones.
+
+    La *guarda* que hace fallar una evaluación en prueba sin marcarla
+    explícitamente es otra cosa y no existe todavía en el proyecto: es el
+    [issue #54](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/54),
+    abierto. Esta función reserva la prueba; no impide que alguien la mire.
+    """
+    from .splits import scaffold_split
+
+    return scaffold_split(
+        pares.assign(andamio=pares["andamio"].fillna(SIN_ANDAMIO)),
+        col_andamio="andamio", col_esqueleto="esqueleto",
+        fraccion_prueba=fraccion_prueba,
+        fraccion_validacion=fraccion_validacion, semilla=semilla)

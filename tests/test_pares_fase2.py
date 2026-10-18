@@ -5,7 +5,8 @@ import pandas as pd
 import pytest
 
 from src.data_prep.pares_fase2 import (CINCO_CATEGORIAS, a_potencia,
-                                       etiqueta_binaria, tabla_de_pares)
+                                       etiqueta_binaria, particion_de_pares,
+                                       tabla_de_pares)
 
 # Etanol y benceno: dos SMILES que RDKit parsea y que dan esqueletos distintos.
 ETANOL = "CCO"
@@ -155,3 +156,45 @@ def test_la_potencia_fuera_del_rango_plausible_no_entra():
     t = _tabla(_medicion(valor=1e-6, unidad="nM"), _medicion(valor=2.0, unidad="uM"))
     assert t.iloc[0]["n_exactas"] == 1
     assert t.iloc[0]["pActividad"] == pytest.approx(6 - np.log10(2.0))
+
+
+def test_la_particion_reserva_prueba_y_no_parte_un_compuesto():
+    """La condición de la patrocinadora: una prueba que el modelo nunca vea.
+
+    Y la propiedad que la hace válida en la fase 2: un compuesto medido contra
+    varias dianas son varios pares, y todos tienen que caer del mismo lado.
+    """
+    filas = []
+    for i in range(40):
+        smiles = f"{'C' * (i % 7 + 1)}c1ccccc1" if i % 2 else f"{'C' * (i + 1)}O"
+        for gen in ("ACHE", "MAOA", "DRD2"):
+            filas.append(_medicion(smiles=smiles, gen=gen, valor=1.0 + i % 5))
+    pares = _tabla(*filas)
+    pares["particion"] = particion_de_pares(pares)
+
+    assert set(pares["particion"]) <= {"entrenamiento", "validacion", "prueba"}
+    assert (pares["particion"] == "prueba").any(), "no reservó nada"
+    # Ningún esqueleto aparece en dos particiones.
+    por_esqueleto = pares.groupby("esqueleto")["particion"].nunique()
+    assert (por_esqueleto == 1).all()
+
+
+def test_el_par_guarda_los_identificadores_y_no_solo_sus_conteos():
+    """`n_referencias` dice cuántos artículos, no cuáles; la validación por
+    artículo disjunto necesita los identificadores."""
+    t = _tabla(_medicion(referencia="R2", ensayo="A2"),
+               _medicion(referencia="R1", ensayo="A1"),
+               _medicion(referencia="R1", ensayo="A3"))
+    fila = t.iloc[0]
+    assert fila["n_referencias"] == 2
+    assert fila["referencias"] == "R1;R2", "ordenados, para que el archivo repita"
+    assert fila["ensayos"] == "A1;A2;A3"
+
+
+def test_la_marca_de_natural_dice_que_sale_de_la_fuente():
+    """Es un proxy que yerra, así que no se llama `natural` a secas."""
+    t = _tabla(_medicion(fuente="chembl"),
+               _medicion(smiles=BENCENO, fuente="npass"))
+    por_fuente = dict(zip(t["estrato"], t["natural_por_fuente"]))
+    assert por_fuente["solo_chembl"] is np.False_ or not por_fuente["solo_chembl"]
+    assert por_fuente["solo_npass"]
