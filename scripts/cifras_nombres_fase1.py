@@ -9,9 +9,21 @@ obtuvo 347 / 949 / 1,077 / 5,095 donde el documento decía 348 / 952 / 1,076 /
 normalización del nombre**, que nadie había escrito:
 
 - Las siete filas llamadas «-» no son un nombre, así que quedan fuera. Dentro,
-  «-» cuenta como un nombre con muchas estructuras y mueve los cuatro números.
+  «-» cuenta como un nombre con siete estructuras y mueve los cuatro números.
 - El nombre se compara sin espacios al borde y sin distinción de mayúsculas.
-  Hay tres nombres que solo difieren en eso.
+  Hay tres nombres que solo difieren en el espacio.
+
+Las dos perillas explican las tres respuestas que hubo, y están medidas:
+
+| Normalización | «-» | nombres | >1 estructura | filas | esqueletos |
+|:--|:--|--:|--:|--:|--:|
+| cruda | dentro | 5,095 | 347 | 949 | 1,077 |
+| sin espacios | dentro | 5,092 | 348 | 952 | 1,076 |
+| sin espacios y minúsculas | fuera | 5,091 | 347 | 945 | 1,075 |
+
+La tercera es la que este script usa y la que el proyecto cita. La segunda es
+la que se había publicado y la primera la que obtuvo la revisión del #83:
+ninguna estaba mal de aritmética.
 
 Con esas dos reglas declaradas, las cifras son reproducibles:
 
