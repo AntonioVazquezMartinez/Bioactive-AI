@@ -246,3 +246,47 @@ def test_el_escalado_es_el_de_su_csv(datos):
     assert sin["sin_converger"] == sin["evaluaciones"], (
         "la gráfica afirma que la regresión logística no converge en ningún pliegue sin escalar"
     )
+
+
+# ---------------------------------------------------------------------------
+# El mazo no puede contradecir a la Ruta
+#
+# `presentacion.qmd` no está bajo `docs/`, así que ninguna búsqueda sobre el
+# registro lo encuentra, y el verificador del sitio comprueba enlaces y no
+# contenido. El resultado fue que el mazo publicado siguió anunciando «siete
+# entradas esperan la definición de la patrocinadora» un día después de que el
+# registro se quedara sin ninguna. Esto ata las dos afirmaciones.
+# ---------------------------------------------------------------------------
+
+MAZO = RAIZ / "presentacion.qmd"
+REGISTRO = RAIZ / "docs/decisiones.md"
+MARCA = "necesita su definición"
+
+
+def _entradas_bloqueadas() -> list[str]:
+    """Las entradas cuyo encabezado lleva la clase `.definir`."""
+    texto = REGISTRO.read_text(encoding="utf-8")
+    return re.findall(r"^#{3,4} ([C\d]\.\d+) · .+?\{#[^}]*\.definir[^}]*\}",
+                      texto, re.M)
+
+
+def test_el_mazo_no_anuncia_entradas_bloqueadas_que_no_existen():
+    bloqueadas = _entradas_bloqueadas()
+    anuncios = [l.strip() for l in MAZO.read_text(encoding="utf-8").splitlines()
+                if MARCA in l and "llevaban" not in l and "quedó" not in l]
+    assert not (anuncios and not bloqueadas), (
+        f"el mazo dice «{MARCA}» pero el registro no tiene ninguna entrada con"
+        f" la clase .definir:\n  " + "\n  ".join(anuncios))
+
+
+def test_el_mazo_declara_el_estado_que_el_registro_declara():
+    """Cada entrada que el mazo enlaza existe y su estado es legible."""
+    registro = REGISTRO.read_text(encoding="utf-8")
+    estados = dict(re.findall(
+        r"^#{3,4} [C\d]\.\d+ · .+?\{#(d[c\d]-\d+)[^}]*\}\n\n\*\*Estado:\*\* *([^·\n]+)",
+        registro, re.M))
+    citadas = set(re.findall(r"decisiones\.html#(d[c\d]-\d+)",
+                             MAZO.read_text(encoding="utf-8")))
+    huerfanas = sorted(citadas - set(estados))
+    assert not huerfanas, (
+        "el mazo enlaza entradas que el registro no tiene: " + ", ".join(huerfanas))

@@ -151,7 +151,7 @@ En conjunto, los naturales cruzan **18.9 puntos menos** (52.7% contra 71.7% BBB+
 :::
 
 ::: {.callout-important}
-Puede ser química real o un artefacto de curación, y los datos no lo distinguen. Es la entrada [1.6](contenido/decisiones.html#d1-6) y **la que necesita su definición**: ella fue quien armó el archivo. El desempeño se reportará por origen **dentro de cada grupo**, no solo en el global.
+Puede ser química real o un artefacto de curación, y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
 :::
 
 # 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
@@ -315,7 +315,9 @@ El `pChEMBL` **solo existe para los registros de ChEMBL**. Etiquetar únicamente
 | Mediciones **censuradas** (`> X nM`) | 54,498 |
 | **Inactivos declarados por texto** | 29,730 |
 
-Los dos últimos **no se suman**: las 29,730 con texto están dentro de las censuradas. La propuesta es etiquetar por tres vías —pChEMBL donde exista, concentración exacta para el resto (recupera 12,809 naturales) e inactivo declarado— y falta una sola decisión: dónde se corta «activo».
+Los dos últimos **no se suman**: las 29,730 con texto están dentro de las censuradas. Se etiqueta con la **concentración y la relación**, que vienen informadas en las tres bases y reproducen el pChEMBL hasta el redondeo donde los dos existen. No es inferir entre bases: es la misma aritmética fila por fila.
+
+Los **inactivos por texto quedan fuera**, y no porque su límite sea inventado —el comentario de ChEMBL dice «Inhibition < 50% @ 10 uM», así que viene del ensayo— sino porque las 29,730 filas son **una sola campaña de tamizaje**: 772 compuestos, un solo documento, sin curva dosis-respuesta. Dentro, un protocolo definiría el 61% de la clase negativa.
 
 ## ¿Dónde se corta «activo»? Una sola decisión {.smaller}
 
@@ -325,20 +327,28 @@ La regla de censura del diccionario ata el corte de los inactivos al de los acti
 :::
 
 ::: {.callout-note}
-Los porcentajes de activos son por registro e incluyen fenotípicos; por par esqueleto × gen salen 70.5% con ≥ 5 y 50.6% con ≥ 6. El umbral no se elige por balance de clases. Pendiente de ratificación.
+Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sobre el par compuesto-diana, que es la unidad del modelo, salen **72.8%** de activos con 10 µM y **50.2%** con 1 µM.
 :::
 
 ::: {.callout-important}
-En la Ruta: [2.3](contenido/decisiones.html#d2-3) (propuesta · **necesita su definición**).
+**Decidido por el equipo: 10 µM principal, 1 µM siempre al lado** ([2.3](contenido/decisiones.html#d2-3), vigente). No es un hallazgo: el archivo **no tiene columna de desenlace**, así que un umbral no se estima, se elige. Lo que sí está medido es de dónde sale el número — el **67.4%** de las mediciones censuradas lo está exactamente en 10 µM, y el comentario de ChEMBL dice «Inhibition < 50% @ 10 uM» —: es la concentración a la que estos ensayos dejaron de mirar.
 :::
 
-## ¿El archivo de actividad ya trae una prueba apartada? {.smaller}
+::: {.callout-caution}
+**Y lo medible favorece 1 µM**: recupera 4,879 censurados más y deja las clases casi balanceadas. Se conserva 10 µM por comparabilidad con el diccionario, y cambiar de principal cuesta **una columna**, porque el objetivo se guarda como intervalo ([2.10](contenido/decisiones.html#d2-10)).
+:::
+
+## La prueba apartada: preguntada, contestada, construida {.smaller}
 
 ::: {.bio-grafica data-grafica="archivo"}
 :::
 
-::: {.callout-important}
-**Entrada [2.6](contenido/decisiones.html#d2-6).** Es lo primero que necesitamos saber, porque si existe no hay que construir otra, y si se separó al azar no sirve como evaluación estructural. Es un sí o un no que solo ella puede dar.
+::: {.callout-tip}
+**Contestado el 15 de octubre** ([2.6](contenido/decisiones.html#d2-6), **ratificada**). Había reservado un 10% **al azar**; aceptó el argumento de que eso no evalúa generalización estructural y entregó el archivo completo. Su única condición, repetida cuatro veces: **que se reserve una prueba que el modelo nunca vea**.
+:::
+
+::: {.callout-note}
+Construida y guardada en el artefacto, no en una celda: **49,425 / 6,986 / 13,973** pares en entrenamiento, validación y prueba, agrupando por andamio. Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los 54,369 primeros y no toca la prueba ([2.7](contenido/decisiones.html#d2-7)).
 :::
 
 ## ¿Con qué dianas se puede entrenar? {.smaller}
@@ -348,8 +358,8 @@ Una **diana** es la proteína sobre la que actúa un compuesto. Las 39 de la lis
 ::: {.bio-grafica data-grafica="dianas"}
 :::
 
-::: {.callout-important}
-**Entrada [2.1](contenido/decisiones.html#d2-1).** Las cuatro de arriba no tienen datos para un modelo; el equipo propone excluirlas. Pero la lista es suya: ¿sobra o falta alguna? Hay que fijarla **antes** de elegir la forma del modelo.
+::: {.callout-tip}
+**Contestado el 15 de octubre** ([2.1](contenido/decisiones.html#d2-1), **ratificada**). Excluyó las cuatro sin datos y acotó el alcance a cinco categorías: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Con eso, el conjunto de la fase 2 son **70,384 pares** compuesto-diana sobre **26 dianas**.
 :::
 
 ## ¿Un modelo por diana, por enfermedad o uno solo? {.smaller}
@@ -361,12 +371,48 @@ Cada diana pertenece a una categoría de enfermedad. Los registros se reparten a
 
 | Opción | Lo que da | Lo que cuesta |
 |:--|:--|:--|
-| Un modelo **por diana** | Cada modelo aprende una sola cosa | Las dianas con pocos registros no sostienen un modelo propio |
-| Uno **por categoría** de enfermedad | Junta las dianas de una misma enfermedad | Ni Huntington (153) ni ELA (53) alcanzan por sí solas |
+| Un modelo **por diana** | Cada modelo aprende una sola cosa | Las dianas con pocos datos no sostienen un modelo propio |
+| Uno **por categoría** de enfermedad | Junta las dianas de una misma enfermedad | Mezcla farmacologías: en Alzheimer conviven una proteasa, una esterasa y un receptor nuclear |
 | Uno **multitarea** | Comparte representación e incluye las dianas pequeñas | Mezcla señales de dianas distintas |
 
 ::: {.callout-important}
-**Entrada [2.2](contenido/decisiones.html#d2-2).** Antes de la forma del modelo: **qué dianas importan para su pregunta de investigación**, porque eso no sale de los datos.
+**Decidido: por diana para once, multitarea para las quince restantes** ([2.2](contenido/decisiones.html#d2-2), vigente). El criterio no es un número de pares sino una condición: **mil pares o más y cincuenta casos de la clase minoritaria en todos los pliegues**. Son el 85.6% de los pares ajustables.
+:::
+
+::: {.callout-caution}
+El criterio cambió al comprobarlo. Con «mil pares o más» salían catorce; mirando los pliegues diana por diana, **dos de las grandes no sostienen un modelo propio aunque tengan volumen**: `LRRK2` (2,709 pares, 96.8% activos) deja un pliegue con 13 negativos y `GRIN2B` (1,592 pares pero solo 172 grupos) deja uno con **5**. Si ella prioriza una diana pequeña, la respuesta no es entrenarle un modelo: es esa cifra.
+:::
+
+## La matriz de la fase 2, y el objetivo guardado como intervalo {.smaller}
+
+De 202,647 **mediciones** a 70,384 **pares** compuesto-diana, que es la unidad sobre la que el modelo predice. La llave es el esqueleto de conectividad × gen, no el identificador del compuesto: los identificadores no se comparten entre fuentes, así que con ellos **164 contradicciones quedarían invisibles**.
+
+| Se guarda | Qué es |
+|:--|:--|
+| `pActividad` | la potencia, 6 − log10 µM. Igual al pChEMBL donde los dos existen: mediana de diferencia **0.0021** |
+| `limite_inferior`, `limite_superior` | el **intervalo** donde cae la potencia, con ±∞ cuando no hay cota |
+| `activo_10um`, `activo_1um` | la etiqueta, **derivada** del intervalo |
+
+::: {.callout-note}
+Guardar el intervalo y no la etiqueta es lo que hace que **el umbral sea una decisión de lectura**: la clasificación, la regresión y la regresión censurada leen el mismo archivo. La fase 1 aprendió la lección al revés — congeló 171 columnas sobre una matriz transformada, y cambiar la transformación obliga a repetirlo todo.
+:::
+
+::: {.callout-caution}
+Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen cotas, y tirarlos sería tirar la evidencia negativa. Por eso el objetivo es un intervalo y no un número ([2.10](contenido/decisiones.html#d2-10)).
+:::
+
+## Tres cosas que la etiqueta esconde, y se publican siempre {.smaller}
+
+::: {.callout-warning}
+**1 · El mismo corte no mide lo mismo en cada diana.** La mediana de potencia va de 5.02 a 7.40, **241 veces**. Con 10 µM, `LRRK2` queda en 96.5% de activos —casi constante, inútil como objetivo— y `MAOA` en 35.0%.
+:::
+
+::: {.callout-warning}
+**2 · La procedencia está confundida con la etiqueta.** Los pares que solo tiene ChEMBL son **75.8%** activos; los que solo tiene NPASS, **14.0%**. Sesenta y tres puntos. El [control de atajo](contenido/decisiones.html#d2-3) decide si el modelo está aprendiendo química o procedencia: si un modelo que solo ve la fuente se acerca al que ve estructura, se vuelve a ChEMBL.
+:::
+
+::: {.callout-warning}
+**3 · Y la prueba reservada no es una muestra representativa.** Es un andamio por par, tiene 7 puntos más de activos que el entrenamiento, y solo el **5.2%** de los pares de NPASS cae en ella —los naturales comparten andamios en familias grandes, y los grupos grandes van a entrenamiento—. Mide generalización a química nueva, que es lo que se quiere; no sirve para comparar por origen con intervalos.
 :::
 
 ## ¿Qué error le cuesta más? {.smaller}
@@ -377,7 +423,11 @@ Mueve el corte y mira el intercambio con los datos del proyecto:
 :::
 
 ::: {.callout-important}
-**Entrada [C.5](contenido/decisiones.html#dc-5).** Si el laboratorio puede ensayar veinte compuestos este semestre, ¿prefiere veinte donde acierte cuatro de cada cinco, o cien donde acierte una de cada dos? Y qué espera recibir al final: una lista, un modelo que pueda correr, o el material de un artículo.
+**Decidido: no se fija un punto de operación** ([C.5](contenido/decisiones.html#dc-5), vigente). La pregunta traía un supuesto escondido —que hay que elegir **uno**—. Se entrega **la curva completa** con un corte sugerido en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre. Mover el corte es leer otra fila de la misma tabla, no reentrenar.
+:::
+
+::: {.callout-note}
+Lo que sigue siendo suyo, y se le muestra en vez de preguntárselo: **qué espera recibir al final** — una lista, un modelo ejecutable o el material de un artículo —, porque eso sí cambia la forma del entregable.
 :::
 
 # 5 · La Ruta del proyecto {background-color="#2a3441"}
@@ -386,7 +436,7 @@ Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
 
 ## Todo queda registrado, y algunas decisiones se revirtieron {.smaller}
 
-**Veintidós entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). Ninguna está *ratificada*: eso ocurre con la minuta de la reunión con la patrocinadora.
+**Veinticinco entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
 
 **Dos se revirtieron al medir:**
 
@@ -407,22 +457,26 @@ Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tr
 «No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
 :::
 
-## Las siete preguntas que necesitamos de ella {.smaller}
+## Las siete que la esperaban, y qué pasó con cada una {.smaller}
 
-Son las entradas marcadas «necesita su definición». Sin su criterio el equipo solo puede avanzar con un supuesto propio.
+Siete entradas llevaban semanas marcadas «necesita su definición» y eran el cuello de botella. El 17 de octubre el registro se quedó **sin ninguna**.
 
-| | Entrada | Qué se le pregunta |
-|:--|:--|:--|
-| 1 | **2.6** Partición reservada | El archivo se llama `_Entrenamiento` y trae el 89.9% de lo que describe el diccionario. ¿Ya hay una prueba apartada, y cómo se hizo? |
-| 2 | **2.1** Dianas sin datos | `GABRG2`, `AIF1`, `GABRB2` y `TARDBP` tienen 0, 0, 1 y 8 registros. ¿Se excluyen? |
-| 3 | **2.3** Criterio de «activo» | ¿10 µM o 1 µM? Una sola decisión, con las consecuencias de la diapositiva anterior |
-| 4 | **2.2** Forma del modelo | ¿Por diana, por categoría o multitarea? Los volúmenes van de 52,676 a 53 registros |
-| 5 | **2.8** Naturales en la fase 2 | ¿Puede aportar el cruce con COCONUT del archivo de actividad, como ya lo hizo con el de permeabilidad? |
-| 6 | **1.6** Naturales en la fase 1 | ¿Por qué la brecha es nula en el grupo A y de 21 y 17 puntos en B y C? |
-| 7 | **C.5** Qué se entrega | Si el laboratorio puede ensayar veinte compuestos, ¿veinte con 80% de acierto o cien con 50%? |
+| Entrada | Qué pasó |
+|:--|:--|
+| **2.6** Partición reservada | **Ratificada el 15 de oct.** Entregó el archivo completo; la condición es reservar una prueba |
+| **2.1** Dianas y alcance | **Ratificada el 15 de oct.** Cuatro dianas fuera, cinco categorías dentro |
+| **2.3** Criterio de «activo» | **La decide el equipo.** Su remedio —revisar por tejido— no se puede ejecutar: esas columnas están vacías en las 108,640 filas que se modelan |
+| **2.2** Forma del modelo | **La decide el equipo.** Si señala prioridades cambia el orden, no la forma |
+| **2.8** Naturales en la fase 2 | **La calcula el equipo.** Con la fuente como proxy erramos en dos de cada tres esqueletos; el cruce propio es medible |
+| **1.6** Naturales en la fase 1 | **La decide el equipo.** Un modelo, evaluación por origen dentro de cada grupo |
+| **C.5** Qué se entrega | **La decide el equipo.** La pregunta suponía que hay que elegir un punto; se entrega la curva |
+
+::: {.callout-tip}
+**El criterio que lo desatascó:** no es si su respuesta sería útil, es si **cambiaría el siguiente commit**. Tres eran contestables con una medición que nadie había corrido, y en dos la respuesta no cambiaba qué construir. Solo dos la necesitaban de verdad, y las ratificó en una reunión.
+:::
 
 ::: {.callout-note}
-El detalle de cada una está en [La ruta del proyecto](contenido/decisiones.html), y se pueden responder por adelantado en la [consulta](consulta.html). Se cierran con la **minuta de la reunión**.
+Ninguna de las cinco se declara ratificada y **cada una dice qué la haría cambiar**. La [consulta](consulta.html) sigue en pie, pero ya no pide definiciones: muestra lo decidido y lo que costó, para que corrija lo que quiera corregir.
 :::
 
 ## Estado y calendario {.smaller}
@@ -431,12 +485,14 @@ El detalle de cada una está en [La ruta del proyecto](contenido/decisiones.html
 |:--|:--|:--|
 | Avance 0 · Propuesta | 27 sep | ✅ entregado |
 | Avance 1 · EDA | 4 oct | ✅ entregado |
-| Avance 2 · Características | 11 oct | notebook entregado · falta el reporte |
-| **Avance 3 · Modelo de referencia** | **18 oct** | en curso |
+| Avance 2 · Características | 11 oct | ✅ notebook y reporte entregados |
+| **Avance 3 · Modelo de referencia** | **18 oct** | en curso · la matriz de la fase 2 ya está construida |
 | Avance 4 · Modelos alternativos | 25 oct | pendiente |
 | Avance 5 · Ensambles | 1 nov | pendiente |
 
-**Siete entradas esperan la definición de la patrocinadora**, cinco en la fase 2 (2.1, 2.2, 2.3, 2.6 y 2.8), una en la fase 1 (1.6) y una común a las dos (C.5). El Avance 3 se puede construir sobre la fase 1 sin ninguna de las siete.
+**Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.
+
+**Veinticinco entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 10 vigentes, 12 propuestas y 1 abierta.
 
 ## Lo que falta antes de reportar candidatos
 
