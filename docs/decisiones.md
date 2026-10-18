@@ -465,25 +465,31 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 **Estado:** vigente · revisada el 17 de octubre: antes era abierta, y la [2.1](#d2-1) la desbloqueó
 
-**Qué se decidió.** La forma la decide el conteo de pares, y el orden en que se atacan las dianas lo decide el **volumen**: de más pares a menos, empezando por `DRD2`, `BACE1`, `ACHE`, `GSK3B` y `MAOB`. No se espera una lista de prioridades suya.
+**Qué se decidió.** Un modelo por diana para **once** dianas, el multitarea para las quince restantes, y el orden lo decide el **volumen**: de más pares a menos, empezando por `BACE1`, `DRD2`, `ACHE`, `MAOB` y `MAOA`. No se espera una lista de prioridades suya.
+
+**Once y no catorce, y la diferencia la encontró una comprobación que faltaba.** El 18 de octubre, al reservar la prueba del 20% y mirar los pliegues diana por diana —lo pidió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86)—, el conteo de «1,000 pares o más» bajó de 14 a **13** sobre lo que queda para ajustar. Y de esas 13, dos no sostienen un modelo propio aunque tengan volumen: `LRRK2` (96.8% de activos) deja un pliegue con **13** negativos y `GRIN2B` (96.9%, y solo 172 grupos para 1,592 pares) deja uno con **5**. Con esa clase minoritaria no hay métrica por pliegue con error estándar interpretable ni punto de operación elegible, así que las dos pasan al multitarea y se reportan como subgrupo. El criterio queda escrito como condición y no como número: **mil pares o más y cincuenta casos de la clase minoritaria en todos los pliegues.**
 
 **Qué pasó.** Con el alcance fijo y la matriz de pares construida, los volúmenes ya no se cuentan en registros sino en pares, que es la unidad del modelo:
 
 | Dianas | Pares que cubren |
 |:--|--:|
-| Las 14 con 1,000 pares o más | **94.3%** |
+| Las 14 con 1,000 pares o más, sobre los 70,384 pares | **94.3%** |
+| Las 13 con 1,000 o más, sobre los 54,369 que quedan al reservar la prueba | 93.5% |
+| **Las 11 que además tienen clase minoritaria en todos los pliegues** | **86.2%** |
 | Las 21 con 200 o más | 99.3% |
 | Las 5 restantes | 466 pares en total |
 
 Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midió contra una sola diana.** Solo 8,934 compuestos (15.0%) tienen dos dianas o más, y aportan el 28.1% de los pares.
 
-**Se propone.** **Un modelo por diana para las 14 que pasan de 1,000 pares**, que es el 94.3% de los datos, y **un multitarea como brazo de comparación** sobre las 26. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
+**Se propone.** **Un modelo por diana para las que pasan el criterio** —once, el 86.2% de los pares ajustables— y **un multitarea** sobre las 26, que deja de ser solo un brazo de comparación: es donde viven `LRRK2` y `GRIN2B`, que tienen volumen pero no clase minoritaria. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
 
 **Por categoría de enfermedad, no.** La categoría agrupa genes que no comparten mecanismo: en Alzheimer conviven `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear). Un modelo sobre esa mezcla aprende el promedio de tres farmacologías. Y como cada gen pertenece a exactamente una categoría, «por categoría» es solo una agrupación más gruesa de los mismos genes, sin nada que la haga preferible. **La categoría se usa para reportar**, que es donde sí aporta: permite decir «el modelo acierta mejor en Alzheimer que en neuroinflamación», que es la lectura que importa para priorizar candidatos.
 
-**Qué lo cambiaría.** Que ella señale dianas prioritarias, y entonces cambia solo el **orden** en que se entrenan, no la forma ni el resultado: son catorce modelos independientes, así que reordenarlos no cuesta rehacer nada. Por eso no vale la pena esperar esa respuesta.
+**Qué lo cambiaría.** Que ella señale dianas prioritarias, y entonces cambia solo el **orden** en que se entrenan, no la forma ni el resultado: son modelos independientes, así que reordenarlos no cuesta rehacer nada. Por eso no vale la pena esperar esa respuesta. Lo que sí cambiaría la forma es que pida una diana que no pasa el criterio —`GRIN1`, con 88 pares y un pliegue sin negativos, es el caso extremo—: ahí la respuesta no es entrenarle un modelo, es decirle con la cifra por qué no se puede y ofrecerle el subgrupo del multitarea.
 
-**Lo que esto arrastra.** Catorce modelos son catorce particiones y catorce conjuntos de hiperparámetros, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 35.0% en `MAOA` a 96.5% en `LRRK2` ([2.3](#d2-3)): las dianas de los extremos tienen una clase casi vacía, así que el punto de operación no puede ser el mismo para todas.
+**Lo que esto arrastra.** Once modelos son once conjuntos de hiperparámetros sobre la misma partición, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 34.8% en `MAOA` a 96.9% en `GRIN2B`, así que el punto de operación no puede ser el mismo para todas: la curva de la [C.5](#dc-5) se entrega por diana.
+
+La tabla por diana con pares, grupos y el mínimo de cada clase en los pliegues está en la sección 6.3 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb), que es de donde salen estas cifras.
 
 #### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .vigente .revisada}
 
