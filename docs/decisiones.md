@@ -45,7 +45,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
 | [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
-| [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
+| [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada |
 | [2.8](#d2-8) | El cruce con COCONUT lo calcula el equipo | Vigente · revisada |
 | [2.9](#d2-9) | Clasificar con un corte o predecir la potencia | Propuesta |
 | [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente |
@@ -425,7 +425,7 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 **Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647, el 89.9%. La sospecha era correcta. Al explicarle por qué el azar no sirve —si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada— lo aceptó sin reservas: «lo hicimos muy a la ligera… si hay una forma de hacerlo con mejores criterios, adelante».
 
-**Su condición, que repitió cuatro veces:** que se reserve una prueba que el modelo nunca vea. Su razón no es metodológica sino práctica: no espera que aparezca otra base de datos con la que validar después. Eso se respeta en la [2.7](#d2-7), que ya particiona por andamio.
+**Su condición, que repitió cuatro veces:** que se reserve una prueba que el modelo nunca vea. Su razón no es metodológica sino práctica: no espera que aparezca otra base de datos con la que validar después. Eso se respeta en la [2.7](#d2-7), que reserva el 20% y lo deja fuera de la validación cruzada.
 
 **La limitación que hay que declarar en el reporte.** Un 10% extraído al azar del mismo archivo comparte andamios, ensayos y artículos con el 90%: es una partición interna con otro nombre. Prueba filas nuevas, no química nueva ni protocolos nuevos. Si el reporte final la llama «validación externa», sobrevende lo que compra. Con el archivo completo en mano el punto es casi histórico, pero queda escrito porque ella descansa mucho en ese conjunto.
 
@@ -593,13 +593,31 @@ Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en v
 
 **Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
 
-#### 2.7 · Partición de la fase 2 {#d2-7 .propuesta}
+#### 2.7 · Partición de la fase 2 {#d2-7 .vigente .revisada}
 
-**Estado:** propuesta
+**Estado:** vigente · construida el 18 de octubre de 2026 · revisada: antes proponía además disjuntar por fuente
 
-> **Pregunta:** ¿Hay agrupaciones por familia química o laboratorio de origen que respetar, más allá del andamio?
+**Qué se decidió, y ya está construido.** El criterio de la fase 1 —andamio de Bemis-Murcko agrupado con el esqueleto de conectividad, con verificación de fuga— con las mismas fracciones: 70% entrenamiento, 10% validación, 20% **prueba reservada**, que es la condición que la patrocinadora repitió cuatro veces ([2.6](#d2-6), ratificada). La calcula `particion_de_pares` en `src/data_prep/pares_fase2.py` y viaja en `fase2_pares.parquet`, no en una celda del notebook: si viviera ahí, cada reejecución podría moverla.
 
-**Se propone.** El criterio de la fase 1: Bemis-Murcko sobre los 99,585 esqueletos, agrupando por esqueleto de conectividad y verificando que no haya fuga, y además disjunta por fuente si los datos lo permiten. Es la mitigación natural de la [2.5](#d2-5): si entrenamiento y prueba no comparten fuente, un modelo que aprendió la fuente se delata. Depende de la [2.6](#d2-6).
+| Partición | Pares | Grupos | Activos a 10 µM |
+|:--|--:|--:|--:|
+| Entrenamiento | 49,425 | 6,640 | 71.6% |
+| Validación | 6,986 | 3,617 | 69.6% |
+| **Prueba** | **13,973** | 13,973 | 78.7% |
+
+Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los 54,369 pares etiquetados de entrenamiento y validación, y no toca la prueba.
+
+**Lo que cuesta, medido y no escondido.** Tres cosas, todas en la sección 6.1 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb):
+
+- **La prueba son 13,973 pares en 13,973 grupos**, un andamio por par: es la semántica de `scaffold_split` —los andamios frecuentes alimentan el modelo y los raros evalúan química nueva— llevada al límite por la cola larga de la fase 2, donde el 59.8% de los grupos tiene un solo par. Mide generalización, no representatividad.
+- **Tiene 7 puntos más de activos que el entrenamiento**, así que no es una prueba más difícil sino otra población. La fase 1 tiene la misma propiedad y mayor (57.3% contra 64.0%), porque agrupar por estructura no estratifica por clase. Cada métrica se reporta con la tasa base de su partición al lado.
+- **Y los naturales se concentran en entrenamiento:** solo el 5.2% de los pares con evidencia de NPASS cae en la prueba, porque comparten andamios en familias grandes. La evaluación por origen sobre la prueba descansa en 346 pares, suficiente para una señal gruesa y no para comparar con intervalos.
+
+**Disjuntar por fuente se descarta, y por qué.** La versión anterior lo proponía como mitigación de la [2.5](#d2-5). No se puede: la fuente no es un atributo del par, y 827 de los 828 pares de CMAUP comparten par con otra fuente ([2.3](#d2-3)). Lo que hace ese trabajo es el **control de atajo** del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) más el reporte por estrato disjunto de procedencia.
+
+**Y disjuntar por artículo tampoco, en su versión estricta.** Con las referencias que el artefacto ya guarda, conectando dos pares que comparten al menos una: **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, lo que lo hace parecer fácil, pero los compuestos medidos en varios artículos enlazan las referencias entre sí. Queda en su lugar reportar el desempeño **por referencia** dentro de la validación cruzada. Lo midió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
+
+**Qué lo cambiaría.** Que haga falta evaluar los naturales sobre la prueba con intervalos, y entonces la partición se estratifica por origen —cuesta reconstruir el artefacto y reejecutar el notebook, no rehacer el modelado—; o que ella señale una agrupación por familia química o laboratorio que el andamio no capture.
 
 #### 2.8 · El cruce con COCONUT lo calcula el equipo {#d2-8 .vigente .revisada}
 

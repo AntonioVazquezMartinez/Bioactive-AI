@@ -130,9 +130,12 @@ La variabilidad entre ensayos no se resuelve con los datos disponibles; se **aco
 | Solo Ki | 15,418 | 86.8% |
 | Solo ChEMBL | 63,796 | 74.8% |
 | Por tipo de ensayo o tejido | no es viable hoy | — |
+| Por artículo disjunto | no es viable: 55.9% en un componente | — |
 
 - **Por tipo de ensayo o tejido** exige que la ruta `cns_target` esté anotada. Dos caminos, en orden: (1) **pedirle a Jorge la misma anotación para esa ruta**, que su equipo ya hizo con la misma tubería para 93,204 filas; no es una capacidad nueva y mantiene una sola versión de ChEMBL, con las dos fases comparables; (2) como plan B y en paralelo, el volcado de ChEMBL 37 uniendo por `assay_chembl_id`, que el proyecto ya declara como alternativa de la fase 2.
-- **Validación por artículo o ensayo disjunto.** Además del esqueleto, la validación agrupa por `reference_id` (o `assay_chembl_id`), para probar el modelo en artículos que no vio. Es viable ya.
+- **Validación por artículo disjunto: en su versión estricta no es viable.** La idea era agrupar también por `reference_id` para probar el modelo en artículos que no vio. Con las referencias que `fase2_pares.parquet` ya guarda, conectando dos pares que comparten al menos una referencia, **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, que es lo que lo hace parecer fácil; lo que los enlaza son los compuestos medidos en varios artículos. Separar por componentes pondría más de la mitad de los datos de un lado y la prueba sería un solo bloque.
+
+  Quedan dos versiones aproximadas, las dos posibles con lo que el artefacto ya trae, y **no se elige todavía**: reportar el desempeño **por referencia** dentro de la validación cruzada, sin exigir que los grupos sean disjuntos; o agrupar cada par por su **referencia principal**, aceptando que algunos compuestos aparezcan en más de un artículo. La primera no cambia la partición y solo añade un corte al reporte; la segunda sí la cambia y hay que medir cuánta fuga deja. Se decide en el Avance 3, con la cifra de fuga de la segunda medida. El cálculo está en la sección 6.4 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb).
 
 Si el resultado no cambia entre variantes, el modelo no depende de esas diferencias; si cambia, se reporta cuánto.
 
