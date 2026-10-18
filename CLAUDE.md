@@ -136,3 +136,14 @@ python -m venv env && source env/bin/activate && pip install -r requirements.txt
 ```
 
 Y los artefactos de `data/processed/` que el notebook lee se generan con el **mismo** intérprete, porque los descriptores los calcula RDKit.
+
+**Y un notebook versionado con sus salidas parece ejecutado aunque su código no corra en orden.** El `02` tenía `LogisticRegression` usado en la celda 48 e importado en la 55: ejecutarlo secuencialmente fallaba con `NameError` mientras las salidas guardadas —de una corrida hecha en otro orden— se veían perfectas, y la rúbrica exige justamente que corra secuencialmente. Lo encontró una revisión al regenerar `data/processed/`, no una comprobación. `tests/test_notebooks_secuenciales.py` lo revisa ahora de forma estática en CI, recorriendo las celdas en orden y marcando los nombres que se usan antes de definirlos; es barato pero no detecta fallos en tiempo de ejecución, así que **antes de dar por bueno un notebook hay que ejecutarlo de principio a fin en una copia**:
+
+```bash
+cd notebooks && cp 02_Feature_Eng.ipynb _tmp.ipynb
+../env/bin/python -m jupyter nbconvert --to notebook --execute --output-dir /tmp \
+    --output ejecutado.ipynb --ExecutePreprocessor.kernel_name=bioactive _tmp.ipynb
+rm _tmp.ipynb
+```
+
+Se ejecuta **una copia** y desde `notebooks/`, por dos razones: el notebook calcula `RAIZ` desde el directorio de trabajo, y reejecutar el original sobre otro sistema operativo cambiaría cifras que la documentación ya cita — el `02` quedó ejecutado en Linux y las corridas no son idénticas entre sistemas.
