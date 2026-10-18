@@ -158,9 +158,13 @@ El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (4
 
 - **NPASS y CMAUP no traen pChEMBL** (15,293 registros), porque solo ChEMBL lo calcula. Etiquetar solo por pChEMBL dejaría fuera justo los productos naturales, de ahí el etiquetado por tres vías de la [decisión 2.3](decisiones.md#d2-3), pendiente de ratificar.
 - **Las unidades no están convertidas a una sola escala**: la mayoría está en nM, pero hay 29,880 registros en µM y 662 en unidades de masa (µg/mL y similares) que no se pueden pasar a concentración molar sin el peso molecular de cada compuesto.
-- **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. Sobre las 61,001 filas con `>` o `>=` (54,498 de ellas sin pChEMBL):
+- **Las mediciones censuradas** dicen «mayor a 10 µM» en vez de dar un número: es un límite inferior, y **solo sirve como negativo si el límite es igual o mayor que el umbral de «activo» que se use**. En el archivo recibido son **54,498 filas** con `>`, `>=` o `>>`, y ninguna de ellas trae pChEMBL.
 
-Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 2.3](decisiones.md#d2-3)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos. De las 41,291 filas con límite de 10 µM, **33,574 vienen de DrugMatrix**: una sola fuente concentra la mayor parte de la evidencia censurada.
+Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, el 89%; con 100 µM, solo el 12% (la tabla completa está en la [decisión 2.3](decisiones.md#d2-3)). Cuanto más estricto el umbral, más censurados se recuperan: con 1 µM (pChEMBL ≥ 6) se obtienen **5,440 negativos más** que con 10 µM. En regresión no deben usarse como valores exactos: el diccionario pide excluirlas o usar un método para valores censurados. De las **36,653** filas con límite de 10 µM, 29,730 vienen del panel de DrugMatrix.
+
+  *Dos de estas cifras venían de la sección 7 del diccionario, que describe el archivo completo de 225,513 registros: decía 61,001 censuradas y 41,291 con límite de 10 µM. Las de aquí son del archivo recibido, que es el que verá el modelo.*
+
+- **No hay límite de censura único: hay 333.** Los más frecuentes, quitando los inactivos por texto, son 10 µM (6,923 filas), 100 µM (5,105), 1 µM (2,954), 30 µM (1,678) y 50 µM (1,628). Y **el límite cambia por diana**, cien veces: 1 µM en `LRRK2`, 10 en `DRD2` y `GSK3B`, 30–40 en `MAOA`, `MAOB` y `PTGS2`, 50 en `ACHE` y `BCHE`, 100 en `NOS2`. Es el mismo orden que las medianas de potencia de abajo, o sea que **los experimentadores ya usaban un umbral por diana**. Como frontera de decisión no sirve —está condicionado al fracaso, porque es el techo de los ensayos que no encontraron nada—, pero sí informa qué tan difícil es cada diana.
 
 ### Qué denominador usa cada porcentaje
 
@@ -178,15 +182,72 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   solo 1,445 son exclusivos de NPASS y CMAUP. Es la [decisión 2.8](decisiones.md#d2-8).
 - **Las 29,730 filas con texto `Not active` son un solo documento de ChEMBL**, `CHEMBL1909046`,
   repartido en 20 ensayos sobre 6 dianas. Todas están censuradas con `>` y todas con límite de
-  10 µM, así que están dentro de las 54,498 censuradas y no se suman aparte. A 10 µM esa sola
-  referencia aporta el 61% de los negativos seguros: es el argumento más fuerte contra ese corte
-  ([decisión 2.3](decisiones.md#d2-3)).
+  10 µM, así que están dentro de las 54,498 censuradas y no se suman aparte. **Y el documento es un
+  panel de toxicogenómica**, DrugMatrix: 30,805 filas sobre 729 compuestos. O sea que el bloque más
+  grande de «inactivos» del archivo contesta «¿este compuesto perturbó esta diana en un tamiz de
+  toxicidad?», no «¿es candidato neuroprotector?». A 10 µM esa sola referencia aporta el 61% de los
+  negativos seguros **por registro**; por par compuesto-diana aporta el 14.1%, porque son 772
+  compuestos, y la [propuesta de variable objetivo](variable-objetivo-fase2.md) la deja fuera de la
+  definición principal, con lo que baja al 0.1% ([decisión 2.3](decisiones.md#d2-3)).
+
+- **El contexto del ensayo está ausente justo en las filas que se modelan, y no es dato faltante.**
+  Las columnas `assay_type`, `assay_format`, `assay_tissue_raw` y `assay_cell_type_raw` dependen por
+  completo de la ruta por la que entró la fila:
+
+  | `selection_route` | Filas | Con formato de ensayo |
+  |:--|--:|--:|
+  | `neuronal_assay` | 93,204 | 89,470 · 96.0% |
+  | `both` | 803 | 784 · 97.6% |
+  | **`cns_target`** | **108,640** | **0 · 0.0%** |
+
+  Son dos rutas anotadas de forma distinta al construir el archivo, y `cns_target` es la ruta de
+  casi todas las dianas de la lista. NPASS y CMAUP no traen `assay_type` en ninguna fila. **Por qué
+  importa:** la patrocinadora pidió revisar cómo se distribuyen los registros por tejido y tipo de
+  experimento antes de decidir el etiquetado, y sobre la población que se modela esa revisión no se
+  puede hacer. Tampoco se puede concluir lo contrario: el vacío no demuestra que el tejido no
+  influya, porque el experimento ocurrió en algún tejido y lo que falta es la columna. Está pedido a
+  Jorge Uribe ([acta](acta-patrocinadora.md#a1)). Lo que sí está en el 100% de las filas es
+  `assay_chembl_id` y `reference_id`.
+
+- **La potencia no es comparable entre fuentes, y ahí está el riesgo del etiquetado.** Mediana de
+  las mediciones exactas: ChEMBL **0.335 µM**, CMAUP 4.47, NPASS **6.56** — veinte veces. Fracción
+  en 10 µM o menos: 85.9%, 64.4% y 57.8%. Así que un corte en 10 µM cae casi en la mediana de NPASS
+  y a treinta veces de la de ChEMBL: para los naturales la etiqueta la decide el ruido de medición,
+  para ChEMBL es estable. Es la preocupación de la patrocinadora sobre comparabilidad, en la forma
+  que sí se puede medir.
+
+- **Tampoco es comparable entre dianas, y la diferencia es de 241 veces.** Mediana de pActividad por
+  diana, de `LRRK2` 7.40 a `NFE2L2` 5.02. Con **el mismo** corte de 10 µM, `LRRK2` queda con 98.1%
+  de pares activos y `NFE2L2` con 50.7%: la etiqueta significa cosas distintas según la diana, y en
+  `LRRK2` es casi constante. Las dos dianas de estrés oxidativo, `NFE2L2` y `KEAP1`, están en el
+  extremo de potencia baja, que es parte de por qué los naturales salen menos activos.
+
+- **La variabilidad entre ensayos está dentro de ChEMBL, no entre bases.** En las cinco categorías,
+  ChEMBL solo aporta 99,415 filas repartidas en **8,984 ensayos** y 4,779 referencias, con 2,704
+  ensayos que aportan una sola fila. El desacuerdo entre mediciones del mismo par es ligeramente
+  **peor** en ChEMBL solo (28.7% de los pares con más de una medición discrepan más de 10×) que
+  juntando las tres fuentes (26.0%). **Por qué importa:** quedarse solo con ChEMBL no compra
+  comparabilidad, solo homogeneidad de la etiqueta de procedencia.
+
+- **No hay columna de desenlace.** Ninguna de las 40 columnas registra si un compuesto *funcionó*:
+  todo lo que hay son mediciones de potencia. **Por qué importa:** un umbral de «activo» no es
+  estimable sin algo contra lo que discriminar, así que se elige y se declara, no se descubre. Es lo
+  que la patrocinadora pidió —«a partir de qué valor ya se vuelve algo significativo»— y la razón de
+  la petición [P4](acta-patrocinadora.md#p4).
+
+- **El eje de toxicidad casi no existe.** Hay 925 filas con desenlace citotóxico (`GI50`, `TGI`,
+  `CC50`, `ID50`, `MIC`, `MNTD`) y 483 con `assay_type` de toxicidad, de 202,647. Solo **203
+  compuestos** tienen a la vez una medición de eficacia y una citotóxica, contra 85,685 con
+  eficacia. **Por qué importa:** no se puede calcular una ventana terapéutica, que es lo que
+  distingue un compuesto útil de uno que simplemente mata la célula. No está contaminando la
+  etiqueta actual —solo 7 pares se sustentan únicamente en citotoxicidad— pero sí limita qué puede
+  significar el ranking final.
 
 ## Lo que los diccionarios no documentan
 
 - Si los `Not active` declarados por texto son negativos confiables.
 - Qué criterio de «activo» usa la patrocinadora.
-- Si existe una partición de prueba reservada, y cómo se construyó.
+- Por qué el recorte dejó fuera los ensayos de citotoxicidad de los mismos compuestos.
 - Qué error pesa más en el laboratorio.
 
 Son parte de la [ruta del proyecto](decisiones.md#fase2).
