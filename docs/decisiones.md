@@ -465,7 +465,7 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 ### Propuestas
 
-#### 2.2 · Por diana, con multitarea como comparación {#d2-2 .propuesta .revisada .definir}
+#### 2.2 · Por diana, con multitarea como comparación {#d2-2 .vigente .revisada}
 
 **Estado:** vigente · revisada el 17 de octubre: antes era abierta, y la [2.1](#d2-1) la desbloqueó
 
@@ -489,7 +489,7 @@ Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midi
 
 **Lo que esto arrastra.** Catorce modelos son catorce particiones y catorce conjuntos de hiperparámetros, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 35.0% en `MAOA` a 96.5% en `LRRK2` ([2.3](#d2-3)): las dianas de los extremos tienen una clase casi vacía, así que el punto de operación no puede ser el mismo para todas.
 
-#### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .propuesta .revisada .definir}
+#### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .vigente .revisada}
 
 **Estado:** vigente · revisada el 7 y el 17 de octubre · decidida por el equipo
 
@@ -501,7 +501,9 @@ Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midi
 - **Quedarse solo con ChEMBL no compra comparabilidad.** Dentro de ChEMBL hay 8,984 ensayos distintos, y el desacuerdo entre mediciones del mismo par es ligeramente **peor** ahí solo (28.7% discrepan más de 10×) que juntando las tres fuentes (26.0%).
 - **Y cuesta la mitad de la categoría que ella defendió:** estrés oxidativo es 47.7% NPASS y CMAUP.
 
-Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL hasta el redondeo**: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. Etiquetar por concentración no es una inferencia entre bases, es la misma aritmética aplicada fila por fila; y los compuestos casi no se solapan —283 SMILES entre ChEMBL y NPASS— así que no hay ninguna etiqueta que se traslade de una base a otra.
+Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL hasta el redondeo**: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. Etiquetar por concentración no es una inferencia entre bases, es la misma aritmética aplicada fila por fila: ninguna etiqueta se traslada de una base a otra, cada fila se etiqueta con su propio valor.
+
+**Lo que sí se solapa, y con la llave que importa.** Una versión anterior de este párrafo añadía que «los compuestos casi no se solapan: 283 SMILES entre ChEMBL y NPASS». La cifra es correcta por SMILES exacto y engañosa aquí, porque la llave del par es el **esqueleto de conectividad**, no el SMILES: con ella hay 1,592 pares mixtos y el 42.4% de los pares con evidencia de NPASS comparte par con otra fuente. El solapamiento es sustancial, y por eso el desempeño se reporta en estratos disjuntos y no «por fuente».
 
 **El riesgo se vigila en lugar de evitarse.** «Solo ChEMBL» queda como análisis de sensibilidad, el desempeño se reporta por estrato de procedencia ([2.10](#d2-10)), y el control de atajo del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) decide: si un modelo que solo ve la procedencia se acerca al que ve química, la fuente está filtrando la etiqueta y se vuelve a ChEMBL.
 
