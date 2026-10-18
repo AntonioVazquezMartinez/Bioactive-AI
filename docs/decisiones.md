@@ -532,10 +532,12 @@ Cortar en 1 µM es más exigente con los activos y, por la misma regla, más gen
 | Unidad, con el corte en 10 µM | Negativos | De `CHEMBL1909046` |
 |:--|--:|--:|
 | Registro etiquetado | 48,480 | 29,730 · **61%** |
-| **Par compuesto-diana** | 19,488 | 2,756 · **14.1%** |
+| **Par compuesto-diana** | 20,281 | 2,187 · **10.8%** |
 | Par, sin los inactivos por texto *(definición vigente)* | 18,107 | 13 · **0.1%** |
 
-Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae a una cuarta parte. Y la definición vigente los deja fuera, con lo que baja al 0.1%: **el riesgo se quita al excluirlos, no se demostró que no existiera**, y se vigila con la sensibilidad «con los inactivos por texto», que el script imprime al lado de la principal.
+Las dos últimas filas las imprime `scripts/cifras_etiqueta_fase2.py` en sus dos variantes. La fila del medio decía antes 19,488 y 2,756 · 14.1%, de una versión del conteo anterior a que la llave del par y los filtros quedaran fijos; es la cifra que Pame no pudo reproducir al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
+
+Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae casi a una sexta parte (61% a 10.8%). Y la definición vigente los deja fuera, con lo que baja al 0.1%: **el riesgo se quita al excluirlos, no se demostró que no existiera**, y se vigila con la sensibilidad «con los inactivos por texto», que el script imprime al lado de la principal.
 
 **La razón para excluirlos no es que el límite sea inventado.** Una versión anterior de esta entrada decía que el `>` de 10 µM «lo asignó el equipo que armó el archivo, no el ensayo original». El comentario de ChEMBL de esas 29,730 filas dice literalmente «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite viene del ensayo y la codificación como `> 10 µM` es una traducción fiel. Lo que sostiene la exclusión es la **concentración en un solo documento**: las 29,730 filas son una sola campaña de tamizaje (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta, así que dejarlas dentro hace que un protocolo defina el 61% de la clase negativa por registro. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
 

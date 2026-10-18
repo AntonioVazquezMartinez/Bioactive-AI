@@ -136,9 +136,13 @@ def main() -> None:
     # Una fila en µg/mL no puede etiquetarse sin el peso molecular, así que un
     # par cuyas filas estén todas en esas unidades no es un par del conjunto.
     base = cinco & con_llave & micromolar.notna()
+    sin_unidad = cinco & con_llave & micromolar.isna()
     print(f"  ...con unidad convertible      "
-          f"{base.sum():>8,}  (las {(cinco & con_llave & micromolar.isna()).sum()}"
-          " restantes están en µg/mL)")
+          f"{base.sum():>8,}  (las {sin_unidad.sum()} restantes están en masa"
+          " por volumen, que sin peso molecular no se convierte)")
+    print("     " + " · ".join(
+        f"{u} {n}" for u, n in
+        df.loc[sin_unidad, "activity_units_used"].value_counts().items()))
 
     for con_los_textos in (False, True):
         filas = base if con_los_textos else base & ~por_texto
@@ -166,6 +170,18 @@ def main() -> None:
                     .groupby(level=[0, 1])["activa"].max())
         print(f"  si el conflicto quedara activo  {len(dejando):>7,}"
               f"  · activos {todos.mean():.1%}")
+
+        # El peso de la referencia única se imprime en las dos variantes a
+        # propósito: es la cifra que la 2.3 cita (14.1% con los textos, 0.1%
+        # sin ellos) y la que muestra que el riesgo se quita al excluirlos, no
+        # que se haya demostrado que no existe.
+        negativos = par[~par.astype(bool)].index
+        de_ahi = (sub.set_index(["key14", "target_gene"]).loc[list(negativos)]
+                  .groupby(level=[0, 1])["reference_id"]
+                  .apply(lambda s: s.eq(REFERENCIA_UNICA).all()))
+        print(f"  pares negativos                 {len(negativos):>7,}")
+        print(f"  ...con evidencia solo de {REFERENCIA_UNICA}"
+              f"  {de_ahi.sum():>7,}  ({de_ahi.mean():.1%})")
 
     # --- La fuente no es un atributo del par ---------------------------------
     sub = df[base & ~por_texto & df["activa"].notna()]
@@ -213,15 +229,8 @@ def main() -> None:
               f"  · pActividad mediana {g.pActividad.median():.2f}"
               f"  · ≤ {umbral:g} µM {um.le(umbral).mean():.1%}")
 
-    # --- Peso de la referencia única en la clase negativa --------------------
-    negativos = par[~par.activa.astype(bool)].index
-    evidencia = sub.loc[list(negativos)].groupby(level=[0, 1])["reference_id"]
-    solo = evidencia.apply(lambda s: s.eq(REFERENCIA_UNICA).all())
-    print(f"\nPeso de {REFERENCIA_UNICA} en la clase negativa, por par")
-    print(f"  pares negativos                 {len(negativos):>7,}")
-    print(f"  cuya evidencia es solo de ahí   {solo.sum():>7,}"
-          f"  ({solo.mean():.1%})")
-    print("  por registro la misma referencia da el 61%: son 772 compuestos")
+    print(f"\nPor registro {REFERENCIA_UNICA} da el 61% de los negativos:"
+          " las 29,730 filas son 772 compuestos")
 
     # --- Ejercicio de potencia ----------------------------------------------
     print("\nEjercicio de potencia")

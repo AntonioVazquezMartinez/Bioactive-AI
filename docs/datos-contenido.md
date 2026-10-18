@@ -186,7 +186,7 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   panel de toxicogenómica**, DrugMatrix: 30,805 filas sobre 729 compuestos. O sea que el bloque más
   grande de «inactivos» del archivo contesta «¿este compuesto perturbó esta diana en un tamiz de
   toxicidad?», no «¿es candidato neuroprotector?». A 10 µM esa sola referencia aporta el 61% de los
-  negativos seguros **por registro**; por par compuesto-diana aporta el 14.1%, porque son 772
+  negativos seguros **por registro**; por par compuesto-diana aporta el 10.8%, porque son 772
   compuestos, y la [propuesta de variable objetivo](variable-objetivo-fase2.md) la deja fuera de la
   definición principal, con lo que baja al 0.1% ([decisión 2.3](decisiones.md#d2-3)).
 
