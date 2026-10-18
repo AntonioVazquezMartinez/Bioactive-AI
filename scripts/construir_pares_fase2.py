@@ -47,6 +47,9 @@ ACTIVIDAD = (RAIZ / "data/external/profesora"
              / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv")
 SALIDA = RAIZ / "data/processed"
 
+# Compuestos por lote al calcular descriptores. Ver el comentario en main().
+LOTE = 5_000
+
 
 def main() -> None:
     cli = argparse.ArgumentParser(description=__doc__)
@@ -127,11 +130,22 @@ def main() -> None:
 
     compuestos = pares["smiles"].drop_duplicates().reset_index(drop=True)
     print(f"\nDescriptores de {len(compuestos):,} compuestos distintos…")
-    mols = [a_mol(s) for s in compuestos]
-    desc = descriptores_rdkit([m for m in mols if m is not None])
-    validos = compuestos[[m is not None for m in mols]].reset_index(drop=True)
-    desc.insert(0, "smiles", validos)
-    print(f"  {desc.shape[0]:,} × {desc.shape[1] - 1} descriptores")
+    # Por lotes y no de una: tener los 59,781 objetos Mol vivos a la vez llegó a
+    # 4.3 GB y el sistema mató el proceso en una máquina de 6 GB. Con lotes de
+    # 5,000 queda en 1.3 GB y las cifras son idénticas, porque cada descriptor
+    # depende solo de su molécula.
+    trozos, validos = [], []
+    for inicio in range(0, len(compuestos), LOTE):
+        lote = compuestos.iloc[inicio:inicio + LOTE]
+        mols = [a_mol(s) for s in lote]
+        buenos = [m is not None for m in mols]
+        trozos.append(descriptores_rdkit([m for m in mols if m is not None]))
+        validos.append(lote[buenos])
+        print(f"  {min(inicio + LOTE, len(compuestos)):>7,} de"
+              f" {len(compuestos):,}", end="\r")
+    desc = pd.concat(trozos, ignore_index=True)
+    desc.insert(0, "smiles", pd.concat(validos, ignore_index=True))
+    print(f"  {desc.shape[0]:,} × {desc.shape[1] - 1} descriptores     ")
 
     destino = SALIDA / "fase2_descriptores.parquet"
     desc.to_parquet(destino, index=False)
