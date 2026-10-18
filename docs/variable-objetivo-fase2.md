@@ -36,7 +36,7 @@ El archivo de actividad (`data/external/profesora/snc_activity_crudo_v3_final_20
 | `activity_value_used` | Número mayor que 0 |
 | `activity_units_used` | nM (85%), uM (15%) y unas pocas unidades más |
 
-**Qué se deja fuera, y por qué.** Se usa **solo la relación y el valor**, que son homogéneos entre fuentes. No se mezclan los **inactivos declarados por texto** (`evidence_kind` = `inactivo_por_texto`, 29,730 filas): ChEMBL solo dice «Not active» (menos del 50% de inhibición a 10 µM, sin curva dosis-respuesta), todos salen de un único documento (`CHEMBL1909046`) y 772 compuestos, y su relación `>` con 10 µM la asignó el equipo que armó el archivo, no la fuente. Entran solo como sensibilidad (sección 9).
+**Qué se deja fuera, y por qué.** Se usa **solo la relación y el valor**, que son homogéneos entre fuentes. No se mezclan los **inactivos declarados por texto** (`evidence_kind` = `inactivo_por_texto`, 29,730 filas): ChEMBL solo dice «Not active» —el comentario completo es «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite de 10 µM **sí viene de la fuente** y la codificación como `> 10 µM` es una traducción fiel—, pero todas salen de un **único documento** (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta. Es eso lo que las excluye: una sola campaña de tamizaje definiría el 61% de la clase negativa por registro. Entran solo como sensibilidad (sección 9).
 
 ## 3. Cómo se clasifica cada medición
 

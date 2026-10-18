@@ -533,7 +533,9 @@ Cortar en 1 µM es más exigente con los activos y, por la misma regla, más gen
 | **Par compuesto-diana** | 19,488 | 2,756 · **14.1%** |
 | Par, sin los inactivos por texto *(definición vigente)* | 18,107 | 13 · **0.1%** |
 
-Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae a una cuarta parte. Y la definición que adopta la [propuesta](variable-objetivo-fase2.md) los deja fuera por otra razón —el `>` de 10 µM lo asignó el equipo que armó el archivo, no el ensayo original— con lo que la objeción **se extingue por construcción**.
+Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae a una cuarta parte. Y la definición vigente los deja fuera, con lo que baja al 0.1%: **el riesgo se quita al excluirlos, no se demostró que no existiera**, y se vigila con la sensibilidad «con los inactivos por texto», que el script imprime al lado de la principal.
+
+**La razón para excluirlos no es que el límite sea inventado.** Una versión anterior de esta entrada decía que el `>` de 10 µM «lo asignó el equipo que armó el archivo, no el ensayo original». El comentario de ChEMBL de esas 29,730 filas dice literalmente «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite viene del ensayo y la codificación como `> 10 µM` es una traducción fiel. Lo que sostiene la exclusión es la **concentración en un solo documento**: las 29,730 filas son una sola campaña de tamizaje (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta, así que dejarlas dentro hace que un protocolo defina el 61% de la clase negativa por registro. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
 
 Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% «el argumento más fuerte contra el corte en 10 µM», y lo era solo mientras la unidad fuera el registro. Deja de ser una razón para preferir 1 µM.
 

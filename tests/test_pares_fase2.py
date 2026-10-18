@@ -134,7 +134,7 @@ def test_los_estratos_son_disjuntos_y_nombran_la_procedencia():
 
 
 def test_los_inactivos_por_texto_quedan_fuera():
-    """Su «> 10 µM» lo asignó quien armó el archivo, no el ensayo original."""
+    """Son una sola campaña de tamizaje, no una vía de etiquetado aparte."""
     assert len(_tabla(_medicion(evidencia="inactivo_por_texto",
                                 relacion=">", valor=10.0))) == 0
 

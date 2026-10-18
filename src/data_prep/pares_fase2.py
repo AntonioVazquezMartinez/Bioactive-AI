@@ -110,8 +110,11 @@ def tabla_de_pares(actividad: pd.DataFrame,
     `actividad` es el archivo de la patrocinadora tal como se lee del CSV. Se
     queda con las filas que tienen categoría en `categorias`, gen, estructura
     parseable y unidad convertible, y descarta los inactivos declarados por
-    texto: su `> 10 µM` lo asignó el equipo que armó el archivo y no el ensayo
-    original (ver la propuesta de variable objetivo).
+    texto. El motivo no es que su `> 10 µM` sea inventado —el comentario de
+    ChEMBL dice «Inhibition < 50% @ 10 uM», así que el límite viene del
+    ensayo— sino que las 29,730 filas son una sola campaña de tamizaje
+    (`CHEMBL1909046`, 772 compuestos, sin curva dosis-respuesta), que dentro
+    definiría el 61% de la clase negativa por registro.
     """
     df = actividad
     df = df[df["diana_categoria"].isin(categorias)]
