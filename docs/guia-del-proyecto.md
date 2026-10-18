@@ -120,4 +120,4 @@ Las preguntas que más cambian cómo se construye el modelo, a la fecha:
 - Naturales: en la fase 1, un solo modelo con el desempeño reportado por origen y por grupo (propuesta, decisión 1.6); en la fase 2, cómo definir «natural» y si se entrena aparte (decisión 2.8).
 - Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
 
-**Pendientes técnicos del equipo:** extender el EDA una semana y terminar en paralelo la documentación de ingeniería de características; completar el baseline para el 18 de octubre y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas. El notebook del Avance 2 ya está ejecutado; las respuestas prioritarias de la patrocinadora están previstas para el 16 de octubre.
+**Pendientes técnicos del equipo:** extender el EDA una semana y terminar en paralelo la documentación de ingeniería de características; completar el baseline y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas. El notebook del Avance 2 ya está ejecutado.
