@@ -126,3 +126,13 @@ python -m venv env && source env/bin/activate && pip install -r requirements.txt
 ```
 
 `requirements.txt` fija solo cotas inferiores, y entre versiones cambian en el tercer decimal las cifras de Random Forest; `requirements.lock` fija todo. Se genera con `uv pip compile requirements.txt --universal --python-version 3.12 -o requirements.lock --no-header`, y **`--universal` no es opcional**: sin él el lock sale resuelto para la plataforma donde se compiló y fija `nvidia-nccl-cu13`, que solo tiene wheels de Linux, así que `uv pip install -r requirements.lock` falla en macOS — justo en la máquina donde haría falta para comparar. Con `--universal` las dependencias de una sola plataforma llevan su marcador y las versiones son las mismas. Se usa **Python 3.12 por ser la versión en la que el trabajo se ejecutó y se verificó**, no por el CI (que no ejecuta los notebooks): pasar a otra obliga a reejecutar los notebooks y los experimentos y a revisar cada cifra. Ni siquiera eso hace idénticas las corridas entre sistemas operativos: la regresión logística con min–max da 0.481 de MCC en Linux, 0.489 en macOS con 3.12 y 0.497 en macOS con 3.14, así que **no se decide con una sola corrida**: lo que dependía de eso se mide con validación cruzada agrupada y su error estándar (`scripts/experimento_L_sortslice.py` y `scripts/experimento_escalado.py`, cada uno con su CSV versionado), y la primera celda del notebook 02 imprime las versiones con las que se ejecutó.
+
+**Y para ejecutar un notebook hay que apuntar al intérprete del lock, no al que tenga a mano `jupyter`.** `nbconvert --execute` usa el kernel `python3` registrado en el sistema, que no tiene por qué ser el del entorno: el 02b se ejecutó así con Python 3.14 y RDKit 2026.03.6 en lugar de 3.12 y 2026.09.1, y una cifra cambió —los descriptores con |asimetría| > 2 pasaron de 154 a 150 de 201— sin que nada fallara. La primera celda imprime las versiones justamente para que esto se vea, y lo encontró una revisión leyendo esa salida, no una comprobación. Así que:
+
+```bash
+./env/bin/python -m ipykernel install --user --name bioactive --display-name "Python (lock)"
+./env/bin/python -m jupyter nbconvert --to notebook --execute --inplace \
+    --ExecutePreprocessor.kernel_name=bioactive notebooks/02b_Feature_Eng_actividad.ipynb
+```
+
+Y los artefactos de `data/processed/` que el notebook lee se generan con el **mismo** intérprete, porque los descriptores los calcula RDKit.
