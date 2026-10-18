@@ -105,6 +105,8 @@ website:
             text: Análisis · EDA de actividad en SNC
           - text: "---"
           - text: "Avance 2 · Características"
+          - href: contenido/reportes/avance-2/Avance2.0.pdf
+            text: Reporte (PDF)
           - href: contenido/notebooks/02_Feature_Eng.ipynb
             text: Análisis · Ingeniería de características
       - href: bibliografia.qmd

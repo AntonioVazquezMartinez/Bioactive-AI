@@ -91,6 +91,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Scaffold split**
 : Partición que reparte **andamios completos** entre entrenamiento y prueba, en vez de repartir filas al azar. Así ninguna variación del mismo núcleo aparece en ambos lados. **Por qué importa:** es la diferencia entre medir si el modelo generaliza a química nueva o si solo memorizó andamios. Una partición aleatoria infla los resultados entre 7 y 13 puntos.
 
+**EDA** (análisis exploratorio de datos)
+: Etapa que describe la estructura, calidad, distribución y relaciones presentes en un conjunto, antes de construir un modelo. **Por qué importa:** sus asociaciones sugieren preguntas y variables a estudiar, pero no son por sí solas reglas predictivas ni pruebas de generalización.
+
 **Dominio de aplicabilidad**
 : La región del espacio químico donde el modelo fue entrenado y, por tanto, donde sus predicciones son confiables. **Por qué importa:** si los productos naturales ocupan otra región, puntuarlos con un modelo entrenado sobre sintéticos es extrapolar, no interpolar. Es uno de los cinco principios de la OCDE para validar modelos QSAR.
 
@@ -122,6 +125,24 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Yeo-Johnson**
 : Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística —queda por debajo en 12 de 15 pliegues, aunque la diferencia no alcanza significancia—. Corregir la asimetría y predecir mejor no son lo mismo. Por qué, no se ha medido: la hipótesis es que la potencia comprime las colas, que es donde está la señal.
 
+**Box-Cox**
+: Transformación de potencia que requiere valores estrictamente positivos. **Por qué importa:** los descriptores del proyecto incluyen ceros y negativos, así que Box-Cox no puede aplicarse de forma directa a todas las columnas.
+
+**Codificación *one-hot***
+: Representación de una categoría mediante una columna binaria por valor posible, sin asignar un orden numérico entre categorías. **Por qué importa:** permite convertir variables categóricas para un modelo, pero no resuelve si la variable debe usarse como predictor; `group` puede estar asociado con la etiqueta BBB.
+
+**Sort & Slice**
+: Fingerprint que conserva las subestructuras más frecuentes de un conjunto de entrenamiento en un vocabulario de tamaño fijo, con una columna por subestructura. **Por qué importa:** evita que varias subestructuras compartan un bit como en un fingerprint plegado y permite rastrear las columnas hasta sus fragmentos. El vocabulario se aprende solo con entrenamiento.
+
+**Umbral de varianza**
+: Filtro que descarta columnas cuya variación queda por debajo de un valor elegido. **Por qué importa:** elimina columnas constantes o casi constantes que apenas distinguen moléculas; el umbral debe ajustarse en entrenamiento.
+
+**ANOVA (prueba F)**
+: Prueba que compara la variación entre clases con la variación dentro de ellas para evaluar una característica. **Por qué importa:** puede ordenar variables según su asociación univariante con la etiqueta, pero no mide su contribución independiente ni su rendimiento fuera de muestra.
+
+**PCA** (análisis de componentes principales)
+: Método que reemplaza variables correlacionadas por combinaciones lineales ordenadas por varianza explicada. **Por qué importa:** reduce dimensiones, pero los componentes mezclan descriptores y pueden dejar de corresponder a propiedades o subestructuras químicas interpretables.
+
 **B3DB**
 : Base de datos abierta de permeabilidad de la barrera hematoencefálica, con 7,807 compuestos clasificados. Es el origen de nuestros datos de la etapa 1. Datos en CC0.
 
@@ -148,6 +169,12 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **CRISP-ML(Q)**
 : Metodología de seis fases para proyectos de machine learning. **Por qué importa:** es la estructura que sigue el calendario de entregas del curso.
+
+**Corrida de experimento**
+: Ejecución identificable de un análisis o experimento, registrada con sus parámetros, métricas y entorno. **Por qué importa:** permite rastrear con qué código y datos se produjo un resultado.
+
+**SHA-256**
+: Función que calcula una huella digital a partir del contenido de un archivo. **Por qué importa:** comparar huellas permite detectar si los datos cambiaron o si se está usando un archivo distinto.
 
 **SHAP**
 : Método que reparte la predicción del modelo entre sus variables de entrada, diciendo cuánto aportó cada una. **Por qué importa:** es una de las vías para cumplir el requisito de explicabilidad, enlazando un bit del fingerprint con la subestructura que lo activó.

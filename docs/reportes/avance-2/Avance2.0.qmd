@@ -1,0 +1,243 @@
+---
+lang: es
+bibliography: bibliografia.bib
+csl: apa.csl
+reference-section-title: "Bibliografía"
+format:
+  typst:
+    toc: false
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 2.5cm
+      y: 2.5cm
+    fontsize: 11pt
+    section-numbering: "1.1.a"
+---
+
+```{=typst}
+#set text(hyphenate: false)
+#show table: set par(justify: false)
+#show bibliography: set par(justify: false)
+
+// ---------------------------------------------------------------- PORTADA
+#place(bottom + center, dy: -0.5cm)[
+  #text(size: 10.5pt)[11 de octubre de 2026]
+]
+
+#align(center)[
+  #set par(justify: false)
+  #v(0.6cm)
+  #text(size: 13pt, weight: "bold")[Tecnológico de Monterrey]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Escuela de Ingeniería y Ciencias]
+
+  #v(0.15cm)
+  #text(size: 11pt)[Maestría en Inteligencia Artificial Aplicada]
+
+  #v(0.4cm)
+  #text(size: 10.5pt, style: "italic")[Proyecto Integrador · TC5035.10]
+
+  #v(1.0cm)
+  #text(size: 12pt, weight: "bold")[Avance 2. Ingeniería de características]
+
+  #v(0.7cm)
+  #line(length: 78%, stroke: 0.6pt)
+  #v(0.7cm)
+
+  #text(size: 22pt, weight: "bold")[Bioactive AI]
+
+  #v(0.5cm)
+  #block(width: 85%)[
+    #text(size: 12.5pt)[
+      Predicción y priorización de compuestos bioactivos con
+      potencial neuroprotector a partir de su estructura molecular
+    ]
+  ]
+
+  #v(0.7cm)
+  #line(length: 78%, stroke: 0.6pt)
+
+  #v(0.9cm)
+  #text(size: 11pt, weight: "bold")[Profesora titular]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Grettel Barceló Alonso]
+
+  #v(0.6cm)
+  #text(size: 11pt, weight: "bold")[Patrocinadora]
+
+  #v(0.2cm)
+  #text(size: 11pt)[Dra. Mariana Martínez Ávila]
+
+  #v(0.8cm)
+  #text(size: 11pt, weight: "bold")[Equipo 7]
+
+  #v(0.35cm)
+  #table(
+    columns: (auto, auto),
+    stroke: none,
+    align: (right, left),
+    inset: (x: 0.6em, y: 0.35em),
+    [Ingrid Pamela Ruiz Puga], [A01021209],
+    [Artemio Santiago Padilla Robles], [A01796613],
+    [José Antonio Vázquez Martínez], [A01797208],
+  )
+]
+
+#pagebreak()
+
+// ---------------------------------------------------------------- ÍNDICE
+#outline(title: [Índice], depth: 2, indent: auto)
+
+#pagebreak()
+```
+
+# Introducción
+
+La ingeniería de características transforma una estructura molecular en variables que un algoritmo puede procesar. En este avance se completa la preparación de la etapa de [permeabilidad de la barrera hematoencefálica (BBB)](../../glosario.md); el notebook ajusta modelos auxiliares para comparar transformaciones, pero no se presenta un modelo predictivo final. La unidad de entrada es el [SMILES](../../glosario.md) estandarizado y la fuente primaria sigue siendo el archivo [curado por la patrocinadora](../../../data/external/profesora/bbb_permeability_experimental.csv).
+
+El proyecto conserva su planteamiento de dos etapas: permeabilidad BBB y actividad neuroprotectora. Una predicción BBB− no descarta un compuesto; ambas etapas aportan evidencia paralela para su priorización. Este reporte se limita a la primera etapa porque es donde ya existen datos curados y un análisis de características reproducible. La matriz construida no demuestra por sí misma actividad neuroprotectora ni exposición cerebral.
+
+## Alcance y continuidad del análisis exploratorio
+
+La fase de [análisis exploratorio de datos (EDA)](../../glosario.md) se extenderá una semana más, en paralelo con el cierre documental de ingeniería de características. Esto no significa que el notebook de ingeniería esté incompleto: ya fue ejecutado y las transformaciones fueron medidas; lo pendiente es incorporar al análisis las observaciones del EDA y completar el reporte con las decisiones que siguen abiertas. El margen corresponde al periodo entre el Avance 2 (11 de octubre) y el Avance 3: es trabajo del equipo previo al baseline[^baseline], no una pausa ni un aplazamiento de la entrega formal del notebook, y no fija ningún plazo a la patrocinadora. Qué entradas del registro necesitan su definición se consulta en [la Ruta](../../decisiones.md), que es donde se mantiene.
+
+En ese periodo falta completar la lectura de la diversidad estructural —incluida la concentración de clases en andamios grandes—, precisar el alcance de la estratificación por `group` ante el posible riesgo de fuga de información[^fuga] y aclarar la pertinencia del conjunto externo. También se incorpora la cuestión abierta de los 131 esqueletos de conectividad (429 filas) con estereoisómeros[^estereoisomero] de etiquetas opuestas: los datos muestran la discordancia, pero no permiten distinguir por sí solos una diferencia estereoquímica real de una inconsistencia entre ensayos. Esta pregunta requiere criterio farmacológico y se mantiene abierta en la decisión 1.8 del [registro](../../decisiones.md#d1-8).
+
+La ingeniería de características se documenta con lo que ya está medido en el [notebook 02](../../../notebooks/02_Feature_Eng.ipynb). Los valores derivados del EDA —por ejemplo, umbrales exploratorios— se identifican como dependientes de los datos y no como reglas biológicas universales. Cuáles de las decisiones dependen del criterio de la patrocinadora está marcado en el [registro](../../decisiones.md), que es la lista única.
+
+Este documento acompaña el notebook ejecutado de principio a fin. Las cifras provienen de sus celdas y de la actualización metodológica documentada en el registro; no se generaron datos o experimentos nuevos para escribir el reporte.
+
+Ninguna entrada del registro detiene este reporte: las que siguen como propuestas se trabajan sobre su versión vigente y se señalan como no ratificadas donde aparecen. La rúbrica solicita la liga al notebook y que se ejecute secuencialmente, por lo que el PDF es complementario y no sustituye el entregable formal.
+
+# Datos de entrada y preparación
+
+La fuente es el archivo de permeabilidad BBB curado por la patrocinadora, no las descargas independientes de B3DB. Tiene 7,811 filas y 7,805 etiquetas BBB integradas. Los 7,811 SMILES parsean en RDKit; las seis filas sin clase integrada no se incorporan a la clasificación ni se les imputa una etiqueta a partir de su conectividad, porque la clase puede depender de la estereoquímica.
+
+Las 7,805 observaciones etiquetadas contienen 4,956 BBB+ (63.5%) y 2,849 BBB− (36.5%). Comparten solo 4,018 esqueletos de conectividad, por lo que las filas no representan observaciones estructuralmente independientes. La preparación mantiene todas las filas etiquetadas; no filtra por la columna `group`.
+
+La columna `group` tiene asociación con la etiqueta y su criterio de asignación no está completamente documentado. Se conserva para describir y estratificar, pero no se interpreta como escala de calidad ni se usa para descartar filas. La preocupación de que pueda contener información relacionada con la variable objetivo no queda resuelta por estratificar: su uso como predictor requiere consulta con la patrocinadora. En consecuencia, la matriz molecular principal se construye con estructura y descriptores, no con un supuesto de que `group` sea una característica válida. Esta cautela atiende la observación recibida en el Avance 1: estratificar permite estudiar heterogeneidad, pero no descarta una posible fuga.
+
+# Representación molecular
+
+## Descriptores calculados desde SMILES
+
+RDKit calcula 217 [descriptores moleculares](../../glosario.md) 2D por molécula: resúmenes de tamaño, carga, polaridad, lipofilicidad, flexibilidad y topología [@rdkit]. Cinco descriptores constantes no aportan variación y ocho contienen valores NaN en esta muestra, así que no pueden entrar sin tratamiento adicional. Además se excluye `Ipc`: aunque sus valores son finitos en precisión de 64 bits, puede alcanzar aproximadamente 10^41, por encima del máximo representable en `float32`; scikit-learn convierte internamente a ese formato y el valor puede hacer fallar el ajuste. El chequeo de valores finitos por sí solo no detectaría este problema.
+
+Quedan 203 descriptores fisicoquímicos utilizables. Se conservan las columnas de tamaño, polaridad e hidrofobicidad que el EDA identificó como relevantes, entre ellas [TPSA](../../glosario.md), [HBD](../../glosario.md), [HBA](../../glosario.md), [logP](../../glosario.md) y peso molecular. Esto no afirma que cada descriptor aporte señal independiente: las correlaciones altas que se miden después motivan un filtrado explícito.
+
+## Fingerprints de subestructuras
+
+Además de los resúmenes fisicoquímicos se generan dos [fingerprints](../../glosario.md), representaciones binarias que registran la presencia de fragmentos moleculares. Morgan/ECFP4 usa radio 2 —el 4 de ECFP4 corresponde al diámetro— y 2,048 bits plegados. La matriz tiene densidad de bits activos de 2.33%; cada compuesto activa una mediana de 47 bits (rango 1–142). El plegado reduce almacenamiento, pero distintos fragmentos pueden terminar en el mismo bit.
+
+Como alternativa interpretable se aplica [Sort & Slice](../../glosario.md): ordena las subestructuras por frecuencia y conserva un vocabulario de 2,048, aprendido exclusivamente en entrenamiento. Cada columna corresponde a una sola subestructura, por lo que se puede rastrear un bit hasta el fragmento que representa. La matriz tiene densidad de 1.91%. Con ese vocabulario se cubre el 84.8% de las subestructuras del entrenamiento, pero el 68.0% de las del conjunto de prueba. La diferencia de 16.8 puntos muestra que los andamios menos frecuentes de la prueba incluyen fragmentos que el vocabulario aprendido no vio.
+
+El tamaño del vocabulario no queda ratificado. El entrenamiento contiene 11,475 subestructuras distintas; con 2,048 columnas se retiene el 18% de ese vocabulario y una parte de la química novedosa de prueba queda sin representar. La cobertura observada es una medición de representación y no basta por sí sola para elegir un tamaño final. Lo que sí está medido es el desempeño: con el error estándar corregido por pliegue, **los tamaños de vocabulario son indistinguibles entre sí desde aproximadamente 128 columnas**, y 2,048 es el menor tamaño dentro del ruido en dos de los tres modelos ([1.7](../../decisiones.md#d1-7)). El tamaño se elige por modelo en el Avance 3, con los modelos ya afinados.
+
+## Características derivadas del dominio
+
+El notebook evalúa tres variables adicionales motivadas por lo observado en el EDA. Se reportan como características candidatas, no como reglas de clasificación validadas:
+
+| Característica | Construcción | [AUC](../../glosario.md) | Comparación y resultado del filtrado |
+|:--|:--|--:|:--|
+| `regla_2p` | Indicador de TPSA < 67 Å² y HBD ≤ 1 | 0.684 | TPSA: 0.844; el indicador no la supera |
+| `tpsa_por_mw` | TPSA dividida entre peso molecular | 0.810 | Correlación máxima: 0.755 con logP; se conserva |
+| `lipo_neta` | logP − TPSA / 100 | 0.795 | Correlación 0.975 con logP; estadístico F del [ANOVA](../../glosario.md) y AUC mayores que logP (0.744), por lo que lo reemplaza |
+
+: Características derivadas y evaluación univariante reproducida en el notebook 02 {#tbl-derivadas tbl-colwidths="[18,31,10,41]"}
+
+La razón TPSA/peso molecular expresa la polaridad por unidad de tamaño y mantiene información que no equivale simplemente a TPSA. `lipo_neta` combina dos dimensiones relevantes para atravesar la barrera, pero correlaciona 0.975 con logP; el filtrado por correlación retiene `lipo_neta` y descarta logP en la matriz reducida. Esa elección es una compresión de información redundante observada en estos datos, no una afirmación de que logP carezca de significado químico.
+
+La regla `regla_2p` se conserva como característica evaluada, pero su corte TPSA < 67 Å² procede del análisis exploratorio y no tiene intervalo de confianza. El umbral que maximiza la separación cambia al cambiar el subconjunto: el notebook lo vuelve a calcular usando únicamente entrenamiento y obtiene 107 Å². Por esa variación, los umbrales no se presentan como constantes universales ni se usan para filtrar compuestos.
+
+Las [AUC](../../glosario.md) de la tabla son comparaciones descriptivas del notebook, sin intervalos de confianza y no estimaciones de rendimiento fuera de muestra. El reporte 1 había recibido la observación de que la derivación de reglas y la evaluación discriminativa pertenecen a una fase posterior al EDA; aquí se ubican como parte de la selección de características, con sus límites explícitos.
+
+## Codificación de variables categóricas
+
+El notebook convierte a indicadores [*one-hot*](../../glosario.md) las categorías auxiliares `group` y el indicador de coincidencia exacta con COCONUT (`natural`). Esta representación permite tratar categorías sin imponerles un orden numérico. Las columnas codificadas se guardan en una matriz auxiliar, separada de las características moleculares. El indicador natural significa coincidencia estructural exacta: el conjunto distingue 3,366 productos naturales exactos, 1,005 análogos que solo difieren en estereoquímica y 3,440 compuestos sin equivalente conocido. Cómo tratar esos análogos sigue abierto; por eso la variable no se incorpora automáticamente como predictor.
+
+No se discretizan de forma general los descriptores continuos. La transformación de valores a intervalos descartaría diferencias dentro de cada intervalo y requeriría cortes que no están justificados como decisiones del proyecto. El indicador `regla_2p` sí es una característica binaria construida a partir de una regla ya analizada; no equivale a discretizar todo el espacio de descriptores.
+
+La codificación no resuelve si esas variables deben entrar al modelo. En particular, `group` podría filtrar información asociada a la etiqueta BBB, y el tratamiento del origen natural depende de cómo se definan los análogos que difieren en estereoquímica. Ambas decisiones quedan pendientes de consulta; no se asume aquí que el *one-hot encoding* convierta una variable en un predictor apropiado.
+
+# Partición y control de fuga estructural
+
+El conjunto se separa con un [scaffold split](../../glosario.md)[^scaffold] por andamio de Bemis–Murcko, que representa los anillos y enlaces que los conectan, y se agrupa también por [esqueleto de conectividad](../../glosario.md) para mantener juntas las variantes estereoquímicas [@bemis1996properties]. Los andamios frecuentes se asignan a entrenamiento y los raros a prueba, una evaluación más exigente que repartir filas al azar.
+
+| Subconjunto | Compuestos | Andamios | BBB+ |
+|:--|--:|--:|--:|
+| Entrenamiento | 5,557 | 1,741 | 64.0% |
+| Validación | 749 | 498 | 72.0% |
+| Prueba | 1,499 | 1,390 | 57.3% |
+
+: Partición por andamio y proporción de clase BBB+ {#tbl-particion tbl-colwidths="[28,23,23,26]"}
+
+El procedimiento produce 3,629 andamios distintos; 312 compuestos acíclicos, que no tienen andamio de anillo, se asignan a entrenamiento. La verificación del notebook encuentra cero andamios y cero esqueletos de conectividad compartidos entre particiones. Por tanto, no hay solapamiento estructural según esos dos identificadores.
+
+La composición de prueba difiere de entrenamiento: contiene 57.3% BBB+ frente a 64.0% en entrenamiento. No se corrige esa diferencia porque refleja la asignación por andamios raros; se reporta para interpretar las métricas futuras. La línea base de [AUPRC](../../glosario.md) para BBB− en prueba es 0.427, igual a la prevalencia de esa clase en dicho subconjunto. La prueba se mantiene intacta durante el ajuste de vocabularios, umbrales, escaladores y selectores.
+
+# Transformación y escalamiento
+
+Los 203 descriptores tienen escalas muy diferentes: la amplitud observada va de aproximadamente 0.51 a 18,796. Además, muchas distribuciones son asimétricas. El notebook compara ausencia de transformación, [escalado](../../glosario.md), min–max y [Yeo–Johnson](../../glosario.md). En 193 de 203 descriptores hay valores menores o iguales a cero; por ello, el logaritmo y [Box–Cox](../../glosario.md) no son transformaciones aplicables de manera directa a todas las columnas. No se aplican transformaciones exponenciales ni de raíz cuadrada, pues el notebook no presenta una necesidad medida ni una comparación de esas opciones. En el conjunto de columnas y filas de entrenamiento usado en esa comparación, Yeo–Johnson reduce el número con asimetría absoluta mayor que 2 de 106 a 66.
+
+La transformación se compara en validación cruzada agrupada por andamio y conectividad, con cinco pliegues y tres semillas; cada ajuste aprende sus parámetros solo del pliegue de entrenamiento y la prueba final no se toca. Los resultados medios de las 15 evaluaciones son:
+
+| Transformación | Logística, [MCC](../../glosario.md) | Logística, [AUPRC](../../glosario.md) | Random Forest, MCC | Random Forest, AUPRC |
+|:--|--:|--:|--:|--:|
+| Sin escalar | 0.687 | 0.867 | 0.704 | 0.901 |
+| Estandarización | 0.690 | 0.864 | 0.705 | 0.901 |
+| Min–max | 0.695 | 0.878 | 0.704 | 0.901 |
+| Yeo–Johnson | 0.665 | 0.862 | 0.705 | 0.901 |
+
+: Promedios de validación cruzada agrupada documentados en la decisión 1.5; AUPRC para BBB− {#tbl-escalado tbl-colwidths="[30,18,18,18,16]"}
+
+Sin escalar, la regresión logística agota las 3,000 iteraciones de `lbfgs` y no converge[^convergencia] en ninguno de los 15 pliegues. Con las tres transformaciones converge: en 53 iteraciones con min–max y entre 137 y 144 con estandarización o Yeo–Johnson. Por ello, el MCC de 0.687 de la fila sin escalar refleja un ajuste incompleto y no es comparable con los demás. En la ejecución documentada, el ajuste mediano tomó 0.437 s sin escalar y 0.007 s con min–max; el tiempo depende del equipo, mientras que la falta de convergencia y las iteraciones observadas motivan el escalado.
+
+Para las comparaciones de desempeño entre transformaciones convergentes, ningún intervalo del 95% excluye cero: la diferencia mayor de MCC —min–max contra Yeo–Johnson en regresión logística— es 0.030, con intervalo [−0.010, 0.071]. En Random Forest, las diferencias de MCC son de 0.000 a 0.001, y las de AUPRC son indistinguibles al redondeo; su tiempo de ajuste tampoco cambia de forma apreciable. Esto respalda no escalar para los árboles y escalar para la regresión logística por convergencia, no por una mejora demostrada de sus métricas. Min–max queda como opción inicial por su convergencia más rápida y el mayor AUPRC observado, no como superioridad estadística establecida. La decisión 1.5 sigue abierta en cuanto al balance entre explicabilidad y PCA. El notebook conserva las matrices transformada y sin transformar para mantener las alternativas reproducibles.
+
+# Selección y extracción de características
+
+## Filtros de varianza y correlación
+
+La selección se aplica a 206 columnas de descriptores y características derivadas. El [umbral de varianza](../../glosario.md) (> 0.01) elimina una columna y conserva 205. Después se buscan pares con correlación absoluta mayor que 0.95; se retiran 34 variables redundantes y quedan 171. El filtrado reduce almacenamiento y evita que el modelo reciba varias columnas casi equivalentes. Entre las decisiones observables está conservar `lipo_neta` en lugar de logP por su comparación univariante, y evitar que variables como TPSA, HBD y HBA se interpreten como señales independientes cuando se correlacionan.
+
+Los parámetros de las transformaciones y de selección se aprenden solo con entrenamiento. De ese modo, ni la varianza, ni las correlaciones, ni el umbral para características derivadas usan la distribución de prueba. El corte de correlación es una propuesta operativa medida en esta muestra y no un valor ratificado por la patrocinadora.
+
+## Extracción por componentes principales
+
+El [análisis de componentes principales (PCA)](../../glosario.md) comprime las 171 columnas seleccionadas en 85 componentes que explican el 95% de la varianza. La reducción es cercana a la mitad, pero cada componente mezcla múltiples descriptores y deja de corresponder a una propiedad o fragmento químico identificable. La explicabilidad a nivel de subestructura es un requisito del proyecto, por lo que PCA se conserva como comparación y no como representación de trabajo.
+
+En la comparación registrada, PCA no mejora de forma consistente los modelos: con Random Forest el [MCC](../../glosario.md) cambia de 0.566 a 0.558 y el AUROC de 0.916 a 0.872; el intervalo bootstrap abarca cero. La alternativa de matriz sin reducción de dimensión permanece disponible.
+
+El [ANOVA](../../glosario.md) univariante (prueba F) se calcula con las filas de entrenamiento para ordenar las características candidatas dentro de los grupos correlacionados; no se usa para afirmar diferencias estadísticamente significativas en todos los descriptores. No se aplicó chi-cuadrado: requiere valores no negativos y no corresponde directamente a la mayoría de los descriptores continuos firmados. No se aplicó análisis factorial porque el objetivo no es inferir factores latentes de un constructo, sino conservar correspondencia entre columnas y propiedades/subestructuras químicas. La selección y PCA cubren los métodos de filtrado y extracción ejecutados; no se aplicaron todos los métodos ilustrativos de la rúbrica por el solo hecho de que aparezcan como opciones.
+
+# Salidas de la preparación
+
+La fase entrega representaciones trazables desde SMILES: descriptores 2D, Morgan/ECFP4, Sort & Slice, características derivadas y codificaciones auxiliares, además de una partición que no comparte andamios ni esqueletos entre entrenamiento, validación y prueba. Los artefactos intermedios se guardan en formato Parquet y se excluyen del control de versiones; los parámetros de escalado, selección y vocabulario se guardan aparte para aplicarlos a moléculas nuevas.
+
+Las matrices transformadas y sin transformar se mantienen para comparar y construir canalizaciones específicas por modelo: escalamiento para la regresión logística y matriz original para los árboles. El equipo definirá la transformación operativa y, si cambia, repetirá la selección de variables; la consulta a la patrocinadora de la decisión 1.5 se limita a priorizar interpretabilidad frente a PCA. El vocabulario de Sort & Slice también se conserva junto con su correspondencia a subestructuras, necesaria para transformar moléculas futuras e interpretar las columnas. La prueba de humo confirma que el flujo puede ejecutarse, pero no sustituye la evaluación comparativa de modelos ni constituye una afirmación de rendimiento final.
+
+Las integraciones recientes agregan registro reproducible de [corridas](../../glosario.md), verificación SHA-256[^sha256] de los archivos de datos y pruebas automatizadas de la partición, Sort & Slice y limpieza de descriptores. También incorporan el registro retrospectivo de las mediciones de escalamiento y del vocabulario de tamaño L, con sus parámetros, métricas y entorno. Estos controles permiten rastrear y reproducir mejor la evidencia reportada, sin cambiar las salidas científicas del notebook.
+
+# Conclusiones
+
+En CRISP-ML(Q), este Avance corresponde a la preparación de datos previa a la ingeniería y evaluación del modelo [@visengeriyeva2023crispml]. La estructura molecular ya se convierte en matrices numéricas reutilizables; se eliminaron columnas constantes, no utilizables o incompatibles con la precisión interna; se construyeron descriptores derivados motivados por el dominio; se redujo redundancia; y se dejó una prueba estructuralmente disjunta. Las transformaciones y los selectores se ajustan solo en entrenamiento, lo que limita la fuga de información.
+
+La medición incorporada sobre escalamiento aclara que la regresión logística sin transformar no converge y respalda escalarla, mientras que el Random Forest no requiere escalamiento. Sin embargo, medir el comportamiento del algoritmo no resuelve las decisiones que requieren contexto de la patrocinadora. Siguen sin ratificar la elección entre la matriz interpretable y [PCA](../../glosario.md) ([1.5](../../decisiones.md#d1-5)) y la definición y evaluación de los compuestos naturales y sus análogos estereoquímicos ([1.6](../../decisiones.md#d1-6)). El tamaño del vocabulario de Sort & Slice ([1.7](../../decisiones.md#d1-7)) dejó de ser una pregunta para ella: está medido y se elige por modelo con los modelos afinados. También falta confirmar cómo puede usarse `group`: su criterio de asignación no está completamente publicado y su asociación con la etiqueta podría filtrar información; estratificar no descarta esa posibilidad ([1.1](../../decisiones.md#d1-1)). La decisión 1.8 añade otra pregunta abierta: si las etiquetas BBB opuestas en 131 esqueletos compartidos por estereoisómeros reflejan diferencias farmacológicas reales o ensayos no comparables; esa interpretación puede afectar la representación y el límite alcanzable del modelo. Los datos disponibles permiten cuantificar alternativas, pero no establecen por sí solos las preferencias científicas ni los criterios de uso que faltan. Estos puntos deben llevarse a consulta con la patrocinadora antes de presentarlos como decisiones cerradas. La señal de cobertura más baja en prueba advierte que parte de las subestructuras raras no está representada por el vocabulario actual. Asimismo, el cambio de prevalencia entre particiones exige informar la línea base de BBB− y métricas sensibles a la clase minoritaria junto con MCC.
+
+El conjunto de 154 compuestos atribuido al estudio citado [@spielvogel2025standardized], con 68 positivos, 42 negativos y 44 casos de eflujo, tampoco se presenta aquí como validación externa. El análisis del Avance 1 identificó el artículo y el archivo, pero no dejó establecido un criterio de selección que permita justificar su representatividad respecto de esta tarea; además, el archivo disponible contiene nombres y descriptores precalculados, no SMILES ni InChI, por lo que no permite una comparación estructural reproducible. Antes de asignarle el papel de conjunto externo se debe aclarar con la patrocinadora su pertinencia para el objetivo del proyecto, documentar el criterio de selección y confirmar si pueden obtenerse identificadores químicos; mientras falte esa información, no se usa para validar el modelo.
+
+El notebook del EDA ya contiene un resultado que debe quedar visible al interpretar la partición: el andamio[^andamio] mayor reúne 410 compuestos y es 99.5% BBB+, mientras que otros andamios grandes son completamente BBB− (por ejemplo, uno con 59 compuestos); por tanto, en estos grupos la estructura está fuertemente asociada con la clase. Incorporar esa lectura y su efecto en la evaluación es una tarea pendiente del EDA, no una incertidumbre que pueda resolver la patrocinadora. Las entradas que sí dependen de su criterio están marcadas como tales en [la Ruta](../../decisiones.md), que es la lista única: este reporte no la duplica, porque dos listas de lo mismo se desincronizan en cuanto una cambia. La fase EDA continúa una semana más; durante ese mismo periodo se cierra la documentación del proceso de ingeniería de características, cuyo notebook ya está ejecutado. No es una semana sin avanzar: el siguiente hito es el baseline. Hasta entonces, este documento es una base reproducible y sus propuestas no deben presentarse como decisiones ratificadas. En modelado se compararán alternativas con particiones agrupadas y se elegirá el preprocesamiento dentro de cada canalización, conservando la interpretabilidad química. Si no se encuentra un patrón generalizable en andamios no vistos, esa ausencia de evidencia predictiva será un resultado válido.
+
+[^baseline]: Modelo de referencia entrenado con una configuración sencilla, que sirve como punto de comparación para modelos posteriores.
+[^fuga]: Uso indirecto, durante entrenamiento o selección, de información que no estaría disponible al predecir o que deriva de la etiqueta objetivo; puede inflar artificialmente la evaluación.
+[^estereoisomero]: Molécula con los mismos átomos y conectividad que otra, pero con distinta disposición espacial; esa diferencia puede modificar su actividad biológica.
+[^scaffold]: Partición que asigna andamios moleculares completos a una sola partición, en lugar de repartir filas al azar, para medir generalización a estructuras no vistas.
+[^convergencia]: En un algoritmo iterativo, alcanzar una solución estable antes de agotar el límite de iteraciones; si no converge, las métricas corresponden a un ajuste incompleto.
+[^andamio]: Núcleo molecular de anillos y enlaces que los conectan, abstraído de los sustituyentes; se usa aquí para agrupar estructuras relacionadas.
+[^sha256]: Función criptográfica que produce una huella digital del contenido de un archivo; permite detectar cambios accidentales o archivos distintos.
+
+::: {#refs}
+:::
