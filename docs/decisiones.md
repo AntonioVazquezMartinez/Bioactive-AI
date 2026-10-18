@@ -38,7 +38,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | # | Decisión | Estado |
 |:--|:--|:--|
 | [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
-| [2.2](#d2-2) | Forma del modelo: por diana, por categoría o multitarea | Abierta · **necesita su definición** |
+| [2.2](#d2-2) | Por diana, con multitarea como comparación | Propuesta · revisada · **necesita su definición** |
 | [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Propuesta · **necesita su definición** |
 | [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
@@ -46,6 +46,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.7](#d2-7) | Partición de la fase 2 | Propuesta |
 | [2.8](#d2-8) | Origen natural en la fase 2: cómo se define y si se entrena aparte | Abierta · **necesita su definición** |
 | [2.9](#d2-9) | Clasificar con un corte o predecir la potencia | Propuesta |
+| [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente |
 
 Estados: **vigente** (se trabaja sobre ella), **revisada** (se decidió, se midió y cambió), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió; las primeras son la 2.1 y la 2.6, del 15 de octubre de 2026). La marca **«necesita su definición»** no es un estado: señala las entradas donde el criterio de la patrocinadora es lo que falta, y son las que más urge resolver con ella.
 
@@ -426,15 +427,57 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 **Pendiente de Jorge Uribe:** el método con que separó el 10%, y verificar con el equipo si introduce sesgo (ofrecido en el correo del 16 de octubre).
 
+#### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
+
+**Estado:** vigente · decisión del equipo, no necesita a la patrocinadora
+
+*No hay nada que preguntarle.* Se registra porque fija el formato del artefacto que todo el modelado de la fase 2 va a leer, y porque tres de sus reglas de agregación difieren de lo que dice la [propuesta de variable objetivo](variable-objetivo-fase2.md).
+
+**Qué pasó.** La matriz de la fase 2 (`src/data_prep/pares_fase2.py`, construida con `scripts/construir_pares_fase2.py`) deja 70,384 pares sobre 59,532 compuestos y 26 dianas. La decisión no es cómo agregarla sino **qué se guarda**: no una etiqueta, sino el intervalo donde cae la potencia, con la binaria derivada de él.
+
+| Columna | Qué es |
+|:--|:--|
+| `pActividad` | la potencia como número, 6 − log10 µM; `NaN` si el par solo tiene cotas |
+| `limite_inferior`, `limite_superior` | el intervalo, con ±∞ donde no hay cota |
+| `activo_10um`, `activo_1um` | la etiqueta binaria, **derivada** del intervalo |
+
+**Por qué.** Es la lección de la fase 1 aplicada al revés. El Avance 2 seleccionó sus 171 columnas sobre la matriz transformada con Yeo-Johnson y congeló ese artefacto, así que cambiar la transformación obliga a repetir la selección y a reejecutar el notebook ([1.5](#d1-5)). Guardar solo `activo_10um` tendría el mismo defecto: adoptar la regresión de la [2.9](#d2-9) obligaría a reconstruir todo. Con el intervalo guardado, la clasificación, la regresión sobre exactas y la censurada leen el mismo archivo, y **el umbral pasa a ser una decisión de lectura**.
+
+**Y el intervalo reproduce la regla del diccionario sin programarla aparte.** En escala de potencia un `> L µM` es cota superior, así que «inactivo con umbral T» es `limite_superior ≤ 6 − log10 T`. Un `> 1 µM` da cota superior 6, que no alcanza para declarar inactivo con T = 10 µM y sí con T = 1 µM: es la sección 7 del diccionario como consecuencia, y no como caso especial.
+
+**Tres reglas de agregación que difieren de la propuesta**, y conviene que se vean porque mueven cifras:
+
+1. **Mediana de las mediciones exactas, no el valor más potente.** El máximo sesga hacia la clase positiva, que es el primer problema que la propuesta declara de su propia regla. La dispersión no se pierde: queda en `rango_exactas`, así que un análisis de robustez puede excluir los pares dispersos sin volver a leer el archivo.
+2. **Conflicto es evidencia incompatible, no dispersión.** Con la mediana, dos mediciones a los lados del corte son ruido de medición y no contradicción. Un par se marca en conflicto cuando su mediana cae fuera de lo que permiten sus cotas, o cuando las cotas se cruzan. Así bajan de **1,784 a 1,126**, y solo 15 dan un intervalo vacío. Eso alivia el segundo problema de la propuesta: quitar los conflictos pesaba más en NPASS y CMAUP (32% y 39% de sus pares con varias mediciones).
+3. **El empate en el umbral se resuelve a favor de activo.** Una medición exacta justo en el umbral es activa por la convención de «concentración igual o menor»; un censurado `> 10 µM` con el mismo umbral es inactivo por la regla del diccionario. Tienen la misma relación numérica con el corte y significan lo contrario, y lo que los distingue es que el censurado no tiene cota inferior. Resolverlo así mueve **409 pares** con el corte de 10 µM, porque los valores redondos son frecuentes. Lo encontró una prueba, no una lectura.
+
+**Dos recortes declarados.** La potencia se recorta a **[2, 12]**, que no es un percentil elegido a mano: es el rango del pChEMBL observado en este archivo (2.35 a 12.00), y ChEMBL no asignó pChEMBL a ninguna de las 319 filas que caen fuera —su propia tubería ya las marcó—. Y las filas en unidades de masa quedan fuera, porque sin peso molecular no hay conversión a molar: son 181 de las que podrían formar par, y por eso el conteo da 70,384 y no 70,497.
+
+**Cifras del artefacto.** 57,832 pares con potencia y 12,552 solo con cotas; 67,736 con etiqueta a 10 µM (72.8% activos, 2,648 sin decidir) y 69,632 a 1 µM (50.2%, 752 sin decidir); 24,230 grupos para la partición. Los descriptores quedan **201 de 217** utilizables, dos menos que los 203 de la fase 1, porque el conjunto de compuestos es otro y cambia qué columnas salen constantes o no finitas. Esa cifra pertenece al diccionario de la matriz y se mueve ahí cuando el #83 se fusione.
+
 ### Propuestas
 
-#### 2.2 · Forma del modelo: por diana, por categoría o multitarea {#d2-2 .abierta .definir}
+#### 2.2 · Por diana, con multitarea como comparación {#d2-2 .propuesta .revisada .definir}
 
-**Estado:** abierta · necesita su definición · después de la [2.1](#d2-1)
+**Estado:** propuesta · revisada el 17 de octubre: antes era abierta, y la [2.1](#d2-1) la desbloqueó
 
-> **Pregunta:** Con la lista ya fijada, ¿un modelo por diana, uno por categoría de enfermedad o uno multitarea con todas? ¿Qué dianas son prioritarias?
+> **Pregunta, y es la única parte que depende de ella:** de las 14 dianas con volumen, **¿cuáles le interesan primero?** La forma del modelo ya no es una pregunta para la patrocinadora, porque la decide el conteo de pares; la prioridad sí, porque depende de su línea de investigación y no de los datos.
 
-**Qué pasó.** Los volúmenes difieren en tres órdenes de magnitud: Alzheimer 52,676 registros, Parkinson 32,372, neuroinflamación 12,331, depresión 10,888, Huntington 153 y ELA 53. Con 53 registros ELA no sostiene un modelo propio; con 52,676 Alzheimer sí. Un modelo multitarea comparte representación entre dianas y es la única forma de incluir las pequeñas, a costa de mezclar señales.
+**Qué pasó.** Con el alcance fijo y la matriz de pares construida, los volúmenes ya no se cuentan en registros sino en pares, que es la unidad del modelo:
+
+| Dianas | Pares que cubren |
+|:--|--:|
+| Las 14 con 1,000 pares o más | **94.3%** |
+| Las 21 con 200 o más | 99.3% |
+| Las 5 restantes | 466 pares en total |
+
+Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midió contra una sola diana.** Solo 8,934 compuestos (15.0%) tienen dos dianas o más, y aportan el 28.1% de los pares.
+
+**Se propone.** **Un modelo por diana para las 14 que pasan de 1,000 pares**, que es el 94.3% de los datos, y **un multitarea como brazo de comparación** sobre las 26. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
+
+**Por categoría de enfermedad, no.** La categoría agrupa genes que no comparten mecanismo: en Alzheimer conviven `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear). Un modelo sobre esa mezcla aprende el promedio de tres farmacologías. Y como cada gen pertenece a exactamente una categoría, «por categoría» es solo una agrupación más gruesa de los mismos genes, sin nada que la haga preferible. **La categoría se usa para reportar**, que es donde sí aporta: permite decir «el modelo acierta mejor en Alzheimer que en neuroinflamación», que es la lectura que importa para priorizar candidatos.
+
+**Lo que esto arrastra.** Catorce modelos son catorce particiones y catorce conjuntos de hiperparámetros, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 35.0% en `MAOA` a 96.5% en `LRRK2` ([2.3](#d2-3)): las dianas de los extremos tienen una clase casi vacía, así que el punto de operación no puede ser el mismo para todas.
 
 #### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .propuesta .revisada .definir}
 
