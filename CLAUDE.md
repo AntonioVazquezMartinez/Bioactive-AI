@@ -80,6 +80,8 @@ The register is split by phase (common, 1, 2; ids like `1.3`, `2.5`, `C.2`) and 
 
 When a decision changes, never rewrite it silently. Mark the previous version as superseded and say what changed it. `scripts/verificar_decisiones.py` checks that every entry declares a valid status.
 
+**Don't let an entry sit blocked on the sponsor. Decide it, write what would change it, and keep it reversible.** Seven entries carried a «necesita su definición» marker and were the bottleneck for weeks. When the team finally went through them, three turned out to be answerable by a measurement nobody had run, and in two more the answer didn't change what had to be built — so only two actually needed her, and she ratified those in one meeting. A *vigente* entry that says what would change it costs almost nothing to reverse; an *abierta* entry waiting for an answer costs the whole week. Asking is still right when the criterion is genuinely hers (which activity types count as neuroprotection, whether a holdout exists), but the test is whether her answer would change the next commit, not whether it would be nice to have.
+
 ### The site does not auto-discover files
 
 This is the part that bites. A new document under `docs/` stays invisible until it is registered in **two** places: the `DOCUMENTOS` list in `scripts/prepare_site.py` and the navbar in `_quarto.yml`.

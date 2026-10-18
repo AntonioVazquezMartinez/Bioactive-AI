@@ -1,6 +1,6 @@
 ---
 title: "Consulta a la patrocinadora"
-subtitle: "Siete definiciones que el equipo no puede deducir de los datos"
+subtitle: "Lo que el equipo decidió, y dónde quiere que usted corrija"
 lang: es
 format:
   html:
@@ -8,24 +8,29 @@ format:
     toc-depth: 2
 ---
 
-Dra. Martínez: esta página reúne las **siete decisiones que dependen de su criterio**. Cada una trae
-el contexto medido, la recomendación del equipo y la casilla para responder.
+Dra. Martínez: esta página reunía siete decisiones esperando su criterio. **Ya ninguna espera.** Dos
+las cerró usted en la reunión del 15 de octubre y las otras cinco las decidió el equipo, porque en
+cada una esperar costaba más que equivocarse: tres resultaron contestables con una medición que
+nadie había hecho, y en las otras dos su respuesta no cambiaba lo que había que construir.
 
-**No se envía nada solo.** Al final, el botón arma un texto con sus respuestas que puede copiar a un
+Así que esta página ya no le pide definiciones. **Le muestra qué se decidió, con qué evidencia y qué
+lo haría cambiar**, para que corrija lo que quiera corregir. Cada casilla sigue abierta, pero ahora
+significa «no estoy de acuerdo» y no «el equipo está detenido esperándome».
+
+**No se envía nada solo.** Al final, el botón arma un texto con sus comentarios que puede copiar a un
 correo o descargar. Lo que escriba vive únicamente en su navegador hasta entonces.
 
-Puede contestar lo que tenga claro y dejar el resto para la reunión. El detalle completo de cada
-decisión —qué se descartó, qué cuesta y qué la cambió— está en [la ruta del
-proyecto](contenido/decisiones.html).
-
 ::: {.callout-note}
-**Cuatro son elecciones** y **tres son peticiones**: información o un archivo que solo usted tiene.
-Están separadas porque se responden distinto.
+**Nada de lo que decidimos es irreversible.** Ninguna entrada se declara *ratificada* sin su
+revisión, y cada una dice en [la ruta del proyecto](contenido/decisiones.html) qué la haría cambiar.
+Si una le parece mal, cambiarla cuesta poco: lo escribimos así a propósito.
 :::
 
-# Lo que solo usted tiene
+# Lo que solo usted tiene, y cómo se resolvió sin ello
 
 ## 1 · ¿El archivo de actividad ya trae una prueba apartada?
+
+> **Resuelta el 15 de octubre, y es la que más nos ayudó.** Sí había una partición, se hizo al azar, y usted entregó el archivo completo para que el equipo la rehaga por andamio. Queda en la [2.6](contenido/decisiones.html#d2-6).
 
 El archivo se llama `..._Entrenamiento.csv` y trae **202,647 de los 225,513 registros** que describe
 su diccionario, el 89.9%. Faltan 22,866.
@@ -39,6 +44,8 @@ generaliza a estructuras nuevas; habría que decirlo como limitación.
 
 ## 2 · ¿Puede aportar el cruce con COCONUT del archivo de actividad?
 
+> **Decidido por el equipo: lo calculamos nosotros.** Con la fuente como aproximación nos equivocábamos en dos de cada tres compuestos, así que esperarlo costaba más que la discrepancia de usar otra versión del catálogo. Si usted lo aporta, pasa a ser la definición y el nuestro queda como comprobación. [2.8](contenido/decisiones.html#d2-8).
+
 El archivo de permeabilidad llegó con tres columnas de COCONUT, y ese cruce es lo que sostiene el
 hallazgo central del Avance 1. El de actividad no trae ninguna: sus únicas columnas de procedencia
 son `source` e `inchikey_source`.
@@ -51,6 +58,8 @@ Mientras tanto se usa la fuente —NPASS y CMAUP— como definición provisional
 :::
 
 ## 3 · La brecha de los naturales aparece solo donde la etiqueta no es medida
+
+> **Decidido por el equipo: queda como limitación declarada.** Su respuesta no cambiaba qué construir —un modelo, evaluado por origen dentro de cada grupo A–D— porque es esa evaluación la que distingue curación de química. [1.6](contenido/decisiones.html#d1-6).
 
 Globalmente los naturales cruzan la barrera 18.9 puntos menos. Pero repartido por grupo de B3DB,
 **la brecha desaparece justo en el grupo A**, que es el que trae un logBB medido:
@@ -68,9 +77,11 @@ archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es 
 ::: {.bio-pregunta data-id="p3" data-titulo="Brecha de los naturales (entrada 1.6)" data-opciones="Hay una razón de curación que lo explica|Es química real|No lo sé; déjenlo como limitación"}
 :::
 
-# Elecciones
+# Lo que el equipo eligió
 
 ## 4 · ¿Dónde se corta «activo»?
+
+> **Decidido por el equipo: 10 µM principal y 1 µM de sensibilidad**, sobre las tres fuentes. No es un hallazgo sino una convención declarada, y lo que la sostiene es que 10 µM es la concentración libre máxima alcanzable con una dosis oral convencional. Sin una columna de desenlace, un umbral no se estima: se elige. [2.3](contenido/decisiones.html#d2-3).
 
 **Es una sola decisión, no dos.** La regla de censura de su diccionario ata el corte de los
 inactivos al de los activos: un `>` solo sirve como negativo si su límite llega al umbral de
@@ -116,6 +127,8 @@ Para dimensionarlo: de esas cuatro para arriba, las demás dianas van de 25 regi
 
 ## 6 · ¿Un modelo por diana, por categoría o multitarea?
 
+> **Decidido por el equipo: por diana, para las 14 con mil pares o más**, con multitarea como comparación. Lo decide que el 85% de los compuestos se midió contra una sola diana. [2.2](contenido/decisiones.html#d2-2).
+
 Los volúmenes difieren en tres órdenes de magnitud:
 
 Alzheimer 52,676 · Parkinson 32,372 · Neuroinflamación 12,331 · Depresión 10,888 · Estrés oxidativo
@@ -134,6 +147,8 @@ sale de los datos, y cambia qué conviene construir.
 :::
 
 ## 7 · ¿Qué espera recibir, y qué error le cuesta más?
+
+> **Decidido por el equipo: no se fija un punto de operación.** Se entrega la curva de precisión contra profundidad, con un corte sugerido en veinte compuestos. Así mover el corte no cuesta reentrenar nada, y usted lo ajusta cuando vea los resultados. [C.5](contenido/decisiones.html#dc-5).
 
 De esta respuesta cuelgan el punto de operación de los dos modelos y la forma del entregable. Es la
 única pregunta de esta página que el equipo no puede ni aproximar con una medición.
