@@ -391,7 +391,7 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 
 **Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes preguntaba por cuatro dianas sueltas
 
-**Qué se decidió.** El alcance de la fase 2 son **cinco categorías**: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás se remueven. La patrocinadora lo cerró en la reunión del 15 de octubre: «sí se pueden resumir a esas… y si los demás adelante los pueden remover» ([acta](acta-patrocinadora.md#e3)).
+**Qué se decidió.** El alcance de la fase 2 son **cinco categorías**: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás se remueven. La patrocinadora lo cerró en la reunión del 15 de octubre: «sí se pueden resumir a esas… y si los demás adelante los pueden remover» (acta de la reunión, documento interno).
 
 | Categoría | Registros | |
 |:--|--:|:--|
@@ -416,7 +416,7 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 **Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes era una pregunta abierta
 
-**Qué se decidió.** Sí había una partición reservada, **se hizo al azar y sin criterio**, y la patrocinadora entrega el archivo completo para que el equipo la rehaga. «Partamos de la base de datos completa que se las podemos pasar… ustedes que son los expertos tengan la base completa y hagan bien esas separaciones» ([acta](acta-patrocinadora.md#p1)).
+**Qué se decidió.** Sí había una partición reservada, **se hizo al azar y sin criterio**, y la patrocinadora entrega el archivo completo para que el equipo la rehaga. «Partamos de la base de datos completa que se las podemos pasar… ustedes que son los expertos tengan la base completa y hagan bien esas separaciones» (acta de la reunión, documento interno).
 
 **Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647, el 89.9%. La sospecha era correcta. Al explicarle por qué el azar no sirve —si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada— lo aceptó sin reservas: «lo hicimos muy a la ligera… si hay una forma de hacerlo con mejores criterios, adelante».
 
@@ -442,7 +442,7 @@ Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: e
 
 > **Pregunta, ya estrecha:** las columnas de la sección 5 del diccionario dan una concentración y una relación **en las tres fuentes**. En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa». ¿Descartó usar esas columnas con el mismo corte, o solo inferir lo que no viene informado, como las 2,001 relaciones de NPASS? Se le muestra con filas reales de cada fuente a la vista.
 >
-> *Y una petición nueva:* un **desenlace** —qué compuestos rescataron neuronas en sus ensayos y a qué concentración— que es lo que haría estimable el umbral que ella quiere ([P4](acta-patrocinadora.md#p4)).
+> *Y una petición nueva:* un **desenlace** —qué compuestos rescataron neuronas en sus ensayos y a qué concentración— que es lo que haría estimable el umbral que ella quiere (petición P4 del acta, documento interno).
 
 **El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
 
@@ -489,7 +489,7 @@ El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 regist
 
 **Umbral.** Con pChEMBL, ≥ 5 daba 87.1% de activos (6.7:1) y llevó a proponer ≥ 6; con las tres vías la razón baja a 1.6:1 por registro. El sesgo de los registros con pChEMBL es una explicación posible, no demostrada. Se conserva ≥ 5 como primario y ≥ 6 como robustez: el balance de clases no determina el umbral biológico.
 
-**La llave del par es el esqueleto × gen, y no el identificador del compuesto.** `source_compound_id` usa prefijos distintos por fuente —`CHEMBL…` contra `NPC…`— y **no comparte ni un valor** entre ellas, así que con esa llave un compuesto medido en dos fuentes entra como dos pares independientes y sus contradicciones quedan invisibles: son **164 pares** en conflicto entre ChEMBL y las fuentes naturales que así no se verían. Se usa el [esqueleto de conectividad](glosario.md#par-compuesto-diana) × `target_gene`, que además es la misma llave que `grupos_cv` usa en `src/data_prep/splits.py` para la validación cruzada agrupada, de modo que la unidad de etiquetado y la de partición coinciden.
+**La llave del par es el esqueleto × gen, y no el identificador del compuesto.** `source_compound_id` usa prefijos distintos por fuente —`CHEMBL…` contra `NPC…`— y **no comparte ni un valor** entre ellas, así que con esa llave un compuesto medido en dos fuentes entra como dos pares independientes y sus contradicciones quedan invisibles: son **164 pares** en conflicto entre ChEMBL y las fuentes naturales que así no se verían. Se usa el [esqueleto de conectividad](glosario.md) × `target_gene`, que además es la misma llave que `grupos_cv` usa en `src/data_prep/splits.py` para la validación cruzada agrupada, de modo que la unidad de etiquetado y la de partición coinciden.
 
 **Y «por fuente» no se puede reportar sobre el par, porque la fuente no es un atributo del par.** Con la llave por esqueleto, 827 de los 828 pares de CMAUP comparten par con otra fuente, y 42.4% de los de NPASS: **CMAUP tiene exactamente un par propio**. Así que el desempeño se reporta en **estratos disjuntos por procedencia de la evidencia**, que sí son aditivos:
 
@@ -554,7 +554,7 @@ La brecha real entre ChEMBL y los naturales es de **63 puntos**, no los 52 que s
 
 La regresión sobre mediciones exactas no pierde al azar: el 98.0% de los pares activos tiene medición exacta y solo el 50.6% de los negativos, porque la mitad de la evidencia de inactividad **existe solo como censurada**. Un segundo modelo entrenado así tendría un ranking optimista de un modo difícil de auditar.
 
-**Se propone.** Un solo modelo: **regresión sobre [pActividad](glosario.md#pactividad) con los censurados como observaciones censuradas por la izquierda**, no borrados. Un `>` de 10 µM no es dato faltante, es la información «pActividad < 5», y el propio diccionario de la patrocinadora lo pide así: «en regresión no deben usarse como si el valor fuera exacto: se excluyen o **se usa un método para valores censurados**». No es maquinaria nueva: XGBoost lo trae como objetivo `survival:aft` con límite inferior y superior por observación, y XGBoost ya es candidato en la [1.5](#d1-5).
+**Se propone.** Un solo modelo: **regresión sobre [pActividad](glosario.md) con los censurados como observaciones censuradas por la izquierda**, no borrados. Un `>` de 10 µM no es dato faltante, es la información «pActividad < 5», y el propio diccionario de la patrocinadora lo pide así: «en regresión no deben usarse como si el valor fuera exacto: se excluyen o **se usa un método para valores censurados**». No es maquinaria nueva: XGBoost lo trae como objetivo `survival:aft` con límite inferior y superior por observación, y XGBoost ya es candidato en la [1.5](#d1-5).
 
 Con eso la clasificación sale gratis umbralando la predicción, así que el MCC y el AUPRC de la [C.1](#dc-1) siguen reportándose y comparándose contra el baseline. **La clasificación a 10 µM se conserva como baseline del Avance 3**, que es el papel que le toca: ser el piso que la censurada tiene que superar. Dos modelos principales no, porque producirían dos rankings y nada diría cuál obedecer.
 

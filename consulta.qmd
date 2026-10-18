@@ -111,6 +111,9 @@ alcance en cinco categorías, tres de las cuatro quedaron fuera por su categorí
 queda, pero se excluye por sí sola: tiene 0 filas y su propia etiqueta dice «marcador de microglía
 activada; no es diana farmacológica». Queda registrada en la [2.1](contenido/decisiones.html#d2-1).
 
+Para dimensionarlo: de esas cuatro para arriba, las demás dianas van de 25 registros declarados
+—`TNF`— hasta **18,215**. El salto es grande, y es lo que hacía a las cuatro un caso aparte.
+
 ## 6 · ¿Un modelo por diana, por categoría o multitarea?
 
 Los volúmenes difieren en tres órdenes de magnitud:

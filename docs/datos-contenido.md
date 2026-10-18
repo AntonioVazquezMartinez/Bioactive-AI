@@ -206,7 +206,7 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   experimento antes de decidir el etiquetado, y sobre la población que se modela esa revisión no se
   puede hacer. Tampoco se puede concluir lo contrario: el vacío no demuestra que el tejido no
   influya, porque el experimento ocurrió en algún tejido y lo que falta es la columna. Está pedido a
-  Jorge Uribe ([acta](acta-patrocinadora.md#a1)). Lo que sí está en el 100% de las filas es
+  Jorge Uribe (acta de la reunión, documento interno). Lo que sí está en el 100% de las filas es
   `assay_chembl_id` y `reference_id`.
 
 - **La potencia no es comparable entre fuentes, y ahí está el riesgo del etiquetado.** Mediana de
@@ -233,7 +233,7 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   todo lo que hay son mediciones de potencia. **Por qué importa:** un umbral de «activo» no es
   estimable sin algo contra lo que discriminar, así que se elige y se declara, no se descubre. Es lo
   que la patrocinadora pidió —«a partir de qué valor ya se vuelve algo significativo»— y la razón de
-  la petición [P4](acta-patrocinadora.md#p4).
+  la petición P4 del acta.
 
 - **El eje de toxicidad casi no existe.** Hay 925 filas con desenlace citotóxico (`GI50`, `TGI`,
   `CC50`, `ID50`, `MIC`, `MNTD`) y 483 con `assay_type` de toxicidad, de 202,647. Solo **203
