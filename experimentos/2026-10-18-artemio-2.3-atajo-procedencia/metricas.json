@@ -1,0 +1,12 @@
+{
+  "auroc_global": 0.8368877739072579,
+  "auroc_por_estrato": {
+    "mixto": 0.6116831294248432,
+    "solo_chembl": 0.8265164636889616,
+    "solo_npass": 0.5690432703890232
+  },
+  "brecha_quimica_menos_procedencia": 0.14801582729826074,
+  "mcc_ambos": 0.4512002030890022,
+  "mcc_procedencia": 0.2803484199077135,
+  "mcc_quimica": 0.4283642472059742
+}
