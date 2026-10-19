@@ -1,0 +1,1 @@
+python3.12.12 scripts/experimento_rubrica3.py
