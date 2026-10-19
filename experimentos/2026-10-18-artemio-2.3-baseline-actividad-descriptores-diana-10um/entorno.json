@@ -1,0 +1,19 @@
+{
+  "arbol_sucio": true,
+  "commit": "d9802b6fbf93cbe47bae9aaf5714bb971db4699e",
+  "datos_sha256": {},
+  "decision": "2.3",
+  "duracion_s": 254.3,
+  "lock_sha256": "6356d9016158dfabdaefadf7d096cfb09f26f3b1e32f89534945d271602ff58e",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.12",
+  "sistema": "macOS-27.0.1-arm64-arm-64bit"
+}
