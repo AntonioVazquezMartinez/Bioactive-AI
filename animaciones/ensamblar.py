@@ -151,7 +151,8 @@ def ensamblar(partes: list[tuple[str, str, str]], calidad: str,
             orden += ["-map", etiqueta_a]
     orden += ["-pix_fmt", "yuv420p", "-c:v", "libx264", "-crf", "18"]
     if con_audio:
-        orden += ["-c:a", "aac", "-b:a", "160k"]
+        # El mismo formato que `sonorizar.py`: 48 kHz y estéreo, explícitos.
+        orden += ["-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2"]
     orden += [str(destino)]
 
     print("\nuniendo…", flush=True)

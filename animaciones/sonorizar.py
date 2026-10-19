@@ -97,7 +97,15 @@ def sonorizar(escena: str, calidad: str) -> Path:
     orden = (["ffmpeg", "-v", "error", "-y", "-i", str(video)] + pistas
              + ["-filter_complex", ";".join(filtros) + ";" + mezcla,
                 "-map", "0:v", "-map", "[voz]", "-c:v", "copy",
-                "-c:a", "aac", "-b:a", "160k", str(destino)])
+                # **48 kHz y dos canales, explícitos.** Sin fijarlos, el
+                # formato lo decidía la cadena de filtros: `loudnorm` remuestrea
+                # internamente y el resultado salía en 96 kHz mono, que es AAC
+                # válido y que varios reproductores —QuickTime entre ellos— no
+                # decodifican. El video se veía y no se oía, sin que nada
+                # fallara ni avisara: `ffprobe` informaba de un flujo de audio
+                # correcto y con nivel.
+                "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2",
+                str(destino)])
     subprocess.run(orden, check=True)
     print(f"  {escena:<14} {largo_video:>6.1f} s · {len(tramos)} tramos"
           f" → {destino.name}")
