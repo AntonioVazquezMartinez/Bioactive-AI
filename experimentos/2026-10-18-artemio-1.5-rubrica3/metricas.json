@@ -1,0 +1,23 @@
+{
+  "brecha_auroc": {
+    "boosting": 0.069,
+    "bosque": 0.0649,
+    "logistica": 0.0293
+  },
+  "brecha_mcc": {
+    "boosting": 0.2696,
+    "bosque": 0.2562,
+    "logistica": 0.0519
+  },
+  "n_caracteristicas": 151,
+  "piso_auroc": {
+    "al azar (proporción)": 0.4938,
+    "mayoritaria": 0.5,
+    "proporción constante": 0.5
+  },
+  "piso_mcc": {
+    "al azar (proporción)": -0.0125,
+    "mayoritaria": 0.0,
+    "proporción constante": 0.0
+  }
+}

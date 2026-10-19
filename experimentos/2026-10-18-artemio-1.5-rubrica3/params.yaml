@@ -1,0 +1,16 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  tarea: permeabilidad
+  representacion: descriptores
+  pliegues: 5
+  fracciones:
+  - 0.2
+  - 0.4
+  - 0.6
+  - 0.8
+  - 1.0
+  repeticiones_permutacion: 5

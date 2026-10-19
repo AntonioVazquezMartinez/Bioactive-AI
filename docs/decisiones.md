@@ -251,6 +251,20 @@ El AUROC es el de las predicciones fuera de pliegue promediadas entre las tres s
 
 Con una sola configuración por familia **no se declara ganador**, que es el error que esta misma entrada ya cometió una vez con el escalado y tuvo que retirar. Afinar es del Avance 4. **Y el orden entre las dos basadas en árboles se invirtió al pasar de la matriz de 171 columnas a la de 151** —antes el MCC más alto era del bosque (0.7017 contra 0.6986), ahora del boosting (0.7019 contra 0.6996)— por diferencias de dos o tres milésimas: es el mismo argumento, visto dos veces. Las cifras salen de `scripts/experimento_baseline.py` y del [notebook 03](../notebooks/03_Baseline.ipynb); la corrida está en `experimentos/2026-10-18-artemio-1.5-baseline-permeabilidad-descriptores/` y la anterior, sobre las 171 columnas, en `experimentos/2026-10-18-artemio-1.5-baseline-permeabilidad-171col/`.
 
+**Los tres sobreajustan de forma muy distinta, y eso dice dónde buscar en el Avance 4.** Medido con la misma partición, la misma métrica sobre el pliegue de ajuste y sobre el de evaluación (`scripts/experimento_rubrica3.py`, corrida `experimentos/2026-10-18-artemio-1.5-rubrica3/`):
+
+| Canalización | MCC ajuste | MCC validación | Brecha | AUROC ajuste | AUROC validación |
+|:--|--:|--:|--:|--:|--:|
+| Regresión logística | 0.739 | 0.687 | **0.052** | 0.943 | 0.913 |
+| Bosque aleatorio | 0.955 | 0.698 | 0.256 | 0.998 | 0.933 |
+| Boosting por histogramas | 0.972 | 0.702 | 0.270 | 0.999 | 0.930 |
+
+Y la curva de aprendizaje —submuestreando **por grupo**, no por fila, porque tomar filas al azar partiría andamios y mediría cuánto ayuda ver más análogos en vez de más estructuras— separa los dos diagnósticos: en los árboles la línea de ajuste es plana desde 168 estructuras y la brecha no se mueve; en la logística baja de 0.81 a 0.74 y se acerca a la de validación. Las tres líneas de validación suben cada vez menos, y el último 20% de estructuras aporta menos de 0.01 de MCC en los tres. **Más compuestos del mismo tipo ayudarían poco**: lo que falta es regularizar los árboles.
+
+**El piso es 0.000 de MCC y 0.500 de AUROC.** No hay desempeño histórico con el que comparar —la patrocinadora no tenía modelo previo— así que el piso lo ponen los clasificadores triviales con la misma partición agrupada. Importa decirlo porque con 65.0% de BBB+ un clasificador que diga siempre «permeable» acierta dos de cada tres veces, y esa exactitud del 65% parecería un resultado. **El desempeño mínimo que el Avance 4 tiene que superar queda fijado en el 0.70 de MCC y el 0.93 de AUROC de este baseline**, medido con esta partición y estas semillas.
+
+**Dos métodos de atribución coinciden en 11 de sus 15 primeras características**, que es lo que la [C.2](#dc-2) exige antes de afirmar nada estructural: la impureza del bosque pone a TPSA arriba, la permutación sobre el pliegue de evaluación pone a `fr_lactam` y `fr_COO`. En la intersección están TPSA, donadores de hidrógeno y `MolLogP`, y los coeficientes de la logística les dan el signo esperado —TPSA −1.42, donadores −2.43—, de modo que la regla de los dos parámetros sale de tres caminos independientes en vez de citarse. **24 de las 151 columnas no dañan al modelo al permutarlas**; retirarlas es candidato de poda para el Avance 4, no una decisión que una sola configuración pueda tomar.
+
 **Las 151 columnas rinden como las 171.** Mismas particiones, mismas semillas y la misma máquina: la diferencia pareada por pliegue va de −0.006 a +0.003 de MCC y de −0.001 a 0.000 de AUROC, con error estándar del mismo tamaño que la diferencia. Veinte columnas menos no cuestan desempeño, que es lo que hacía falta comprobar antes de adoptar la matriz nueva.
 
 **Y el baseline usa la matriz sin transformar.** La guardada trae Yeo-Johnson ajustado sobre todas las filas de entrenamiento, así que usarla en validación cruzada mete en cada pliegue de evaluación información ajustada con él. Se midió la diferencia y es pequeña —alrededor de 0.001 de AUROC—, pero no se sabía hasta medirla. El escalado va dentro de la canalización, que se reajusta por pliegue.
