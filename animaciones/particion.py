@@ -189,7 +189,7 @@ class Particion(Narrada):
         bloque = VGroup()
         for rotulo, valor, color in (
                 ("agrupando solo por andamio", "AUROC 0.959", ROJO),
-                ("agrupando por andamio y esqueleto", "AUROC 0.937", VERDE)):
+                ("agrupando por andamio y esqueleto", "AUROC 0.936", VERDE)):
             r = dato(rotulo, 24, color)
             v = dato(valor, 26, color)
             v.next_to(r, RIGHT, buff=0.8)
@@ -200,7 +200,7 @@ class Particion(Narrada):
 
         linea = Line(bloque.get_left() + DOWN * 1.1,
                      bloque.get_right() + DOWN * 1.1, color=GRIS, stroke_width=1)
-        remate = dato("2.2 puntos, y la de arriba es la que infla", 24, CREMA)
+        remate = dato("más de dos puntos, y la de arriba es la que infla", 24, CREMA)
         remate.next_to(linea, DOWN, buff=0.35)
         cabe(bloque, remate)
         self.play(Create(linea), FadeIn(remate), run_time=1.2)

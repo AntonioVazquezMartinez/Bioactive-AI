@@ -54,3 +54,7 @@ que los datos no sostienen — lo encontró el brainstorm yendo a `experimentos/
   `experimentos/2026-10-18-artemio-*/metricas.json`**, del AUROC agrupado
   sobre predicciones fuera de pliegue. El promedio por pliegue da otros
   valores (0.863 en vez de 0.866); son dos estimadores y no se mezclan.
+- El 0.938 es el boosting por histogramas, que sobre la matriz de 151 columnas
+  es el de MCC más alto. Con la matriz anterior, de 171, el de MCC más alto era
+  el bosque y daba 0.9377: la cifra en pantalla no se mueve, el modelo sí.
+  Entre los tres la diferencia es de milésimas y el video no declara ganador.

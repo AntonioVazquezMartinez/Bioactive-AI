@@ -58,9 +58,9 @@ moléculas repetidas.
 > La diferencia no es cosmética. Sobre los datos de permeabilidad, con el
 > mismo modelo y la misma matriz, agrupar solo por andamio da un AUROC de
 > cero punto nueve cinco nueve. Uniendo el andamio al esqueleto de
-> conectividad, cero punto nueve tres siete.
+> conectividad, cero punto nueve tres seis.
 >
-> Dos punto dos puntos, y la de arriba es la que infla.
+> Más de dos puntos, y la de arriba es la que infla.
 >
 > Y es un caso suave: lo único que cambia entre esas dos moléculas es la
 > disposición espacial. Partir del todo al azar infla entre siete y trece
@@ -74,7 +74,8 @@ fuente.
 ## Notas para la locución
 
 - **«AUROC»** se lee deletreado, *a-u-roc*, no como palabra.
-- Los decimales se leen **«cero punto nueve tres siete»**, que es como se dice en México y lo que la pantalla escribe (`0.937`).
+- Los decimales se leen **«cero punto nueve tres seis»**, que es como se dice en México y lo que la pantalla escribe (`0.936`).
+- La diferencia medida es de 0.0223, o sea 2.2 puntos, pero restando lo que la pantalla muestra salen 2.3. Por eso el remate dice «más de dos puntos»: es cierto con las dos lecturas y no invita a restar.
 - No hay ninguna cifra en pantalla que la voz no diga, ni al revés. Si una
   cambia, cambian las dos y se vuelve a grabar — por eso el video lleva solo
   tres números.
