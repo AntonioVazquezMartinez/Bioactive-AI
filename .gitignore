@@ -53,6 +53,9 @@ mlruns/
 # no la heredaba: un `git add -A` metió 53 MB de renders, mp3 y SVG a `main`.
 # Las reglas van aquí para que no dependan de en qué rama se esté.
 animaciones/media/
+# Y la de la raíz: manim escribe aquí cuando se le invoca desde el repositorio
+# en vez de desde , y así se colaron 29 archivos de una prueba.
+media/
 env-anim/
 
 # El audio generado: cuesta llamadas a la API y no se versiona.

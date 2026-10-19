@@ -1,3 +1,0 @@
-# This file records the segment order used by Manim.
-file 'file:/Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/media/videos/prueba_mol/480p15/partial_movie_files/PruebaMol/fa9b720287ac02178761b190a84564fed4952c3c63edcfc26279b3844a83c944.mp4'
-file 'file:/Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/media/videos/prueba_mol/480p15/partial_movie_files/PruebaMol/f1bfdc79d199f32ac3a251090f90d70d6bb7e326ff335b54e107dcd6c79a464c.mp4'
