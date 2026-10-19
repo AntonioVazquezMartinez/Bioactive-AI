@@ -85,8 +85,9 @@ El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 | 1 | Análisis exploratorio de datos (`notebooks/01_EDA.ipynb`) | Entregado el 4 de octubre |
 | — | EDA de la etapa 2 (`notebooks/01b_EDA_actividad_snc.ipynb`) | Hecho; acompaña al Avance 1 y no es un entregable |
 | 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Hecho y revisado con la retroalimentación de la asesora: matriz de 151 columnas, partición por andamio con la prueba reservada; reporte en PDF publicado. La fase 2 tiene su propio notebook, `02b_Feature_Eng_actividad.ipynb`: matriz de 70,384 pares y partición con prueba reservada |
-| 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Hecho: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar. Vence el 18 de octubre; la entrega es la liga al notebook |
-| 4–5 | Modelos alternativos y modelo final | Pendiente |
+| 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Entregado el 18 de octubre: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar |
+| 4 | Modelos alternativos | En curso · vence el 25 de octubre |
+| 5 | Modelo final | Pendiente · vence el 1 de noviembre |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
 
