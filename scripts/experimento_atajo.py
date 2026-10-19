@@ -91,9 +91,13 @@ SEMILLAS = (0, 1, 2)
 PLIEGUES = 5
 ESTRATOS = ("solo_chembl", "solo_npass", "mixto")
 SALIDA_DIANA = RAIZ / "notebooks/datos/atajo_por_diana.csv"
-# Una diana entra a la comparación si NPASS le aporta al menos esto y las dos
-# clases: por debajo, el intervalo es tan ancho que no distingue nada.
+# Una diana entra a la comparación por el tamaño de su **clase minoritaria**,
+# no por el de la diana. Exigir solo pares deja pasar casos vacíos: `ACHE`
+# tiene 221 pares de NPASS y **3 activos**, así que su AUROC es ruido —y en una
+# primera versión de esta tabla salía 0.763, que parecía tranquilizador—. Lo
+# señaló Pame al revisar el #90.
 MIN_PARES = 100
+MIN_MINORITARIA = 20
 REMUESTRAS = 2000
 
 
@@ -258,33 +262,41 @@ def _medir(corrida: Corrida) -> None:
     # A igual diana, ¿separa el modelo los pares de NPASS tan bien como los de
     # ChEMBL? Si sí, el 0.569 agregado era composición de dianas; si no, el
     # modelo no sirve para naturales y hay que decirlo.
-    print(f"\nA igual diana, ChEMBL contra NPASS (dianas con ≥{MIN_PARES}"
-          " pares de NPASS y las dos clases)")
+    print(f"\nA igual diana, ChEMBL contra NPASS (≥{MIN_PARES} pares y"
+          f" ≥{MIN_MINORITARIA} casos de la clase minoritaria en cada fuente)")
     por_diana = []
     for g in sorted(set(diana)):
         for e in ("solo_chembl", "solo_npass"):
             sel = (diana == g) & (estrato == e)
             if sel.sum() < MIN_PARES or len(np.unique(y[sel])) < 2:
                 continue
-            a, lo, hi = auroc_con_intervalo(y[sel], medias["química"][sel], grupos[sel])
-            por_diana.append({"diana": g, "estrato": e, "n": int(sel.sum()),
-                              "activos": float(y[sel].mean()),
-                              "auroc": a, "ic_bajo": lo, "ic_alto": hi})
+            minoritaria = min(int(y[sel].sum()), int((1 - y[sel]).sum()))
+            if minoritaria < MIN_MINORITARIA:
+                continue
+            for conjunto in ("química", "química+diana"):
+                a, lo, hi = auroc_con_intervalo(y[sel], medias[conjunto][sel], grupos[sel])
+                por_diana.append({"diana": g, "estrato": e, "conjunto": conjunto,
+                                  "n": int(sel.sum()), "minoritaria": minoritaria,
+                                  "activos": float(y[sel].mean()),
+                                  "auroc": a, "ic_bajo": lo, "ic_alto": hi})
     pdi = pd.DataFrame(por_diana)
     # Solo las dianas donde se puede comparar: las dos fuentes presentes.
     completas = pdi.groupby("diana")["estrato"].nunique().loc[lambda s: s == 2].index
     pdi = pdi[pdi["diana"].isin(completas)]
     pdi.to_csv(SALIDA_DIANA, index=False)
     print(f"[guardado] {SALIDA_DIANA.relative_to(RAIZ)}\n")
-    for g in completas:
-        f = pdi[pdi.diana.eq(g)].set_index("estrato")
-        print(f"  {g:<8}"
-              + "   ".join(
-                  f"{e.replace('solo_', ''):<6} n={int(f.loc[e, 'n']):>5,}"
-                  f" act {f.loc[e, 'activos']:>5.1%}"
-                  f" AUROC {f.loc[e, 'auroc']:.3f} [{f.loc[e, 'ic_bajo']:.3f},"
-                  f" {f.loc[e, 'ic_alto']:.3f}]"
-                  for e in ("solo_chembl", "solo_npass")))
+    for conjunto in ("química", "química+diana"):
+        print(f"\n  con {conjunto}:")
+        sub = pdi[pdi.conjunto.eq(conjunto)]
+        for g in completas:
+            f = sub[sub.diana.eq(g)].set_index("estrato")
+            print(f"    {g:<8}"
+                  + "   ".join(
+                      f"{e.replace('solo_', ''):<6} n={int(f.loc[e, 'n']):>5,}"
+                      f" min={int(f.loc[e, 'minoritaria']):>4}"
+                      f" AUROC {f.loc[e, 'auroc']:.3f}"
+                      f" [{f.loc[e, 'ic_bajo']:.3f}, {f.loc[e, 'ic_alto']:.3f}]"
+                      for e in ("solo_chembl", "solo_npass")))
 
     pe = pd.DataFrame(por_estrato).set_index(["conjunto", "estrato"])
     corrida.metricas({
@@ -302,10 +314,12 @@ def _medir(corrida: Corrida) -> None:
             float(pe.loc[("química+diana", "solo_npass"), "auroc"]), 4)
         if ("química+diana", "solo_npass") in pe.index else None,
         "dianas_comparables": len(completas),
-        "auroc_por_diana_npass_mediana": round(float(
-            pdi[pdi.estrato.eq("solo_npass")]["auroc"].median()), 4),
-        "auroc_por_diana_chembl_mediana": round(float(
-            pdi[pdi.estrato.eq("solo_chembl")]["auroc"].median()), 4),
+        "auroc_por_diana": {
+            g: {e.replace("solo_", ""): round(float(
+                pdi[(pdi.diana == g) & (pdi.estrato == e)
+                    & (pdi.conjunto == "química+diana")]["auroc"].iloc[0]), 4)
+                for e in ("solo_chembl", "solo_npass")}
+            for g in completas},
     })
 
 
