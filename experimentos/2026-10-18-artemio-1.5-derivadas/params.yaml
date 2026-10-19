@@ -1,0 +1,23 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  conjuntos:
+    sin derivadas: []
+    las tres:
+    - regla_2p
+    - tpsa_por_mw
+    - lipo_neta
+    solo regla_2p:
+    - regla_2p
+    solo tpsa_por_mw:
+    - tpsa_por_mw
+    solo lipo_neta:
+    - lipo_neta
+  pliegues: 5
+  columnas_base: 203
+  modelos:
+    LogReg: min-max + C elegido por CV interna
+    RF: n_estimators=200
