@@ -17,7 +17,8 @@ la sección 8.2 con sus mismos hiperparámetros.
 actúa sobre coeficientes cuya magnitud depende de la escala de cada columna, así
 que con `C = 1` fijo cada transformación recibe una regularización distinta, y
 una diferencia entre ellas no se puede atribuir al escalador. Por eso cada
-transformación se mide dos veces: con `C = 1` (el valor por defecto, `LogReg`) y
+transformación se mide dos veces (salvo «sin escalar», cuya logística no converge
+con ningún C y cuya búsqueda tardaría horas): con `C = 1` (el valor por defecto, `LogReg`) y
 con el `C` que **cada una elige para sí** dentro del pliegue (`LogReg-C`), por
 validación cruzada interna agrupada sobre la parte de ajuste, de modo que la
 evaluación nunca interviene en la elección.
@@ -179,8 +180,12 @@ def main() -> None:
                     else:
                         Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
                         Xb = t.transform(X[evalua])
-                    c_elegido = elegir_c(Xa, y[ajuste], g[ajuste], semilla)
+                    # Sin escalar, ningún C converge en 3,000 iteraciones (ver `LogReg`):
+                    # buscarlo costaría horas para no medir nada, así que se omite.
+                    c_elegido = None if t is None else elegir_c(Xa, y[ajuste], g[ajuste], semilla)
                     for mod_n in ("LogReg", "LogReg-C", "RF"):
+                        if mod_n == "LogReg-C" and c_elegido is None:
+                            continue
                         mod = modelo_de(mod_n, semilla, c_elegido)
                         t1 = time.perf_counter()
                         with warnings.catch_warnings(record=True) as avisos:
@@ -201,8 +206,10 @@ def main() -> None:
             # la validación fija, para poder comparar con la medición anterior
             t = transformadores()[nombre]
             Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
-            c_val = elegir_c(Xt, y[tr], g[tr], 42)
+            c_val = None if t is None else elegir_c(Xt, y[tr], g[tr], 42)
             for mod_n in ("LogReg", "LogReg-C", "RF"):
+                if mod_n == "LogReg-C" and c_val is None:
+                    continue
                 mod = modelo_de(mod_n, 42, c_val)
                 t1 = time.perf_counter()
                 with warnings.catch_warnings(record=True) as avisos:
