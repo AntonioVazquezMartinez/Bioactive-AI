@@ -123,7 +123,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores. **Y el costo no es de acierto, es de convergencia:** sin escalar, la regresión logística de este proyecto **no converge** —agota su presupuesto de iteraciones y avisa— y tarda mucho más (1,110 segundos contra 40 en una de las máquinas del equipo), mientras que el Random Forest tarda lo mismo con o sin escalado, porque no itera.
 
 **Yeo-Johnson**
-: Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores y, medida con validación cruzada, la que peor predice con la regresión logística —queda por debajo en 12 de 15 pliegues, aunque la diferencia no alcanza significancia—. Corregir la asimetría y predecir mejor no son lo mismo. Por qué, no se ha medido: la hipótesis es que la potencia comprime las colas, que es donde está la señal.
+: Transformación de potencia que acerca una variable a la normal y **admite ceros y valores negativos**, a diferencia de Box-Cox y del logaritmo. **Por qué importa:** es la que mejor corrige la asimetría de estos descriptores, y con la regresión logística predice igual que la estandarización y el min–max **siempre que cada una lleve su propia regularización**. Con C = 1 fijo parecía la peor (12 de 15 pliegues por debajo de min–max); con C ajustado la diferencia es 0.000 de MCC. Una versión anterior de esta entrada atribuía esa desventaja a que la potencia comprime las colas; era una hipótesis sin medir y la medición la dejó sin nada que explicar ([decisión 1.5](decisiones.md#d1-5)).
 
 **Box-Cox**
 : Transformación de potencia que requiere valores estrictamente positivos. **Por qué importa:** los descriptores del proyecto incluyen ceros y negativos, así que Box-Cox no puede aplicarse de forma directa a todas las columnas.
@@ -135,7 +135,16 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Fingerprint que conserva las subestructuras más frecuentes de un conjunto de entrenamiento en un vocabulario de tamaño fijo, con una columna por subestructura. **Por qué importa:** evita que varias subestructuras compartan un bit como en un fingerprint plegado y permite rastrear las columnas hasta sus fragmentos. El vocabulario se aprende solo con entrenamiento.
 
 **Umbral de varianza**
-: Filtro que descarta columnas cuya variación queda por debajo de un valor elegido. **Por qué importa:** elimina columnas constantes o casi constantes que apenas distinguen moléculas; el umbral debe ajustarse en entrenamiento.
+: Filtro que descarta columnas cuya varianza queda por debajo de un valor elegido. **Por qué importa:** la varianza depende de las unidades, así que el mismo umbral significa cosas distintas en cada descriptor —las cargas parciales varían en décimas y caerían bajo 0.01 sin ser casi constantes— y, sobre datos estandarizados, toda columna no constante tiene varianza 1 y el umbral solo retira constantes. Por eso el proyecto usa en su lugar el filtro de **casi constantes**.
+
+**Filtro de casi constantes**
+: Retira una columna si menos de un número fijo de moléculas de entrenamiento (10 en este proyecto) tiene un valor distinto del más frecuente. **Por qué importa:** cuenta moléculas, no unidades, así que no depende de la escala ni del escalador; está en `src/features/seleccion.py`.
+
+**Correlación de Spearman**
+: Correlación entre los **rangos** de dos variables: mide si una sube cuando la otra sube, sin exigir que sea en línea recta. **Por qué importa:** no cambia con ninguna transformación que conserve el orden —estandarización, min–max, Yeo-Johnson—, así que el filtro de redundancia del proyecto da la misma lista de columnas con cualquier escalador.
+
+**Regularización** (y el parámetro C)
+: Penalización que se suma al error de un modelo para que sus coeficientes no crezcan sin necesidad, lo que reduce el sobreajuste. En la regresión logística de scikit-learn la controla **C**, que es su inverso: un C pequeño regulariza mucho. **Por qué importa:** el tamaño de los coeficientes depende de la escala de cada columna, así que **el mismo C regulariza distinto según el escalador**. Comparar escaladores con C fijo mezcla los dos efectos; por eso C se elige por validación cruzada para cada uno.
 
 **ANOVA (prueba F)**
 : Prueba que compara la variación entre clases con la variación dentro de ellas para evaluar una característica. **Por qué importa:** puede ordenar variables según su asociación univariante con la etiqueta, pero no mide su contribución independiente ni su rendimiento fuera de muestra.

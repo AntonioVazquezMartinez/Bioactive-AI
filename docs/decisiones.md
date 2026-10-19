@@ -28,7 +28,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 |:--|:--|:--|
 | [1.1](#d1-1) | No filtrar por la columna de grupo A–D | Vigente · revisada |
 | [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente |
-| [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente |
+| [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4; de las derivadas, solo `regla_2p` | Vigente · revisada |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta |
 | [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Propuesta |
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente |
@@ -200,13 +200,20 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 **Consecuencias.** La prueba tiene 1,390 andamios en 1,499 compuestos y 57.3% BBB+ contra 64.0% del entrenamiento: se evalúa sobre una distribución distinta de la que aprendió, que es lo realista. Construida al revés, con los frecuentes en prueba, daba 45 andamios con el benceno ocupando el 26%; la dirección de la asignación es el detalle crítico.
 
-#### 1.3 · Descriptores RDKit más Morgan/ECFP4 {#d1-3 .vigente}
+#### 1.3 · Descriptores RDKit más Morgan/ECFP4 {#d1-3 .vigente .revisada}
 
-**Estado:** vigente
+**Estado:** vigente · revisada el 19 de octubre (características derivadas)
 
 > **Pregunta:** ¿Se conoce una representación más eficiente o más interpretable para productos naturales?
 
-**Se decidió.** 217 descriptores 2D de RDKit (203 utilizables) más Morgan/ECFP4 de 2,048 bits con `rdFingerprintGenerator`. Con `radius=2` se obtiene ECFP4, porque el número del nombre es el diámetro. Se descartaron los *embeddings* congelados de transformers, que no superan a esta combinación bajo partición por andamio.
+**Se decidió.** 217 descriptores 2D de RDKit (203 utilizables) más Morgan/ECFP4 de 2,048 bits con `rdFingerprintGenerator`. Con `radius=2` se obtiene ECFP4, porque el número del nombre es el diámetro. Se descartaron los *embeddings* congelados de transformers, que no superan a esta combinación bajo partición por andamio. De las tres características derivadas del dominio solo entra **`regla_2p`** (TPSA < 67 Å² y HBD ≤ 1).
+
+**Las características derivadas: versión superada (Avance 2) y qué la cambió.** El Avance 2 agregaba tres características construidas con conocimiento del dominio —`regla_2p`, `tpsa_por_mw` (TPSA entre peso molecular) y `lipo_neta` (logP − TPSA/100)— y las conservaba por su AUC individual (0.684, 0.810 y 0.795) y porque ninguna era copia de un descriptor base. Era la única decisión de inclusión del notebook que no se medía con un modelo, y la asesora lo señaló. Se midió con validación cruzada de 5 pliegues agrupada por andamio y esqueleto, 3 semillas, solo con entrenamiento y la selección reajustada dentro de cada pliegue (`scripts/experimento_derivadas.py`, corridas `2026-10-19-antonio-1.3-derivadas` y `…-derivadas-solo-regla`; sección 6.1 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)):
+
+- **No cambian el desempeño.** Contra la matriz sin derivadas, todas las variantes —las tres, cada una retirada por turno, solo `regla_2p`, y el umbral de TPSA derivado en cada pliegue (105.7 Å² de media)— quedan entre −0.005 y +0.002 de MCC, y todos los intervalos del 95% incluyen el cero, con regresión logística y con Random Forest.
+- **Por qué** (`scripts/analisis_derivadas.py`, corrida `2026-10-19-antonio-1.3-derivadas-por-que`): cada una se reconstruye con los descriptores que ya están (R² de 0.997, 0.909 y 1.000); `lipo_neta` es exactamente `MolLogP − 0.01·TPSA`; un árbol de profundidad 2 reproduce `regla_2p` con 0.998 de exactitud, cortando en TPSA ≤ 67 y HBD ≤ 1.5; y en Random Forest la importancia por permutación pasa de los componentes a las derivadas en lugar de sumarse. Esta última es la evidencia más débil: importancias de milésimas, y su criterio se corrigió después de la primera corrida (el script lo declara).
+
+**Se conserva `regla_2p` por interpretabilidad, no por desempeño**: no cuesta nada medible (−0.001 [−0.006, +0.003] de MCC en la logística, +0.002 [−0.014, +0.018] en el bosque) y es la regla publicada, así que permite comparar lo que aprende el modelo con lo que ya se sabe. `lipo_neta` se retira porque el filtro de correlación la prefería a `MolLogP`, que es más fácil de interpretar, y `tpsa_por_mw` porque no agrega nada. **Qué lo cambiaría:** que con los modelos afinados del Avance 3 alguna derivada mejore el desempeño con un intervalo que excluya el cero.
 
 **Qué pasó.** `Ipc` alcanza ~1e41, finito en float64 pero fuera de float32, y sklearn convierte internamente; `isfinite` no lo detecta y costó una ejecución fallida, así que se descarta. El fingerprint plegado además mezcla subestructuras en un mismo bit; por eso se evalúa **Sort & Slice**, sin colisiones y con el vocabulario aprendido solo del entrenamiento. Con 2048 columnas cubre el 84.8% de las subestructuras del entrenamiento y el 68.0% de las del conjunto de prueba (el vocabulario se aprende solo con el entrenamiento, y la prueba trae los andamios raros). Esa brecha de 16.8 puntos crece con el vocabulario: 13.6 con 512 columnas y 17.8 con 4096. No es la cobertura en validación de la tabla de más abajo (71.0% con 2048), que se mide dentro de la validación cruzada.
 
@@ -232,21 +239,22 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 **Versión superada (7 de octubre), y qué la cambió.** La versión anterior de esta entrada decía que Yeo-Johnson quedaba *a la par* de min–max en la regresión logística, con MCC 0.484 contra 0.481. Esa comparación era de **una sola corrida sobre una sola partición de validación**, y su orden cambiaba con el entorno: min–max daba 0.481 en Linux, 0.489 en macOS con Python 3.12 y 0.497 en macOS con Python 3.14, contra un 0.484 estable de Yeo-Johnson. La conclusión dependía de quién ejecutara.
 
-`scripts/experimento_escalado.py` la repite con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad, 3 semillas, la transformación **reajustada dentro de cada pliegue** y la prueba sin tocar (resultados en `notebooks/datos/resultados_escalado.csv`, sección 8.2 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)). MCC medio y AUPRC sobre BBB−:
+**Segunda versión superada (12 de octubre), y qué la cambió.** `scripts/experimento_escalado.py` repitió la comparación con validación cruzada de 5 pliegues agrupada por andamio y esqueleto de conectividad, 3 semillas, la transformación reajustada dentro de cada pliegue y la prueba sin tocar, pero con **C = 1 para las cuatro transformaciones**. Concluía que Yeo-Johnson era «consistentemente la peor para la regresión logística» (0.665 de MCC contra 0.695 de min–max, por debajo en 12 de los 15 pliegues, t = 1.6) y proponía dos hipótesis sin medir para explicarlo. La asesora observó que con el mismo C la penalización L2 no pesa igual con cada escalador, porque depende de la escala de los coeficientes, así que la diferencia podía venir de la regularización y no del escalador. Esa versión decía también que el número de condición iba de 5.9e+17 a 1.2e+21 y que el tiempo mediano de ajuste era 0.437 s sin escalar contra 0.007 s con min–max.
 
-| Transformación | LogReg, MCC | LogReg, AUPRC | RF, MCC | RF, AUPRC |
-|:--|--:|--:|--:|--:|
-| sin escalar | 0.687 | 0.867 | 0.704 | 0.901 |
-| estandarización | 0.690 | 0.864 | 0.705 | 0.901 |
-| min-max | 0.695 | 0.878 | 0.704 | 0.901 |
-| Yeo-Johnson | 0.665 | 0.862 | 0.705 | 0.901 |
+**Medición vigente (19 de octubre).** El mismo experimento, ahora con **C elegido para cada transformación** dentro de cada pliegue, con una validación cruzada interna agrupada de 3 pliegues sobre {0.01, 0.1, 1, 10, 100} y el AUPRC sobre BBB− como criterio; la fila con C = 1 se conserva para comparar (corrida `2026-10-19-antonio-1.5-escalado`, `notebooks/datos/resultados_escalado.csv`, sección 8.2 del [notebook 02](../notebooks/02_Feature_Eng.ipynb)). MCC medio y AUPRC sobre BBB−, 15 evaluaciones:
 
-- **Ningún intervalo del 95% excluye el cero.** Con quince evaluaciones que comparten datos de entrenamiento, la medición no establece que una transformación supere a otra. La diferencia mayor —min–max contra Yeo-Johnson en la regresión logística— es de 0.030 de MCC con un error estándar corregido de 0.019: t = 1.6, intervalo [−0.010, +0.071]. Lo que esta medición aporta es sobre todo **la cota**: la incertidumbre es mayor que todas las diferencias entre transformaciones menos una.
-- **En Random Forest la transformación es irrelevante, y eso sí queda establecido**: diferencias de 0.000 a 0.001 con intervalos de ±0.002 a ±0.005, tan estrechos que descartan cualquier efecto que importe. La invariancia de los árboles deja de ser solo un argumento.
-- **Sin escalar, la regresión logística no converge**, y eso es lo que justifica escalar. Agota las 3,000 iteraciones de `lbfgs` en los 15 pliegues y avisa de no haber convergido en los 15; con cualquiera de las tres transformaciones converge sin aviso, en 53 iteraciones con min–max y 137 a 144 con las otras dos. Su MCC de 0.687 no es el desempeño de «no escalar»: es donde se detuvo el optimizador al agotar su presupuesto, así que esa fila no es comparable con el resto. El tiempo (0.437 s contra 0.007 s) es la consecuencia visible; las iteraciones y el aviso son la prueba. El Random Forest tarda lo mismo con las cuatro, lo que descarta que los datos sean más difíciles sin escalar.
-- **El escalado no arregla el condicionamiento**, y conviene no atribuírselo: el número de condición de la matriz va de 5.9e+17 a 1.2e+21 con las cuatro transformaciones. Viene de las columnas casi colineales —120 pares con |r| > 0.95— y lo trata la selección, no el escalado.
-- **Yeo-Johnson es consistentemente la peor para la regresión logística**: por debajo de min–max en 12 de los 15 pliegues y de estandarización en 13. La dirección es estable; la magnitud no alcanza significancia con esta cantidad de evaluaciones dependientes. Entre las otras tres la medición **no distingue** en MCC (+0.005 y +0.009).
-- **Corregir la asimetría y predecir mejor parecen ser cosas distintas**, y el por qué queda como **hipótesis, no como explicación**: puede ser que la potencia comprima las colas, donde vive parte de la señal (el umbral útil de TPSA cae en 107 Å²), o que sus parámetros, ajustados en cada pliegue, extrapolen mal en variables de cola pesada. Ninguna de las dos está medida. Lo acotable: comparar Yeo-Johnson con estandarización aísla el paso de potencia, porque `PowerTransformer(standardize=True)` es potencia y luego estandarización, y ese contraste da +0.025 (t = 1.5); el costo está en la potencia, no en el escalado que la acompaña.
+| Transformación | C elegido (pliegues) | LogReg, MCC | LogReg, AUPRC | LogReg C = 1, MCC | RF, MCC | RF, AUPRC |
+|:--|:--|--:|--:|--:|--:|--:|
+| sin escalar | 1, sin búsqueda | 0.691 | 0.867 | — | 0.703 | 0.901 |
+| estandarización | 0.01 (14 de 15) | 0.697 | 0.875 | 0.690 | 0.703 | 0.902 |
+| min-max | 1 (13 de 15) | 0.694 | 0.877 | 0.696 | 0.704 | 0.902 |
+| Yeo-Johnson | 0.01 (15 de 15) | 0.694 | 0.874 | 0.665 | 0.702 | 0.901 |
+
+- **Con su propio C, las tres formas de escalar no se distinguen.** Todas las diferencias por pares están por debajo de 0.003 de MCC, con intervalos de ±0.02; min–max contra Yeo-Johnson da 0.000 [−0.022, +0.022], cuando con C = 1 daba 0.030 [−0.005, +0.066]. **La desventaja de Yeo-Johnson era de regularización**: la estandarización y Yeo-Johnson dejan columnas con desviación 1 y colas largas, C = 1 regulariza poco con esa escala, y la validación interna elige 0.01 para las dos (con C = 1 además convergían despacio, de 140 a 145 iteraciones, contra 28 con C = 0.01). Las dos hipótesis de la versión anterior se retiran: no queda nada que tengan que explicar.
+- **En Random Forest la transformación es irrelevante, y eso sí queda establecido**: MCC de 0.702 a 0.704, diferencias por pares de 0.002 o menos con intervalos de ±0.01.
+- **Sin escalar, la regresión logística no converge** con C = 1: agota las 3,000 iteraciones de `lbfgs` en los 15 pliegues, a unos 74 s por ajuste en Linux. Esa fila no lleva búsqueda de C, porque con la validación interna tardaba unas 5 horas y se detuvo, así que **no está medido si converge con otro C**. Su 0.691 es donde se detuvo el optimizador y no es comparable con el resto. Con cualquiera de las tres transformaciones converge, en 28 a 52 iteraciones. El Random Forest, que no itera, da lo mismo con las cuatro.
+- **El escalado no arregla el condicionamiento**: el número de condición va de 1.9e+18 a 1.3e+22 con las cuatro. Viene de columnas casi colineales —120 pares con |r| > 0.95— y lo trata la selección, no el escalado.
+- **Alcance.** El experimento usa las 206 columnas anteriores (con las tres derivadas y sin la selección), porque mide el escalado y no la selección; la [1.3](#d1-3) muestra que las derivadas no mueven el desempeño.
 
 El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la diferencia se toma pareada por pliegue. Se reportan intervalos y no un veredicto de «dentro del ruido»: ese umbral de un error estándar sirve para elegir el menor L —ahí ser laxo es conservador— pero no para afirmar que una diferencia existe, donde apenas es t = 1.
 
@@ -272,7 +280,9 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 **Dos cosas que quedan como supuesto declarado,** por si alguien las necesita: los 1,005 compuestos con análogo natural que difiere solo en estereoquímica **no** cuentan como naturales, porque la definición que sostiene el hallazgo del Avance 1 es la coincidencia exacta con COCONUT; y no se fija un rango de TPSA propio para naturales, porque el óptimo ya se midió y sube con la diversidad del conjunto.
 
-**Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido. Los naturales cruzan unos 19 puntos menos (52.7% contra 71.7% BBB+, notebook 01 del Avance 1).
+**Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido.
+
+**Los tres orígenes cruzan distinto** (sección 5 del [notebook 01](../notebooks/01_EDA.ipynb), revisada el 19 de octubre): naturales exactos 52.7% BBB+ [51.0, 54.4], análogos estereoquímicos 39.7% [36.7, 42.7] y sin equivalente natural 81.0% [79.6, 82.3], intervalos de Wilson que no se solapan. La brecha entre naturales y compuestos sin equivalente es de **28.3 puntos**. *Versión superada:* el Avance 1 juntaba análogos y compuestos sin equivalente en un grupo «sintético» y reportaba 18.9 puntos (52.7% contra 71.7%). Ese grupo no era sintético —más de una quinta parte (1,003 de los 4,439 con clase) son estereoisómeros de un natural, que cruzan todavía menos— y diluía la brecha. A igual cumplimiento de la regla TPSA/HBD, los naturales siguen cruzando menos (80.9% contra 90.9% entre los que la cumplen; 37.8% contra 72.6% entre los que no), así que la regla no la explica.
 
 **La brecha no es uniforme.** Repartida por el grupo de confiabilidad de B3DB, casi no existe donde hay un logBB medido y aparece donde la etiqueta viene de una clasificación publicada:
 
@@ -281,6 +291,8 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | A (con logBB medido) | 87.6% (n = 644) | 88.4% (n = 414) | −0.8 [−4.8, +3.2] |
 | B | 77.2% (n = 2,166) | 55.9% (n = 1,455) | +21.4 [+18.3, +24.5] |
 | C | 58.1% (n = 1,624) | 40.9% (n = 1,451) | +17.2 [+13.7, +20.7] |
+
+Con los tres orígenes por separado (natural exacto, análogo y sin equivalente) el patrón es el mismo: 88.4%, 86.6% y 87.7% en el grupo A; 55.9%, 43.5% y 83.6% en el B; 40.9%, 30.7% y 73.0% en el C (notebook 01, sección 5).
 
 En el grupo A la brecha no es solo «casi inexistente»: queda **acotada a unos ±5 puntos**, lo que excluye cualquier cosa parecida a los 19 globales; en B y C es grande y en la dirección contraria. El grupo D (n = 5 y 46) no permite concluir. Esto es descriptivo y no prueba la causa, pero sugiere que la brecha puede reflejar de dónde viene la etiqueta y no solo la química. La regla TPSA < 67 Å² y HBD ≤ 1 la cumple una proporción de naturales 6.6 puntos menor que la de los demás (41.2% contra 34.6%): es una diferencia de proporciones menor que la de la etiqueta, no una parte de ella, así que esa regla no alcanza para explicarla (quedan el eflujo, descriptores no medidos o el sesgo de qué se ensayó).
 
@@ -360,7 +372,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 | S1.2 | Los grupos A–D son una escala de confiabilidad | Desmentido | Ver [1.1](#d1-1). BBB− es 12.1% en A y 92.2% en D | Estratificar, no excluir |
 | S1.3 | El umbral de TPSA publicado es una constante | Acotado | Cambia con el subconjunto (ver [1.6](#d1-6)) | Derivarlo solo sobre entrenamiento |
 | S1.4 | «Natural» es una categoría limpia | Acotado | Es coincidencia exacta con COCONUT | Declarar la definición usada |
-| S1.5 | La brecha entre naturales y el resto es química | Sin comprobar | Es de ~19 puntos, pero no existe en el grupo A (87.6% contra 88.4% BBB+) y sí en B y C ([1.6](#d1-6)); la regla TPSA/HBD difiere solo 6.6 puntos entre los dos | Evaluar por origen global y dentro de cada grupo A, B y C |
+| S1.5 | La brecha entre naturales y el resto es química | Sin comprobar | Con tres orígenes es de 28.3 puntos contra los compuestos sin equivalente natural (52.7% contra 81.0% BBB+; la versión de dos grupos daba ~19), pero no existe en el grupo A (88.4%, 86.6% y 87.7% en los tres orígenes) y sí en B y C ([1.6](#d1-6)); a igual cumplimiento de la regla TPSA/HBD persiste | Evaluar por origen global y dentro de cada grupo A, B y C |
 | S1.6 | Los valores atípicos son alertas, no errores | Asumido | No se recortan ni eliminan | — |
 | S1.7 | Mandar los 312 acíclicos a entrenamiento es una regla razonable | Sin comprobar | Es el valor por omisión de `scaffold_split` y no sale de ninguna medición; ninguno entra a validación ni a prueba. Dentro del entrenamiento hay 127 filas en 44 esqueletos compartidos (estereoisómeros) | Escribir y justificar la regla antes del baseline; en la validación cruzada se agrupan por esqueleto de conectividad |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |

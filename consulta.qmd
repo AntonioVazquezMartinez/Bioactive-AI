@@ -61,7 +61,7 @@ Mientras tanto se usa la fuente —NPASS y CMAUP— como definición provisional
 
 > **Decidido por el equipo: queda como limitación declarada.** Su respuesta no cambiaba qué construir —un modelo, evaluado por origen dentro de cada grupo A–D— porque es esa evaluación la que distingue curación de química. [1.6](contenido/decisiones.html#d1-6).
 
-Globalmente los naturales cruzan la barrera 18.9 puntos menos. Pero repartido por grupo de B3DB,
+Globalmente los naturales cruzan la barrera 18.9 puntos menos que el resto (28.3 menos que los compuestos sin equivalente natural, si los análogos estereoquímicos se separan). Pero repartido por grupo de B3DB,
 **la brecha desaparece justo en el grupo A**, que es el que trae un logBB medido:
 
 | Grupo de B3DB | No natural | Natural | Diferencia (IC 95%) |

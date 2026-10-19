@@ -26,8 +26,8 @@ columna: al cambiar de escalador cambiaba también cuánto se regularizaba, y no
 saber si «min–max gana y Yeo-Johnson pierde» venía del escalador o de la penalización
 (observación de la asesora sobre la §8.2). Ahora, dentro de cada pliegue de ajuste, una
 validación cruzada interna agrupada de 3 pliegues elige C en {0.01, 0.1, 1, 10, 100}
-por AUPRC sobre BBB− (salvo sin escalar, que no converge con ningún C y se queda en
-C = 1: ver `modelos`). La fila «LogReg (C=1)» conserva la medición anterior para ver
+por AUPRC sobre BBB− (salvo sin escalar, que se queda en C = 1 sin búsqueda: ver
+`modelos`). La fila «LogReg (C=1)» conserva la medición anterior para ver
 cuánto de la diferencia venía de la regularización.
 
 Dos cosas que hacen válida la comparación:
@@ -110,11 +110,12 @@ def modelos(semilla: int, C: float, transformacion: str) -> dict:
     """La logística con el C de su transformación, la de C = 1 fijo (la medición anterior,
     para ver cuánto venía de la regularización) y el bosque, que no tiene C.
 
-    Sin escalar no se ajusta C: la logística no converge con ningún escalado ausente
-    (agota sus 3,000 iteraciones, ~74 s por ajuste en Linux), así que esa fila ya se
-    descarta de la comparación, y elegir C ahí costaba unas 5 horas sin cambiar nada de
-    lo que se concluye. Queda con C = 1, como en la medición anterior, y por eso no lleva
-    la fila duplicada «LogReg (C=1)».
+    Sin escalar no se ajusta C: con C = 1 la logística no converge (agota sus 3,000
+    iteraciones en los 15 pliegues, ~74 s por ajuste en Linux) y la búsqueda de C,
+    con la validación interna, costaba unas 5 horas, así que se detuvo. **No se midió**
+    si converge con otro C; la fila se lee solo como «con C = 1 no converge». Queda con
+    C = 1, como en la medición anterior, y por eso no lleva la fila duplicada
+    «LogReg (C=1)».
     """
     m = {"LogReg": LogisticRegression(C=C, max_iter=3000, random_state=semilla)}
     if transformacion != SIN_ESCALAR:
