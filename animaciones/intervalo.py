@@ -15,7 +15,7 @@ from manim import (DOWN, LEFT, RIGHT, UP, Arrow, Create, Dot, FadeIn, FadeOut,
                    Line, NumberLine, Scene, VGroup, Write, config)
 
 from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
-                   dato, pie, subtitulo, titulo)
+                   cabe, dato, pie, separados, subtitulo, titulo)
 
 config.background_color = FONDO
 
@@ -52,6 +52,7 @@ class Intervalo(Scene):
         der = subtitulo("más potente", 17).next_to(self.eje, RIGHT, buff=0.3)
         nombre = subtitulo("potencia  ·  6 − log₁₀ de la concentración en µM", 17)
         nombre.to_edge(DOWN, buff=0.45)
+        cabe(self.eje, izq, der, nombre)
         self.play(Create(self.eje), FadeIn(izq), FadeIn(der), FadeIn(nombre),
                   run_time=1.3)
         self.wait(0.8)
@@ -117,6 +118,9 @@ class Intervalo(Scene):
         # A una altura fija bajo el eje, cada una de su lado del corte.
         activo = dato("activo", 24, VERDE).move_to(self._x(7.6) + DOWN * 1.9)
         inactivo = dato("inactivo", 24, ROJO).move_to(self._x(3.9) + DOWN * 1.9)
+        cabe(activo, inactivo)
+        separados(activo, rotulo)
+        separados(inactivo, rotulo)
         self.play(FadeIn(activo, shift=DOWN * 0.2), run_time=0.7)
         self.play(FadeIn(inactivo, shift=UP * 0.2), run_time=0.7)
         self.wait(0.6)
@@ -156,6 +160,7 @@ class Intervalo(Scene):
                       " qué columna se lee.", 20),
         ).arrange(DOWN, buff=0.45)
         cierre.move_to(DOWN * 0.2)
+        cabe(cierre)
         self.play(FadeIn(cierre, lag_ratio=0.3), run_time=1.6)
 
         fuente = pie("Decisión 2.10 · notebook 02b · regla de la sección 7 del"

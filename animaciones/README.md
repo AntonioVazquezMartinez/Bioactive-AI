@@ -26,6 +26,34 @@ vuelve a renderizar.
    una, cambian las dos y hay que regrabar. Es caro a propósito: obliga a
    poner pocas.
 
+## Dos guardas, porque mirar fotogramas no escala
+
+La primera versión de estas dos escenas tuvo **siete defectos de composición**
+—texto saliéndose del cuadro, etiquetas encimadas, títulos ilegibles a media
+transición—, y los encontré extrayendo fotogramas a mano y mirándolos. Eso no
+escala y no se puede pedir en una revisión.
+
+`comun.py` trae dos comprobaciones que fallan **al renderizar**, con el nombre
+y la posición del objeto culpable:
+
+- `cabe(*objetos)` — si algo se sale del cuadro.
+- `separados(a, b)` — si dos objetos se encinan.
+
+Las escenas las llaman en los puntos donde ya falló algo. No sustituyen mirar
+el resultado: no detectan una jerarquía mal puesta ni un color que no contrasta.
+Detectan las dos clases que más veces se repitieron.
+
+**Lo que sigue sin guarda, y hay que mirar a ojo:**
+
+- Transiciones de texto. Cambiar un título con `Transform` interpola letra a
+  letra entre textos de largo distinto y deja medio segundo ilegible: va con
+  fundido.
+- Saltos de línea. En el código son `\n` de verdad; escritos con doble barra
+  salen literales en pantalla.
+- Que lo que la escena *ilustra* y lo que la cifra *mide* sean lo mismo. El
+  defecto más caro de la primera versión fue ese: la escena mostraba una
+  partición al azar y la cifra de abajo venía de agrupar por andamio.
+
 ## Cómo se renderiza
 
 Manim queda **fuera de `requirements.lock`** a propósito: el lock fija el

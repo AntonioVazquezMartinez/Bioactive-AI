@@ -17,7 +17,7 @@ from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut,
                    Indicate, Line, Rectangle, Scene, VGroup, Write, config)
 
 from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
-                   dato, pie, subtitulo, titulo)
+                   cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
 
@@ -46,6 +46,7 @@ class Particion(Scene):
                       " el esqueleto de anillos")
         t.to_edge(UP, buff=0.8)
         s.next_to(t, DOWN, buff=0.3)
+        cabe(t, s)
         self.play(Write(t), run_time=1.2)
         self.play(FadeIn(s, shift=DOWN * 0.2), run_time=0.8)
         self.wait(0.6)
@@ -194,6 +195,7 @@ class Particion(Scene):
                      bloque.get_right() + DOWN * 1.1, color=GRIS, stroke_width=1)
         remate = dato("2.2 puntos, y la de arriba es la que infla", 24, CREMA)
         remate.next_to(linea, DOWN, buff=0.35)
+        cabe(bloque, remate)
         self.play(Create(linea), FadeIn(remate), run_time=1.2)
         self.wait(1.0)
 
@@ -207,5 +209,6 @@ class Particion(Scene):
         fuente = pie("Decisión 1.2 · notebook 03_Baseline · bosque aleatorio,"
                      " validación cruzada agrupada, 3 semillas")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.5)

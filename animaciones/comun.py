@@ -41,6 +41,54 @@ def pie(texto: str) -> Text:
     return subtitulo(texto, 16)
 
 
+# El cuadro de Manim en 16:9, con un margen para que nada quede pegado al borde.
+ANCHO, ALTO = 14.222, 8.0
+MARGEN = 0.25
+
+
+def cabe(*objetos, margen: float = MARGEN) -> None:
+    """Falla si algo se sale del cuadro, al renderizar y no al mirar el video.
+
+    De los siete defectos de la primera versión de estas escenas, tres eran
+    texto saliéndose por un borde, y los encontré extrayendo fotogramas a mano.
+    Esto los convierte en un error con nombre y posición, que es lo que un
+    defecto de composición debería ser.
+
+    No sustituye mirar el resultado: no detecta solapamientos ni jerarquías
+    mal puestas. Detecta la clase que más veces se repitió.
+    """
+    limite_x, limite_y = ANCHO / 2 - margen, ALTO / 2 - margen
+    for o in objetos:
+        izq, der = o.get_left()[0], o.get_right()[0]
+        abajo, arriba = o.get_bottom()[1], o.get_top()[1]
+        # `original_text` conserva los espacios; `text` no.
+        texto = getattr(o, "original_text", None) or getattr(
+            o, "text", type(o).__name__)
+        if izq < -limite_x or der > limite_x:
+            raise ValueError(
+                f"se sale por los lados: «{texto}» ocupa de {izq:.2f} a"
+                f" {der:.2f} y el cuadro llega a ±{limite_x:.2f}."
+                " Acorta el texto, bájale el tamaño o pártelo en más líneas")
+        if abajo < -limite_y or arriba > limite_y:
+            raise ValueError(
+                f"se sale por arriba o abajo: «{texto}» ocupa de {abajo:.2f} a"
+                f" {arriba:.2f} y el cuadro llega a ±{limite_y:.2f}")
+
+
+def separados(a, b, minimo: float = 0.08) -> None:
+    """Falla si dos objetos se solapan. El otro defecto que se repitió."""
+    ax1, ax2 = a.get_left()[0], a.get_right()[0]
+    ay1, ay2 = a.get_bottom()[1], a.get_top()[1]
+    bx1, bx2 = b.get_left()[0], b.get_right()[0]
+    by1, by2 = b.get_bottom()[1], b.get_top()[1]
+    solapa_x = min(ax2, bx2) - max(ax1, bx1)
+    solapa_y = min(ay2, by2) - max(ay1, by1)
+    if solapa_x > -minimo and solapa_y > -minimo:
+        ta = getattr(a, "original_text", None) or getattr(a, "text", type(a).__name__)
+        tb = getattr(b, "original_text", None) or getattr(b, "text", type(b).__name__)
+        raise ValueError(f"se enciman: «{ta}» y «{tb}»")
+
+
 __all__ = ["FONDO", "AZUL", "AZUL_CLARO", "VERDE", "NARANJA", "ROJO", "GRIS",
-           "CREMA", "FUENTE", "titulo", "subtitulo", "dato", "pie",
-           "BLACK", "WHITE", "VGroup"]
+           "CREMA", "FUENTE", "ANCHO", "ALTO", "MARGEN", "titulo", "subtitulo",
+           "dato", "pie", "cabe", "separados", "BLACK", "WHITE", "VGroup"]
