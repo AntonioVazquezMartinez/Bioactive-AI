@@ -212,8 +212,11 @@ class Particion(Narrada):
         cierre.next_to(remate, DOWN, buff=0.35)
         self.play(Write(cierre), run_time=2.0)
 
+        # Una semilla, no tres: la celda 10 del notebook 03 corre `evaluar` con
+        # `semillas=(0,)`. El pie decía tres y es la clase de cifra que nadie
+        # comprueba porque está en letra pequeña.
         fuente = pie("Decisión 1.2 · notebook 03_Baseline · bosque aleatorio,"
-                     " validación cruzada agrupada, 3 semillas")
+                     " validación cruzada agrupada, una semilla")
         fuente.to_edge(DOWN, buff=0.3)
         cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)

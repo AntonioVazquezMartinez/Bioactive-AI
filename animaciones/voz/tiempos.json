@@ -1,24 +1,24 @@
 {
  "apertura": {
-  "voz_s": 57.35,
-  "video_s": 33.0,
+  "voz_s": 57.36,
+  "video_s": 60.73,
   "tramos": [
    {
     "n": 1,
     "titulo": "El problema",
-    "segundos": 17.97,
+    "segundos": 19.09,
     "palabras": 44
    },
    {
     "n": 2,
     "titulo": "La apuesta",
-    "segundos": 22.24,
+    "segundos": 20.99,
     "palabras": 48
    },
    {
     "n": 3,
     "titulo": "La tesis",
-    "segundos": 17.14,
+    "segundos": 17.28,
     "palabras": 46
    }
   ],
@@ -26,31 +26,31 @@
   "modelo": "eleven_multilingual_v2"
  },
  "linaje": {
-  "voz_s": 130.18,
-  "video_s": 127.6,
+  "voz_s": 131.56,
+  "video_s": 137.67,
   "tramos": [
    {
     "n": 1,
     "titulo": "El embudo de filas",
-    "segundos": 56.1,
+    "segundos": 58.98,
     "palabras": 132
    },
    {
     "n": 2,
     "titulo": "Las columnas",
-    "segundos": 37.76,
+    "segundos": 36.87,
     "palabras": 95
    },
    {
     "n": 3,
     "titulo": "La partición",
-    "segundos": 20.02,
+    "segundos": 20.25,
     "palabras": 50
    },
    {
     "n": 4,
     "titulo": "Cierre",
-    "segundos": 16.3,
+    "segundos": 15.46,
     "palabras": 42
    }
   ],
@@ -58,37 +58,37 @@
   "modelo": "eleven_multilingual_v2"
  },
  "intervalo": {
-  "voz_s": 74.76,
-  "video_s": 69.73,
+  "voz_s": 73.47,
+  "video_s": 86.8,
   "tramos": [
    {
     "n": 1,
     "titulo": "El eje",
-    "segundos": 8.17,
+    "segundos": 7.85,
     "palabras": 22
    },
    {
     "n": 2,
     "titulo": "Una medición exacta",
-    "segundos": 7.38,
+    "segundos": 7.29,
     "palabras": 18
    },
    {
     "n": 3,
     "titulo": "Una censurada",
-    "segundos": 20.25,
+    "segundos": 19.97,
     "palabras": 51
    },
    {
     "n": 4,
     "titulo": "El corte decide",
-    "segundos": 25.82,
+    "segundos": 25.73,
     "palabras": 72
    },
    {
     "n": 5,
     "titulo": "Mover el corte",
-    "segundos": 13.14,
+    "segundos": 12.63,
     "palabras": 32
    }
   ],
@@ -96,31 +96,31 @@
   "modelo": "eleven_multilingual_v2"
  },
  "fingerprints": {
-  "voz_s": 87.12,
-  "video_s": 37.8,
+  "voz_s": 85.18,
+  "video_s": 94.27,
   "tramos": [
    {
     "n": 1,
     "titulo": "La colisión",
-    "segundos": 22.66,
+    "segundos": 22.99,
     "palabras": 60
    },
    {
     "n": 2,
     "titulo": "Ordenar y cortar",
-    "segundos": 14.77,
+    "segundos": 14.86,
     "palabras": 33
    },
    {
     "n": 3,
     "titulo": "Lo que cuesta",
-    "segundos": 39.71,
+    "segundos": 37.76,
     "palabras": 105
    },
    {
     "n": 4,
     "titulo": "Cierre",
-    "segundos": 9.98,
+    "segundos": 9.57,
     "palabras": 21
    }
   ],
@@ -128,31 +128,31 @@
   "modelo": "eleven_multilingual_v2"
  },
  "particion": {
-  "voz_s": 89.9,
-  "video_s": 83.4,
+  "voz_s": 88.47,
+  "video_s": 94.87,
   "tramos": [
    {
     "n": 1,
     "titulo": "El conjunto",
-    "segundos": 11.84,
+    "segundos": 11.98,
     "palabras": 33
    },
    {
     "n": 2,
     "titulo": "La partición al azar",
-    "segundos": 21.36,
+    "segundos": 19.74,
     "palabras": 52
    },
    {
     "n": 3,
     "titulo": "La partición por familia",
-    "segundos": 24.52,
+    "segundos": 24.71,
     "palabras": 66
    },
    {
     "n": 4,
     "titulo": "Lo que cuesta",
-    "segundos": 32.18,
+    "segundos": 32.04,
     "palabras": 83
    }
   ],
@@ -160,25 +160,25 @@
   "modelo": "eleven_multilingual_v2"
  },
  "cierre": {
-  "voz_s": 74.3,
-  "video_s": 30.07,
+  "voz_s": 72.45,
+  "video_s": 78.8,
   "tramos": [
    {
     "n": 1,
     "titulo": "Funciona",
-    "segundos": 11.61,
+    "segundos": 11.15,
     "palabras": 32
    },
    {
     "n": 2,
     "titulo": "Pero",
-    "segundos": 36.92,
+    "segundos": 36.27,
     "palabras": 94
    },
    {
     "n": 3,
     "titulo": "Lo que se entrega",
-    "segundos": 25.77,
+    "segundos": 25.03,
     "palabras": 67
    }
   ],

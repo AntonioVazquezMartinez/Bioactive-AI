@@ -127,7 +127,16 @@ def ensamblar(partes: list[tuple[str, str, str]], calidad: str,
         acumulado += duraciones[i] - FUNDIDO
     # El audio se encadena con `acrossfade` en los mismos puntos que el video:
     # si solo se cruzara la imagen, la voz se cortaría en seco en cada unión.
-    con_audio = all(_tiene_audio(r) for r in rutas)
+    # Todas con voz o ninguna. Mezclarlas no da un video a medio sonorizar:
+    # `ffmpeg` descarta el audio y devuelve uno mudo que parece terminado, que
+    # es justo el descuido contra el que avisa `_parte`.
+    audios = [_tiene_audio(r) for r in rutas]
+    if any(audios) and not all(audios):
+        mudas = [m for (m, _, _), a in zip(partes, audios) if not a]
+        raise SystemExit(
+            "unas partes traen voz y otras no, así que el montaje saldría mudo. "
+            "Sonoriza estas antes de ensamblar: " + ", ".join(mudas))
+    con_audio = all(audios)
     if con_audio:
         etiqueta_a, acum = "[0:a]", duraciones[0]
         for i in range(1, len(rutas)):

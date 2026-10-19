@@ -78,12 +78,26 @@ def sonorizar(escena: str, calidad: str) -> Path:
               "normalize=0:duration=longest[mezclado];"
               # Norma de sonoridad para web: sin esto, una escena suena más
               # fuerte que otra según cuánto hable.
-              "[mezclado]loudnorm=I=-16:TP=-1.5:LRA=11[voz]")
+              "[mezclado]loudnorm=I=-16:TP=-1.5:LRA=11[normalizado];"
+              # **Silencio hasta el final de la imagen.** La voz acaba antes
+              # que la escena —para eso está la holgura—, y si la pista termina
+              # ahí, `ensamblar.py` encadena los audios uno tras otro y cada
+              # escena adelanta la voz de las siguientes. Eran 15.4 s de
+              # desfase acumulado al final del video, creciendo escena a
+              # escena, sin que nada fallara.
+              f"[normalizado]apad=whole_dur={largo_video:.3f}[voz]")
+    # **Sin `-shortest`.** La mezcla acaba cuando termina la última pista de
+    # voz, que casi siempre es antes que la imagen: con `-shortest`, ffmpeg
+    # tiraba el video sobrante en silencio. Eran 0.9 s en la mayoría de las
+    # escenas, pero 7.6 s en `intervalo` y 4.1 s en el cierre —el plano final
+    # del video entero—, y nada fallaba: el archivo salía bien formado y más
+    # corto. Sin la bandera, la duración la manda la imagen y el audio
+    # simplemente termina antes.
     destino = video.with_name(f"{ESCENAS[escena]}-con-voz.mp4")
     orden = (["ffmpeg", "-v", "error", "-y", "-i", str(video)] + pistas
              + ["-filter_complex", ";".join(filtros) + ";" + mezcla,
                 "-map", "0:v", "-map", "[voz]", "-c:v", "copy",
-                "-c:a", "aac", "-b:a", "160k", "-shortest", str(destino)])
+                "-c:a", "aac", "-b:a", "160k", str(destino)])
     subprocess.run(orden, check=True)
     print(f"  {escena:<14} {largo_video:>6.1f} s · {len(tramos)} tramos"
           f" → {destino.name}")

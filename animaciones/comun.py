@@ -97,6 +97,13 @@ class Narrada(Scene):
     """
 
     POR_OMISION = 8.0
+    # Una cola después del **último** tramo de la escena. Sin ella el video
+    # acaba en el mismo fotograma que la voz, y entre que la síntesis no
+    # devuelve dos veces la misma duración y el montaje redondea, el audio se
+    # pasa unas décimas del final y `sonorizar.py` se niega a montarlo. Vivía
+    # como un `wait` suelto en `fingerprints.py`, que es el único sitio donde
+    # alguien se acordó de ponerlo.
+    COLA = 1.0
 
     def setup(self) -> None:
         super().setup()
@@ -163,6 +170,8 @@ class Narrada(Scene):
                   " Quita animación o escribe más narración; no aceleres la voz.")
             return
         self.wait(max(0.0, objetivo - gastado))
+        if self._tramos and n == max(self._tramos):
+            self.wait(self.COLA)
 
 
 def matriz(filas: int, columnas: int, ancho: float = 7.0, alto: float = 2.6,
