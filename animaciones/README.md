@@ -11,6 +11,7 @@ atadas a los datos.
 | `particion.py` | Por qué partir al azar infla el resultado | guion escrito, sin voz |
 | `intervalo.py` | Por qué un «> 10 µM» no es un dato faltante | guion escrito, sin voz |
 | `linaje.py` | Del archivo a la matriz: qué filas y columnas se pierden | guion escrito, sin voz |
+| `fingerprints.py` | Por qué no plegamos: colisión contra trazabilidad | guion escrito, sin voz |
 
 ## Las tres reglas
 

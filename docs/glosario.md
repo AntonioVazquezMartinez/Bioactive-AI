@@ -143,9 +143,6 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Codificación *one-hot***
 : Representación de una categoría mediante una columna binaria por valor posible, sin asignar un orden numérico entre categorías. **Por qué importa:** permite convertir variables categóricas para un modelo, pero no resuelve si la variable debe usarse como predictor; `group` puede estar asociado con la etiqueta BBB.
 
-**Sort & Slice**
-: Fingerprint que conserva las subestructuras más frecuentes de un conjunto de entrenamiento en un vocabulario de tamaño fijo, con una columna por subestructura. **Por qué importa:** evita que varias subestructuras compartan un bit como en un fingerprint plegado y permite rastrear las columnas hasta sus fragmentos. El vocabulario se aprende solo con entrenamiento.
-
 **Umbral de varianza**
 : Filtro que descarta columnas cuya variación queda por debajo de un valor elegido. **Por qué importa:** elimina columnas constantes o casi constantes que apenas distinguen moléculas; el umbral debe ajustarse en entrenamiento.
 
