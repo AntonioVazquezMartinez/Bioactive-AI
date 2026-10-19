@@ -119,6 +119,18 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 ## Datos y metodología
 
+**Canalización** (*pipeline*)
+: Una secuencia de pasos —escalar, seleccionar, imputar, predecir— tratada como un solo objeto que se ajusta de una vez. **Por qué importa:** es lo que impide filtrar información. Si el escalador se ajusta sobre todo el conjunto y después se parte, la media y la varianza del pliegue de evaluación ya entraron en el entrenamiento, y el desempeño sale mejor de lo que es. Dentro de una canalización, cada paso se reajusta en cada pliegue. En este proyecto el arnés de `src/evaluation/cv.py` solo acepta canalizaciones, no modelos sueltos, justamente para que no haya forma de saltarse eso.
+
+**Predicción fuera de pliegue** (*out-of-fold*)
+: La predicción que cada fila recibe de un modelo que **no la vio** durante el ajuste. Con validación cruzada de cinco pliegues, cada fila cae una vez en evaluación y ahí se guarda su predicción. **Por qué importa:** permite medir después sobre cualquier corte —por diana, por procedencia, por grupo A–D— sin volver a entrenar, y es la base del bootstrap por grupos que define la entrada siguiente.
+
+**Bootstrap por grupos**
+: Estimar la incertidumbre de una métrica remuestreando **grupos** con reemplazo, no filas. **Por qué importa:** la fila no es la unidad independiente. Los compuestos del mismo andamio comparten química y van juntos en la partición, así que remuestrear filas las trata como independientes y devuelve un intervalo más estrecho de lo que corresponde — la forma fácil de concluir que algo se distingue cuando no se distingue. Tampoco sirve la desviación entre semillas: tres semillas sobre las mismas filas no son tres réplicas.
+
+**Estrato de procedencia**
+: En la fase 2, de qué base viene la evidencia de un par compuesto-diana: solo ChEMBL, solo NPASS, solo CMAUP o mixto. **Por qué importa:** son disjuntos y por eso aditivos, a diferencia de «por fuente» —un par puede tener mediciones de varias—. Y hace falta porque el desempeño agregado no describe a los productos naturales: el modelo de referencia da 0.855 de AUROC en los pares que solo tiene ChEMBL y 0.607 en los que solo tiene NPASS.
+
 **Escalado** (estandarización y min–max)
 : Poner los descriptores en escalas comparables. La **estandarización** les deja media 0 y desviación 1; el **min–max** los lleva al rango [0,1]. **Por qué importa:** los descriptores van de menos de una unidad a casi 19,000 de amplitud, y un modelo lineal trataría al más grande como si pesara miles de veces más, por sus unidades y no por su contenido. Los árboles son indiferentes: solo miran el orden de los valores. **Y el costo no es de acierto, es de convergencia:** sin escalar, la regresión logística de este proyecto **no converge** —agota su presupuesto de iteraciones y avisa— y tarda mucho más (1,110 segundos contra 40 en una de las máquinas del equipo), mientras que el Random Forest tarda lo mismo con o sin escalado, porque no itera.
 

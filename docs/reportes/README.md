@@ -34,10 +34,21 @@ El EDA se extiende una semana, en paralelo con el cierre documental de ingenier�
 
 Las integraciones de registro de corridas, manifiesto de datos y pruebas del flujo (#67, #71 y #73) refuerzan la trazabilidad sin alterar las salidas científicas del notebook. También se integró el registro retrospectivo de las mediciones de escalamiento y del vocabulario Sort & Slice de tamaño L, con sus parámetros, métricas y entorno.
 
+## Avance 3 · Modelo de referencia
+
+Entregado el 18 de octubre: [`notebooks/03_Baseline.ipynb`](../../notebooks/03_Baseline.ipynb). Las tres canalizaciones candidatas de la [1.5](../decisiones.md#d1-5) sobre las dos fases, con validación cruzada agrupada por estructura y desglose por estrato de procedencia.
+
+Tres cosas que deja establecidas, y que condicionan cómo se leen las cifras siguientes:
+
+- **Ninguna canalización gana.** Los intervalos del 95% se solapan; con una configuración por familia, declarar un ganador sería prematuro. Afinar es del Avance 4.
+- **El criterio de agrupamiento pesa más que la elección de modelo.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 6.2 — más de lo que separa a las tres familias entre sí.
+- **El desempeño de la fase 2 no es un número.** Por estrato de procedencia: 0.855 de AUROC donde solo hay ChEMBL y 0.607 donde solo hay NPASS, que son los productos naturales que el proyecto existe para priorizar.
+
+La prueba reservada no se ha mirado.
+
 ## Próximas entregas
 
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
-| Avance 3 · Modelo de referencia | 18 de octubre | Ingeniería del modelo (a) |
 | Avance 4 · Modelos alternativos | 25 de octubre | Ingeniería del modelo (b) |
 | Avance 5 · Ensambles | 1 de noviembre | Ingeniería del modelo (c) |
