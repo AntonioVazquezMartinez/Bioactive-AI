@@ -1,0 +1,21 @@
+{
+  "arbol_sucio": false,
+  "commit": "2e2a0825b621b68c70add942adfbb45a6be58e11",
+  "datos_sha256": {
+    "data/external/profesora/bbb_permeability_experimental.csv": "ecbf6bb74a88a6dad11c6befb75f68038c9b93f51dbca5fe66d12bb555fd6e2e"
+  },
+  "decision": "1.5",
+  "duracion_s": 75.2,
+  "lock_sha256": "6356d9016158dfabdaefadf7d096cfb09f26f3b1e32f89534945d271602ff58e",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.12",
+  "sistema": "macOS-27.0.1-arm64-arm-64bit"
+}
