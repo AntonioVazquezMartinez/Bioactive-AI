@@ -496,7 +496,11 @@ function enfermedades(destino, D) {
 // ---------------------------------------------------------------------------
 function costo(destino, D) {
   const T = D.tpsa;
-  const serie = T.series.completo;
+  // **Entrenamiento, no el conjunto completo.** La serie `completo` incluye la
+  // partición de prueba reservada, que no se mira para nada que se decida ni se
+  // muestre. Contarla aquí no cambiaba la forma de la curva, pero ponía en
+  // público un recuento sobre filas apartadas.
+  const serie = T.series.entrenamiento;
   // la lista crece con el corte: más candidatos marcados, menos precisión
   const puntos = T.cortes.map((c) => {
     const [tp, fn, fp] = serie[c];
