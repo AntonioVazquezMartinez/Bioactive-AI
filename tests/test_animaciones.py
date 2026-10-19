@@ -220,3 +220,58 @@ def test_hay_escenas_y_guiones_que_revisar():
     """Si alguien mueve las carpetas, la prueba deja de proteger en silencio."""
     assert _escenas(), "no hay escenas en animaciones/"
     assert list(GUIONES.glob("*.md")), "no hay guiones en animaciones/guion/"
+
+
+# ---------------------------------------------------------------------------
+# Las voces no se enciman
+#
+# Cada tramo del guion se coloca en el segundo donde la escena lo abrió. Si uno
+# dura más que el hueco hasta el siguiente, se oyen dos voces a la vez — y eso
+# no se ve en el código: hay que medirlo. Pasó en `intervalo` y `particion`,
+# con cuatro y seis segundos de solape, porque el `cerrar_tramo` del primer
+# acto había quedado dentro de un método auxiliar.
+# ---------------------------------------------------------------------------
+
+VOZ = ANIMACIONES / "voz"
+
+
+def _duracion(ruta: Path) -> float:
+    import subprocess
+    s = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                        "format=duration", "-of", "csv=p=0", str(ruta)],
+                       capture_output=True, text=True, check=True)
+    return float(s.stdout.strip())
+
+
+def _escenas_con_voz() -> list[str]:
+    ruta = VOZ / "offsets.json"
+    if not ruta.exists():
+        return []
+    import json
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return [e for e in datos
+            if any((VOZ / f"{e}-{n}.mp3").exists() for n in datos[e]["tramos"])]
+
+
+@pytest.mark.parametrize("escena", _escenas_con_voz() or ["sin-voz"])
+def test_ningun_tramo_se_encima_con_el_siguiente(escena: str):
+    import json
+    import shutil
+    if escena == "sin-voz":
+        pytest.skip("todavía no hay voz generada")
+    if not shutil.which("ffprobe"):
+        pytest.skip("hace falta ffprobe para medir los audios")
+
+    datos = json.loads((VOZ / "offsets.json").read_text(encoding="utf-8"))[escena]
+    tramos = sorted((int(n), float(s)) for n, s in datos["tramos"].items())
+    solapes = []
+    for i, (n, inicio) in enumerate(tramos):
+        pista = VOZ / f"{escena}-{n}.mp3"
+        if not pista.exists():
+            continue
+        fin = inicio + _duracion(pista)
+        tope = tramos[i + 1][1] if i + 1 < len(tramos) else datos["duracion_s"]
+        if fin > tope + 0.05:
+            solapes.append(f"tramo {n} acaba en {fin:.1f} s y el siguiente"
+                           f" empieza en {tope:.1f} s")
+    assert not solapes, f"{escena}: se oirían dos voces a la vez · " + "; ".join(solapes)

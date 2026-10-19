@@ -142,6 +142,18 @@ class Narrada(Scene):
         self._offsets[n] = self._inicio
 
     def cerrar_tramo(self, n: int) -> None:
+        # Cerrar un tramo que no es el abierto significa que la llamada acabó
+        # en el método equivocado —un auxiliar, por ejemplo— y entonces el
+        # relleno ocurre en otro momento y la voz se encima con la siguiente.
+        # Pasó con `intervalo` y `particion`: el cierre del tramo 1 terminó
+        # dentro de `_cambiar`, y el audio se solapó cuatro y seis segundos.
+        abierto = getattr(self, "_tramo_actual", None)
+        if abierto != n:
+            raise RuntimeError(
+                f"se cierra el tramo {n} pero el abierto es {abierto}. "
+                "Cada `cerrar_tramo(n)` va al final del mismo acto que llamó "
+                "a `abrir_tramo(n)`, nunca en un método auxiliar")
+        self._tramo_actual = None
         objetivo = self.dura(n)
         gastado = self.renderer.time - self._inicio
         if gastado > objetivo + 0.05:

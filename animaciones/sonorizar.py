@@ -53,12 +53,21 @@ def sonorizar(escena: str, calidad: str) -> Path:
         if not pista.exists():
             raise SystemExit(f"falta {pista.name}: córrelo con «voz.py --solo "
                              f"{escena}»")
-        fin = inicio + duracion(pista)
-        if fin > largo_video + 0.2:
+        largo = duracion(pista)
+        fin = inicio + largo
+        # **Que quepa antes del siguiente tramo**, no solo dentro del video.
+        # Comprobar solo lo segundo es lo que dejó pasar cuatro y seis
+        # segundos de voces encimadas en `intervalo` y `particion`: el tramo 1
+        # seguía hablando cuando el 2 empezaba.
+        siguiente = sorted(float(v) for v in tramos.values() if float(v) > inicio)
+        tope = siguiente[0] if siguiente else largo_video
+        if fin > tope + 0.05:
+            que = (f"el tramo siguiente, que abre en {tope:.1f} s"
+                   if siguiente else f"el final del video, en {tope:.1f} s")
             raise SystemExit(
-                f"el tramo {n} de {escena} empieza en {inicio:.1f} s, dura "
-                f"{duracion(pista):.1f} s y el video solo llega a "
-                f"{largo_video:.1f} s. Alarga la escena, no aceleres la voz.")
+                f"el tramo {n} de {escena} empieza en {inicio:.1f} s y dura "
+                f"{largo:.1f} s, así que se encima {fin - tope:.1f} s con "
+                f"{que}. Alarga la escena, no aceleres la voz.")
         pistas += ["-i", str(pista)]
         # `adelay` en milisegundos, a los dos canales.
         ms = int(round(inicio * 1000))

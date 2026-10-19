@@ -10,11 +10,13 @@ Las cifras son del planteamiento del proyecto y del registro de decisiones.
 Las de desempeño no van aquí: esta escena no afirma resultados.
 """
 
-from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut,
-                   Line, VGroup, Write, config)
+import numpy as np
+from manim import (DOWN, LEFT, PI, RIGHT, UP, Arc, Circle, Create, Dot, Ellipse,
+                   FadeIn, FadeOut, Indicate, Line, RoundedRectangle, VGroup,
+                   Write, config)
 
-from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, VERDE,
-                   cabe, dato, pie, subtitulo, titulo)
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA,
+                   VERDE, cabe, dato, pie, separados, subtitulo, titulo)
 
 config.background_color = FONDO
 
@@ -26,32 +28,129 @@ class Apertura(Narrada):
         self._la_tesis()
 
     # -- 1. el problema ------------------------------------------------------
+    @staticmethod
+    def _cerebro(alto: float = 2.3) -> VGroup:
+        """Un cerebro estilizado: un óvalo con pliegues.
+
+        No es anatomía, es un signo. Lo que tiene que leerse en dos segundos
+        es «esto es el cerebro y está del otro lado de la barrera».
+        """
+        bulbo = Ellipse(width=alto * 1.25, height=alto, color=AZUL_CLARO,
+                        fill_opacity=0.18, stroke_width=2.5)
+        pliegues = VGroup()
+        for i, (dx, dy, r) in enumerate(((-0.30, 0.26, 0.42), (0.14, 0.33, 0.36),
+                                         (-0.10, -0.06, 0.40), (0.34, -0.14, 0.33),
+                                         (-0.36, -0.34, 0.30))):
+            arco = Arc(radius=r * alto / 2.3, angle=PI * 1.15,
+                       color=AZUL_CLARO, stroke_width=2)
+            arco.rotate(i * 0.7).move_to(bulbo.get_center()
+                                         + np.array([dx * alto, dy * alto, 0]))
+            pliegues.add(arco)
+        # El tallo, que es lo que lo hace reconocible de un vistazo.
+        tallo = Arc(radius=0.22 * alto / 2.3, angle=-PI, color=AZUL_CLARO,
+                    stroke_width=3)
+        tallo.next_to(bulbo, DOWN, buff=-0.12).shift(LEFT * 0.12 * alto)
+        return VGroup(bulbo, pliegues, tallo)
+
+    @staticmethod
+    def _barrera(alto: float = 3.4) -> VGroup:
+        """La barrera como una hilera de células muy unidas, que es lo que es."""
+        celulas = VGroup()
+        n = 9
+        for i in range(n):
+            c = RoundedRectangle(width=0.34, height=alto / n * 0.92,
+                                 corner_radius=0.06, color=NARANJA,
+                                 fill_opacity=0.3, stroke_width=1.6)
+            celulas.add(c)
+        celulas.arrange(DOWN, buff=alto / n * 0.08)
+        return celulas
+
     def _el_problema(self) -> None:
         self.abrir_tramo(1)
-        t = titulo("Casi nada llega al cerebro", 40).shift(UP * 1.2)
+        t = titulo("Casi nada llega al cerebro", 40).to_edge(UP, buff=0.8)
         cabe(t)
-        self.play(Write(t), run_time=1.4)
-        self.wait(0.5)
+        self.play(Write(t), run_time=1.3)
 
-        s = subtitulo("La barrera hematoencefálica deja fuera a la gran mayoría"
-                      "\nde los fármacos. Probar uno en laboratorio es lento y"
-                      " caro.", 22)
-        s.next_to(t, DOWN, buff=0.6).set_x(0)
-        cabe(s)
-        self.play(FadeIn(s, shift=DOWN * 0.2), run_time=1.5)
-        self.wait(1.6)
+        # El escenario: sangre a la izquierda, barrera en medio, cerebro a la
+        # derecha. Se construye de izquierda a derecha, como se lee.
+        cerebro = self._cerebro(2.4).shift(RIGHT * 3.9 + DOWN * 0.4)
+        barrera = self._barrera(4.6).shift(LEFT * 0.2 + DOWN * 0.3)
+        rotulo_b = subtitulo("barrera hematoencefálica", 17)
+        rotulo_b.next_to(barrera, UP, buff=0.25)
+        rotulo_s = subtitulo("sangre", 17).move_to(LEFT * 4.4 + DOWN * 2.1)
+        cabe(cerebro, barrera, rotulo_b, rotulo_s)
+        self.play(FadeIn(cerebro, shift=LEFT * 0.3), run_time=0.9)
+        self.play(Create(barrera, lag_ratio=0.08), FadeIn(rotulo_b),
+                  FadeIn(rotulo_s), run_time=1.2)
 
-        s2 = subtitulo("Y los productos naturales, que son una fuente"
-                       " prometedora,\nestán mucho menos explorados que los"
-                       " compuestos sintéticos.", 22)
-        s2.next_to(s, DOWN, buff=0.5).set_x(0)
-        cabe(s2)
-        self.play(FadeIn(s2, shift=DOWN * 0.2), run_time=1.5)
+        # Las moléculas salen de la sangre y chocan. Dos de catorce pasan: es
+        # la proporción que la frase dice, puesta en el dibujo.
+        rng = np.random.default_rng(11)
+        moleculas, pasan = VGroup(), []
+        for i in range(14):
+            m = Dot(radius=0.11, color=AZUL,
+                    fill_opacity=0.9).move_to(
+                        LEFT * 5.2 + UP * rng.uniform(-1.9, 1.1))
+            moleculas.add(m)
+            pasan.append(i in (4, 9))
+        self.play(FadeIn(moleculas, lag_ratio=0.05), run_time=0.8)
+
+        rebotes, cruces = [], []
+        for m, pasa in zip(moleculas, pasan):
+            y = m.get_center()[1]
+            if pasa:
+                cruces.append(m.animate.move_to(cerebro.get_center()
+                                                + np.array([rng.uniform(-0.6, 0.6),
+                                                            rng.uniform(-0.6, 0.6), 0]))
+                              .set_color(VERDE))
+            else:
+                rebotes.append(m.animate.move_to(
+                    np.array([rng.uniform(-2.6, -1.2), y, 0])).set_opacity(0.45))
+        self.play(*rebotes, *cruces, run_time=2.2)
+        self.play(Indicate(barrera, color=NARANJA, scale_factor=1.03),
+                  run_time=0.8)
+
+        marca = dato("casi todos rebotan", 22, NARANJA)
+        marca.move_to(LEFT * 3.3 + UP * 1.9)
+        cabe(marca)
+        self.play(FadeIn(marca), run_time=0.7)
+        self.wait(0.6)
+
+        caro = subtitulo("Y probar uno en el laboratorio es lento y caro.", 21)
+        caro.to_edge(DOWN, buff=0.95).set_x(0)
+        separados(caro, rotulo_b)
+        cabe(caro)
+        self.play(Write(caro), run_time=1.6)
+        self.wait(0.8)
+
+        # Y el segundo golpe: los naturales, que es de lo que trata todo.
+        self.play(FadeOut(marca), FadeOut(caro), run_time=0.5)
+        sinteticos = VGroup(*[Dot(radius=0.075, color=AZUL, fill_opacity=0.85)
+                              for _ in range(40)])
+        sinteticos.arrange_in_grid(4, 10, buff=0.16)
+        naturales = VGroup(*[Dot(radius=0.075, color=VERDE, fill_opacity=0.85)
+                             for _ in range(8)])
+        naturales.arrange_in_grid(4, 2, buff=0.16)
+        grupos = VGroup(sinteticos, naturales).arrange(RIGHT, buff=1.1)
+        grupos.move_to(DOWN * 0.5)
+        e1 = subtitulo("sintéticos: muy explorados", 17)
+        e1.next_to(sinteticos, DOWN, buff=0.3)
+        e2 = subtitulo("naturales: apenas", 17).next_to(naturales, DOWN, buff=0.3)
+        cabe(grupos, e1, e2)
+        self.play(FadeOut(VGroup(cerebro, barrera, rotulo_b, rotulo_s,
+                                 moleculas)), run_time=0.6)
+        self.play(FadeIn(sinteticos, lag_ratio=0.02), FadeIn(e1), run_time=1.2)
+        self.play(FadeIn(naturales, lag_ratio=0.08), FadeIn(e2), run_time=1.0)
+        self.play(Indicate(naturales, color=VERDE, scale_factor=1.25),
+                  run_time=1.0)
+
+        remate = subtitulo("Y son una fuente prometedora.", 21)
+        remate.to_edge(DOWN, buff=1.0).set_x(0)
+        cabe(remate)
+        self.play(Write(remate), run_time=1.3)
         self.cerrar_tramo(1)
-        self.wait(1.8)
-        self.play(FadeOut(t), FadeOut(s), FadeOut(s2), run_time=0.7)
+        self.play(FadeOut(VGroup(t, grupos, e1, e2, remate)), run_time=0.7)
 
-    # -- 2. la apuesta -------------------------------------------------------
     def _la_apuesta(self) -> None:
         self.abrir_tramo(2)
         t = titulo("La apuesta: predecir desde la estructura").to_edge(UP, buff=0.9)

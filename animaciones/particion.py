@@ -69,9 +69,9 @@ class Particion(Narrada):
         columnas.move_to(DOWN * 0.3)
 
         self.play(FadeIn(columnas, lag_ratio=0.1), run_time=1.6)
-        self.wait(1.2)
         self.titulo_actual = t
         self.sub_actual = s
+        self.cerrar_tramo(1)
 
     def _cambiar_titulo(self, nuevo: str, nuevo_sub: str) -> None:
         """Con fundido y no con `Transform`.
@@ -82,7 +82,6 @@ class Particion(Narrada):
         """
         t = titulo(nuevo).move_to(self.titulo_actual)
         s = subtitulo(nuevo_sub).next_to(t, DOWN, buff=0.3)
-        self.cerrar_tramo(1)
         self.play(FadeOut(self.titulo_actual), FadeOut(self.sub_actual),
                   run_time=0.35)
         self.play(FadeIn(t), FadeIn(s), run_time=0.5)

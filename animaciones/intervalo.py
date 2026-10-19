@@ -56,8 +56,8 @@ class Intervalo(Narrada):
         cabe(self.eje, izq, der, nombre)
         self.play(Create(self.eje), FadeIn(izq), FadeIn(der), FadeIn(nombre),
                   run_time=1.3)
-        self.wait(0.8)
         self.bordes = VGroup(izq, der, nombre)
+        self.cerrar_tramo(1)
 
     def _x(self, valor: float) -> np.ndarray:
         return self.eje.number_to_point(valor)
@@ -65,7 +65,6 @@ class Intervalo(Narrada):
     def _cambiar(self, nuevo: str, sub: str) -> None:
         t = titulo(nuevo).move_to(self.t)
         s = subtitulo(sub).next_to(t, DOWN, buff=0.3)
-        self.cerrar_tramo(1)
         self.play(FadeOut(self.t), FadeOut(self.s), run_time=0.3)
         self.play(FadeIn(t), FadeIn(s), run_time=0.45)
         self.t, self.s = t, s

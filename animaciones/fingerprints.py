@@ -204,3 +204,6 @@ class Fingerprints(Narrada):
         self.wait(2.5)
 
         self.cerrar_tramo(4)
+        # Una cola después del último tramo: sin ella el video acaba en el
+        # mismo fotograma que la voz y la última palabra se corta al montar.
+        self.wait(1.5)
