@@ -120,7 +120,11 @@ def _permeabilidad(representacion: str, incluir_prueba: bool) -> Tarea:
         # `grupos_cv` y no el andamio a secas: un esqueleto de conectividad
         # puede aparecer con andamios distintos, y separarlos pone
         # estereoisómeros del mismo compuesto a los dos lados del pliegue.
-        # Sobre este conjunto son 2,373 grupos contra 3,629 por andamio solo.
+        # Sobre lo que esta función devuelve —entrenamiento y validación, sin
+        # la prueba— son 1,048 grupos contra 2,239 por andamio solo, que es lo
+        # que mide la §2.1 del notebook 03. Las cifras de 2,373 y 3,629 que
+        # este comentario traía son del conjunto completo, con la prueba
+        # dentro, y no son las que nadie puede reproducir desde aquí.
         grupos=grupos_cv(m.assign(andamio=m["andamio"].fillna(SIN_ANDAMIO)),
                          "andamio", "esqueleto"),
         # El grupo A–D estratifica, nunca excluye (1.1).
@@ -149,7 +153,8 @@ def _actividad(representacion: str, umbral_um: float, incluir_prueba: bool) -> T
     if representacion == "descriptores":
         X = d[columnas].to_numpy(dtype=np.float32)
     elif representacion == "descriptores+diana":
-        # La diana importa: las tasas base por diana van de 34.8% a 96.9%, y sin
+        # La diana importa: sobre las 25 dianas de esta matriz con 50 pares o
+        # más, la tasa de activos va de 34.8% en `MAOA` a 98.4% en `IL6`, y sin
         # ella el modelo no sabe contra qué se mide (2.2, y el control del #32).
         X = np.hstack([d[columnas].to_numpy(dtype=np.float32),
                        pd.get_dummies(d["target_gene"]).to_numpy(dtype=np.float32)])
