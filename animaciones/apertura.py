@@ -11,8 +11,7 @@ Las de desempeño no van aquí: esta escena no afirma resultados.
 """
 
 import numpy as np
-from manim import (DOWN, LEFT, PI, RIGHT, UP, Arc, Circle, Create, Dot, Ellipse,
-                   FadeIn, FadeOut, Indicate, Line, RoundedRectangle, VGroup,
+from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, Dot, FadeIn, FadeOut, Indicate, Line, RoundedRectangle, VGroup, VMobject,
                    Write, config)
 
 from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA,
@@ -28,29 +27,73 @@ class Apertura(Narrada):
         self._la_tesis()
 
     # -- 1. el problema ------------------------------------------------------
+    # La silueta sagital, en coordenadas normalizadas de −1 a 1. Es un contorno
+    # cerrado y no una elipse: lleva el polo frontal a la izquierda, el vértice
+    # arriba, el occipital a la derecha y el lóbulo temporal colgando por
+    # delante y abajo. Son los cuatro rasgos que hacen que se lea como cerebro
+    # y no como nube.
+    _SILUETA = [
+        (-1.00, 0.08), (-0.95, 0.45), (-0.74, 0.74), (-0.38, 0.92),
+        (0.05, 0.94), (0.46, 0.78), (0.78, 0.48), (0.93, 0.12),
+        (0.86, -0.22), (0.62, -0.38), (0.34, -0.44), (0.02, -0.46),
+        (-0.30, -0.52), (-0.60, -0.58), (-0.84, -0.44), (-0.98, -0.16),
+    ]
+    # Los surcos **nacen y mueren en el contorno**, que es lo que los vuelve
+    # pliegues en vez de rayones sueltos. El primero es la cisura de Silvio,
+    # que separa el lóbulo temporal y es la que más hace por el parecido.
+    _SURCOS = [
+        [(-0.86, -0.26), (-0.50, -0.34), (-0.10, -0.30), (0.26, -0.20)],
+        [(-0.70, 0.78), (-0.62, 0.46), (-0.48, 0.22), (-0.40, 0.00)],
+        [(-0.30, 0.93), (-0.26, 0.58), (-0.16, 0.30), (-0.14, 0.04)],
+        [(0.12, 0.93), (0.20, 0.60), (0.28, 0.34), (0.26, 0.10)],
+        [(0.52, 0.74), (0.54, 0.48), (0.56, 0.26), (0.48, 0.06)],
+        [(-0.93, 0.36), (-0.74, 0.26), (-0.62, 0.12), (-0.60, -0.04)],
+        [(0.86, 0.22), (0.66, 0.12), (0.54, -0.04), (0.50, -0.20)],
+    ]
+
     @staticmethod
     def _cerebro(alto: float = 2.3) -> VGroup:
-        """Un cerebro estilizado: un óvalo con pliegues.
+        """Un cerebro de perfil: silueta, surcos, cerebelo y tallo.
 
-        No es anatomía, es un signo. Lo que tiene que leerse en dos segundos
-        es «esto es el cerebro y está del otro lado de la barrera».
+        No es anatomía exacta, es un signo — pero un signo tiene que leerse. La
+        versión anterior era una elipse con arcos sueltos por dentro, y los
+        arcos no tocaban el borde, así que parecían rayones. Un surco se lee
+        como surco cuando **entra desde el contorno**.
         """
-        bulbo = Ellipse(width=alto * 1.25, height=alto, color=AZUL_CLARO,
-                        fill_opacity=0.18, stroke_width=2.5)
-        pliegues = VGroup()
-        for i, (dx, dy, r) in enumerate(((-0.30, 0.26, 0.42), (0.14, 0.33, 0.36),
-                                         (-0.10, -0.06, 0.40), (0.34, -0.14, 0.33),
-                                         (-0.36, -0.34, 0.30))):
-            arco = Arc(radius=r * alto / 2.3, angle=PI * 1.15,
-                       color=AZUL_CLARO, stroke_width=2)
-            arco.rotate(i * 0.7).move_to(bulbo.get_center()
-                                         + np.array([dx * alto, dy * alto, 0]))
-            pliegues.add(arco)
-        # El tallo, que es lo que lo hace reconocible de un vistazo.
-        tallo = Arc(radius=0.22 * alto / 2.3, angle=-PI, color=AZUL_CLARO,
-                    stroke_width=3)
-        tallo.next_to(bulbo, DOWN, buff=-0.12).shift(LEFT * 0.12 * alto)
-        return VGroup(bulbo, pliegues, tallo)
+        k = alto / 1.9
+
+        def puntos(lista):
+            return [np.array([x * k * 1.15, y * k, 0.0]) for x, y in lista]
+
+        corteza = VMobject(color=AZUL_CLARO, stroke_width=2.6)
+        corteza.set_points_smoothly(puntos(Apertura._SILUETA + [Apertura._SILUETA[0]]))
+        corteza.set_fill(AZUL_CLARO, opacity=0.16)
+
+        surcos = VGroup()
+        for traza in Apertura._SURCOS:
+            c = VMobject(color=AZUL_CLARO, stroke_width=1.8, stroke_opacity=0.75)
+            c.set_points_smoothly(puntos(traza))
+            surcos.add(c)
+
+        # El cerebelo, abajo y atrás, con sus estrías horizontales: es el
+        # segundo rasgo que lo identifica, después de la silueta.
+        cerebelo = VMobject(color=AZUL_CLARO, stroke_width=2.2)
+        cerebelo.set_points_smoothly(puntos([
+            (0.30, -0.44), (0.60, -0.46), (0.80, -0.62), (0.74, -0.84),
+            (0.48, -0.92), (0.24, -0.80), (0.20, -0.60), (0.30, -0.44)]))
+        cerebelo.set_fill(AZUL_CLARO, opacity=0.10)
+        estrias = VGroup(*[
+            Line(np.array([0.26 * k * 1.15, y * k, 0.0]),
+                 np.array([0.76 * k * 1.15, (y - 0.06) * k, 0.0]),
+                 color=AZUL_CLARO, stroke_width=1.0, stroke_opacity=0.6)
+            for y in (-0.58, -0.68, -0.78)])
+
+        # El tallo: baja desde el centro, por delante del cerebelo.
+        tallo = VMobject(color=AZUL_CLARO, stroke_width=2.4)
+        tallo.set_points_smoothly(puntos([
+            (0.02, -0.46), (0.06, -0.66), (0.10, -0.86), (0.04, -1.04)]))
+
+        return VGroup(corteza, surcos, cerebelo, estrias, tallo)
 
     @staticmethod
     def _barrera(alto: float = 3.4) -> VGroup:
@@ -66,7 +109,7 @@ class Apertura(Narrada):
         return celulas
 
     def _el_problema(self) -> None:
-        self.abrir_tramo(1)
+        self.abrir_tramo(1, compases=3)
         t = titulo("Casi nada llega al cerebro", 40).to_edge(UP, buff=0.8)
         cabe(t)
         self.play(Write(t), run_time=1.3)
@@ -114,14 +157,14 @@ class Apertura(Narrada):
         marca.move_to(LEFT * 3.3 + UP * 1.9)
         cabe(marca)
         self.play(FadeIn(marca), run_time=0.7)
-        self.wait(0.6)
+        self.respira()
 
         caro = subtitulo("Y probar uno en el laboratorio es lento y caro.", 21)
         caro.to_edge(DOWN, buff=0.95).set_x(0)
         separados(caro, rotulo_b)
         cabe(caro)
         self.play(Write(caro), run_time=1.6)
-        self.wait(0.8)
+        self.respira()
 
         # Y el segundo golpe: los naturales, que es de lo que trata todo.
         self.play(FadeOut(marca), FadeOut(caro), run_time=0.5)
@@ -152,7 +195,7 @@ class Apertura(Narrada):
         self.play(FadeOut(VGroup(t, grupos, e1, e2, remate)), run_time=0.7)
 
     def _la_apuesta(self) -> None:
-        self.abrir_tramo(2)
+        self.abrir_tramo(2, compases=3)
         t = titulo("La apuesta: predecir desde la estructura").to_edge(UP, buff=0.9)
         s = subtitulo("una molécula entra como texto, y salen dos respuestas", 22)
         s.next_to(t, DOWN, buff=0.3).set_x(0)
@@ -166,7 +209,7 @@ class Apertura(Narrada):
         pie_entrada.next_to(entrada, DOWN, buff=0.22).set_x(0)
         cabe(entrada, pie_entrada)
         self.play(FadeIn(entrada), FadeIn(pie_entrada), run_time=1.2)
-        self.wait(1.0)
+        self.respira()
 
         preguntas = VGroup()
         for texto, color in (("¿cruza la barrera?", AZUL),
@@ -182,7 +225,7 @@ class Apertura(Narrada):
         cabe(preguntas)
         self.play(FadeIn(preguntas, lag_ratio=0.3, shift=DOWN * 0.2),
                   run_time=1.3)
-        self.wait(0.8)
+        self.respira()
 
         nota = subtitulo("No es una cascada: un «no cruza» predicho no descarta"
                          " nada.\nLas dos son evidencia que se combina al"

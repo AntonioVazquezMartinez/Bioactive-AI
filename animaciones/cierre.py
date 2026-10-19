@@ -66,7 +66,7 @@ class Cierre(Narrada):
 
     # -- 2. pero no sobre lo que importa ------------------------------------
     def _pero(self) -> None:
-        self.abrir_tramo(2)
+        self.abrir_tramo(2, compases=3)
         t = titulo("Pero no igual en todas partes").to_edge(UP, buff=0.85)
         s = subtitulo("el mismo modelo, partido por de dónde viene la"
                       " evidencia", 21)
@@ -123,9 +123,9 @@ class Cierre(Narrada):
             self.play(FadeIn(nombre), run_time=0.3)
             self.play(columna.animate.restore(), run_time=0.9)
             self.play(FadeIn(cifra, shift=UP * 0.15), run_time=0.45)
-        self.wait(0.4)
+        self.respira()
         self.play(*[Create(g[1]) for g in barras], run_time=1.1)
-        self.wait(0.6)
+        self.respira()
         # Y el gesto que sostiene la lectura honesta: los dos de la derecha,
         # juntos, para que se vea que sus intervalos se tocan.
         self.play(Indicate(barras[1][1], color=CREMA, scale_factor=1.08),
@@ -142,7 +142,7 @@ class Cierre(Narrada):
 
     # -- 3. lo que se entrega ------------------------------------------------
     def _el_entregable(self) -> None:
-        self.abrir_tramo(3)
+        self.abrir_tramo(3, compases=3)
         t = titulo("Lo que se entrega, y lo que no se afirma")
         t.to_edge(UP, buff=0.85)
         cabe(t)
@@ -157,7 +157,7 @@ class Cierre(Narrada):
         entrega.next_to(t, DOWN, buff=0.6).set_x(0)
         cabe(entrega)
         self.play(FadeIn(entrega, lag_ratio=0.3), run_time=1.8)
-        self.wait(1.4)
+        self.respira()
 
         linea = Line(LEFT * 4.6, RIGHT * 4.6, color=GRIS, stroke_width=1)
         linea.next_to(entrega, DOWN, buff=0.55)
@@ -172,7 +172,7 @@ class Cierre(Narrada):
         self.play(Create(linea), run_time=0.6)
         self.play(FadeIn(no[0]), run_time=0.7)
         self.play(Write(no[1]), run_time=2.4)
-        self.wait(1.0)
+        self.respira()
 
         # La tarjeta final va **dentro** del tramo 3, porque la voz dice esa
         # frase ahí. Puesta después de `cerrar_tramo`, el remate del video

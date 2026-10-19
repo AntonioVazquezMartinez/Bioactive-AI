@@ -112,14 +112,14 @@ class Intervalo(Narrada):
 
     # -- 4. el corte decide --------------------------------------------------
     def _el_corte(self) -> None:
-        self.abrir_tramo(4)
+        self.abrir_tramo(4, compases=3)
         self._cambiar("La etiqueta sale de dónde cae el intervalo",
                       "no de un umbral aplicado a un número suelto")
         linea = Line(self._x(CORTE) + UP * 0.95, self._x(CORTE) + DOWN * 1.6,
                      color=CREMA, stroke_width=2)
         rotulo = dato("corte: 10 µM", 20, CREMA).next_to(linea, UP, buff=0.15)
         self.play(Create(linea), FadeIn(rotulo), run_time=0.9)
-        self.wait(0.5)
+        self.respira()
 
         # A una altura fija bajo el eje, cada una de su lado del corte.
         activo = dato("activo", 24, VERDE).move_to(self._x(7.6) + DOWN * 1.9)
@@ -129,7 +129,7 @@ class Intervalo(Narrada):
         separados(inactivo, rotulo)
         self.play(FadeIn(activo, shift=DOWN * 0.2), run_time=0.7)
         self.play(FadeIn(inactivo, shift=UP * 0.2), run_time=0.7)
-        self.wait(0.6)
+        self.respira()
 
         nota = subtitulo("El punto está entero a la derecha del corte."
                          "\nLa media recta está entera a la izquierda.", 20)
@@ -142,7 +142,7 @@ class Intervalo(Narrada):
 
     # -- 5. mover el corte no reconstruye nada -------------------------------
     def _lo_que_se_gana(self) -> None:
-        self.abrir_tramo(5)
+        self.abrir_tramo(5, compases=2)
         self._cambiar("Por eso el umbral es una decisión de lectura",
                       "mover el corte no obliga a reconstruir la matriz")
         nuevo = 6.0  # 1 µM
@@ -151,7 +151,7 @@ class Intervalo(Narrada):
         rotulo2 = dato("corte: 1 µM", 20, AZUL_CLARO).next_to(linea2, UP, buff=0.15)
         self.play(self.corte[0].animate.become(linea2),
                   self.corte[1].animate.become(rotulo2), run_time=1.4)
-        self.wait(0.5)
+        self.respira()
 
         sigue = dato("sigue activo", 22, VERDE).move_to(self._x(7.6) + DOWN * 1.9)
         tambien = dato("sigue inactivo", 22, ROJO).move_to(self._x(3.9) + DOWN * 1.9)

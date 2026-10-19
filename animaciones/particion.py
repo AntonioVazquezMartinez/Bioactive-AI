@@ -41,7 +41,7 @@ class Particion(Narrada):
 
     # -- 1. el conjunto, agrupado por familia -------------------------------
     def _presentar(self) -> None:
-        self.abrir_tramo(1)
+        self.abrir_tramo(1, compases=2)
         t = titulo("Un conjunto de moléculas no es una bolsa de filas")
         s = subtitulo("Se parecen entre sí por familias: comparten el andamio,"
                       " el esqueleto de anillos")
@@ -50,7 +50,7 @@ class Particion(Narrada):
         cabe(t, s)
         self.play(Write(t), run_time=1.2)
         self.play(FadeIn(s, shift=DOWN * 0.2), run_time=0.8)
-        self.wait(0.6)
+        self.respira()
 
         # Las filas y sus etiquetas se guardan por separado: si las etiquetas
         # viven dentro del mismo grupo, el FadeOut del final las vuelve a
@@ -98,7 +98,7 @@ class Particion(Narrada):
 
     # -- 2. la partición al azar --------------------------------------------
     def _al_azar(self) -> None:
-        self.abrir_tramo(2)
+        self.abrir_tramo(2, compases=3)
         self._cambiar_titulo("Si se parten al azar…",
                              "cada familia queda repartida entre las dos cajas")
         # Las etiquetas se van con las moléculas: si se quedan, acaban
@@ -106,12 +106,18 @@ class Particion(Narrada):
         izq, der = self._cajas()
         self.play(Create(izq), Create(der), FadeOut(self.etiquetas), run_time=0.9)
 
+        # **Cada familia se parte, porque eso es lo que dice el rótulo.** Con un
+        # sorteo independiente por molécula, una familia entera podía caer de un
+        # solo lado y el dibujo desmentía a la voz: pasaba con la tercera. Aquí
+        # se baraja dentro de la familia y se manda al menos una a cada caja.
         rng = np.random.default_rng(7)
         destinos, moleculas = [], []
         for fila in self.grupos:
-            for mol in fila:
+            n = len(fila)
+            a_la_derecha = set(rng.choice(n, size=max(1, n // 4), replace=False).tolist())
+            for k, mol in enumerate(fila):
                 moleculas.append(mol)
-                destinos.append(izq[0] if rng.random() < 0.75 else der[0])
+                destinos.append(der[0] if k in a_la_derecha else izq[0])
 
         animaciones = []
         for mol, caja in zip(moleculas, destinos):
@@ -119,14 +125,14 @@ class Particion(Narrada):
                 rng.uniform(-2.2, 2.2), rng.uniform(-0.9, 0.9), 0.0])
             animaciones.append(mol.animate.move_to(objetivo))
         self.play(*animaciones, lag_ratio=0.02, run_time=2.4)
-        self.wait(0.4)
+        self.respira()
 
         aviso = dato("La misma familia está de los dos lados", 24, ROJO)
         aviso.next_to(der[0], DOWN, buff=0.45)
         gemelas = [m for m, c in zip(moleculas, destinos) if c is der[0]][:3]
         self.play(FadeIn(aviso), *[Indicate(m, color=ROJO, scale_factor=1.6)
                                    for m in gemelas], run_time=1.4)
-        self.wait(0.8)
+        self.respira()
 
         explicacion = subtitulo(
             "El modelo ya vio a sus análogos casi idénticos.\n"
@@ -142,7 +148,7 @@ class Particion(Narrada):
 
     # -- 3. la partición por andamio ----------------------------------------
     def _por_andamio(self) -> None:
-        self.abrir_tramo(3)
+        self.abrir_tramo(3, compases=2)
         self._cambiar_titulo("Si se parten por familia…",
                              "cada familia cae entera de un solo lado")
         rng = np.random.default_rng(3)
@@ -156,7 +162,7 @@ class Particion(Narrada):
                 animaciones.append(mol.animate.move_to(objetivo))
                 i += 1
         self.play(*animaciones, lag_ratio=0.02, run_time=2.4)
-        self.wait(0.5)
+        self.respira()
 
         bien = dato("Ninguna familia se reparte", 24, VERDE)
         bien.next_to(self.der[0], DOWN, buff=0.45)
@@ -175,7 +181,7 @@ class Particion(Narrada):
 
     # -- 4. lo que cuesta confundirse ---------------------------------------
     def _la_cifra(self) -> None:
-        self.abrir_tramo(4)
+        self.abrir_tramo(4, compases=4)
         self._cambiar_titulo(
             "La diferencia no es cosmética",
             "medido sobre la fase 1, con el mismo modelo y la misma matriz")
@@ -195,7 +201,7 @@ class Particion(Narrada):
             bloque.add(VGroup(r, v))
         bloque.arrange(DOWN, buff=0.7, aligned_edge=LEFT).move_to(DOWN * 0.2)
         self.play(FadeIn(bloque, lag_ratio=0.2), run_time=1.4)
-        self.wait(0.8)
+        self.respira()
 
         linea = Line(bloque.get_left() + DOWN * 1.1,
                      bloque.get_right() + DOWN * 1.1, color=GRIS, stroke_width=1)
@@ -203,7 +209,7 @@ class Particion(Narrada):
         remate.next_to(linea, DOWN, buff=0.35)
         cabe(bloque, remate)
         self.play(Create(linea), FadeIn(remate), run_time=1.2)
-        self.wait(1.0)
+        self.respira()
 
         cierre = subtitulo(
             "Y es un caso suave: dos moléculas idénticas salvo la\n"
@@ -220,6 +226,6 @@ class Particion(Narrada):
         fuente.to_edge(DOWN, buff=0.3)
         cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
-        self.wait(2.5)
+        self.respira()
 
         self.cerrar_tramo(4)

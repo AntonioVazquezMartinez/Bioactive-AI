@@ -12,7 +12,7 @@ Todas las cifras salen de `data/processed/` y de la salida de
 copiadas de la prosa.
 """
 
-from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, VGroup, Write, config)
+from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, Flash, FadeOut, VGroup, Write, config)
 
 from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, NARANJA, ROJO, VERDE,
                    cabe, dato, matriz, pie, subtitulo, titulo)
@@ -53,11 +53,14 @@ class Linaje(Narrada):
 
     # -- 1. las filas: de mediciones a pares --------------------------------
     def _embudo(self) -> None:
-        self.abrir_tramo(1)
+        # Siete compases: el encabezado, las cinco cifras una por una —que es
+        # lo que el guion pide— y la nota del final.
+        self.abrir_tramo(1, compases=7)
         cab = self._encabezado(
             "El archivo trae mediciones, no compuestos",
             "la unidad del modelo —el par compuesto-diana— hay que construirla")
         self.play(Write(cab[0]), FadeIn(cab[1]), run_time=1.4)
+        self.respira()
 
         filas = VGroup()
         for cifra, motivo, color in EMBUDO:
@@ -69,11 +72,13 @@ class Linaje(Narrada):
         filas.move_to(DOWN * 0.4)
         cabe(filas)
 
-        for i, fila in enumerate(filas):
+        for fila in filas:
             self.play(FadeIn(fila, shift=RIGHT * 0.3), run_time=0.55)
-            if i == 0:
-                self.wait(0.5)
-        self.wait(1.0)
+            # Un destello sobre la cifra al decirla: dirige la mirada sin
+            # añadir nada que leer.
+            self.play(Flash(fila[0], color=fila[0].color, line_length=0.14,
+                            num_lines=8, flash_radius=0.42), run_time=0.45)
+            self.respira()
 
         nota = subtitulo("Y las 29,730 declaradas inactivas por texto quedan"
                          " fuera:\nson una sola campaña de tamizaje, 772"
@@ -87,7 +92,9 @@ class Linaje(Narrada):
 
     # -- 2. las columnas: la matriz encogiéndose ----------------------------
     def _columnas(self) -> None:
-        self.abrir_tramo(2)
+        # La rejilla, una por cada caída —el `respira()` va dentro del bucle—,
+        # el cambio de rótulo y el relleno final.
+        self.abrir_tramo(2, compases=len(CAIDAS) + 3)
         cab = self._encabezado(
             "De 217 descriptores llegan 201",
             "RDKit los calcula todos; no todos sirven para un modelo")
@@ -99,7 +106,7 @@ class Linaje(Narrada):
         rotulo.next_to(rej, UP, buff=0.35)
         cabe(rej, rotulo)
         self.play(Create(rej, lag_ratio=0.02), FadeIn(rotulo), run_time=1.8)
-        self.wait(0.8)
+        self.respira()
 
         # Cada motivo tiñe sus columnas y se las lleva. Las proporciones del
         # dibujo siguen a las reales: 16 de 217 es una de cada catorce.
@@ -118,7 +125,7 @@ class Linaje(Narrada):
             cabe(etiqueta, detalle)
             self.play(objetivo.animate.set_color(ROJO), FadeIn(etiqueta),
                       FadeIn(detalle), run_time=0.8)
-            self.wait(0.9)
+            self.respira()
             restante = VGroup(*rej[pos:])
             self.play(FadeOut(objetivo, shift=DOWN * 1.2),
                       FadeOut(etiqueta), FadeOut(detalle),
@@ -127,7 +134,7 @@ class Linaje(Narrada):
         nuevo_rotulo = dato("201 columnas", 22, VERDE).move_to(rotulo)
         self.play(restante.animate.set_color(VERDE),
                   FadeOut(rotulo), FadeIn(nuevo_rotulo), run_time=1.0)
-        self.wait(0.8)
+        self.respira()
         quedan = restante
 
         nota = subtitulo("Son dos menos que las 203 de la fase 1, y no es otro"
@@ -143,7 +150,7 @@ class Linaje(Narrada):
 
     # -- 3. la partición ----------------------------------------------------
     def _particion(self) -> None:
-        self.abrir_tramo(3)
+        self.abrir_tramo(3, compases=2)
         cab = self._encabezado(
             "Y las filas se parten antes de mirar nada",
             "agrupando por estructura, con una prueba que el modelo nunca ve")
@@ -168,7 +175,7 @@ class Linaje(Narrada):
         bloques.move_to(DOWN * 0.3)
         cabe(bloques)
         self.play(FadeIn(bloques, lag_ratio=0.3), run_time=1.6)
-        self.wait(1.0)
+        self.respira()
 
         nota = subtitulo("La prueba es el 20% y no se mira hasta el final."
                          "\nEs la única condición que puso la patrocinadora.", 19)
@@ -181,7 +188,7 @@ class Linaje(Narrada):
 
     # -- 4. el cierre --------------------------------------------------------
     def _cierre(self) -> None:
-        self.abrir_tramo(4)
+        self.abrir_tramo(4, compases=2)
         linea1 = dato("Cada paso quita filas o columnas,", 26, CREMA)
         linea2 = dato("y cada uno dice por qué.", 26, CREMA)
         cierre = VGroup(linea1, linea2).arrange(DOWN, buff=0.3)
@@ -197,6 +204,6 @@ class Linaje(Narrada):
                      " decisiones 2.1, 2.3 y 2.7")
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.8)
-        self.wait(2.5)
+        self.respira()
 
         self.cerrar_tramo(4)

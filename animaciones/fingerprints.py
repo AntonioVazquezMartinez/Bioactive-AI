@@ -49,7 +49,9 @@ class Fingerprints(Narrada):
 
     # -- 1. el plegado y su colisión ----------------------------------------
     def _la_colision(self) -> None:
-        self.abrir_tramo(1)
+        # Cuatro respiros sueltos, uno por fragmento dentro del bucle, y el
+        # relleno final. Son tres fragmentos.
+        self.abrir_tramo(1, compases=8)
         cab = self._encabezado(
             "Plegar mete dos fragmentos en el mismo bit",
             "y entonces un bit importante ya no se puede dibujar")
@@ -71,7 +73,7 @@ class Fingerprints(Narrada):
         cabe(fragmentos, bits, etiqueta_bits)
         self.play(FadeIn(fragmentos, lag_ratio=0.2), Create(bits),
                   FadeIn(etiqueta_bits), run_time=1.5)
-        self.wait(0.5)
+        self.respira()
 
         # El primero y el tercero caen en el mismo bit: eso es la colisión.
         destinos = (3, 6, 3)
@@ -85,22 +87,22 @@ class Fingerprints(Narrada):
             self.play(Create(flecha),
                       destino.animate.set_fill(frag[0].color, opacity=0.75),
                       run_time=0.75)
-            self.wait(0.15)
-        self.wait(0.5)
+            self.respira()
+        self.respira()
 
         aviso = dato("dos fragmentos distintos, el mismo bit", 24, ROJO)
         aviso.next_to(etiqueta_bits, DOWN, buff=0.5).set_x(0)
         cabe(aviso)
         self.play(bits[3].animate.set_color(ROJO).set_fill(ROJO, opacity=0.8),
                   FadeIn(aviso), run_time=1.0)
-        self.wait(0.7)
+        self.respira()
 
         nota = subtitulo("Si ese bit pesa en la predicción, no se puede decir\n"
                          "cuál de los dos fragmentos la empujó.", 19)
         nota.next_to(aviso, DOWN, buff=0.3).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)
-        self.wait(1.7)
+        self.respira()
         # Objetos explícitos y no `self.mobjects`: ese incluye un Mobject
         # plano que VGroup no acepta, y además barrer todo a ciegas esconde
         # qué se está quitando.
@@ -111,7 +113,7 @@ class Fingerprints(Narrada):
 
     # -- 2. ordenar y cortar -------------------------------------------------
     def _ordenar_y_cortar(self) -> None:
-        self.abrir_tramo(2)
+        self.abrir_tramo(2, compases=3)
         cab = self._encabezado(
             "Sort & Slice no pliega: ordena y corta",
             "las subestructuras por frecuencia, y se queda con las primeras")
@@ -131,14 +133,14 @@ class Fingerprints(Narrada):
         eje.next_to(barras, DOWN, buff=0.35)
         cabe(barras, eje)
         self.play(Create(barras, lag_ratio=0.06), FadeIn(eje), run_time=1.8)
-        self.wait(0.7)
+        self.respira()
 
         corte = dato("corte: las 2,048 más frecuentes", 20, VERDE)
         corte.next_to(barras, UP, buff=0.5)
         cabe(corte)
         self.play(FadeIn(corte), run_time=0.7)
         self.play(VGroup(*barras[9:]).animate.set_opacity(0.18), run_time=0.9)
-        self.wait(0.6)
+        self.respira()
 
         nota = subtitulo("Cada columna es una sola subestructura, así que un\n"
                          "bit importante se puede dibujar. No hay colisiones.",
@@ -152,11 +154,13 @@ class Fingerprints(Narrada):
 
     # -- 3. lo que cuesta ----------------------------------------------------
     def _lo_que_cuesta(self) -> None:
-        self.abrir_tramo(3)
+        # Seis compases: el encabezado, las cuatro cifras y la nota.
+        self.abrir_tramo(3, compases=6)
         cab = self._encabezado(
             "Pero la cola se corta, y la prueba vive en la cola",
             "el vocabulario se aprende solo con entrenamiento")
         self.play(FadeIn(cab), run_time=0.8)
+        self.respira()
 
         filas = VGroup()
         for cifra, motivo, color in (
@@ -171,7 +175,7 @@ class Fingerprints(Narrada):
         cabe(filas)
         for f in filas:
             self.play(FadeIn(f, shift=RIGHT * 0.25), run_time=0.55)
-        self.wait(0.9)
+            self.respira()
 
         nota = subtitulo("La prueba trae los andamios raros, que son justo\n"
                          "los que el corte deja fuera. Y la brecha crece con\n"
@@ -186,7 +190,7 @@ class Fingerprints(Narrada):
 
     # -- 4. cierre -----------------------------------------------------------
     def _cierre(self) -> None:
-        self.abrir_tramo(4)
+        self.abrir_tramo(4, compases=2)
         cierre = VGroup(
             dato("Se paga cobertura por trazabilidad.", 26, CREMA),
             subtitulo("El proyecto exige poder señalar la subestructura\n"
@@ -201,6 +205,6 @@ class Fingerprints(Narrada):
                      " del plegado")
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.8)
-        self.wait(2.5)
+        self.respira()
 
         self.cerrar_tramo(4)

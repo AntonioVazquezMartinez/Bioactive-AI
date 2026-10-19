@@ -110,6 +110,10 @@ class Narrada(Scene):
         self._tramos = self._cargar_tramos()
         self._inicio = 0.0
         self._offsets = {}
+        self._compases = 1
+        self._compases_totales = 1
+        self._animado = 0.0
+        self._respirado = 0.0
 
     def tear_down(self) -> None:
         """Deja por escrito en qué segundo empieza cada tramo.
@@ -143,10 +147,71 @@ class Narrada(Scene):
     def dura(self, n: int) -> float:
         return self._tramos.get(n, {}).get("segundos", self.POR_OMISION)
 
-    def abrir_tramo(self, n: int) -> None:
+    def abrir_tramo(self, n: int, compases: int = 1) -> None:
+        """Abre el tramo `n`, que se repartirá en `compases` respiros.
+
+        `compases` es cuántas veces va a llamar el acto a `respira()`, contando
+        el relleno final que hace `cerrar_tramo`. Con el valor por omisión, 1,
+        se comporta como antes: todo el silencio al final.
+        """
         self._inicio = self.renderer.time
         self._tramo_actual = n
         self._offsets[n] = self._inicio
+        self._respirado = 0.0
+        self._compases = max(1, compases)
+        self._compases_totales = self._compases
+        self._animado = 0.0          # segundos de dibujo, sin contar respiros
+
+    def respira(self) -> None:
+        """Espera **la parte que le toca** del silencio que falta.
+
+        El acto se escribe como se cuenta —un paso, un respiro, otro paso— y
+        cada respiro se queda con `falta / compases_restantes`. Al dividir
+        sobre lo que falta y no sobre el total, se corrige solo: si un paso se
+        alargó, los respiros siguientes se acortan.
+
+        **Por qué existe.** `cerrar_tramo` rellenaba con un único `wait` al
+        final, así que todo el dibujo ocurría en el primer cuarto del tramo y
+        la pantalla se quedaba congelada el resto: cincuenta segundos en el
+        embudo del linaje, treinta en Sort & Slice, veinticuatro en el cierre.
+        La voz seguía hablando sobre una imagen fija, que es justo lo que una
+        animación no debe hacer.
+        """
+        if self._tramo_actual is None:
+            raise RuntimeError("`respira()` fuera de un tramo abierto")
+        transcurrido = self.renderer.time - self._inicio
+        falta = self.dura(self._tramo_actual) - transcurrido
+        self._animado = transcurrido - self._respirado
+
+        # **Hay que descontar la animación que todavía no ocurrió.** Repartir
+        # `falta / compases_restantes` a secas es goloso: el primer respiro se
+        # queda con su parte sin saber cuánto dibujo viene después, y el acto se
+        # pasa del tramo. Pasó con `linaje` 2 (3.6 s de más) y `fingerprints` 1
+        # (1.7 s). Como los compases marcan pasos de tamaño parecido, lo ya
+        # dibujado por compás usado estima lo que falta por dibujar.
+        usados = self._compases_totales - self._compases + 1
+        restantes = self._compases
+        por_compas = self._animado / max(1, usados)
+        reserva = por_compas * max(0, restantes - 1)
+
+        espera = (falta - reserva) / restantes
+        # Un `respira()` de más —el caso típico es uno dentro de un bucle cuyas
+        # vueltas no se contaron— dejaría a los últimos quedándose con todo lo
+        # que falta, y el acto se pasa del tramo. Pasó con `linaje` 2 y
+        # `fingerprints` 1: tres vueltas cada uno, declaradas como una.
+        if self._compases <= 1 and usados > self._compases_totales:
+            raise RuntimeError(
+                f"el tramo {self._tramo_actual} llamó a `respira()` "
+                f"{usados} veces y declaró {self._compases_totales} compases. "
+                "Si el respiro va dentro de un bucle, cuenta sus vueltas en "
+                "`abrir_tramo(n, compases=…)`")
+        self._compases = max(1, self._compases - 1)
+        # `manim` rechaza `wait(0)`, y aquí llega a cero de forma legítima: si
+        # al acto no le sobra tiempo, el respiro que toca es ninguno. Si se pasa
+        # de verdad, el aviso lo da `cerrar_tramo`, que mide el total.
+        if espera > 0.04:
+            self.wait(espera)
+            self._respirado += espera
 
     def cerrar_tramo(self, n: int) -> None:
         # Cerrar un tramo que no es el abierto significa que la llamada acabó
@@ -161,6 +226,7 @@ class Narrada(Scene):
                 "Cada `cerrar_tramo(n)` va al final del mismo acto que llamó "
                 "a `abrir_tramo(n)`, nunca en un método auxiliar")
         self._tramo_actual = None
+        self._compases = 1
         objetivo = self.dura(n)
         gastado = self.renderer.time - self._inicio
         if gastado > objetivo + 0.05:
