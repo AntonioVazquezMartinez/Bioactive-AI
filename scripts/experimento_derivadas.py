@@ -78,6 +78,9 @@ VARIANTES = {
     "sin_regla_2p": (("tpsa_por_mw", "lipo_neta"), U_PUBLICADO),
     "sin_tpsa_por_mw": (("regla_2p", "lipo_neta"), U_PUBLICADO),
     "sin_lipo_neta": (("regla_2p", "tpsa_por_mw"), U_PUBLICADO),
+    # la decisión del equipo: conservar solo la regla publicada, por interpretabilidad
+    "solo_regla_2p": (("regla_2p",), U_PUBLICADO),
+    "solo_regla_2p_U_pliegue": (("regla_2p",), "pliegue"),
 }
 MODELOS = ("LogReg", "RF")
 
@@ -154,6 +157,9 @@ def main() -> None:
     ap.add_argument("--sin-registro", action="store_true", help="no crea carpeta en experimentos/")
     ap.add_argument("--semillas", type=int, nargs="+", default=list(SEMILLAS))
     ap.add_argument("--variantes", nargs="+", default=list(VARIANTES))
+    ap.add_argument("--nombre", default="derivadas",
+                    help="nombre de la corrida; una corrida registrada no se sobrescribe")
+    ap.add_argument("--salida", default="notebooks/datos/resultados_derivadas.csv")
     args = ap.parse_args()
     semillas = tuple(args.semillas)
     variantes = {k: VARIANTES[k] for k in args.variantes}
@@ -189,7 +195,7 @@ def main() -> None:
                   partición=dict(fraccion_prueba=0.2, fraccion_validacion=0.1, semilla=42,
                                  acíclicos_a="entrenamiento"))
     registro = None if args.sin_registro else Corrida(
-        "derivadas", decision="1.3", params=params, semillas=list(semillas), datos=[datos])
+        args.nombre, decision="1.3", params=params, semillas=list(semillas), datos=[datos])
     if registro is not None:
         registro.__enter__()
     try:
@@ -221,7 +227,7 @@ def main() -> None:
                 print(f"semilla {semilla} pliegue {k} listo ({time.time()-t0:.0f}s)", flush=True)
 
         res = pd.DataFrame(filas)
-        salida = RAIZ / "notebooks/datos/resultados_derivadas.csv"
+        salida = RAIZ / args.salida
         salida.parent.mkdir(parents=True, exist_ok=True)
         res.to_csv(salida, index=False)
         print("escrito", salida)
