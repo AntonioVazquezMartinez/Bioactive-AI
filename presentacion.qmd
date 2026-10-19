@@ -430,7 +430,68 @@ Mueve el corte y mira el intercambio con los datos del proyecto:
 Lo que sigue siendo suyo, y se le muestra en vez de preguntárselo: **qué espera recibir al final** — una lista, un modelo ejecutable o el material de un artículo —, porque eso sí cambia la forma del entregable.
 :::
 
-# 5 · La Ruta del proyecto {background-color="#2a3441"}
+# 5 · El modelo de referencia {background-color="#2a3441"}
+
+Contra qué se van a comparar los modelos de los Avances 4 y 5.
+
+## Tres candidatos, ninguno gana {.smaller}
+
+Las tres familias de la [1.5](contenido/decisiones.html#d1-5), con sus hiperparámetros por omisión, la misma partición y las mismas métricas. Sobre permeabilidad:
+
+| Canalización | AUROC | Intervalo del 95% |
+|:--|--:|:--|
+| Bosque aleatorio | 0.937 | [0.913, 0.955] |
+| Boosting por histogramas | 0.935 | [0.912, 0.953] |
+| Regresión logística (min–max) | 0.914 | [0.888, 0.936] |
+
+::: {.callout-important}
+**Los tres intervalos se solapan, así que el baseline no elige ganador: fija el nivel.** Con una sola configuración por familia, declarar un ganador sería repetir el error que esta misma entrada ya cometió con el escalado y tuvo que retirar. Afinar es del Avance 4.
+:::
+
+::: {.callout-note}
+El intervalo sale de remuestrear **grupos** y no filas: los compuestos del mismo andamio comparten química, así que remuestrear filas las trata como independientes y da un intervalo más estrecho del que corresponde. Y la desviación entre semillas no sirve, porque las tres semillas comparten las mismas filas.
+:::
+
+## Cómo se agrupa pesa más que qué modelo se usa {.smaller}
+
+El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de conectividad puede aparecer con andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados del pliegue:
+
+| Agrupamiento | Grupos | AUROC | MCC |
+|:--|--:|:--|--:|
+| Andamio **∪** esqueleto | 1,048 | 0.937 [0.913, 0.955] | 0.705 |
+| Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.767** |
+
+::: {.callout-caution}
+**2.2 puntos de AUROC y 6.2 de MCC**, que es más de lo que separa a las tres canalizaciones entre sí. Dicho al revés: **el criterio de partición importa más que la elección de modelo**, y una cifra que no diga cómo agrupó no se puede comparar con estas.
+:::
+
+::: {.callout-note}
+Apareció porque la primera corrida dio 0.957 y no cuadraba con el 0.916 que el proyecto ya tenía documentado. Es la clase de diferencia que pasa por mejora si nadie la contrasta.
+:::
+
+## En la fase 2, el desempeño no es un número {.smaller}
+
+El mismo arnés sobre los pares compuesto-diana, con el corte en 10 µM y la diana como característica:
+
+| Estrato de procedencia | Pares | Activos | AUROC |
+|:--|--:|--:|:--|
+| Solo ChEMBL | 50,671 | 74.8% | **0.858** [0.850, 0.867] |
+| Mixtos | 1,588 | 40.3% | 0.637 [0.594, 0.687] |
+| **Solo NPASS** | **2,109** | **12.3%** | **0.611** [0.572, 0.647] |
+
+::: {.callout-important}
+**El modelo separa mucho peor justo los compuestos que el proyecto existe para priorizar.** Es el [control de atajo](contenido/decisiones.html#d2-3) reproducido por otra vía, con otro modelo y otras características, así que no es un artefacto de cómo se midió.
+:::
+
+::: {.callout-caution}
+Lo que **no** se puede afirmar todavía es que el modelo no sirva para productos naturales. A igual diana solo hay tres con datos suficientes y el cuadro es heterogéneo: en una la brecha desaparece, en otra es clara, en la tercera no se decide. Afirmarlo haría falta medirlo con más datos por diana, no con más modelos.
+:::
+
+::: {.callout-note}
+**La prueba reservada no se ha mirado**, y cuando se mire hay que decir antes que trae 117 pares de NPASS puros: el intervalo sobre naturales va a ser ancho por construcción.
+:::
+
+# 6 · La Ruta del proyecto {background-color="#2a3441"}
 
 Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
 
