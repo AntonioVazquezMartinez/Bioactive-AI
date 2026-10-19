@@ -9,7 +9,7 @@ atadas a los datos.
 | Escena | Qué explica | Estado |
 |:--|:--|:--|
 | `particion.py` | Por qué partir al azar infla el resultado | guion escrito, sin voz |
-| `intervalo.py` | Por qué un «> 10 µM» no es un dato faltante | pendiente |
+| `intervalo.py` | Por qué un «> 10 µM» no es un dato faltante | guion escrito, sin voz |
 
 ## Las tres reglas
 
