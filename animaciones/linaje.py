@@ -146,10 +146,13 @@ class Linaje(Scene):
         self.play(FadeIn(cab), run_time=0.8)
 
         bloques = VGroup()
+        # Los porcentajes y no los conteos: la voz dice «setenta, diez,
+        # veinte» y no dice 49,425. Una cifra en pantalla que la voz no dice
+        # obliga a regrabar si cambia, así que no se pone.
         for n, nombre, frac, color in (
-                ("49,425", "entrenamiento", 0.70, VERDE),
-                ("6,986", "validación", 0.10, AZUL_CLARO),
-                ("13,973", "prueba", 0.20, NARANJA)):
+                ("70%", "entrenamiento", 0.70, VERDE),
+                ("10%", "validación", 0.10, AZUL_CLARO),
+                ("20%", "prueba", 0.20, NARANJA)):
             col = matriz(5, max(2, round(frac * 20)), ancho=9.0 * frac,
                          alto=1.9, color=color)
             cifra = dato(n, 20, color)

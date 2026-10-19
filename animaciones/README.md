@@ -61,6 +61,14 @@ vuelve a renderizar.
    una, cambian las dos y hay que regrabar. Es caro a propósito: obliga a
    poner pocas.
 
+   Esta la escribí y la rompí el mismo día, en cuatro sitios, y lo encontró un
+   repaso a mano. Ahora la comprueba `tests/test_animaciones.py`: recorre el
+   árbol sintáctico de cada escena, saca las cifras de toda cadena que no sea
+   documentación ni pie de procedencia, y exige que el guion las diga —en
+   dígitos o en palabras, con un conversor de números al español que sabe de
+   géneros y acentos—. Busca **solo en las líneas de cita**, que son la
+   narración: una nota explicativa que mencione la cifra no cuenta.
+
 ## Dos guardas, porque mirar fotogramas no escala
 
 La primera versión de estas dos escenas tuvo **siete defectos de composición**

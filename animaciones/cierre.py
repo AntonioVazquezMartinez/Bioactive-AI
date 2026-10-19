@@ -41,8 +41,12 @@ class Cierre(Scene):
 
         filas = VGroup()
         for cifra, que, color in (
-                ("0.937", "permeabilidad de la barrera", VERDE),
-                ("0.863", "actividad sobre la diana", VERDE)):
+                # Las dos salen de `experimentos/`, del AUROC agrupado sobre
+                # las predicciones fuera de pliegue. El promedio por pliegue
+                # da 0.863 para la segunda, que es otro estimador: no se
+                # mezclan, y el registro usa este.
+                ("0.938", "permeabilidad de la barrera", VERDE),
+                ("0.866", "actividad sobre la diana", VERDE)):
             n = dato(cifra, 32, color)
             q = subtitulo(que, 20).next_to(n, RIGHT, buff=0.45)
             filas.add(VGroup(n, q))
@@ -65,31 +69,49 @@ class Cierre(Scene):
         self.play(Write(t), FadeIn(s), run_time=1.4)
 
         barras = VGroup()
-        for valor, etiqueta_txt, n, color in (
-                (0.858, "solo ChEMBL", "50,671 pares", VERDE),
-                (0.637, "mixtos", "1,588 pares", AZUL_CLARO),
-                (0.611, "solo NPASS", "2,109 pares", NARANJA)):
+        for valor, bajo, alto_ic, etiqueta_txt, color in (
+                # Sin los conteos exactos: la voz da el contraste de orden de
+                # magnitud —cincuenta mil contra dos mil— que es lo que hay
+                # que entender, y un conteo exacto en pantalla que la voz no
+                # dice obliga a regrabar si cambia.
+                (0.858, 0.850, 0.867, "solo ChEMBL", VERDE),
+                (0.637, 0.594, 0.687, "mixtos", AZUL_CLARO),
+                (0.611, 0.572, 0.647, "solo NPASS", NARANJA)):
             # La barra se mide desde 0.5, que es el azar: una barra desde cero
             # haría parecer que 0.611 es «la mitad de bueno» que 0.858.
-            alto = max(0.08, (valor - 0.5) * 6.5)
+            escala = 6.5
+            alto = max(0.08, (valor - 0.5) * escala)
             b = Rectangle(width=1.5, height=alto, color=color, fill_opacity=0.8,
                           stroke_width=0)
-            cifra = dato(f"{valor:.3f}", 21, color).next_to(b, UP, buff=0.18)
+            # El intervalo del 95%, porque sin él tres puntos invitan a leer
+            # una pendiente. El de mixtos y el de NPASS se solapan casi del
+            # todo: no hay tendencia, hay dos valores indistinguibles.
+            y0 = b.get_bottom()[1] + (bajo - 0.5) * escala
+            y1 = b.get_bottom()[1] + (alto_ic - 0.5) * escala
+            x = b.get_center()[0]
+            barra_ic = VGroup(
+                Line([x, y0, 0], [x, y1, 0], color=CREMA, stroke_width=2.5),
+                Line([x - 0.22, y0, 0], [x + 0.22, y0, 0], color=CREMA,
+                     stroke_width=2.5),
+                Line([x - 0.22, y1, 0], [x + 0.22, y1, 0], color=CREMA,
+                     stroke_width=2.5),
+            )
+            cifra = dato(f"{valor:.3f}", 21, color)
+            cifra.next_to(barra_ic, UP, buff=0.18)
             nom = subtitulo(etiqueta_txt, 18).next_to(b, DOWN, buff=0.2)
-            cuantos = subtitulo(n, 15).next_to(nom, DOWN, buff=0.1)
-            barras.add(VGroup(b, cifra, nom, cuantos))
+            barras.add(VGroup(b, barra_ic, cifra, nom))
         barras.arrange(RIGHT, buff=1.0, aligned_edge=DOWN).shift(DOWN * 0.9)
         base = Line(barras.get_left() + LEFT * 0.3,
                     barras.get_right() + RIGHT * 0.3, color=GRIS,
                     stroke_width=1.5)
         base.move_to([barras.get_center()[0], barras[0][0].get_bottom()[1], 0])
-        azar = subtitulo("0.5 — el azar", 15).next_to(base, LEFT, buff=0.25)
+        azar = dato("0.5 · el azar", 20, CREMA).next_to(base, LEFT, buff=0.3)
         cabe(barras, base)
         self.play(Create(base), FadeIn(azar), run_time=0.7)
         self.play(FadeIn(barras, lag_ratio=0.25), run_time=1.6)
         self.wait(1.2)
 
-        nota = dato("Los productos naturales son el objeto del proyecto.", 23,
+        nota = dato("Los dos de la derecha no se distinguen entre sí.", 23,
                     CREMA)
         nota.next_to(barras, DOWN, buff=0.55).set_x(0)
         cabe(nota)

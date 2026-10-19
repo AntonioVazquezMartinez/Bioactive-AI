@@ -44,9 +44,10 @@ rojo cuando el bit compartido se tiñe.
 > cuatrocientas setenta y cinco subestructuras distintas, y en el vocabulario
 > caben dos mil cuarenta y ocho: el dieciocho por ciento.
 >
-> Con eso se cubre el ochenta y cinco por ciento de las subestructuras del
-> entrenamiento, y solo el sesenta y ocho de las de la prueba. La prueba trae
-> los andamios raros, que son justo los que el corte deja fuera.
+> Con eso se cubre el ochenta y cuatro coma ocho por ciento de las
+> subestructuras del entrenamiento, y solo el sesenta y ocho de las de la
+> prueba. La prueba trae los andamios raros, que son justo los que el corte
+> deja fuera.
 >
 > Y lo que no se espera: esa brecha **crece** con el vocabulario. Trece coma
 > seis puntos con quinientas doce columnas, diecisiete coma ocho con cuatro
@@ -69,6 +70,7 @@ rojo cuando el bit compartido se tiñe.
   llama el equipo.
 - **«fingerprint»** se deja en inglés; traducirlo a «huella molecular» no es
   lo que nadie dice en voz alta aquí.
-- El tramo 3 es el que más cifras tiene. Si hace falta aire, las dos últimas
-  —13.6 y 17.8— pueden quedarse solo en pantalla: la frase «crece con el
-  vocabulario» ya dice lo que importa.
+- El tramo 3 es el que más cifras tiene, y **ninguna puede quedarse solo en
+  pantalla**: la regla 3 dice que si la voz no la dice, no va. Si hace falta
+  aire, la salida es quitar 13.6 y 17.8 **de la escena también** y dejar solo
+  «la brecha crece con el vocabulario», que es lo que importa.

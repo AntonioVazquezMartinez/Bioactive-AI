@@ -19,8 +19,8 @@ dibujado es un eje y tres trazos.
 
 ## 2 · Una medición exacta *(0:07 – 0:12)*
 
-> Cuando el ensayo da un número —medio micromolar— sabemos exactamente dónde
-> cae. Es un punto.
+> Cuando el ensayo da un número —cero punto cinco micromolar— sabemos
+> exactamente dónde cae. Es un punto.
 
 *Entra con:* el punto azul y su etiqueta.
 
@@ -51,9 +51,9 @@ dibujado es un eje y tres trazos.
 
 ## 5 · Mover el corte *(0:27 – 0:33)*
 
-> Y si movemos el corte, no hay que reconstruir nada. Se guarda el intervalo,
-> no la etiqueta: la clasificación, la regresión y la regresión censurada leen
-> el mismo archivo.
+> Y si movemos el corte a un micromolar, no hay que reconstruir nada. Se
+> guarda el intervalo, no la etiqueta: la clasificación, la regresión y la
+> regresión censurada leen el mismo archivo.
 
 *Entra con:* el corte deslizándose a 1 µM; el cierre, con el pie de fuente.
 

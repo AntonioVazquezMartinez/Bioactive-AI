@@ -158,7 +158,7 @@ class Fingerprints(Scene):
                 ("11,475", "subestructuras distintas hay en entrenamiento", CREMA),
                 ("2,048", "caben en el vocabulario: el 18%", VERDE),
                 ("84.8%", "de las del entrenamiento quedan cubiertas", AZUL_CLARO),
-                ("68.0%", "de las de la prueba", NARANJA)):
+                ("68%", "de las de la prueba", NARANJA)):
             n = dato(cifra, 28, color)
             m = subtitulo(motivo, 18).next_to(n, RIGHT, buff=0.4)
             filas.add(VGroup(n, m))
