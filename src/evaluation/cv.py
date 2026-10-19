@@ -106,8 +106,18 @@ def evaluar(
         for pliegue, (ajuste, val) in enumerate(cv.split(X_arr, y, grupos), 1):
             for nombre, canalizacion in canalizaciones.items():
                 modelo = clone(canalizacion)
-                if hasattr(modelo, "random_state"):
-                    modelo.set_params(random_state=semilla)
+                # **La semilla cambia la partición, no el modelo.** Aquí había
+                # un `if hasattr(modelo, "random_state"): set_params(...)` que
+                # no se ejecutaba nunca —un `Pipeline` no expone
+                # `random_state`— y que habría lanzado `ValueError` si se
+                # hubiera ejecutado. Así que las tres semillas siempre
+                # entrenaron con el `random_state` con el que se construyó la
+                # canalización, y lo que varía entre ellas es el reparto en
+                # pliegues. Para este arnés es lo que importa, porque el
+                # agrupamiento pesa más que la aleatoriedad interna del
+                # modelo; variar también la del modelo ensancharía el error
+                # estándar y queda para el Avance 4. Lo que no se puede es
+                # decir que se varía cuando no se varía.
                 modelo.fit(X_arr[ajuste], y[ajuste])
                 p = modelo.predict_proba(X_arr[val])[:, 1]
                 fuera_de_pliegue[nombre][s, val] = p
