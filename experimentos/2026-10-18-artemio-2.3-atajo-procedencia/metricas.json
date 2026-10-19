@@ -1,6 +1,18 @@
 {
-  "auroc_por_diana_chembl_mediana": 0.7762,
-  "auroc_por_diana_npass_mediana": 0.6267,
+  "auroc_por_diana": {
+    "MAPT": {
+      "chembl": 0.8838,
+      "npass": 0.5398
+    },
+    "NFE2L2": {
+      "chembl": 0.6716,
+      "npass": 0.6394
+    },
+    "PTGS2": {
+      "chembl": 0.7048,
+      "npass": 0.5155
+    }
+  },
   "auroc_quimica": {
     "mixto": {
       "auroc": 0.6104,
@@ -33,8 +45,8 @@
   },
   "auroc_quimica_diana_npass": 0.6127,
   "brecha_quimica_menos_procedencia": 0.14801582729826074,
-  "dianas_comparables": 7,
-  "mcc_ambos": 0.4512188302876376,
+  "dianas_comparables": 3,
+  "mcc_ambos": 0.4512002030890022,
   "mcc_procedencia": 0.2803484199077135,
   "mcc_quimica": 0.4283642472059742,
   "mcc_quimica_diana": 0.4925942648939191

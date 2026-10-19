@@ -538,23 +538,23 @@ Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL ha
 - **Decía «casi no funciona» y «indistinguible del azar».** No lo es: el intervalo de 0.574 es [0.534, 0.609] y **no toca 0.5**. Discrimina poco, y discrimina.
 - **Y atribuía todo el déficit al origen, cuando parte es de la diana.** El modelo del control no recibe la diana, y dentro de `solo_npass` conviven dianas con tasas base de 1.2% a 29.7%; dándosela, el AUROC sube a 0.613. Parte de lo que parecía «no separa naturales» era «no sabe de qué diana se trata».
 
-**A igual diana, la comparación no alcanza para concluir.** Es la forma de separar las dos explicaciones: en las siete dianas donde NPASS aporta cien pares o más y las dos clases, el AUROC de NPASS queda por debajo del de ChEMBL en las siete, pero **los intervalos se solapan en casi todas**, porque NPASS aporta entre 118 y 579 pares por diana:
+**A igual diana, solo tres dianas se pueden comparar, y el resultado es heterogéneo.** El criterio no puede ser el número de pares sino **el tamaño de la clase minoritaria**: `ACHE` tiene 221 pares de NPASS y **3 activos**, así que su AUROC es ruido. Exigiendo veinte casos de cada clase en cada fuente quedan tres dianas (con química y diana, el bootstrap sobre grupos):
 
-| Diana | ChEMBL | NPASS |
-|:--|:--|:--|
-| `ACHE` | 0.822 [0.796, 0.847] | 0.763 [0.557, 0.889] |
-| `DRD2` | 0.787 [0.749, 0.824] | 0.757 [0.610, 0.884] |
-| `PPARG` | 0.776 [0.721, 0.827] | 0.648 [0.476, 0.781] |
-| `MAOA` | 0.728 [0.697, 0.759] | 0.625 [0.323, 0.881] |
-| `NFE2L2` | 0.677 [0.556, 0.794] | 0.627 [0.556, 0.678] |
-| `MAPT` | 0.864 [0.791, 0.926] | 0.550 [0.439, 0.659] |
-| `PTGS2` | 0.700 [0.659, 0.738] | 0.516 [0.395, 0.706] |
+| Diana | NPASS: pares · minoritaria | AUROC NPASS | AUROC ChEMBL |
+|:--|:--|:--|:--|
+| `NFE2L2` | 579 · 126 | 0.639 [0.571, 0.691] | 0.672 [0.550, 0.785] |
+| `PTGS2` | 262 · 20 | 0.515 [0.397, 0.709] | 0.705 [0.665, 0.744] |
+| `MAPT` | 118 · 35 | 0.540 [0.425, 0.652] | **0.884 [0.817, 0.937]** |
 
-**Lo que sostiene la evidencia, y nada más:** el agregado de `solo_npass` está inflado a la baja por la composición de dianas; a igual diana el modelo es peor sobre naturales en las siete, de forma consistente pero sin que los intervalos lo establezcan una por una; y en `MAPT` y `PTGS2` el punto cae casi en 0.5 con intervalos anchísimos. **No se puede afirmar todavía que el modelo no sirva para productos naturales, ni lo contrario.** Lo que sí está establecido es que un desempeño agregado no los describe.
+**En `NFE2L2` la brecha prácticamente desaparece; en `MAPT` es clara y los intervalos no se tocan; en `PTGS2` no se decide.** Una versión anterior de esta tabla traía siete dianas, incluidas `ACHE` y `DRD2` con tres y catorce activos, cuyos AUROC altos hacían parecer que la brecha se cerraba. Lo señaló Pame al revisar el [#90](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/90), que corrió la medición por su cuenta y llegó a las mismas tres dianas.
+
+**Lo que sostiene la evidencia, y nada más:** el agregado de `solo_npass` está deprimido en parte por la composición de dianas; a igual diana hay **señal débil y heterogénea** —una diana sin brecha, una con brecha clara, una indecidible—; y solo hay tres dianas con datos para medirlo. **No se puede afirmar todavía que el modelo no sirva para productos naturales, ni lo contrario.** Lo que sí está establecido es que un desempeño agregado no los describe.
+
+**Nota sobre las cifras.** Las de aquí salen de agrupar las predicciones fuera de pliegue y calcular un AUROC; promediar el AUROC de cada pliegue, que es la otra forma razonable, da 0.569 y 0.607 donde aquí sale 0.574 y 0.613. La diferencia es el estimador, no los datos; se agrupan las predicciones porque es lo que permite el bootstrap por grupos, con cada par contado una sola vez.
 
 **Qué cambia en cómo se reporta.** No invalida etiquetar las tres fuentes: la alternativa —«solo ChEMBL»— no tendría productos naturales en absoluto. Invalida **reportar un desempeño agregado como si describiera a los naturales**: toda métrica va con su desglose por estrato, y la cifra que contesta la pregunta del proyecto es la de `solo_npass` **por diana**, con su intervalo. La corrida está en `experimentos/2026-10-18-artemio-2.3-atajo-procedencia/` y las tablas en `notebooks/datos/resultados_atajo.csv` y `atajo_por_diana.csv`.
 
-**Qué lo cambiaría.** Que con los modelos afinados y por diana el AUROC sobre naturales siga por debajo del de ChEMBL **con intervalos que no se solapen**, y entonces la conclusión no es cambiar el etiquetado sino **decir que el modelo no sirve para productos naturales**, que es un resultado válido y así hay que reportarlo; que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
+**Qué lo cambiaría.** Que con los modelos afinados el patrón de `MAPT` —brecha clara, intervalos que no se tocan— se repita en la mayoría de las dianas comparables en vez de en una de tres, y entonces la conclusión no es cambiar el etiquetado sino **decir que el modelo no sirve para productos naturales**, que es un resultado válido y así hay que reportarlo; que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
 
 **El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
 
