@@ -48,7 +48,10 @@ docs/reportes/**/*.typ
 # MLflow local: solo visor, la fuente de verdad es experimentos/
 mlruns/
 
-# Salida de las animaciones (artefacto generado, como los PDF de los reportes)
+# Salida de las animaciones (artefacto generado, como los PDF de los reportes).
+# Vivía solo en la rama `feat/animaciones`, así que una rama cortada de `main`
+# no la heredaba: un `git add -A` metió 53 MB de renders, mp3 y SVG a `main`.
+# Las reglas van aquí para que no dependan de en qué rama se esté.
 animaciones/media/
 env-anim/
 

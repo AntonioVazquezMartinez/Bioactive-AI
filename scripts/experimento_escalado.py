@@ -13,6 +13,16 @@ de dominio), con validación cruzada de 5 pliegues agrupada por andamio y
 esqueleto de conectividad, repetida con 3 semillas, y los dos modelos que usaba
 la sección 8.2 con sus mismos hiperparámetros.
 
+**El mismo C no es el mismo modelo.** La penalización de la regresión logística
+actúa sobre coeficientes cuya magnitud depende de la escala de cada columna, así
+que con `C = 1` fijo cada transformación recibe una regularización distinta, y
+una diferencia entre ellas no se puede atribuir al escalador. Por eso cada
+transformación se mide dos veces (salvo «sin escalar», cuya logística no converge
+con ningún C y cuya búsqueda tardaría horas): con `C = 1` (el valor por defecto, `LogReg`) y
+con el `C` que **cada una elige para sí** dentro del pliegue (`LogReg-C`), por
+validación cruzada interna agrupada sobre la parte de ajuste, de modo que la
+evaluación nunca interviene en la elección.
+
 Mide tres cosas, no una: el **desempeño**, el **tiempo de ajuste** y la
 **convergencia misma** —iteraciones de `lbfgs` y si avisó de no haber convergido—,
 más el número de condición de la matriz. El tiempo solo sería evidencia indirecta:
@@ -58,6 +68,9 @@ from tracking import Corrida
 
 SEMILLAS = (0, 1, 2)
 PLIEGUES = 5
+# Rejilla logarítmica de C, de regularización muy fuerte a muy débil.
+C_REJILLA = (1e-3, 1e-2, 1e-1, 1.0, 1e1, 1e2, 1e3)
+PLIEGUES_INTERNOS = 3
 
 
 def transformadores() -> dict:
@@ -72,6 +85,33 @@ def modelos(semilla: int) -> dict:
     """Los mismos dos modelos y los mismos hiperparámetros de la sección 8.2."""
     return {"LogReg": LogisticRegression(max_iter=3000, random_state=semilla),
             "RF": RandomForestClassifier(n_estimators=200, random_state=semilla, n_jobs=-1)}
+
+
+def elegir_c(Xa: np.ndarray, ya: np.ndarray, ga: np.ndarray, semilla: int) -> float:
+    """El C de mayor AUROC en validación cruzada interna agrupada, sobre el ajuste.
+
+    El AUROC y no el MCC porque no depende del umbral de 0.5, que cambia con la
+    escala; y agrupada, porque una partición interna al azar dejaría análogos a
+    los dos lados y elegiría un C que premia memorizar andamios.
+    """
+    interno = StratifiedGroupKFold(n_splits=PLIEGUES_INTERNOS, shuffle=True,
+                                   random_state=semilla)
+    puntajes = {c: [] for c in C_REJILLA}
+    for ia, ib in interno.split(Xa, ya, ga):
+        for c in C_REJILLA:
+            m = LogisticRegression(C=c, max_iter=3000, random_state=semilla)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                m.fit(Xa[ia], ya[ia])
+            puntajes[c].append(roc_auc_score(ya[ib], m.predict_proba(Xa[ib])[:, 1]))
+    return max(C_REJILLA, key=lambda c: np.mean(puntajes[c]))
+
+
+def modelo_de(nombre: str, semilla: int, c: float | None = None):
+    """`LogReg-C` es la logística con el C elegido; los demás vienen de `modelos`."""
+    if nombre == "LogReg-C":
+        return LogisticRegression(C=c, max_iter=3000, random_state=semilla)
+    return modelos(semilla)[nombre]
 
 
 def metricas(y: np.ndarray, puntuacion: np.ndarray) -> tuple[float, float, float]:
@@ -121,7 +161,10 @@ def main() -> None:
                   columnas=int(X.shape[1]),
                   partición=dict(fraccion_prueba=0.2, fraccion_validacion=0.1, semilla=42,
                                  acíclicos_a="entrenamiento"),
-                  modelos=dict(LogReg="max_iter=3000", RF="n_estimators=200"))
+                  modelos=dict(LogReg="C=1, max_iter=3000",
+                               **{"LogReg-C": f"C elegido por CV interna en {C_REJILLA}"},
+                               RF="n_estimators=200"),
+                  pliegues_internos=PLIEGUES_INTERNOS)
     with Corrida("escalado", decision="1.5", params=params, semillas=list(SEMILLAS),
                  datos=[datos]) as c:
         filas = []
@@ -137,7 +180,13 @@ def main() -> None:
                     else:
                         Xa = t.fit_transform(X[ajuste])   # reajustada en cada pliegue
                         Xb = t.transform(X[evalua])
-                    for mod_n, mod in modelos(semilla).items():
+                    # Sin escalar, ningún C converge en 3,000 iteraciones (ver `LogReg`):
+                    # buscarlo costaría horas para no medir nada, así que se omite.
+                    c_elegido = None if t is None else elegir_c(Xa, y[ajuste], g[ajuste], semilla)
+                    for mod_n in ("LogReg", "LogReg-C", "RF"):
+                        if mod_n == "LogReg-C" and c_elegido is None:
+                            continue
+                        mod = modelo_de(mod_n, semilla, c_elegido)
                         t1 = time.perf_counter()
                         with warnings.catch_warnings(record=True) as avisos:
                             warnings.simplefilter("always", ConvergenceWarning)
@@ -150,12 +199,18 @@ def main() -> None:
                         mcc, ap, au = metricas(y[evalua], mod.predict_proba(Xb)[:, 1])
                         filas.append(dict(transformacion=nombre, modelo=mod_n, seed=semilla,
                                           fold=k, MCC=mcc, AUPRC_neg=ap, AUROC=au,
+                                          C=(c_elegido if mod_n == "LogReg-C"
+                                             else 1.0 if mod_n == "LogReg" else None),
                                           ajuste_s=ajuste_s, n_iter=n_iter,
                                           sin_converger=sin_converger, eval="cv"))
             # la validación fija, para poder comparar con la medición anterior
             t = transformadores()[nombre]
             Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
-            for mod_n, mod in modelos(42).items():
+            c_val = None if t is None else elegir_c(Xt, y[tr], g[tr], 42)
+            for mod_n in ("LogReg", "LogReg-C", "RF"):
+                if mod_n == "LogReg-C" and c_val is None:
+                    continue
+                mod = modelo_de(mod_n, 42, c_val)
                 t1 = time.perf_counter()
                 with warnings.catch_warnings(record=True) as avisos:
                     warnings.simplefilter("always", ConvergenceWarning)
@@ -165,6 +220,8 @@ def main() -> None:
                 sin_converger = any(issubclass(a.category, ConvergenceWarning) for a in avisos)
                 mcc, ap, au = metricas(y[va], mod.predict_proba(Xv)[:, 1])
                 filas.append(dict(transformacion=nombre, modelo=mod_n, seed=42, fold=-1,
+                                  C=(c_val if mod_n == "LogReg-C"
+                                     else 1.0 if mod_n == "LogReg" else None),
                                   MCC=mcc, AUPRC_neg=ap, AUROC=au, ajuste_s=ajuste_s,
                                   n_iter=n_iter, sin_converger=sin_converger, eval="val"))
             # el número de condición es de la matriz, no del modelo: una fila por transformación
@@ -180,6 +237,7 @@ def main() -> None:
         cvd = pd.DataFrame(filas)
         cvd = cvd[cvd["eval"] == "cv"]
         lr = cvd[cvd["modelo"] == "LogReg"]
+        lrc = cvd[cvd["modelo"] == "LogReg-C"]
         c.metricas({"cv_media": {t: {m: {k: float(v)
                                          for k, v in g_[["MCC", "AUPRC_neg", "AUROC"]].mean().items()}
                                      for m, g_ in cvd[cvd.transformacion == t].groupby("modelo")}
@@ -188,6 +246,8 @@ def main() -> None:
                                          "sin_converger": int(s["sin_converger"].sum()),
                                          "ajuste_s_mediano": float(s["ajuste_s"].median())}
                                      for t, s in lr.groupby("transformacion")},
+                    "c_elegido_mediano": {t: float(s["C"].median())
+                                          for t, s in lrc.groupby("transformacion")},
                     "filas_cv": int(len(cvd))})
 
 

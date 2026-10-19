@@ -1,0 +1,95 @@
+{
+  "c_elegido_mediano": {
+    "Yeo-Johnson": 0.01,
+    "estandarización": 0.01,
+    "min-max": 1.0
+  },
+  "convergencia": {
+    "Yeo-Johnson": {
+      "ajuste_s_mediano": 0.016492666996782646,
+      "iteraciones_mediana": 137.0,
+      "sin_converger": 0
+    },
+    "estandarización": {
+      "ajuste_s_mediano": 0.018398042000626447,
+      "iteraciones_mediana": 144.0,
+      "sin_converger": 0
+    },
+    "min-max": {
+      "ajuste_s_mediano": 0.007153124999604188,
+      "iteraciones_mediana": 53.0,
+      "sin_converger": 0
+    },
+    "sin escalar": {
+      "ajuste_s_mediano": 0.39948945799915236,
+      "iteraciones_mediana": 3000.0,
+      "sin_converger": 15
+    }
+  },
+  "cv_media": {
+    "Yeo-Johnson": {
+      "LogReg": {
+        "AUPRC_neg": 0.8615726108902254,
+        "AUROC": 0.9014126534899579,
+        "MCC": 0.6651958621161002
+      },
+      "LogReg-C": {
+        "AUPRC_neg": 0.8736635627640327,
+        "AUROC": 0.9126351717840677,
+        "MCC": 0.695144379167066
+      },
+      "RF": {
+        "AUPRC_neg": 0.9010233301420457,
+        "AUROC": 0.9331885558550627,
+        "MCC": 0.7046535378207455
+      }
+    },
+    "estandarización": {
+      "LogReg": {
+        "AUPRC_neg": 0.8640541808917476,
+        "AUROC": 0.9028024184989311,
+        "MCC": 0.6902804866851241
+      },
+      "LogReg-C": {
+        "AUPRC_neg": 0.8759449414941336,
+        "AUROC": 0.9138750755732764,
+        "MCC": 0.6990968285755547
+      },
+      "RF": {
+        "AUPRC_neg": 0.901374478381057,
+        "AUROC": 0.9329249164226469,
+        "MCC": 0.7048110777462587
+      }
+    },
+    "min-max": {
+      "LogReg": {
+        "AUPRC_neg": 0.8782807218021806,
+        "AUROC": 0.9132721715393117,
+        "MCC": 0.6954864082647707
+      },
+      "LogReg-C": {
+        "AUPRC_neg": 0.8772972481947897,
+        "AUROC": 0.9120223741067593,
+        "MCC": 0.6951048976686767
+      },
+      "RF": {
+        "AUPRC_neg": 0.9013595556667492,
+        "AUROC": 0.9331797158412836,
+        "MCC": 0.7044586655517299
+      }
+    },
+    "sin escalar": {
+      "LogReg": {
+        "AUPRC_neg": 0.8668513062093005,
+        "AUROC": 0.9050524108931586,
+        "MCC": 0.6867438933083517
+      },
+      "RF": {
+        "AUPRC_neg": 0.9011316309592866,
+        "AUROC": 0.9330774748113252,
+        "MCC": 0.7035194490591208
+      }
+    }
+  },
+  "filas_cv": 165
+}

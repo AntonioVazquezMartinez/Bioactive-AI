@@ -145,7 +145,7 @@ En la Ruta: [1.1](contenido/decisiones.html#d1-1) (vigente · revisada). La reco
 
 ## ¿Los naturales cruzan peor? Depende del grupo {.smaller}
 
-En conjunto, los naturales cruzan **18.9 puntos menos** (52.7% contra 71.7% BBB+). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
+En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% contra 71.7% BBB+), y **28.3 menos** que los compuestos sin equivalente natural (81.0%) si se separan los análogos estereoquímicos, que cruzan aún menos (39.7%). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
 
 ::: {.bio-grafica data-grafica="naturales"}
 :::
@@ -251,9 +251,9 @@ De las 217 columnas de descriptores a la matriz con la que se entrena:
 | Paso | Qué pasa | Cuántas quedan |
 |:--|:--|--:|
 | Descriptores utilizables | Se quitan 5 constantes, 8 con valores faltantes y `Ipc` | 203 |
-| Características derivadas | Se suman las tres: `tpsa_por_mw`, `lipo_neta` y `regla_2p`. Ninguna supera al TPSA solo (AUC 0.844), pero ninguna es una copia de él: su correlación máxima con un descriptor base es de 0.755, 0.975 y 0.602 | 206 |
-| Filtro de varianza | Se quita una columna casi constante | 205 |
-| Filtro de correlación | Se retiran 34 columnas casi iguales a otra; `lipo_neta` correlaciona 0.975 con logP y lo reemplaza | **171** |
+| Características derivadas | Se suman las tres: `tpsa_por_mw`, `lipo_neta` y `regla_2p`. Medidas con el modelo ninguna aporta —con Random Forest las tres juntas quedan 0.006 de MCC por debajo de no usarlas— pero tampoco estorban | 206 |
+| Casi constantes | Se van 24 columnas cuyo valor modal cubre el 99% del entrenamiento, casi todas conteos de grupos funcionales | 182 |
+| Filtro de correlación | Se van 31 columnas casi iguales a otra, entre ellas `lipo_neta`, que correlaciona 0.975 con logP | **151** |
 
 **Lo que no entra como predictor:** `group` y el indicador de origen natural. Se codifican aparte, pero la matriz principal solo lleva estructura y descriptores. `group` está confundida con la etiqueta, así que usarla de entrada sería fuga; y cómo tratar los 1,005 análogos de los naturales sigue abierto ([1.6](contenido/decisiones.html#d1-6)).
 
@@ -269,7 +269,7 @@ Cinco opciones que se probaron con los datos del proyecto:
 |:--|:--|:--|
 | Entrenar solo con grupos A+B | La clase minoritaria baja de 36.5% a 27.0% | Se usa todo el conjunto ([1.1](contenido/decisiones.html#d1-1)) |
 | No escalar la regresión logística | No converge en ninguno de los 15 pliegues; con min–max, 53 iteraciones | Se escala ([1.5](contenido/decisiones.html#d1-5)) |
-| Yeo–Johnson | Por debajo de min–max en 12 de 15 pliegues y de estandarización en 13, sin llegar a significancia | No se adopta ([S1.9](contenido/decisiones.html)) |
+| Yeo–Johnson | Parecía la peor —0.030 de MCC por debajo de min–max— hasta que cada transformación eligió su propio `C`: con el suyo empatan en 0.695. Los `C` elegidos están a dos órdenes de magnitud (0.01 contra 1.0) | Ya no hay motivo medido para evitarla ([S1.9](contenido/decisiones.html)) |
 | PCA | Con Random Forest, el MCC cambia −0.008 (IC 95%: −0.070 a +0.055) y las componentes dejan de ser fragmentos | Solo como comparación ([1.5](contenido/decisiones.html#d1-5)) |
 | El descriptor `Ipc` | Llega a 10⁴¹ y no cabe en float32 | Se excluye ([1.3](contenido/decisiones.html#d1-3)) |
 
@@ -394,7 +394,7 @@ De 202,647 **mediciones** a 70,384 **pares** compuesto-diana, que es la unidad s
 | `activo_10um`, `activo_1um` | la etiqueta, **derivada** del intervalo |
 
 ::: {.callout-note}
-Guardar el intervalo y no la etiqueta es lo que hace que **el umbral sea una decisión de lectura**: la clasificación, la regresión y la regresión censurada leen el mismo archivo. La fase 1 aprendió la lección al revés — congeló 171 columnas sobre una matriz transformada, y cambiar la transformación obliga a repetirlo todo.
+Guardar el intervalo y no la etiqueta es lo que hace que **el umbral sea una decisión de lectura**: la clasificación, la regresión y la regresión censurada leen el mismo archivo. La fase 1 aprendió la lección al revés — seleccionó sus columnas sobre una matriz ya transformada, así que cambiar la transformación obligaba a repetirlo todo; se corrigió filtrando sobre los valores crudos, y ahora las 151 columnas son las mismas con cualquiera de las tres transformaciones.
 :::
 
 ::: {.callout-caution}

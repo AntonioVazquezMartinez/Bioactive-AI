@@ -1,9 +1,9 @@
 {
   "arbol_sucio": true,
-  "commit": "d9802b6fbf93cbe47bae9aaf5714bb971db4699e",
+  "commit": "8d6d23c33b16cb6db0b930cd94e0c6a3988ae49f",
   "datos_sha256": {},
   "decision": "1.5",
-  "duracion_s": 43.0,
+  "duracion_s": 85.3,
   "lock_sha256": "6356d9016158dfabdaefadf7d096cfb09f26f3b1e32f89534945d271602ff58e",
   "paquetes": {
     "imbalanced-learn": "0.14.2",
