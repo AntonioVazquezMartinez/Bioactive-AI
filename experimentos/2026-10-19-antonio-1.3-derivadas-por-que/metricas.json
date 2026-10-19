@@ -1,0 +1,36 @@
+{
+  "h1": {
+    "lipo_neta": {
+      "R2_lineal": 1.0,
+      "R2_rf": 0.9938273651106535
+    },
+    "regla_2p": {
+      "R2_lineal": 0.4979830095458874,
+      "R2_rf": 0.9974914135293573
+    },
+    "tpsa_por_mw": {
+      "R2_lineal": 0.7581632028096303,
+      "R2_rf": 0.9086221612534124
+    }
+  },
+  "h2_R2_directo": 1.0,
+  "h3": {
+    "exactitud_cv": 0.9980205146661868,
+    "exactitud_entrenamiento": 1.0
+  },
+  "h4": {
+    "auroc_derivadas": {
+      "lipo_neta": 0.7952611775252437,
+      "regla_2p": 0.6843118017693501,
+      "tpsa_por_mw": 0.8096138428967153
+    },
+    "caida_componentes": 0.005184155991664405,
+    "ganancia_derivadas": 0.005836136775380898
+  },
+  "veredictos": {
+    "h1": true,
+    "h2": true,
+    "h3": true,
+    "h4": true
+  }
+}

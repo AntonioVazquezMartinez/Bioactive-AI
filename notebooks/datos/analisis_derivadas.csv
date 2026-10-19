@@ -1,0 +1,40 @@
+hipotesis,derivada,medida,valor,detalle
+0,-,descriptores_base_sobrevivientes,166.0,de 203
+0,-,sobrevive_TPSA,1.0,-
+0,-,sobrevive_MolLogP,1.0,-
+0,-,sobrevive_NumHDonors,1.0,-
+0,-,sobrevive_MolWt,0.0,HeavyAtomMolWt (ρ=0.999)
+1,regla_2p,R2_cv_LinearRegression,0.4979830095458874,descriptores base sobrevivientes
+1,regla_2p,R2_cv_RandomForest,0.9974914135293573,descriptores base sobrevivientes
+1,regla_2p,AUROC_cv_RandomForest,0.9999791344477993,clasificador de la regla
+1,tpsa_por_mw,R2_cv_LinearRegression,0.7581632028096303,descriptores base sobrevivientes
+1,tpsa_por_mw,R2_cv_RandomForest,0.9086221612534124,descriptores base sobrevivientes
+1,lipo_neta,R2_cv_LinearRegression,1.0,descriptores base sobrevivientes
+1,lipo_neta,R2_cv_RandomForest,0.9938273651106535,descriptores base sobrevivientes
+1,-,veredicto_se_sostiene,1.0,"mejor R2: regla_2p 0.997, tpsa_por_mw 0.909, lipo_neta 1.000"
+2,lipo_neta,R2_entrenamiento_MolLogP_TPSA,1.0,"coef MolLogP=1.0000, coef TPSA=-0.0100"
+2,-,veredicto_se_sostiene,1.0,R2=1.000000
+3,regla_2p,exactitud_entrenamiento,1.0,TPSA<=67.00; NumHDonors<=1.50
+3,regla_2p,exactitud_cv_agrupada,0.9980205146661868,
+3,-,veredicto_se_sostiene,1.0,exactitud_cv=0.9980
+4,TPSA,AUROC_individual_entrenamiento,0.8439477608393855,componente
+4,MolLogP,AUROC_individual_entrenamiento,0.7435469421051166,componente
+4,NumHDonors,AUROC_individual_entrenamiento,0.8219151031389782,componente
+4,MolWt,AUROC_individual_entrenamiento,0.7130456740455668,componente
+4,regla_2p,AUROC_individual_entrenamiento,0.6843118017693501,derivada
+4,tpsa_por_mw,AUROC_individual_entrenamiento,0.8096138428967153,derivada
+4,lipo_neta,AUROC_individual_entrenamiento,0.7952611775252437,derivada
+4,TPSA,importancia_sin_derivadas,-0.0005463805235760997,grupo TPSA; viva 0.8
+4,TPSA,importancia_con_derivadas,-0.0007544628908786597,grupo TPSA; viva 0.8
+4,MolLogP,importancia_sin_derivadas,0.004514717502940369,grupo MolLogP; viva 1.0
+4,MolLogP,importancia_con_derivadas,0.0,grupo MolLogP; viva 0.0
+4,NumHDonors,importancia_sin_derivadas,0.0010751551706761075,grupo NumHDonors; viva 0.8
+4,NumHDonors,importancia_con_derivadas,0.000329222269228806,grupo NumHDonors; viva 0.8
+4,MolWt,importancia_sin_derivadas,-0.000350325042749633,grupo HeavyAtomMolWt; viva 1.0
+4,MolWt,importancia_con_derivadas,-6.574826272380818e-05,grupo HeavyAtomMolWt; viva 1.0
+4,regla_2p,importancia_con_derivadas,0.0004341944202908189,viva en 1.0 de los pliegues
+4,tpsa_por_mw,importancia_con_derivadas,0.0014005301687655658,viva en 1.0 de los pliegues
+4,lipo_neta,importancia_con_derivadas,0.004001412186324513,viva en 1.0 de los pliegues
+4,-,caida_componentes,0.005184155991664405,suma de (sin − con) en los 4 componentes
+4,-,ganancia_derivadas,0.005836136775380898,suma de importancias de las 3 derivadas
+4,-,veredicto_se_sostiene,1.0,AUROC_min=0.684; caida=0.0052; ganancia=0.0058
