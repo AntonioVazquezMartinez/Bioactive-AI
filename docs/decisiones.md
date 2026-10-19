@@ -293,7 +293,9 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 **Dos cosas que quedan como supuesto declarado,** por si alguien las necesita: los 1,005 compuestos con análogo natural que difiere solo en estereoquímica **no** cuentan como naturales, porque la definición que sostiene el hallazgo del Avance 1 es la coincidencia exacta con COCONUT; y no se fija un rango de TPSA propio para naturales, porque el óptimo ya se midió y sube con la diversidad del conjunto.
 
-**Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido. Los naturales cruzan unos 19 puntos menos (52.7% contra 71.7% BBB+, notebook 01 del Avance 1).
+**Qué pasó.** El archivo de la patrocinadora marca como natural lo que coincide exactamente con COCONUT (columna `coconut_id_exact_match`): 3,366 compuestos, el 43.1% de los 7,805 con clase. Lo demás no es «sintético»: el diccionario distingue 3,366 naturales exactos, 1,005 análogos que difieren solo en estereoquímica y 3,440 sin equivalente natural conocido.
+
+**Los tres orígenes cruzan distinto** (sección 5 del [notebook 01](../notebooks/01_EDA.ipynb), revisada el 19 de octubre): naturales exactos 52.7% BBB+ [51.0, 54.4], análogos estereoquímicos 39.7% [36.7, 42.7] y sin equivalente natural 81.0% [79.6, 82.3], intervalos de Wilson que no se solapan. La brecha entre naturales y compuestos sin equivalente es de **28.3 puntos**. *Versión superada:* el Avance 1 juntaba análogos y compuestos sin equivalente en un grupo «sintético» y reportaba 18.9 puntos (52.7% contra 71.7%). Ese grupo no era sintético —más de una quinta parte (1,003 de los 4,439 con clase) son estereoisómeros de un natural, que cruzan todavía menos— y diluía la brecha. A igual cumplimiento de la regla TPSA/HBD, los naturales siguen cruzando menos (80.9% contra 90.9% entre los que la cumplen; 37.8% contra 72.6% entre los que no), así que la regla no la explica.
 
 **La brecha no es uniforme.** Repartida por el grupo de confiabilidad de B3DB, casi no existe donde hay un logBB medido y aparece donde la etiqueta viene de una clasificación publicada:
 
@@ -302,6 +304,8 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 | A (con logBB medido) | 87.6% (n = 644) | 88.4% (n = 414) | −0.8 [−4.8, +3.2] |
 | B | 77.2% (n = 2,166) | 55.9% (n = 1,455) | +21.4 [+18.3, +24.5] |
 | C | 58.1% (n = 1,624) | 40.9% (n = 1,451) | +17.2 [+13.7, +20.7] |
+
+Con los tres orígenes por separado (natural exacto, análogo y sin equivalente) el patrón es el mismo: 88.4%, 86.6% y 87.7% en el grupo A; 55.9%, 43.5% y 83.6% en el B; 40.9%, 30.7% y 73.0% en el C (notebook 01, sección 5).
 
 En el grupo A la brecha no es solo «casi inexistente»: queda **acotada a unos ±5 puntos**, lo que excluye cualquier cosa parecida a los 19 globales; en B y C es grande y en la dirección contraria. El grupo D (n = 5 y 46) no permite concluir. Esto es descriptivo y no prueba la causa, pero sugiere que la brecha puede reflejar de dónde viene la etiqueta y no solo la química. La regla TPSA < 67 Å² y HBD ≤ 1 la cumple una proporción de naturales 6.6 puntos menor que la de los demás (41.2% contra 34.6%): es una diferencia de proporciones menor que la de la etiqueta, no una parte de ella, así que esa regla no alcanza para explicarla (quedan el eflujo, descriptores no medidos o el sesgo de qué se ensayó).
 
@@ -381,7 +385,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 | S1.2 | Los grupos A–D son una escala de confiabilidad | Desmentido | Ver [1.1](#d1-1). BBB− es 12.1% en A y 92.2% en D | Estratificar, no excluir |
 | S1.3 | El umbral de TPSA publicado es una constante | Acotado | Cambia con el subconjunto (ver [1.6](#d1-6)) | Derivarlo solo sobre entrenamiento |
 | S1.4 | «Natural» es una categoría limpia | Acotado | Es coincidencia exacta con COCONUT | Declarar la definición usada |
-| S1.5 | La brecha entre naturales y el resto es química | Sin comprobar | Es de ~19 puntos, pero no existe en el grupo A (87.6% contra 88.4% BBB+) y sí en B y C ([1.6](#d1-6)); la regla TPSA/HBD difiere solo 6.6 puntos entre los dos | Evaluar por origen global y dentro de cada grupo A, B y C |
+| S1.5 | La brecha entre naturales y el resto es química | Sin comprobar | Con tres orígenes es de 28.3 puntos contra los compuestos sin equivalente natural (52.7% contra 81.0% BBB+; la versión de dos grupos daba ~19), pero no existe en el grupo A (88.4%, 86.6% y 87.7% en los tres orígenes) y sí en B y C ([1.6](#d1-6)); a igual cumplimiento de la regla TPSA/HBD persiste | Evaluar por origen global y dentro de cada grupo A, B y C |
 | S1.6 | Los valores atípicos son alertas, no errores | Asumido | No se recortan ni eliminan | — |
 | S1.7 | Mandar los 312 acíclicos a entrenamiento es una regla razonable | Sin comprobar | Es el valor por omisión de `scaffold_split` y no sale de ninguna medición; ninguno entra a validación ni a prueba. Dentro del entrenamiento hay 127 filas en 44 esqueletos compartidos (estereoisómeros) | Escribir y justificar la regla antes del baseline; en la validación cruzada se agrupan por esqueleto de conectividad |
 | S1.8 | El conjunto externo de Spielvogel sirve para validar | Desmentido | 154 nombres, sin SMILES ni InChI | Conseguir las estructuras |

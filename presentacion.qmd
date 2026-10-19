@@ -145,7 +145,7 @@ En la Ruta: [1.1](contenido/decisiones.html#d1-1) (vigente · revisada). La reco
 
 ## ¿Los naturales cruzan peor? Depende del grupo {.smaller}
 
-En conjunto, los naturales cruzan **18.9 puntos menos** (52.7% contra 71.7% BBB+). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
+En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% contra 71.7% BBB+), y **28.3 menos** que los compuestos sin equivalente natural (81.0%) si se separan los análogos estereoquímicos, que cruzan aún menos (39.7%). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
 
 ::: {.bio-grafica data-grafica="naturales"}
 :::
