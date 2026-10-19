@@ -16,9 +16,11 @@ res, fdp = evaluar(canalizaciones(), t.X, t.y, t.grupos, estratos=t.estratos)
 ```
 
 Cambiar el umbral es cambiar un número, y cambiar la entrada es cambiar una
-palabra. Es la lección que la fase 1 aprendió al revés: el Avance 2 congeló sus
-171 columnas sobre la matriz de Yeo-Johnson, y cambiar la transformación obliga
-a repetir la selección y a reejecutar el notebook.
+palabra. Es la lección que la fase 1 aprendió al revés: el Avance 2 seleccionó
+sus columnas sobre la matriz de Yeo-Johnson, así que cambiar la transformación
+obligaba a repetir la selección. Se corrigió filtrando sobre los valores
+crudos —valor modal para las casi constantes, Spearman para las redundantes— y
+el notebook comprueba que las 151 columnas salen iguales con las tres.
 
 **Cómo se importa.** Con la raíz del repositorio en `sys.path` y no con `src/`:
 `from src.models import cargar`. Es la misma convención que exige
