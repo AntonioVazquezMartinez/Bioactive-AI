@@ -12,6 +12,39 @@ atadas a los datos.
 | `intervalo.py` | Por qué un «> 10 µM» no es un dato faltante | guion escrito, sin voz |
 | `linaje.py` | Del archivo a la matriz: qué filas y columnas se pierden | guion escrito, sin voz |
 | `fingerprints.py` | Por qué no plegamos: colisión contra trazabilidad | guion escrito, sin voz |
+| `apertura.py` | El problema, la apuesta y la tesis | guion escrito, sin voz |
+| `cierre.py` | Lo que sale, y lo que no se puede afirmar | guion escrito, sin voz |
+
+## El video completo
+
+Seis escenas, 3:29, unidas por una tesis: **los datos no son lo que parecen**.
+Las cuatro técnicas no son viñetas sueltas — cada una es una instancia de esa
+frase, y el cierre la cobra.
+
+| # | Escena | Papel en el hilo | Dura |
+|:--|:--|:--|--:|
+| 1 | `apertura.py` | el problema y la apuesta | 33 s |
+| 2 | `linaje.py` | las mediciones no son compuestos | 41 s |
+| 3 | `intervalo.py` | un «>» no es un hueco | 33 s |
+| 4 | `fingerprints.py` | un bit no es un fragmento | 38 s |
+| 5 | `particion.py` | las filas no son independientes | 37 s |
+| 6 | `cierre.py` | lo que sale, y lo que no se afirma | 30 s |
+
+```bash
+python animaciones/ensamblar.py                 # borrador, 480p
+python animaciones/ensamblar.py --calidad alta  # 1080p
+python animaciones/ensamblar.py --solo linaje intervalo
+```
+
+`ensamblar.py` es la **única pieza que sabe el orden**, y comprueba tres cosas
+antes de unir: que no falte ninguna parte, que todas sean de la misma calidad,
+y que ninguna sea más vieja que su escena. Esa tercera es la que importa: si
+se toca `linaje.py` y no se vuelve a renderizar, el video llevaría la versión
+anterior — que es exactamente cómo el mazo se desincronizó dos veces de sus
+cifras.
+
+Las transiciones son fundidos de medio segundo. Sin efectos: la atención tiene
+que estar en lo que se explica.
 
 ## Las tres reglas
 
