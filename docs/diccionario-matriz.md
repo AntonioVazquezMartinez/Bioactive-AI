@@ -64,7 +64,7 @@ Los cinco descriptores fisicoquímicos que cualquiera esperaría encontrar —TP
 - **`MolLogP`** correlaciona **0.975** con `lipo_neta`, la derivada que lo contiene. Antes el filtro conservaba la derivada y descartaba el original; ahora pasa lo contrario, y es la lectura correcta: la derivada no aporta nada medible ([S1.11](decisiones.md)) y el original es el que se puede explicar.
 - **`MolWt`** correlaciona **0.999** con `HeavyAtomMolWt`: son la misma variable medida dos veces. Se queda el peso molecular y se va el otro.
 
-Así quedan en la matriz los dos que `CLAUDE.md` exige para verificar cualquier afirmación estructural —TPSA < 67 Å² y donadores ≤ 1— y también `MolLogP`, que es el descriptor más frágil del conjunto: su AUC cae de 0.844 a 0.594 entre entrenamiento y validación (§12.5 del notebook 02). Tenerlo en la matriz es lo que permite enseñar esa fragilidad en vez de heredarla escondida en una derivada.
+Así quedan en la matriz los dos que `CLAUDE.md` exige para verificar cualquier afirmación estructural —TPSA < 67 Å² y donadores ≤ 1— y también `MolLogP`, que es el descriptor más frágil del conjunto: su AUC cae de 0.744 a 0.594 entre entrenamiento y validación, mientras que la de TPSA solo baja de 0.844 a 0.828 (§12.5 del notebook 02). Tenerlo en la matriz es lo que permite enseñar esa fragilidad en vez de heredarla escondida en una derivada.
 
 ## Columnas casi vacías, y por qué siguen ahí
 

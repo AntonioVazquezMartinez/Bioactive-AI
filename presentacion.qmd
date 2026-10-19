@@ -269,7 +269,7 @@ Cinco opciones que se probaron con los datos del proyecto:
 |:--|:--|:--|
 | Entrenar solo con grupos A+B | La clase minoritaria baja de 36.5% a 27.0% | Se usa todo el conjunto ([1.1](contenido/decisiones.html#d1-1)) |
 | No escalar la regresión logística | No converge en ninguno de los 15 pliegues; con min–max, 53 iteraciones | Se escala ([1.5](contenido/decisiones.html#d1-5)) |
-| Yeo–Johnson | Por debajo de min–max en 12 de 15 pliegues y de estandarización en 13, sin llegar a significancia | No se adopta ([S1.9](contenido/decisiones.html)) |
+| Yeo–Johnson | Parecía la peor —0.030 de MCC por debajo de min–max— hasta que cada transformación eligió su propio `C`: con el suyo empatan en 0.695. Los `C` elegidos están a dos órdenes de magnitud (0.01 contra 1.0) | Ya no hay motivo medido para evitarla ([S1.9](contenido/decisiones.html)) |
 | PCA | Con Random Forest, el MCC cambia −0.008 (IC 95%: −0.070 a +0.055) y las componentes dejan de ser fragmentos | Solo como comparación ([1.5](contenido/decisiones.html#d1-5)) |
 | El descriptor `Ipc` | Llega a 10⁴¹ y no cabe en float32 | Se excluye ([1.3](contenido/decisiones.html#d1-3)) |
 
