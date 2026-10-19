@@ -47,3 +47,7 @@ docs/reportes/**/*.typ
 
 # MLflow local: solo visor, la fuente de verdad es experimentos/
 mlruns/
+
+# Salida de las animaciones (artefacto generado, como los PDF de los reportes)
+animaciones/media/
+env-anim/

@@ -1,0 +1,15 @@
+# Animaciones explicativas (carpeta `animaciones/`).
+#
+# **Deliberadamente fuera de `requirements.lock`.** El lock fija el entorno con
+# el que se ejecutaron los notebooks y se midieron las cifras del proyecto;
+# Manim arrastra cairo, pango, ffmpeg y una cadena de dependencias gráficas que
+# no tienen nada que ver con reproducir un número. Mezclarlos haría más frágil
+# justo lo que el lock existe para proteger.
+#
+#     uv venv --python 3.12 env-anim
+#     uv pip install --python env-anim -r requirements-animaciones.txt
+#
+# Hace falta `ffmpeg` en el sistema (`brew install ffmpeg`). **No hace falta
+# LaTeX**: las escenas usan `Text` y no `MathTex`, a propósito, para que
+# cualquiera pueda renderizarlas sin una instalación de TeX.
+manim>=0.19
