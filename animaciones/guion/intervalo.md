@@ -42,8 +42,12 @@ dibujado es un eje y tres trazos.
 ## 4 · El corte decide *(0:20 – 0:27)*
 
 > Con el corte puesto, la etiqueta sale sola de dónde cae el intervalo. El
-> punto está entero a la derecha: activo. La media recta está entera a la
-> izquierda: inactivo.
+> punto está entero a la derecha del corte: activo. La media recta está entera
+> a la izquierda: inactivo.
+>
+> Fíjate en que no hace falta inventar un número para la medición censurada.
+> No sabemos cuánto vale, y aun así sabemos de qué lado cae. Esa es toda la
+> diferencia entre tratarla como una cota y tratarla como un hueco.
 
 *Entra con:* la línea del corte, y después las dos etiquetas.
 

@@ -11,15 +11,15 @@ Las de desempeño no van aquí: esta escena no afirma resultados.
 """
 
 from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut,
-                   Line, Scene, VGroup, Write, config)
+                   Line, VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, VERDE,
                    cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
 
 
-class Apertura(Scene):
+class Apertura(Narrada):
     def construct(self) -> None:
         self._el_problema()
         self._la_apuesta()
@@ -27,6 +27,7 @@ class Apertura(Scene):
 
     # -- 1. el problema ------------------------------------------------------
     def _el_problema(self) -> None:
+        self.abrir_tramo(1)
         t = titulo("Casi nada llega al cerebro", 40).shift(UP * 1.2)
         cabe(t)
         self.play(Write(t), run_time=1.4)
@@ -46,11 +47,13 @@ class Apertura(Scene):
         s2.next_to(s, DOWN, buff=0.5).set_x(0)
         cabe(s2)
         self.play(FadeIn(s2, shift=DOWN * 0.2), run_time=1.5)
+        self.cerrar_tramo(1)
         self.wait(1.8)
         self.play(FadeOut(t), FadeOut(s), FadeOut(s2), run_time=0.7)
 
     # -- 2. la apuesta -------------------------------------------------------
     def _la_apuesta(self) -> None:
+        self.abrir_tramo(2)
         t = titulo("La apuesta: predecir desde la estructura").to_edge(UP, buff=0.9)
         s = subtitulo("una molécula entra como texto, y salen dos respuestas", 22)
         s.next_to(t, DOWN, buff=0.3).set_x(0)
@@ -88,12 +91,14 @@ class Apertura(Scene):
         nota.next_to(preguntas, DOWN, buff=0.55).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=2.0)
+        self.cerrar_tramo(2)
         self.wait(2.0)
         self.play(FadeOut(VGroup(t, s, entrada, pie_entrada, preguntas, nota)),
                   run_time=0.7)
 
     # -- 3. la tesis ---------------------------------------------------------
     def _la_tesis(self) -> None:
+        self.abrir_tramo(3)
         t = titulo("Pero antes de predecir hay que mirar los datos", 34)
         t.to_edge(UP, buff=0.8)
         cabe(t)
@@ -131,3 +136,5 @@ class Apertura(Scene):
         fuente.to_edge(DOWN, buff=0.28)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.2)
+
+        self.cerrar_tramo(3)

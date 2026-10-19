@@ -48,8 +48,25 @@ ORDEN = [
 ]
 
 
-def _parte(modulo: str, escena: str, calidad: str) -> Path:
-    return MEDIA / modulo / CALIDADES[calidad] / f"{escena}.mp4"
+def _parte(modulo: str, escena: str, calidad: str, con_voz: bool = True) -> Path:
+    """La parte con voz si existe, y si no la muda.
+
+    Prefiere la sonorizada a propósito: una vez que hay voz, montar las mudas
+    por descuido da un video silencioso que parece terminado.
+    """
+    carpeta = MEDIA / modulo / CALIDADES[calidad]
+    sonora = carpeta / f"{escena}-con-voz.mp4"
+    if con_voz and sonora.exists():
+        return sonora
+    return carpeta / f"{escena}.mp4"
+
+
+def _tiene_audio(ruta: Path) -> bool:
+    salida = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries",
+         "stream=codec_type", "-of", "csv=p=0", str(ruta)],
+        capture_output=True, text=True, check=True)
+    return "audio" in salida.stdout
 
 
 def _duracion(ruta: Path) -> float:
@@ -108,9 +125,25 @@ def ensamblar(partes: list[tuple[str, str, str]], calidad: str,
             f":offset={acumulado - FUNDIDO:.3f}{salida}")
         etiqueta = salida
         acumulado += duraciones[i] - FUNDIDO
+    # El audio se encadena con `acrossfade` en los mismos puntos que el video:
+    # si solo se cruzara la imagen, la voz se cortaría en seco en cada unión.
+    con_audio = all(_tiene_audio(r) for r in rutas)
+    if con_audio:
+        etiqueta_a, acum = "[0:a]", duraciones[0]
+        for i in range(1, len(rutas)):
+            salida_a = f"[s{i}]"
+            filtros.append(f"{etiqueta_a}[{i}:a]acrossfade=d={FUNDIDO}"
+                           f":c1=tri:c2=tri{salida_a}")
+            etiqueta_a = salida_a
+            acum += duraciones[i] - FUNDIDO
     if filtros:
         orden += ["-filter_complex", ";".join(filtros), "-map", etiqueta]
-    orden += ["-pix_fmt", "yuv420p", "-c:v", "libx264", "-crf", "18", str(destino)]
+        if con_audio:
+            orden += ["-map", etiqueta_a]
+    orden += ["-pix_fmt", "yuv420p", "-c:v", "libx264", "-crf", "18"]
+    if con_audio:
+        orden += ["-c:a", "aac", "-b:a", "160k"]
+    orden += [str(destino)]
 
     print("\nuniendo…", flush=True)
     subprocess.run(orden, check=True)

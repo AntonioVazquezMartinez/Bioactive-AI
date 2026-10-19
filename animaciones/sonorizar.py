@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""Pone la voz sobre el video de una escena, en el segundo exacto de cada tramo.
+
+    python animaciones/sonorizar.py cierre
+    python animaciones/sonorizar.py --todas --calidad alta
+
+**No concatena los audios.** Cada tramo se coloca en el segundo donde la
+escena lo abrió, que `voz/offsets.json` registra al renderizar. Concatenarlos
+y confiar en que las pausas coincidan es lo que deja el montaje desfasado sin
+que nadie se entere: basta que una animación cambie medio segundo.
+
+Si la escena se re-renderiza, sus offsets cambian solos y esto los vuelve a
+leer. Si cambia el guion, hay que regenerar el audio con `voz.py` — y la
+comprobación de abajo lo detecta, porque el audio no cabría en su hueco.
+"""
+
+import argparse
+import json
+import subprocess
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent
+VOZ = RAIZ / "voz"
+MEDIA = RAIZ / "media" / "videos"
+CALIDADES = {"borrador": "480p15", "alta": "1080p60"}
+ESCENAS = {"apertura": "Apertura", "linaje": "Linaje", "intervalo": "Intervalo",
+           "fingerprints": "Fingerprints", "particion": "Particion",
+           "cierre": "Cierre"}
+
+
+def duracion(ruta: Path) -> float:
+    s = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                        "format=duration", "-of", "csv=p=0", str(ruta)],
+                       capture_output=True, text=True, check=True)
+    return float(s.stdout.strip())
+
+
+def sonorizar(escena: str, calidad: str) -> Path:
+    offsets = json.loads((VOZ / "offsets.json").read_text())
+    if escena not in offsets:
+        raise SystemExit(f"{escena} no tiene offsets: renderiza la escena "
+                         "primero, que los escribe al correr")
+    tramos = offsets[escena]["tramos"]
+
+    video = MEDIA / escena / CALIDADES[calidad] / f"{ESCENAS[escena]}.mp4"
+    if not video.exists():
+        raise SystemExit(f"falta {video.relative_to(RAIZ.parent)}")
+    largo_video = duracion(video)
+
+    pistas, filtros, etiquetas = [], [], []
+    for i, (n, inicio) in enumerate(sorted(tramos.items(), key=lambda kv: int(kv[0]))):
+        pista = VOZ / f"{escena}-{n}.mp3"
+        if not pista.exists():
+            raise SystemExit(f"falta {pista.name}: córrelo con «voz.py --solo "
+                             f"{escena}»")
+        fin = inicio + duracion(pista)
+        if fin > largo_video + 0.2:
+            raise SystemExit(
+                f"el tramo {n} de {escena} empieza en {inicio:.1f} s, dura "
+                f"{duracion(pista):.1f} s y el video solo llega a "
+                f"{largo_video:.1f} s. Alarga la escena, no aceleres la voz.")
+        pistas += ["-i", str(pista)]
+        # `adelay` en milisegundos, a los dos canales.
+        ms = int(round(inicio * 1000))
+        filtros.append(f"[{i + 1}:a]adelay={ms}|{ms}[a{i}]")
+        etiquetas.append(f"[a{i}]")
+
+    mezcla = (f"{''.join(etiquetas)}amix=inputs={len(etiquetas)}:"
+              "normalize=0:duration=longest[mezclado];"
+              # Norma de sonoridad para web: sin esto, una escena suena más
+              # fuerte que otra según cuánto hable.
+              "[mezclado]loudnorm=I=-16:TP=-1.5:LRA=11[voz]")
+    destino = video.with_name(f"{ESCENAS[escena]}-con-voz.mp4")
+    orden = (["ffmpeg", "-v", "error", "-y", "-i", str(video)] + pistas
+             + ["-filter_complex", ";".join(filtros) + ";" + mezcla,
+                "-map", "0:v", "-map", "[voz]", "-c:v", "copy",
+                "-c:a", "aac", "-b:a", "160k", "-shortest", str(destino)])
+    subprocess.run(orden, check=True)
+    print(f"  {escena:<14} {largo_video:>6.1f} s · {len(tramos)} tramos"
+          f" → {destino.name}")
+    return destino
+
+
+def main() -> None:
+    cli = argparse.ArgumentParser(description=__doc__,
+                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    cli.add_argument("escenas", nargs="*", choices=list(ESCENAS) + [[]])
+    cli.add_argument("--todas", action="store_true")
+    cli.add_argument("--calidad", default="borrador", choices=list(CALIDADES))
+    args = cli.parse_args()
+
+    escenas = list(ESCENAS) if args.todas else (args.escenas or [])
+    if not escenas:
+        raise SystemExit("di qué escena, o --todas")
+    for escena in escenas:
+        sonorizar(escena, args.calidad)
+
+
+if __name__ == "__main__":
+    main()

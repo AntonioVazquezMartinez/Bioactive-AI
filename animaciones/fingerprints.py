@@ -14,9 +14,9 @@ Cifras comprobadas contra `data/processed/` y la decisión 1.7.
 """
 
 from manim import (DOWN, LEFT, RIGHT, UP, Arrow, Create, FadeIn, FadeOut,
-                   Rectangle, Scene, VGroup, Write, config)
+                   Rectangle, VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
                    cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
@@ -34,7 +34,7 @@ def _fragmento(etiqueta: str, color: str) -> VGroup:
     return VGroup(caja, texto)
 
 
-class Fingerprints(Scene):
+class Fingerprints(Narrada):
     def construct(self) -> None:
         self._la_colision()
         self._ordenar_y_cortar()
@@ -49,6 +49,7 @@ class Fingerprints(Scene):
 
     # -- 1. el plegado y su colisión ----------------------------------------
     def _la_colision(self) -> None:
+        self.abrir_tramo(1)
         cab = self._encabezado(
             "Plegar mete dos fragmentos en el mismo bit",
             "y entonces un bit importante ya no se puede dibujar")
@@ -103,12 +104,14 @@ class Fingerprints(Scene):
         # Objetos explícitos y no `self.mobjects`: ese incluye un Mobject
         # plano que VGroup no acepta, y además barrer todo a ciegas esconde
         # qué se está quitando.
+        self.cerrar_tramo(1)
         self.play(FadeOut(fragmentos), FadeOut(bits), FadeOut(etiqueta_bits),
                   FadeOut(aviso), FadeOut(nota), FadeOut(cab),
                   *[FadeOut(f) for f in self.flechas], run_time=0.7)
 
     # -- 2. ordenar y cortar -------------------------------------------------
     def _ordenar_y_cortar(self) -> None:
+        self.abrir_tramo(2)
         cab = self._encabezado(
             "Sort & Slice no pliega: ordena y corta",
             "las subestructuras por frecuencia, y se queda con las primeras")
@@ -143,11 +146,13 @@ class Fingerprints(Scene):
         nota.next_to(eje, DOWN, buff=0.45).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=1.9)
+        self.cerrar_tramo(2)
         self.wait(1.7)
         self.play(FadeOut(VGroup(barras, eje, corte, nota, cab)), run_time=0.7)
 
     # -- 3. lo que cuesta ----------------------------------------------------
     def _lo_que_cuesta(self) -> None:
+        self.abrir_tramo(3)
         cab = self._encabezado(
             "Pero la cola se corta, y la prueba vive en la cola",
             "el vocabulario se aprende solo con entrenamiento")
@@ -175,11 +180,13 @@ class Fingerprints(Scene):
         nota.next_to(filas, DOWN, buff=0.5).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=2.4)
+        self.cerrar_tramo(3)
         self.wait(2.0)
         self.play(FadeOut(VGroup(filas, nota, cab)), run_time=0.7)
 
     # -- 4. cierre -----------------------------------------------------------
     def _cierre(self) -> None:
+        self.abrir_tramo(4)
         cierre = VGroup(
             dato("Se paga cobertura por trazabilidad.", 26, CREMA),
             subtitulo("El proyecto exige poder señalar la subestructura\n"
@@ -195,3 +202,5 @@ class Fingerprints(Scene):
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.5)
+
+        self.cerrar_tramo(4)

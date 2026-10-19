@@ -14,16 +14,16 @@ válido en este proyecto, y decirlo es parte del trabajo.
 Cifras del notebook 03 y de las decisiones 2.3 y C.5.
 """
 
-from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Line,
-                   Rectangle, Scene, VGroup, Write, config)
+from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Flash,
+                   Indicate, Line, Rectangle, VGroup, Write, config)
 
-from comun import (AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, VERDE, cabe,
-                   dato, pie, subtitulo, titulo)
+from comun import (AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, Narrada, VERDE,
+                   cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
 
 
-class Cierre(Scene):
+class Cierre(Narrada):
     def construct(self) -> None:
         self._funciona()
         self._pero()
@@ -31,6 +31,7 @@ class Cierre(Scene):
 
     # -- 1. el modelo funciona ----------------------------------------------
     def _funciona(self) -> None:
+        self.abrir_tramo(1)
         t = titulo("Con los datos bien mirados, el modelo funciona")
         s = subtitulo("validación cruzada agrupada por estructura, sin tocar"
                       " la prueba reservada", 21)
@@ -56,11 +57,16 @@ class Cierre(Scene):
         self.play(FadeIn(etiqueta), run_time=0.5)
         for f in filas:
             self.play(FadeIn(f, shift=RIGHT * 0.25), run_time=0.7)
-        self.wait(1.4)
+            # Un destello sobre la cifra al decirla: es el gesto que dirige la
+            # mirada sin añadir nada que leer.
+            self.play(Flash(f[0], color=f[0].color, line_length=0.18,
+                            num_lines=10, flash_radius=0.55), run_time=0.6)
+        self.cerrar_tramo(1)
         self.play(FadeOut(VGroup(t, s, filas, etiqueta)), run_time=0.7)
 
     # -- 2. pero no sobre lo que importa ------------------------------------
     def _pero(self) -> None:
+        self.abrir_tramo(2)
         t = titulo("Pero no igual en todas partes").to_edge(UP, buff=0.85)
         s = subtitulo("el mismo modelo, partido por de dónde viene la"
                       " evidencia", 21)
@@ -108,19 +114,35 @@ class Cierre(Scene):
         azar = dato("0.5 · el azar", 20, CREMA).next_to(base, LEFT, buff=0.3)
         cabe(barras, base)
         self.play(Create(base), FadeIn(azar), run_time=0.7)
-        self.play(FadeIn(barras, lag_ratio=0.25), run_time=1.6)
-        self.wait(1.2)
+        # Una barra por vez, creciendo desde la base: la voz las nombra en
+        # este orden y el intervalo entra después, que es cuando lo menciona.
+        for grupo in barras:
+            columna, intervalo, cifra, nombre = grupo
+            columna.save_state()
+            columna.stretch_to_fit_height(0.01, about_edge=DOWN)
+            self.play(FadeIn(nombre), run_time=0.3)
+            self.play(columna.animate.restore(), run_time=0.9)
+            self.play(FadeIn(cifra, shift=UP * 0.15), run_time=0.45)
+        self.wait(0.4)
+        self.play(*[Create(g[1]) for g in barras], run_time=1.1)
+        self.wait(0.6)
+        # Y el gesto que sostiene la lectura honesta: los dos de la derecha,
+        # juntos, para que se vea que sus intervalos se tocan.
+        self.play(Indicate(barras[1][1], color=CREMA, scale_factor=1.08),
+                  Indicate(barras[2][1], color=CREMA, scale_factor=1.08),
+                  run_time=1.2)
 
         nota = dato("Los dos de la derecha no se distinguen entre sí.", 23,
                     CREMA)
         nota.next_to(barras, DOWN, buff=0.55).set_x(0)
         cabe(nota)
         self.play(FadeIn(nota), run_time=1.0)
-        self.wait(1.6)
+        self.cerrar_tramo(2)
         self.play(FadeOut(VGroup(t, s, barras, base, azar, nota)), run_time=0.7)
 
     # -- 3. lo que se entrega ------------------------------------------------
     def _el_entregable(self) -> None:
+        self.abrir_tramo(3)
         t = titulo("Lo que se entrega, y lo que no se afirma")
         t.to_edge(UP, buff=0.85)
         cabe(t)
@@ -150,16 +172,20 @@ class Cierre(Scene):
         self.play(Create(linea), run_time=0.6)
         self.play(FadeIn(no[0]), run_time=0.7)
         self.play(Write(no[1]), run_time=2.4)
-        self.wait(2.0)
+        self.wait(1.0)
 
+        # La tarjeta final va **dentro** del tramo 3, porque la voz dice esa
+        # frase ahí. Puesta después de `cerrar_tramo`, el remate del video
+        # entero sonaba sobre la pantalla anterior.
         self.play(FadeOut(VGroup(t, entrega, linea, no)), run_time=0.7)
         final = titulo("«No hay patrón aprendible»\nes un resultado válido.", 32)
         final.set_color(CREMA)
         cabe(final)
         self.play(FadeIn(final, scale=0.95), run_time=1.4)
+        self.cerrar_tramo(3)
 
         fuente = pie("Bioactive AI · Equipo 7 ·"
                      " antoniovazquezmartinez.github.io/Bioactive-AI")
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.9)
-        self.wait(2.8)
+        self.wait(2.2)

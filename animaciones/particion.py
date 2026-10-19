@@ -14,9 +14,9 @@ un número dentro de un `.mp4` no se puede corregir en un PR.
 
 import numpy as np
 from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut,
-                   Indicate, Line, Rectangle, Scene, VGroup, Write, config)
+                   Indicate, Line, Rectangle, VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
                    cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
@@ -32,7 +32,7 @@ def _molecula(color: str, radio: float = 0.17) -> Circle:
     return c
 
 
-class Particion(Scene):
+class Particion(Narrada):
     def construct(self) -> None:
         self._presentar()
         self._al_azar()
@@ -41,6 +41,7 @@ class Particion(Scene):
 
     # -- 1. el conjunto, agrupado por familia -------------------------------
     def _presentar(self) -> None:
+        self.abrir_tramo(1)
         t = titulo("Un conjunto de moléculas no es una bolsa de filas")
         s = subtitulo("Se parecen entre sí por familias: comparten el andamio,"
                       " el esqueleto de anillos")
@@ -81,6 +82,7 @@ class Particion(Scene):
         """
         t = titulo(nuevo).move_to(self.titulo_actual)
         s = subtitulo(nuevo_sub).next_to(t, DOWN, buff=0.3)
+        self.cerrar_tramo(1)
         self.play(FadeOut(self.titulo_actual), FadeOut(self.sub_actual),
                   run_time=0.35)
         self.play(FadeIn(t), FadeIn(s), run_time=0.5)
@@ -97,6 +99,7 @@ class Particion(Scene):
 
     # -- 2. la partición al azar --------------------------------------------
     def _al_azar(self) -> None:
+        self.abrir_tramo(2)
         self._cambiar_titulo("Si se parten al azar…",
                              "cada familia queda repartida entre las dos cajas")
         # Las etiquetas se van con las moléculas: si se quedan, acaban
@@ -132,6 +135,7 @@ class Particion(Scene):
             "reconocer la familia, no entender la química.", 20)
         explicacion.next_to(aviso, DOWN, buff=0.3)
         self.play(Write(explicacion), run_time=2.0)
+        self.cerrar_tramo(2)
         self.wait(1.6)
         self.play(FadeOut(aviso), FadeOut(explicacion), run_time=0.6)
         self.izq, self.der = izq, der
@@ -139,6 +143,7 @@ class Particion(Scene):
 
     # -- 3. la partición por andamio ----------------------------------------
     def _por_andamio(self) -> None:
+        self.abrir_tramo(3)
         self._cambiar_titulo("Si se parten por familia…",
                              "cada familia cae entera de un solo lado")
         rng = np.random.default_rng(3)
@@ -162,6 +167,7 @@ class Particion(Scene):
         explicacion.next_to(bien, DOWN, buff=0.3)
         self.play(FadeIn(bien), run_time=0.8)
         self.play(Write(explicacion), run_time=2.2)
+        self.cerrar_tramo(3)
         self.wait(2.0)
         self.play(FadeOut(bien), FadeOut(explicacion),
                   FadeOut(self.izq), FadeOut(self.der),
@@ -170,6 +176,7 @@ class Particion(Scene):
 
     # -- 4. lo que cuesta confundirse ---------------------------------------
     def _la_cifra(self) -> None:
+        self.abrir_tramo(4)
         self._cambiar_titulo(
             "La diferencia no es cosmética",
             "medido sobre la fase 1, con el mismo modelo y la misma matriz")
@@ -212,3 +219,5 @@ class Particion(Scene):
         cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.5)
+
+        self.cerrar_tramo(4)

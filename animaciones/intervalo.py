@@ -12,9 +12,9 @@ Las cifras del cierre salen de la decisión 2.10 y del notebook 02b.
 
 import numpy as np
 from manim import (DOWN, LEFT, RIGHT, UP, Arrow, Create, Dot, FadeIn, FadeOut,
-                   Line, NumberLine, Scene, VGroup, Write, config)
+                   Line, NumberLine, VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
                    cabe, dato, pie, separados, subtitulo, titulo)
 
 config.background_color = FONDO
@@ -24,7 +24,7 @@ EJE_MIN, EJE_MAX = 3.0, 9.0
 CORTE = 5.0  # 10 µM
 
 
-class Intervalo(Scene):
+class Intervalo(Narrada):
     def construct(self) -> None:
         self._el_eje()
         self._una_medicion_exacta()
@@ -34,6 +34,7 @@ class Intervalo(Scene):
 
     # -- 1. el eje de potencia ----------------------------------------------
     def _el_eje(self) -> None:
+        self.abrir_tramo(1)
         self.t = titulo("Una medición censurada no es un hueco")
         self.s = subtitulo("Es una cota: dice hasta dónde se miró sin ver efecto")
         self.t.to_edge(UP, buff=0.8)
@@ -64,12 +65,14 @@ class Intervalo(Scene):
     def _cambiar(self, nuevo: str, sub: str) -> None:
         t = titulo(nuevo).move_to(self.t)
         s = subtitulo(sub).next_to(t, DOWN, buff=0.3)
+        self.cerrar_tramo(1)
         self.play(FadeOut(self.t), FadeOut(self.s), run_time=0.3)
         self.play(FadeIn(t), FadeIn(s), run_time=0.45)
         self.t, self.s = t, s
 
     # -- 2. una medición exacta ---------------------------------------------
     def _una_medicion_exacta(self) -> None:
+        self.abrir_tramo(2)
         punto = Dot(self._x(6.3), radius=0.11, color=AZUL)
         etiqueta = dato("IC50 = 0.5 µM", 22, AZUL).next_to(punto, UP, buff=0.25)
         nota = subtitulo("una medición exacta es un punto:"
@@ -77,12 +80,14 @@ class Intervalo(Scene):
         nota.next_to(self.eje, DOWN, buff=1.6)
         self.play(FadeIn(punto, scale=0.5), FadeIn(etiqueta), run_time=0.9)
         self.play(Write(nota), run_time=1.3)
+        self.cerrar_tramo(2)
         self.wait(1.2)
         self.play(FadeOut(nota), run_time=0.4)
         self.exacta = VGroup(punto, etiqueta)
 
     # -- 3. una censurada ----------------------------------------------------
     def _una_censurada(self) -> None:
+        self.abrir_tramo(3)
         self._cambiar("Y un «> 10 µM» es media recta",
                       "el ensayo llegó a 10 µM y no vio efecto: la potencia"
                       " está por debajo")
@@ -101,12 +106,14 @@ class Intervalo(Scene):
                          " negativa que tenemos.", 20)
         nota.next_to(self.eje, DOWN, buff=2.0)
         self.play(Write(nota), run_time=2.2)
+        self.cerrar_tramo(3)
         self.wait(1.6)
         self.play(FadeOut(nota), run_time=0.4)
         self.censurada = VGroup(flecha, tope, etiqueta)
 
     # -- 4. el corte decide --------------------------------------------------
     def _el_corte(self) -> None:
+        self.abrir_tramo(4)
         self._cambiar("La etiqueta sale de dónde cae el intervalo",
                       "no de un umbral aplicado a un número suelto")
         linea = Line(self._x(CORTE) + UP * 0.95, self._x(CORTE) + DOWN * 1.6,
@@ -129,12 +136,14 @@ class Intervalo(Scene):
                          "\nLa media recta está entera a la izquierda.", 20)
         nota.move_to(self.eje.get_center() + DOWN * 2.8)
         self.play(Write(nota), run_time=1.8)
+        self.cerrar_tramo(4)
         self.wait(1.4)
         self.play(FadeOut(nota), FadeOut(activo), FadeOut(inactivo), run_time=0.5)
         self.corte = VGroup(linea, rotulo)
 
     # -- 5. mover el corte no reconstruye nada -------------------------------
     def _lo_que_se_gana(self) -> None:
+        self.abrir_tramo(5)
         self._cambiar("Por eso el umbral es una decisión de lectura",
                       "mover el corte no obliga a reconstruir la matriz")
         nuevo = 6.0  # 1 µM
@@ -148,6 +157,7 @@ class Intervalo(Scene):
         sigue = dato("sigue activo", 22, VERDE).move_to(self._x(7.6) + DOWN * 1.9)
         tambien = dato("sigue inactivo", 22, ROJO).move_to(self._x(3.9) + DOWN * 1.9)
         self.play(FadeIn(sigue), FadeIn(tambien), run_time=0.8)
+        self.cerrar_tramo(5)
         self.wait(1.0)
         self.play(FadeOut(sigue), FadeOut(tambien), FadeOut(self.exacta),
                   FadeOut(self.censurada), FadeOut(self.corte),

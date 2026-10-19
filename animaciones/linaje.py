@@ -12,10 +12,9 @@ Todas las cifras salen de `data/processed/` y de la salida de
 copiadas de la prosa.
 """
 
-from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Scene,
-                   VGroup, Write, config)
+from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, NARANJA, ROJO, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, NARANJA, ROJO, VERDE,
                    cabe, dato, matriz, pie, subtitulo, titulo)
 
 config.background_color = FONDO
@@ -37,7 +36,7 @@ CAIDAS = [
 ]
 
 
-class Linaje(Scene):
+class Linaje(Narrada):
     def construct(self) -> None:
         self._embudo()
         self._columnas()
@@ -54,6 +53,7 @@ class Linaje(Scene):
 
     # -- 1. las filas: de mediciones a pares --------------------------------
     def _embudo(self) -> None:
+        self.abrir_tramo(1)
         cab = self._encabezado(
             "El archivo trae mediciones, no compuestos",
             "la unidad del modelo —el par compuesto-diana— hay que construirla")
@@ -81,11 +81,13 @@ class Linaje(Scene):
         nota.next_to(filas, DOWN, buff=0.5)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)
+        self.cerrar_tramo(1)
         self.wait(1.8)
         self.play(FadeOut(filas), FadeOut(nota), FadeOut(cab), run_time=0.7)
 
     # -- 2. las columnas: la matriz encogiéndose ----------------------------
     def _columnas(self) -> None:
+        self.abrir_tramo(2)
         cab = self._encabezado(
             "De 217 descriptores llegan 201",
             "RDKit los calcula todos; no todos sirven para un modelo")
@@ -134,12 +136,14 @@ class Linaje(Scene):
         nota.next_to(quedan, DOWN, buff=0.7)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)
+        self.cerrar_tramo(2)
         self.wait(1.8)
         self.play(FadeOut(quedan), FadeOut(nuevo_rotulo), FadeOut(nota),
                   FadeOut(cab), run_time=0.7)
 
     # -- 3. la partición ----------------------------------------------------
     def _particion(self) -> None:
+        self.abrir_tramo(3)
         cab = self._encabezado(
             "Y las filas se parten antes de mirar nada",
             "agrupando por estructura, con una prueba que el modelo nunca ve")
@@ -171,11 +175,13 @@ class Linaje(Scene):
         nota.next_to(bloques, DOWN, buff=0.6)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)
+        self.cerrar_tramo(3)
         self.wait(1.8)
         self.play(FadeOut(bloques), FadeOut(nota), FadeOut(cab), run_time=0.7)
 
     # -- 4. el cierre --------------------------------------------------------
     def _cierre(self) -> None:
+        self.abrir_tramo(4)
         linea1 = dato("Cada paso quita filas o columnas,", 26, CREMA)
         linea2 = dato("y cada uno dice por qué.", 26, CREMA)
         cierre = VGroup(linea1, linea2).arrange(DOWN, buff=0.3)
@@ -192,3 +198,5 @@ class Linaje(Scene):
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.5)
+
+        self.cerrar_tramo(4)

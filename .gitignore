@@ -51,3 +51,7 @@ mlruns/
 # Salida de las animaciones (artefacto generado, como los PDF de los reportes)
 animaciones/media/
 env-anim/
+
+# El audio generado: cuesta llamadas a la API y no se versiona.
+# `voz/tiempos.json` sí, porque es la fuente de los tiempos.
+animaciones/voz/*.mp3

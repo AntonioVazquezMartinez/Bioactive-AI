@@ -40,10 +40,14 @@ moléculas repetidas.
 
 ## 3 · La partición por familia *(0:17 – 0:27)*
 
-> Si en cambio repartimos familias enteras, ninguna se parte.
+> Si en cambio repartimos familias enteras, ninguna se parte. Las familias
+> grandes alimentan al modelo; las raras se guardan para evaluarlo.
 >
 > Ahora la caja de la derecha tiene química que el modelo no vio nunca. Es más
 > difícil, y es la pregunta que de verdad importa: ¿sirve con algo nuevo?
+>
+> Las métricas van a bajar, y eso no es un problema: es que antes estaban
+> infladas.
 
 *Entra con:* las moléculas moviéndose en bloque por familia.
 

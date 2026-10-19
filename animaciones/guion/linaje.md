@@ -71,6 +71,10 @@ rojo y cayendo, y la matriz recomponiéndose.
 ## 4 · Cierre *(0:36 – 0:41)*
 
 > Cada paso quita filas o columnas, y cada uno dice por qué.
+>
+> Ninguno de estos filtros es obvio, y ninguno se puede comprobar mirando la
+> matriz final: para eso está escrito el linaje completo, archivo por archivo,
+> en la documentación del proyecto.
 
 ---
 

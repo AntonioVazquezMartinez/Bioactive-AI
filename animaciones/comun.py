@@ -9,7 +9,10 @@ renderizar no exija una instalación de TeX. Eso descarta `MathTex`, así que la
 fórmulas se escriben con Unicode (`6 − log₁₀ µM`) o se dicen en la narración.
 """
 
-from manim import BLACK, WHITE, Text, VGroup
+import json
+from pathlib import Path
+
+from manim import BLACK, Scene, WHITE, Text, VGroup
 
 # La paleta del sitio.
 FONDO = "#1b2430"        # el azul oscuro de las secciones del mazo
@@ -75,6 +78,81 @@ def cabe(*objetos, margen: float = MARGEN) -> None:
                 f" {arriba:.2f} y el cuadro llega a ±{limite_y:.2f}")
 
 
+class Narrada(Scene):
+    """Una escena cuyos actos duran lo que dura su narración.
+
+    El audio manda sobre el tiempo, no al revés. Cada acto llama a
+    `abrir_tramo(n)` al empezar y `cerrar_tramo(n)` al terminar: el segundo
+    espera lo que falte del tramo, así que el dibujo y la voz acaban juntos.
+    Si las animaciones del acto ya se pasaron, lo avisa — la respuesta
+    entonces es quitar animación o escribir más narración, nunca acelerar la
+    voz.
+
+    Las duraciones salen de `voz/tiempos.json`, que escribe `voz.py` midiendo
+    los audios de verdad. Es la fuente única: sin ella cada escena tendría sus
+    tiempos a ojo y el montaje se arreglaría a mano.
+
+    Sin ese archivo —o sin el tramo— la escena corre con tiempos por omisión,
+    para poder trabajar el dibujo antes de tener voz.
+    """
+
+    POR_OMISION = 8.0
+
+    def setup(self) -> None:
+        super().setup()
+        self._tramos = self._cargar_tramos()
+        self._inicio = 0.0
+        self._offsets = {}
+
+    def tear_down(self) -> None:
+        """Deja por escrito en qué segundo empieza cada tramo.
+
+        Es lo que permite colocar el audio exactamente donde va, en vez de
+        concatenarlo y confiar en que las pausas coincidan. Lo escribe la
+        escena al renderizar porque es la única que lo sabe: los tiempos
+        dependen de las animaciones que de verdad se jugaron.
+        """
+        if not self._offsets:
+            return super().tear_down()
+        ruta = Path(__file__).resolve().parent / "voz" / "offsets.json"
+        ruta.parent.mkdir(exist_ok=True)
+        datos = json.loads(ruta.read_text()) if ruta.exists() else {}
+        clave = type(self).__module__.rsplit(".", 1)[-1]
+        datos[clave] = {"tramos": {str(n): round(s, 3)
+                                   for n, s in sorted(self._offsets.items())},
+                        "duracion_s": round(self.renderer.time, 3)}
+        ruta.write_text(json.dumps(datos, indent=1, ensure_ascii=False) + "\n")
+        return super().tear_down()
+
+    def _cargar_tramos(self) -> dict:
+        ruta = Path(__file__).resolve().parent / "voz" / "tiempos.json"
+        if not ruta.exists():
+            return {}
+        datos = json.loads(ruta.read_text(encoding="utf-8"))
+        # El nombre del módulo de la escena es la llave: `cierre.py` → «cierre».
+        clave = type(self).__module__.rsplit(".", 1)[-1]
+        return {t["n"]: t for t in datos.get(clave, {}).get("tramos", [])}
+
+    def dura(self, n: int) -> float:
+        return self._tramos.get(n, {}).get("segundos", self.POR_OMISION)
+
+    def abrir_tramo(self, n: int) -> None:
+        self._inicio = self.renderer.time
+        self._tramo_actual = n
+        self._offsets[n] = self._inicio
+
+    def cerrar_tramo(self, n: int) -> None:
+        objetivo = self.dura(n)
+        gastado = self.renderer.time - self._inicio
+        if gastado > objetivo + 0.05:
+            titulo = self._tramos.get(n, {}).get("titulo", "")
+            print(f"  [tramo {n} {titulo}] la animación dura {gastado:.1f} s y"
+                  f" la voz {objetivo:.1f} s: se pasa {gastado - objetivo:.1f} s."
+                  " Quita animación o escribe más narración; no aceleres la voz.")
+            return
+        self.wait(max(0.0, objetivo - gastado))
+
+
 def matriz(filas: int, columnas: int, ancho: float = 7.0, alto: float = 2.6,
            color: str = AZUL, relleno: float = 0.55):
     """Una cuadrícula que representa una matriz, para poder quitarle columnas.
@@ -120,5 +198,5 @@ def separados(a, b, minimo: float = 0.08) -> None:
 
 __all__ = ["FONDO", "AZUL", "AZUL_CLARO", "VERDE", "NARANJA", "ROJO", "GRIS",
            "CREMA", "FUENTE", "ANCHO", "ALTO", "MARGEN", "titulo", "subtitulo",
-           "dato", "pie", "cabe", "matriz", "separados", "BLACK", "WHITE",
-           "VGroup"]
+           "dato", "pie", "cabe", "matriz", "separados", "Narrada", "BLACK",
+           "WHITE", "VGroup"]
