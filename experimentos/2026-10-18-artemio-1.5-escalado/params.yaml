@@ -1,0 +1,23 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  transformaciones:
+  - sin escalar
+  - estandarización
+  - min-max
+  - Yeo-Johnson
+  pliegues: 5
+  columnas: 206
+  partición:
+    fraccion_prueba: 0.2
+    fraccion_validacion: 0.1
+    semilla: 42
+    acíclicos_a: entrenamiento
+  modelos:
+    LogReg: C=1, max_iter=3000
+    LogReg-C: C elegido por CV interna en (0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
+    RF: n_estimators=200
+  pliegues_internos: 3
