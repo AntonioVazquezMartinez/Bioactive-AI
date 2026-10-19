@@ -75,6 +75,35 @@ def cabe(*objetos, margen: float = MARGEN) -> None:
                 f" {arriba:.2f} y el cuadro llega a ±{limite_y:.2f}")
 
 
+def matriz(filas: int, columnas: int, ancho: float = 7.0, alto: float = 2.6,
+           color: str = AZUL, relleno: float = 0.55):
+    """Una cuadrícula que representa una matriz, para poder quitarle columnas.
+
+    No dibuja las celdas reales —serían decenas de miles— sino una rejilla que
+    se lee como matriz: cada columna del dibujo representa un bloque de
+    columnas reales. Lo que importa es **ver** la matriz encogerse, no contar
+    celdas.
+
+    Devuelve un `VGroup` de columnas, cada una un `VGroup` de celdas, para que
+    quitar columnas sea quitar elementos del grupo.
+    """
+    from manim import Rectangle
+
+    cw, ch = ancho / columnas, alto / filas
+    rejilla = VGroup()
+    for j in range(columnas):
+        col = VGroup()
+        for i in range(filas):
+            celda = Rectangle(width=cw, height=ch, color=color,
+                              fill_opacity=relleno, stroke_width=0.6,
+                              stroke_color=FONDO)
+            celda.move_to([j * cw, -i * ch, 0])
+            col.add(celda)
+        rejilla.add(col)
+    rejilla.move_to([0, 0, 0])
+    return rejilla
+
+
 def separados(a, b, minimo: float = 0.08) -> None:
     """Falla si dos objetos se solapan. El otro defecto que se repitió."""
     ax1, ax2 = a.get_left()[0], a.get_right()[0]
@@ -91,4 +120,5 @@ def separados(a, b, minimo: float = 0.08) -> None:
 
 __all__ = ["FONDO", "AZUL", "AZUL_CLARO", "VERDE", "NARANJA", "ROJO", "GRIS",
            "CREMA", "FUENTE", "ANCHO", "ALTO", "MARGEN", "titulo", "subtitulo",
-           "dato", "pie", "cabe", "separados", "BLACK", "WHITE", "VGroup"]
+           "dato", "pie", "cabe", "matriz", "separados", "BLACK", "WHITE",
+           "VGroup"]
