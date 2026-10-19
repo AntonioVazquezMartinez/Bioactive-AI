@@ -1,0 +1,1 @@
+python3.12.15 scripts/experimento_derivadas.py --variantes sin_derivadas solo_regla_2p solo_regla_2p_U_pliegue --nombre derivadas-solo-regla --salida notebooks/datos/resultados_derivadas_solo_regla.csv
