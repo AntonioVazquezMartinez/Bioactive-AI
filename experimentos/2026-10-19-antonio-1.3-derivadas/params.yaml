@@ -1,0 +1,50 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  variantes:
+    sin_derivadas:
+      derivadas: []
+      U: null
+    con_las_tres:
+      derivadas:
+      - regla_2p
+      - tpsa_por_mw
+      - lipo_neta
+      U: 67.0
+    con_las_tres_U_pliegue:
+      derivadas:
+      - regla_2p
+      - tpsa_por_mw
+      - lipo_neta
+      U: pliegue
+    sin_regla_2p:
+      derivadas:
+      - tpsa_por_mw
+      - lipo_neta
+      U: 67.0
+    sin_tpsa_por_mw:
+      derivadas:
+      - regla_2p
+      - lipo_neta
+      U: 67.0
+    sin_lipo_neta:
+      derivadas:
+      - regla_2p
+      - tpsa_por_mw
+      U: 67.0
+  modelos:
+    LogReg: MinMaxScaler + max_iter=3000
+    RF: n_estimators=200
+  seleccion:
+    casi_constante_min_distintas: 10
+    correlacion_spearman: 0.95
+  pliegues: 5
+  descriptores: 203
+  partición:
+    fraccion_prueba: 0.2
+    fraccion_validacion: 0.1
+    semilla: 42
+    acíclicos_a: entrenamiento
