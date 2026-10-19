@@ -26,7 +26,8 @@ columna: al cambiar de escalador cambiaba también cuánto se regularizaba, y no
 saber si «min–max gana y Yeo-Johnson pierde» venía del escalador o de la penalización
 (observación de la asesora sobre la §8.2). Ahora, dentro de cada pliegue de ajuste, una
 validación cruzada interna agrupada de 3 pliegues elige C en {0.01, 0.1, 1, 10, 100}
-por AUPRC sobre BBB−. La fila «LogReg (C=1)» conserva la medición anterior para ver
+por AUPRC sobre BBB− (salvo sin escalar, que no converge con ningún C y se queda en
+C = 1: ver `modelos`). La fila «LogReg (C=1)» conserva la medición anterior para ver
 cuánto de la diferencia venía de la regularización.
 
 Dos cosas que hacen válida la comparación:
@@ -102,12 +103,24 @@ def elegir_c(Xa: np.ndarray, ya: np.ndarray, ga: np.ndarray, semilla: int) -> fl
     return mejor
 
 
-def modelos(semilla: int, C: float) -> dict:
+SIN_ESCALAR = "sin escalar"
+
+
+def modelos(semilla: int, C: float, transformacion: str) -> dict:
     """La logística con el C de su transformación, la de C = 1 fijo (la medición anterior,
-    para ver cuánto venía de la regularización) y el bosque, que no tiene C."""
-    return {"LogReg": LogisticRegression(C=C, max_iter=3000, random_state=semilla),
-            "LogReg (C=1)": LogisticRegression(max_iter=3000, random_state=semilla),
-            "RF": RandomForestClassifier(n_estimators=200, random_state=semilla, n_jobs=-1)}
+    para ver cuánto venía de la regularización) y el bosque, que no tiene C.
+
+    Sin escalar no se ajusta C: la logística no converge con ningún escalado ausente
+    (agota sus 3,000 iteraciones, ~74 s por ajuste en Linux), así que esa fila ya se
+    descarta de la comparación, y elegir C ahí costaba unas 5 horas sin cambiar nada de
+    lo que se concluye. Queda con C = 1, como en la medición anterior, y por eso no lleva
+    la fila duplicada «LogReg (C=1)».
+    """
+    m = {"LogReg": LogisticRegression(C=C, max_iter=3000, random_state=semilla)}
+    if transformacion != SIN_ESCALAR:
+        m["LogReg (C=1)"] = LogisticRegression(max_iter=3000, random_state=semilla)
+    m["RF"] = RandomForestClassifier(n_estimators=200, random_state=semilla, n_jobs=-1)
+    return m
 
 
 def metricas(y: np.ndarray, puntuacion: np.ndarray) -> tuple[float, float, float]:
@@ -177,8 +190,8 @@ def main() -> None:
                         Xb = t.transform(X[evalua])
                     with warnings.catch_warnings():
                         warnings.simplefilter("ignore", ConvergenceWarning)
-                        C = elegir_c(Xa, y[ajuste], g[ajuste], semilla)
-                    for mod_n, mod in modelos(semilla, C).items():
+                        C = 1.0 if nombre == SIN_ESCALAR else elegir_c(Xa, y[ajuste], g[ajuste], semilla)
+                    for mod_n, mod in modelos(semilla, C, nombre).items():
                         t1 = time.perf_counter()
                         with warnings.catch_warnings(record=True) as avisos:
                             warnings.simplefilter("always", ConvergenceWarning)
@@ -199,8 +212,8 @@ def main() -> None:
             Xt, Xv = (X[tr], X[va]) if t is None else (t.fit_transform(X[tr]), t.transform(X[va]))
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", ConvergenceWarning)
-                C_val = elegir_c(Xt, y[tr], g[tr], 42)
-            for mod_n, mod in modelos(42, C_val).items():
+                C_val = 1.0 if nombre == SIN_ESCALAR else elegir_c(Xt, y[tr], g[tr], 42)
+            for mod_n, mod in modelos(42, C_val, nombre).items():
                 t1 = time.perf_counter()
                 with warnings.catch_warnings(record=True) as avisos:
                     warnings.simplefilter("always", ConvergenceWarning)
