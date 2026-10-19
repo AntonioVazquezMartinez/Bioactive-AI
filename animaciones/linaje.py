@@ -12,10 +12,10 @@ Todas las cifras salen de `data/processed/` y de la salida de
 copiadas de la prosa.
 """
 
-from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Line,
-                   Scene, VGroup, Write, config)
+from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Scene,
+                   VGroup, Write, config)
 
-from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
+from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, NARANJA, ROJO, VERDE,
                    cabe, dato, matriz, pie, subtitulo, titulo)
 
 config.background_color = FONDO
