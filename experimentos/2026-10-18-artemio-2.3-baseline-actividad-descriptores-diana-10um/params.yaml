@@ -1,0 +1,14 @@
+decision: '2.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  tarea: actividad
+  representacion: descriptores+diana
+  umbral_um: 10.0
+  pliegues: 5
+  canalizaciones:
+  - logistica
+  - bosque
+  - boosting

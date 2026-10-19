@@ -224,7 +224,8 @@ def main() -> int:
     import json
     for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/01b_EDA_actividad_snc.ipynb",
                    "notebooks/02_Feature_Eng.ipynb",
-                   "notebooks/02b_Feature_Eng_actividad.ipynb"]:
+                   "notebooks/02b_Feature_Eng_actividad.ipynb",
+                   "notebooks/03_Baseline.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
