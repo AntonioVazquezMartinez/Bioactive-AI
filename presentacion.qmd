@@ -486,8 +486,8 @@ Ninguna de las cinco se declara ratificada y **cada una dice qué la haría camb
 | Avance 0 · Propuesta | 27 sep | ✅ entregado |
 | Avance 1 · EDA | 4 oct | ✅ entregado |
 | Avance 2 · Características | 11 oct | ✅ notebook y reporte entregados |
-| **Avance 3 · Modelo de referencia** | **18 oct** | en curso · la matriz de la fase 2 ya está construida |
-| Avance 4 · Modelos alternativos | 25 oct | pendiente |
+| Avance 3 · Modelo de referencia | 18 oct | ✅ entregado · [notebook](contenido/notebooks/03_Baseline.html) |
+| **Avance 4 · Modelos alternativos** | **25 oct** | en curso |
 | Avance 5 · Ensambles | 1 nov | pendiente |
 
 **Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.

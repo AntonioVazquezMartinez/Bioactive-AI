@@ -194,6 +194,15 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 > **Pregunta:** ¿Hay razón experimental para separar también por laboratorio o por fuente, más allá del andamio?
 
+**El grupo es el andamio unido al esqueleto de conectividad, y la diferencia no es cosmética.** Un esqueleto puede aparecer con andamios distintos —un tautómero que cambia el anillo—, así que agrupar solo por andamio pone estereoisómeros del mismo compuesto a los dos lados del pliegue. Medido en el Avance 3 sobre la fase 1:
+
+| Agrupamiento | Grupos | AUROC | MCC |
+|:--|--:|:--|--:|
+| Andamio ∪ esqueleto | 1,048 | 0.937 [0.913, 0.955] | 0.705 |
+| Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.767** |
+
+**2.2 puntos de AUROC y 6.2 de MCC**, que es más de lo que separa a las tres canalizaciones candidatas entre sí ([1.5](#d1-5)). Es decir que el criterio de agrupamiento pesa más que la elección de modelo, y que **una cifra que no diga cómo agrupó no se puede comparar** con las de este registro. El criterio vive en `grupos_cv`, en `src/data_prep/splits.py`, y lo usan las dos fases.
+
 **Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura reporta que así se infla el resultado entre 7 y 13 puntos.
 
 **Se decidió.** Bemis-Murcko, agrupando también por esqueleto de conectividad para que los estereoisómeros no se separen. Los andamios frecuentes van a entrenamiento y los raros a prueba (convención de DeepChem): 5,557 / 749 / 1,499, sin andamio ni esqueleto compartido. **Los 312 compuestos acíclicos** (cadenas sin anillos, que no tienen andamio) **van todos a entrenamiento**: no comparten estructura de anillo con nada, así que no filtran información a la prueba, pero tampoco ayudan a medir generalización estructural.
@@ -227,6 +236,18 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 **Estado:** propuesta · revisada el 12 de octubre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 171 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
+
+**Medido en el Avance 3, con el arnés agrupado y las tres como canalizaciones.** Ninguna gana: los intervalos del 95% se solapan, y lo único que se distingue es la logística por debajo de las dos basadas en árboles.
+
+| Canalización | AUROC | IC 95% |
+|:--|--:|:--|
+| Bosque aleatorio | 0.937 | [0.913, 0.955] |
+| Boosting por histogramas | 0.935 | [0.912, 0.953] |
+| Regresión logística (min–max) | 0.914 | [0.888, 0.936] |
+
+Con una sola configuración por familia **no se declara ganador**, que es el error que esta misma entrada ya cometió una vez con el escalado y tuvo que retirar. Afinar es del Avance 4. Las cifras salen de `scripts/experimento_baseline.py` y del [notebook 03](../notebooks/03_Baseline.ipynb); la corrida está en `experimentos/2026-10-18-artemio-1.5-baseline-permeabilidad-descriptores/`.
+
+**Y el baseline usa la matriz sin transformar.** La guardada trae Yeo-Johnson ajustado sobre todas las filas de entrenamiento, así que usarla en validación cruzada mete en cada pliegue de evaluación información ajustada con él. Se midió la diferencia y es pequeña —alrededor de 0.001 de AUROC—, pero no se sabía hasta medirla. El escalado va dentro de la canalización, que se reajusta por pliegue.
 
 **Qué pasó.** El Avance 2 pedía escalamiento y selección de características. Escalar no es una decisión independiente: depende del modelo. Medido en el notebook 02: 120 pares de descriptores con correlación mayor a 0.95; Yeo-Johnson corrige mejor la asimetría, de 106 a 66 descriptores muy asimétricos. El PCA al 95% (85 componentes) da un MCC algo mayor con la regresión logística (0.512 contra 0.500) y algo menor con Random Forest (0.558 contra 0.566); el AUROC del Random Forest empeora (0.872 contra 0.916) y el intervalo del bootstrap de la diferencia cruza el cero. La selección dejó 171 de 206 descriptores.
 
