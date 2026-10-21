@@ -1,0 +1,442 @@
+prueba,modelo,estrato_o_contraste,medida,valor,ic_inf,ic_sup,detalle
+estratos,,análogo estereoquímico,n,768.0,,,BBB− 438
+estratos,,natural exacto,n,2920.0,,,BBB− 1345
+estratos,,sin equivalente natural,n,2618.0,,,BBB− 426
+estratos,,análogo estereoquímico·A,n,64.0,,,BBB− 8
+estratos,,análogo estereoquímico·B,n,297.0,,,BBB− 170
+estratos,,análogo estereoquímico·C,n,406.0,,,BBB− 260
+estratos,,análogo estereoquímico·D,n,1.0,,,BBB− 0
+estratos,,natural exacto·A,n,348.0,,,BBB− 34
+estratos,,natural exacto·B,n,1327.0,,,BBB− 613
+estratos,,natural exacto·C,n,1229.0,,,BBB− 683
+estratos,,natural exacto·D,n,16.0,,,BBB− 15
+estratos,,sin equivalente natural·A,n,340.0,,,BBB− 42
+estratos,,sin equivalente natural·B,n,1470.0,,,BBB− 230
+estratos,,sin equivalente natural·C,n,806.0,,,BBB− 152
+estratos,,sin equivalente natural·D,n,2.0,,,BBB− 2
+diferencia_pareada,logistica,NA−SE global,dAUROC,0.056218310148823614,0.01604524980509348,0.0987469124290463,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE global,dMCC_p_media,0.18943289146355502,0.07922237969763311,0.3055144220418028,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE global,dMCC_media_semillas,0.19705736153837755,0.08740690943208941,0.3098242788261447,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE global,dAUPRC_menos_base,-0.05283916650189374,-0.1542254975816005,0.05120516657619423,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE global,dAUROC,0.05293810232557661,0.022792363232183477,0.08631144454057561,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE global,dMCC_p_media,0.2150342199571985,0.11576960155597663,0.3244380812834672,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE global,dMCC_media_semillas,0.19716826105394203,0.09995369283274821,0.30568105406523327,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE global,dAUPRC_menos_base,-0.056021302622984215,-0.16054501221408551,0.04440073888628171,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE global,dAUROC,0.04964041819272802,0.017401313534510618,0.08507098773549057,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE global,dMCC_p_media,0.22706737955675116,0.11927573898536536,0.33208184473247837,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE global,dMCC_media_semillas,0.2065353533214045,0.10895822430942094,0.30071517774735584,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE global,dAUPRC_menos_base,-0.05719913348899752,-0.165039541804965,0.047299869119853934,natural exacto − sin equivalente natural; grupos 958 (166 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE A,dAUROC,0.06057041292129206,-0.042999061973142544,0.1857817721269632,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE A,dMCC_p_media,0.008834138257156204,-0.25457224045341226,0.2952572287324104,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE A,dMCC_media_semillas,0.051778700071050704,-0.18760824491894393,0.3191376505787183,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE A,dAUPRC_menos_base,-0.021313264804091514,-0.2142059144681589,0.2746654289730805,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE A,dAUROC,0.04137241610618514,-0.06912084169911396,0.164231252176618,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE A,dMCC_p_media,0.07231522176065047,-0.15299702127089715,0.3461140024115024,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE A,dMCC_media_semillas,0.06436208897729423,-0.16499997392180968,0.31481466317610196,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE A,dAUPRC_menos_base,0.029132059809058364,-0.21095997454135412,0.2757833313953705,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE A,dAUROC,0.056963220461099584,-0.04784373827644645,0.17265553946271878,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE A,dMCC_p_media,0.1074192460784307,-0.12886456562633733,0.37581804720909556,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE A,dMCC_media_semillas,0.1112675363177181,-0.096950795417407,0.34610625963524694,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE A,dAUPRC_menos_base,0.05105445295803762,-0.16673410706315497,0.2789455477262618,natural exacto·A − sin equivalente natural·A; grupos 299 (34 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE B,dAUROC,0.08129864600249348,0.02483207576272367,0.13768930253580872,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE B,dMCC_p_media,0.27665330509899805,0.12442903917561762,0.4286416191369185,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE B,dMCC_media_semillas,0.29290244340345734,0.1418594489773029,0.44309591490725886,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE B,dAUPRC_menos_base,-0.015462442970814061,-0.16130200860599522,0.11545729841647814,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE B,dAUROC,0.07430945374289932,0.02742285598540296,0.12045640427752458,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE B,dMCC_p_media,0.3148976507468972,0.15818976807924942,0.4708543938235746,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE B,dMCC_media_semillas,0.2975699094117655,0.14502580066914494,0.4491211558837275,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE B,dAUPRC_menos_base,-0.0234993506448119,-0.1800309107934236,0.11168880261484702,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE B,dAUROC,0.06872644472586242,0.019124105976758784,0.12030187722470384,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE B,dMCC_p_media,0.31842158323328973,0.15741786378455644,0.4699389177134039,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE B,dMCC_media_semillas,0.29550254641791546,0.15186234891967143,0.4286845884914743,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE B,dAUPRC_menos_base,-0.030034542515742113,-0.18682725692158772,0.1050118931807818,natural exacto·B − sin equivalente natural·B; grupos 697 (95 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE C,dAUROC,0.018990229100428357,-0.02236856455029987,0.06897055254841876,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE C,dMCC_p_media,0.0501354466106112,-0.05013928320811304,0.16056685490422146,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE C,dMCC_media_semillas,0.04356921557867921,-0.05710107414026854,0.15250091702094806,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA−SE C,dAUPRC_menos_base,-0.20058310321438289,-0.28664277168700025,-0.10768024532739752,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE C,dAUROC,0.017688434985502655,-0.015149828791941081,0.05570553958362295,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE C,dMCC_p_media,0.06465808397840167,-0.03835907780556845,0.18407286023304578,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE C,dMCC_media_semillas,0.040977074263799595,-0.052136972182249865,0.15270165309971823,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA−SE C,dAUPRC_menos_base,-0.2168590448715786,-0.301926546673671,-0.12130941746889778,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE C,dAUROC,0.013171212601657878,-0.01535798632336986,0.0461260690576653,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE C,dMCC_p_media,0.05998105418616628,-0.027980130007746115,0.16390793786279217,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE C,dMCC_media_semillas,0.04566465006449283,-0.041222360229286895,0.14219032163281933,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA−SE C,dAUPRC_menos_base,-0.22850984980185407,-0.3143004442529706,-0.13375022840979567,natural exacto·C − sin equivalente natural·C; grupos 637 (97 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA A−B,dAUROC,-0.08418122083051482,-0.15801760396098669,-0.015197019697695508,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA A−B,dMCC_p_media,-0.5163555699532425,-0.72483515815251,-0.29126876851271033,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA A−B,dMCC_media_semillas,-0.49473243727253385,-0.6936012284228669,-0.285465877714133,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,NA A−B,dAUPRC_menos_base,-0.2632344381584754,-0.37819363774600856,0.03545644465955842,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA A−B,dAUROC,-0.0900697630077062,-0.176604338632789,-0.022495290143190082,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA A−B,dMCC_p_media,-0.4630306101832759,-0.6680601696113461,-0.2648638044564152,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA A−B,dMCC_media_semillas,-0.4532341891716243,-0.6314321704190281,-0.27136843588885795,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,NA A−B,dAUPRC_menos_base,-0.2015064628460761,-0.35931290662468957,0.03960048201154086,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA A−B,dAUROC,-0.08089682189934178,-0.15681713250681095,-0.019125320048322784,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA A−B,dMCC_p_media,-0.42957781896120656,-0.6179895008076283,-0.23764892624202036,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA A−B,dMCC_media_semillas,-0.4050090310752651,-0.5729031796534101,-0.24306290941624165,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,NA A−B,dAUPRC_menos_base,-0.20485694800386833,-0.3534056047217087,0.03108947347770705,natural exacto·A − natural exacto·B; grupos 482 (72 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,SE A−B,dAUROC,-0.0634529877493134,-0.1830160287427812,0.03721731979333655,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,SE A−B,dMCC_p_media,-0.24853640311140068,-0.4874472887196939,-0.022100794542509426,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,SE A−B,dMCC_media_semillas,-0.2536086939401272,-0.48162970323126075,-0.04404182889958119,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,logistica,SE A−B,dAUPRC_menos_base,-0.25738361632519796,-0.43574415246593434,-0.04833856082043823,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,SE A−B,dAUROC,-0.05713272537099201,-0.17294878632227864,0.04198581691124296,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,SE A−B,dMCC_p_media,-0.2204481811970292,-0.4885898943480094,0.012955603056076848,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,SE A−B,dMCC_media_semillas,-0.22002636873715303,-0.4680652569778248,0.009197573705885262,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,bosque,SE A−B,dAUPRC_menos_base,-0.25413787329994636,-0.4290177885800393,-0.04386745811256425,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,SE A−B,dAUROC,-0.06913359763457894,-0.17506732996468816,0.029572061386766917,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,SE A−B,dMCC_p_media,-0.21857548180634753,-0.4923849643329929,0.027727122579057815,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,SE A−B,dMCC_media_semillas,-0.22077402097506774,-0.43986795196733486,-0.01232032939661485,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+diferencia_pareada,boosting,SE A−B,dAUPRC_menos_base,-0.28594594347764807,-0.4606746795046326,-0.0866534281040518,sin equivalente natural·A − sin equivalente natural·B; grupos 495 (76 compartidos); remuestras válidas 2000
+perfil,logistica,global,sensibilidad,0.9433731999023676,,,
+perfil,logistica,global,especificidad,0.7093707559981892,,,
+perfil,logistica,natural exacto,prev_pos,0.5393835616438356,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,sens,0.9180952380952381,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,espec,0.7598513011152417,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,p_media_neg,0.2490935982895838,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,frac_neg_p_ge_05,0.24014869888475837,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,auprc_neg,0.9070725512158073,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,base_neg,0.4606164383561644,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,mcc_obs,0.6915049464635802,,,"n=2920, BBB−=1345"
+perfil,logistica,natural exacto,mcc_esp,0.6789582861825437,,,"n=2920, BBB−=1345"
+perfil,logistica,análogo estereoquímico,prev_pos,0.4296875,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,sens,0.906060606060606,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,espec,0.817351598173516,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,p_media_neg,0.22379378537986294,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,frac_neg_p_ge_05,0.182648401826484,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,auprc_neg,0.9295806117230223,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,base_neg,0.5703125,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,mcc_obs,0.7162843307374902,,,"n=768, BBB−=438"
+perfil,logistica,análogo estereoquímico,mcc_esp,0.6528933000713202,,,"n=768, BBB−=438"
+perfil,logistica,sin equivalente natural,prev_pos,0.8372803666921314,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,sens,0.9671532846715328,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,espec,0.43896713615023475,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,p_media_neg,0.4931778978104443,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,frac_neg_p_ge_05,0.5610328638497653,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,auprc_neg,0.6620149126694053,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,base_neg,0.1627196333078686,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,mcc_obs,0.5020720550000252,,,"n=2618, BBB−=426"
+perfil,logistica,sin equivalente natural,mcc_esp,0.6525478667997675,,,"n=2618, BBB−=426"
+perfil,logistica,natural exacto·A,prev_pos,0.9022988505747126,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,sens,0.910828025477707,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,espec,0.35294117647058826,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,p_media_neg,0.5253379731279268,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,frac_neg_p_ge_05,0.6470588235294118,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,auprc_neg,0.30706732604331033,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,base_neg,0.09770114942528736,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,mcc_obs,0.24554043109530352,,,"n=348, BBB−=34"
+perfil,logistica,natural exacto·A,mcc_esp,0.5955401632942107,,,"n=348, BBB−=34"
+perfil,logistica,análogo estereoquímico·A,prev_pos,0.875,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,sens,0.7857142857142857,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,espec,0.75,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,p_media_neg,0.34529909768995515,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,frac_neg_p_ge_05,0.25,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,auprc_neg,0.5693732193732194,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,base_neg,0.125,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,mcc_obs,0.39405520311955033,,,"n=64, BBB−=8"
+perfil,logistica,análogo estereoquímico·A,mcc_esp,0.6254873248361805,,,"n=64, BBB−=8"
+perfil,logistica,sin equivalente natural·A,prev_pos,0.8764705882352941,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,sens,0.9496644295302014,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,espec,0.23809523809523808,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,p_media_neg,0.6141357360747717,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,frac_neg_p_ge_05,0.7619047619047619,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,auprc_neg,0.3542088531868204,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,base_neg,0.12352941176470589,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,mcc_obs,0.23670629283814731,,,"n=340, BBB−=42"
+perfil,logistica,sin equivalente natural·A,mcc_esp,0.6241441706240451,,,"n=340, BBB−=42"
+perfil,logistica,natural exacto·B,prev_pos,0.5380557648831952,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,sens,0.9089635854341737,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,espec,0.8499184339314845,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,p_media_neg,0.1824819962100367,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,frac_neg_p_ge_05,0.1500815660685155,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,auprc_neg,0.9345448498933032,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,base_neg,0.4619442351168048,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,mcc_obs,0.761896001048546,,,"n=1327, BBB−=613"
+perfil,logistica,natural exacto·B,mcc_esp,0.6787343927536841,,,"n=1327, BBB−=613"
+perfil,logistica,análogo estereoquímico·B,prev_pos,0.4276094276094276,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,sens,0.9448818897637795,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,espec,0.8647058823529412,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,p_media_neg,0.1656650824098524,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,frac_neg_p_ge_05,0.13529411764705881,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,auprc_neg,0.9471152591332791,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,base_neg,0.5723905723905723,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,mcc_obs,0.8016077033291895,,,"n=297, BBB−=170"
+perfil,logistica,análogo estereoquímico·B,mcc_esp,0.6522438090754281,,,"n=297, BBB−=170"
+perfil,logistica,sin equivalente natural·B,prev_pos,0.8435374149659864,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,sens,0.9741935483870968,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,espec,0.39565217391304347,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,p_media_neg,0.5200451469570617,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,frac_neg_p_ge_05,0.6043478260869565,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,auprc_neg,0.6445256427813261,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,base_neg,0.1564625850340136,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,mcc_obs,0.485242695949548,,,"n=1470, BBB−=230"
+perfil,logistica,sin equivalente natural·B,mcc_esp,0.6488933536420414,,,"n=1470, BBB−=230"
+perfil,logistica,natural exacto·C,prev_pos,0.44426362896663957,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,sens,0.9340659340659341,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,espec,0.7115666178623719,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,p_media_neg,0.2852279938862926,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,frac_neg_p_ge_05,0.2884333821376281,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,auprc_neg,0.9353997131973522,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,base_neg,0.5557363710333605,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,mcc_obs,0.6490036415175718,,,"n=1229, BBB−=683"
+perfil,logistica,natural exacto·C,mcc_esp,0.6572759547248286,,,"n=1229, BBB−=683"
+perfil,logistica,análogo estereoquímico·C,prev_pos,0.35960591133004927,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,sens,0.9178082191780822,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,espec,0.7884615384615384,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,p_media_neg,0.2580623892507132,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,frac_neg_p_ge_05,0.21153846153846154,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,auprc_neg,0.9354692708130798,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,base_neg,0.6403940886699507,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,mcc_obs,0.679474156360586,,,"n=406, BBB−=260"
+perfil,logistica,análogo estereoquímico·C,mcc_esp,0.627291280240347,,,"n=406, BBB−=260"
+perfil,logistica,sin equivalente natural·C,prev_pos,0.8114143920595533,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,sens,0.9617737003058104,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,espec,0.5657894736842105,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,p_media_neg,0.41618437838169803,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,frac_neg_p_ge_05,0.4342105263157895,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,auprc_neg,0.7688320533188212,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,base_neg,0.18858560794044665,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,mcc_obs,0.5988681949069606,,,"n=806, BBB−=152"
+perfil,logistica,sin equivalente natural·C,mcc_esp,0.6650198076530108,,,"n=806, BBB−=152"
+perfil,bosque,global,sensibilidad,0.9377593360995851,,,
+perfil,bosque,global,especificidad,0.7387958352195564,,,
+perfil,bosque,natural exacto,prev_pos,0.5393835616438356,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,sens,0.9168253968253969,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,espec,0.8014869888475836,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,p_media_neg,0.24475793658015202,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,frac_neg_p_ge_05,0.19851301115241635,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,auprc_neg,0.9289628881017117,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,base_neg,0.4606164383561644,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,mcc_obs,0.7269032673299153,,,"n=2920, BBB−=1345"
+perfil,bosque,natural exacto,mcc_esp,0.6969931302657668,,,"n=2920, BBB−=1345"
+perfil,bosque,análogo estereoquímico,prev_pos,0.4296875,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,sens,0.8606060606060606,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,espec,0.817351598173516,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,p_media_neg,0.220002218243153,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,frac_neg_p_ge_05,0.182648401826484,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,auprc_neg,0.9405990983917035,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,base_neg,0.5703125,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,mcc_obs,0.6721330052596629,,,"n=768, BBB−=438"
+perfil,bosque,análogo estereoquímico,mcc_esp,0.673471774843579,,,"n=768, BBB−=438"
+perfil,bosque,sin equivalente natural,prev_pos,0.8372803666921314,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,sens,0.9644160583941606,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,espec,0.460093896713615,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,p_media_neg,0.47260158452760637,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,frac_neg_p_ge_05,0.539906103286385,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,auprc_neg,0.6870873856764002,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,base_neg,0.1627196333078686,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,mcc_obs,0.5118690473727168,,,"n=2618, BBB−=426"
+perfil,bosque,sin equivalente natural,mcc_esp,0.6612263085710277,,,"n=2618, BBB−=426"
+perfil,bosque,natural exacto·A,prev_pos,0.9022988505747126,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,sens,0.8949044585987261,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,espec,0.5,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,p_media_neg,0.4835037200453867,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,frac_neg_p_ge_05,0.5,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,auprc_neg,0.3735724316686168,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,base_neg,0.09770114942528736,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,mcc_obs,0.3342744519477698,,,"n=348, BBB−=34"
+perfil,bosque,natural exacto·A,mcc_esp,0.6005821334698078,,,"n=348, BBB−=34"
+perfil,bosque,análogo estereoquímico·A,prev_pos,0.875,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,sens,0.8214285714285714,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,espec,0.5,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,p_media_neg,0.4254144118182109,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,frac_neg_p_ge_05,0.5,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,auprc_neg,0.5320543172105672,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,base_neg,0.125,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,mcc_obs,0.2571428571428571,,,"n=64, BBB−=8"
+perfil,bosque,análogo estereoquímico·A,mcc_esp,0.6322101724759679,,,"n=64, BBB−=8"
+perfil,bosque,sin equivalente natural·A,prev_pos,0.8764705882352941,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,sens,0.9496644295302014,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,espec,0.2619047619047619,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,p_media_neg,0.5973070282891711,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,frac_neg_p_ge_05,0.7380952380952381,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,auprc_neg,0.370268634198977,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,base_neg,0.12352941176470589,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,mcc_obs,0.2619592301871193,,,"n=340, BBB−=42"
+perfil,bosque,sin equivalente natural·A,mcc_esp,0.6307828119344242,,,"n=340, BBB−=42"
+perfil,bosque,natural exacto·B,prev_pos,0.5380557648831952,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,sens,0.9327731092436975,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,espec,0.8597063621533442,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,p_media_neg,0.19399747469288542,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,frac_neg_p_ge_05,0.1402936378466558,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,auprc_neg,0.9393219802062104,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,base_neg,0.4619442351168048,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,mcc_obs,0.7973050621310457,,,"n=1327, BBB−=613"
+perfil,bosque,natural exacto·B,mcc_esp,0.6968013669409894,,,"n=1327, BBB−=613"
+perfil,bosque,análogo estereoquímico·B,prev_pos,0.4276094276094276,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,sens,0.905511811023622,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,espec,0.8823529411764706,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,p_media_neg,0.1668212056291353,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,frac_neg_p_ge_05,0.11764705882352941,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,auprc_neg,0.9650938677713802,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,base_neg,0.5723905723905723,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,mcc_obs,0.7828050179678382,,,"n=297, BBB−=170"
+perfil,bosque,análogo estereoquímico·B,mcc_esp,0.672868303499043,,,"n=297, BBB−=170"
+perfil,bosque,sin equivalente natural·B,prev_pos,0.8435374149659864,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,sens,0.9733870967741935,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,espec,0.39565217391304347,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,p_media_neg,0.49837204755476283,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,frac_neg_p_ge_05,0.6043478260869565,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,auprc_neg,0.657339680768231,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,base_neg,0.1564625850340136,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,mcc_obs,0.4824074113841485,,,"n=1470, BBB−=230"
+perfil,bosque,sin equivalente natural·B,mcc_esp,0.6572719610363037,,,"n=1470, BBB−=230"
+perfil,bosque,natural exacto·C,prev_pos,0.44426362896663957,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,sens,0.9084249084249084,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,espec,0.780380673499268,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,p_media_neg,0.26934247324562527,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,frac_neg_p_ge_05,0.21961932650073207,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,auprc_neg,0.9486760907591356,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,base_neg,0.5557363710333605,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,mcc_obs,0.6854137218935349,,,"n=1229, BBB−=683"
+perfil,bosque,natural exacto·C,mcc_esp,0.6775291944033415,,,"n=1229, BBB−=683"
+perfil,bosque,análogo estereoquímico·C,prev_pos,0.35960591133004927,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,sens,0.8356164383561644,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,espec,0.7846153846153846,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,p_media_neg,0.2484540436115474,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,frac_neg_p_ge_05,0.2153846153846154,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,auprc_neg,0.9417590980879209,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,base_neg,0.6403940886699507,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,mcc_obs,0.5998459383989965,,,"n=406, BBB−=260"
+perfil,bosque,análogo estereoquímico·C,mcc_esp,0.6493634663749026,,,"n=406, BBB−=260"
+perfil,bosque,sin equivalente natural·C,prev_pos,0.8114143920595533,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,sens,0.9541284403669725,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,espec,0.618421052631579,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,p_media_neg,0.39636984559820604,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,frac_neg_p_ge_05,0.3815789473684211,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,auprc_neg,0.7983843725378004,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,base_neg,0.18858560794044665,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,mcc_obs,0.6207556379151332,,,"n=806, BBB−=152"
+perfil,bosque,sin equivalente natural·C,mcc_esp,0.6748527378919705,,,"n=806, BBB−=152"
+perfil,boosting,global,sensibilidad,0.9262875274591165,,,
+perfil,boosting,global,especificidad,0.7627885921231327,,,
+perfil,boosting,natural exacto,prev_pos,0.5393835616438356,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,sens,0.9060317460317461,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,espec,0.8185873605947955,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,p_media_neg,0.20160461901718774,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,frac_neg_p_ge_05,0.18141263940520447,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,auprc_neg,0.9258988345325844,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,base_neg,0.4606164383561644,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,mcc_obs,0.7300317664761982,,,"n=2920, BBB−=1345"
+perfil,boosting,natural exacto,mcc_esp,0.7038278367306682,,,"n=2920, BBB−=1345"
+perfil,boosting,análogo estereoquímico,prev_pos,0.4296875,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,sens,0.8515151515151516,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,espec,0.8561643835616438,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,p_media_neg,0.17245050260239397,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,frac_neg_p_ge_05,0.14383561643835616,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,auprc_neg,0.919820835024742,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,base_neg,0.5703125,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,mcc_obs,0.7044797472749165,,,"n=768, BBB−=438"
+perfil,boosting,análogo estereoquímico,mcc_esp,0.6837466991016854,,,"n=768, BBB−=438"
+perfil,boosting,sin equivalente natural,prev_pos,0.8372803666921314,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,sens,0.9520985401459854,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,espec,0.49061032863849763,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,p_media_neg,0.4689581114674981,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,frac_neg_p_ge_05,0.5093896713615024,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,auprc_neg,0.6852011629732861,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,base_neg,0.1627196333078686,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,mcc_obs,0.502964386919447,,,"n=2618, BBB−=426"
+perfil,boosting,sin equivalente natural,mcc_esp,0.6538819323141082,,,"n=2618, BBB−=426"
+perfil,boosting,natural exacto·A,prev_pos,0.9022988505747126,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,sens,0.8980891719745223,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,espec,0.5,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,p_media_neg,0.4450499176921957,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,frac_neg_p_ge_05,0.5,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,auprc_neg,0.364586011259501,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,base_neg,0.09770114942528736,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,mcc_obs,0.33982162578096947,,,"n=348, BBB−=34"
+perfil,boosting,natural exacto·A,mcc_esp,0.5878137811198741,,,"n=348, BBB−=34"
+perfil,boosting,análogo estereoquímico·A,prev_pos,0.875,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,sens,0.7321428571428571,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,espec,0.875,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,p_media_neg,0.30661720551408533,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,frac_neg_p_ge_05,0.125,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,auprc_neg,0.4417683702008645,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,base_neg,0.125,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,mcc_obs,0.42276002160669474,,,"n=64, BBB−=8"
+perfil,boosting,análogo estereoquímico·A,mcc_esp,0.6218631322164389,,,"n=64, BBB−=8"
+perfil,boosting,sin equivalente natural·A,prev_pos,0.8764705882352941,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,sens,0.9261744966442953,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,espec,0.2857142857142857,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,p_media_neg,0.633560599703681,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,frac_neg_p_ge_05,0.7142857142857143,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,auprc_neg,0.33935982064088194,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,base_neg,0.12352941176470589,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,mcc_obs,0.23240237970253877,,,"n=340, BBB−=42"
+perfil,boosting,sin equivalente natural·A,mcc_esp,0.6203101206148396,,,"n=340, BBB−=42"
+perfil,boosting,natural exacto·B,prev_pos,0.5380557648831952,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,sens,0.9005602240896359,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,espec,0.867862969004894,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,p_media_neg,0.15296198214301446,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,frac_neg_p_ge_05,0.13213703099510604,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,auprc_neg,0.9336860449548868,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,base_neg,0.4619442351168048,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,mcc_obs,0.769399444742176,,,"n=1327, BBB−=613"
+perfil,boosting,natural exacto·B,mcc_esp,0.703680379225544,,,"n=1327, BBB−=613"
+perfil,boosting,análogo estereoquímico·B,prev_pos,0.4276094276094276,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,sens,0.905511811023622,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,espec,0.8941176470588236,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,p_media_neg,0.13532237004139677,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,frac_neg_p_ge_05,0.10588235294117647,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,auprc_neg,0.9405859357364174,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,base_neg,0.5723905723905723,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,mcc_obs,0.7955497830923552,,,"n=297, BBB−=170"
+perfil,boosting,análogo estereoquímico·B,mcc_esp,0.6832048050081644,,,"n=297, BBB−=170"
+perfil,boosting,sin equivalente natural·B,prev_pos,0.8435374149659864,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,sens,0.957258064516129,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,espec,0.41739130434782606,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,p_media_neg,0.5109625091445462,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,frac_neg_p_ge_05,0.5826086956521739,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,auprc_neg,0.6582389373878378,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,base_neg,0.1564625850340136,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,mcc_obs,0.4509778615088863,,,"n=1470, BBB−=230"
+perfil,boosting,sin equivalente natural·B,mcc_esp,0.649458993320113,,,"n=1470, BBB−=230"
+perfil,boosting,natural exacto·C,prev_pos,0.44426362896663957,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,sens,0.9175824175824175,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,espec,0.8023426061493412,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,p_media_neg,0.22256389630673212,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,frac_neg_p_ge_05,0.19765739385065886,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,auprc_neg,0.9485485615723944,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,base_neg,0.5557363710333605,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,mcc_obs,0.7158763878372977,,,"n=1229, BBB−=683"
+perfil,boosting,natural exacto·C,mcc_esp,0.6873689049194813,,,"n=1229, BBB−=683"
+perfil,boosting,análogo estereoquímico·C,prev_pos,0.35960591133004927,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,sens,0.8493150684931506,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,espec,0.8307692307692308,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,p_media_neg,0.19259838303345544,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,frac_neg_p_ge_05,0.16923076923076924,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,auprc_neg,0.9272536499796872,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,base_neg,0.6403940886699507,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,mcc_obs,0.6626477552689409,,,"n=406, BBB−=260"
+perfil,boosting,análogo estereoquímico·C,mcc_esp,0.6616519468855568,,,"n=406, BBB−=260"
+perfil,boosting,sin equivalente natural·C,prev_pos,0.8114143920595533,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,sens,0.9541284403669725,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,espec,0.6644736842105263,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,p_media_neg,0.3537955053271064,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,frac_neg_p_ge_05,0.3355263157894737,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,auprc_neg,0.8099076482813347,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,base_neg,0.18858560794044665,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,mcc_obs,0.6558953336511314,,,"n=806, BBB−=152"
+perfil,boosting,sin equivalente natural·C,mcc_esp,0.6693277890854543,,,"n=806, BBB−=152"
+frontera,,grupo A,cobertura_logbb,0.9933510638297872,,,fracción de filas del grupo con logBB no nulo
+frontera,,grupo B,cobertura_logbb,0.0,,,fracción de filas del grupo con logBB no nulo
+frontera,,natural exacto·A,frac_bbb_neg_cerca_corte,0.4411764705882353,,,BBB− con logBB: 34; |logBB+1|<0.3
+frontera,,análogo estereoquímico·A,frac_bbb_neg_cerca_corte,0.5714285714285714,,,BBB− con logBB: 7; |logBB+1|<0.3
+frontera,,sin equivalente natural·A,frac_bbb_neg_cerca_corte,0.3333333333333333,,,BBB− con logBB: 42; |logBB+1|<0.3
+frontera,logistica,grupo A,frac_errores_cerca_corte,0.4036697247706422,,,errores 109
+frontera,logistica,grupo A,frac_aciertos_cerca_corte,0.06269592476489028,,,aciertos 638
+frontera,bosque,grupo A,frac_errores_cerca_corte,0.3394495412844037,,,errores 109
+frontera,bosque,grupo A,frac_aciertos_cerca_corte,0.07366771159874608,,,aciertos 638
+frontera,boosting,grupo A,frac_errores_cerca_corte,0.3017241379310345,,,errores 116
+frontera,boosting,grupo A,frac_aciertos_cerca_corte,0.07765451664025357,,,aciertos 631
+tpsa,,natural exacto,mediana_tpsa_bbb_neg,136.07000732421875,,,BBB− 1345
+tpsa,,análogo estereoquímico,mediana_tpsa_bbb_neg,167.44000244140625,,,BBB− 438
+tpsa,,sin equivalente natural,mediana_tpsa_bbb_neg,92.69999694824219,,,BBB− 426
+tpsa,,natural exacto·A,mediana_tpsa_bbb_neg,91.69999694824219,,,BBB− 34
+tpsa,,sin equivalente natural·A,mediana_tpsa_bbb_neg,83.91000366210938,,,BBB− 42
+tpsa,,natural exacto·B,mediana_tpsa_bbb_neg,147.2100067138672,,,BBB− 613
+tpsa,,sin equivalente natural·B,mediana_tpsa_bbb_neg,87.38999938964844,,,BBB− 230
+tpsa,,natural exacto·C,mediana_tpsa_bbb_neg,132.9600067138672,,,BBB− 683
+tpsa,,sin equivalente natural·C,mediana_tpsa_bbb_neg,111.66999816894531,,,BBB− 152
+fuga_prior,boosting,natural exacto,auroc_descriptores_a_estrato,0.7730887761046695,,,prevalencia 0.463
+fuga_prior,boosting,grupo A,auroc_descriptores_a_estrato,0.8444049573242209,,,prevalencia 0.119
+fuga_prior,,origen,auroc_solo_tasa_del_estrato,0.6846798433594213,,,referencia: predecir BBB+ con la tasa del estrato; el origen·grupo no se conoce al inferir
+fuga_prior,,origen·grupo,auroc_solo_tasa_del_estrato,0.7355873684694373,,,referencia: predecir BBB+ con la tasa del estrato; el origen·grupo no se conoce al inferir
