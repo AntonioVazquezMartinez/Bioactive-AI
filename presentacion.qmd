@@ -151,7 +151,7 @@ En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% cont
 :::
 
 ::: {.callout-important}
-Puede ser química real o un artefacto de curación, y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
+Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
 :::
 
 # 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
