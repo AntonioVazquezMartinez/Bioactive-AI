@@ -18,13 +18,13 @@ Qué se mide y por qué así
    independiente (`cv.intervalo_por_grupos`). El remuestreo es *conjunto*: en cada réplica
    se eligen grupos de la unión de los dos estratos y se calcula la diferencia sobre lo
    elegido, de modo que un grupo que aporta filas a los dos estratos (hay 34 en el grupo A,
-   95 en el B) mueve las dos medidas a la vez, como debe. Contrastes: natural exacto contra
+   95 en el B) mueve las medidas a la vez, como debe. Contrastes: natural exacto contra
    sin equivalente (global, en A, en B y en C) y A contra B dentro de cada origen. Se usa la
    probabilidad promediada entre semillas; el MCC se da de dos maneras, sobre esa
    probabilidad media y como promedio de los MCC por semilla, que es como lo reporta el
    baseline. También se da la diferencia de AUPRC de BBB− menos su línea base (la
-   prevalencia de BBB−), porque el AUPRC cruda depende de la prevalencia del estrato y la
-   resta la quita.
+   prevalencia de BBB−), porque el AUPRC cruda depende de la prevalencia del estrato; la
+   resta no quita esa dependencia, porque el máximo del AUPRC es 1 − π.
 2. **Perfil por estrato.** n, BBB−, sensibilidad y especificidad con corte 0.5,
    probabilidad media de los BBB−, fracción de BBB− que el modelo manda a BBB+ (p ≥ 0.5)
    y AUPRC de BBB− junto a su línea base.
@@ -39,7 +39,9 @@ Qué se mide y por qué así
    misma es casi arbitraria ahí. Se reporta esa fracción y la de errores contra aciertos
    cerca del corte.
 5. **TPSA de los BBB−.** Mediana por estrato: TPSA domina empíricamente la permeabilidad
-   (<67 Å²), así que unos BBB− con TPSA baja son difíciles por construcción.
+   (<67 Å²); el argumento es contra el umbral óptimo de este conjunto (101.9 Å² en el
+   completo, 107.0 en entrenamiento), no contra 67 Å²: unos BBB− por debajo de él caen del
+   lado donde la mayoría es BBB+, y eso podría hacerlos difíciles. Es una hipótesis.
 6. **Control de fuga de prior.** Si los descriptores predicen «natural exacto» o «grupo A»
    en CV agrupada, el modelo *podría* aprender, de los descriptores, el prior de BBB+ del
    estrato en vez de la química de la permeabilidad. Se mide con un boosting por defecto
@@ -63,7 +65,7 @@ Límites, escritos antes de ver la cifra
 - **Los intervalos remuestrean grupos**, así que cubren la variación entre grupos pero no
   la de reentrenar (las tres semillas comparten filas). Son 2000 remuestras, semilla 0,
   las del auditor y las de `intervalo_por_grupos`.
-- Muchos contrastes (4 + 2 por 3 modelos por 2 medidas): ninguno está corregido por
+- Muchos contrastes (4 + 2 por 3 modelos por 4 medidas): ninguno está corregido por
   comparaciones múltiples. Se lee el patrón entre modelos, no un intervalo suelto.
 
 Salida: tablas en pantalla y `notebooks/datos/analisis_origen_fase1.csv` en formato largo
