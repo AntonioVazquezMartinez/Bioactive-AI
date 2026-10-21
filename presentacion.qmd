@@ -182,7 +182,7 @@ En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente). Todo lo que se apre
 :::
 
 ::: {.callout-note}
-Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**: con un bootstrap de **esqueletos** —no de filas, que no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas verdes). **Decisión:** derivarlo solo con entrenamiento y no citarlo como constante. En la Ruta: supuesto S1.3.
+Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**: con un bootstrap de **esqueletos** —no de filas, que no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas azules). **Decisión:** derivarlo solo con entrenamiento y no citarlo como constante. En la Ruta: supuesto S1.3.
 :::
 
 # 3 · Cómo convertimos moléculas en números {background-color="#2a3441"}
@@ -348,7 +348,7 @@ Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sob
 :::
 
 ::: {.callout-note}
-Construida y guardada en el artefacto, no en una celda: **49,425 / 6,986 / 13,973** pares en entrenamiento, validación y prueba, agrupando por andamio. Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los 54,369 primeros y no toca la prueba ([2.7](contenido/decisiones.html#d2-7)).
+Construida y guardada en el artefacto, no en una celda: **49,425 / 6,986 / 13,973** pares en entrenamiento, validación y prueba, agrupando por andamio. Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los **54,369** de esos 56,411 que tienen etiqueta utilizable a 10 µM, y no toca la prueba ([2.7](contenido/decisiones.html#d2-7)).
 :::
 
 ## ¿Con qué dianas se puede entrenar? {.smaller}
@@ -380,7 +380,7 @@ Cada diana pertenece a una categoría de enfermedad. Los registros se reparten a
 :::
 
 ::: {.callout-caution}
-El criterio cambió al comprobarlo. Con «mil pares o más» salían catorce; mirando los pliegues diana por diana, **dos de las grandes no sostienen un modelo propio aunque tengan volumen**: `LRRK2` (2,709 pares, 96.8% activos) deja un pliegue con 13 negativos y `GRIN2B` (1,592 pares pero solo 172 grupos) deja uno con **5**. Si ella prioriza una diana pequeña, la respuesta no es entrenarle un modelo: es esa cifra.
+El criterio cambió al comprobarlo. Con «mil pares o más» salían catorce sobre el archivo entero, y **trece** sobre lo que queda para ajustar al reservar la prueba; de esas trece, mirando los pliegues diana por diana, **dos no sostienen un modelo propio aunque tengan volumen**: `LRRK2` (2,709 pares fuera de la prueba, 96.8% activos ahí y 96.5% sobre el archivo completo) deja un pliegue con 13 negativos y `GRIN2B` (1,592 pares pero solo 172 grupos) deja uno con **5**. Si ella prioriza una diana pequeña, la respuesta no es entrenarle un modelo: es esa cifra.
 :::
 
 ## La matriz de la fase 2, y el objetivo guardado como intervalo {.smaller}
@@ -404,11 +404,11 @@ Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen 
 ## Tres cosas que la etiqueta esconde, y se publican siempre {.smaller}
 
 ::: {.callout-warning}
-**1 · El mismo corte no mide lo mismo en cada diana.** La mediana de potencia va de 5.02 a 7.40, **241 veces**. Con 10 µM, `LRRK2` queda en 96.5% de activos —casi constante, inútil como objetivo— y `MAOA` en 35.0%.
+**1 · El mismo corte no mide lo mismo en cada diana.** Sobre las 25 dianas con 50 pares o más, la mediana de potencia va de 5.02 en `NFE2L2` a 7.55 en `IL6`: **337 veces** en concentración. Con 10 µM, `LRRK2` queda en 96.5% de activos sobre el archivo completo —casi constante, inútil como objetivo— y `MAOA` en 35.0%.
 :::
 
 ::: {.callout-warning}
-**2 · La procedencia está confundida con la etiqueta.** Los pares que solo tiene ChEMBL son **75.8%** activos; los que solo tiene NPASS, **14.0%**. Sesenta y tres puntos. El [control de atajo](contenido/decisiones.html#d2-3) decide si el modelo está aprendiendo química o procedencia: si un modelo que solo ve la fuente se acerca al que ve estructura, se vuelve a ChEMBL.
+**2 · La procedencia está confundida con la etiqueta.** Los pares que solo tiene ChEMBL son **75.8%** activos; los que solo tiene NPASS, **14.0%**. Casi sesenta y dos puntos. El [control de atajo](contenido/decisiones.html#d2-3) decide si el modelo está aprendiendo química o procedencia: si un modelo que solo ve la fuente se acerca al que ve estructura, se vuelve a ChEMBL.
 :::
 
 ::: {.callout-warning}
@@ -417,7 +417,7 @@ Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen 
 
 ## ¿Qué error le cuesta más? {.smaller}
 
-Mueve el corte y mira el intercambio con los datos del proyecto:
+Mueve el corte y mira el intercambio, contado **sobre entrenamiento**: la partición de prueba está reservada y no se cuenta tampoco aquí.
 
 ::: {.bio-grafica data-grafica="costo"}
 :::
@@ -436,13 +436,13 @@ Contra qué se van a comparar los modelos de los Avances 4 y 5.
 
 ## Tres candidatos, ninguno gana {.smaller}
 
-Las tres familias de la [1.5](contenido/decisiones.html#d1-5), con sus hiperparámetros por omisión, la misma partición y las mismas métricas. Sobre permeabilidad:
+Las tres familias de la [1.5](contenido/decisiones.html#d1-5), **sin afinar** —que no es lo mismo que «por omisión»: el bosque lleva 300 árboles y `min_samples_leaf=2`, fijados una vez y no buscados—, con la misma partición y las mismas métricas. Sobre permeabilidad, con la matriz de 151 columnas:
 
-| Canalización | AUROC | Intervalo del 95% |
-|:--|--:|:--|
-| Bosque aleatorio | 0.937 | [0.913, 0.955] |
-| Boosting por histogramas | 0.935 | [0.912, 0.953] |
-| Regresión logística (min–max) | 0.914 | [0.888, 0.936] |
+| Canalización | AUROC | Intervalo del 95% | MCC |
+|:--|--:|:--|--:|
+| Boosting por histogramas | 0.938 | [0.915, 0.956] | 0.702 |
+| Bosque aleatorio | 0.937 | [0.913, 0.955] | 0.700 |
+| Regresión logística (min–max) | 0.918 | [0.893, 0.939] | 0.687 |
 
 ::: {.callout-important}
 **Los tres intervalos se solapan, así que el baseline no elige ganador: fija el nivel.** Con una sola configuración por familia, declarar un ganador sería repetir el error que esta misma entrada ya cometió con el escalado y tuvo que retirar. Afinar es del Avance 4.
@@ -458,11 +458,11 @@ El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de
 
 | Agrupamiento | Grupos | AUROC | MCC |
 |:--|--:|:--|--:|
-| Andamio **∪** esqueleto | 1,048 | 0.937 [0.913, 0.955] | 0.705 |
-| Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.767** |
+| Andamio **∪** esqueleto | 1,048 | 0.936 [0.912, 0.955] | 0.699 |
+| Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.769** |
 
 ::: {.callout-caution}
-**2.2 puntos de AUROC y 6.2 de MCC**, que es más de lo que separa a las tres canalizaciones entre sí. Dicho al revés: **el criterio de partición importa más que la elección de modelo**, y una cifra que no diga cómo agrupó no se puede comparar con estas.
+**2.2 puntos de AUROC y 7.1 de MCC.** En MCC eso es mucho más que la elección de modelo, que mueve 1.5 puntos entre la logística y el boosting: **el criterio de partición importa casi cinco veces más**. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
 :::
 
 ::: {.callout-note}
@@ -553,7 +553,7 @@ Ninguna de las cinco se declara ratificada y **cada una dice qué la haría camb
 
 **Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.
 
-**Veinticinco entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 10 vigentes, 12 propuestas y 1 abierta.
+**Veinticinco entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 13 vigentes, 9 propuestas y 1 abierta. Ocho de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
 
 ## Lo que falta antes de reportar candidatos
 
