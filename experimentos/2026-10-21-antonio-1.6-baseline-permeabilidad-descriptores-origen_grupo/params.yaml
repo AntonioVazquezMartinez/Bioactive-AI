@@ -1,0 +1,15 @@
+decision: '1.6'
+semillas:
+- 0
+- 1
+- 2
+params:
+  tarea: permeabilidad
+  representacion: descriptores
+  umbral_um: null
+  estratos: origen_grupo
+  pliegues: 5
+  canalizaciones:
+  - logistica
+  - bosque
+  - boosting
