@@ -176,7 +176,7 @@ Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `
 
 ## Fase 1 · Permeabilidad {#fase1}
 
-El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de conectividad: ese es el tamaño efectivo. Evidencia: [reporte del Avance 1](reportes/README.md), [notebook 01](../notebooks/01_EDA.ipynb) y [notebook 02](../notebooks/02_Feature_Eng.ipynb).
+El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de conectividad: ese es el tamaño efectivo. Evidencia: [reporte del Avance 1](reportes/README.md), [notebook 01](../notebooks/01_EDA.ipynb), [notebook 02](../notebooks/02_Feature_Eng.ipynb) (la matriz de 151 columnas y la partición) y [notebook 03](../notebooks/03_Baseline.ipynb) (el modelo de referencia).
 
 ### Decisiones
 
@@ -426,7 +426,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 
 ## Fase 2 · Actividad {#fase2}
 
-202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es una medición: un compuesto contra una proteína, con tipo (IC50, Ki, EC50), relación (`=`, `>`, `<`), valor y unidad. El pChEMBL es −log₁₀ de la concentración molar: 5 equivale a 10 µM y 6 a 1 µM. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. Todavía no hay matriz de características ni partición. Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) y [datos del proyecto](datos-contenido.md).
+202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es una medición: un compuesto contra una proteína, con tipo (IC50, Ki, EC50), relación (`=`, `>`, `<`), valor y unidad. El pChEMBL es −log₁₀ de la concentración molar: 5 equivale a 10 µM y 6 a 1 µM. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. **La matriz de pares ya está construida** —70,384 pares compuesto-diana sobre 59,532 esqueletos de conectividad, con 201 descriptores por compuesto— **y la partición con la prueba reservada también** ([2.7](#d2-7)); el modelo de referencia del Avance 3 corre sobre ellas ([2.9](#d2-9)). Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) (los datos), [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb) (la matriz y la partición), [notebook 03](../notebooks/03_Baseline.ipynb) (el modelo de referencia) y [datos del proyecto](datos-contenido.md).
 
 ### Decisiones
 
@@ -599,7 +599,7 @@ Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL ha
 | `PTGS2` | 262 · 20 | 0.515 [0.397, 0.709] | 0.705 [0.665, 0.744] |
 | `MAPT` | 118 · 35 | 0.540 [0.425, 0.652] | **0.884 [0.817, 0.937]** |
 
-**En `NFE2L2` la brecha prácticamente desaparece; en `MAPT` es clara y los intervalos no se tocan; en `PTGS2` no se decide.** Una versión anterior de esta tabla traía siete dianas, incluidas `ACHE` y `DRD2` con tres y catorce activos, cuyos AUROC altos hacían parecer que la brecha se cerraba. Lo señaló Pame al revisar el [#90](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/90), que corrió la medición por su cuenta y llegó a las mismas tres dianas.
+**En `NFE2L2` la brecha prácticamente desaparece; en `MAPT` es clara y los intervalos no se tocan; en `PTGS2` no se decide.** Una versión anterior de esta tabla traía siete dianas, incluidas `ACHE`, `MAOA` y `DRD2` con tres, cinco y catorce activos entre sus 221, 411 y 260 pares de NPASS, cuyos AUROC altos hacían parecer que la brecha se cerraba. Lo señaló Pame al revisar el [#90](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/90), que corrió la medición por su cuenta y llegó a las mismas tres dianas.
 
 **Lo que sostiene la evidencia, y nada más:** el agregado de `solo_npass` está deprimido en parte por la composición de dianas; a igual diana hay **señal débil y heterogénea** —una diana sin brecha, una con brecha clara, una indecidible—; y solo hay tres dianas con datos para medirlo. **No se puede afirmar todavía que el modelo no sirva para productos naturales, ni lo contrario.** Lo que sí está establecido es que un desempeño agregado no los describe.
 
@@ -715,6 +715,8 @@ Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegu
 
 **Y disjuntar por artículo tampoco, en su versión estricta.** Con las referencias que el artefacto ya guarda, conectando dos pares que comparten al menos una: **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, lo que lo hace parecer fácil, pero los compuestos medidos en varios artículos enlazan las referencias entre sí. Queda en su lugar reportar el desempeño **por referencia** dentro de la validación cruzada. Lo midió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
 
+**Cómo se protege hoy la prueba, y lo que falta.** `cargar` (`src/models/tareas.py`) la deja fuera por omisión y exige `incluir_prueba=True` para devolverla, y el modelo de referencia no la pide. Pero eso es una convención: pedirla no falla ni deja registro. La guarda que lo exigiría —evaluar sobre la prueba sin declararlo falla con un mensaje claro y queda anotado— sigue abierta en el [#54](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/54), y conviene tenerla antes de afinar modelos, que es cuando más tienta mirarla.
+
 **Qué lo cambiaría.** Que haga falta evaluar los naturales sobre la prueba con intervalos, y entonces la partición se estratifica por origen —cuesta reconstruir el artefacto y reejecutar el notebook, no rehacer el modelado—; o que ella señale una agrupación por familia química o laboratorio que el andamio no capture.
 
 #### 2.8 · El cruce con COCONUT lo calcula el equipo {#d2-8 .vigente .revisada}
@@ -755,6 +757,16 @@ La regresión sobre mediciones exactas no pierde al azar: el 98.0% de los pares 
 
 Con eso la clasificación sale gratis umbralando la predicción, así que el MCC y el AUPRC de la [C.1](#dc-1) siguen reportándose y comparándose contra el baseline. **La clasificación a 10 µM se conserva como baseline del Avance 3**, que es el papel que le toca: ser el piso que la censurada tiene que superar. Dos modelos principales no, porque producirían dos rankings y nada diría cuál obedecer.
 
+**Ese baseline ya existe, y dice dos cosas.** Las tres canalizaciones de la [1.5](#d1-5), sin afinar, sobre los 54,369 pares de entrenamiento y validación (10,071 grupos, 71.4% de activos), con la diana como característica y la misma validación cruzada agrupada de la fase 1; la prueba no se toca (`scripts/experimento_baseline.py --tarea actividad`, corrida `experimentos/2026-10-18-artemio-2.3-baseline-actividad-descriptores-diana-10um/`):
+
+| Canalización | AUROC | IC 95% | MCC |
+|:--|--:|:--|--:|
+| Bosque aleatorio | 0.866 | [0.859, 0.874] | 0.495 |
+| Boosting por histogramas | 0.857 | [0.848, 0.865] | 0.486 |
+| Regresión logística | 0.796 | [0.786, 0.806] | 0.387 |
+
+Aquí sí se distingue la logística, por 6 a 7 puntos de AUROC y con intervalos que no se tocan, al revés que en la fase 1. Entre el bosque y el boosting no se distingue. **Y el agregado no describe a los naturales:** por procedencia, el AUROC del bosque es 0.858 sobre los pares que solo tiene ChEMBL, 0.637 sobre los mixtos y **0.611 [0.572, 0.647]** sobre los que solo tiene NPASS (boosting 0.629 y logística 0.585), que coincide con la medición de la [2.3](#d2-3), hecha con otra configuración del bosque (0.613). Es un solo modelo con la diana como característica, no uno por diana como propone la [2.2](#d2-2); afinar y separar por diana es del Avance 4.
+
 **Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. SHAP corre sobre `survival:aft`, pero atribuye sobre log-potencia, que es más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo»; la [C.2](#dc-2) pide dos métodos que concuerden y sigue siendo viable, pero el relato cambia. Y las métricas de clasificación saldrían de un modelo que no las optimizó directamente.
 
 **Por qué conviene aunque cueste.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es una clase y no un número, la combinación pierde resolución; y la forma principista de combinarlas no es sumar dos puntajes, es **comparar la potencia predicha contra la exposición alcanzable**, que es lo que la fase 1 predice. Un compuesto BBB− alcanza menos concentración en cerebro, así que necesita más potencia para servir.
@@ -774,6 +786,6 @@ Con eso la clasificación sale gratis umbralando la predicción, así que el MCC
 | S2.7 | Un mismo esqueleto y gen tienen etiquetas consistentes | Desmentido en parte | 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6 | Regla de resolución reproducible y análisis de sensibilidad |
 | S2.8 | El archivo recibido es el conjunto completo | Acotado | 89.9% de lo descrito en el diccionario ([2.6](#d2-6)) | Pedir la partición reservada |
 | S2.9 | La fuente no explica la etiqueta | Acotado | Perfecta por registro, rota para el 65.4% de los naturales ([2.5](#d2-5)) | Calibrar con los 2,727 solapados; partición disjunta por fuente |
-| S2.10 | La matriz de características sirve para la fase 2 | Desmentido por ahora | Todo el Avance 2 es de la fase 1 | Replicar el pipeline sobre los 99,585 esqueletos |
+| S2.10 | La matriz de características sirve para la fase 2 | Acotado | Ya existe y se usa: 70,384 pares sobre 59,532 esqueletos, 201 descriptores más 26 indicadores de diana (227 columnas), y con ella el modelo de referencia da AUROC 0.866 sobre entrenamiento y validación ([2.9](#d2-9)). Pero **no describe a los naturales**: sobre los pares que solo tiene NPASS baja a 0.611 [0.572, 0.647] ([2.9](#d2-9); la [2.3](#d2-3) lo mide con otro bosque y da 0.613) | Reportar siempre por procedencia; si con los modelos afinados sigue cerca del azar, decir que el modelo no sirve para naturales |
 | S2.11 | La fuente (NPASS y CMAUP) identifica a los productos naturales | Sin comprobar | El 65.4% de los naturales también está en ChEMBL y solo 1,445 esqueletos son exclusivos de NPASS y CMAUP ([2.8](#d2-8)) | Definir «natural» por cruce con COCONUT si se puede |
 
