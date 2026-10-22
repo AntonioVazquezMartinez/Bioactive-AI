@@ -426,3 +426,42 @@ section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
     &.activo { background: var(--bio-positivo); border-color: var(--bio-positivo); color: #fff; font-weight: 600; }
   }
 }
+
+/* --- El puente estructura ↔ columna del visualizador ----------------------
+   Por defecto la lista sale poblada y con la primera columna resaltada: no
+   hay que tocar nada para que enseñe algo. El hover y el clic son la capa de
+   encima. Las que llegan a la matriz de trabajo se distinguen de las que
+   existen en RDKit pero no sobreviven la selección. */
+.vm-puente-cab { margin: .8rem 0 .4rem; font-size: .9rem; }
+
+.vm-puente { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+.vm-col {
+  display: inline-flex; align-items: baseline; gap: .4rem;
+  padding: .25rem .55rem; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--bio-rejilla);
+  background: transparent; color: inherit; font-size: .8rem;
+
+  // El `code` del sitio trae fondo claro, y dentro de un botón sobre fondo
+  // oscuro eso daba texto blanco sobre caja blanca: los nombres salían
+  // ilegibles. Aquí la caja la pone el botón, no el `code`.
+  code {
+    font-size: .95em;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border: 0;
+  }
+  span { opacity: .6; font-size: .9em; }
+
+  &:hover, &:focus-visible { border-color: var(--bio-natural); outline: none; }
+}
+
+.vm-col-usada { border-color: var(--bio-positivo); }
+
+.vm-col-activa {
+  border-color: var(--bio-natural);
+  background: color-mix(in srgb, var(--bio-natural) 16%, transparent);
+}
+
+.vm-puente-nota { margin-top: .6rem; font-size: .82rem; opacity: .75; }

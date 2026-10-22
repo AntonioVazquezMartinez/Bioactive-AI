@@ -261,7 +261,7 @@ De las 217 columnas de descriptores a la matriz con la que se entrena:
 Los cortes de **0.01** de varianza y **0.95** de correlación son propuestas operativas medidas en estos datos, no valores ratificados. Si cambian, se repite la selección. En la Ruta: [1.5](contenido/decisiones.html#d1-5) y el supuesto S1.11.
 :::
 
-## Lo que medimos y descartamos {.smaller}
+## Cinco alternativas que los datos descartaron {.smaller}
 
 Cinco opciones que se probaron con los datos del proyecto:
 
@@ -277,7 +277,7 @@ Cinco opciones que se probaron con los datos del proyecto:
 Son decisiones técnicas del equipo. No necesitan su respuesta, pero quedan a la vista por si ella las objeta.
 :::
 
-## Lo que descartamos sin entrenar un modelo para compararlo {.smaller}
+## Lo que se descartó por diseño, no por desempeño {.smaller}
 
 Aquí **no hay un experimento comparativo**: nadie entrenó un modelo con Box–Cox, por ejemplo. La razón es un conteo en nuestros datos, un argumento o la literatura, y la última columna dice cuál:
 
@@ -374,6 +374,8 @@ Cada diana pertenece a una categoría de enfermedad. Los registros se reparten a
 | Un modelo **por diana** | Cada modelo aprende una sola cosa | Las dianas con pocos datos no sostienen un modelo propio |
 | Uno **por categoría** de enfermedad | Junta las dianas de una misma enfermedad | Mezcla farmacologías: en Alzheimer conviven una proteasa, una esterasa y un receptor nuclear |
 | Uno **multitarea** | Comparte representación e incluye las dianas pequeñas | Mezcla señales de dianas distintas |
+
+## La decisión, y lo que la cambió {.smaller}
 
 ::: {.callout-important}
 **Decidido: por diana para once, multitarea para las quince restantes** ([2.2](contenido/decisiones.html#d2-2), vigente). El criterio no es un número de pares sino una condición: **mil pares o más y cincuenta casos de la clase minoritaria en todos los pliegues**. Son el 85.6% de los pares ajustables.
@@ -518,7 +520,7 @@ Propuesto tras observar 6.7:1 en los registros con pChEMBL; al recalcular con tr
 «No hay patrón aprendible» es un resultado válido. Se reporta honestamente en vez de ajustar hasta que algo se vea bien.
 :::
 
-## Las siete que la esperaban, y qué pasó con cada una {.smaller}
+## Las siete decisiones que esperaban a la patrocinadora {.smaller}
 
 Siete entradas llevaban semanas marcadas «necesita su definición» y eran el cuello de botella. El 17 de octubre el registro se quedó **sin ninguna**.
 
@@ -532,8 +534,10 @@ Siete entradas llevaban semanas marcadas «necesita su definición» y eran el c
 | **1.6** Naturales en la fase 1 | **La decide el equipo.** Un modelo, evaluación por origen dentro de cada grupo |
 | **C.5** Qué se entrega | **La decide el equipo.** La pregunta suponía que hay que elegir un punto; se entrega la curva |
 
+## Qué desatascó siete entradas bloqueadas {.smaller}
+
 ::: {.callout-tip}
-**El criterio que lo desatascó:** no es si su respuesta sería útil, es si **cambiaría el siguiente commit**. Tres eran contestables con una medición que nadie había corrido, y en dos la respuesta no cambiaba qué construir. Solo dos la necesitaban de verdad, y las ratificó en una reunión.
+**El criterio:** no es si su respuesta sería útil, es si **cambiaría el siguiente commit**. Tres eran contestables con una medición que nadie había corrido, y en dos la respuesta no cambiaba qué construir. Solo dos la necesitaban de verdad, y las ratificó en una reunión.
 :::
 
 ::: {.callout-note}

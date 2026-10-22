@@ -494,9 +494,14 @@ function enfermedades(destino, D) {
   const pie = document.createElement("div");
   pie.className = "lectura";
   pie.innerHTML =
+    // **El alcance son cinco categorías, y está ratificado (2.1).** El pie decía
+    // que el multitarea era «la única forma de incluir» las de abajo, lo que
+    // prometía justo lo que esa decisión dejó fuera. El multitarea incluye las
+    // dianas pequeñas **dentro** de las cinco, no otras enfermedades.
     `A escala real. Alzheimer tiene <strong>${num(es[0].n)}</strong> registros y ELA ` +
-    `<strong>${num(es[es.length - 1].n)}</strong>: tres órdenes de magnitud. Las de abajo no sostienen un ` +
-    `modelo propio, y un modelo multitarea es la única forma de incluirlas, a costa de mezclar señales.`;
+    `<strong>${num(es[es.length - 1].n)}</strong>: tres órdenes de magnitud. Las cinco de arriba son ` +
+    `el alcance del proyecto; el resto se dibuja para situarlas y queda fuera por decisión ratificada. ` +
+    `Dentro de esas cinco, las dianas con pocos datos entran por el modelo multitarea.`;
   destino.append(svg, pie);
 }
 
