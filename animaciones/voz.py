@@ -50,9 +50,7 @@ MODELO = "eleven_multilingual_v2"
 
 # El orden lo manda `ensamblar.py`; aquí solo hace falta saber qué escena es
 # cuál para medir contra su video.
-ESCENAS = {"apertura": "Apertura", "linaje": "Linaje", "intervalo": "Intervalo",
-           "fingerprints": "Fingerprints", "particion": "Particion",
-           "cierre": "Cierre"}
+from orden import ESCENAS
 
 
 def _limpiar(texto: str) -> str:

@@ -33,9 +33,12 @@ config.background_color = FONDO
 # derivadas. Juntarlos en una sola fila es la representación
 # `descriptores+morgan` de `src/models/tareas.py`, que es la que mejor sale en
 # la prueba de humo; las otras usan un bloque a la vez.
+# Los tres colores categóricos en su orden, no una tinta de apoyo en medio: los
+# bloques son tres identidades y el de en medio llevaba el gris de los trazos
+# secundarios, que es el mismo error de categoría que la paleta vieja tenía.
 BLOQUES = [
     ("descriptores", 203, 3.0, AZUL),
-    ("subestructuras", 2048, 4.4, AZUL_CLARO),
+    ("subestructuras", 2048, 4.4, NARANJA),
     ("derivadas", 3, 0.9, VERDE),
 ]
 

@@ -35,17 +35,7 @@ MEDIA = RAIZ / "media" / "videos"
 CALIDADES = {"borrador": "480p15", "alta": "1080p60"}
 FUNDIDO = 0.5
 
-# El orden del video completo. Las cuatro técnicas son instancias de la misma
-# tesis —los datos no son lo que parecen— y el orden las encadena de la unidad
-# del dato hacia la unidad de la evaluación.
-ORDEN = [
-    ("apertura", "Apertura", "el problema y la apuesta"),
-    ("linaje", "Linaje", "las mediciones no son compuestos"),
-    ("intervalo", "Intervalo", "un «>» no es un hueco"),
-    ("fingerprints", "Fingerprints", "un bit no es un fragmento"),
-    ("particion", "Particion", "las filas no son independientes"),
-    ("cierre", "Cierre", "lo que sale, y lo que no se afirma"),
-]
+from orden import ORDEN
 
 
 def _parte(modulo: str, escena: str, calidad: str, con_voz: bool = True) -> Path:

@@ -23,9 +23,7 @@ RAIZ = Path(__file__).resolve().parent
 VOZ = RAIZ / "voz"
 MEDIA = RAIZ / "media" / "videos"
 CALIDADES = {"borrador": "480p15", "alta": "1080p60"}
-ESCENAS = {"apertura": "Apertura", "linaje": "Linaje", "intervalo": "Intervalo",
-           "fingerprints": "Fingerprints", "particion": "Particion",
-           "cierre": "Cierre"}
+from orden import ESCENAS
 
 
 def duracion(ruta: Path) -> float:

@@ -184,5 +184,31 @@
   ],
   "voz_id": "qK97aPuDo74niFLxjFrK",
   "modelo": "eleven_multilingual_v2"
+ },
+ "matriz": {
+  "voz_s": 71.61,
+  "video_s": null,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El SMILES",
+    "segundos": 16.11,
+    "palabras": 43
+   },
+   {
+    "n": 2,
+    "titulo": "La fila de tres bloques",
+    "segundos": 37.71,
+    "palabras": 84
+   },
+   {
+    "n": 3,
+    "titulo": "Muchas filas son la matriz",
+    "segundos": 17.79,
+    "palabras": 53
+   }
+  ],
+  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "modelo": "eleven_multilingual_v2"
  }
 }
