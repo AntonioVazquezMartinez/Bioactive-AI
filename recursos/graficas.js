@@ -10,15 +10,24 @@
  * mano: si una gráfica muestra un número, salió de ahí.
  */
 
+// **Los colores salen de `recursos/paleta.json`**, repartidos por
+// `scripts/paleta.py` a `recursos/paleta.js`, que esta página carga antes.
+// Vivían duplicados aquí y en `animaciones/comun.py`, y tres se habían
+// desviado: el azul, el verde y el naranja.
+//
+// Se toman los pasos de modo oscuro porque el mazo va sobre fondo oscuro.
+// `resto` desaparece como color propio: no era una serie sino una tinta de
+// apoyo, y por eso fallaba el piso de croma —0.072, que se lee como gris—.
+const _P = (window.PALETA || {}).oscuro || {};
 const PAL = {
-  texto: "#e8edf3",
-  tenue: "#9aa8b8",
-  rejilla: "#3a4654",
-  positivo: "#5b9bd5",   // BBB+, la clase mayoritaria
-  negativo: "#e8954a",   // BBB−, la minoritaria
-  natural: "#4caf7d",
-  resto: "#8fb3dd",
-  alerta: "#d64541",
+  texto: _P.texto,
+  tenue: _P.tenue,
+  rejilla: _P.rejilla,
+  positivo: _P.positivo,   // BBB+, la clase mayoritaria
+  negativo: _P.negativo,   // BBB−, la minoritaria
+  natural: _P.natural,
+  resto: _P.secundaria,    // trazo de apoyo, no una identidad
+  alerta: _P.alerta,       // estado reservado: nunca como «serie 4»
 };
 
 const NS = "http://www.w3.org/2000/svg";

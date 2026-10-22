@@ -573,6 +573,8 @@ Todo el proyecto, con sus datos, sus notebooks y sus decisiones, en
 [antoniovazquezmartinez.github.io/Bioactive-AI](https://antoniovazquezmartinez.github.io/Bioactive-AI/)
 
 ```{=html}
+<!-- La paleta va primero: `graficas.js` la lee al cargarse. -->
+<script src="recursos/paleta.js"></script>
 <script src="recursos/datos.js"></script>
 <script src="recursos/graficas.js"></script>
 ```

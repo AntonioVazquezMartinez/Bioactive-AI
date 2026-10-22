@@ -15,14 +15,34 @@ from pathlib import Path
 from manim import BLACK, Scene, WHITE, Text, VGroup
 
 # La paleta del sitio.
-FONDO = "#1b2430"        # el azul oscuro de las secciones del mazo
-AZUL = "#3b78d6"         # el primario
-AZUL_CLARO = "#8fb3dd"
-VERDE = "#2e8b57"        # «bien», entrenamiento
-NARANJA = "#e07b1a"      # «ojo», lo que se reserva
-ROJO = "#d64541"         # error, fuga
-GRIS = "#9aa8b8"         # texto secundario
-CREMA = "#e8edf3"        # texto principal sobre fondo oscuro
+# **Los colores salen de `recursos/paleta.json`, no de aquí.** Vivían duplicados
+# en este archivo, en `graficas.js` y en las dos hojas de estilo, y tres se
+# habían desviado entre sí —el azul, el verde y el naranja— lo bastante poco
+# para parecer un descuido. `scripts/paleta.py` los reparte y `--revisar` falla
+# si alguno queda desfasado.
+#
+# Se usan los pasos de **modo oscuro**, porque el video siempre va sobre fondo
+# oscuro. Los tres categóricos pasan las cinco comprobaciones de la guía de
+# visualización con todas las parejas en juego; la paleta anterior fallaba tres,
+# y la seria era que verde y naranja —«natural» y «BBB−»— quedaban a 5.9 de
+# separación en protanopía.
+_PALETA = json.loads(
+    (Path(__file__).resolve().parents[1] / "recursos" / "paleta.json")
+    .read_text(encoding="utf-8"))
+
+
+def _c(grupo: str, rol: str) -> str:
+    return _PALETA[grupo][rol]["oscuro"]
+
+
+FONDO = _c("tintas", "fondo")
+AZUL = _c("categoricos", "positivo")        # BBB+, entrenamiento
+AZUL_CLARO = _c("tintas", "secundaria")     # trazo de apoyo, no una serie
+VERDE = _c("categoricos", "natural")        # producto natural
+NARANJA = _c("categoricos", "negativo")     # BBB−, lo que se reserva
+ROJO = _c("estado", "alerta")               # error, fuga
+GRIS = _c("tintas", "tenue")                # texto secundario
+CREMA = _c("tintas", "texto")               # texto principal
 
 FUENTE = "Helvetica Neue"
 

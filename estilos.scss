@@ -1,3 +1,5 @@
+@import "paleta";
+
 /*-- scss:defaults --*/
 
 // Ancho de lectura un poco mayor que el de Bootstrap por defecto: los
@@ -212,7 +214,7 @@ body.quarto-light {
 
 body.quarto-dark {
   pre.mermaid svg, .cell-output-display svg[id^="mermaid"] {
-    @include mermaid-colores(#2a3441, #8fb3dd, #e8edf3, #8fb3dd, #1e252e);
+    @include mermaid-colores(#2a3441, var(--bio-secundaria), var(--bio-texto), var(--bio-secundaria), #1e252e);
   }
 }
 
@@ -229,7 +231,7 @@ section.level4.vigente,
 section.level4.propuesta,
 section.level4.abierta,
 section.level4.ratificada {
-  --estado: #2e8b57;
+  --estado: var(--bio-natural);
   border: 1px solid rgba(128, 128, 128, 0.35);
   border-left: 7px solid var(--estado);
   border-radius: 0.5rem;
@@ -238,8 +240,8 @@ section.level4.ratificada {
   margin: 1.8rem 0;
 }
 
-section.level4.propuesta { --estado: #3b78d6; }
-section.level4.abierta   { --estado: #e07b1a; }
+section.level4.propuesta { --estado: var(--bio-positivo); }
+section.level4.abierta   { --estado: var(--bio-negativo); }
 section.level4.ratificada { --estado: #7b4fd6; }
 
 // lo que espera la definición de la patrocinadora lleva además un contorno rojo
@@ -295,7 +297,7 @@ section.level4.definir > h4::before {
   flex: none;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
-  background: #d64541;
+  background: var(--bio-alerta);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 700;
@@ -347,7 +349,7 @@ section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
   margin: 1rem 0 1.5rem;
   padding: 1rem 1.2rem;
   border: 1px solid rgba(128, 128, 128, 0.35);
-  border-left: 5px solid #3b78d6;
+  border-left: 5px solid var(--bio-positivo);
   border-radius: 0.4rem;
   background: rgba(128, 128, 128, 0.06);
 
@@ -391,8 +393,8 @@ section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
   .bio-resumen {
     margin: 0 0 0.4rem;
     font-weight: 700;
-    color: #e07b1a;
-    &.completo { color: #2e8b57; }
+    color: var(--bio-negativo);
+    &.completo { color: var(--bio-natural); }
   }
 
   .bio-salida {
@@ -421,6 +423,6 @@ section.level4:is(.vigente, .propuesta, .abierta, .ratificada) > blockquote p {
     cursor: pointer;
 
     &:hover { background: rgba(59, 120, 214, 0.15); }
-    &.activo { background: #3b78d6; border-color: #3b78d6; color: #fff; font-weight: 600; }
+    &.activo { background: var(--bio-positivo); border-color: var(--bio-positivo); color: #fff; font-weight: 600; }
   }
 }

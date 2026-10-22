@@ -45,6 +45,12 @@ jobs:
       - name: Verificar el registro de decisiones
         run: python3 scripts/verificar_decisiones.py
 
+      # Los hex vivían duplicados en cuatro archivos y tres se habían desviado
+      # entre sí sin que nadie lo notara. Con una fuente y un reparto, editar un
+      # destino a mano deja de pasar inadvertido.
+      - name: La paleta está al día en sus destinos
+        run: python3 scripts/paleta.py --revisar
+
   animaciones:
     name: Animaciones (render mudo)
     runs-on: ubuntu-latest
