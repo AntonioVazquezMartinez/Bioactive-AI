@@ -101,7 +101,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Cuando una clase es mucho más frecuente que la otra. **Por qué importa:** con 1.74 a 1, un modelo que prediga siempre BBB+ acierta el 63.5% de las veces sin haber aprendido nada. Por eso la exactitud no sirve como métrica.
 
 **AUC / AUROC**
-: Probabilidad de que el modelo le dé mayor puntaje a un positivo que a un negativo, tomados al azar. 0.5 es azar, 1.0 es perfecto. **Por qué importa:** es útil para comparar descriptores individuales, pero **engaña con clases desbalanceadas**, porque premia el acierto sobre la clase mayoritaria.
+: Probabilidad de que el modelo le dé mayor puntaje a un positivo que a un negativo, tomados al azar. 0.5 es azar, 1.0 es perfecto. **Por qué importa:** es útil para comparar descriptores individuales y, como no depende de la prevalencia, es la medida primaria para comparar estratos de prevalencia distinta (decisión [1.6](decisiones.md#d1-6)); no sustituye a la regla general de la [C.1](decisiones.md#dc-1) —MCC y AUPRC de la clase minoritaria, que se siguen reportando—. Con clases desbalanceadas puede verse alto aunque se detecte mal la clase minoritaria, y por eso no se lee solo. Y depende de qué negativos hay: un estrato con negativos fáciles da un AUROC alto sin que el modelo sea mejor ahí.
 
 **AUPRC** (área bajo la curva de precisión-exhaustividad)
 : Como el AUC, pero calculada sobre la clase minoritaria. **Por qué importa:** es la métrica que sí refleja el desempeño sobre lo que cuesta predecir. Hay que leerla siempre contra su línea base, que es la proporción de la clase minoritaria, no 0.5.
