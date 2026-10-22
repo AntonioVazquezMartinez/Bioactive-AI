@@ -1,0 +1,24 @@
+decision: '1.6'
+semillas:
+- 0
+- 1
+- 2
+params:
+  tarea: permeabilidad
+  representacion: descriptores
+  estratos: origen_grupo
+  pliegues: 5
+  canalizaciones:
+  - logistica
+  - bosque
+  - boosting
+  bootstrap:
+    remuestras: 2000
+    semilla: 0
+    unidad: grupos de la CV
+  frontera_logbb:
+    corte: -1.0
+    cerca: 0.3
+  min_minoritaria_tablas: 5
+  control_fuga: HistGradientBoostingClassifier(random_state=0), StratifiedGroupKFold(5,
+    shuffle, 0)

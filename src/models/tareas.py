@@ -50,6 +50,9 @@ RAIZ = Path(__file__).resolve().parents[2]
 PROCESADOS = RAIZ / "data/processed"
 
 TAREAS = ("permeabilidad", "actividad")
+ESTRATOS = ("grupo", "origen", "origen_grupo")
+ARCHIVO_PATROCINADORA = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
+ORIGENES = ("natural exacto", "análogo estereoquímico", "sin equivalente natural")
 REPRESENTACIONES = ("descriptores", "descriptores_transformados", "morgan",
                     "sortslice", "descriptores+morgan")
 
@@ -107,8 +110,65 @@ def _entradas_permeabilidad(representacion: str, filas: np.ndarray) -> np.ndarra
     raise ValueError(f"representación {representacion!r}; use una de {REPRESENTACIONES}")
 
 
-def _permeabilidad(representacion: str, incluir_prueba: bool) -> Tarea:
+def asignar_origen(exacto: pd.Series, key14: pd.Series) -> np.ndarray:
+    """Origen de tres categorías a partir de las dos columnas de COCONUT.
+
+    Es la definición del notebook 01 (§5): **natural exacto** si hay
+    coincidencia exacta (`coconut_id_exact_match`), **análogo estereoquímico**
+    si solo coincide la llave de conectividad (`coconut_ids_key14_match`), y
+    **sin equivalente natural** si ninguna de las dos. La coincidencia exacta
+    manda: un compuesto con las dos columnas presentes es natural exacto.
+    """
+    return np.select([exacto.notna().to_numpy(), key14.notna().to_numpy()],
+                     [ORIGENES[0], ORIGENES[1]], default=ORIGENES[2])
+
+
+def _origen_por_fila(meta: pd.DataFrame) -> np.ndarray:
+    """Origen de cada fila de `meta`, cruzando con el archivo de la patrocinadora.
+
+    `bbb_meta.parquet` no guarda las columnas de COCONUT, solo `natural`. La
+    llave es el InChIKey (`Inchi` en `meta` es un InChIKey, no un InChI): tiene
+    3 repetidos tanto en `meta` como en el archivo, de modo que no cruza 1 a 1.
+    Se acepta porque en los tres casos las filas repetidas tienen el mismo
+    origen, y eso se comprueba abajo en lugar de suponerse; si el archivo
+    cambiara y dejara de cumplirse, falla aquí.
+    """
+    arch = pd.read_csv(ARCHIVO_PATROCINADORA)
+    arch.columns = [c.strip().lstrip("\ufeff") for c in arch.columns]
+    arch = arch[arch["bbb_class"].notna()].copy()
+    arch["origen"] = asignar_origen(arch["coconut_id_exact_match"],
+                                    arch["coconut_ids_key14_match"])
+    ambiguas = arch.groupby("inchikey")["origen"].nunique()
+    if not (ambiguas == 1).all():
+        raise ValueError("InChIKeys repetidos con origen distinto: "
+                         f"{ambiguas[ambiguas > 1].index.tolist()}")
+    por_llave = arch.drop_duplicates("inchikey").set_index("inchikey")["origen"]
+    origen = meta["Inchi"].map(por_llave)
+    if origen.isna().any():
+        raise ValueError(
+            f"{int(origen.isna().sum())} filas de bbb_meta sin origen: su InChIKey "
+            "no está en el archivo de la patrocinadora")
+    # El origen «natural exacto» tiene que ser exactamente la columna `natural`
+    # que ya traía `meta`; si no, el cruce o alguna de las dos definiciones falló.
+    if not (origen.eq(ORIGENES[0]).to_numpy() == meta["natural"].to_numpy(dtype=bool)).all():
+        raise ValueError("«natural exacto» no coincide con la columna `natural` de bbb_meta")
+    return origen.to_numpy()
+
+
+def _etiquetas_estratos(estratos: str, grupo: np.ndarray, origen: np.ndarray) -> np.ndarray:
+    """Etiqueta de estrato por fila; `origen` solo se usa si `estratos` lo pide."""
+    if estratos == "grupo":
+        return grupo
+    if estratos == "origen":
+        return origen
+    return np.char.add(np.char.add(origen.astype(str), "·"), grupo.astype(str))
+
+
+def _permeabilidad(representacion: str, incluir_prueba: bool,
+                   estratos: str = "grupo") -> Tarea:
     meta = pd.read_parquet(PROCESADOS / "bbb_meta.parquet")
+    if estratos != "grupo":
+        meta = meta.assign(origen=_origen_por_fila(meta))
     # La prueba se reserva (1.2); el baseline mide sobre entrenamiento y validación.
     filas = np.flatnonzero(meta["particion"].ne("prueba").to_numpy()
                            | incluir_prueba)
@@ -128,7 +188,9 @@ def _permeabilidad(representacion: str, incluir_prueba: bool) -> Tarea:
         grupos=grupos_cv(m.assign(andamio=m["andamio"].fillna(SIN_ANDAMIO)),
                          "andamio", "esqueleto"),
         # El grupo A–D estratifica, nunca excluye (1.1).
-        estratos=m["group"].astype(str).to_numpy(),
+        estratos=_etiquetas_estratos(
+            estratos, m["group"].astype(str).to_numpy(),
+            m["origen"].to_numpy() if "origen" in m else np.array([])),
         meta=m,
         objetivo="bbb_class (BBB+ = 1)",
         representacion=representacion,
@@ -177,10 +239,33 @@ def _actividad(representacion: str, umbral_um: float, incluir_prueba: bool) -> T
 
 
 def cargar(tarea: str = "permeabilidad", *, representacion: str = "descriptores",
-           umbral_um: float = 10.0, incluir_prueba: bool = False) -> Tarea:
-    """Arma una tarea. `umbral_um` solo aplica a «actividad»."""
+           umbral_um: float = 10.0, incluir_prueba: bool = False,
+           estratos: str = "grupo") -> Tarea:
+    """Arma una tarea. `umbral_um` solo aplica a «actividad».
+
+    `estratos` elige cómo se desglosa el resultado en permeabilidad:
+
+    - `"grupo"` (por omisión): los grupos A–D de B3DB.
+    - `"origen"`: natural exacto, análogo estereoquímico o sin equivalente
+      natural, según COCONUT (`asignar_origen`).
+    - `"origen_grupo"`: las dos etiquetas juntas, p. ej. `"natural exacto·B"`.
+
+    Existe por la [1.6](../../docs/decisiones.md#d1-6) y el #102. Juntar los
+    análogos con los compuestos sin equivalente natural diluye la brecha entre
+    naturales y el resto (18.9 contra 28.3 puntos, notebook 01 §5), y el grupo A
+    tiene 88% de BBB+: cada estrato se lee contra su propia tasa base, no contra
+    la global. La columna `origen` solo se añade a `meta` cuando se pide.
+
+    En «actividad» los estratos son de procedencia y no se pueden cambiar:
+    cualquier valor distinto de `"grupo"` da error.
+    """
+    if estratos not in ESTRATOS:
+        raise ValueError(f"estratos {estratos!r}; use uno de {ESTRATOS}")
     if tarea == "permeabilidad":
-        return _permeabilidad(representacion, incluir_prueba)
+        return _permeabilidad(representacion, incluir_prueba, estratos)
     if tarea == "actividad":
+        if estratos != "grupo":
+            raise ValueError("en «actividad» los estratos son de procedencia; "
+                             f"estratos={estratos!r} no aplica")
         return _actividad(representacion, umbral_um, incluir_prueba)
     raise ValueError(f"tarea {tarea!r}; use una de {TAREAS}")
