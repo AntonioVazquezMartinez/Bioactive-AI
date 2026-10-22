@@ -151,7 +151,7 @@ En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% cont
 :::
 
 ::: {.callout-important}
-Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
+Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Ya medido, **los naturales no rinden peor** en la fase 1 (AUROC 0.942 contra 0.892 en los compuestos sin equivalente natural); dentro del grupo A el rendimiento baja con los dos orígenes y, con 34 y 42 BBB−, no alcanza para distinguirlos. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
 :::
 
 # 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
@@ -412,7 +412,7 @@ Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen 
 :::
 
 ::: {.callout-warning}
-**3 · Y la prueba reservada no es una muestra representativa.** Es un andamio por par, tiene 7 puntos más de activos que el entrenamiento, y solo el **5.2%** de los pares de NPASS cae en ella —los naturales comparten andamios en familias grandes, y los grupos grandes van a entrenamiento—. Mide generalización a química nueva, que es lo que se quiere; no sirve para comparar por origen con intervalos.
+**3 · Y la prueba reservada no es una muestra representativa.** Es un andamio por par, tiene 7 puntos más de activos que el entrenamiento, y solo el **5.2%** de los pares que solo tiene NPASS cae en ella (8.5% si se cuentan los mixtos) —los naturales comparten andamios en familias grandes, y los grupos grandes van a entrenamiento—. Mide generalización a química nueva, que es lo que se quiere; no sirve para comparar por origen con intervalos.
 :::
 
 ## ¿Qué error le cuesta más? {.smaller}
@@ -526,10 +526,10 @@ Siete entradas llevaban semanas marcadas «necesita su definición» y eran el c
 |:--|:--|
 | **2.6** Partición reservada | **Ratificada el 15 de oct.** Entregó el archivo completo; la condición es reservar una prueba |
 | **2.1** Dianas y alcance | **Ratificada el 15 de oct.** Cuatro dianas fuera, cinco categorías dentro |
-| **2.3** Criterio de «activo» | **La decide el equipo.** Su remedio —revisar por tejido— no se puede ejecutar: esas columnas están vacías en las 108,640 filas que se modelan |
+| **2.3** Criterio de «activo» | **La decide el equipo.** Su remedio —revisar por tejido— no se puede ejecutar: el tejido está vacío en las 108,640 filas que se modelan y el tipo de célula en el 92% |
 | **2.2** Forma del modelo | **La decide el equipo.** Si señala prioridades cambia el orden, no la forma |
 | **2.8** Naturales en la fase 2 | **La calcula el equipo.** Con la fuente como proxy erramos en dos de cada tres esqueletos; el cruce propio es medible |
-| **1.6** Naturales en la fase 1 | **La decide el equipo.** Un modelo, evaluación por origen dentro de cada grupo |
+| **1.6** Naturales en la fase 1 | **La decide el equipo.** Un modelo, evaluación por origen dentro de cada grupo. Medido: los naturales no rinden peor (0.942 contra 0.892 de AUROC) |
 | **C.5** Qué se entrega | **La decide el equipo.** La pregunta suponía que hay que elegir un punto; se entrega la curva |
 
 ::: {.callout-tip}
