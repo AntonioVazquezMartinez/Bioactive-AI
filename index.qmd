@@ -70,15 +70,16 @@ Las dos etapas son **independientes**: la primera no filtra a la segunda, sus sa
 | Datos etapa 1 | Conjunto de la patrocinadora, auditado en el Avance 1 |
 | Datos etapa 2 | Entregados el 25 sep: 202,647 registros, 39 dianas · [EDA ejecutado](contenido/notebooks/01b_EDA_actividad_snc.html) |
 | EDA de permeabilidad (Avance 1) | Entregado el 4 oct |
-| Ingeniería de características (Avance 2) | Notebook ejecutado sobre las 7,805 filas · falta el reporte |
-| Modelos base (Avance 3) | Pendiente · vence el 18 oct |
+| Ingeniería de características (Avance 2) | Entregado el 11 oct · notebook, matriz de 151 columnas y reporte; la fase 2 tiene su propia matriz (70,384 pares) y su prueba reservada |
+| Modelos base (Avance 3) | Entregado el 18 oct · [notebook](contenido/notebooks/03_Baseline.html) con el modelo de referencia de las dos fases |
+| Modelos alternativos (Avance 4) | En curso · vence el 25 oct |
 
 ## Decisiones técnicas
 
 Tomadas con la evidencia documentada en la [investigación de referencia](contenido/referencias/index.html):
 
 - **Datos, etapa 1:** el conjunto curado por la patrocinadora, derivado de [B3DB](https://github.com/theochem/B3DB) y cruzado con COCONUT. Umbral logBB = −1.0. Las categorías A–D **no** se usan para excluir registros: el Avance 1 mostró que no son una escala de calidad.
-- **Datos, etapa 2:** el conjunto de actividad en SNC de la patrocinadora, con ChEMBL, NPASS y CMAUP. Etiquetado **por tres vías** —pChEMBL, concentración exacta e inactivo declarado—, con pChEMBL ≥ 5 como primario y ≥ 6 como robustez. Etiquetar solo por pChEMBL dejaría fuera los productos naturales; ver el [EDA de la etapa 2](contenido/notebooks/01b_EDA_actividad_snc.html).
+- **Datos, etapa 2:** el conjunto de actividad en SNC de la patrocinadora, con ChEMBL, NPASS y CMAUP. Las **tres fuentes** se etiquetan con las mismas columnas del diccionario de la patrocinadora, con corte de 10 µM como principal y 1 µM como sensibilidad, y el objetivo se guarda como intervalo de potencia y no como etiqueta ([2.3](contenido/decisiones.html#d2-3) y [2.10](contenido/decisiones.html#d2-10)). Etiquetar solo por pChEMBL dejaría fuera los productos naturales; ver el [EDA de la etapa 2](contenido/notebooks/01b_EDA_actividad_snc.html).
 - **Representación:** descriptores 2D de RDKit (217) más Morgan/ECFP4 de 2048 bits. Los embeddings congelados de transformers no superan a esta combinación bajo scaffold split.
 - **Validación:** scaffold split de Bemis-Murcko, nunca aleatorio. Métricas MCC y AUPRC, no exactitud.
 - **Explicabilidad:** al menos dos métodos independientes, reportando como confirmadas solo las substructuras donde coinciden.
@@ -112,7 +113,7 @@ La curcumina acumula más de 120 ensayos clínicos sin un solo resultado positiv
 ::: {.callout-note}
 ## El umbral de TPSA no es transferible
 
-La regla publicada se replica de forma exacta en el subconjunto comparable (precisión 0.966 contra 96.6%), pero el umbral óptimo se mueve de 66.6 Å² a **83.6 Å²** en el conjunto con el que realmente se va a entrenar. No es una constante de la barrera.
+La regla publicada se replica de forma exacta en el subconjunto comparable (precisión 0.966 contra 96.6%), pero el umbral óptimo se mueve de 66.6 Å² en ese subconjunto a **101.9 Å²** en el conjunto completo y a **107.0 Å²** sobre el entrenamiento, que es con el que realmente se entrena. No es una constante de la barrera.
 :::
 
 ::: {.callout-caution}

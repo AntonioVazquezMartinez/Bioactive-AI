@@ -35,8 +35,10 @@ bioactive-ai/
 │
 ├── notebooks/              # Jupyter Notebooks para exploración y prototipado
 │   ├── 01_EDA.ipynb        # Análisis Exploratorio de Datos (Avance 1)
-│   ├── 02_Feature_Eng.ipynb# Ingeniería de características (Avance 2)
-│   ├── 03_Baseline.ipynb   # Modelos base (Avance 3)
+│   ├── 01b_EDA_actividad_snc.ipynb   # EDA de la actividad, etapa 2 (acompaña al Avance 1)
+│   ├── 02_Feature_Eng.ipynb# Ingeniería de características, permeabilidad (Avance 2)
+│   ├── 02b_Feature_Eng_actividad.ipynb # Matriz de pares y partición, actividad (Avance 2)
+│   ├── 03_Baseline.ipynb   # Modelo de referencia de las dos fases (Avance 3)
 │   └── 04_Models.ipynb     # Modelos alternativos y evaluación (Avance 4 y 5)
 │
 ├── src/                    # Código fuente del proyecto (scripts de Python)

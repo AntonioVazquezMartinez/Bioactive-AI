@@ -1,0 +1,107 @@
+{
+  "auroc": {
+    "boosting": {
+      "auroc": 0.9376,
+      "ic95": [
+        0.9147,
+        0.9556
+      ]
+    },
+    "boosting·análogo estereoquímico": {
+      "auroc": 0.928,
+      "ic95": [
+        0.8913,
+        0.954
+      ],
+      "mcc": 0.6924
+    },
+    "boosting·natural exacto": {
+      "auroc": 0.9419,
+      "ic95": [
+        0.9216,
+        0.9594
+      ],
+      "mcc": 0.7205
+    },
+    "boosting·sin equivalente natural": {
+      "auroc": 0.8923,
+      "ic95": [
+        0.8472,
+        0.9297
+      ],
+      "mcc": 0.514
+    },
+    "bosque": {
+      "auroc": 0.9366,
+      "ic95": [
+        0.9129,
+        0.9547
+      ]
+    },
+    "bosque·análogo estereoquímico": {
+      "auroc": 0.9299,
+      "ic95": [
+        0.8954,
+        0.9545
+      ],
+      "mcc": 0.6769
+    },
+    "bosque·natural exacto": {
+      "auroc": 0.9425,
+      "ic95": [
+        0.9207,
+        0.9607
+      ],
+      "mcc": 0.7145
+    },
+    "bosque·sin equivalente natural": {
+      "auroc": 0.8896,
+      "ic95": [
+        0.846,
+        0.9267
+      ],
+      "mcc": 0.5173
+    },
+    "logistica": {
+      "auroc": 0.9176,
+      "ic95": [
+        0.8928,
+        0.9386
+      ]
+    },
+    "logistica·análogo estereoquímico": {
+      "auroc": 0.917,
+      "ic95": [
+        0.8796,
+        0.9472
+      ],
+      "mcc": 0.704
+    },
+    "logistica·natural exacto": {
+      "auroc": 0.922,
+      "ic95": [
+        0.8979,
+        0.9459
+      ],
+      "mcc": 0.6937
+    },
+    "logistica·sin equivalente natural": {
+      "auroc": 0.8658,
+      "ic95": [
+        0.8209,
+        0.9079
+      ],
+      "mcc": 0.4966
+    }
+  },
+  "mcc": {
+    "boosting": 0.7019,
+    "bosque": 0.6998,
+    "logistica": 0.6869
+  },
+  "mejor_por_mcc": "boosting",
+  "n_columnas": 151,
+  "n_filas": 6306,
+  "n_grupos": 1048,
+  "positivos": 0.6497
+}

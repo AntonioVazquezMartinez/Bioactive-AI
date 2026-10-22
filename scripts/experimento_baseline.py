@@ -16,6 +16,7 @@ argumentos.
     python scripts/experimento_baseline.py --tarea actividad
     python scripts/experimento_baseline.py --tarea actividad --umbral 1
     python scripts/experimento_baseline.py --representacion sortslice
+    python scripts/experimento_baseline.py --estratos origen_grupo   # 1.6 y #102
 
 Y el escalado tampoco se aplica antes de partir: va dentro de la canalización,
 que se reajusta en cada pliegue. Ajustarlo sobre todo el entrenamiento y
@@ -39,9 +40,11 @@ sys.path.insert(0, str(RAIZ))
 
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
+from sklearn.metrics import matthews_corrcoef  # noqa: E402
 
 from src.evaluation.cv import evaluar, intervalo_por_grupos, resumen  # noqa: E402
 from src.models import canalizaciones, cargar  # noqa: E402
+from src.models.tareas import ARCHIVO_PATROCINADORA  # noqa: E402
 from src.tracking import Corrida  # noqa: E402
 
 SEMILLAS = (0, 1, 2)
@@ -56,29 +59,48 @@ def main() -> None:
     cli.add_argument("--representacion", default="descriptores")
     cli.add_argument("--umbral", type=float, default=10.0,
                      help="umbral de «activo» en µM; solo para --tarea actividad")
+    cli.add_argument("--estratos", default="grupo",
+                     choices=["grupo", "origen", "origen_grupo"],
+                     help="desglose de permeabilidad; con uno distinto de «grupo» el CSV "
+                          "y la corrida llevan sufijo para no sobrescribir el existente")
     cli.add_argument("--semillas", type=int, nargs="+", default=list(SEMILLAS))
     cli.add_argument("--pliegues", type=int, default=PLIEGUES)
     args = cli.parse_args()
 
     decision = "1.5" if args.tarea == "permeabilidad" else "2.3"
+    if args.estratos != "grupo":
+        decision = "1.6"   # el desglose por origen es la evidencia que pide la 1.6
     etiqueta = f"{args.tarea}-{args.representacion}".replace("+", "-")
     if args.tarea == "actividad":
         etiqueta += f"-{args.umbral:g}um"
+    if args.estratos != "grupo":
+        etiqueta += f"-{args.estratos}"
     salida = RAIZ / f"notebooks/datos/baseline_{etiqueta}.csv"
 
     print(f"python {platform.python_version()} · {platform.platform()}", flush=True)
     with Corrida(f"baseline-{etiqueta}", decision=decision,
                  params={"tarea": args.tarea, "representacion": args.representacion,
                          "umbral_um": args.umbral if args.tarea == "actividad" else None,
+                         "estratos": args.estratos,
                          "pliegues": args.pliegues,
                          "canalizaciones": ["logistica", "bosque", "boosting"]},
-                 semillas=list(args.semillas)) as corrida:
+                 semillas=list(args.semillas),
+                 # con el desglose por origen, el archivo de la patrocinadora es una
+                 # entrada más del experimento y su huella tiene que quedar registrada
+                 datos=[] if args.estratos == "grupo" else [ARCHIVO_PATROCINADORA]) as corrida:
         _correr(args, salida, corrida)
 
 
 def _correr(args, salida: Path, corrida: Corrida) -> None:
-    t = cargar(args.tarea, representacion=args.representacion, umbral_um=args.umbral)
+    t = cargar(args.tarea, representacion=args.representacion, umbral_um=args.umbral,
+               estratos=args.estratos)
     print(f"{t}\n  objetivo: {t.objetivo}", flush=True)
+    # La tasa base de cada estrato, para leer sus cifras contra ella y no contra
+    # la global (el grupo A tiene 88% de BBB+).
+    print("\nEstratos (n y tasa de positivos)")
+    for e in sorted(pd.unique(t.estratos)):
+        sel = t.estratos == e
+        print(f"  {e:<32} n={sel.sum():>6,}  positivos {t.y[sel].mean():>5.1%}")
 
     resultados, fuera_de_pliegue = evaluar(
         canalizaciones(), t.X, t.y, t.grupos, estratos=t.estratos,
@@ -111,8 +133,18 @@ def _correr(args, salida: Path, corrida: Corrida) -> None:
             ae, loe, hie = intervalo_por_grupos(ys, media[sel], t.grupos[sel])
             intervalos[f"{nombre}·{e}"] = {"auroc": round(ae, 4),
                                            "ic95": [round(loe, 4), round(hie, 4)]}
-            print(f"    {e:<14} n={sel.sum():>6,}  activos {ys.mean():>5.1%}"
-                  f"  {ae:.4f}  [{loe:.4f}, {hie:.4f}]")
+            # El MCC del estrato, igual que su AUROC: sobre las predicciones fuera
+            # de pliegue del estrato completo, uno por semilla y su promedio, con el
+            # corte de 0.5 que usa `cv.evaluar`. Promediar las filas de `resultados`
+            # no sirve aquí: `evaluar` solo las crea en los pliegues donde la
+            # minoritaria del estrato llega a 20 *dentro del pliegue*, y un estrato
+            # pequeño (natural exacto·A, que es el que nombra la 1.6) se quedaba
+            # sin ningún pliegue y sin MCC aunque pasara el corte en conjunto.
+            mcc_e = float(np.mean([matthews_corrcoef(ys, (p[s, sel] >= 0.5).astype(int))
+                                   for s in range(p.shape[0])]))
+            intervalos[f"{nombre}·{e}"]["mcc"] = round(mcc_e, 4)
+            print(f"    {e:<32} n={sel.sum():>6,}  positivos {ys.mean():>5.1%}"
+                  f"  {ae:.4f}  [{loe:.4f}, {hie:.4f}]  MCC {mcc_e:.4f}")
 
     global_ = resultados[resultados.estrato.eq("todos")].groupby("modelo")["mcc"].mean()
     mejor = global_.idxmax()

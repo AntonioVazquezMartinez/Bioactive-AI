@@ -59,7 +59,7 @@ Mientras tanto se usa la fuente —NPASS y CMAUP— como definición provisional
 
 ## 3 · La brecha de los naturales aparece solo donde la etiqueta no es medida
 
-> **Decidido por el equipo: queda como limitación declarada.** Su respuesta no cambiaba qué construir —un modelo, evaluado por origen dentro de cada grupo A–D— porque es esa evaluación la que distingue curación de química. [1.6](contenido/decisiones.html#d1-6).
+> **Decidido por el equipo: queda como limitación declarada.** Su respuesta no cambiaba qué construir —un modelo, evaluado por origen dentro de cada grupo A–D— y la evaluación por origen, ya hecha, tampoco distingue curación de química. [1.6](contenido/decisiones.html#d1-6).
 
 Globalmente los naturales cruzan la barrera 18.9 puntos menos que el resto (28.3 menos que los compuestos sin equivalente natural, si los análogos estereoquímicos se separan). Pero repartido por grupo de B3DB,
 **la brecha desaparece justo en el grupo A**, que es el que trae un logBB medido:
