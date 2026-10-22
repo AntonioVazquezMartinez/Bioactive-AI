@@ -182,7 +182,7 @@ class Linaje(Narrada):
         self.respira()
 
         nota = subtitulo("La prueba es el 20% y no se mira hasta el final."
-                         "\nEs la única condición que puso la patrocinadora.", 19)
+                         "\nEs la condición que puso al entregar el archivo.", 19)
         nota.next_to(bloques, DOWN, buff=0.6)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)

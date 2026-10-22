@@ -1,7 +1,7 @@
 {
  "apertura": {
   "voz_s": 57.36,
-  "video_s": 60.73,
+  "video_s": 61.73,
   "tramos": [
    {
     "n": 1,
@@ -26,8 +26,8 @@
   "modelo": "eleven_multilingual_v2"
  },
  "linaje": {
-  "voz_s": 131.56,
-  "video_s": 137.67,
+  "voz_s": 132.72,
+  "video_s": 140.0,
   "tramos": [
    {
     "n": 1,
@@ -44,8 +44,8 @@
    {
     "n": 3,
     "titulo": "La partición",
-    "segundos": 20.25,
-    "palabras": 50
+    "segundos": 21.41,
+    "palabras": 54
    },
    {
     "n": 4,
@@ -59,7 +59,7 @@
  },
  "intervalo": {
   "voz_s": 73.47,
-  "video_s": 86.8,
+  "video_s": 86.47,
   "tramos": [
    {
     "n": 1,
@@ -97,7 +97,7 @@
  },
  "fingerprints": {
   "voz_s": 85.18,
-  "video_s": 94.27,
+  "video_s": 91.87,
   "tramos": [
    {
     "n": 1,
@@ -129,7 +129,7 @@
  },
  "particion": {
   "voz_s": 88.47,
-  "video_s": 94.87,
+  "video_s": 94.47,
   "tramos": [
    {
     "n": 1,
@@ -161,7 +161,7 @@
  },
  "cierre": {
   "voz_s": 72.45,
-  "video_s": 78.8,
+  "video_s": 78.66,
   "tramos": [
    {
     "n": 1,

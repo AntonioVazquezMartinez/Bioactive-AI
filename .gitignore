@@ -59,5 +59,7 @@ media/
 env-anim/
 
 # El audio generado: cuesta llamadas a la API y no se versiona.
-# `voz/tiempos.json` sí, porque es la fuente de los tiempos.
+# `voz/tiempos.json` sí, porque es la fuente de los tiempos, y
+# `voz/huellas.json` también: es lo que dice qué tramos ya están grabados.
+# Sin él, quien clone el repositorio regraba los 7,365 caracteres enteros.
 animaciones/voz/*.mp3

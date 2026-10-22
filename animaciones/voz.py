@@ -28,6 +28,7 @@ imposible de seguir, que es justo lo que se quiere evitar.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -141,10 +142,47 @@ def generar(escena: str, texto: str, clave: str, tramo: int | None = None) -> Pa
     return destino
 
 
+HUELLAS = SALIDA / "huellas.json"
+
+
+def _huella(texto: str) -> str:
+    return hashlib.sha256(f"{VOZ}|{MODELO}|{texto}".encode()).hexdigest()[:16]
+
+
+def _huellas() -> dict:
+    return json.loads(HUELLAS.read_text()) if HUELLAS.exists() else {}
+
+
+def _cambio(escena: str, tr: dict) -> bool:
+    """Hay que volver a pedir este tramo si falta el mp3 o si cambió su texto.
+
+    La huella es del **texto que se manda**, junto con la voz y el modelo: así
+    editar una nota de producción del `.md`, o reordenar la sección, no cuesta
+    cuota. Cambiar de voz sí la invalida, que es lo correcto.
+
+    **Por qué existe.** `voz.py --solo linaje` regrababa los cuatro tramos de
+    la escena —1,917 caracteres— para corregir una frase de 291. Y como la
+    síntesis no devuelve dos veces la misma duración, regrabar de más movía
+    `voz/tiempos.json` y obligaba a re-renderizar escenas que nadie había
+    tocado. Con la huella, expandir el video cuesta lo que cuesta lo nuevo.
+    """
+    if not (SALIDA / f"{escena}-{tr['n']}.mp3").exists():
+        return True
+    return _huellas().get(f"{escena}-{tr['n']}") != _huella(tr["texto"])
+
+
+def _anotar(escena: str, tr: dict) -> None:
+    h = _huellas()
+    h[f"{escena}-{tr['n']}"] = _huella(tr["texto"])
+    HUELLAS.write_text(json.dumps(h, indent=1, ensure_ascii=False) + "\n")
+
+
 def main() -> None:
     cli = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     cli.add_argument("--solo", nargs="+", choices=list(ESCENAS))
+    cli.add_argument("--rehacer", action="store_true",
+                     help="regraba aunque el texto no haya cambiado")
     cli.add_argument("--medir", action="store_true",
                      help="no genera audio; solo compara lo que ya existe")
     args = cli.parse_args()
@@ -155,6 +193,7 @@ def main() -> None:
                          "guarda en ningún archivo: este repositorio es público")
 
     SALIDA.mkdir(exist_ok=True)
+    nuevos: list[str] = []
     escenas = args.solo or list(ESCENAS)
     tiempos = json.loads(TIEMPOS.read_text()) if TIEMPOS.exists() else {}
 
@@ -170,7 +209,10 @@ def main() -> None:
         for tr in partes:
             audio = SALIDA / f"{escena}-{tr['n']}.mp3"
             if not args.medir:
-                audio = generar(escena, tr["texto"], clave, tr["n"])
+                if args.rehacer or _cambio(escena, tr):
+                    audio = generar(escena, tr["texto"], clave, tr["n"])
+                    _anotar(escena, tr)
+                    nuevos.append(f"{escena}-{tr['n']}")
             if not audio.exists():
                 print(f"  tramo {tr['n']} · sin audio todavía")
                 continue

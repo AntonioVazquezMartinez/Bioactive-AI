@@ -61,8 +61,8 @@ rojo y cayendo, y la matriz recomponiéndose.
 > que un compuesto y sus análogos caigan siempre del mismo lado.
 >
 > Setenta por ciento para entrenar, diez para validar, veinte reservado. Esa
-> prueba no se mira hasta el final: es la única condición que puso la
-> patrocinadora.
+> prueba no se mira hasta el final: es la condición que la patrocinadora puso
+> al entregar el archivo completo.
 
 *Entra con:* los tres bloques apareciendo.
 
