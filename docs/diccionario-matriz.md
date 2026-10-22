@@ -53,7 +53,7 @@ Rangos de los que más se citan, sobre las 7,805 filas etiquetadas:
 | `tpsa_por_mw` | TPSA / peso molecular | polaridad por unidad de tamaño |
 | `lipo_neta` | `MolLogP` − TPSA / 100 | lipofilia descontando la polaridad |
 
-No son reglas validadas, y **medidas con el modelo no aportan**. El AUC individual y la correlación dicen si una columna tiene señal, no si añade algo que el modelo no tenga ya; `scripts/experimento_derivadas.py` lo mide como lo segundo, con la misma validación cruzada agrupada, con y sin ellas (diferencia pareada de MCC contra no usarlas, 15 evaluaciones): la logística no se mueve (+0.0001 ± 0.0014) y el Random Forest queda **por debajo** con las tres (−0.0062 ± 0.0039). Corrida en `experimentos/2026-10-18-artemio-1.5-derivadas/`, supuesto S1.11 de [la Ruta](decisiones.md).
+No son reglas validadas, y **medidas con el modelo no aportan**. El AUC individual y la correlación dicen si una columna tiene señal, no si añade algo que el modelo no tenga ya; `scripts/experimento_derivadas.py` lo mide como lo segundo, con la misma validación cruzada agrupada, con y sin ellas (diferencia pareada de MCC contra no usarlas, 15 evaluaciones): la logística no se mueve (+0.0001 ± 0.0031, error estándar corregido por Nadeau y Bengio) y el Random Forest con las tres da −0.0062 ± 0.0086, con un intervalo que incluye el cero. Corrida en `experimentos/2026-10-18-artemio-1.5-derivadas/`, supuesto S1.11 de [la Ruta](decisiones.md).
 
 **`lipo_neta` ya no entra a la matriz**: correlaciona 0.975 con `MolLogP`, que está protegido, así que ahora cae la derivada y no el original. `regla_2p` y `tpsa_por_mw` siguen, porque no estorban.
 
