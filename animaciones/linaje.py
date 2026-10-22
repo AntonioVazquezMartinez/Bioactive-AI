@@ -154,7 +154,7 @@ class Linaje(Narrada):
 
     # -- 3. la partición ----------------------------------------------------
     def _particion(self) -> None:
-        self.abrir_tramo(3, compases=2)
+        self.abrir_tramo(3, compases=5)
         cab = self._encabezado(
             "Y las filas se parten antes de mirar nada",
             "agrupando por estructura, con una prueba que el modelo nunca ve")
@@ -178,14 +178,19 @@ class Linaje(Narrada):
         bloques.arrange(RIGHT, buff=0.4)
         bloques.move_to(DOWN * 0.3)
         cabe(bloques)
-        self.play(FadeIn(bloques, lag_ratio=0.3), run_time=1.6)
-        self.respira()
+        # Un bloque por vez y no los tres de golpe: la voz los nombra uno a uno
+        # —«setenta, diez, veinte»— y entrando juntos sobraban casi nueve
+        # segundos de imagen fija al final del tramo.
+        for bloque in bloques:
+            self.play(FadeIn(bloque, lag_ratio=0.2), run_time=0.7)
+            self.respira()
 
         nota = subtitulo("La prueba es el 20% y no se mira hasta el final."
                          "\nEs la condición que puso al entregar el archivo.", 19)
         nota.next_to(bloques, DOWN, buff=0.6)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)
+        self.respira()
         self.cerrar_tramo(3)
         self.wait(1.8)
         self.play(FadeOut(bloques), FadeOut(nota), FadeOut(cab), run_time=0.7)

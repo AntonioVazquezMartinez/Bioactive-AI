@@ -16,7 +16,8 @@ import numpy as np
 from manim import (DOWN, LEFT, RIGHT, UP, Circle, Create, FadeIn, FadeOut,
                    Indicate, Line, Rectangle, VGroup, Write, config)
 
-from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, ROJO, VERDE,
+from comun import (Narrada, AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA,
+                   REJILLA, ROJO, VERDE,
                    cabe, dato, pie, subtitulo, titulo)
 
 config.background_color = FONDO
@@ -88,8 +89,12 @@ class Particion(Narrada):
         self.titulo_actual, self.sub_actual = t, s
 
     def _cajas(self) -> tuple[VGroup, VGroup]:
-        izq = Rectangle(width=5.4, height=2.6, color=VERDE, stroke_width=2)
-        der = Rectangle(width=5.4, height=2.6, color=NARANJA, stroke_width=2)
+        # Las cajas van en tinta de apoyo y no en VERDE/NARANJA: esos dos son
+        # los colores de las familias C y D, y una molécula verde dentro de una
+        # caja verde hacía que el color dijera dos cosas a la vez. Las cajas ya
+        # se identifican por su rótulo, que es lo que una caja necesita.
+        izq = Rectangle(width=5.4, height=2.6, color=REJILLA, stroke_width=2)
+        der = Rectangle(width=5.4, height=2.6, color=REJILLA, stroke_width=2)
         izq.to_edge(LEFT, buff=0.7).shift(DOWN * 0.6)
         der.to_edge(RIGHT, buff=0.7).shift(DOWN * 0.6)
         e1 = subtitulo("entrenamiento", 18).next_to(izq, UP, buff=0.15)
@@ -100,16 +105,23 @@ class Particion(Narrada):
     def _al_azar(self) -> None:
         self.abrir_tramo(2, compases=3)
         self._cambiar_titulo("Si se parten al azar…",
-                             "cada familia queda repartida entre las dos cajas")
+                             "las familias quedan partidas entre las dos cajas")
         # Las etiquetas se van con las moléculas: si se quedan, acaban
         # flotando sobre las cajas y sobre la tabla del final.
         izq, der = self._cajas()
         self.play(Create(izq), Create(der), FadeOut(self.etiquetas), run_time=0.9)
 
-        # **Cada familia se parte, porque eso es lo que dice el rótulo.** Con un
-        # sorteo independiente por molécula, una familia entera podía caer de un
-        # solo lado y el dibujo desmentía a la voz: pasaba con la tercera. Aquí
-        # se baraja dentro de la familia y se manda al menos una a cada caja.
+        # **Las familias de dos o más se parten, porque eso es lo que dice el
+        # rótulo.** Con un sorteo independiente por molécula, una familia
+        # entera podía caer de un solo lado y el dibujo desmentía a la voz:
+        # pasaba con la tercera. Aquí se baraja dentro de la familia y se manda
+        # al menos una a cada caja.
+        #
+        # «Cada familia» no: la E es de una sola molécula y no se puede partir.
+        # La cola de familias de uno es una propiedad real del conjunto —y por
+        # eso está dibujada—, así que lo que se corrige es la afirmación, no el
+        # dibujo. Quitar la familia de uno para que el eslogan fuese cierto
+        # habría sido ajustar el dato a la frase.
         rng = np.random.default_rng(7)
         destinos, moleculas = [], []
         for fila in self.grupos:
@@ -148,7 +160,7 @@ class Particion(Narrada):
 
     # -- 3. la partición por andamio ----------------------------------------
     def _por_andamio(self) -> None:
-        self.abrir_tramo(3, compases=2)
+        self.abrir_tramo(3, compases=4)
         self._cambiar_titulo("Si se parten por familia…",
                              "cada familia cae entera de un solo lado")
         rng = np.random.default_rng(3)
@@ -171,7 +183,9 @@ class Particion(Narrada):
             " nunca.\nEs más difícil, y es la pregunta que importa.", 20)
         explicacion.next_to(bien, DOWN, buff=0.3)
         self.play(FadeIn(bien), run_time=0.8)
+        self.respira()
         self.play(Write(explicacion), run_time=2.2)
+        self.respira()
         self.cerrar_tramo(3)
         self.wait(2.0)
         self.play(FadeOut(bien), FadeOut(explicacion),

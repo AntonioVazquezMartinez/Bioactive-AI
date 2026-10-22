@@ -483,13 +483,35 @@ function enfermedades(destino, D) {
   es.forEach((e, i) => {
     const y = 14 + i * 23;
     const w = Math.max((e.n / max) * ancho, 1.5);
-    const pocos = e.n < 500;
+    // **El color dice si entra al alcance, que es de lo que habla el pie.**
+    // Codificaba `n < 500` —y encima con `alerta`, que está reservado para
+    // estados— así que Epilepsia y Neurodegeneración, que la 2.1 dejó fuera,
+    // se veían igual que las cinco que sí entran. Y pocos datos no es lo mismo
+    // que fuera de alcance: dentro de las cinco hay dianas pequeñas, y entran.
+    const dentro = i < 5;
     svg.append(
-      h("text", { x: izq - 12, y: y + 13, "text-anchor": "end", fill: PAL.texto, "font-size": 14 }, e.nombre),
-      h("rect", { x: izq, y, width: w, height: 17, fill: pocos ? PAL.alerta : PAL.resto, opacity: pocos ? 0.95 : 0.6, rx: 2 }),
-      h("text", { x: izq + w + 8, y: y + 13, fill: pocos ? PAL.alerta : PAL.tenue, "font-size": 13 }, num(e.n)),
+      h("text", { x: izq - 12, y: y + 13, "text-anchor": "end",
+                  fill: dentro ? PAL.texto : PAL.tenue, "font-size": 14 }, e.nombre),
+      h("rect", { x: izq, y, width: w, height: 17,
+                  fill: dentro ? PAL.positivo : PAL.resto,
+                  opacity: dentro ? 0.85 : 0.35, rx: 2 }),
+      h("text", { x: izq + w + 8, y: y + 13,
+                  fill: dentro ? PAL.texto : PAL.tenue, "font-size": 13 }, num(e.n)),
     );
   });
+
+  // La línea que marca dónde acaba el alcance: cinco barras arriba, el resto
+  // debajo. Sin ella el pie tenía que explicar un corte que no se veía.
+  const yCorte = 14 + 5 * 23 - 3;
+  svg.append(
+    h("line", { x1: izq - 150, y1: yCorte, x2: W - 8, y2: yCorte,
+                stroke: PAL.rejilla, "stroke-width": 1, "stroke-dasharray": "3 3" }),
+    // A la derecha y no a la izquierda: a la izquierda el rótulo caía justo
+    // sobre el nombre de la categoría que marca el corte.
+    h("text", { x: W - 8, y: yCorte - 5, "text-anchor": "end",
+                fill: PAL.tenue, "font-size": 11 },
+      "alcance del proyecto · decisión 2.1"),
+  );
 
   const pie = document.createElement("div");
   pie.className = "lectura";
@@ -598,7 +620,9 @@ function particion(destino, D) {
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = t;
-    b.className = v === malo ? "activo" : "";
+    // `bio-boton` es lo que los hace botones del mazo y no del navegador:
+    // sin esa clase salían como cajas blancas sobre el fondo oscuro.
+    b.className = v === malo ? "bio-boton activo" : "bio-boton";
     b.addEventListener("click", () => {
       malo = v;
       [...control.children].forEach((x, i) => x.classList.toggle("activo", (i === 1) === malo));
@@ -655,7 +679,8 @@ function costo(destino, D) {
       `<div class="bio-tarjeta alerta"><div class="t">Ensayos que no darán nada</div>
          <div class="v">${num(p.fallidos)}</div><div class="n">y ${num(p.perdidos)} reales quedan fuera (${(100 - exh).toFixed(0)}% perdido)</div></div>`;
     pie.innerHTML =
-      `Con el corte en <strong>TPSA &lt; ${p.corte} Å²</strong>. Es la única regla que el proyecto tiene ` +
+      `Con el corte en <strong>TPSA &lt; ${p.corte} Å²</strong>, sobre el <strong>entrenamiento</strong> (n = ${num(T.n.entrenamiento)}; la prueba queda ` +
+      `reservada y no se cuenta). Es la única regla que el proyecto tiene ` +
       `medida hoy, no el modelo final, pero la forma del dilema es la misma: <strong>acortar la lista sube ` +
       `la precisión y deja fuera más candidatos reales</strong>. Dónde conviene pararse depende de qué ` +
       `cuesta más en su laboratorio, y eso no lo decide la estadística.`;

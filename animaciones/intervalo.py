@@ -90,7 +90,7 @@ class Intervalo(Narrada):
 
     # -- 3. una censurada ----------------------------------------------------
     def _una_censurada(self) -> None:
-        self.abrir_tramo(3)
+        self.abrir_tramo(3, compases=3)
         self._cambiar("Y un «> 10 µM» es media recta",
                       "el ensayo llegó a 10 µM y no vio efecto: la potencia"
                       " está por debajo")
@@ -103,12 +103,14 @@ class Intervalo(Narrada):
         etiqueta = dato("> 10 µM", 22, NARANJA).next_to(tope, RIGHT, buff=0.2)
         self.play(Create(tope), run_time=0.5)
         self.play(Create(flecha), FadeIn(etiqueta), run_time=1.1)
+        self.respira()
 
         nota = subtitulo("No sabemos cuánto, pero sabemos que no llega hasta"
                          " aquí.\nTirarla sería tirar la única evidencia"
                          " negativa que tenemos.", 20)
         nota.next_to(self.eje, DOWN, buff=2.0)
         self.play(Write(nota), run_time=2.2)
+        self.respira()
         self.cerrar_tramo(3)
         self.wait(1.6)
         self.play(FadeOut(nota), run_time=0.4)
@@ -146,13 +148,22 @@ class Intervalo(Narrada):
 
     # -- 5. mover el corte no reconstruye nada -------------------------------
     def _lo_que_se_gana(self) -> None:
-        self.abrir_tramo(5, compases=2)
+        # Tres compases: el cambio de corte, las dos etiquetas y la tarjeta
+        # de cierre, que ahora entra dentro del tramo.
+        self.abrir_tramo(5, compases=3)
         self._cambiar("Por eso el umbral es una decisión de lectura",
                       "mover el corte no obliga a reconstruir la matriz")
         nuevo = 6.0  # 1 µM
         linea2 = Line(self._x(nuevo) + UP * 0.95, self._x(nuevo) + DOWN * 1.6,
                       color=AZUL_CLARO, stroke_width=2)
         rotulo2 = dato("corte: 1 µM", 20, AZUL_CLARO).next_to(linea2, UP, buff=0.15)
+        # El corte nuevo cae en 6.0 y la medición exacta en 6.3: a tres décimas,
+        # que en pantalla son centímetros. La etiqueta del acto 2 lleva un
+        # desplazamiento a la derecha precisamente por esto, pero nada lo
+        # comprobaba —y una separación que solo existe como comentario se
+        # pierde en el primer ajuste de la escena. Aquí se comprueba.
+        separados(self.exacta[1], rotulo2)
+        separados(self.exacta[1], linea2)
         self.play(self.corte[0].animate.become(linea2),
                   self.corte[1].animate.become(rotulo2), run_time=1.4)
         self.respira()
@@ -160,8 +171,14 @@ class Intervalo(Narrada):
         sigue = dato("sigue activo", 22, VERDE).move_to(self._x(7.6) + DOWN * 1.9)
         tambien = dato("sigue inactivo", 22, ROJO).move_to(self._x(3.9) + DOWN * 1.9)
         self.play(FadeIn(sigue), FadeIn(tambien), run_time=0.8)
-        self.cerrar_tramo(5)
-        self.wait(1.0)
+        self.respira()
+
+        # **La tarjeta de cierre entra dentro del tramo, no después.** Estaba
+        # detrás de `cerrar_tramo(5)`, así que el remate de la escena —la frase
+        # que resume el acto entero— aparecía cuando la voz ya había callado,
+        # en el relleno de cola. El tramo dura 12.63 s y los actos gastaban
+        # 3.45: sobraba sitio de sobra para decirla a tiempo. Igual que hace
+        # `cierre.py` con la suya.
         self.play(FadeOut(sigue), FadeOut(tambien), FadeOut(self.exacta),
                   FadeOut(self.censurada), FadeOut(self.corte),
                   FadeOut(self.eje), FadeOut(self.bordes), run_time=0.8)
@@ -179,6 +196,8 @@ class Intervalo(Narrada):
         fuente = pie("Decisión 2.10 · notebook 02b · regla de la sección 7 del"
                      " diccionario de la patrocinadora")
         fuente.to_edge(DOWN, buff=0.3)
-        cabe(fuente)
+        cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
-        self.wait(2.5)
+        self.respira()
+        self.cerrar_tramo(5)
+        self.wait(1.5)

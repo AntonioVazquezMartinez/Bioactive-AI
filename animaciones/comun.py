@@ -42,6 +42,7 @@ VERDE = _c("categoricos", "natural")        # producto natural
 NARANJA = _c("categoricos", "negativo")     # BBB−, lo que se reserva
 ROJO = _c("estado", "alerta")               # error, fuga
 GRIS = _c("tintas", "tenue")                # texto secundario
+REJILLA = _c("tintas", "rejilla")           # contenedor, eje, cuadrícula
 CREMA = _c("tintas", "texto")               # texto principal
 
 FUENTE = "Helvetica Neue"
@@ -125,6 +126,22 @@ class Narrada(Scene):
     # alguien se acordó de ponerlo.
     COLA = 1.0
 
+    # **El congelado más largo que se tolera con la voz hablando encima.**
+    # La auditoría del video midió 50 s en el embudo del linaje, 30 en Sort &
+    # Slice y 24.9 en el cierre: la pantalla quieta mientras la narración
+    # seguía, que es justo lo que una animación no debe hacer. `respira()`
+    # reparte el silencio, pero repartirlo entre dos compases en un tramo de
+    # treinta segundos todavía deja quince de imagen fija, así que hacía falta
+    # medirlo y no suponerlo.
+    #
+    # Nueve segundos no sale de ninguna norma: es el tope que deja margen sobre
+    # lo medido. Al poner la guarda, el peor tramo se quedaba 29.2 s quieto
+    # (`matriz` 2, que se montó sin un solo `respira()`); repartidos los cinco
+    # que pasaban del tope, el peor es ahora 7.9 s (`particion` 4). El margen
+    # se estrecha cuando el reparto mejore, no antes, y la cifra de cada tramo
+    # queda en `voz/offsets.json` para no tener que volver a renderizar.
+    TOPE_CONGELADO = 9.0
+
     def setup(self) -> None:
         super().setup()
         self._tramos = self._cargar_tramos()
@@ -134,6 +151,7 @@ class Narrada(Scene):
         self._compases_totales = 1
         self._animado = 0.0
         self._respirado = 0.0
+        self._quietos = []           # (tramo, segundos) de cada espera
 
     def tear_down(self) -> None:
         """Deja por escrito en qué segundo empieza cada tramo.
@@ -149,8 +167,14 @@ class Narrada(Scene):
         ruta.parent.mkdir(exist_ok=True)
         datos = json.loads(ruta.read_text()) if ruta.exists() else {}
         clave = type(self).__module__.rsplit(".", 1)[-1]
+        quietos = {}
+        for n, q in getattr(self, "_quietos", []):
+            quietos[str(n)] = max(quietos.get(str(n), 0.0), round(q, 2))
         datos[clave] = {"tramos": {str(n): round(s, 3)
                                    for n, s in sorted(self._offsets.items())},
+                        # El congelado más largo de cada tramo, para poder ver
+                        # el reparto sin volver a renderizar.
+                        "quieto_max_s": quietos,
                         "duracion_s": round(self.renderer.time, 3)}
         ruta.write_text(json.dumps(datos, indent=1, ensure_ascii=False) + "\n")
         return super().tear_down()
@@ -232,6 +256,7 @@ class Narrada(Scene):
         if espera > 0.04:
             self.wait(espera)
             self._respirado += espera
+            self._quietos.append((self._tramo_actual, espera))
 
     def cerrar_tramo(self, n: int) -> None:
         # Cerrar un tramo que no es el abierto significa que la llamada acabó
@@ -255,7 +280,22 @@ class Narrada(Scene):
                   f" la voz {objetivo:.1f} s: se pasa {gastado - objetivo:.1f} s."
                   " Quita animación o escribe más narración; no aceleres la voz.")
             return
-        self.wait(max(0.0, objetivo - gastado))
+        relleno = max(0.0, objetivo - gastado)
+        self.wait(relleno)
+        if relleno > 0.04:
+            self._quietos.append((n, relleno))
+
+        # El tope se revisa aquí y no al final de la escena para que el aviso
+        # diga **qué tramo** se queda quieto, que es donde hay que repartir.
+        largo = max((q for t, q in self._quietos if t == n), default=0.0)
+        if largo > self.TOPE_CONGELADO and self._tramos:
+            titulo = self._tramos.get(n, {}).get("titulo", "")
+            raise RuntimeError(
+                f"el tramo {n} ({titulo}) se queda {largo:.1f} s con la imagen"
+                f" fija y la voz hablando, y el tope son {self.TOPE_CONGELADO:.0f} s."
+                " Súbele los compases a `abrir_tramo` y reparte el dibujo, o"
+                " pártelo en varios tramos en el guion")
+
         if self._tramos and n == max(self._tramos):
             self.wait(self.COLA)
 
@@ -304,6 +344,6 @@ def separados(a, b, minimo: float = 0.08) -> None:
 
 
 __all__ = ["FONDO", "AZUL", "AZUL_CLARO", "VERDE", "NARANJA", "ROJO", "GRIS",
-           "CREMA", "FUENTE", "ANCHO", "ALTO", "MARGEN", "titulo", "subtitulo",
+           "CREMA", "REJILLA", "FUENTE", "ANCHO", "ALTO", "MARGEN", "titulo", "subtitulo",
            "dato", "pie", "cabe", "matriz", "separados", "Narrada", "BLACK",
            "WHITE", "VGroup"]

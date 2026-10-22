@@ -57,7 +57,11 @@ class Matriz(Narrada):
 
     # -- 1. la molécula entra como texto ------------------------------------
     def _una_molecula(self) -> None:
-        self.abrir_tramo(1)
+        # Esta escena se montó sin un solo `respira()`, así que los tres
+        # tramos juntaban todo el silencio al final: 29 s de imagen fija en el
+        # segundo, con la voz hablando encima. Lo midió la guarda de
+        # `TOPE_CONGELADO`, no una revisión de fotogramas.
+        self.abrir_tramo(1, compases=3)
         cab = self._encabezado("Todo empieza con una cadena de texto",
                                "el SMILES es la única entrada del sistema")
         self.play(Write(cab[0]), FadeIn(cab[1]), run_time=1.4)
@@ -66,7 +70,7 @@ class Matriz(Narrada):
         smiles.move_to(UP * 0.6)
         cabe(smiles)
         self.play(FadeIn(smiles), run_time=1.0)
-        self.wait(0.6)
+        self.respira()
 
         # El trozo que es el anillo, resaltado: la cadena no es opaca, tiene
         # partes que significan algo.
@@ -76,7 +80,7 @@ class Matriz(Narrada):
         cabe(marca)
         self.play(Indicate(anillo, color=NARANJA, scale_factor=1.25),
                   FadeIn(marca), run_time=1.3)
-        self.wait(0.8)
+        self.respira()
         self.play(FadeOut(marca), run_time=0.4)
         self.smiles = smiles
         self.cab = cab
@@ -84,7 +88,7 @@ class Matriz(Narrada):
 
     # -- 2. la fila: tres bloques, uno al lado del otro ---------------------
     def _una_fila(self) -> None:
-        self.abrir_tramo(2)
+        self.abrir_tramo(2, compases=len(BLOQUES) + 2)
         nueva = self._encabezado(
             "Y se convierte en una fila de números",
             "tres bloques distintos, pegados uno al lado del otro")
@@ -94,6 +98,7 @@ class Matriz(Narrada):
 
         self.play(self.smiles.animate.scale(0.62).to_edge(LEFT, buff=0.7)
                   .shift(UP * 0.9), run_time=1.0)
+        self.respira()
 
         fila, rotulos = VGroup(), VGroup()
         for nombre, cuantas, ancho, color in BLOQUES:
@@ -122,6 +127,7 @@ class Matriz(Narrada):
             self.play(Create(celdas, lag_ratio=0.05), FadeIn(etiqueta),
                       run_time=0.8)
             self.play(FadeOut(flecha), run_time=0.25)
+            self.respira()
 
         nota = subtitulo("Son 2,254 números para una sola molécula, y los tres"
                          " bloques\nmiden cosas distintas: propiedades, trozos"
@@ -129,12 +135,13 @@ class Matriz(Narrada):
         nota.to_edge(DOWN, buff=0.8).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=2.0)
+        self.respira()
         self.fila, self.rotulos, self.nota = fila, rotulos, nota
         self.cerrar_tramo(2)
 
     # -- 3. muchas filas: la matriz -----------------------------------------
     def _la_matriz(self) -> None:
-        self.abrir_tramo(3)
+        self.abrir_tramo(3, compases=4)
         nueva = self._encabezado("Una fila por molécula, y eso es la matriz",
                                  "lo que el modelo ve, y lo único que ve")
         self.play(FadeOut(self.cab), FadeOut(self.nota), run_time=0.3)
@@ -149,6 +156,7 @@ class Matriz(Narrada):
         self.play(Transform(self.fila, rej[0]), run_time=0.8)
         self.play(Create(rej, lag_ratio=0.015), run_time=2.0)
         self.play(FadeOut(self.fila), run_time=0.2)
+        self.respira()
 
         lado = subtitulo("una fila\npor molécula", 17)
         lado.next_to(rej, LEFT, buff=0.3)
@@ -156,7 +164,7 @@ class Matriz(Narrada):
         arriba.next_to(rej, UP, buff=0.25).set_x(0)
         cabe(lado, arriba)
         self.play(FadeIn(lado), FadeIn(arriba), run_time=0.8)
-        self.wait(0.6)
+        self.respira()
 
         # Y el remate que ata esta escena con las dos siguientes.
         self.play(Indicate(VGroup(*rej[:7]), color=AZUL, scale_factor=1.02),
@@ -167,6 +175,7 @@ class Matriz(Narrada):
         nota.to_edge(DOWN, buff=0.75).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=1.9)
+        self.respira()
 
         fuente = pie("Decisiones 1.3 y 1.7 · notebook 02 · 7,805 moléculas"
                      " en la fase 1")

@@ -126,16 +126,22 @@ def _cifras_en_pantalla(fuente: str) -> set[str]:
     """
     arbol = ast.parse(fuente)
 
-    # El pie de procedencia queda fuera: por definición son referencias
-    # —«Decisión 2.3», «notebook 02b», «Equipo 7»— y no cifras que la voz
-    # tenga que decir. Es la línea que dice de dónde salen las demás.
-    en_el_pie = set()
+    # El pie de procedencia queda fuera, **pero solo para lo que de verdad es
+    # una referencia**: «Decisión 2.3», «notebook 02b», «Equipo 7», un radio o
+    # un número de bits que nombran la configuración. Es la línea que dice de
+    # dónde salen las demás cifras, no un sitio donde colar una más.
+    #
+    # La exención era ciega justo donde su premisa no se cumplía: el pie de
+    # `fingerprints` llevaba «densidad 1.91% contra 2.33% del plegado», que no
+    # es una referencia sino una medición que solo aparecía ahí, y pasaba sin
+    # que nadie la dijera. Lo encontró una auditoría, no esta guarda.
+    en_el_pie = {}
     for nodo in ast.walk(arbol):
         if (isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name)
                 and nodo.func.id == "pie"):
             for hijo in ast.walk(nodo):
                 if isinstance(hijo, ast.Constant) and isinstance(hijo.value, str):
-                    en_el_pie.add(id(hijo))
+                    en_el_pie[id(hijo)] = _mediciones(hijo.value)
 
     documentaciones = set()
     for nodo in ast.walk(arbol):
@@ -151,13 +157,65 @@ def _cifras_en_pantalla(fuente: str) -> set[str]:
     for nodo in ast.walk(arbol):
         if not (isinstance(nodo, ast.Constant) and isinstance(nodo.value, str)):
             continue
-        if id(nodo) in documentaciones or id(nodo) in en_el_pie:
+        if id(nodo) in documentaciones:
+            continue
+        if id(nodo) in en_el_pie:
+            # Del pie, solo lo que midió alguien; sus referencias no.
+            cifras |= en_el_pie[id(nodo)]
             continue
         for c in re.findall(r"\d[\d.,]*%?", nodo.value):
             limpia = c.rstrip(".,")
             if limpia:
                 cifras.add(limpia)
     return cifras
+
+
+# Lo que un pie puede nombrar sin que sea una medición: de dónde sale la
+# cifra —la entrada del registro, el notebook, el script, el equipo— y cómo se
+# configuró lo que la produjo —el radio, los bits, las semillas, el pliegue—.
+# Nada de eso se mide en esta corrida; la identifica.
+_REFERENCIAS = (
+    "decisión", "decisiones", "notebook", "cuaderno", "script", "equipo",
+    "fase", "tramo", "radio", "bits", "semilla", "semillas", "pliegue",
+    "pliegues", "experimento", "experimentos", "avance", "rúbrica", "issue",
+    "pr", "sección", "árboles",
+)
+
+
+def _mediciones(texto: str) -> set[str]:
+    """Las cifras del pie que son mediciones y no referencias.
+
+    La premisa de la exención del pie está escrita en su propio comentario:
+    «por definición son referencias». Esta función la hace cumplir, en vez de
+    suponerla. Una cifra cuenta como referencia cuando a su lado aparece la
+    palabra que dice qué identifica —«decisión 1.2», «notebook 03», «radio 2»,
+    «2048 bits», «una semilla»—; cualquier otra, y en particular un porcentaje
+    o un decimal suelto, es algo que alguien midió y que la voz tiene que
+    decir si va a estar en pantalla.
+
+    Va cifra por cifra y no cadena por cadena: un pie es casi siempre varias
+    literales adyacentes, que Python concatena en una sola constante, así que
+    exentar o exigir la cadena entera arrastraría las referencias con la
+    medición o la medición con las referencias.
+    """
+    ref = "|".join(_REFERENCIAS)
+    # Se tacha lo que es referencia y se mide lo que sobra. Al revés —mirar las
+    # palabras vecinas de cada cifra— se queda corto en lo que más aparece en
+    # un pie: rutas (`experimentos/2026-10-18-artemio-*`), ids con guion bajo
+    # (`03_Baseline`) y listas de entradas («decisiones 2.1, 2.3 y 2.7»), donde
+    # la palabra que identifica está lejos o no vuelve a repetirse.
+    resto = texto
+    # 1 · rutas, nombres de archivo e ids: llevan `/` o `_` y alguna letra.
+    resto = re.sub(r"\S*[/_]\S*[A-Za-zÁÉÍÓÚÑáéíóúñ]\S*|"
+                   r"\S*[A-Za-zÁÉÍÓÚÑáéíóúñ]\S*[/_]\S*", " ", resto)
+    # 2 · una palabra que identifica y la lista de ids que la sigue.
+    resto = re.sub(rf"(?i)\b({ref})\b[\s:]*"
+                   r"(\d[\d.]*(\s*(,|y|·)\s*\d[\d.]*)*)", " ", resto)
+    # 3 · la cifra que precede a lo que configura: «2048 bits», «3 semillas».
+    resto = re.sub(rf"(?i)\b\d[\d.,]*\s+({ref})\b", " ", resto)
+
+    return {c.rstrip(".,") for c in re.findall(r"\d[\d.,]*%?", resto)
+            if c.rstrip(".,")}
 
 
 def _formas(cifra: str) -> list[str]:

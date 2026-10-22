@@ -128,7 +128,7 @@
   "modelo": "eleven_multilingual_v2"
  },
  "particion": {
-  "voz_s": 88.47,
+  "voz_s": 87.72,
   "video_s": 94.47,
   "tramos": [
    {
@@ -140,8 +140,8 @@
    {
     "n": 2,
     "titulo": "La partición al azar",
-    "segundos": 19.74,
-    "palabras": 52
+    "segundos": 18.99,
+    "palabras": 53
    },
    {
     "n": 3,

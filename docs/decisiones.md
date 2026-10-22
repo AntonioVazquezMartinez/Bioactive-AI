@@ -21,6 +21,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [C.5](#dc-5) | El entregable es una lista priorizada, y el punto de operación va como curva | Vigente |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta |
 | [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta |
+| [C.8](#dc-8) | Tres colores categóricos, validados contra daltonismo | Vigente |
 
 **Fase 1 · Permeabilidad**
 
@@ -167,6 +168,20 @@ Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `
 
 **Si no se resuelve:** el ranking se entrega declarando que ordena por potencia y permeabilidad, y que no distingue un compuesto selectivo de uno citotóxico. Eso cambia qué significa el entregable, así que toca la [C.3](#dc-3) y la [C.5](#dc-5).
 
+#### C.8 · Tres colores categóricos, validados contra daltonismo {#dc-8 .vigente}
+
+**Estado:** vigente
+
+**Qué pasó.** Los hex vivían copiados en cuatro archivos —el video, las gráficas del mazo, los estilos del sitio y los del mazo— y **tres se habían desviado entre sí**: el azul, el verde y el naranja, lo bastante parecidos para que nadie lo notara leyendo. Al validarla contra simulación de daltonismo, la paleta fallaba tres de cinco comprobaciones sobre fondo oscuro, y la peor era entre el verde y el naranja —«producto natural» y «BBB−»—, que con protanopía quedaban a ΔE 5.9 en OKLab: indistinguibles. Son las dos categorías de las que trata el proyecto.
+
+Había además un error de categoría: `alerta` es un **estado** y no una serie, y `resto` es una tinta de apoyo. Contándolos como colores de serie, la paleta parecía tener cinco categorías cuando tiene tres.
+
+**Se decidió.** **Tres roles categóricos y no más** —`positivo` (BBB+, entrenamiento), `negativo` (BBB−, lo que se reserva) y `natural` (producto natural)—, asignados en ese orden fijo y nunca ciclados: una cuarta categoría se pliega en «otros» o se separa en gráficas pequeñas, no recibe un tono generado. `estado.alerta` queda reservado para estados y las `tintas` para lo que no es una serie: fondo, texto, rejilla, contenedor. Con los pasos corregidos, la paleta pasa las cinco comprobaciones en los dos modos y con todas las parejas.
+
+**Y vive en un solo sitio.** `recursos/paleta.json` es la fuente; `scripts/paleta.py` la reparte a `recursos/paleta.js` y `_paleta.scss`, y el CI lo corre con `--revisar`, que falla si alguien editó un destino a mano. El video la lee del JSON directamente.
+
+**Qué la cambiaría.** Que haga falta una cuarta categoría de verdad —no un cuarto elemento de una lista, que se pliega—. Entonces no se añade un tono: se parte la gráfica, porque cuatro tonos no se separan bajo daltonismo sobre este fondo. Y si el sitio cambiara de fondo, hay que volver a validar: los pasos están elegidos contra **este** fondo, no en abstracto.
+
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |
@@ -205,9 +220,9 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 Las dos filas son del bosque aleatorio con una semilla, celda 10 del [notebook 03](../notebooks/03_Baseline.ipynb), sobre la matriz de 151 columnas. (Con la matriz anterior, de 171, daban 0.937 / 0.705 y 0.959 / 0.767: la diferencia entre agrupamientos no se mueve.)
 
-**2.2 puntos de AUROC y 7.1 de MCC.** Lo que sigue compara, en cada métrica, **el par de modelos más lejano de esa métrica**, que no es el mismo par: en MCC son el boosting y la logística (0.0153; el bosque contra la logística da 0.0130) y en AUROC el bosque y la logística. Comparar siempre el mismo par subestimaría la distancia entre familias en una de las dos.
+**2.2 puntos de AUROC y 7.1 de MCC.** Lo que sigue compara, en cada métrica, **el par de modelos más lejano de esa métrica**, que no es el mismo par: en MCC son el boosting y la logística (0.0223; el bosque contra la logística da 0.0178) y en AUROC el bosque y la logística. Comparar siempre el mismo par subestimaría la distancia entre familias en una de las dos. Las dos cifras son de una semilla y media de pliegues, igual que las del agrupamiento: el paréntesis citó durante un tiempo el 0.0153 del promedio de las quince, que es el estimador de la otra tabla.
 
-En MCC la elección de modelo mueve **2.2 puntos** entre la logística y el boosting, así que el criterio de agrupamiento pesa **algo más de tres veces**. Esa razón salía antes de 4.6, y era otra mezcla de estimadores: los 7.1 puntos del agrupamiento son de una semilla y el 1.5 que se les comparaba, del promedio de las 15 evaluaciones. Con la misma medida en los dos lados —una semilla, media de pliegues— son 7.1 contra 2.2. **En AUROC no**, y la versión anterior de esta entrada decía que sí: con el mismo estimador —una semilla, predicciones fuera de pliegue, bootstrap de grupos— el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225. La afirmación salía de comparar los 2.2 puntos de ese estimador contra el «menos de 2» del promedio de 15 pliegues, que es otro. Con cualquiera de los dos se sostiene lo que de verdad importa: **una cifra que no diga cómo agrupó no se puede comparar** con las de este registro. El criterio vive en `grupos_cv`, en `src/data_prep/splits.py`, y lo usan las dos fases.
+En MCC la elección de modelo mueve **2.2 puntos** entre la logística y el boosting, así que el criterio de agrupamiento pesa **algo más de tres veces**. Esa razón salía antes de 4.6, y era otra mezcla de estimadores: los 7.1 puntos del agrupamiento son de una semilla y el 1.5 que se les comparaba, del promedio de las 15 evaluaciones. Con la misma medida en los dos lados —una semilla, media de pliegues— son 7.1 contra 2.2. **En AUROC no**, y la versión anterior de esta entrada decía que sí: con el mismo estimador —una semilla, predicciones fuera de pliegue, bootstrap de grupos— el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0215 (0.9349 contra 0.9134): ocho diezmilésimas de diferencia, que no distinguen nada. La afirmación salía de comparar los 2.2 puntos de ese estimador contra el «menos de 2» del promedio de 15 pliegues, que es otro. Con cualquiera de los dos se sostiene lo que de verdad importa: **una cifra que no diga cómo agrupó no se puede comparar** con las de este registro. El criterio vive en `grupos_cv`, en `src/data_prep/splits.py`, y lo usan las dos fases.
 
 **Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura reporta que así se infla el resultado entre 7 y 13 puntos.
 

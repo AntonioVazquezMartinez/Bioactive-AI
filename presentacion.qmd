@@ -130,7 +130,7 @@ En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente) para la partición, 
 
 ## ¿Sirve filtrar por A–D? No, empeora el desbalance {.smaller}
 
-La investigación inicial leía las categorías de B3DB como confiabilidad y recomendaba entrenar solo con A y B. Antes de adoptarlo miramos qué pasa al filtrar. Pruébalo:
+La investigación inicial leía las categorías de B3DB como confiabilidad y recomendaba entrenar solo con A y B. Antes de adoptarlo, miramos qué pasa al filtrar:
 
 ::: {.bio-grafica .baja .g360 data-grafica="grupos"}
 :::
@@ -139,19 +139,17 @@ La investigación inicial leía las categorías de B3DB como confiabilidad y rec
 
 **Lo que decidimos:** se usa para **estratificar, nunca para excluir**, y el entrenamiento pasó de 4,679 a 7,805 compuestos (+67%).
 
-::: {.callout-note}
-En la Ruta: [1.1](contenido/decisiones.html#d1-1) (vigente · revisada). La recomendación anterior sigue visible, marcada como superada.
-:::
+En la Ruta: [1.1](contenido/decisiones.html#d1-1), revisada — la recomendación anterior sigue visible, marcada como superada.
 
 ## ¿Los naturales cruzan peor? Depende del grupo {.smaller}
 
 En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% contra 71.7% BBB+), y **28.3 menos** que los compuestos sin equivalente natural (81.0%) si se separan los análogos estereoquímicos, que cruzan aún menos (39.7%). Pero repartida por grupo de B3DB, la brecha **desaparece justo donde la etiqueta viene de un logBB medido**:
 
-::: {.bio-grafica data-grafica="naturales"}
+::: {.bio-grafica .baja .g360 data-grafica="naturales"}
 :::
 
 ::: {.callout-important}
-Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6), vigente): **un solo modelo**, con el desempeño evaluado por origen **dentro de cada grupo A–D** y no solo en el global, y la causa declarada como limitación. Entrenar por separado partiría un conjunto que ya es chico para resolver una ambigüedad que los datos no resuelven.
+Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6)): **un solo modelo**, evaluado por origen **dentro de cada grupo A–D** y no solo en el global. Entrenar por separado partiría un conjunto ya chico para resolver una ambigüedad que los datos no resuelven.
 :::
 
 # 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
@@ -224,16 +222,16 @@ El costo es que el vocabulario **se aprende de los datos**, así que se ajusta s
 
 ## ¿Cuánto vocabulario hace falta? {.smaller}
 
-::: {.bio-grafica data-grafica="vocabulario"}
+::: {.bio-grafica .baja .g360 data-grafica="vocabulario"}
 :::
 
 ::: {.callout-note}
-Se mantiene **L = 2048** como valor de trabajo: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos. Lo que falta decidir con la patrocinadora no es el número sino la estrategia —desempeño, parsimonia o relevancia química de las subestructuras raras— y ahí su conocimiento de los productos naturales es lo que inclina la balanza. En la Ruta: [1.7](contenido/decisiones.html#d1-7) (propuesta).
+Se mantiene **L = 2048**: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos. Lo que falta decidir con la patrocinadora no es el número sino la estrategia —desempeño, parsimonia o relevancia química de las subestructuras raras—, y ahí su conocimiento de los productos naturales es lo que inclina la balanza ([1.7](contenido/decisiones.html#d1-7)).
 :::
 
 ## ¿Para qué sirve escalar? No para acertar: para que converja {.smaller}
 
-::: {.bio-grafica data-grafica="escalado"}
+::: {.bio-grafica .baja .g360 data-grafica="escalado"}
 :::
 
 ::: {.callout-important}
@@ -300,7 +298,7 @@ Qué hay, qué no cuadra y qué necesitamos saber antes de elegir cómo modelarl
 
 ## ¿Se puede encadenar una etapa con la otra? Casi no se tocan
 
-::: {.bio-grafica data-grafica="etapas"}
+::: {.bio-grafica .baja .g360 data-grafica="etapas"}
 :::
 
 La cadena completa no se puede validar experimentalmente más que sobre ese subconjunto, y reservarlo costaría **la cuarta parte** de la fase 1. Confirma por una vía independiente que la etapa 1 no puede ser filtro duro.
@@ -323,7 +321,7 @@ Los **inactivos por texto quedan fuera**, y no porque su límite sea inventado �
 
 La regla de censura del diccionario ata el corte de los inactivos al de los activos: mover uno mueve al otro.
 
-::: {.bio-grafica data-grafica="etiquetado"}
+::: {.bio-grafica .baja .g360 data-grafica="etiquetado"}
 :::
 
 ::: {.callout-note}
@@ -340,11 +338,11 @@ Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sob
 
 ## ¿Había una prueba reservada? Sí, y hubo que rehacerla {.smaller}
 
-::: {.bio-grafica data-grafica="archivo"}
+::: {.bio-grafica .baja .g360 data-grafica="archivo"}
 :::
 
 ::: {.callout-tip}
-**Contestado el 15 de octubre** ([2.6](contenido/decisiones.html#d2-6), **ratificada**). Había reservado un 10% **al azar**; aceptó el argumento de que eso no evalúa generalización estructural y entregó el archivo completo. Su única condición, repetida cuatro veces: **que se reserve una prueba que el modelo nunca vea**.
+**Contestado el 15 de octubre** ([2.6](contenido/decisiones.html#d2-6), **ratificada**). Había reservado un 10% **al azar**; aceptó el argumento de que eso no evalúa generalización estructural y entregó el archivo completo. La condición que puso al entregarlo, repetida cuatro veces: **que se reserve una prueba que el modelo nunca vea**. No es su único requisito —los dos métodos de atribución de la [C.2](contenido/decisiones.html#dc-2) también son suyos—, es el que acompañó al archivo.
 :::
 
 ::: {.callout-note}
@@ -355,7 +353,7 @@ Construida y guardada en el artefacto, no en una celda: **49,425 / 6,986 / 13,97
 
 Una **diana** es la proteína sobre la que actúa un compuesto. Las 39 de la lista, 37 genes y dos receptores completos (NMDA y GABA-A), las curó ella a mano; cada una tiene una categoría de enfermedad. Un modelo necesita ejemplos de cada diana para aprender algo. Contamos cuántos hay:
 
-::: {.bio-grafica data-grafica="dianas"}
+::: {.bio-grafica .baja .g360 data-grafica="dianas"}
 :::
 
 ::: {.callout-tip}
@@ -421,7 +419,7 @@ Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen 
 
 Mueve el corte y mira el intercambio, contado **sobre entrenamiento**: la partición de prueba está reservada y no se cuenta tampoco aquí.
 
-::: {.bio-grafica data-grafica="costo"}
+::: {.bio-grafica .baja .g360 data-grafica="costo"}
 :::
 
 ::: {.callout-important}
@@ -454,19 +452,30 @@ Las tres familias de la [1.5](contenido/decisiones.html#d1-5), **sin afinar** �
 El intervalo sale de remuestrear **grupos** y no filas: los compuestos del mismo andamio comparten química, así que remuestrear filas las trata como independientes y da un intervalo más estrecho del que corresponde. Y la desviación entre semillas no sirve, porque las tres semillas comparten las mismas filas.
 :::
 
-## ¿Pesa más cómo se agrupa o qué modelo se usa? El agrupamiento {.smaller}
+## ¿Pesa más el agrupamiento o el modelo? El agrupamiento {.smaller}
 
-El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de conectividad puede aparecer con andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados del pliegue:
+Un esqueleto de conectividad puede aparecer con andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados del pliegue:
 
-::: {.bio-grafica data-grafica="particion"}
+::: {.bio-grafica .baja .g260 data-grafica="particion"}
 :::
 
 ::: {.callout-caution}
-**2.2 puntos de AUROC y 7.1 de MCC.** En MCC eso es mucho más que la elección de modelo, que mueve **2.2 puntos** entre la logística y el boosting: **el criterio de partición importa algo más de tres veces**. Las dos cifras con la misma medida: una semilla, media de pliegues. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
+**2.2 puntos de AUROC y 7.1 de MCC**, con una semilla y media de pliegues. En MCC eso es **algo más de tres veces** lo que mueve la elección de modelo —2.2 puntos entre la logística y el boosting, con esa misma medida—. En AUROC **no**: 0.0223 contra 0.0215 entre el bosque y la logística, o sea lo mismo.
 :::
 
+## ¿Y cómo se sabe que esas dos cifras se pueden restar? {.smaller}
+
+**Porque salen del mismo estimador — y la primera versión de la diapositiva anterior no cumplía eso.**
+
+| | de dónde sale | distancia entre modelos, en MCC |
+|:--|:--|--:|
+| Tabla del modelo de referencia | bootstrap de grupos, 3 semillas | 1.5 puntos |
+| Afirmación del agrupamiento | una semilla, media de pliegues | **2.2 puntos** |
+
+Dividir los 7.1 puntos del agrupamiento entre el 1.5 de la primera fila daba **4.6**: el agrupamiento pesando casi cinco veces más que el modelo. Con la misma medida en los dos lados son **3.2**. La conclusión aguanta; el número no era nuestro.
+
 ::: {.callout-note}
-Apareció porque la primera corrida dio 0.957 y no cuadraba con el 0.916 que el proyecto ya tenía documentado. Es la clase de diferencia que pasa por mejora si nadie la contrasta.
+Apareció al no cuadrar una corrida de 0.957 con el 0.916 que el proyecto ya tenía documentado — la clase de diferencia que pasa por mejora si nadie la contrasta. De ahí el remate: **una cifra que no diga cómo agrupó, ni con qué estimador, no se puede comparar**. En la Ruta: [1.2](contenido/decisiones.html#d1-2), revisada.
 :::
 
 ## En la fase 2, el desempeño no es un número {.smaller}
@@ -497,7 +506,7 @@ Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
 
 ## Todo queda registrado, y algunas decisiones se revirtieron {.smaller}
 
-**Veinticinco entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
+**Veintiséis entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
 
 **Dos se revirtieron al medir:**
 
@@ -555,7 +564,7 @@ Ninguna de las cinco se declara ratificada y **cada una dice qué la haría camb
 
 **Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.
 
-**Veinticinco entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 13 vigentes, 9 propuestas y 1 abierta. Ocho de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
+**Veintiséis entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 14 vigentes, 9 propuestas y 1 abierta. Ocho de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
 
 ## Lo que falta antes de reportar candidatos
 

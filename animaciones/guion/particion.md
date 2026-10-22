@@ -26,8 +26,8 @@ existe para explicar y no para durar poco.
 
 ## 2 · La partición al azar *(0:08 – 0:17)*
 
-> Si repartimos las moléculas al azar entre entrenamiento y evaluación, cada
-> familia queda de los dos lados.
+> Si repartimos las moléculas al azar entre entrenamiento y evaluación, las
+> familias quedan partidas entre los dos lados.
 >
 > Y entonces el modelo ya vio a los análogos casi idénticos de lo que tiene
 > que predecir. Para acertar en la caja de la derecha le basta reconocer la

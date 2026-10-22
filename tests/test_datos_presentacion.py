@@ -290,3 +290,84 @@ def test_el_mazo_declara_el_estado_que_el_registro_declara():
     huerfanas = sorted(citadas - set(estados))
     assert not huerfanas, (
         "el mazo enlaza entradas que el registro no tiene: " + ", ".join(huerfanas))
+
+
+def test_el_mazo_cuenta_los_estados_que_el_registro_tiene():
+    """El reparto por estado que anuncia el mazo es el del registro.
+
+    La guarda de arriba solo comprobaba que las entradas enlazadas existieran,
+    así que el mazo pudo publicar durante semanas un reparto que no cuadraba
+    con ninguna versión del registro: lo encontró una auditoría sumando a mano.
+    Aquí se cuentan los encabezados y se comparan con la frase, porque es una
+    cifra que cambia cada vez que se decide algo y nadie vuelve a sumarla.
+
+    `revisada` no entra en el reparto a propósito: es un estado que se añade
+    sobre otro —una entrada revisada sigue siendo vigente o ratificada— y el
+    mazo la cuenta aparte en la misma línea.
+    """
+    registro = REGISTRO.read_text(encoding="utf-8")
+    encabezados = re.findall(r"^#{3,4} [C\d]\.\d+ · .+?\{#d[c\d]-\d+([^}]*)\}",
+                             registro, re.M)
+    cuenta = {}
+    for clases in encabezados:
+        for clase in re.findall(r"\.([a-zá-ú]+)", clases):
+            cuenta[clase] = cuenta.get(clase, 0) + 1
+
+    mazo = MAZO.read_text(encoding="utf-8")
+    frase = re.search(
+        r"\*\*(\w+) entradas\*\* en \[la Ruta\][^:]*: *(.+?)\. ", mazo)
+    assert frase, "el mazo ya no declara el reparto por estado en la Ruta"
+    declarado = {}
+    for n, nombre in re.findall(r"(\d+) (ratificadas?|vigentes?|propuestas?"
+                                r"|abiertas?|revisadas?)", frase.group(2)):
+        declarado[nombre.rstrip("s")] = int(n)
+
+    singular = {"ratificada": "ratificada", "vigente": "vigente",
+                "propuesta": "propuesta", "abierta": "abierta"}
+    real = {k: v for k, v in cuenta.items() if k in singular}
+    assert declarado == real, (
+        f"el mazo declara {declarado} y el registro tiene {real}; "
+        "son los encabezados de docs/decisiones.md")
+
+    # Y el total, que va en la misma frase y en la diapositiva de la Ruta.
+    total = len(encabezados)
+    assert sum(real.values()) == total, (
+        f"{total} entradas pero {sum(real.values())} con estado de reparto")
+
+
+def test_el_mazo_cita_el_agrupamiento_que_da_el_generador(datos):
+    """Las cifras del agrupamiento del mazo son las de `recursos/datos.js`.
+
+    Es la afirmación metodológica central del proyecto y ya ha estado mal dos
+    veces: primero con las cifras de la matriz de 171 columnas, después con una
+    razón que dividía dos estimadores distintos. Las dos las encontró alguien
+    leyendo, no una comprobación — y la segunda sobrevivió a la corrección de
+    la primera. Esta las ata al generador.
+    """
+    a = datos["agrupamiento"]
+    texto = MAZO.read_text(encoding="utf-8")
+
+    # Los dos AUROC no se escriben en el mazo: los pone la gráfica leyendo este
+    # mismo archivo, que es por lo que dejaron de poder desviarse. Lo que sí se
+    # escribe a mano son las distancias, y son las que hay que atar.
+    assert 'data-grafica="particion"' in texto, (
+        "la diapositiva del agrupamiento ya no dibuja la gráfica, así que sus "
+        "AUROC vuelven a estar escritos a mano: átalos aquí")
+    esperadas = {
+        "distancia de AUROC entre los dos agrupamientos":
+            f"{a['solo_andamio']['auroc'] - a['andamio_esqueleto']['auroc']:.4f}",
+        "distancia de AUROC entre modelos": f"{a['entre_modelos']['auroc']:.4f}",
+    }
+    faltantes = {k: v for k, v in esperadas.items() if v not in texto}
+    assert not faltantes, (
+        "presentacion.qmd cita cifras de agrupamiento que no son las de "
+        "recursos/datos.js: "
+        + "; ".join(f"{k} deberia decir {v}" for k, v in faltantes.items()))
+
+    # Y la razon entre lo que mueve el agrupamiento y lo que mueve el modelo,
+    # que es donde se colo la comparacion entre estimadores.
+    razon = ((a["solo_andamio"]["mcc"] - a["andamio_esqueleto"]["mcc"])
+             / a["entre_modelos"]["mcc"])
+    assert 3.0 <= razon < 3.5, (
+        f"la razon entre agrupamiento y modelo en MCC es {razon:.1f}; el mazo "
+        "dice «algo mas de tres veces» y habria que reescribirlo")

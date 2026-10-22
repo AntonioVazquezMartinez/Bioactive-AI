@@ -105,8 +105,12 @@ jobs:
         working-directory: animaciones
         run: |
           fallos=0
-          for par in apertura:Apertura linaje:Linaje intervalo:Intervalo \
-                     fingerprints:Fingerprints particion:Particion cierre:Cierre; do
+          # La lista sale de `orden.py`, que es donde vive el orden del video.
+          # Estaba escrita a mano aquí, y por eso se quedó en seis escenas
+          # cuando entró la séptima: `matriz` se renderizaba en local y nunca
+          # en CI, que es exactamente lo que `orden.py` existe para evitar.
+          for par in $(python -c \
+              "from orden import ESCENAS; print(' '.join(f'{m}:{c}' for m, c in ESCENAS.items()))"); do
             modulo="${par%%:*}"; escena="${par##*:}"
             echo "::group::$escena"
             if python -m manim -ql --disable_caching "$modulo.py" "$escena" 2>&1 | tee "/tmp/$modulo.log"; then

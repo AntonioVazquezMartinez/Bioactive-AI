@@ -97,9 +97,21 @@ class Fingerprints(Narrada):
             # milímetros del bit y se lee como que la flecha no llega. Y es
             # justo la que no llegaba —la verde, la segunda del bit compartido—
             # la que tiene que verse aterrizar.
+            # Cabezal de tamaño fijo y no proporcional al largo: con el ratio,
+            # cada flecha llevaba una punta distinta —las tres caídas tienen
+            # largos distintos— y la más corta se quedaba con un cabezal
+            # minúsculo que no se leía como que llegaba.
             flecha = Arrow(frag.get_bottom(), punta,
                            color=frag[0].color, stroke_width=3.5, buff=0.0,
-                           max_tip_length_to_length_ratio=0.12)
+                           tip_length=0.18)
+            # Que la punta caiga **dentro** del bit no es evidente en el código:
+            # depende del corrimiento, del ancho del bit y del cabezal. Mirar
+            # fotogramas lo encontró una vez; esto lo encuentra siempre.
+            pta = flecha.get_end()
+            assert destino.get_left()[0] <= pta[0] <= destino.get_right()[0], (
+                f"la flecha del fragmento {i} acaba en x={pta[0]:.2f}, fuera "
+                f"del bit {j} ({destino.get_left()[0]:.2f} a "
+                f"{destino.get_right()[0]:.2f})")
             self.flechas.append(flecha)
             self.play(Create(flecha),
                       destino.animate.set_fill(frag[0].color, opacity=0.75),

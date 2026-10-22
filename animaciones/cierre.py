@@ -22,6 +22,20 @@ from comun import (AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, Narrada, VERDE,
 
 config.background_color = FONDO
 
+# AUROC por procedencia, fase 2. Sin los conteos exactos: la voz da el
+# contraste de orden de magnitud —cincuenta mil contra dos mil— que es lo que
+# hay que entender, y un conteo exacto en pantalla que la voz no dice obliga a
+# regrabar si cambia.
+#
+# Va aquí arriba y no dentro del bucle porque `abrir_tramo` necesita cuántas
+# son para repartir el tramo: con la lista en línea, el número de compases
+# había que escribirlo a mano y podía quedarse corto sin que nada avisara.
+PROCEDENCIAS = (
+    (0.858, 0.850, 0.867, "solo ChEMBL", VERDE),
+    (0.637, 0.594, 0.687, "mixtos", AZUL_CLARO),
+    (0.611, 0.572, 0.647, "solo NPASS", NARANJA),
+)
+
 
 class Cierre(Narrada):
     def construct(self) -> None:
@@ -79,7 +93,10 @@ class Cierre(Narrada):
 
     # -- 2. pero no sobre lo que importa ------------------------------------
     def _pero(self) -> None:
-        self.abrir_tramo(2, compases=3)
+        # Un compás por barra —el `respira()` va dentro del bucle—, más los
+        # intervalos, el gesto y la nota: con tres, el tramo de 36 s se quedaba
+        # 10.9 quieto en el último.
+        self.abrir_tramo(2, compases=len(PROCEDENCIAS) + 3)
         t = titulo("Pero no igual en todas partes").to_edge(UP, buff=0.85)
         s = subtitulo("el mismo modelo, partido por de dónde viene la"
                       " evidencia", 21)
@@ -88,14 +105,7 @@ class Cierre(Narrada):
         self.play(Write(t), FadeIn(s), run_time=1.4)
 
         barras = VGroup()
-        for valor, bajo, alto_ic, etiqueta_txt, color in (
-                # Sin los conteos exactos: la voz da el contraste de orden de
-                # magnitud —cincuenta mil contra dos mil— que es lo que hay
-                # que entender, y un conteo exacto en pantalla que la voz no
-                # dice obliga a regrabar si cambia.
-                (0.858, 0.850, 0.867, "solo ChEMBL", VERDE),
-                (0.637, 0.594, 0.687, "mixtos", AZUL_CLARO),
-                (0.611, 0.572, 0.647, "solo NPASS", NARANJA)):
+        for valor, bajo, alto_ic, etiqueta_txt, color in PROCEDENCIAS:
             # La barra se mide desde 0.5, que es el azar: una barra desde cero
             # haría parecer que 0.611 es «la mitad de bueno» que 0.858.
             escala = 6.5
@@ -136,7 +146,7 @@ class Cierre(Narrada):
             self.play(FadeIn(nombre), run_time=0.3)
             self.play(columna.animate.restore(), run_time=0.9)
             self.play(FadeIn(cifra, shift=UP * 0.15), run_time=0.45)
-        self.respira()
+            self.respira()
         self.play(*[Create(g[1]) for g in barras], run_time=1.1)
         self.respira()
         # Y el gesto que sostiene la lectura honesta: los dos de la derecha,
@@ -144,6 +154,7 @@ class Cierre(Narrada):
         self.play(Indicate(barras[1][1], color=CREMA, scale_factor=1.08),
                   Indicate(barras[2][1], color=CREMA, scale_factor=1.08),
                   run_time=1.2)
+        self.respira()
 
         nota = dato("Los dos de la derecha no se distinguen entre sí.", 23,
                     CREMA)
