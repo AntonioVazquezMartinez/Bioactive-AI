@@ -61,7 +61,20 @@ class Cierre(Narrada):
             # mirada sin añadir nada que leer.
             self.play(Flash(f[0], color=f[0].color, line_length=0.18,
                             num_lines=10, flash_radius=0.55), run_time=0.6)
+        # **Las dos cifras no son del mismo modelo, y hay que decirlo.** El
+        # 0.938 es el boosting por histogramas y el 0.866 el bosque aleatorio:
+        # cada uno es el de mayor MCC en su fase. Sin el pie, «el modelo» en
+        # singular del título y los dos AUROC juntos se leen como una sola
+        # canalización sobre las dos tareas.
+        fuente = pie("boosting (fase 1) y bosque aleatorio (fase 2), cada uno el"
+                     " de mayor MCC en la suya\n"
+                     "experimentos/2026-10-18-artemio-*  ·  AUROC fuera de"
+                     " pliegue, 3 semillas, agrupado por andamio y esqueleto")
+        fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
+        self.play(FadeIn(fuente), run_time=0.6)
         self.cerrar_tramo(1)
+        self.play(FadeOut(fuente), run_time=0.3)
         self.play(FadeOut(VGroup(t, s, filas, etiqueta)), run_time=0.7)
 
     # -- 2. pero no sobre lo que importa ------------------------------------
@@ -137,7 +150,15 @@ class Cierre(Narrada):
         nota.next_to(barras, DOWN, buff=0.55).set_x(0)
         cabe(nota)
         self.play(FadeIn(nota), run_time=1.0)
+        fuente2 = pie("bosque aleatorio, fase 2 · AUROC por procedencia sobre"
+                      " las predicciones fuera de pliegue\n"
+                      "experimentos/2026-10-18-artemio-2.3-baseline-actividad-"
+                      "descriptores-diana-10um  ·  intervalos por bootstrap de grupos")
+        fuente2.to_edge(DOWN, buff=0.3)
+        cabe(fuente2)
+        self.play(FadeIn(fuente2), run_time=0.6)
         self.cerrar_tramo(2)
+        self.play(FadeOut(fuente2), run_time=0.3)
         self.play(FadeOut(VGroup(t, s, barras, base, azar, nota)), run_time=0.7)
 
     # -- 3. lo que se entrega ------------------------------------------------

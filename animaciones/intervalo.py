@@ -73,7 +73,11 @@ class Intervalo(Narrada):
     def _una_medicion_exacta(self) -> None:
         self.abrir_tramo(2)
         punto = Dot(self._x(6.3), radius=0.11, color=AZUL)
-        etiqueta = dato("IC50 = 0.5 µM", 22, AZUL).next_to(punto, UP, buff=0.25)
+        # Arriba y a la derecha, no centrada sobre el punto: el corte de 1 µM
+        # del acto 5 se dibuja en 6.0, a tres décimas de este punto, y la
+        # etiqueta centrada le quedaba justo encima — la línea la atravesaba.
+        etiqueta = dato("IC50 = 0.5 µM", 22, AZUL)
+        etiqueta.next_to(punto, UP, buff=0.3).shift(RIGHT * 1.35)
         nota = subtitulo("una medición exacta es un punto:"
                          " el intervalo se colapsa", 20)
         nota.next_to(self.eje, DOWN, buff=1.6)

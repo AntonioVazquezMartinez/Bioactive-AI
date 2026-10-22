@@ -100,7 +100,11 @@ class Linaje(Narrada):
             "RDKit los calcula todos; no todos sirven para un modelo")
         self.play(FadeIn(cab), run_time=0.8)
 
-        rej = matriz(6, 24, ancho=9.0, alto=2.4, color=AZUL)
+        # 64 columnas y no 24: lo que cae son 16 de 217, el 7.4%, y el dibujo
+        # quitaba 5 de 24, el 21% — tres veces más. Quien leyera «217 columnas»
+        # y viera irse un quinto inferiría unas 45 bajas. Con 64, las mismas 5
+        # columnas son el 7.8% y el dibujo dice lo que dicen sus rótulos.
+        rej = matriz(6, 64, ancho=9.0, alto=2.4, color=AZUL)
         rej.move_to(DOWN * 0.3)
         rotulo = dato("217 columnas", 22, CREMA)
         rotulo.next_to(rej, UP, buff=0.35)
@@ -108,14 +112,14 @@ class Linaje(Narrada):
         self.play(Create(rej, lag_ratio=0.02), FadeIn(rotulo), run_time=1.8)
         self.respira()
 
-        # Cada motivo tiñe sus columnas y se las lleva. Las proporciones del
-        # dibujo siguen a las reales: 16 de 217 es una de cada catorce.
+        # Cada motivo tiñe sus columnas y se las lleva, en proporción entre sí
+        # (3, 12 y 1) y sobre el total (16 de 217).
         # Tras cada corte, lo que queda se recompone y se recentra: si no, las
         # columnas desaparecen y la matriz parece del mismo tamaño. Lo que
         # tiene que verse es que mengua.
         pos, restante = 0, VGroup(*rej)
         for cuantas, nombre, porque in CAIDAS:
-            cols = max(1, round(cuantas / 16 * 4))
+            cols = max(1, round(cuantas / 16 * 5))
             objetivo = VGroup(*rej[pos:pos + cols])
             pos += cols
             etiqueta = dato(f"{cuantas}  {nombre}", 22, ROJO)

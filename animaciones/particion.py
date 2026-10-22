@@ -221,8 +221,13 @@ class Particion(Narrada):
         # Una semilla, no tres: la celda 10 del notebook 03 corre `evaluar` con
         # `semillas=(0,)`. El pie decía tres y es la clase de cifra que nadie
         # comprueba porque está en letra pequeña.
-        fuente = pie("Decisión 1.2 · notebook 03_Baseline · bosque aleatorio,"
-                     " validación cruzada agrupada, una semilla")
+        # Dos procedencias distintas en la misma escena, y el pie decía una:
+        # los dos AUROC son nuestros, pero el «entre 7 y 13 puntos» del remate
+        # es de la literatura. Firmarlo todo como corrida propia era atribuirse
+        # una cifra que nadie de este equipo midió.
+        fuente = pie("AUROC: decisión 1.2 · notebook 03_Baseline · bosque"
+                     " aleatorio, validación cruzada agrupada, una semilla\n"
+                     "«entre 7 y 13 puntos»: de la literatura, no medido aquí")
         fuente.to_edge(DOWN, buff=0.3)
         cabe(cierre, fuente)
         self.play(FadeIn(fuente), run_time=0.8)

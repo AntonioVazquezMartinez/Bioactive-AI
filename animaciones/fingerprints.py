@@ -75,13 +75,30 @@ class Fingerprints(Narrada):
                   FadeIn(etiqueta_bits), run_time=1.5)
         self.respira()
 
-        # El primero y el tercero caen en el mismo bit: eso es la colisión.
+        # El primero y el tercero caen en el mismo bit: eso es la colisión, y
+        # es lo único que esta escena existe para enseñar. Las dos flechas que
+        # comparten destino apuntan a **mitades distintas** de su borde
+        # superior: con las dos al mismo punto, la segunda quedaba detrás de la
+        # primera y su punta parecía no tocar nada.
         destinos = (3, 6, 3)
+        reparto = {j: [k for k, d in enumerate(destinos) if d == j]
+                   for j in set(destinos)}
         self.flechas = []
-        for frag, j in zip(fragmentos, destinos):
+        for i, (frag, j) in enumerate(zip(fragmentos, destinos)):
             destino = bits[j]
-            flecha = Arrow(frag.get_bottom(), destino.get_top() + UP * 0.08,
-                           color=frag[0].color, stroke_width=3.5, buff=0.1,
+            comparten = reparto[j]
+            # −0.25 y +0.25 del ancho del bit cuando son dos; al centro si es una.
+            corrimiento = 0.0
+            if len(comparten) > 1:
+                corrimiento = (comparten.index(i) / (len(comparten) - 1) - 0.5) * \
+                    destino.width * 0.5
+            punta = destino.get_top() + RIGHT * corrimiento
+            # `buff=0`: con cualquier separación, el cabezal queda a unos
+            # milímetros del bit y se lee como que la flecha no llega. Y es
+            # justo la que no llegaba —la verde, la segunda del bit compartido—
+            # la que tiene que verse aterrizar.
+            flecha = Arrow(frag.get_bottom(), punta,
+                           color=frag[0].color, stroke_width=3.5, buff=0.0,
                            max_tip_length_to_length_ratio=0.12)
             self.flechas.append(flecha)
             self.play(Create(flecha),
@@ -201,7 +218,10 @@ class Fingerprints(Narrada):
         self.play(FadeIn(cierre[0]), run_time=1.0)
         self.play(Write(cierre[1]), run_time=2.0)
 
-        fuente = pie("Decisión 1.7 · notebook 02 · densidad 1.91% contra 2.33%"
+        # Sin el «1.91% contra 2.33%» que traía: la voz no los dice en ningún
+        # momento, y la regla 3 del README es que no haya cifra en pantalla
+        # que la voz calle. Lo que el pie tiene que dar es la procedencia.
+        fuente = pie("Decisión 1.7 · notebook 02 · vocabulario aprendido"
                      " del plegado")
         fuente.to_edge(DOWN, buff=0.3)
         self.play(FadeIn(fuente), run_time=0.8)
