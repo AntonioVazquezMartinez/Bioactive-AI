@@ -276,6 +276,7 @@ class Apertura(Narrada):
         fuente = pie("Bioactive AI · Equipo 7 · Maestría en Inteligencia"
                      " Artificial Aplicada")
         fuente.to_edge(DOWN, buff=0.28)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.2)
 

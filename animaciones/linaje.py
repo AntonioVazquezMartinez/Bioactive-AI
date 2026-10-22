@@ -207,6 +207,7 @@ class Linaje(Narrada):
         fuente = pie("Cifras de data/processed/ · construir_pares_fase2.py ·"
                      " decisiones 2.1, 2.3 y 2.7")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.respira()
 

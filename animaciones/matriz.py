@@ -168,6 +168,7 @@ class Matriz(Narrada):
         fuente = pie("Decisiones 1.3 y 1.7 · notebook 02 · 7,805 moléculas"
                      " en la fase 1")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.7)
         self.cerrar_tramo(3)
         self.wait(1.2)

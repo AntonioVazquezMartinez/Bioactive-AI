@@ -224,6 +224,7 @@ class Fingerprints(Narrada):
         fuente = pie("Decisión 1.7 · notebook 02 · vocabulario aprendido"
                      " del plegado")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.respira()
 

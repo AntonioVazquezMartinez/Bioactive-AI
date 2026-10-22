@@ -179,5 +179,6 @@ class Intervalo(Narrada):
         fuente = pie("Decisión 2.10 · notebook 02b · regla de la sección 7 del"
                      " diccionario de la patrocinadora")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.5)

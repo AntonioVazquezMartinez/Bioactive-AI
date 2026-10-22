@@ -208,5 +208,6 @@ class Cierre(Narrada):
         fuente = pie("Bioactive AI · Equipo 7 ·"
                      " antoniovazquezmartinez.github.io/Bioactive-AI")
         fuente.to_edge(DOWN, buff=0.3)
+        cabe(fuente)
         self.play(FadeIn(fuente), run_time=0.9)
         self.wait(2.2)
