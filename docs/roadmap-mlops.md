@@ -130,3 +130,13 @@ Voto de Artemio (12 de octubre) entre paréntesis; falta el del resto del equipo
 3. ¿Se exige que todo resultado citado en el reporte tenga una corrida registrada? *(Artemio: sí.)*
 4. ¿Basta con git más el visor local, o el equipo prefiere un servidor compartido (propio o un servicio externo) desde el principio? *(Artemio: git más visor local por ahora.)*
 5. ¿Se crean issues con la etiqueta `mlops` por cada fila de las fases 0 y 1? *(Artemio: sí.)* Las issues abiertas (#24 a #32) siguen hablando de los Avances 2 y 3. Ya se actualizaron las anclas de las #26, #29, #31 y #32 a la numeración nueva de la Ruta, y la #31 explica que la consulta se fusionó en esa página y que `verificar_decisiones.py` ya no comprueba que una pregunta aparezca en un documento aparte.
+
+## Los 53 MB de animaciones en el historial
+
+El 19 de octubre entraron a `main` 448 archivos y 53 MB de artefactos generados —el video ensamblado, las seis escenas sonorizadas, 23 mp3 de narración y 400 SVG de caché de manim— al fusionar un PR cuya rama se cortó de `main`, donde las reglas de ignorado de `animaciones/` todavía no existían: vivían solo en el `.gitignore` de `feat/animaciones`. Un `git add -A` se lo llevó todo.
+
+**La causa está cerrada:** las reglas viven ahora en el `.gitignore` de `main`, así que ninguna rama nueva las pierde.
+
+**Los blobs se quedan en el historial, y es una decisión, no un olvido.** `.git` pesa 151 MB; sin ellos pesaría unos 98. Quitarlos obliga a reescribir el historial y a un push forzado que cada quien tiene que resolver en su copia, con el riesgo de que alguien reintroduzca lo viejo al empujar una rama antigua. Por 53 MB en un repositorio que se clona unas pocas veces, el costo es mayor que el ahorro.
+
+**Qué lo cambiaría:** que el repositorio se acerque al límite de GitHub (1 GB recomendado, 5 GB duro), que alguien tenga que clonarlo con mala conexión de forma habitual, o que haya que reescribir el historial por otra razón —ahí se aprovecha el mismo viaje—. Si llega ese día: `git filter-repo --path animaciones/media --path-glob 'animaciones/voz/*.mp3' --invert-paths`, coordinado con el equipo.

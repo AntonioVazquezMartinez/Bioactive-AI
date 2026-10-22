@@ -101,7 +101,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Cuando una clase es mucho más frecuente que la otra. **Por qué importa:** con 1.74 a 1, un modelo que prediga siempre BBB+ acierta el 63.5% de las veces sin haber aprendido nada. Por eso la exactitud no sirve como métrica.
 
 **AUC / AUROC**
-: Probabilidad de que el modelo le dé mayor puntaje a un positivo que a un negativo, tomados al azar. 0.5 es azar, 1.0 es perfecto. **Por qué importa:** es útil para comparar descriptores individuales, pero **engaña con clases desbalanceadas**, porque premia el acierto sobre la clase mayoritaria.
+: Probabilidad de que el modelo le dé mayor puntaje a un positivo que a un negativo, tomados al azar. 0.5 es azar, 1.0 es perfecto. **Por qué importa:** es útil para comparar descriptores individuales y, como no depende de la prevalencia, es la medida primaria para comparar estratos de prevalencia distinta (decisión [1.6](decisiones.md#d1-6)); no sustituye a la regla general de la [C.1](decisiones.md#dc-1) —MCC y AUPRC de la clase minoritaria, que se siguen reportando—. Con clases desbalanceadas puede verse alto aunque se detecte mal la clase minoritaria, y por eso no se lee solo. Y depende de qué negativos hay: un estrato con negativos fáciles da un AUROC alto sin que el modelo sea mejor ahí.
 
 **AUPRC** (área bajo la curva de precisión-exhaustividad)
 : Como el AUC, pero calculada sobre la clase minoritaria. **Por qué importa:** es la métrica que sí refleja el desempeño sobre lo que cuesta predecir. Hay que leerla siempre contra su línea base, que es la proporción de la clase minoritaria, no 0.5.
@@ -127,6 +127,12 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Bootstrap por grupos**
 : Estimar la incertidumbre de una métrica remuestreando **grupos** con reemplazo, no filas. **Por qué importa:** la fila no es la unidad independiente. Los compuestos del mismo andamio comparten química y van juntos en la partición, así que remuestrear filas las trata como independientes y devuelve un intervalo más estrecho de lo que corresponde — la forma fácil de concluir que algo se distingue cuando no se distingue. Tampoco sirve la desviación entre semillas: tres semillas sobre las mismas filas no son tres réplicas.
+
+**Negativos frontera**
+: Los compuestos BBB− cuyo logBB queda cerca del corte que define la etiqueta (aquí, a menos de 0.3 de logBB = −1.0). **Por qué importa:** la etiqueta ahí depende de diferencias pequeñas de logBB —una medición de −0.9 es BBB+ y una de −1.1 es BBB−—, así que son difíciles de acertar para cualquier modelo. El ancho de 0.3 es una elección del análisis, no un error experimental medido. Solo se pueden identificar donde hay logBB medido (el grupo A).
+
+**Potencia estadística**
+: La probabilidad de que una comparación detecte una diferencia que sí existe. Depende del tamaño de esa diferencia y de cuántos casos independientes hay: aquí, sobre todo, de los casos de la clase minoritaria y del número de grupos de la partición, no de las filas. **Por qué importa:** con 34 o 42 BBB−, un intervalo que incluye el cero dice que no se detecta diferencia, no que no la haya; es ausencia de evidencia, no evidencia de ausencia. Por eso el arnés no reporta un subgrupo con menos de 20 casos de su clase minoritaria.
 
 **Estrato de procedencia**
 : En la fase 2, de qué base viene la evidencia de un par compuesto-diana: solo ChEMBL, solo NPASS, solo CMAUP o mixto. **Por qué importa:** son disjuntos y por eso aditivos, a diferencia de «por fuente» —un par puede tener mediciones de varias—. Y hace falta porque el desempeño agregado no describe a los productos naturales: el modelo de referencia da 0.855 de AUROC en los pares que solo tiene ChEMBL y 0.607 en los que solo tiene NPASS.

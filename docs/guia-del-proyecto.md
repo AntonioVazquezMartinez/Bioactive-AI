@@ -79,14 +79,15 @@ Cada decisión técnica, con su contexto, lo que se descartó, lo que cuesta, su
 
 El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 
-| Avance | Entregable | Estado (11 de octubre de 2026) |
+| Avance | Entregable | Estado (19 de octubre de 2026) |
 |---|---|---|
 | 0 | Propuesta del proyecto | Entregado (PDF) |
 | 1 | Análisis exploratorio de datos (`notebooks/01_EDA.ipynb`) | Entregado el 4 de octubre |
 | — | EDA de la etapa 2 (`notebooks/01b_EDA_actividad_snc.ipynb`) | Hecho; acompaña al Avance 1 y no es un entregable |
-| 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Notebook ejecutado; PDF complementario en borrador. El EDA continúa una semana y se cierra el reporte en paralelo; escalamiento medido por modelo, consulta 1.5 para interpretabilidad frente a PCA |
-| 3 | Modelo de referencia (baseline) | Pendiente · vence el 18 de octubre |
-| 4–5 | Modelos alternativos y modelo final | Pendiente |
+| 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Hecho y revisado con la retroalimentación de la asesora: matriz de 151 columnas, partición por andamio con la prueba reservada; reporte en PDF publicado. La fase 2 tiene su propio notebook, `02b_Feature_Eng_actividad.ipynb`: matriz de 70,384 pares y partición con prueba reservada |
+| 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Entregado el 18 de octubre: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar |
+| 4 | Modelos alternativos | En curso · vence el 25 de octubre |
+| 5 | Modelo final | Pendiente · vence el 1 de noviembre |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
 
@@ -112,12 +113,10 @@ Las trampas sobre los datos —el tamaño efectivo, los nombres como identificad
 
 Lo abierto vive en dos sitios, y esta guía no los duplica: la **ruta del proyecto**, con cada decisión, propuesta y supuesto por fase y la pregunta que queda por resolver, en [`decisiones.md`](decisiones.md). El trabajo pendiente vive en los issues de GitHub, etiquetados por el avance que bloquean.
 
-Las preguntas que más cambian cómo se construye el modelo, a la fecha:
+Qué quedó decidido y qué sigue abierto, a la fecha (el detalle y el estado de cada una están en la tabla «Estado de un vistazo» de la ruta):
 
-- Qué criterio de «activo» usa la patrocinadora en la etapa 2 (decisión 2.3).
-- Un modelo por diana, por categoría de enfermedad o multitarea (decisión 2.2).
-- Si vale la pena comprobar con los 1,033 compuestos que tienen las dos mediciones si combinar las dos predicciones mejora la selección (decisión C.3). No se reservan: el experimento va aparte y no toca el entrenamiento.
-- Naturales: en la fase 1, un solo modelo con el desempeño reportado por origen y por grupo (propuesta, decisión 1.6); en la fase 2, cómo definir «natural» y si se entrena aparte (decisión 2.8).
-- Si el archivo de actividad, que recibimos con el 89.9% de las filas, ya trae una partición de prueba reservada y cómo se hizo.
+- **Ratificadas por la patrocinadora el 15 de octubre:** el alcance de cinco categorías (2.1) y la partición de prueba, que ella entrega para que el equipo la rehaga (2.6).
+- **Decididas por el equipo, reversibles y sin ratificar:** el criterio de «activo» (2.3), un modelo por diana para las once que lo sostienen (2.2), los naturales evaluados por origen y no entrenados aparte (1.6) y el cruce con COCONUT calculado por el equipo (2.8).
+- **Abiertas o propuestas:** si combinar las dos predicciones mejora la selección con los 1,033 compuestos comunes (C.3), la licencia y el uso de los resultados (C.6), la ventana terapéutica (C.7), clasificar con un corte o predecir la potencia (2.9, se decide en el Avance 4) y los 131 esqueletos con etiquetas contradictorias (1.8).
 
-**Pendientes técnicos del equipo:** extender el EDA una semana y terminar en paralelo la documentación de ingeniería de características; completar el baseline y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas. El notebook del Avance 2 ya está ejecutado.
+**Pendientes técnicos del equipo:** afinar los modelos (Avance 4); la guarda que impide evaluar sobre la prueba sin declararlo ([#54](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/54)); desglosar la fase 1 por los tres orígenes y no solo por grupo ([#102](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/102)); la auditoría del EDA de la fase 2 ([#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95)); y resolver los 154 nombres del conjunto de Spielvogel a estructuras químicas.

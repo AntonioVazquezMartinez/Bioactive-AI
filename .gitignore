@@ -63,3 +63,14 @@ env-anim/
 # `voz/huellas.json` también: es lo que dice qué tramos ya están grabados.
 # Sin él, quien clone el repositorio regraba los 7,365 caracteres enteros.
 animaciones/voz/*.mp3
+
+# Los worktrees de Claude Code, que son checkouts completos del repositorio
+# dentro del repositorio. Hoy pesan 217 MB entre los dos. Git los ve como
+# repositorios anidados —cada uno lleva su `.git` como archivo— así que un
+# `git add -A` los metería como *gitlinks*: entradas tipo submódulo que
+# apuntan a nada y rompen el clon de cualquiera. Y uno creado a mano, sin
+# registrar con `git worktree add`, entraría entero.
+#
+# Se ignora `worktrees/` y no `.claude/` completo a propósito: ahí pueden
+# vivir configuración o skills del proyecto que sí convenga versionar.
+.claude/worktrees/
