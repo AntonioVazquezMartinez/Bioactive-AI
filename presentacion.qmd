@@ -458,13 +458,11 @@ El intervalo sale de remuestrear **grupos** y no filas: los compuestos del mismo
 
 El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de conectividad puede aparecer con andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados del pliegue:
 
-| Agrupamiento | Grupos | AUROC | MCC |
-|:--|--:|:--|--:|
-| Andamio **∪** esqueleto | 1,048 | 0.936 [0.912, 0.955] | 0.699 |
-| Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.769** |
+::: {.bio-grafica data-grafica="particion"}
+:::
 
 ::: {.callout-caution}
-**2.2 puntos de AUROC y 7.1 de MCC.** En MCC eso es mucho más que la elección de modelo, que mueve 1.5 puntos entre la logística y el boosting: **el criterio de partición importa casi cinco veces más**. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
+**2.2 puntos de AUROC y 7.1 de MCC.** En MCC eso es mucho más que la elección de modelo, que mueve **2.2 puntos** entre la logística y el boosting: **el criterio de partición importa algo más de tres veces**. Las dos cifras con la misma medida: una semilla, media de pliegues. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
 :::
 
 ::: {.callout-note}

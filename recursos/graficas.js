@@ -508,6 +508,116 @@ function enfermedades(destino, D) {
 // ---------------------------------------------------------------------------
 // 9 · Qué error cuesta más, con la única regla que hoy está medida (C.5)
 // ---------------------------------------------------------------------------
+// --------------------------------------------------------------- partición
+// **La afirmación metodológica central del proyecto, y vivía como una tabla.**
+// Agrupar por andamio solo, en vez de unirlo al esqueleto de conectividad,
+// pone estereoisómeros del mismo compuesto a los dos lados del pliegue — y eso
+// infla el resultado más que elegir un modelo u otro.
+//
+// Por defecto se dibuja el agrupamiento correcto, con sus cifras y su barra de
+// comparación: **no hay que tocar nada para que enseñe la conclusión**. El
+// interruptor es la capa de encima: al pasar al agrupamiento malo, las familias
+// se reparten entre las dos cajas y las cifras suben.
+function particion(destino, D) {
+  const A = D.agrupamiento;
+  if (!A) return;
+  const W = 760, H = 300;
+  // **Tantas familias como colores categóricos, no más.** Con seis familias y
+  // tres hues, el color dejaba de identificar a la familia y el dibujo parecía
+  // decir que las familias se repartían incluso en el agrupamiento correcto —
+  // lo contrario de su propio rótulo.
+  const FAMILIAS = 3, POR_FAMILIA = 5;
+  let malo = false;
+
+  const svg = lienzo(W, H, "Qué cambia según cómo se agrupa");
+  const capa = h("g");
+  svg.appendChild(capa);
+
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  // Una familia es un esqueleto con sus estereoisómeros: mismo color.
+  const color = (i) => [PAL.positivo, PAL.natural, PAL.negativo][i % 3];
+
+  function pinta() {
+    capa.textContent = "";
+    const d = malo ? A.solo_andamio : A.andamio_esqueleto;
+    const cajaW = 300, cajaH = 150, sep = 60;
+    const x0 = (W - 2 * cajaW - sep) / 2, y0 = 54;
+
+    [["entrenamiento", x0], ["evaluación", x0 + cajaW + sep]].forEach(([t, x]) => {
+      capa.append(
+        h("rect", { x, y: y0, width: cajaW, height: cajaH, rx: 6, fill: "none",
+                    stroke: PAL.rejilla, "stroke-width": 1.5 }),
+        h("text", { x: x + cajaW / 2, y: y0 - 10, "text-anchor": "middle",
+                    fill: PAL.tenue, "font-size": 13 }, t));
+    });
+
+    // Bien agrupado: la última familia entera a evaluación. Mal: una de cada
+    // familia se va, así que las tres quedan a los dos lados.
+    const izq = [], der = [];
+    for (let f = 0; f < FAMILIAS; f++) {
+      for (let m = 0; m < POR_FAMILIA; m++) {
+        const derecha = malo ? (m === 0) : (f === FAMILIAS - 1);
+        (derecha ? der : izq).push(f);
+      }
+    }
+    const colocar = (lista, bx) => lista.forEach((f, i) => {
+      capa.append(h("circle", {
+        cx: bx + 34 + (i % 7) * 38,
+        cy: y0 + 40 + Math.floor(i / 7) * 38,
+        r: 9, fill: color(f), "fill-opacity": 0.85,
+        stroke: PAL.rejilla, "stroke-width": 2,
+      }));
+    });
+    colocar(izq, x0);
+    colocar(der, x0 + cajaW + sep);
+
+    const aviso = malo
+      ? "La misma familia está de los dos lados: al modelo le basta reconocerla."
+      : "Cada familia cae entera de un solo lado.";
+    capa.append(h("text", { x: W / 2, y: y0 + cajaH + 26, "text-anchor": "middle",
+                            fill: malo ? PAL.alerta : PAL.natural, "font-size": 14 }, aviso));
+
+    lectura.innerHTML =
+      `<strong>${d.grupos.toLocaleString("es-MX")}</strong> grupos · ` +
+      `AUROC <strong>${d.auroc.toFixed(3)}</strong> ` +
+      `[${d.ic[0].toFixed(3)}, ${d.ic[1].toFixed(3)}] · ` +
+      `MCC <strong>${d.mcc.toFixed(3)}</strong>` +
+      (malo
+        ? ` — infla ${((A.solo_andamio.auroc - A.andamio_esqueleto.auroc) * 100).toFixed(1)} puntos de AUROC y ` +
+          `${((A.solo_andamio.mcc - A.andamio_esqueleto.mcc) * 100).toFixed(1)} de MCC. En MCC eso es ` +
+          `más de tres veces lo que separa a los tres modelos entre sí ` +
+          `(${(A.entre_modelos.mcc * 100).toFixed(1)} puntos, con la misma medida).`
+        : " — es el agrupamiento que usa el proyecto.");
+  }
+
+  [["Andamio ∪ esqueleto", false], ["Solo andamio", true]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    b.className = v === malo ? "activo" : "";
+    b.addEventListener("click", () => {
+      malo = v;
+      [...control.children].forEach((x, i) => x.classList.toggle("activo", (i === 1) === malo));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Bosque aleatorio, una semilla, predicciones fuera de pliegue, intervalo por " +
+    "bootstrap de grupos — la misma medida en las dos filas y en la distancia entre " +
+    "modelos. Notebook 03, decisión 1.2. Las moléculas del dibujo son ilustrativas; " +
+    "las cifras, no.";
+  destino.append(control, svg, lectura, pie);
+}
+
 function costo(destino, D) {
   const T = D.tpsa;
   // **Entrenamiento, no el conjunto completo.** La serie `completo` incluye la
@@ -705,7 +815,7 @@ function vocabulario(destino, D) {
 
 // ---------------------------------------------------------------------------
 
-const GRAFICAS = { grupos, naturales, tpsa, etapas, etiquetado,
+const GRAFICAS = { particion, grupos, naturales, tpsa, etapas, etiquetado,
                    archivo, dianas, enfermedades, costo,
                    escalado, vocabulario };
 
