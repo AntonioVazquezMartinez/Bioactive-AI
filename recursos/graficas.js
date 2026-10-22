@@ -840,7 +840,282 @@ function vocabulario(destino, D) {
 
 // ---------------------------------------------------------------------------
 
-const GRAFICAS = { particion, grupos, naturales, tpsa, etapas, etiquetado,
+
+// ---------------------------------------------------------------------------
+// Por qué no plegamos: la colisión contra la trazabilidad.
+//
+// Por defecto dibuja Sort & Slice, que es lo que el proyecto usa y lo que se
+// sostiene; el interruptor enseña qué pasa al plegar. El mismo patrón que
+// `particion`: el estado por omisión lleva su conclusión y no hay que tocar
+// nada para entender la diapositiva.
+// ---------------------------------------------------------------------------
+function colision(destino, D) {
+  const BITS = 9;
+  // Tres subestructuras, los tres colores categóricos en su orden. Son
+  // ilustrativas: lo que se demuestra es la mecánica, no un caso real.
+  const FRAGMENTOS = [
+    { nombre: "anillo aromático", color: PAL.positivo },
+    { nombre: "grupo nitro", color: PAL.negativo },
+    { nombre: "amina terciaria", color: PAL.natural },
+  ];
+  // Al plegar, el primero y el tercero caen en el mismo bit: es lo que una
+  // función de dispersión hace cuando el vocabulario no cabe en las casillas.
+  const PLEGADO = [3, 6, 3];
+  const PROPIO = [1, 4, 7];
+  const W = 760, H = 300;
+  let plegado = false;
+
+  const svg = lienzo(W, H, "Dónde cae cada subestructura");
+  const capa = h("g");
+  svg.appendChild(capa);
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  function pinta() {
+    capa.textContent = "";
+    const destinoBit = plegado ? PLEGADO : PROPIO;
+    const bw = 54, bh = 54, sep = 10;
+    const fila = BITS * bw + (BITS - 1) * sep;
+    const bx0 = (W - fila) / 2, by = 196;
+
+    // Cuántos fragmentos acaban en cada bit: es lo que decide el color.
+    const cuantos = {};
+    destinoBit.forEach((b) => { cuantos[b] = (cuantos[b] || 0) + 1; });
+
+    for (let i = 0; i < BITS; i++) {
+      const n = cuantos[i] || 0;
+      const choca = n > 1;
+      const duenyo = destinoBit.indexOf(i);
+      capa.append(h("rect", {
+        x: bx0 + i * (bw + sep), y: by, width: bw, height: bh, rx: 4,
+        fill: choca ? PAL.alerta : (n ? FRAGMENTOS[duenyo].color : PAL.resto),
+        "fill-opacity": n ? 0.8 : 0.25,
+        stroke: PAL.rejilla, "stroke-width": 1.5,
+      }));
+    }
+    capa.append(h("text", {
+      x: W / 2, y: by + bh + 22, "text-anchor": "middle",
+      fill: PAL.tenue, "font-size": 13,
+    }, plegado ? "una fila de 2,048 bits" : "una columna por subestructura"));
+
+    // Las etiquetas arriba, y la flecha de cada una a su bit.
+    const ew = 190, ey = 54;
+    FRAGMENTOS.forEach((f, i) => {
+      const ex = (W - 3 * ew - 2 * 20) / 2 + i * (ew + 20);
+      capa.append(
+        h("rect", { x: ex, y: ey, width: ew, height: 38, rx: 4, fill: f.color,
+                    "fill-opacity": 0.18, stroke: f.color, "stroke-width": 1.5 }),
+        h("text", { x: ex + ew / 2, y: ey + 24, "text-anchor": "middle",
+                    fill: PAL.texto, "font-size": 14 }, f.nombre));
+      // La punta cae en el centro del bit, desplazada cuando lo comparte, para
+      // que se vea que son dos y no una.
+      const comparten = destinoBit.reduce(
+        (acc, b, k) => (b === destinoBit[i] ? acc.concat(k) : acc), []);
+      const corrimiento = comparten.length > 1
+        ? (comparten.indexOf(i) / (comparten.length - 1) - 0.5) * bw * 0.5 : 0;
+      const px = bx0 + destinoBit[i] * (bw + sep) + bw / 2 + corrimiento;
+      capa.append(h("path", {
+        d: `M ${ex + ew / 2} ${ey + 38} L ${px} ${by - 9}`,
+        stroke: f.color, "stroke-width": 2.5, fill: "none",
+        "marker-end": flechaPunta(svg, f.color),
+      }));
+    });
+
+    const aviso = plegado
+      ? "Dos subestructuras distintas, el mismo bit: si ese bit pesa, no se puede dibujar cuál la empujó."
+      : "Cada columna se puede dibujar: el bit importante tiene una subestructura y solo una.";
+    // Debajo de la fila y no entre las etiquetas y los bits: ahí lo cruzaban
+    // las tres flechas.
+    capa.append(h("text", { x: W / 2, y: by + bh + 48, "text-anchor": "middle",
+                            fill: plegado ? PAL.alerta : PAL.natural,
+                            "font-size": 14 }, aviso));
+
+    lectura.innerHTML = plegado
+      ? "<strong>Plegado.</strong> El vocabulario no cabe en las casillas, así que " +
+        "la función de dispersión mete varias subestructuras en el mismo bit. Es " +
+        "barato y de tamaño fijo, y rompe lo que la patrocinadora puso como no " +
+        "negociable: poder decir qué estructura empujó la predicción."
+      : "<strong>Sort & Slice.</strong> Se ordenan las subestructuras por frecuencia " +
+        "en el entrenamiento y se guardan las L más comunes, una por columna. El " +
+        "costo es que el vocabulario <strong>se aprende de los datos</strong>: se " +
+        "ajusta solo con entrenamiento, y lo que solo aparece en la prueba queda fuera.";
+  }
+
+  [["Sort & Slice", false], ["Plegado", true]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    b.className = v === plegado ? "bio-boton activo" : "bio-boton";
+    b.addEventListener("click", () => {
+      plegado = v;
+      [...control.children].forEach((x, i) => x.classList.toggle("activo", (i === 1) === plegado));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Decisión 1.7 · notebook 02. Las tres subestructuras y los nueve bits son " +
+    "ilustrativos: el vocabulario real son 11,475 subestructuras y L = 2,048 " +
+    "columnas. Lo que no es ilustrativo es la mecánica — plegar colisiona por " +
+    "construcción, Sort &amp; Slice no puede.";
+  destino.append(control, svg, lectura, pie);
+}
+
+// ---------------------------------------------------------------------------
+// Una medición censurada no es un hueco, y el umbral es una decisión de lectura.
+//
+// Mueve el corte entre 10 µM y 1 µM y enseña qué etiquetas cambian **sin que
+// cambie el archivo**: es el argumento de la 2.10, que por eso guarda el
+// intervalo y no la etiqueta.
+// ---------------------------------------------------------------------------
+function intervalo(destino, D) {
+  const W = 760, H = 270;
+  const EJE_MIN = 3, EJE_MAX = 9;
+  // Cuatro mediciones que cubren los cuatro casos del archivo. Ilustrativas en
+  // sus valores; los cuatro casos, no.
+  const MEDICIONES = [
+    { t: "exacta", v: 7.3, lo: 7.3, hi: 7.3, txt: "IC50 = 0.05 µM" },
+    { t: "exacta", v: 5.4, lo: 5.4, hi: 5.4, txt: "IC50 = 4 µM" },
+    { t: "censurada", v: 5.0, lo: -Infinity, hi: 5.0, txt: "> 10 µM" },
+    { t: "censurada", v: 6.0, lo: -Infinity, hi: 6.0, txt: "> 1 µM" },
+  ];
+  let corte = 5.0;   // 10 µM
+
+  const svg = lienzo(W, H, "Dónde cae el corte, y qué etiqueta cambia");
+  const capa = h("g");
+  svg.appendChild(capa);
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  const x = (v) => 90 + ((v - EJE_MIN) / (EJE_MAX - EJE_MIN)) * (W - 180);
+
+  function etiqueta(m) {
+    // La regla de la 2.10: la etiqueta sale del intervalo, no de un número.
+    // Si el intervalo entero cae de un lado del corte, la etiqueta es segura;
+    // si lo cruza, es ambigua y se deja fuera.
+    //
+    // El `<=` no es un detalle: un «> 10 µM» tiene su cota **exactamente** en
+    // el corte de 10 µM, así que con `<` salía ambiguo y el dibujo desmentía
+    // a la 2.3, que cuenta esas mediciones como inactivos declarados —son el
+    // 67.4% de las censuradas, justo por estar censuradas ahí.
+    if (m.lo >= corte) return "activo";
+    if (m.hi <= corte) return "inactivo";
+    return "ambiguo";
+  }
+
+  function pinta() {
+    capa.textContent = "";
+    const ejeY = 196;
+    capa.append(
+      h("line", { x1: x(EJE_MIN), y1: ejeY, x2: x(EJE_MAX), y2: ejeY,
+                  stroke: PAL.rejilla, "stroke-width": 2 }),
+      h("text", { x: x(EJE_MIN), y: ejeY + 24, fill: PAL.tenue, "font-size": 12 },
+        "menos potente"),
+      h("text", { x: x(EJE_MAX), y: ejeY + 24, "text-anchor": "end",
+                  fill: PAL.tenue, "font-size": 12 }, "más potente"),
+      h("text", { x: W / 2, y: ejeY + 44, "text-anchor": "middle",
+                  fill: PAL.tenue, "font-size": 12 },
+        "potencia · 6 − log₁₀ de la concentración en µM"));
+
+    // El corte, de arriba abajo.
+    capa.append(
+      h("line", { x1: x(corte), y1: 40, x2: x(corte), y2: ejeY + 8,
+                  stroke: PAL.texto, "stroke-width": 2, "stroke-dasharray": "5 4" }),
+      h("text", { x: x(corte), y: 32, "text-anchor": "middle",
+                  fill: PAL.texto, "font-size": 13 },
+        corte === 5 ? "corte: 10 µM" : "corte: 1 µM"));
+
+    const COLOR = { activo: PAL.natural, inactivo: PAL.negativo, ambiguo: PAL.alerta };
+    MEDICIONES.forEach((m, i) => {
+      const y = 62 + i * 30;
+      const e = etiqueta(m);
+      if (m.t === "censurada") {
+        // Media recta: llega hasta la cota y sigue hacia abajo sin fondo.
+        capa.append(h("path", {
+          d: `M ${x(m.hi)} ${y} L ${x(EJE_MIN) + 6} ${y}`,
+          stroke: COLOR[e], "stroke-width": 3, fill: "none",
+          "marker-end": flechaPunta(svg, COLOR[e]),
+        }), h("line", { x1: x(m.hi), y1: y - 7, x2: x(m.hi), y2: y + 7,
+                        stroke: COLOR[e], "stroke-width": 3 }));
+      } else {
+        capa.append(h("circle", { cx: x(m.v), cy: y, r: 7, fill: COLOR[e],
+                                  stroke: PAL.rejilla, "stroke-width": 2 }));
+      }
+      capa.append(
+        h("text", { x: W - 86, y: y + 4, fill: PAL.texto, "font-size": 13 }, m.txt),
+        h("text", { x: 82, y: y + 4, "text-anchor": "end", fill: COLOR[e],
+                    "font-size": 13 }, e));
+    });
+
+    lectura.innerHTML = corte === 5
+      ? "<strong>Con el corte en 10 µM</strong>, el «&gt; 10 µM» es <strong>inactivo</strong> " +
+        "—su cota está exactamente en el corte— y el «&gt; 1 µM» queda <strong>ambiguo</strong>: " +
+        "su intervalo cruza el corte, así que el archivo no dice de qué lado cae y se " +
+        "deja fuera. Es el corte principal, y no es un hallazgo: el <strong>67.4%</strong> " +
+        "de las mediciones censuradas lo está exactamente en 10 µM, que es la " +
+        "concentración a la que estos ensayos dejaron de mirar."
+      : "<strong>Con el corte en 1 µM</strong> cambian dos cosas en direcciones opuestas: " +
+        "el «&gt; 1 µM» deja de ser ambiguo y pasa a <strong>inactivo</strong>, y la " +
+        "medición exacta de 4 µM pasa de <strong>activo</strong> a <strong>inactivo</strong>. " +
+        "Un corte más exigente <strong>recupera</strong> evidencia negativa censurada en " +
+        "vez de perderla. Y ninguna fila del archivo cambió.";
+  }
+
+  [["10 µM", 5.0], ["1 µM", 6.0]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    b.className = v === corte ? "bio-boton activo" : "bio-boton";
+    b.addEventListener("click", () => {
+      corte = v;
+      [...control.children].forEach((x2, i) => x2.classList.toggle("activo", (i === 1) === (corte === 6)));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Decisión 2.10 · notebook 02b. Las cuatro mediciones son ilustrativas; los " +
+    "cuatro casos que cubren, no — dos exactas a cada lado del corte, una censurada " +
+    "en el corte y una que lo cruza. Sobre el archivo entero, bajar a 1 µM deja " +
+    "<strong>53,359</strong> censuradas utilizables contra <strong>48,480</strong> a " +
+    "10 µM —4,879 negativos más— y el balance de clases pasa de 1.6:1 a 0.8:1. El corte " +
+    "principal sigue siendo 10 µM porque es el de la biblioteca, no porque dé mejores " +
+    "cifras; 1 µM se reporta siempre al lado.";
+  destino.append(control, svg, lectura, pie);
+}
+
+// La punta de flecha, una por color y reutilizada: SVG las quiere declaradas
+// en `defs` y referenciadas por id, así que crearlas al vuelo duplicaba una
+// por cada trazo.
+function flechaPunta(svg, color) {
+  const id = "punta-" + color.replace(/[^a-z0-9]/gi, "");
+  if (!svg.querySelector("#" + id)) {
+    let defs = svg.querySelector("defs");
+    if (!defs) { defs = h("defs"); svg.insertBefore(defs, svg.firstChild); }
+    const m = h("marker", {
+      id, viewBox: "0 0 10 10", refX: 8, refY: 5,
+      markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse",
+    });
+    m.append(h("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: color }));
+    defs.append(m);
+  }
+  return `url(#${id})`;
+}
+
+const GRAFICAS = { particion, colision, intervalo,
+                   grupos, naturales, tpsa, etapas, etiquetado,
                    archivo, dianas, enfermedades, costo,
                    escalado, vocabulario };
 

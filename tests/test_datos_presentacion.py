@@ -371,3 +371,52 @@ def test_el_mazo_cita_el_agrupamiento_que_da_el_generador(datos):
     assert 3.0 <= razon < 3.5, (
         f"la razon entre agrupamiento y modelo en MCC es {razon:.1f}; el mazo "
         "dice «algo mas de tres veces» y habria que reescribirlo")
+
+
+def test_cada_grafica_del_mazo_declara_tope_de_alto():
+    """Toda `.bio-grafica` del mazo lleva su clase de alto, y la gráfica existe.
+
+    Cuatro diapositivas se desbordaban del cuadro de 1280x760 y siete gráficas
+    no declaraban tope: una gráfica sin tope crece con sus datos y empuja el
+    texto fuera de la diapositiva sin que nada falle. Lo encontró medirlo en el
+    navegador, que es lo único que ve un desborde — pero el tope sí se puede
+    exigir aquí, y es lo que lo evita.
+
+    `.baja` acota el ancho y centra; `.gNNN` pone el maximo en pixeles. Van
+    siempre juntas: `.gNNN` sola no hace nada, porque la regla que la aplica
+    esta anidada bajo `.baja`.
+    """
+    mazo = MAZO.read_text(encoding="utf-8")
+    bloques = re.findall(r"^::: \{\.bio-grafica([^}]*)\}", mazo, re.M)
+    assert bloques, "el mazo ya no tiene ninguna gráfica"
+
+    sin_tope = []
+    for clases in bloques:
+        nombre = re.search(r'data-grafica="([^"]+)"', clases)
+        nombre = nombre.group(1) if nombre else "(sin nombre)"
+        if ".baja" not in clases or not re.search(r"\.g\d+\b", clases):
+            sin_tope.append(nombre)
+    assert not sin_tope, (
+        "estas gráficas del mazo no declaran tope de alto, así que pueden "
+        "desbordar la diapositiva: " + ", ".join(sin_tope)
+        + ". Añádeles `.baja .gNNN`, con NNN el máximo en píxeles")
+
+    # Y que cada una exista de verdad en el registro de graficas.js, porque un
+    # `data-grafica` mal escrito deja el hueco en blanco sin avisar.
+    js = (MAZO.parent / "recursos" / "graficas.js").read_text(encoding="utf-8")
+    registro = re.search(r"const GRAFICAS = \{(.+?)\}", js, re.S)
+    assert registro, "no se encuentra el registro GRAFICAS en recursos/graficas.js"
+    conocidas = {n.strip() for n in registro.group(1).split(",") if n.strip()}
+    pedidas = set(re.findall(r'data-grafica="([^"]+)"', mazo))
+    huerfanas = sorted(pedidas - conocidas)
+    assert not huerfanas, (
+        "el mazo pide gráficas que graficas.js no registra: "
+        + ", ".join(huerfanas))
+
+    # Y los topes que el mazo usa tienen su regla en los estilos.
+    scss = (MAZO.parent / "estilos-slides.scss").read_text(encoding="utf-8")
+    topes = set(re.findall(r"\.(g\d+)\b", " ".join(bloques)))
+    faltan = sorted(t for t in topes if f".baja.{t}" not in scss)
+    assert not faltan, (
+        "el mazo usa topes que estilos-slides.scss no define, así que no "
+        "acotan nada: " + ", ".join(faltan))

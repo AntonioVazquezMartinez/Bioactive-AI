@@ -87,19 +87,26 @@ flowchart LR
     F --> G
 ```
 
-## El recorrido {.smaller}
+## Una sola tesis, cuatro veces {.smaller}
 
-1. **Los datos de permeabilidad.** Cuántos compuestos distintos hay, si sirve el grupo A–D, si los naturales se comportan distinto.
-2. **Cómo evaluamos sin hacernos trampa.** Cómo se parte el conjunto y qué tan firme es un umbral.
-3. **Cómo convertimos moléculas en números.** Qué se probó, qué se descartó y por qué.
-4. **La etapa 2.** Qué hay en el archivo de actividad y qué no sabemos todavía.
-5. **La Ruta del proyecto.** Donde quedó todo lo anterior, y lo que le pedimos revisar.
+Todo lo que sigue dice lo mismo: **los datos no son lo que parecen**. Las cuatro secciones técnicas no son etapas de un pipeline, son cuatro instancias de esa frase — y cada una cambió una decisión.
+
+| | Lo que parece | Lo que es | Qué cambió |
+|:--|:--|:--|:--|
+| **1** | una fila es un compuesto | **las mediciones no son compuestos** | la mitad del archivo son el mismo esqueleto |
+| **2** | las filas se pueden barajar | **las filas no son independientes** | partir al azar infla 2.2 puntos de AUROC y 7.1 de MCC |
+| **3** | un bit es una subestructura | **un bit no es un fragmento** | no plegamos: romper eso rompe la explicabilidad |
+| **4** | un «> 10 µM» es un dato faltante | **un «>» no es un hueco** | es una cota, y se guarda el intervalo entero |
+
+Luego, el modelo de referencia y la Ruta: dónde quedó cada decisión y qué le pedimos revisar.
 
 ::: {.callout-note}
 Cada decisión se cuenta igual: **la pregunta, lo que miramos, lo que vimos y lo que decidimos**, con su entrada en la Ruta y su estado. Nada está *ratificado* hasta que ella lo revise.
 :::
 
-# 1 · Los datos de permeabilidad {background-color="#2a3441"}
+# 1 · Las mediciones no son compuestos {background-color="#2a3441"}
+
+Los datos de permeabilidad: cuántos compuestos distintos hay de verdad, si sirve el grupo A–D y si los naturales se comportan distinto.
 
 Qué hay en el archivo, y qué decidimos al mirarlo.
 
@@ -152,9 +159,9 @@ En conjunto, los naturales cruzan **18.9 puntos menos** que el resto (52.7% cont
 Puede ser química real, un artefacto de curación o un efecto techo (el grupo A es 88% BBB+), y los datos no lo distinguen. **Decidido por el equipo** ([1.6](contenido/decisiones.html#d1-6)): **un solo modelo**, evaluado por origen **dentro de cada grupo A–D** y no solo en el global. Entrenar por separado partiría un conjunto ya chico para resolver una ambigüedad que los datos no resuelven.
 :::
 
-# 2 · Cómo evaluamos sin hacernos trampa {background-color="#2a3441"}
+# 2 · Las filas no son independientes {background-color="#2a3441"}
 
-Cómo se parte el conjunto, y qué tan firme es un número que parece exacto.
+Cómo se parte el conjunto sin hacernos trampa, y qué tan firme es un número que parece exacto.
 
 ## ¿Cómo se parte el conjunto sin hacer trampa? {.smaller}
 
@@ -183,7 +190,9 @@ En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente). Todo lo que se apre
 Dos lecturas: **el pico se mueve** con el subconjunto, y **es plano**: con un bootstrap de **esqueletos** —no de filas, que no son independientes— 28 cortes entre 75 y 110 Å² no se distinguen del mejor (las franjas azules). **Decisión:** derivarlo solo con entrenamiento y no citarlo como constante. En la Ruta: supuesto S1.3.
 :::
 
-# 3 · Cómo convertimos moléculas en números {background-color="#2a3441"}
+# 3 · Un bit no es un fragmento {background-color="#2a3441"}
+
+Cómo convertimos moléculas en números: qué se probó, qué se descartó y por qué.
 
 Qué se construyó, qué se probó y qué se descartó, con la evidencia de cada cosa.
 
@@ -214,11 +223,10 @@ En la Ruta: [1.3](contenido/decisiones.html#d1-3) (vigente).
 
 ## ¿Por qué no el fingerprint plegado? Rompe la explicabilidad {.smaller}
 
-Un fingerprint plegado reparte las subestructuras en un número fijo de casillas con una función de dispersión, así que **dos subestructuras distintas pueden caer en el mismo bit**. Si ese bit resulta importante, no se puede traducir a una estructura concreta — que es exactamente lo que la patrocinadora pidió como no negociable.
+Un fingerprint plegado reparte las subestructuras en casillas con una función de dispersión, así que **dos distintas pueden caer en el mismo bit**. Si ese bit pesa en la predicción, no se puede traducir a una estructura concreta — lo que la patrocinadora puso como no negociable:
 
-**Sort & Slice** ordena las subestructuras por frecuencia en el entrenamiento y se queda con las L más comunes, **una por columna**. Sin colisiones: cada columna se puede dibujar.
-
-El costo es que el vocabulario **se aprende de los datos**, así que se ajusta solo con entrenamiento y las subestructuras que solo aparecen en la prueba quedan fuera.
+::: {.bio-grafica .baja .g260 data-grafica="colision"}
+:::
 
 ## ¿Cuánto vocabulario hace falta? {.smaller}
 
@@ -292,7 +300,9 @@ Aquí **no hay un experimento comparativo**: nadie entrenó un modelo con Box–
 La diferencia importa: un resultado comparado se revisa repitiendo el experimento con otros datos; un descarte por conteo o por razonamiento, solo con un argumento mejor.
 :::
 
-# 4 · La etapa 2: el archivo de actividad {background-color="#2a3441"}
+# 4 · Un «>» no es un hueco {background-color="#2a3441"}
+
+La etapa 2: qué hay en el archivo de actividad, qué esconde la etiqueta y qué no sabemos todavía.
 
 Qué hay, qué no cuadra y qué necesitamos saber antes de elegir cómo modelarlo.
 
@@ -399,6 +409,11 @@ Guardar el intervalo y no la etiqueta es lo que hace que **el umbral sea una dec
 
 ::: {.callout-caution}
 Un `> 10 µM` **no es un dato faltante**: es una cota. 12,552 pares solo tienen cotas, y tirarlos sería tirar la evidencia negativa. Por eso el objetivo es un intervalo y no un número ([2.10](contenido/decisiones.html#d2-10)).
+:::
+
+## ¿Y si el corte fuera otro? Cambia la lectura, no el archivo {.smaller}
+
+::: {.bio-grafica .baja .g260 data-grafica="intervalo"}
 :::
 
 ## Tres cosas que la etiqueta esconde, y se publican siempre {.smaller}
