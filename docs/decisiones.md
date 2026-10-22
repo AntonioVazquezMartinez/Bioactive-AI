@@ -127,6 +127,8 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 > **Pregunta:** ¿Se autoriza publicar los resultados, y qué datos derivados, bajo uso académico no comercial? ¿Hay aspiraciones comerciales? NPASS (CC BY-NC) lo impediría.
 
+**Dónde vive el video de divulgación, y por qué todavía no se publica.** Las animaciones de `animaciones/` producen un video de poco más de diez minutos que explica el proyecto. **El `.mp4` no se versiona** —es un artefacto generado, como los PDF de los reportes— así que publicarlo exige alojarlo en algún sitio, y eso es lo que falta decidir. Lo que ya está resuelto: el uso académico cumple con todas las licencias de los datos, incluida la de NPASS; lo que no se puede es darle un uso comercial, y el video tiene que llevar la atribución de las fuentes como la lleva el sitio. **Qué lo cierra:** elegir alojamiento —el repositorio de publicaciones del Tec, un enlace no listado, o renderizarlo en cada despliegue del sitio— y escribirlo aquí. Mientras tanto se reconstruye con `animaciones/ensamblar.py`, que es reproducible porque los guiones, las escenas y los tiempos de la voz sí están versionados.
+
 **Esta entrada va aparte de las demás.** No es un criterio técnico sino administrativo, y la mitad de lo que falta no depende de ella sino del departamento y del Tec: propiedad intelectual, orden de autoría, foro. Tratarla en la misma sesión que el criterio de «activo» hace que ninguna de las dos se cierre. Se plantea por escrito y con tiempo, no en la reunión donde se discuten los criterios técnicos.
 
 **Se propone.** Los archivos de la patrocinadora son la fuente y el producto puede ser un texto académico de investigación. Qué hace falta:

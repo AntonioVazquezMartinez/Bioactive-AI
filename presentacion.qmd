@@ -174,7 +174,7 @@ La prueba quedó con 57.3% BBB+ contra 64.0% del entrenamiento: **los andamios r
 En la Ruta: [1.2](contenido/decisiones.html#d1-2) (vigente). Todo lo que se aprende de los datos —vocabularios, umbrales, escaladores— se ajusta solo con entrenamiento.
 :::
 
-## El mejor corte de TPSA cambia con los datos, y muchos valen lo mismo {.smaller}
+## ¿Hay un umbral de TPSA? Se mueve con los datos, y muchos valen lo mismo {.smaller}
 
 **TPSA** mide la polaridad de la molécula. La regla es «si TPSA < corte, se predice BBB+». La curva dice qué tan bien separa esa regla las dos clases con cada corte: es el **índice J** (sensibilidad + especificidad − 1), donde 0 es azar y 1 es perfecto. El pico es el «umbral óptimo». Mueve el corte y cambia de subconjunto; es el **mismo** dataset en los cuatro casos:
 
@@ -231,7 +231,7 @@ El costo es que el vocabulario **se aprende de los datos**, así que se ajusta s
 Se mantiene **L = 2048** como valor de trabajo: es el menor tamaño que el AUPRC no distingue del mejor en dos de los tres modelos. Lo que falta decidir con la patrocinadora no es el número sino la estrategia —desempeño, parsimonia o relevancia química de las subestructuras raras— y ahí su conocimiento de los productos naturales es lo que inclina la balanza. En la Ruta: [1.7](contenido/decisiones.html#d1-7) (propuesta).
 :::
 
-## Escalar no es por el acierto, es por la convergencia {.smaller}
+## ¿Para qué sirve escalar? No para acertar: para que converja {.smaller}
 
 ::: {.bio-grafica data-grafica="escalado"}
 :::
@@ -298,7 +298,7 @@ La diferencia importa: un resultado comparado se revisa repitiendo el experiment
 
 Qué hay, qué no cuadra y qué necesitamos saber antes de elegir cómo modelarlo.
 
-## Las dos etapas casi no comparten compuestos
+## ¿Se puede encadenar una etapa con la otra? Casi no se tocan
 
 ::: {.bio-grafica data-grafica="etapas"}
 :::
@@ -338,7 +338,7 @@ Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sob
 **Y lo medible favorece 1 µM**: recupera 4,879 censurados más y deja las clases casi balanceadas. Se conserva 10 µM por comparabilidad con el diccionario, y cambiar de principal cuesta **una columna**, porque el objetivo se guarda como intervalo ([2.10](contenido/decisiones.html#d2-10)).
 :::
 
-## La prueba apartada: preguntada, contestada, construida {.smaller}
+## ¿Había una prueba reservada? Sí, y hubo que rehacerla {.smaller}
 
 ::: {.bio-grafica data-grafica="archivo"}
 :::
@@ -454,7 +454,7 @@ Las tres familias de la [1.5](contenido/decisiones.html#d1-5), **sin afinar** �
 El intervalo sale de remuestrear **grupos** y no filas: los compuestos del mismo andamio comparten química, así que remuestrear filas las trata como independientes y da un intervalo más estrecho del que corresponde. Y la desviación entre semillas no sirve, porque las tres semillas comparten las mismas filas.
 :::
 
-## Cómo se agrupa pesa más que qué modelo se usa {.smaller}
+## ¿Pesa más cómo se agrupa o qué modelo se usa? El agrupamiento {.smaller}
 
 El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de conectividad puede aparecer con andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados del pliegue:
 
