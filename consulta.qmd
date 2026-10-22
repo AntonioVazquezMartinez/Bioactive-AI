@@ -71,7 +71,10 @@ Globalmente los naturales cruzan la barrera 18.9 puntos menos que el resto (28.3
 | C | 58.1% | 40.9% | **+17.2** [+13.7, +20.7] |
 
 Puede ser química real —los transportadores son estereoselectivos y los naturales son estructuralmente
-distintos— o puede ser un artefacto de cómo se armó el archivo. Los datos no lo distinguen. El
+distintos— o puede ser un artefacto de cómo se armó el archivo. Y hay una tercera lectura: el grupo A es
+88% BBB+, y con casi todo del mismo lado queda poco margen para que los orígenes difieran (un efecto
+techo). Los datos no lo distinguen. Lo único que el archivo dice de cada grupo es que las filas de A traen
+logBB, las de B solo el corte (−1) y las de C ninguno de los dos. El
 archivo lo armó usted, así que conoce cómo se etiquetó cada grupo, y eso es lo que aquí falta.
 
 ::: {.bio-pregunta data-id="p3" data-titulo="Brecha de los naturales (entrada 1.6)" data-opciones="Hay una razón de curación que lo explica|Es química real|No lo sé; déjenlo como limitación"}
