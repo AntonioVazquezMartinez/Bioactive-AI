@@ -210,5 +210,19 @@
   ],
   "voz_id": "qK97aPuDo74niFLxjFrK",
   "modelo": "eleven_multilingual_v2"
+ },
+ "direccion": {
+  "voz_s": 0.0,
+  "video_s": 33.73,
+  "tramos": [],
+  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "resultados": {
+  "voz_s": 0.0,
+  "video_s": 34.93,
+  "tramos": [],
+  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "modelo": "eleven_multilingual_v2"
  }
 }
