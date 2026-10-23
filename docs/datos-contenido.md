@@ -157,6 +157,12 @@ La cobertura es muy desigual: Alzheimer reúne 52,676 registros y ELA solo 53. C
 
 El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
 
+### La dirección en que se busca modular cada diana
+
+El archivo trae tres columnas que describen la **diana**, no la medición: `diana_enfermedades`, `diana_mecanismo` (el sistema biológico: colinérgico, dopaminérgico, inflamatorio…) y `diana_efecto_buscado`, que dice **en qué dirección habría que modularla para que sirva como tratamiento** ([glosario](glosario.md)). Se llenaron a mano, con fármacos conocidos como respaldo. De las 39 dianas, 16 buscan inhibición, 5 modulación positiva, 4 antagonismo, 4 activación (`PPARG`, `SIRT1`, `NFE2L2`, `TSPO`), 3 reducir agregación, 3 reducir niveles y 1 modulación negativa; `DRD2` es «agonismo o antagonismo según la enfermedad», `CX3CR1` no tiene dirección establecida y `AIF1` es un marcador.
+
+**La columna no dice qué hizo el compuesto en el ensayo**, y el proyecto todavía no la usa. Importa porque el tipo de medida sí tiene dirección: un IC50 mide potencia de inhibir y un EC50, de activar. En las dianas de activación (11,100 filas) el 48% son EC50 y el 29% IC50, así que ahí un compuesto puede quedar «activo» por inhibir, que es lo contrario de lo buscado. Cuánto está en juego y qué se propone está en la [decisión 2.3](decisiones.md#d2-3) y en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95); mientras no haya respuesta de la patrocinadora, el etiquetado no cambia.
+
 ### Cómo se mide la actividad
 
 - **NPASS y CMAUP no traen pChEMBL** (15,293 registros), porque solo ChEMBL lo calcula. Etiquetar solo por pChEMBL dejaría fuera justo los productos naturales, de ahí el etiquetado por tres vías de la [decisión 2.3](decisiones.md#d2-3), pendiente de ratificar.
