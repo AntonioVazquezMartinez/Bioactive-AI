@@ -242,41 +242,54 @@ class Apertura(Narrada):
     def _la_tesis(self) -> None:
         self.abrir_tramo(3)
         t = titulo("Pero antes de predecir hay que mirar los datos", 34)
-        t.to_edge(UP, buff=0.8)
+        t.to_edge(UP, buff=0.65)
         cabe(t)
         self.play(Write(t), run_time=1.5)
         self.wait(0.6)
 
         tesis = titulo("Y los datos no son lo que parecen.", 36)
-        tesis.set_color(NARANJA).next_to(t, DOWN, buff=0.55).set_x(0)
+        tesis.set_color(NARANJA).next_to(t, DOWN, buff=0.40).set_x(0)
         cabe(tesis)
         self.play(FadeIn(tesis, scale=0.92), run_time=1.2)
         self.wait(1.4)
 
-        linea = Line(LEFT * 4.2, RIGHT * 4.2, color=GRIS, stroke_width=1)
-        linea.next_to(tesis, DOWN, buff=0.5)
+        # **La lista ya no es el índice del video, es la tesis.** Antes eran
+        # cuatro afirmaciones y cuatro capítulos en ese orden, y las escenas que
+        # entraron después —cómo se construye el objetivo, la dirección del
+        # ensayo, los resultados— no cabían en ninguna de las cuatro. El video
+        # se recorre ahora **por fases**, que es como está construido el
+        # proyecto, y las cuatro frases se quedan como lo que siempre fueron: lo
+        # que le pasa a los datos en las dos.
+        linea = Line(LEFT * 4.6, RIGHT * 4.6, color=GRIS, stroke_width=1)
+        linea.next_to(tesis, DOWN, buff=0.38)
         lista = VGroup(
-            subtitulo("Las mediciones no son compuestos.", 20),
-            subtitulo("Un «mayor que» no es un dato faltante.", 20),
-            subtitulo("Un bit no es un fragmento.", 20),
-            subtitulo("Las filas no son independientes.", 20),
-        ).arrange(DOWN, buff=0.24)
-        lista.next_to(linea, DOWN, buff=0.35).set_x(0)
+            subtitulo("Las mediciones no son compuestos.", 19),
+            subtitulo("Un «mayor que» no es un dato faltante.", 19),
+            subtitulo("Un bit no es un fragmento.", 19),
+            subtitulo("Las filas no son independientes.", 19),
+        ).arrange(DOWN, buff=0.2)
+        lista.next_to(linea, DOWN, buff=0.28).set_x(0)
         cabe(linea, lista)
         self.play(Create(linea), run_time=0.6)
         for item in lista:
-            self.play(FadeIn(item, shift=RIGHT * 0.2), run_time=0.5)
-        self.wait(1.2)
+            self.play(FadeIn(item, shift=RIGHT * 0.2), run_time=0.45)
+        self.wait(0.8)
 
-        cierre = subtitulo("Cada una costó una medición.", 20)
-        cierre.next_to(lista, DOWN, buff=0.4).set_x(0)
-        cabe(cierre)
-        self.play(Write(cierre), run_time=1.8)
+        recorrido = VGroup(
+            subtitulo("Primero la fase uno, la permeabilidad:"
+                      " de la molécula al resultado.", 20),
+            subtitulo("Después la fase dos, la actividad:"
+                      " del archivo al objetivo.", 20),
+        ).arrange(DOWN, buff=0.2)
+        recorrido.next_to(lista, DOWN, buff=0.30).set_x(0)
+        cabe(recorrido)
+        self.play(FadeIn(recorrido, lag_ratio=0.4), run_time=1.6)
 
         fuente = pie("Bioactive AI · Equipo 7 · Maestría en Inteligencia"
                      " Artificial Aplicada")
         fuente.to_edge(DOWN, buff=0.28)
         cabe(fuente)
+        separados(recorrido, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
         self.wait(2.2)
 

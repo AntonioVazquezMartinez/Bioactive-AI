@@ -1,6 +1,6 @@
 # Guion · Apertura
 
-**Duración:** 33 s. **Papel en el hilo:** planta la tesis que recorre todo.
+**Duración:** 42 s. **Papel en el hilo:** planta la tesis que recorre todo.
 
 ---
 
@@ -36,7 +36,11 @@
 > Las mediciones no son compuestos. Un «mayor que» no es un dato faltante. Un
 > bit no es un fragmento. Las filas no son independientes.
 >
-> Cada una costó una medición.
+> Cada una costó una medición. Y las cuatro vuelven a pasar en las dos fases,
+> así que el recorrido va por fases y no por sorpresas.
+>
+> Primero la fase uno, la permeabilidad: de la molécula al resultado. Después
+> la fase dos, la actividad: del archivo al objetivo.
 
 *Entra con:* la frase en naranja, sola, con aire antes y después. Es la que
 tiene que quedarse.
@@ -45,6 +49,13 @@ tiene que quedarse.
 
 ## Notas
 
-- El tramo 3 es el que no se puede acelerar: las cuatro líneas son los cuatro
-  capítulos que siguen, y el espectador tiene que oírlas como una lista.
+- El tramo 3 es el que no se puede acelerar. **Las cuatro líneas ya no son el
+  índice**, son la tesis: antes eran cuatro afirmaciones y cuatro capítulos en
+  ese orden, y las escenas que entraron después —cómo se construye el objetivo,
+  la dirección del ensayo, los resultados— no cabían en ninguna. El recorrido va
+  por fases, que es como está construido el proyecto; las cuatro frases se
+  quedan como lo que le pasa a los datos en las dos.
+- El par de líneas del recorrido sí es el índice, y tiene que oírse despacio:
+  es lo único que le dice al espectador dónde está parado durante los diez
+  minutos siguientes.
 - Esta escena no lleva ninguna cifra, a propósito. No afirma resultados.
