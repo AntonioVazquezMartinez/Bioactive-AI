@@ -12,7 +12,13 @@ escritas aquí como literales, igual que el resto del video, porque una escena
 que lee un CSV al renderizar cambiaría de contenido sin que el diff lo muestre.
 Si la corrida cambia, cambian estas tres líneas y el guion.
 
-**Por qué el tramo 4 no lleva números.** Es el que dice que el dato no decide;
+**Las dos mitades van juntas.** El tramo 3 cuenta qué se pierde al quitar lo
+que contradice la dirección; el 4, qué se pierde al quitar lo que incomoda por
+venir de una sola fuente. Por separado cada mitad parece tener salida fácil
+—quitar lo raro—, y juntas enseñan que las dos salidas sesgan en sentidos
+opuestos. Si alguna vez hay que recortar, se recortan las dos o ninguna.
+
+**Por qué el tramo 5 no lleva números.** Es el que dice que el dato no decide;
 una cifra ahí invitaría a pensar lo contrario.
 """
 
@@ -34,6 +40,10 @@ config.background_color = FONDO
 PARES = 6140
 SIN_EVIDENCIA = 832
 UNA_SOLA = 752
+# El mismo problema por el otro lado: de qué vive la clase negativa de los
+# productos naturales. De la misma corrida.
+NEGATIVOS_NPASS = 1914
+DEPENDEN_DE_AC50 = 1161
 
 
 class Direccion(Narrada):
@@ -41,6 +51,7 @@ class Direccion(Narrada):
         self._dianas()
         self._tipos()
         self._juego()
+        self._negativos()
         self._cierre()
 
     # -- 1. cada diana pide una dirección ------------------------------------
@@ -177,9 +188,50 @@ class Direccion(Narrada):
         self.cerrar_tramo(3)
         self.play(FadeOut(VGroup(t, r, partes, p)), run_time=0.6)
 
-    # -- 4. lo que el dato no decide -----------------------------------------
+    # -- 4. el mismo problema por el otro lado -------------------------------
+    def _negativos(self) -> None:
+        """De qué vive la clase negativa de los productos naturales.
+
+        Es el espejo del tramo anterior y la razón de que la pregunta no tenga
+        una respuesta cómoda. Si se quitan los tipos de ensayo que incomodan,
+        los naturales se quedan casi sin negativos, y un modelo sin clase
+        negativa en un estrato no mide nada en ese estrato.
+        """
+        self.abrir_tramo(4, compases=3)
+        t = titulo("Y el mismo problema, por el otro lado")
+        t.to_edge(UP, buff=0.7)
+        cabe(t)
+        self.play(Write(t), run_time=1.2)
+        self.respira()
+
+        r = reduccion("negativos de los pares que solo tiene NPASS",
+                      NEGATIVOS_NPASS, DEPENDEN_DE_AC50, VERDE, ancho=3.2)
+        r.move_to([-3.4, -0.2, 0])
+        cabe(r)
+        self.play(Create(r[0]), run_time=0.7)
+        self.play(GrowFromCenter(r.barra), FadeIn(r[2], r[3]), run_time=1.1)
+        self.respira()
+
+        lineas = VGroup(
+            subtitulo("dependen de un solo tipo de ensayo: AC50,", 21),
+            subtitulo("que en este archivo solo existe en NPASS.", 21),
+            subtitulo("Quitarlo por evitar el sesgo de fuente", 21),
+            subtitulo("deja a los naturales casi sin clase negativa.", 21),
+        ).arrange(DOWN, buff=0.24)
+        lineas.move_to([3.1, 0.1, 0])
+        cabe(lineas)
+        self.play(FadeIn(lineas, lag_ratio=0.3), run_time=1.8)
+
+        cola = dato("se conserva, y se reporta con y sin esos pares", 21, CREMA)
+        cola.to_edge(DOWN, buff=0.9)
+        cabe(cola)
+        self.play(Write(cola), run_time=1.2)
+        self.cerrar_tramo(4)
+        self.play(FadeOut(VGroup(t, r, lineas, cola)), run_time=0.6)
+
+    # -- 5. lo que el dato no decide -----------------------------------------
     def _cierre(self) -> None:
-        self.abrir_tramo(4, compases=2)
+        self.abrir_tramo(5, compases=2)
         t = titulo("Lo que el dato no decide")
         t.to_edge(UP, buff=0.9)
         cabe(t)
@@ -203,4 +255,4 @@ class Direccion(Narrada):
         cola.to_edge(DOWN, buff=1.0)
         cabe(cola)
         self.play(Write(cola), run_time=1.1)
-        self.cerrar_tramo(4)
+        self.cerrar_tramo(5)

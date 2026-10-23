@@ -1,6 +1,6 @@
 # Guion · La medida que apunta al revés
 
-**Duración de la animación:** 60 s (baja calidad).
+**Duración de la animación:** 82 s (baja calidad).
 
 **Por qué existe.** Es el defecto que ninguna gráfica del proyecto mostraba y
 que ninguna cifra publicada delataba: el archivo dice en qué dirección hay que
@@ -8,6 +8,11 @@ mover cada diana para que sirva como tratamiento, y el código que construye la
 etiqueta no mira el tipo de medida. En cuatro dianas eso significa que una
 medición de inhibir cuenta como evidencia de activar. Con dos flechas opuestas
 se ve en un segundo; en prosa hay que creerlo.
+
+Y lleva su espejo, que es lo que impide una respuesta cómoda: si se quitan los
+tipos de ensayo que incomodan, los productos naturales se quedan casi sin clase
+negativa. Las dos mitades juntas son el argumento completo; por separado, cada
+una parece tener una salida fácil.
 
 ---
 
@@ -61,7 +66,27 @@ los dos grupos.
 
 ---
 
-## 4 · Lo que el dato no decide *(0:46 – 1:00)*
+## 4 · El mismo problema, por el otro lado *(0:46 – 1:08)*
+
+> Y antes de cerrar, el espejo de todo esto, porque es lo que impide una
+> respuesta cómoda.
+>
+> De los mil novecientos catorce pares negativos que solo tiene NPASS —la base
+> de productos naturales— mil ciento sesenta y uno dependen de **un solo tipo
+> de ensayo**: el AC cincuenta, que en este archivo no existe en ninguna otra
+> fuente.
+>
+> Así que si se quitaran los tipos de ensayo que incomodan, los productos
+> naturales se quedarían casi sin clase negativa. Y un modelo sin clase
+> negativa en un estrato no mide nada en ese estrato.
+>
+> Se conserva, y el desempeño se reporta con y sin esos pares.
+
+*Entra con:* la barra de los negativos y el bloque que depende de AC cincuenta.
+
+---
+
+## 5 · Lo que el dato no decide *(1:08 – 1:22)*
 
 > Aquí el proyecto se detiene, y es a propósito. La columna dice qué modulación
 > se busca **como tratamiento**, no qué hizo el compuesto en el ensayo: un IC
@@ -78,12 +103,16 @@ los dos grupos.
 
 ## Notas para la locución
 
-- **«IC50»** y **«EC50»** se leen *i-ce-cincuenta* y *e-ce-cincuenta*.
+- **«IC50»**, **«EC50»** y **«AC50»** se leen *i-ce-cincuenta*,
+  *e-ce-cincuenta* y *a-ce-cincuenta*.
 - **«Nrf2»** se lee *ene-erre-efe-dos*.
 - **«acetilcolinesterasa»** va despacio; es la palabra más larga del video.
-- Las tres cifras de la escena —29, 832 y 752— son las únicas que aparecen en
-  pantalla. Las demás (6,140 pares, 584 activos) se dicen o se callan según el
-  aire, pero **no se escriben**, porque la escena ya es la más cargada de ideas
-  del bloque de la fase dos.
-- El tramo 4 no lleva cifras a propósito: es el que dice que el dato no decide,
-  y una cifra ahí invitaría a pensar que sí.
+- Las cifras que aparecen **en pantalla** son cinco: 29, 832 y 752 en los
+  tramos 2 y 3, y 1,914 y 1,161 en el 4. Las demás —6,140 pares, 584 activos—
+  se dicen o se callan según el aire, pero **no se escriben**: la escena ya es
+  la más cargada de ideas del bloque de la fase dos.
+- El tramo 5 no lleva cifras a propósito: es el que dice que el dato no
+  decide, y una cifra ahí invitaría a pensar que sí.
+- Los tramos 3 y 4 son espejo uno del otro y conviene que se noten como tales:
+  el 3 dice qué se pierde al quitar lo que contradice, el 4 qué se pierde al
+  quitar lo que incomoda. Si se recorta uno, se recortan los dos.
