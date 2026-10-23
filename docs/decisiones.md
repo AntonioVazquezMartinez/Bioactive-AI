@@ -71,6 +71,10 @@ Lo que vale para las dos fases.
 
 **Se decidió.** Métricas principales: MCC y AUPRC sobre la clase minoritaria. Exactitud y AUROC no se reportan solos.
 
+**Una excepción declarada: comparar estratos de prevalencia distinta.** El MCC depende de la prevalencia, así que entre estratos que van de 12% a 90% de positivos no mide lo mismo y leer su columna de arriba abajo lleva a la conclusión contraria. Cuando lo que se compara son **estratos**, la medida primaria es el **AUROC** y el MCC va al lado, nunca en su lugar, y **cada estrato se reporta con su prevalencia**. Es el caso de la evaluación por origen de la [1.6](#d1-6): los compuestos naturales exactos tienen 53.7% de positivos y los que no tienen equivalente natural 83.6%, y sus MCC —0.719 y 0.521— sugieren una diferencia de desempeño que el AUROC —0.935 y 0.886— no sostiene en esa magnitud.
+
+La excepción vivía dentro de la 1.6 y queda aquí porque es una **decisión de métrica** y no un detalle de esa entrada ([#115](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/115)). Fuera de ese caso, la C.1 no cambia: una cifra agregada sigue reportándose con MCC y AUPRC de la minoritaria.
+
 #### C.2 · Dos métodos de atribución independientes {#dc-2 .vigente}
 
 **Estado:** vigente · requisito de la patrocinadora
