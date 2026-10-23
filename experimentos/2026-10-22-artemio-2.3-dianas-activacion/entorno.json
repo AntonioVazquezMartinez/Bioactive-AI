@@ -1,11 +1,11 @@
 {
   "arbol_sucio": true,
-  "commit": "f9ff4d1412e9d685b3cc7848f35efe4838deef5a",
+  "commit": "89bd96e67dae44def03e18d0106ad110e4c146f9",
   "datos_sha256": {
     "data/external/profesora/snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv": "8dfeeec3f1a223e70c086e645e8e3b2423ea29f5b045d7897d8d7ee8a5ba8fd6"
   },
   "decision": "2.3",
-  "duracion_s": 43.5,
+  "duracion_s": 45.2,
   "lock_sha256": "6356d9016158dfabdaefadf7d096cfb09f26f3b1e32f89534945d271602ff58e",
   "paquetes": {
     "imbalanced-learn": "0.14.2",

@@ -14,9 +14,9 @@ params:
     - inhibicion
   direccion_de_tipo:
     EC50: activacion
-    AC50: activacion
     EC1.5: activacion
     EC30: activacion
+    AC50: ambigua
     IC50: inhibicion
     IC33: inhibicion
     IC60: inhibicion
