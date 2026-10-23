@@ -188,6 +188,36 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **pActividad**
 : La potencia en escala logarítmica, calculada por el equipo como 6 − log10 del valor en µM. Coincide con el pChEMBL donde este existe: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. **Por qué importa:** es la misma cantidad que el pChEMBL pero disponible para las tres fuentes, así que permite tratar la actividad como un número en vez de como una clase, y que el umbral sea una decisión de lectura y no de modelado.
 
+**Tipo de medida** (`activity_type`: IC50, EC50, Ki, Kd, AC50, Potency…)
+: La columna que dice **qué cuantifica** el número de una medición. Cada ensayo mide algo distinto, y el archivo de actividad mezcla 41 tipos bajo un mismo valor y una misma unidad. Los que pesan: IC50 (114,228 filas), Ki (66,295), EC50 (13,943), Potency (3,405), Kd (2,159) y AC50 (1,374). **Por qué importa:** el código convierte el valor a pActividad sin mirar el tipo, así que un IC50 y un EC50 entran a la misma mediana aunque midan cosas distintas. Qué tipos cuentan en cada diana está abierto en la [decisión 2.3](decisiones.md#d2-3) y en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95). Las cinco entradas siguientes definen los tipos.
+
+**IC50** (*half-maximal inhibitory concentration*)
+: La concentración del compuesto que **reduce a la mitad** la actividad de la diana o del proceso que se mide. Un IC50 pequeño es un compuesto potente **para inhibir**. **Por qué importa:** es el tipo dominante del archivo y mide la dirección de inhibir. Donde lo que se busca es inhibir (ACHE, MAOB, BACE1…) coincide con lo buscado; donde se busca activar (PPARG, NFE2L2), mide lo contrario.
+
+**EC50** (*half-maximal effective concentration*)
+: La concentración que produce **la mitad del efecto máximo**. En un ensayo donde el efecto es activar, un EC50 pequeño es un compuesto potente **para activar**. **Por qué importa:** es el tipo natural de las dianas de activación. Ojo: en algunos ensayos de inhibición también se reporta un EC50, y el nombre solo no distingue los casos.
+
+**Ki y Kd** (constantes de inhibición y de disociación)
+: Miden la **afinidad**, cuánto se une el compuesto a la proteína, no lo que hace una vez unido. Un Ki o Kd pequeño es una unión fuerte. **Por qué importa:** no declaran dirección: un compuesto con Ki de 10 nM puede activar, inhibir o bloquear sin activar. En las dianas de activación son una evidencia con reserva, y en `TSPO`, que se mide casi solo por afinidad, decide si la diana se puede modelar.
+
+**AC50** (*activity concentration at 50%*)
+: La concentración a la que se alcanza el 50% de actividad en un ensayo de cribado. Es un nombre genérico que no declara si el ensayo mide activar o inhibir. **Por qué importa:** en este archivo existe **solo en NPASS** (1,374 filas, 1,246 con la cota «>»), así que es de donde sale la mayoría de los negativos de NPASS. Quitarlo para evitar el sesgo por fuente dejaría a los productos naturales casi sin clase negativa.
+
+**Potency** (como tipo de medida)
+: Un tipo de medida que NPASS y CMAUP reportan sin declarar de qué curva sale ni en qué dirección. En las filas con diana de la lista son 3,357 (2,516 de NPASS y 841 de CMAUP), todas con relación `=`. No es la «potencia» de pActividad, que es una escala que calcula el equipo; el nombre coincide por casualidad. **Por qué importa:** es el cuarto tipo del archivo y el segundo de los naturales, y es el que no se puede clasificar por dirección.
+
+**GI50, TGI y CC50**
+: Medidas de crecimiento o viabilidad celular: GI50 es la concentración que inhibe el crecimiento a la mitad, TGI la que lo detiene por completo y CC50 la que mata a la mitad de las células. **Por qué importa:** miden toxicidad o efecto en células, no interacción con una proteína. No traen gen, así que el filtro por gen las deja fuera del conjunto de pares. Son también la materia prima natural de una señal de toxicidad, que sería un modelo aparte.
+
+**Efecto buscado** (`diana_efecto_buscado`)
+: Una propiedad de la **diana**, no del compuesto ni del ensayo: en qué dirección habría que modularla para que sirva como tratamiento. La llenó la patrocinadora a mano, con fármacos conocidos como respaldo. Por ejemplo, AChE es una enzima que destruye acetilcolina, que escasea en el alzhéimer, y por eso se busca *inhibirla*; NFE2L2 enciende las defensas contra el estrés oxidativo, y por eso se busca *activarlo*. Los valores son Inhibición (16 dianas), Modulación positiva (5), Antagonismo (4), Activación (4), Reducir agregación (3), Reducir niveles (3), Modulación negativa (1) y tres casos sin dirección fija: `DRD2` («agonismo o antagonismo según la enfermedad»), `CX3CR1` («no establecida») y `AIF1` («no aplica», es un marcador). **Por qué importa:** el diccionario de la patrocinadora aclara que **no dice qué hizo el compuesto en el ensayo**. Es el dato que falta para saber si un tipo de medida va en la dirección buscada, y el proyecto todavía no lo usa ([decisión 2.3](decisiones.md#d2-3), supuesto S2.5).
+
+**Mecanismo de la diana** (`diana_mecanismo`)
+: El sistema biológico en el que actúa la diana: colinérgico (acetilcolina, memoria y atención), dopaminérgico, monoaminérgico, glutamatérgico, GABAérgico, inflamatorio, metabólico, entre otros (12 valores). **Por qué importa:** agrupa las dianas por función y ayuda a leer resultados, pero no dice nada sobre la dirección en que se busca modular: eso lo dice el efecto buscado.
+
+**`filas_v3`**
+: Una columna de `etiquetas_dianas_2026-09-25.csv`: cuántas filas tiene cada diana en el archivo **completo** de la patrocinadora (225,513 registros). **Por qué importa:** el archivo que recibimos es un recorte de 202,647, así que cada diana tiene menos filas en el nuestro que lo que dice esta columna (por ejemplo `DRD2`: 18,215 contra 16,197). Es la brecha del ~11% entre su diccionario y nuestros datos, desglosada diana por diana. Algunas etiquetas de la lista («Receptor completo») no tienen gen en el archivo, y esas diferencias no son pérdida de datos.
+
 **Control de atajo**
 : Un modelo entrenado a propósito con **solo** las variables que no deberían bastar —la fuente, el tipo de ensayo, el artículo— y sin química. **Por qué importa:** si se acerca al desempeño del modelo real, entonces esas variables llevan información de la etiqueta y el modelo bueno probablemente las esté usando como atajo en lugar de aprender química. Es la comprobación del [issue #32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32).
 
