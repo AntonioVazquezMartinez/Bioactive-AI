@@ -184,6 +184,31 @@ class Ejes:
         return barras
 
 
+def intervalo_de_confianza(ejes: "Ejes", y: float, centro: float,
+                           desde: float, hasta: float, color: str = AZUL,
+                           alto_tope: float = 0.12) -> VGroup:
+    """Una estimación con su intervalo, dibujada sobre unos ejes.
+
+    **Este proyecto no publica una cifra sin su intervalo**, y hasta ahora el
+    video sí: las barras y los puntos daban el estimador puntual y callaban la
+    incertidumbre, que es justo lo que decide si dos estratos se distinguen o
+    no. Con los intervalos dibujados, «se tocan» o «no se tocan» se ve sin
+    decirlo.
+
+    `y` va en coordenadas de datos, igual que `centro`, `desde` y `hasta`.
+    """
+    if not desde <= centro <= hasta:
+        raise ValueError(
+            f"el centro {centro} no cae dentro de [{desde}, {hasta}]")
+    izq, der = ejes.punto(desde, y), ejes.punto(hasta, y)
+    barra = Line(izq, der, color=color, stroke_width=2.2)
+    topes = VGroup(*[Line([p[0], p[1] - alto_tope, 0],
+                          [p[0], p[1] + alto_tope, 0], color=color,
+                          stroke_width=2.2) for p in (izq, der)])
+    return VGroup(barra, topes, Dot(ejes.punto(centro, y), radius=0.075,
+                                    color=color))
+
+
 def abanico(centro, radios: int, color: str = AZUL, largo: float = 1.5,
             etiquetas: tuple = (), desde: float = 150.0, hasta: float = 30.0):
     """Un punto del que salen `radios` líneas: un compuesto y sus dianas.
@@ -270,4 +295,5 @@ def flecha_direccion(inicio, fin, color: str = GRIS, grosor: float = 2.0):
 
 
 __all__ = ["Ejes", "abanico", "reduccion", "columna_naciendo",
-           "flecha_direccion", "TRAZO_DATO", "TRAZO_EJE"]
+           "flecha_direccion", "intervalo_de_confianza", "TRAZO_DATO",
+           "TRAZO_EJE"]

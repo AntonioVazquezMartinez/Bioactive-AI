@@ -88,7 +88,7 @@ class Matriz(Narrada):
 
     # -- 2. la fila: tres bloques, uno al lado del otro ---------------------
     def _una_fila(self) -> None:
-        self.abrir_tramo(2, compases=len(BLOQUES) + 2)
+        self.abrir_tramo(2, compases=len(BLOQUES) + 3)
         nueva = self._encabezado(
             "Y se convierte en una fila de números",
             "tres bloques distintos, pegados uno al lado del otro")
@@ -132,11 +132,24 @@ class Matriz(Narrada):
         nota = subtitulo("Son 2,254 números para una sola molécula, y los tres"
                          " bloques\nmiden cosas distintas: propiedades, trozos"
                          " y combinaciones.", 20)
-        nota.to_edge(DOWN, buff=0.8).set_x(0)
+        nota.to_edge(DOWN, buff=1.25).set_x(0)
         cabe(nota)
         self.play(Write(nota), run_time=2.0)
         self.respira()
-        self.fila, self.rotulos, self.nota = fila, rotulos, nota
+
+        # **Y las tres derivadas no se quedan por lo que aportan.** Medido en la
+        # 1.5, ninguna de las tres muestra aportar nada: los tres intervalos
+        # incluyen el cero. Se conservan porque son interpretables y baratas, no
+        # porque se haya medido que ayuden, y decir solo «combinaciones que
+        # añadimos» deja al espectador creyendo lo contrario.
+        matiz = subtitulo("de las tres derivadas, ninguna muestra aportar:"
+                          " se quedan por interpretables, no por medidas", 19)
+        matiz.next_to(nota, DOWN, buff=0.22).set_x(0)
+        cabe(matiz)
+        self.play(FadeIn(matiz), run_time=1.0)
+        self.respira()
+        self.fila, self.rotulos, self.nota = fila, rotulos, VGroup(nota,
+                                                                    matiz)
         self.cerrar_tramo(2)
 
     # -- 3. muchas filas: la matriz -----------------------------------------

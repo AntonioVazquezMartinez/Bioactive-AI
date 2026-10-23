@@ -4,6 +4,11 @@
 una cifra sola no contesta: hace falta el piso contra el que compararla y la
 distancia entre lo que el modelo sabe de memoria y lo que generaliza.
 
+**Es la fase 1, permeabilidad.** `scripts/experimento_rubrica3.py` carga
+`cargar("permeabilidad")`, y decirlo no es un detalle: el video habla de las dos
+fases y una cifra sin fase es una cifra que alguien va a citar en la otra. La
+fase 2 tiene sus propios números y su propia escena.
+
 **De dónde salen las cifras.** De `scripts/experimento_rubrica3.py`, promediando
 semillas y pliegues sobre `notebooks/datos/rubrica3_piso.csv`,
 `rubrica3_ajuste.csv` y `rubrica3_curva.csv`. Van como literales, igual que en
@@ -16,12 +21,12 @@ condición que la patrocinadora puso al entregar el archivo completo
 falta. Si alguna vez se reporta la prueba, es otra escena y lleva su aviso.
 """
 
-from manim import (DOWN, UP, Create, FadeIn, FadeOut, GrowFromEdge, Write,
-                   config)
+from manim import (DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut,
+                   GrowFromEdge, Write, config)
 
 from comun import (AZUL, AZUL_CLARO, CREMA, FONDO, GRIS, NARANJA, Narrada,
                    VERDE, VGroup, cabe, dato, pie, subtitulo, titulo)
-from figuras import Ejes
+from figuras import Ejes, intervalo_de_confianza
 
 config.background_color = FONDO
 
@@ -45,11 +50,12 @@ class Resultados(Narrada):
         self._familias()
         self._memoria()
         self._curva()
+        self._naturales()
 
     # -- 1. el piso ----------------------------------------------------------
     def _piso(self) -> None:
         self.abrir_tramo(1, compases=3)
-        t = titulo("Antes de celebrar, el piso")
+        t = titulo("Fase 1: antes de celebrar, el piso")
         t.to_edge(UP, buff=0.7)
         cabe(t)
         self.play(Write(t), run_time=1.1)
@@ -86,7 +92,7 @@ class Resultados(Narrada):
     # -- 2. las tres familias ------------------------------------------------
     def _familias(self) -> None:
         self.abrir_tramo(2, compases=3)
-        t = titulo("Las tres acaban en el mismo sitio")
+        t = titulo("Las tres familias acaban en el mismo sitio")
         t.to_edge(UP, buff=0.7)
         cabe(t)
         self.play(Write(t), run_time=1.1)
@@ -120,7 +126,8 @@ class Resultados(Narrada):
         nota = subtitulo("que coincidan dice que el resultado viene de los"
                          " datos, no del modelo", 20)
         nota.to_edge(DOWN, buff=0.75)
-        p = pie("validación agrupada · script experimento_rubrica3.py")
+        p = pie("permeabilidad · validación agrupada ·"
+                " script experimento_rubrica3.py")
         p.next_to(nota, DOWN, buff=0.16)
         cabe(nota, p)
         self.play(Write(nota), run_time=1.2)
@@ -217,3 +224,65 @@ class Resultados(Narrada):
         cabe(cola)
         self.play(Write(cola), run_time=1.1)
         self.cerrar_tramo(4)
+        # El tramo 4 era el último y no limpiaba; al entrar el 5 se dibujaba
+        # encima. Cada acto deja la pantalla vacía para el siguiente.
+        self.play(FadeOut(VGroup(t, e.grupo, area, ajuste, validacion, r_aj,
+                                 r_val, cola)), run_time=0.6)
+
+    # -- 5. y la pregunta del proyecto ---------------------------------------
+    def _naturales(self) -> None:
+        """¿El modelo rinde peor con los productos naturales?
+
+        Es **la** pregunta del proyecto, y el video la dejaba sin contestar
+        aunque esté medida desde el 21 de octubre. Las cifras son del boosting
+        por histogramas con bootstrap de grupos, de la tabla de la
+        [1.6](../docs/decisiones.md#d1-6): agrupar las predicciones fuera de
+        pliegue, no promediar el AUROC de cada pliegue.
+        """
+        self.abrir_tramo(5, compases=4)
+        t = titulo("¿Y rinde peor con los productos naturales?")
+        t.to_edge(UP, buff=0.7)
+        cabe(t)
+        self.play(Write(t), run_time=1.2)
+        self.respira()
+
+        e = Ejes((0.75, 1.0), (0, 3), ancho=7.6, alto=2.4,
+                 # Sin marcas numéricas: lo que esta figura tiene que
+                 # dejar leer es si los dos intervalos se tocan, y para eso
+                 # basta verlos a la misma escala. Los dos estimadores sí van
+                 # escritos, y la voz los dice.
+                 etiqueta_x="AUROC, con su intervalo del 95%")
+        e.grupo.shift(DOWN * 0.2)
+        cabe(e.grupo)
+        self.play(Create(e.grupo), run_time=1.0)
+        self.respira()
+
+        filas = VGroup()
+        for y, nombre, centro, desde, hasta, color, cifra in (
+                (2.2, "natural exacto", 0.942, 0.922, 0.959, VERDE, "0.942"),
+                (1.2, "sin equivalente natural", 0.892, 0.847, 0.930, AZUL,
+                 "0.892")):
+            g = intervalo_de_confianza(e, y, centro, desde, hasta, color)
+            r = subtitulo(nombre, 18)
+            r.next_to(g, UP, buff=0.12).align_to(e.punto(0.75, y), LEFT)
+            c = dato(cifra, 22, color)
+            c.next_to(g, RIGHT, buff=0.3)
+            filas.add(VGroup(g, r, c))
+        cabe(filas)
+        for f in filas:
+            self.play(Create(f[0]), FadeIn(f[1], f[2]), run_time=0.9)
+        self.respira()
+
+        nota = subtitulo("no rinde peor: rinde mejor, y los intervalos casi"
+                         " no se tocan", 20)
+        nota.to_edge(DOWN, buff=1.15)
+        cautela = subtitulo("dentro del grupo A, con 34 y 42 BBB−, no alcanza"
+                            " para distinguirlos", 19)
+        cautela.next_to(nota, DOWN, buff=0.18)
+        p = pie("boosting · decisión 1.6 · bootstrap de grupos")
+        p.next_to(cautela, DOWN, buff=0.14)
+        cabe(nota, cautela, p)
+        self.play(Write(nota), run_time=1.2)
+        self.play(FadeIn(cautela), run_time=0.8)
+        self.play(FadeIn(p), run_time=0.5)
+        self.cerrar_tramo(5)

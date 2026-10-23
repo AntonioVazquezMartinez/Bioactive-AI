@@ -40,6 +40,11 @@ nombra.
 >
 > Son dos mil doscientos cincuenta y cuatro números para una sola molécula, y
 > los tres bloques miden cosas distintas: propiedades, trozos y combinaciones.
+>
+> Y conviene decir algo de esas tres derivadas, porque es fácil suponer lo
+> contrario: ninguna de las tres muestra aportar nada. Se midió, y los tres
+> intervalos incluyen el cero. Se quedan porque son interpretables y no cuestan
+> nada, no porque se haya comprobado que ayudan.
 
 *Entra con:* una flecha por bloque, cada una al decir su cifra; la nota del
 final con el total.

@@ -19,7 +19,8 @@ sys.path.insert(0, str(RAIZ / "animaciones"))
 
 pytest.importorskip("manim", reason="animaciones tiene su propio entorno")
 
-from figuras import Ejes, abanico, columna_naciendo, reduccion  # noqa: E402
+from figuras import (Ejes, abanico, columna_naciendo,  # noqa: E402
+                     intervalo_de_confianza, reduccion)
 
 
 def test_punto_coloca_los_extremos_en_las_esquinas():
@@ -100,3 +101,19 @@ def test_las_marcas_llevan_su_rotulo_escrito():
 
     with pytest.raises((ValueError, TypeError)):
         Ejes((0, 100), (0, 1), ancho=5.0, alto=2.0, marcas_x=(0, 100))
+
+
+def test_un_intervalo_que_no_contiene_su_centro_es_un_error():
+    e = Ejes((0.8, 1.0), (0, 3), ancho=6.0, alto=2.0)
+    with pytest.raises(ValueError, match="no cae dentro"):
+        intervalo_de_confianza(e, 1, centro=0.99, desde=0.84, hasta=0.93)
+
+
+def test_el_intervalo_se_dibuja_donde_dicen_sus_datos():
+    e = Ejes((0.8, 1.0), (0, 3), ancho=6.0, alto=2.0)
+    g = intervalo_de_confianza(e, 1, centro=0.892, desde=0.847, hasta=0.930)
+    barra, _, punto = g
+    assert barra.get_left()[0] == pytest.approx(e.punto(0.847, 1)[0], abs=1e-6)
+    assert barra.get_right()[0] == pytest.approx(e.punto(0.930, 1)[0], abs=1e-6)
+    assert punto.get_center()[0] == pytest.approx(e.punto(0.892, 1)[0],
+                                                  abs=1e-6)
