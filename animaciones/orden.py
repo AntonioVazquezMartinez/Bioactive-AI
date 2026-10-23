@@ -17,6 +17,7 @@ ORDEN = [
     ("linaje", "Linaje", "las mediciones no son compuestos"),
     ("matriz", "Matriz", "una molécula es una fila de números"),
     ("intervalo", "Intervalo", "un «>» no es un hueco"),
+    ("direccion", "Direccion", "una medida apunta en una dirección"),
     ("fingerprints", "Fingerprints", "un bit no es un fragmento"),
     ("particion", "Particion", "las filas no son independientes"),
     ("cierre", "Cierre", "lo que sale, y lo que no se afirma"),
