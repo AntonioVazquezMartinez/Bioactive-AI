@@ -56,7 +56,31 @@ class Intervalo(Narrada):
         cabe(self.eje, izq, der, nombre)
         self.play(Create(self.eje), FadeIn(izq), FadeIn(der), FadeIn(nombre),
                   run_time=1.3)
-        self.bordes = VGroup(izq, der, nombre)
+
+        # **La misma recta, leída en concentración.** El eje es de potencia, así
+        # que la concentración **baja** hacia la derecha, y sin eso en pantalla
+        # la escena es incomprensible: un «0.5 µM» aparece a la derecha de un
+        # «> 10 µM» y parece un error de dibujo. La pista vivía solo en la
+        # fórmula del pie, que se lee una vez y dura lo que dura.
+        #
+        # No es un segundo eje con otra magnitud —lo que la guía de
+        # visualización prohíbe— sino **la misma magnitud en otras unidades**,
+        # como grados Celsius y Fahrenheit sobre un termómetro.
+        self.concentraciones = VGroup()
+        for potencia, rotulo in ((4.0, "100 µM"), (5.0, "10 µM"),
+                                 (6.0, "1 µM")):
+            marca = Line(self._x(potencia), self._x(potencia) + DOWN * 0.12,
+                         color=GRIS, stroke_width=1.4)
+            r = subtitulo(rotulo, 16)
+            r.next_to(marca, DOWN, buff=0.08)
+            self.concentraciones.add(marca, r)
+        aviso = subtitulo("la concentración baja hacia la derecha", 16)
+        aviso.next_to(self.concentraciones, DOWN, buff=0.18)
+        self.concentraciones.add(aviso)
+        cabe(self.concentraciones)
+        self.play(FadeIn(self.concentraciones, lag_ratio=0.2), run_time=1.1)
+
+        self.bordes = VGroup(izq, der, nombre, self.concentraciones)
         self.cerrar_tramo(1)
 
     def _x(self, valor: float) -> np.ndarray:

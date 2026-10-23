@@ -12,8 +12,16 @@ dibujado es un eje y tres trazos.
 
 > Pongamos la potencia de un compuesto en un eje. A la derecha, más potente:
 > hace falta menos concentración para que haga algo.
+>
+> Y conviene fijarse en eso antes de seguir, porque el eje va al revés de como
+> uno lo leería. La potencia es el logaritmo de la concentración cambiado de
+> signo, así que la concentración **baja** hacia la derecha: cien micromolar,
+> diez micromolar, un micromolar.
+>
+> Un compuesto que funciona a menos concentración es más potente, y por eso cae
+> más a la derecha.
 
-*Entra con:* el eje dibujándose.
+*Entra con:* el eje dibujándose, y después la fila de concentraciones debajo.
 
 ---
 
