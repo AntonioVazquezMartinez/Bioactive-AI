@@ -95,8 +95,14 @@ SALIDA = RAIZ / "notebooks/datos/medicion_dianas_activacion.csv"
 # GI50, TGI y CC50 están por completitud y no llegan al par: son fenotípicos y no
 # traen gen, así que el filtro de `tabla_de_pares` ya los deja fuera.
 DIRECCION_DE_TIPO = {
-    "EC50": "activacion", "AC50": "activacion", "EC1.5": "activacion",
-    "EC30": "activacion",
+    "EC50": "activacion", "EC1.5": "activacion", "EC30": "activacion",
+    # `AC50` **no** es de activación aunque el nombre lo sugiera: es la
+    # concentración al 50% de actividad en un ensayo de cribado, y el cribado
+    # puede medir en cualquiera de las dos direcciones. Lo señaló Pame al
+    # revisar el #119, corrigiendo también su propia propuesta del #95. En las
+    # dianas de activación son 77 filas, todas de `PPARG` y 65 de ellas
+    # censuradas, así que solo mueve la variante estricta.
+    "AC50": "ambigua",
     "IC50": "inhibicion", "IC33": "inhibicion", "IC60": "inhibicion",
     "Inhibition": "inhibicion", "INH": "inhibicion", "DC50": "inhibicion",
     "MIC": "inhibicion", "GI50": "inhibicion", "TGI": "inhibicion",
@@ -191,7 +197,7 @@ def _medir(corrida: Corrida) -> None:
     en_activacion = actividad["target_gene"].isin(activacion)
     resumenes = {"base": _resumen(
         de_activacion, int(en_activacion.sum()))}
-    tablas = {}
+    tablas, evidencia = {}, {}
     for nombre, conservadas in VARIANTES.items():
         recortado = actividad[en_activacion & direccion.isin(conservadas)]
         print(f"\nVariante «{nombre}»: {len(recortado):,} de"
@@ -201,6 +207,8 @@ def _medir(corrida: Corrida) -> None:
         resumenes[nombre] = _resumen(variante, len(recortado))
         filas += _por_gen(recortado, variante, activacion, "direccion", nombre)
         _comparar(de_activacion, variante, nombre)
+        evidencia[nombre] = _sobre_cuanta_evidencia(
+            _ausentes(de_activacion, variante))
 
     acuerdo = _acuerdo(tablas["solo_activacion"], tablas["solo_inhibicion"])
 
@@ -256,6 +264,7 @@ def _medir(corrida: Corrida) -> None:
         "negativos_de_pares_solo_npass": neg_npass,
         "negativos_solo_npass_que_dependen_de_ac50": neg_npass_ac50,
         "ic50_aparte": acuerdo,
+        "pares_sin_evidencia": evidencia,
     })
 
 
@@ -306,6 +315,28 @@ def _ausentes(antes: pd.DataFrame, despues: pd.DataFrame) -> pd.DataFrame:
     clave = ["esqueleto", "target_gene"]
     marca = antes.merge(despues[clave].assign(_sigue=True), on=clave, how="left")
     return antes[marca["_sigue"].isna().to_numpy()]
+
+
+def _sobre_cuanta_evidencia(perdidos: pd.DataFrame) -> dict:
+    """Cuántas mediciones sostenían a los pares que se quedan sin ninguna.
+
+    El conteo de pares solo no basta para pesar la pregunta: varios IC50
+    concordantes son más evidencia que uno solo, y lo que se decida vale
+    distinto en cada caso. Lo pidió Pame al revisar el #119.
+    """
+    n = perdidos["n_mediciones"]
+    etiqueta = perdidos["activo_10um"]
+    una = int(n.eq(1).sum())
+    print(f"    de ellos, con una sola medición: {una:,}"
+          f"  ({una / max(len(perdidos), 1):.1%})"
+          f" · con dos o más: {int(n.ge(2).sum()):,}"
+          f" · máximo {int(n.max()) if len(n) else 0}")
+    print(f"    y su etiqueta de hoy: activos {int(etiqueta.sum()):,}"
+          f" · inactivos {int((~etiqueta.fillna(True)).sum()):,}"
+          f" · sin decidir {int(etiqueta.isna().sum()):,}")
+    return {"pares": len(perdidos), "con_una_sola_medicion": una,
+            "con_dos_o_mas": int(n.ge(2).sum()),
+            "hoy_activos": int(etiqueta.sum())}
 
 
 def _comparar(antes: pd.DataFrame, despues: pd.DataFrame,

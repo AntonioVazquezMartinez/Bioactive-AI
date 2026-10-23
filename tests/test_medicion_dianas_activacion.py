@@ -66,6 +66,9 @@ def test_la_direccion_de_cada_tipo_esta_declarada_o_no_esta():
     # Los dos tipos que deciden la medición, cada uno en su dirección.
     assert med.DIRECCION_DE_TIPO["IC50"] == "inhibicion"
     assert med.DIRECCION_DE_TIPO["EC50"] == "activacion"
+    # `AC50` suena a activación y no lo es: en cribado puede medir en cualquiera
+    # de las dos direcciones. Si alguien lo reclasifica, esta prueba lo frena.
+    assert med.DIRECCION_DE_TIPO["AC50"] == "ambigua"
     # «sin_contrarias» conserva todo menos lo que contradice; «solo_activacion»
     # exige medir en la dirección. Si eso se invierte, la medición miente.
     assert "inhibicion" not in med.VARIANTES["sin_contrarias"]
@@ -73,6 +76,16 @@ def test_la_direccion_de_cada_tipo_esta_declarada_o_no_esta():
     # Y «solo_inhibicion» es la que permite tratar los IC50 aparte: tiene que
     # ser la complementaria exacta, o la comparación entre las dos no dice nada.
     assert med.VARIANTES["solo_inhibicion"] == ("inhibicion",)
+
+
+def test_sobre_cuanta_evidencia_separa_la_medicion_unica_de_las_varias():
+    perdidos = pd.DataFrame({
+        "n_mediciones": [1, 1, 3],
+        "activo_10um": pd.array([True, None, False], dtype="boolean"),
+    })
+    r = med._sobre_cuanta_evidencia(perdidos)
+    assert r == {"pares": 3, "con_una_sola_medicion": 2, "con_dos_o_mas": 1,
+                 "hoy_activos": 1}
 
 
 def test_el_acuerdo_entre_direcciones_solo_mira_donde_las_dos_deciden():
