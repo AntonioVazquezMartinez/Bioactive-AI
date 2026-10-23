@@ -10,6 +10,8 @@ params:
     - sin_clasificar
     solo_activacion:
     - activacion
+    solo_inhibicion:
+    - inhibicion
   direccion_de_tipo:
     EC50: activacion
     AC50: activacion

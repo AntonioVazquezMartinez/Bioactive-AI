@@ -11,6 +11,10 @@ direccion,NFE2L2,solo_activacion,702,609,437,172,0
 direccion,PPARG,solo_activacion,4681,3536,2636,749,151
 direccion,SIRT1,solo_activacion,66,0,0,0,0
 direccion,TSPO,solo_activacion,5,5,2,3,0
+direccion,NFE2L2,solo_inhibicion,8,6,6,0,0
+direccion,PPARG,solo_inhibicion,1925,1513,1194,281,38
+direccion,SIRT1,solo_inhibicion,1009,0,0,0,0
+direccion,TSPO,solo_inhibicion,82,78,21,8,49
 ac50,ACHE,base,11510,6955,4311,2537,107
 ac50,DRD2,base,16197,9618,7749,1181,688
 ac50,MAOA,base,8267,4839,1637,3037,165

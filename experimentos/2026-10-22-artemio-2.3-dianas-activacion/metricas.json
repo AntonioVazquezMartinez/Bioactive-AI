@@ -22,10 +22,22 @@
       "mediciones": 5454,
       "pares": 4150,
       "sin_decidir": 151
+    },
+    "solo_inhibicion": {
+      "activos": 1221,
+      "inactivos": 289,
+      "mediciones": 3024,
+      "pares": 1597,
+      "sin_decidir": 87
     }
   },
   "activos_totales": 49332,
   "dianas_de_activacion": 4,
+  "ic50_aparte": {
+    "pares_con_las_dos_direcciones": 704,
+    "pares_donde_discrepan": 71,
+    "pares_donde_las_dos_deciden": 676
+  },
   "negativos_de_pares_solo_npass": 1914,
   "negativos_solo_npass_que_dependen_de_ac50": 1161,
   "negativos_totales": 18404,
