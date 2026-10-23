@@ -216,15 +216,20 @@ class Objetivo(Narrada):
 
     # -- 4. lo que se guarda es el intervalo ---------------------------------
     def _el_intervalo(self) -> None:
-        self.abrir_tramo(4, compases=4)
+        # Seis compases contando las tres vueltas del bucle de los casos: es el
+        # tramo más largo de la escena (35 s de voz) y con cuatro dejaba la
+        # pantalla fija por encima del tope.
+        self.abrir_tramo(4, compases=9)
         t = titulo("Se guarda el intervalo, no la etiqueta")
         t.to_edge(UP, buff=0.7)
         cabe(t)
         self.play(Write(t), run_time=1.1)
+        self.respira()
 
         recta = self._recta(y=1.5)
         cabe(recta)
         self.play(Create(recta.recta), FadeIn(recta[1:]), run_time=0.9)
+        self.respira()
 
         # La línea del corte empieza **debajo** de la fila de concentraciones:
         # arrancándola en la recta atravesaba el rótulo «10 µM», que es justo el
@@ -253,7 +258,7 @@ class Objetivo(Narrada):
         cabe(casos)
         for c in casos:
             self.play(GrowFromCenter(c[0]), FadeIn(c[1]), run_time=0.65)
-        self.respira()
+            self.respira()
 
         cifra = dato(f"{SIN_DECIDIR} pares que el corte atraviesa: se declaran,"
                      " no se inventan", 21, CREMA)
@@ -263,7 +268,9 @@ class Objetivo(Narrada):
         nota.next_to(cifra, DOWN, buff=0.2)
         cabe(cifra, nota)
         self.play(Write(cifra), run_time=1.2)
+        self.respira()
         self.play(FadeIn(nota), run_time=0.8)
+        self.respira()
         self.cerrar_tramo(4)
         self.play(FadeOut(VGroup(t, recta, corte, r_corte, casos, cifra,
                                  nota)), run_time=0.6)

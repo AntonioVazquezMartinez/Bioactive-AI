@@ -188,8 +188,20 @@ class Narrada(Scene):
         clave = type(self).__module__.rsplit(".", 1)[-1]
         return {t["n"]: t for t in datos.get(clave, {}).get("tramos", [])}
 
+    # **Una pizca más que el audio, en cada tramo.** `tiempos.json` guarda la
+    # duración del mp3 redondeada y `sonorizar.py` la vuelve a medir con
+    # ffprobe; entre las dos lecturas hay décimas, y basta una para que el
+    # audio de un tramo invada el hueco del siguiente. Pasó en `intervalo` 1:
+    # 30.8 s de voz en un hueco de 30.7. La cola de la escena ya tenía su
+    # margen (`COLA`); esto le da el suyo a cada tramo, que es donde el
+    # problema ocurre de verdad.
+    MARGEN_TRAMO = 0.15
+
     def dura(self, n: int) -> float:
-        return self._tramos.get(n, {}).get("segundos", self.POR_OMISION)
+        medido = self._tramos.get(n, {}).get("segundos")
+        if medido is None:
+            return self.POR_OMISION
+        return medido + self.MARGEN_TRAMO
 
     def abrir_tramo(self, n: int, compases: int = 1) -> None:
         """Abre el tramo `n`, que se repartirá en `compases` respiros.

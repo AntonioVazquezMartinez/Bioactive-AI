@@ -138,7 +138,7 @@ class Resultados(Narrada):
 
     # -- 3. lo que las separa es cuánto memorizan ----------------------------
     def _memoria(self) -> None:
-        self.abrir_tramo(3, compases=3)
+        self.abrir_tramo(3, compases=7)
         t = titulo("Lo que las separa es cuánto memorizan")
         t.to_edge(UP, buff=0.7)
         cabe(t)
@@ -150,6 +150,7 @@ class Resultados(Narrada):
                  marcas_y=((0.0, "cero"), (1.0, "perfecto")))
         e.grupo.shift(DOWN * 0.25)
         self.play(Create(e.grupo), run_time=0.9)
+        self.respira()
 
         grupos = VGroup()
         for i, (nombre, validacion, ajuste, color) in enumerate(FAMILIAS):
@@ -170,8 +171,9 @@ class Resultados(Narrada):
             par.add(r)
             grupos.add(par)
         cabe(grupos)
-        self.play(FadeIn(grupos, lag_ratio=0.25), run_time=1.5)
-        self.respira()
+        for g in grupos:
+            self.play(FadeIn(g, lag_ratio=0.25), run_time=0.6)
+            self.respira()
 
         brechas = VGroup(
             dato("0.05", 26, AZUL), subtitulo("de brecha", 17),
@@ -184,13 +186,14 @@ class Resultados(Narrada):
         leyenda.to_edge(DOWN, buff=0.75)
         cabe(brechas, leyenda)
         self.play(FadeIn(brechas, lag_ratio=0.2), FadeIn(leyenda), run_time=1.3)
+        self.respira()
         self.cerrar_tramo(3)
         self.play(FadeOut(VGroup(t, e.grupo, grupos, brechas, leyenda)),
                   run_time=0.6)
 
     # -- 4. la curva de aprendizaje ------------------------------------------
     def _curva(self) -> None:
-        self.abrir_tramo(4, compases=3)
+        self.abrir_tramo(4, compases=7)
         t = titulo("Lo que falta son datos, no modelo")
         t.to_edge(UP, buff=0.7)
         cabe(t)
@@ -216,13 +219,17 @@ class Resultados(Narrada):
         r_val.next_to(validacion, DOWN, buff=0.14)
         cabe(area, ajuste, validacion, r_aj, r_val)
         self.play(Create(ajuste), FadeIn(r_aj), run_time=1.0)
+        self.respira()
         self.play(Create(validacion), FadeIn(r_val), run_time=1.0)
+        self.respira()
         self.play(FadeIn(area), run_time=0.7)
+        self.respira()
 
         cola = dato("sube, y no se ha aplanado", 22, CREMA)
         cola.to_edge(DOWN, buff=0.7)
         cabe(cola)
         self.play(Write(cola), run_time=1.1)
+        self.respira()
         self.cerrar_tramo(4)
         # El tramo 4 era el último y no limpiaba; al entrar el 5 se dibujaba
         # encima. Cada acto deja la pantalla vacía para el siguiente.
@@ -239,7 +246,7 @@ class Resultados(Narrada):
         [1.6](../docs/decisiones.md#d1-6): agrupar las predicciones fuera de
         pliegue, no promediar el AUROC de cada pliegue.
         """
-        self.abrir_tramo(5, compases=4)
+        self.abrir_tramo(5, compases=8)
         t = titulo("¿Y rinde peor con los productos naturales?")
         t.to_edge(UP, buff=0.7)
         cabe(t)
@@ -270,8 +277,10 @@ class Resultados(Narrada):
             filas.add(VGroup(g, r, c))
         cabe(filas)
         for f in filas:
-            self.play(Create(f[0]), FadeIn(f[1], f[2]), run_time=0.9)
-        self.respira()
+            self.play(Create(f[0]), run_time=0.7)
+            self.respira()
+            self.play(FadeIn(f[1], f[2]), run_time=0.5)
+            self.respira()
 
         nota = subtitulo("no rinde peor: rinde mejor, y los intervalos casi"
                          " no se tocan", 20)
@@ -285,4 +294,5 @@ class Resultados(Narrada):
         self.play(Write(nota), run_time=1.2)
         self.play(FadeIn(cautela), run_time=0.8)
         self.play(FadeIn(p), run_time=0.5)
+        self.respira()
         self.cerrar_tramo(5)

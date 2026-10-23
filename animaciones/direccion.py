@@ -197,7 +197,7 @@ class Direccion(Narrada):
         los naturales se quedan casi sin negativos, y un modelo sin clase
         negativa en un estrato no mide nada en ese estrato.
         """
-        self.abrir_tramo(4, compases=3)
+        self.abrir_tramo(4, compases=6)
         t = titulo("Y el mismo problema, por el otro lado")
         t.to_edge(UP, buff=0.7)
         cabe(t)
@@ -209,6 +209,7 @@ class Direccion(Narrada):
         r.move_to([-3.4, -0.2, 0])
         cabe(r)
         self.play(Create(r[0]), run_time=0.7)
+        self.respira()
         self.play(GrowFromCenter(r.barra), FadeIn(r[2], r[3]), run_time=1.1)
         self.respira()
 
@@ -221,17 +222,22 @@ class Direccion(Narrada):
         lineas.move_to([3.1, 0.1, 0])
         cabe(lineas)
         self.play(FadeIn(lineas, lag_ratio=0.3), run_time=1.8)
+        self.respira()
 
         cola = dato("se conserva, y se reporta con y sin esos pares", 21, CREMA)
         cola.to_edge(DOWN, buff=0.9)
         cabe(cola)
         self.play(Write(cola), run_time=1.2)
+        self.respira()
         self.cerrar_tramo(4)
         self.play(FadeOut(VGroup(t, r, lineas, cola)), run_time=0.6)
 
     # -- 5. lo que el dato no decide -----------------------------------------
     def _cierre(self) -> None:
-        self.abrir_tramo(5, compases=2)
+        # Siete compases: es un tramo sin figura, 33 s de voz sobre
+        # cuatro líneas de texto. Revelarlas de golpe dejaba quince segundos de
+        # pantalla fija, así que entran una a una.
+        self.abrir_tramo(5, compases=7)
         t = titulo("Lo que el dato no decide")
         t.to_edge(UP, buff=0.9)
         cabe(t)
@@ -249,10 +255,13 @@ class Direccion(Narrada):
         ).arrange(DOWN, buff=0.26)
         lineas.move_to([0, -0.2, 0])
         cabe(lineas)
-        self.play(FadeIn(lineas, lag_ratio=0.35), run_time=2.0)
+        for linea in lineas:
+            self.play(FadeIn(linea, shift=DOWN * 0.12), run_time=0.55)
+            self.respira()
 
         cola = dato("se mide, se escribe, y el etiquetado no cambia", 22, CREMA)
         cola.to_edge(DOWN, buff=1.0)
         cabe(cola)
         self.play(Write(cola), run_time=1.1)
+        self.respira()
         self.cerrar_tramo(5)
