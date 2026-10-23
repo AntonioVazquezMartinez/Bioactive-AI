@@ -8,19 +8,27 @@ atadas a los datos.
 
 ## El video completo
 
-Siete escenas, 10:22, unidas por una tesis: **los datos no son lo que
-parecen**. Las cinco técnicas no son viñetas sueltas — cada una es una
+Diez escenas, 19:00, unidas por una tesis: **los datos no son lo que
+parecen**. Las ocho técnicas no son viñetas sueltas — cada una es una
 instancia de esa frase, y el cierre la cobra.
 
-| # | Escena | Papel en el hilo | Dura |
-|:--|:--|:--|--:|
-| 1 | `apertura.py` | el problema y la apuesta | 62 s |
-| 2 | `linaje.py` | las mediciones no son compuestos | 141 s |
-| 3 | `matriz.py` | de una cadena de texto a 2,254 números | 74 s |
-| 4 | `intervalo.py` | un «>» no es un hueco | 81 s |
-| 5 | `fingerprints.py` | un bit no es un fragmento | 92 s |
-| 6 | `particion.py` | las filas no son independientes | 94 s |
-| 7 | `cierre.py` | lo que sale, y lo que no se afirma | 79 s |
+**El recorrido va por fases**, que es como está construido el proyecto: la
+fase 1 entera —de la molécula al resultado— y después la fase 2 —del archivo
+al objetivo—. Antes iba por las cuatro afirmaciones de la apertura, y dejó de
+funcionar cuando entraron escenas que no cabían en ninguna de las cuatro.
+
+| # | Escena | Fase | Papel en el hilo | Dura |
+|:--|:--|:--|:--|--:|
+| 1 | `apertura.py` | — | el problema, la apuesta y el recorrido | 75 s |
+| 2 | `matriz.py` | 1 | de una cadena de texto a 2,254 números | 88 s |
+| 3 | `fingerprints.py` | 1 | un bit no es un fragmento | 90 s |
+| 4 | `particion.py` | 1 | las filas no son independientes | 90 s |
+| 5 | `resultados.py` | 1 | qué tan bueno es «bueno», y los naturales | 175 s |
+| 6 | `linaje.py` | 2 | las mediciones no son compuestos | 141 s |
+| 7 | `intervalo.py` | 2 | un «>» no es un hueco | 103 s |
+| 8 | `objetivo.py` | 2 | cómo se construye lo que se predice | 156 s |
+| 9 | `direccion.py` | 2 | una medida apunta en una dirección | 152 s |
+| 10 | `cierre.py` | — | lo que sale, y lo que no se afirma | 76 s |
 
 Las duraciones salen de la voz y no al revés, así que cambian al regrabar un
 tramo: las imprime `voz.py --medir` y quedan en `voz/tiempos.json`.
