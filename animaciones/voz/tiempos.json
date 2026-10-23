@@ -1,28 +1,28 @@
 {
  "apertura": {
-  "voz_s": 57.36,
+  "voz_s": 70.17,
   "video_s": 61.73,
   "tramos": [
    {
     "n": 1,
     "titulo": "El problema",
-    "segundos": 19.09,
+    "segundos": 17.55,
     "palabras": 44
    },
    {
     "n": 2,
     "titulo": "La apuesta",
-    "segundos": 20.99,
+    "segundos": 19.23,
     "palabras": 48
    },
    {
     "n": 3,
     "titulo": "La tesis",
-    "segundos": 17.28,
-    "palabras": 46
+    "segundos": 33.39,
+    "palabras": 88
    }
   ],
-  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
   "modelo": "eleven_multilingual_v2"
  },
  "linaje": {
@@ -58,41 +58,41 @@
   "modelo": "eleven_multilingual_v2"
  },
  "intervalo": {
-  "voz_s": 73.47,
+  "voz_s": 93.9,
   "video_s": 81.33,
   "tramos": [
    {
     "n": 1,
     "titulo": "El eje",
-    "segundos": 7.85,
+    "segundos": 30.79,
     "palabras": 84
    },
    {
     "n": 2,
     "titulo": "Una medición exacta",
-    "segundos": 7.29,
+    "segundos": 6.78,
     "palabras": 18
    },
    {
     "n": 3,
     "titulo": "Una censurada",
-    "segundos": 19.97,
+    "segundos": 19.27,
     "palabras": 51
    },
    {
     "n": 4,
     "titulo": "El corte decide",
-    "segundos": 25.73,
+    "segundos": 25.03,
     "palabras": 72
    },
    {
     "n": 5,
     "titulo": "Mover el corte",
-    "segundos": 12.63,
+    "segundos": 12.03,
     "palabras": 32
    }
   ],
-  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
   "modelo": "eleven_multilingual_v2"
  },
  "fingerprints": {

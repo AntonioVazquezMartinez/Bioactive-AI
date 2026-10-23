@@ -240,18 +240,22 @@ class Apertura(Narrada):
 
     # -- 3. la tesis ---------------------------------------------------------
     def _la_tesis(self) -> None:
-        self.abrir_tramo(3)
+        # Nueve compases: la narración de este tramo pasó de doce segundos a
+        # treinta y tres al añadir el recorrido por fases, y con el silencio
+        # todo al final la pantalla se quedaba veinte segundos fija. Lo detectó
+        # `TOPE_CONGELADO`, no una revisión.
+        self.abrir_tramo(3, compases=9)
         t = titulo("Pero antes de predecir hay que mirar los datos", 34)
         t.to_edge(UP, buff=0.65)
         cabe(t)
         self.play(Write(t), run_time=1.5)
-        self.wait(0.6)
+        self.respira()
 
         tesis = titulo("Y los datos no son lo que parecen.", 36)
         tesis.set_color(NARANJA).next_to(t, DOWN, buff=0.40).set_x(0)
         cabe(tesis)
         self.play(FadeIn(tesis, scale=0.92), run_time=1.2)
-        self.wait(1.4)
+        self.respira()
 
         # **La lista ya no es el índice del video, es la tesis.** Antes eran
         # cuatro afirmaciones y cuatro capítulos en ese orden, y las escenas que
@@ -271,9 +275,10 @@ class Apertura(Narrada):
         lista.next_to(linea, DOWN, buff=0.28).set_x(0)
         cabe(linea, lista)
         self.play(Create(linea), run_time=0.6)
+        self.respira()
         for item in lista:
             self.play(FadeIn(item, shift=RIGHT * 0.2), run_time=0.45)
-        self.wait(0.8)
+            self.respira()
 
         recorrido = VGroup(
             subtitulo("Primero la fase uno, la permeabilidad:"
@@ -284,6 +289,7 @@ class Apertura(Narrada):
         recorrido.next_to(lista, DOWN, buff=0.30).set_x(0)
         cabe(recorrido)
         self.play(FadeIn(recorrido, lag_ratio=0.4), run_time=1.6)
+        self.respira()
 
         fuente = pie("Bioactive AI · Equipo 7 · Maestría en Inteligencia"
                      " Artificial Aplicada")
@@ -291,6 +297,5 @@ class Apertura(Narrada):
         cabe(fuente)
         separados(recorrido, fuente)
         self.play(FadeIn(fuente), run_time=0.8)
-        self.wait(2.2)
 
         self.cerrar_tramo(3)

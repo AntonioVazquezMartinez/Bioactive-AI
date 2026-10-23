@@ -34,13 +34,18 @@ class Intervalo(Narrada):
 
     # -- 1. el eje de potencia ----------------------------------------------
     def _el_eje(self) -> None:
-        self.abrir_tramo(1)
+        # Seis compases: al añadir la lectura en concentración, la narración de
+        # este tramo pasó de siete segundos a treinta, y el silencio al final
+        # dejaba veintiséis de imagen fija. Lo detectó `TOPE_CONGELADO`.
+        self.abrir_tramo(1, compases=6)
         self.t = titulo("Una medición censurada no es un hueco")
         self.s = subtitulo("Es una cota: dice hasta dónde se miró sin ver efecto")
         self.t.to_edge(UP, buff=0.8)
         self.s.next_to(self.t, DOWN, buff=0.3)
         self.play(Write(self.t), run_time=1.1)
+        self.respira()
         self.play(FadeIn(self.s, shift=DOWN * 0.2), run_time=0.7)
+        self.respira()
 
         # Eje de 9 y no de 11: con 11 los rótulos de los extremos se salían del
         # cuadro. Y el nombre del eje va abajo del todo, porque a media altura
@@ -54,8 +59,10 @@ class Intervalo(Narrada):
         nombre = subtitulo("potencia  ·  6 − log₁₀ de la concentración en µM", 17)
         nombre.to_edge(DOWN, buff=0.45)
         cabe(self.eje, izq, der, nombre)
-        self.play(Create(self.eje), FadeIn(izq), FadeIn(der), FadeIn(nombre),
-                  run_time=1.3)
+        self.play(Create(self.eje), run_time=1.3)
+        self.respira()
+        self.play(FadeIn(izq), FadeIn(der), FadeIn(nombre), run_time=0.9)
+        self.respira()
 
         # **La misma recta, leída en concentración.** El eje es de potencia, así
         # que la concentración **baja** hacia la derecha, y sin eso en pantalla
@@ -79,6 +86,7 @@ class Intervalo(Narrada):
         self.concentraciones.add(aviso)
         cabe(self.concentraciones)
         self.play(FadeIn(self.concentraciones, lag_ratio=0.2), run_time=1.1)
+        self.respira()
 
         self.bordes = VGroup(izq, der, nombre, self.concentraciones)
         self.cerrar_tramo(1)

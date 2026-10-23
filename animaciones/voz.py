@@ -43,9 +43,15 @@ SALIDA = RAIZ / "voz"
 TIEMPOS = SALIDA / "tiempos.json"
 MEDIA = RAIZ / "media" / "videos"
 
-# Miguel Paz. La eligió el equipo entre cuatro mexicanas, oyendo la frase más
-# difícil del guion: decimales leídos y la sigla ChEMBL.
-VOZ = "qK97aPuDo74niFLxjFrK"
+# **La voz clonada de Artemio.** Antes era «Miguel Paz», una profesional que el
+# equipo eligió entre cuatro mexicanas oyendo la frase más difícil del guion
+# —decimales leídos y la sigla ChEMBL—. Se cambia porque el video lo presenta el
+# equipo y una voz de catálogo lo hace sonar a material comprado.
+#
+# **Cambiar esta constante regraba el video entero**, porque `_huella` la
+# incluye: el audio de un tramo no es función solo de su texto. Son 16,810
+# caracteres en 41 tramos, así que no es una decisión que se tome dos veces.
+VOZ = "sAJBOuXPVjIijtxp2LLu"
 MODELO = "eleven_multilingual_v2"
 
 # El orden lo manda `ensamblar.py`; aquí solo hace falta saber qué escena es
