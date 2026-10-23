@@ -37,6 +37,13 @@ y CMAUP viene de curvas dosis-respuesta cuya dirección no se declara, así que
 `sin_contrarias` la conserva y `solo_activacion` la quita, y la diferencia entre
 las dos variantes dice cuánto pesa esa duda.
 
+Hay una tercera, `solo_inhibicion`, que **no es un candidato a adoptar**: sirve
+para tratar los IC50 **aparte** en lugar de quitarlos, que es la otra mitad de lo
+que pide el issue. Comparada con `solo_activacion` dice qué opina cada dirección
+por su cuenta sobre el mismo par, y si se contradicen donde las dos opinan. Si
+coincidieran casi siempre, mezclarlas sería inofensivo y la pregunta a la
+patrocinadora perdería urgencia.
+
 ## Y la segunda medición: de qué depende la clase negativa de NPASS
 
 AC50 existe solo en NPASS y casi todo es censurado, así que es de donde sale la
@@ -103,6 +110,11 @@ VARIANTES = {
     # nombre: las direcciones que se conservan en las dianas de activación
     "sin_contrarias": ("activacion", "afinidad", "ambigua", "sin_clasificar"),
     "solo_activacion": ("activacion",),
+    # La tercera no es un candidato a adoptar: existe para **tratar los IC50
+    # aparte**, que es la otra mitad de lo que pide el #95. Con ella y con
+    # `solo_activacion` se puede ver qué dice cada dirección por su cuenta sobre
+    # el mismo par, y si se contradicen.
+    "solo_inhibicion": ("inhibicion",),
 }
 
 UMBRAL_UM = 10.0
@@ -179,14 +191,18 @@ def _medir(corrida: Corrida) -> None:
     en_activacion = actividad["target_gene"].isin(activacion)
     resumenes = {"base": _resumen(
         de_activacion, int(en_activacion.sum()))}
+    tablas = {}
     for nombre, conservadas in VARIANTES.items():
         recortado = actividad[en_activacion & direccion.isin(conservadas)]
         print(f"\nVariante «{nombre}»: {len(recortado):,} de"
               f" {int(en_activacion.sum()):,} mediciones sobreviven")
         variante = tabla_de_pares(recortado)
+        tablas[nombre] = variante
         resumenes[nombre] = _resumen(variante, len(recortado))
         filas += _por_gen(recortado, variante, activacion, "direccion", nombre)
         _comparar(de_activacion, variante, nombre)
+
+    acuerdo = _acuerdo(tablas["solo_activacion"], tablas["solo_inhibicion"])
 
     # --- bloque 2 · de qué depende la clase negativa de NPASS
     es_ac50 = actividad["activity_type"].eq("AC50")
@@ -239,6 +255,7 @@ def _medir(corrida: Corrida) -> None:
         "negativos_totales": int(negativo.sum()),
         "negativos_de_pares_solo_npass": neg_npass,
         "negativos_solo_npass_que_dependen_de_ac50": neg_npass_ac50,
+        "ic50_aparte": acuerdo,
     })
 
 
@@ -252,6 +269,36 @@ def _codigo(etiqueta: pd.Series) -> pd.Series:
     decidir **es** un cambio y hay que contarlo.
     """
     return etiqueta.map({True: 1, False: 0}).fillna(-1).astype(int)
+
+
+def _acuerdo(activacion: pd.DataFrame, inhibicion: pd.DataFrame) -> dict:
+    """Qué dice cada dirección por su cuenta sobre el mismo par.
+
+    Es la otra mitad de lo que pide el #95: no «quitar los IC50» sino
+    **tratarlos aparte**, para ver si las dos direcciones se contradicen donde
+    las dos opinan. Si coincidieran casi siempre, mezclarlas sería inofensivo y
+    la pregunta a la patrocinadora perdería urgencia.
+    """
+    clave = ["esqueleto", "target_gene"]
+    j = activacion[clave + ["activo_10um"]].merge(
+        inhibicion[clave + ["activo_10um"]], on=clave,
+        suffixes=("_act", "_inh"))
+    a, b = _codigo(j["activo_10um_act"]), _codigo(j["activo_10um_inh"])
+    deciden = (a != -1) & (b != -1)
+    discrepan = int((deciden & (a != b)).sum())
+    print("\nLos IC50 tratados aparte, no quitados")
+    print(f"  pares con evidencia de las dos direcciones: {len(j):,}")
+    print(f"  de ellos, los dos lados deciden:            "
+          f"{int(deciden.sum()):,}")
+    print(f"  y discrepan:                               {discrepan:,}"
+          f"  ({discrepan / max(int(deciden.sum()), 1):.1%})")
+    NOMBRE = {1: "activo", 0: "inactivo", -1: "sin decidir"}
+    tabla = pd.crosstab(a.map(NOMBRE), b.map(NOMBRE))
+    print("  activación (filas) contra inhibición (columnas):")
+    print("    " + tabla.to_string().replace("\n", "\n    "))
+    return {"pares_con_las_dos_direcciones": len(j),
+            "pares_donde_las_dos_deciden": int(deciden.sum()),
+            "pares_donde_discrepan": discrepan}
 
 
 def _ausentes(antes: pd.DataFrame, despues: pd.DataFrame) -> pd.DataFrame:

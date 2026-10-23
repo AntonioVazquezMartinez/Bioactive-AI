@@ -70,3 +70,20 @@ def test_la_direccion_de_cada_tipo_esta_declarada_o_no_esta():
     # exige medir en la dirección. Si eso se invierte, la medición miente.
     assert "inhibicion" not in med.VARIANTES["sin_contrarias"]
     assert med.VARIANTES["solo_activacion"] == ("activacion",)
+    # Y «solo_inhibicion» es la que permite tratar los IC50 aparte: tiene que
+    # ser la complementaria exacta, o la comparación entre las dos no dice nada.
+    assert med.VARIANTES["solo_inhibicion"] == ("inhibicion",)
+
+
+def test_el_acuerdo_entre_direcciones_solo_mira_donde_las_dos_deciden():
+    """Un par sin decidir por un lado no cuenta como discrepancia."""
+    clave = {"esqueleto": ["E0", "E1", "E2"], "target_gene": ["PPARG"] * 3}
+    activacion = pd.DataFrame(
+        {**clave, "activo_10um": pd.array([True, True, None], dtype="boolean")})
+    inhibicion = pd.DataFrame(
+        {**clave, "activo_10um": pd.array([False, True, False],
+                                          dtype="boolean")})
+    r = med._acuerdo(activacion, inhibicion)
+    assert r["pares_con_las_dos_direcciones"] == 3
+    assert r["pares_donde_las_dos_deciden"] == 2
+    assert r["pares_donde_discrepan"] == 1
