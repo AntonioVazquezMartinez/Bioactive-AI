@@ -100,6 +100,14 @@ jobs:
           sudo apt-get install -y -qq ffmpeg libcairo2-dev libpango1.0-dev
           pip install -r requirements-animaciones.txt
 
+      # Las pruebas de `figuras.py` solo corren aquí: en el entorno del lock se
+      # saltan por no haber Manim, y son justo las que comprueban que un eje
+      # traduzca sus datos donde dice. Van antes del render porque tardan un
+      # segundo y el render tarda minutos.
+      - name: Probar las primitivas de figura
+        if: steps.cambios.outputs.hay == 'sí'
+        run: python -m pytest tests/test_figuras.py -q
+
       - name: Renderizar las escenas de orden.py, en borrador y sin voz
         if: steps.cambios.outputs.hay == 'sí'
         working-directory: animaciones

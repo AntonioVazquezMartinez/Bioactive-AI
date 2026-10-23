@@ -13,3 +13,8 @@
 # LaTeX**: las escenas usan `Text` y no `MathTex`, a propósito, para que
 # cualquiera pueda renderizarlas sin una instalación de TeX.
 manim>=0.19
+# `tests/test_figuras.py` se salta solo si no hay Manim, así que en el entorno
+# del lock —donde corre el `pytest` del CI— nunca se ejecuta. Aquí sí, y por eso
+# el paso de animaciones lo corre antes de renderizar: las guardas de `figuras`
+# son baratas de probar y caras de descubrir en un fotograma.
+pytest>=8.0
