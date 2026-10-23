@@ -35,8 +35,8 @@ que los datos no sostienen — lo encontró el brainstorm yendo a `experimentos/
 ## 3 · Lo que se entrega *(0:15 – 0:30)*
 
 > Lo que el proyecto entrega es una lista de candidatos priorizados, con su
-> marca de origen natural, su alerta de promiscuidad y la curva completa en
-> vez de un punto de corte.
+> marca de origen natural, un aviso cuando el compuesto golpea muchas dianas a
+> la vez, y la curva completa en vez de un punto de corte.
 >
 > Y lo que no afirma: que el modelo sirva para productos naturales. Con tres
 > dianas comparables, todavía no se puede decir ni que sí ni que no.

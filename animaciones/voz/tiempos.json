@@ -27,13 +27,13 @@
  },
  "linaje": {
   "voz_s": 132.72,
-  "video_s": 140.0,
+  "video_s": 141.2,
   "tramos": [
    {
     "n": 1,
     "titulo": "El embudo de filas",
     "segundos": 58.98,
-    "palabras": 132
+    "palabras": 150
    },
    {
     "n": 2,
@@ -59,7 +59,7 @@
  },
  "intervalo": {
   "voz_s": 73.47,
-  "video_s": 86.47,
+  "video_s": 81.33,
   "tramos": [
    {
     "n": 1,
@@ -129,7 +129,7 @@
  },
  "particion": {
   "voz_s": 87.72,
-  "video_s": 94.47,
+  "video_s": 93.67,
   "tramos": [
    {
     "n": 1,
@@ -179,7 +179,7 @@
     "n": 3,
     "titulo": "Lo que se entrega",
     "segundos": 25.03,
-    "palabras": 67
+    "palabras": 74
    }
   ],
   "voz_id": "qK97aPuDo74niFLxjFrK",
@@ -187,7 +187,7 @@
  },
  "matriz": {
   "voz_s": 71.61,
-  "video_s": null,
+  "video_s": 73.73,
   "tramos": [
    {
     "n": 1,

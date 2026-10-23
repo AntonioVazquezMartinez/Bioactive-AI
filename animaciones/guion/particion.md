@@ -17,8 +17,8 @@ existe para explicar y no para durar poco.
 ## 1 · El conjunto *(0:00 – 0:08)*
 
 > Un conjunto de moléculas no es una bolsa de filas independientes.
-> Se parecen entre sí por familias: comparten el andamio, que es el esqueleto
-> de anillos sobre el que cuelga todo lo demás.
+> Se parecen entre sí por familias: comparten el andamio, que es el armazón de
+> anillos sobre el que cuelga todo lo demás.
 
 *Entra con:* el título, y después las cinco familias apareciendo en orden.
 

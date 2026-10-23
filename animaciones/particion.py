@@ -44,8 +44,12 @@ class Particion(Narrada):
     def _presentar(self) -> None:
         self.abrir_tramo(1, compases=2)
         t = titulo("Un conjunto de moléculas no es una bolsa de filas")
+        # «armazón» y no «esqueleto»: en este proyecto el esqueleto de
+        # conectividad es otra cosa —los 14 caracteres del InChIKey— y esta
+        # misma escena los distingue en el tramo 4. Usar la palabra para las
+        # dos cosas hacía incomprensible la comparación de AUROC.
         s = subtitulo("Se parecen entre sí por familias: comparten el andamio,"
-                      " el esqueleto de anillos")
+                      " el armazón de anillos")
         t.to_edge(UP, buff=0.8)
         s.next_to(t, DOWN, buff=0.3)
         cabe(t, s)
@@ -208,7 +212,7 @@ class Particion(Narrada):
         bloque = VGroup()
         for rotulo, valor, color in (
                 ("agrupando solo por andamio", "AUROC 0.959", ROJO),
-                ("agrupando por andamio y esqueleto", "AUROC 0.936", VERDE)):
+                ("andamio + esqueleto de conectividad", "AUROC 0.936", VERDE)):
             r = dato(rotulo, 24, color)
             v = dato(valor, 26, color)
             v.next_to(r, RIGHT, buff=0.8)

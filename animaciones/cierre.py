@@ -182,8 +182,12 @@ class Cierre(Narrada):
 
         entrega = VGroup(
             subtitulo("Una lista de candidatos priorizados,", 22),
-            subtitulo("con su marca de origen natural y su alerta de"
-                      " promiscuidad,", 22),
+            # «promiscuidad» se decía sin definirla, y el video no puede
+            # introducir un término que nadie explicó: la regla del proyecto es
+            # definir en el primer uso. Dicho en palabras cuesta lo mismo y no
+            # deja a nadie fuera. El término está en el glosario.
+            subtitulo("con su marca de origen natural, un aviso si golpea"
+                      " muchas dianas,", 22),
             subtitulo("y la curva completa en vez de un punto de corte.", 22),
         ).arrange(DOWN, buff=0.22)
         entrega.next_to(t, DOWN, buff=0.6).set_x(0)

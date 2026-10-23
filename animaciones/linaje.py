@@ -80,9 +80,14 @@ class Linaje(Narrada):
                             num_lines=8, flash_radius=0.42), run_time=0.45)
             self.respira()
 
-        nota = subtitulo("Y las 29,730 declaradas inactivas por texto quedan"
-                         " fuera:\nson una sola campaña de tamizaje, 772"
-                         " compuestos.", 19)
+        # El 29,730 es del archivo entero y solo 5,922 llegan hasta este punto
+        # del embudo: las demás ya se habían ido por no estar en las cinco
+        # categorías. Decir el primero aquí hacía pensar que el embudo quitaba
+        # 29,730. Y la campaña es una, pero se reparte en veinte ensayos.
+        nota = subtitulo("Y las declaradas inactivas por texto quedan fuera:"
+                         " 5,922 de las que\nllegan hasta aquí, 29,730 en todo"
+                         " el archivo. Son una sola campaña\nde tamizaje: 772"
+                         " compuestos, veinte ensayos.", 19)
         nota.next_to(filas, DOWN, buff=0.5)
         cabe(nota)
         self.play(Write(nota), run_time=1.8)

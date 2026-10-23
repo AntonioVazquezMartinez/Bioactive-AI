@@ -27,9 +27,11 @@ pierden, qué columnas caen y por qué.
 
 *Entra con:* cada cifra, una por una.
 
-> Las veintinueve mil setecientas treinta declaradas inactivas por texto
-> quedan fuera, y no porque su límite sea inventado: porque son una sola
-> campaña de tamizaje, setecientos setenta y dos compuestos.
+> Y las declaradas inactivas por texto quedan fuera: cinco mil novecientas
+> veintidós de las que llegan hasta aquí, veintinueve mil setecientas treinta
+> en todo el archivo. No salen porque su límite sea inventado, sino porque son
+> una sola campaña de tamizaje: setecientos setenta y dos compuestos, veinte
+> ensayos.
 
 ---
 
@@ -87,3 +89,9 @@ rojo y cayendo, y la matriz recomponiéndose.
   las cuatro cifras intermedias pueden resumirse en «tres filtros».
 - Esta escena es la más cargada de números del conjunto. Todos están
   comprobados contra los parquet de `data/processed/`, no copiados de prosa.
+- **Las dos cifras de los inactivos por texto van juntas a propósito.** El
+  29,730 es del archivo entero y el 5,922 es lo que este embudo quita; decir
+  solo el primero hacía pensar que el embudo se llevaba 29,730, cuando las
+  otras 23,808 ya se habían ido por no estar en las cinco categorías. Si hace
+  falta aire, la que se puede soltar es la del archivo entero, no la del
+  embudo.

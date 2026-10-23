@@ -50,6 +50,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **PAINS** (*Pan-Assay Interference Compounds*)
 : Compuestos que dan positivo en casi cualquier ensayo por mecanismos inespecíficos, no porque actúen sobre la diana. **Por qué importa:** la curcumina es el caso clásico, con más de 120 ensayos clínicos sin un resultado positivo controlado. El modelo los va a rankear alto, así que hay que filtrarlos antes de reportar cualquier candidato.
 
+**Promiscuidad**
+: Que un mismo compuesto tenga actividad medida contra **muchas dianas distintas**. Se cuenta sobre el par compuesto-diana: un esqueleto de conectividad con actividad en diez dianas es más promiscuo que uno con una. **Por qué importa:** no es lo mismo que los PAINS de la entrada anterior, que son una alerta *estructural* de interferencia en el ensayo; la promiscuidad es lo que los datos muestran, y puede ser real —hay compuestos que de verdad modulan varias dianas— o puede ser el síntoma de que la medición capta potencia general en lugar de un efecto sobre la diana. Por eso acompaña al ranking como aviso y no como filtro, igual que los PAINS en la [decisión C.4](decisiones.md#dc-4). Añadirla a la matriz de características es el [issue #29](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/29).
+
 ---
 
 ## Descriptores moleculares

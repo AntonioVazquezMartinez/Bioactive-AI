@@ -74,3 +74,11 @@ rojo cuando el bit compartido se tiñe.
   pantalla**: la regla 3 dice que si la voz no la dice, no va. Si hace falta
   aire, la salida es quitar 13.6 y 17.8 **de la escena también** y dejar solo
   «la brecha crece con el vocabulario», que es lo que importa.
+- **Las cifras de cobertura son las de la prueba reservada, y por eso la
+  escena dice «la prueba».** Hay otra medición de lo mismo sobre la
+  validación, dentro de la validación cruzada, que da 71.0% con 2048 columnas
+  y brechas de 11.9, 13.8 y 14.8 (`notebooks/datos/resultados_L_sortslice.csv`
+  y la tabla de la [1.7](../../docs/decisiones.md#d1-7)). **No se mezclan**: si
+  alguien cambia el 68.0 por el 71.0 tiene que cambiar las tres brechas y
+  decir que habla de validación. La [1.5](../../docs/decisiones.md#d1-5) las
+  distingue explícitamente.
