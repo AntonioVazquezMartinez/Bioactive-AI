@@ -1,0 +1,33 @@
+{
+  "ac50_pares_que_cambian_de_etiqueta": 4,
+  "ac50_pares_que_dependen_solo_de_ac50": 1208,
+  "activacion": {
+    "base": {
+      "activos": 4184,
+      "inactivos": 1738,
+      "mediciones": 10818,
+      "pares": 6140,
+      "sin_decidir": 218
+    },
+    "sin_contrarias": {
+      "activos": 3600,
+      "inactivos": 1549,
+      "mediciones": 7794,
+      "pares": 5308,
+      "sin_decidir": 159
+    },
+    "solo_activacion": {
+      "activos": 3075,
+      "inactivos": 924,
+      "mediciones": 5454,
+      "pares": 4150,
+      "sin_decidir": 151
+    }
+  },
+  "activos_totales": 49332,
+  "dianas_de_activacion": 4,
+  "negativos_de_pares_solo_npass": 1914,
+  "negativos_solo_npass_que_dependen_de_ac50": 1161,
+  "negativos_totales": 18404,
+  "pares_totales": 70384
+}
