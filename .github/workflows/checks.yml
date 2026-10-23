@@ -45,6 +45,97 @@ jobs:
       - name: Verificar el registro de decisiones
         run: python3 scripts/verificar_decisiones.py
 
+      # Los hex vivían duplicados en cuatro archivos y tres se habían desviado
+      # entre sí sin que nadie lo notara. Con una fuente y un reparto, editar un
+      # destino a mano deja de pasar inadvertido.
+      - name: La paleta está al día en sus destinos
+        run: python3 scripts/paleta.py --revisar
+
+  animaciones:
+    name: Animaciones (render mudo)
+    runs-on: ubuntu-latest
+    # Las pruebas de `test_animaciones.py` son estáticas: leen los `.py` y los
+    # `.md`. Las guardas que de verdad atrapan defectos de dibujo —`cabe`,
+    # `separados`, el aviso de un acto que se pasa de su narración y la de
+    # `cerrar_tramo`— **solo disparan al renderizar**, así que hasta ahora
+    # dependían de que alguien renderizara en su máquina. Encontraron, ellas
+    # solas, un pie que se salía del cuadro, dos actos pasados y un `respira()`
+    # dentro de un bucle que no se había contado.
+    #
+    # Se renderiza **sin voz**: los mp3 no se versionan, y regenerarlos aquí
+    # costaría cuota de una API de pago y movería `voz/tiempos.json` en cada
+    # corrida, forzando re-renders. `tiempos.json` sí está versionado, así que
+    # el render mudo lleva las duraciones reales y las guardas valen igual.
+    if: github.event_name != 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # `paths` no sirve aquí: el job debe existir siempre para que la
+          # protección de rama lo vea. El filtro va abajo, por diff.
+          fetch-depth: 0
+
+      - name: ¿Cambió algo de las animaciones?
+        id: cambios
+        run: |
+          base="origin/${{ github.base_ref || 'main' }}"
+          if git diff --quiet "$base"...HEAD -- animaciones/ ; then
+            echo "hay=no" >> "$GITHUB_OUTPUT"
+            echo "Sin cambios en animaciones/: no se renderiza."
+          else
+            echo "hay=sí" >> "$GITHUB_OUTPUT"
+            git diff --name-only "$base"...HEAD -- animaciones/
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.cambios.outputs.hay == 'sí'
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-animaciones.txt
+
+      - name: Instalar ffmpeg y las dependencias de Manim
+        if: steps.cambios.outputs.hay == 'sí'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg libcairo2-dev libpango1.0-dev
+          pip install -r requirements-animaciones.txt
+
+      # Las pruebas de `figuras.py` solo corren aquí: en el entorno del lock se
+      # saltan por no haber Manim, y son justo las que comprueban que un eje
+      # traduzca sus datos donde dice. Van antes del render porque tardan un
+      # segundo y el render tarda minutos.
+      - name: Probar las primitivas de figura
+        if: steps.cambios.outputs.hay == 'sí'
+        run: python -m pytest tests/test_figuras.py -q
+
+      - name: Renderizar las escenas de orden.py, en borrador y sin voz
+        if: steps.cambios.outputs.hay == 'sí'
+        working-directory: animaciones
+        run: |
+          fallos=0
+          # La lista sale de `orden.py`, que es donde vive el orden del video.
+          # Estaba escrita a mano aquí, y por eso se quedó en seis escenas
+          # cuando entró la séptima: `matriz` se renderizaba en local y nunca
+          # en CI, que es exactamente lo que `orden.py` existe para evitar.
+          for par in $(python -c \
+              "from orden import ESCENAS; print(' '.join(f'{m}:{c}' for m, c in ESCENAS.items()))"); do
+            modulo="${par%%:*}"; escena="${par##*:}"
+            echo "::group::$escena"
+            if python -m manim -ql --disable_caching "$modulo.py" "$escena" 2>&1 | tee "/tmp/$modulo.log"; then
+              # El aviso de «se pasa» no aborta el render, pero es un defecto:
+              # el acto dura más que su narración y la pantalla queda muda.
+              if grep -q "se pasa" "/tmp/$modulo.log"; then
+                echo "::error title=$escena::un acto dura más que su narración"
+                fallos=1
+              fi
+            else
+              echo "::error title=$escena::falló el render (mira las guardas cabe/separados)"
+              fallos=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $fallos
+
   codigo:
     name: Ruff y pytest
     runs-on: ubuntu-latest

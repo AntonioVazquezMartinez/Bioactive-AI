@@ -1,0 +1,3 @@
+file '/Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/animaciones/voz/cierre-1.mp3'
+file '/Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/animaciones/voz/cierre-2.mp3'
+file '/Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/animaciones/voz/cierre-3.mp3'

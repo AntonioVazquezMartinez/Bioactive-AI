@@ -50,6 +50,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **PAINS** (*Pan-Assay Interference Compounds*)
 : Compuestos que dan positivo en casi cualquier ensayo por mecanismos inespecíficos, no porque actúen sobre la diana. **Por qué importa:** la curcumina es el caso clásico, con más de 120 ensayos clínicos sin un resultado positivo controlado. El modelo los va a rankear alto, así que hay que filtrarlos antes de reportar cualquier candidato.
 
+**Promiscuidad**
+: Que un mismo compuesto tenga actividad medida contra **muchas dianas distintas**. Se cuenta sobre el par compuesto-diana: un esqueleto de conectividad con actividad en diez dianas es más promiscuo que uno con una. **Por qué importa:** no es lo mismo que los PAINS de la entrada anterior, que son una alerta *estructural* de interferencia en el ensayo; la promiscuidad es lo que los datos muestran, y puede ser real —hay compuestos que de verdad modulan varias dianas— o puede ser el síntoma de que la medición capta potencia general en lugar de un efecto sobre la diana. Por eso acompaña al ranking como aviso y no como filtro, igual que los PAINS en la [decisión C.4](decisiones.md#dc-4). Añadirla a la matriz de características es el [issue #29](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/29).
+
 ---
 
 ## Descriptores moleculares
@@ -148,9 +151,6 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Codificación *one-hot***
 : Representación de una categoría mediante una columna binaria por valor posible, sin asignar un orden numérico entre categorías. **Por qué importa:** permite convertir variables categóricas para un modelo, pero no resuelve si la variable debe usarse como predictor; `group` puede estar asociado con la etiqueta BBB.
-
-**Sort & Slice**
-: Fingerprint que conserva las subestructuras más frecuentes de un conjunto de entrenamiento en un vocabulario de tamaño fijo, con una columna por subestructura. **Por qué importa:** evita que varias subestructuras compartan un bit como en un fingerprint plegado y permite rastrear las columnas hasta sus fragmentos. El vocabulario se aprende solo con entrenamiento.
 
 **Umbral de varianza**
 : Filtro que descarta columnas cuya variación queda por debajo de un valor elegido. **Por qué importa:** elimina columnas constantes o casi constantes que apenas distinguen moléculas; el umbral debe ajustarse en entrenamiento.
