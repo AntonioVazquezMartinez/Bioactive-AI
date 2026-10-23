@@ -65,7 +65,7 @@
     "n": 1,
     "titulo": "El eje",
     "segundos": 7.85,
-    "palabras": 22
+    "palabras": 84
    },
    {
     "n": 2,
@@ -199,7 +199,7 @@
     "n": 2,
     "titulo": "La fila de tres bloques",
     "segundos": 37.71,
-    "palabras": 84
+    "palabras": 130
    },
    {
     "n": 3,
@@ -220,7 +220,14 @@
  },
  "resultados": {
   "voz_s": 0.0,
-  "video_s": 34.93,
+  "video_s": 44.27,
+  "tramos": [],
+  "voz_id": "qK97aPuDo74niFLxjFrK",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "objetivo": {
+  "voz_s": 0.0,
+  "video_s": 42.93,
   "tramos": [],
   "voz_id": "qK97aPuDo74niFLxjFrK",
   "modelo": "eleven_multilingual_v2"
