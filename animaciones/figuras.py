@@ -44,6 +44,10 @@ class Ejes:
     el tamaño en pantalla. `punto(x, y)` devuelve la posición de ese dato, de
     modo que las escenas hablen en las unidades de su figura.
 
+    Las marcas van como `((valor, "rótulo"), …)`, con el rótulo escrito a mano
+    —ver el comentario de abajo: de eso depende que la prueba de «ninguna cifra
+    sin voz» siga viendo lo que hay en pantalla.
+
     El grupo se construye centrado en el origen. Si la escena lo mueve, le toca
     volver a llamar a `cabe`: aquí solo se comprueba que el tamaño quepa.
     """
@@ -52,8 +56,7 @@ class Ejes:
                  rango_y: tuple[float, float], ancho: float = 8.0,
                  alto: float = 4.0, etiqueta_x: str = "",
                  etiqueta_y: str = "", marcas_x: tuple = (),
-                 marcas_y: tuple = (), formato_x: str = "{:g}",
-                 formato_y: str = "{:g}") -> None:
+                 marcas_y: tuple = ()) -> None:
         if rango_x[1] <= rango_x[0] or rango_y[1] <= rango_y[0]:
             raise ValueError(f"rangos vacíos o invertidos: {rango_x}, {rango_y}")
         self.rango_x, self.rango_y = rango_x, rango_y
@@ -69,19 +72,26 @@ class Ejes:
         # aplica a todo el grupo por igual.
         self._origen = [0.0, 0.0, 0.0]
 
+        # **Cada marca llega como `(valor, "rótulo")`, con el rótulo escrito.**
+        # No es ceremonia: `tests/test_animaciones.py` garantiza que ninguna
+        # cifra aparezca en pantalla sin que la voz la diga, y lo hace leyendo
+        # las **cadenas literales** de la escena. Si estos ejes formatearan el
+        # número ellos mismos, el rótulo saldría en el video sin existir en el
+        # archivo, y esa prueba dejaría de ver justo lo que vigila. Escribir el
+        # rótulo cuesta dos comillas y mantiene la garantía.
         self.marcas = VGroup()
-        for x in marcas_x:
+        for x, rotulo in marcas_x:
             p = self._bruto(x, rango_y[0])
             marca = Line(p, [p[0], p[1] - 0.12, 0], color=REJILLA,
                          stroke_width=TRAZO_EJE)
-            r = subtitulo(formato_x.format(x), 16)
+            r = subtitulo(rotulo, 16)
             r.next_to(marca, DOWN, buff=0.1)
             self.marcas.add(marca, r)
-        for y in marcas_y:
+        for y, rotulo in marcas_y:
             p = self._bruto(rango_x[0], y)
             marca = Line(p, [p[0] - 0.12, p[1], 0], color=REJILLA,
                          stroke_width=TRAZO_EJE)
-            r = subtitulo(formato_y.format(y), 16)
+            r = subtitulo(rotulo, 16)
             r.next_to(marca, LEFT, buff=0.1)
             self.marcas.add(marca, r)
         self.grupo.add(self.marcas)

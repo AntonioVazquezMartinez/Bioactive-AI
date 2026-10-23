@@ -20,6 +20,7 @@ ORDEN = [
     ("direccion", "Direccion", "una medida apunta en una dirección"),
     ("fingerprints", "Fingerprints", "un bit no es un fragmento"),
     ("particion", "Particion", "las filas no son independientes"),
+    ("resultados", "Resultados", "qué tan bueno es «bueno»"),
     ("cierre", "Cierre", "lo que sale, y lo que no se afirma"),
 ]
 

@@ -84,3 +84,19 @@ def test_el_abanico_tiene_un_radio_por_diana_mas_el_punto():
 
 def test_la_columna_naciente_tiene_sus_filas():
     assert len(columna_naciendo(filas=6)) == 6
+
+
+def test_las_marcas_llevan_su_rotulo_escrito():
+    """El rótulo es una cadena de la escena, no un número que formateen los ejes.
+
+    De eso depende `test_toda_cifra_en_pantalla_esta_en_el_guion`, que lee las
+    cadenas literales del archivo: si los ejes formatearan el número, el rótulo
+    saldría en el video sin existir en el código y esa prueba dejaría de verlo.
+    """
+    e = Ejes((0, 100), (0, 1), ancho=5.0, alto=2.0,
+             marcas_x=((0, "cero"), (100, "cien")))
+    textos = [m.text for m in e.marcas if hasattr(m, "text")]
+    assert textos == ["cero", "cien"]
+
+    with pytest.raises((ValueError, TypeError)):
+        Ejes((0, 100), (0, 1), ancho=5.0, alto=2.0, marcas_x=(0, 100))
