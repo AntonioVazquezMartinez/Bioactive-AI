@@ -126,13 +126,22 @@ class Intervalo(Narrada):
         self._cambiar("Y un «> 10 µM» es media recta",
                       "el ensayo llegó a 10 µM y no vio efecto: la potencia"
                       " está por debajo")
+        # **Debajo de la fila de concentraciones, no encima.** La media recta
+        # colgaba a 0.7 del eje, que es justo donde ahora viven los rótulos de
+        # concentración: la flecha los tachaba y su «> 10 µM» se encimaba con
+        # el aviso. Se ancla al fondo de esa fila en vez de a una distancia
+        # fija, para que mover una no rompa la otra.
         inicio = self._x(CORTE)
-        flecha = Arrow(inicio, self._x(EJE_MIN + 0.15), color=NARANJA,
-                       stroke_width=5, buff=0, max_tip_length_to_length_ratio=0.05)
-        flecha.shift(DOWN * 0.7)
-        tope = Line(inicio + DOWN * 1.0, inicio + DOWN * 0.4, color=NARANJA,
-                    stroke_width=5)
+        y = self.concentraciones.get_bottom()[1] - 0.5
+        flecha = Arrow([inicio[0], y, 0], [self._x(EJE_MIN + 0.15)[0], y, 0],
+                       color=NARANJA, stroke_width=5, buff=0,
+                       max_tip_length_to_length_ratio=0.05)
+        tope = Line([inicio[0], y - 0.3, 0], [inicio[0], y + 0.3, 0],
+                    color=NARANJA, stroke_width=5)
         etiqueta = dato("> 10 µM", 22, NARANJA).next_to(tope, RIGHT, buff=0.2)
+        cabe(flecha, tope, etiqueta)
+        separados(flecha, self.concentraciones)
+        separados(etiqueta, self.concentraciones)
         self.play(Create(tope), run_time=0.5)
         self.play(Create(flecha), FadeIn(etiqueta), run_time=1.1)
         self.respira()
@@ -140,7 +149,9 @@ class Intervalo(Narrada):
         nota = subtitulo("No sabemos cuánto, pero sabemos que no llega hasta"
                          " aquí.\nTirarla sería tirar la única evidencia"
                          " negativa que tenemos.", 20)
-        nota.next_to(self.eje, DOWN, buff=2.0)
+        nota.next_to(flecha, DOWN, buff=0.55).set_x(0)
+        cabe(nota)
+        separados(nota, flecha)
         self.play(Write(nota), run_time=2.2)
         self.respira()
         self.cerrar_tramo(3)
