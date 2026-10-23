@@ -731,6 +731,24 @@ Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en v
 
 **Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
 
+**Y en cuatro dianas el tipo de medida ni siquiera apunta en la misma dirección.** El archivo trae `diana_efecto_buscado` —qué modulación de la diana se busca como tratamiento— y el proyecto no la usa: `src/data_prep/pares_fase2.py` no menciona `activity_type` ni una vez. En `PPARG`, `NFE2L2`, `SIRT1` y `TSPO` el efecto buscado es **activación**, y ahí el 28% de las mediciones son IC50, que mide potencia de **inhibir**. Hoy entran a la mediana del par junto con los EC50 como si midieran lo mismo. Lo señaló Pame al revisar el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95); cuánto está en juego lo mide `scripts/medicion_dianas_activacion.py`:
+
+| En las dianas de activación | Pares | Activos |
+|:--|--:|--:|
+| Como está hoy | 6,140 | 4,184 |
+| Si el tipo no puede contradecir la dirección | 5,308 | 3,600 |
+| Si además tiene que medirla | 4,150 | 3,075 |
+
+**Lo que se mueve no son las etiquetas, es la evidencia.** De los pares que sobreviven, solo 49 cambian de etiqueta con el criterio laxo y 69 con el estricto. El resto del efecto es que 832 o 1,990 pares se quedan **sin ninguna medición**. Así que la pregunta no es si las etiquetas están mal, es si un par cuya única evidencia apunta al revés debe contar. Y el diccionario advierte que `diana_efecto_buscado` **no dice qué hizo el compuesto en el ensayo**: un IC50 sobre `PPARG` puede ser un antagonista medido a propósito, así que la columna no decide sola.
+
+Dos cosas que la medición enseñó de paso. **`SIRT1` aporta cero pares** pese a sus 1,110 mediciones, porque su categoría —«Neurodegeneración (general)»— no está entre las cinco que ella ratificó ([2.1](#d2-1)): las dianas de activación son tres en la práctica. Y **`TSPO` casi desaparece con el criterio estricto**, de 260 pares a 5, porque es un marcador de PET y se mide por afinidad, no por activación.
+
+> **Pregunta:** en las dianas cuyo efecto buscado es activación (`PPARG`, `NFE2L2` y `TSPO`; `SIRT1` queda fuera por su categoría), ¿un IC50 cuenta como evidencia de actividad, cuenta como evidencia en contra, o no cuenta? ¿Y las medidas de afinidad (`Ki`, `Kd`), que no declaran dirección? La respuesta mueve 832 pares y 584 activos en la lectura más conservadora. En `DRD2`, con 9,618 pares y efecto buscado «agonismo o antagonismo según enfermedad», la pregunta es la misma y más grande.
+
+**Mientras no haya respuesta no se cambia el etiquetado.** La medición queda registrada y el desempeño del Avance 4 se reportará también sin las dianas de activación, que es el análisis de sensibilidad que mantiene la decisión reversible. La corrida está en `experimentos/2026-10-22-artemio-2.3-dianas-activacion/` y la tabla en `notebooks/datos/medicion_dianas_activacion.csv`.
+
+**La misma medición acota el otro extremo: qué sostiene la clase negativa de los productos naturales.** `AC50` existe solo en NPASS, son 1,374 mediciones y 1,246 de ellas censuradas, así que es de donde salen sus negativos. Medido sobre el par: **1,208 pares dependen solo de AC50** —todos del estrato `solo_npass`, 1,161 de ellos inactivos— y son el **61% de los 1,914 negativos de los pares que solo tiene NPASS**. Quitar AC50 para evitar el sesgo por fuente dejaría a los naturales casi sin clase negativa, que sesga en el otro sentido; se conserva, y lo que se reporta es el desempeño con y sin esos pares. Lo planteó Pame en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95).
+
 #### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
 
 **Estado:** propuesta
@@ -831,7 +849,7 @@ El AUROC es el de las predicciones fuera de pliegue agrupadas, con bootstrap de 
 | S2.2 | Una etiqueta describe una clase bajo un umbral y un ensayo, no una propiedad del compuesto | Asumido | El mismo compuesto cambia de clase según la concentración | Se declara el umbral en cada reporte |
 | S2.3 | El pChEMBL basta para etiquetar | Desmentido | Solo existe para ChEMBL ([2.3](#d2-3)) | Tres vías |
 | S2.4 | Un censurado «> 10 µM» sirve como negativo | Acotado | Solo si el límite es ≥ al umbral de «activo»; concentrado en DrugMatrix | Reportar el desempeño por vía |
-| S2.5 | «Activo» tiene una dirección clara | Sin comprobar | Falta verificar si el archivo distingue inhibir de activar | Aclararlo en la [2.3](#d2-3) antes de etiquetar |
+| S2.5 | «Activo» tiene una dirección clara | Desmentido en parte | El archivo **sí** trae la dirección buscada por diana (`diana_efecto_buscado`) y el proyecto no la usa: en las dianas de «Activación» el 28% de las mediciones son IC50, que mide lo contrario. Medido: exigir que el tipo no contradiga la dirección deja 832 de 6,140 pares sin evidencia y 584 activos menos ([2.3](#d2-3)). Pero la columna declara el efecto **buscado como tratamiento**, no lo que hizo el compuesto, así que no decide sola | Preguntar qué tipos cuentan en cada dirección ([2.3](#d2-3)); mientras, reportar con y sin las dianas de activación |
 | S2.6 | Hay datos para las 39 dianas | Desmentido | Cuatro sin datos suficientes; Alzheimer 52,676 y ELA 53 | Excluir; modelo por categoría o multitarea |
 | S2.7 | Un mismo esqueleto y gen tienen etiquetas consistentes | Desmentido en parte | 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6 | Regla de resolución reproducible y análisis de sensibilidad |
 | S2.8 | El archivo recibido es el conjunto completo | Acotado | 89.9% de lo descrito en el diccionario ([2.6](#d2-6)) | Pedir la partición reservada |
