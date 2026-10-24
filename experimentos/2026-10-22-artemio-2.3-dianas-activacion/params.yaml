@@ -1,0 +1,39 @@
+decision: '2.3'
+semillas: []
+params:
+  umbral_um: 10.0
+  variantes:
+    sin_contrarias:
+    - activacion
+    - afinidad
+    - ambigua
+    - sin_clasificar
+    solo_activacion:
+    - activacion
+    solo_inhibicion:
+    - inhibicion
+  direccion_de_tipo:
+    EC50: activacion
+    EC1.5: activacion
+    EC30: activacion
+    AC50: ambigua
+    IC50: inhibicion
+    IC33: inhibicion
+    IC60: inhibicion
+    Inhibition: inhibicion
+    INH: inhibicion
+    DC50: inhibicion
+    MIC: inhibicion
+    GI50: inhibicion
+    TGI: inhibicion
+    CC50: inhibicion
+    Ki: afinidad
+    Kd: afinidad
+    Kb: afinidad
+    Kic: afinidad
+    KiL: afinidad
+    KiH: afinidad
+    Kc: afinidad
+    Potency: ambigua
+    Activity: ambigua
+    CD: ambigua
