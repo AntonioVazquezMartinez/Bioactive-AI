@@ -77,7 +77,7 @@ Para derivar la clase de un par, un `> L` solo cuenta como inactivo si su límit
 
 - **Concordancia de Harrell:** de los pares de mediciones cuyo orden se conoce, qué fracción ordena bien el modelo. Tolera la censura.
 - **Spearman y RMSE**, solo sobre las mediciones exactas, declarado así.
-- **Un techo:** repetir el mismo ensayo da diferencias de unas 0.7 unidades logarítmicas en IC50 y 0.5 en Ki (fuente por citar), y el 25.5% de los pares con dos o más exactas discrepa más de una unidad. Un RMSE muy por debajo no es un buen resultado, es una señal de fuga.
+- **Un techo:** repetir el mismo ensayo da diferencias de unas 0.7 unidades logarítmicas en IC50 y 0.5 en Ki (`kalliokoski2013ic50`, `kramer2012ki`; con curación mínima el ruido es mayor, `landrum2024ruido`), y el 25.5% de los pares con dos o más exactas discrepa más de una unidad. Un RMSE muy por debajo no es un buen resultado, es una señal de fuga.
 - **Siempre por procedencia** (solo ChEMBL, mixtos, solo NPASS): el modelo separa mucho peor los pares que solo tiene NPASS ([2.5](decisiones.md#d2-5)).
 - Las métricas de ranking (enriquecimiento, precisión en los primeros 100) están en la [C.5](decisiones.md#dc-5).
 
