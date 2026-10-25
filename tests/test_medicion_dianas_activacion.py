@@ -64,7 +64,7 @@ def test_la_direccion_de_cada_tipo_esta_declarada_o_no_esta():
     direcciones = set(med.DIRECCION_DE_TIPO.values())
     assert direcciones == {"activacion", "inhibicion", "afinidad", "ambigua"}
     # Los dos tipos que deciden la medición, cada uno en su dirección.
-    assert med.DIRECCION_DE_TIPO["IC50"] == "inhibicion"
+    assert med.DIRECCION_DE_TIPO["IC50"] == "ambigua"  # depende del ensayo
     assert med.DIRECCION_DE_TIPO["EC50"] == "activacion"
     # `AC50` suena a activación y no lo es: en cribado puede medir en cualquiera
     # de las dos direcciones. Si alguien lo reclasifica, esta prueba lo frena.
@@ -100,3 +100,59 @@ def test_el_acuerdo_entre_direcciones_solo_mira_donde_las_dos_deciden():
     assert r["pares_con_las_dos_direcciones"] == 3
     assert r["pares_donde_las_dos_deciden"] == 2
     assert r["pares_donde_discrepan"] == 1
+
+
+def test_un_ic50_de_union_es_afinidad_y_solo_el_funcional_es_inhibicion():
+    """El tipo del ensayo decide la dirección de un IC, no el nombre de la medida."""
+    act = pd.DataFrame({
+        "activity_type": ["IC50", "IC50", "IC50", "IC50", "EC50", "Ki"],
+        "assay_chembl_id": ["A1", "A2", "A3", None, "A1", "A1"],
+        "assay_type": [None, None, None, "F", None, None],
+    })
+    tipos = pd.DataFrame({"assay_type": ["B", "F", "A"], "description": ["", "", ""]},
+                         index=["A1", "A2", "A3"])
+    base = act["activity_type"].map(med.DIRECCION_DE_TIPO)
+    r = med.resolver_ic(act, base, tipos)
+    # unión → afinidad; funcional → inhibición; ADME → ambigua; sin id usa el assay_type de la fila
+    assert r.tolist() == ["afinidad", "inhibicion", "ambigua", "inhibicion",
+                          "activacion", "afinidad"]
+
+
+def test_un_tipo_b_descrito_como_inhibicion_funcional_se_lee_como_inhibicion():
+    """El tipo B es grueso: «Inhibition of PPARgamma… transcriptional activity» es funcional."""
+    act = pd.DataFrame({
+        "activity_type": ["IC50"] * 5,
+        "assay_chembl_id": ["A", "B", "C", "D", "E"],
+        "assay_type": [None] * 5,
+    })
+    ensayos = pd.DataFrame({
+        "assay_type": ["B", "B", "B", "B", "F"],
+        "description": [
+            "Inhibition of PPARgamma assessed as transcriptional activity",   # funcional
+            "Displacement of [3H]-rosiglitazone from PPARgamma",              # unión
+            "Inhibition of binding of [125I]ligand to the receptor",          # unión pese a «inhibition»
+            "PPARgamma LBD in a Lanthascreen assay",                          # sin palabra de inhibir
+            "Agonist activity at PPARgamma",                                  # F manda
+        ]}, index=["A", "B", "C", "D", "E"])
+    base = act["activity_type"].map(med.DIRECCION_DE_TIPO)
+    assert med.resolver_ic(act, base, ensayos).tolist() == [
+        "inhibicion", "afinidad", "afinidad", "afinidad", "inhibicion"]
+
+
+def test_los_tipos_ic_son_los_que_el_mapa_deja_ambiguos_y_los_que_se_descargan():
+    """Si alguien añade un IC al mapa o a la descarga, los dos scripts tienen que enterarse."""
+    spec2 = importlib.util.spec_from_file_location(
+        "descarga", Path(__file__).resolve().parents[1] / "scripts/descargar_tipos_ensayo.py")
+    desc = importlib.util.module_from_spec(spec2)
+    spec2.loader.exec_module(desc)
+    assert set(med.TIPOS_IC) == set(desc.TIPOS_IC)
+    assert all(med.DIRECCION_DE_TIPO[t] == "ambigua" for t in med.TIPOS_IC)
+
+
+def test_la_evidencia_de_un_par_es_activacion_o_lo_que_le_falta():
+    f = med.tipo_de_evidencia
+    assert f({"activacion", "afinidad"}) == "con activación"
+    assert f({"inhibicion"}) == "solo inhibición funcional"
+    assert f({"afinidad"}) == "solo afinidad"
+    assert f({"ambigua"}) == "solo tipo ambiguo"
+    assert f({"afinidad", "inhibicion"}) == "mezcla sin activación"

@@ -13,8 +13,15 @@ por tipo de medida. Eso no se nota en la mayoría de las dianas, porque el filtr
 de gen ya deja fuera los ensayos fenotípicos (GI50, TGI, CC50 no traen gen). Pero
 el archivo trae además `diana_efecto_buscado`, que dice **qué modulación de la
 diana se busca como tratamiento**, y en cuatro dianas esa dirección es
-«Activación». Ahí un IC50 mide potencia de **inhibir**, que es lo contrario de lo
-buscado, y hoy entra a la mediana junto con los EC50 como si midiera lo mismo.
+«Activación». Ahí un EC50 mide activar, que es lo buscado, pero un IC50 **no dice
+por sí solo** en qué sentido actúa el compuesto: si el ensayo es de unión
+(desplazamiento de un radioligando, competencia por fluorescencia) mide cuánto se
+une, como el Ki, también para un agonista; solo si es funcional mide inhibición.
+En las tres dianas de activación el 92.5% de los IC50 de ChEMBL son de unión, así
+que el tipo de ensayo se pide a ChEMBL (`scripts/descargar_tipos_ensayo.py`) y
+decide la dirección de cada IC50. Una primera versión de este script los
+clasificaba a todos como inhibición, y esa lectura era falsa; la señaló Artemio
+al revisar el correo para la patrocinadora.
 
 El diccionario de la patrocinadora advierte que `diana_efecto_buscado` **no dice
 qué hizo el compuesto en el ensayo**, así que la columna no resuelve el caso por
@@ -64,6 +71,7 @@ Eso permite correr las variantes sobre miles de filas en lugar de 202,647, y es
 lo que hace que el script tarde minutos y no horas.
 """
 
+import re
 import sys
 import warnings
 from pathlib import Path
@@ -75,7 +83,7 @@ sys.path.insert(0, str(RAIZ / "src"))
 
 import pandas as pd
 
-from src.data_prep.pares_fase2 import tabla_de_pares
+from src.data_prep.pares_fase2 import filas_de_pares, tabla_de_pares
 from tracking import Corrida
 
 ACTIVIDAD = (RAIZ / "data/external/profesora"
@@ -83,9 +91,10 @@ ACTIVIDAD = (RAIZ / "data/external/profesora"
 ETIQUETAS = RAIZ / "data/external/profesora/etiquetas_dianas_2026-09-25.csv"
 SALIDA = RAIZ / "notebooks/datos/medicion_dianas_activacion.csv"
 
-# Qué mide cada tipo de medida, en términos de dirección. No es una decisión del
-# proyecto: es la lectura estándar de cada ensayo, y está aquí explícita para que
-# se pueda discutir línea por línea en lugar de quedar implícita en su ausencia.
+# Qué mide cada tipo de medida, en términos de dirección, y está aquí explícita para
+# que se pueda discutir línea por línea en lugar de quedar implícita en su ausencia.
+# No es una decisión del proyecto. Los tipos IC dependen del ensayo y se resuelven
+# aparte (`resolver_ic`).
 #
 # - `activacion`: la potencia con la que el compuesto **activa** la diana.
 # - `inhibicion`: la potencia con la que la **inhibe**.
@@ -103,7 +112,8 @@ DIRECCION_DE_TIPO = {
     # dianas de activación son 77 filas, todas de `PPARG` y 65 de ellas
     # censuradas, así que solo mueve la variante estricta.
     "AC50": "ambigua",
-    "IC50": "inhibicion", "IC33": "inhibicion", "IC60": "inhibicion",
+    # IC50/IC33/IC60: ambigua por defecto; `resolver_ic` la cambia según el tipo de ensayo.
+    "IC50": "ambigua", "IC33": "ambigua", "IC60": "ambigua",
     "Inhibition": "inhibicion", "INH": "inhibicion", "DC50": "inhibicion",
     "MIC": "inhibicion", "GI50": "inhibicion", "TGI": "inhibicion",
     "CC50": "inhibicion",
@@ -124,6 +134,70 @@ VARIANTES = {
 }
 
 UMBRAL_UM = 10.0
+
+# Los tipos IC no tienen dirección por su nombre: depende del ensayo. Deben coincidir con las
+# entradas «ambigua» de DIRECCION_DE_TIPO, y la prueba lo comprueba. Es el mismo conjunto que
+# baja `descargar_tipos_ensayo.py`.
+TIPOS_IC = ("IC50", "IC33", "IC60")
+TIPOS_ENSAYO = RAIZ / "notebooks/datos/tipos_ensayo_chembl.csv"
+# Tipo de ensayo de ChEMBL → dirección de un IC. `B` es unión (desplazamiento,
+# competencia): afinidad. `F` es funcional: el IC mide inhibición. Otro tipo
+# —ADME o toxicidad: un IC50 de toxicidad es citotoxicidad— o ninguno (NPASS y
+# CMAUP no traen identificador de ensayo) queda ambigua. **Provisional**: el
+# tipo se trae de la API de ChEMBL y está pendiente del visto bueno de la
+# patrocinadora; si dice que no, este diccionario queda vacío y los IC vuelven
+# a ser ambiguos.
+DIRECCION_DE_ENSAYO = {"B": "afinidad", "F": "inhibicion"}
+
+# El tipo `B` es grueso: hay ensayos de unión según ChEMBL cuya descripción es
+# funcional («Inhibition of PPARgamma assessed as transcriptional activity»,
+# «Inhibition of human plasma BChE… by Ellman's method»). Un ensayo `B` cuya
+# descripción habla de inhibir o antagonizar y no de unión se lee como
+# inhibición funcional. Es una regla de palabras, provisional y deliberadamente
+# estrecha: lo que no encaja queda con el tipo de ChEMBL.
+INHIBE = re.compile(r"inhibit|antagonis|inverse agonist|suppress|transrepress|reduc",
+                    re.IGNORECASE)
+UNION = re.compile(r"displac|bindin|compet|\bbind|fret|scintillation|radioligand|affinity"
+                   r"|lanthascreen|alphascreen|\[3h\]|\[125i\]", re.IGNORECASE)
+
+
+def descripcion_de_inhibicion(descripcion: pd.Series) -> pd.Series:
+    """Verdadero si la descripción habla de inhibir o antagonizar y no de unión."""
+    d = descripcion.fillna("").astype(str)
+    return d.str.contains(INHIBE) & ~d.str.contains(UNION)
+
+
+def resolver_ic(actividad: pd.DataFrame, direccion: pd.Series,
+                ensayos: pd.DataFrame) -> pd.Series:
+    """Reemplaza la dirección de los IC por la que dicen el tipo y la descripción de su ensayo.
+
+    `ensayos` está indexado por `assay_chembl_id` y trae `assay_type` y `description`. Si el
+    archivo ya trae `assay_type` en la fila se usa como respaldo del identificador.
+    """
+    ids = actividad["assay_chembl_id"]
+    tipo = ids.map(ensayos["assay_type"]).fillna(actividad["assay_type"])
+    resuelta = tipo.map(DIRECCION_DE_ENSAYO).fillna("ambigua")
+    # Un `B` que se describe como inhibición funcional contradice a su tipo.
+    contradice = tipo.eq("B") & descripcion_de_inhibicion(ids.map(ensayos["description"]))
+    resuelta = resuelta.where(~contradice, "inhibicion")
+    return direccion.where(~actividad["activity_type"].isin(TIPOS_IC), resuelta)
+
+
+def tipo_de_evidencia(direcciones: set) -> str:
+    """Qué dice el conjunto de mediciones de un par sobre la dirección buscada.
+
+    Una activación decide a favor; sin ella, lo que queda no dice la dirección (afinidad,
+    tipo ambiguo) o la contradice (inhibición funcional).
+    """
+    if "activacion" in direcciones:
+        return "con activación"
+    if direcciones == {"inhibicion"}:
+        return "solo inhibición funcional"
+    if direcciones == {"afinidad"}:
+        return "solo afinidad"
+    if direcciones <= {"ambigua", "sin_clasificar"}:
+        return "solo tipo ambiguo"
+    return "mezcla sin activación"
 
 
 def _resumen(pares: pd.DataFrame, mediciones: int) -> dict:
@@ -155,6 +229,8 @@ def _medir(corrida: Corrida) -> None:
 
     direccion = actividad["activity_type"].map(DIRECCION_DE_TIPO).fillna(
         "sin_clasificar")
+    ensayos = pd.read_csv(TIPOS_ENSAYO).drop_duplicates("assay_chembl_id").set_index("assay_chembl_id")
+    direccion = resolver_ic(actividad, direccion, ensayos)
     sin_clasificar = actividad.loc[direccion.eq("sin_clasificar"),
                                    "activity_type"]
     if not sin_clasificar.empty:
@@ -169,10 +245,30 @@ def _medir(corrida: Corrida) -> None:
                       "gen"].dropna()))
     print(f"\nDianas con efecto buscado «Activación»: {', '.join(activacion)}")
 
+    ic = actividad["activity_type"].isin(TIPOS_IC) & actividad["target_gene"].isin(activacion)
+    print(f"\nIC en las dianas de activación: {int(ic.sum()):,} mediciones, por dirección:"
+          f" {direccion[ic].value_counts().to_dict()}")
+
+    # Qué dice cada par de las dianas de activación sobre la dirección: con una activación, o solo
+    # inhibición funcional, afinidad o tipos que no la declaran.
+    filas_act = filas_de_pares(actividad[actividad["target_gene"].isin(activacion)])
+    direcciones = (direccion.loc[filas_act.index]
+                   .groupby([filas_act["esqueleto"], filas_act["target_gene"]]).agg(set))
+    por_evidencia = direcciones.map(tipo_de_evidencia).value_counts()
+    print(f"\nPares de las dianas de activación según lo que dicen sus mediciones: "
+          f"{por_evidencia.to_dict()}")
+
     print("\nTabla de pares completa (la referencia)…")
     base = tabla_de_pares(actividad)
     print(f"  {len(base):,} pares · {int(base['activo_10um'].sum()):,} activos"
           f" a {UMBRAL_UM:g} µM")
+
+    # El mismo reparto, solo en las dianas que aportan pares: SIRT1 no entra al modelo y sus
+    # 1,009 IC50 son casi todos de inhibición enzimática.
+    con_pares = actividad["target_gene"].isin(base["target_gene"].unique())
+    ic_modelo = ic & con_pares
+    print(f"IC en las dianas de activación que aportan pares: {int(ic_modelo.sum()):,}"
+          f" mediciones, por dirección: {direccion[ic_modelo].value_counts().to_dict()}")
 
     filas = []
     de_activacion = base[base["target_gene"].isin(activacion)]
@@ -265,6 +361,11 @@ def _medir(corrida: Corrida) -> None:
         "negativos_solo_npass_que_dependen_de_ac50": neg_npass_ac50,
         "ic50_aparte": acuerdo,
         "pares_sin_evidencia": evidencia,
+        "pares_de_activacion_por_evidencia": {k: int(v) for k, v in por_evidencia.items()},
+        "ic_de_activacion_por_direccion": {k: int(v) for k, v
+                                           in direccion[ic].value_counts().items()},
+        "ic_de_activacion_con_pares_por_direccion": {
+            k: int(v) for k, v in direccion[ic_modelo].value_counts().items()},
     })
 
 
@@ -369,7 +470,7 @@ def _comparar(antes: pd.DataFrame, despues: pd.DataFrame,
 def main() -> None:
     if not ACTIVIDAD.exists():
         raise SystemExit(f"No está el archivo de actividad: {ACTIVIDAD}")
-    with Corrida("dianas-activacion", decision="2.3",
+    with Corrida("dianas-activacion-descripcion", decision="2.3",
                  params={"umbral_um": UMBRAL_UM,
                          "variantes": {k: list(v) for k, v in VARIANTES.items()},
                          "direccion_de_tipo": DIRECCION_DE_TIPO},
