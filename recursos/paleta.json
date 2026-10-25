@@ -1,0 +1,62 @@
+{
+  "_comentario": [
+    "Fuente única de color del proyecto. La consumen el video (animaciones/comun.py),",
+    "las gráficas del mazo (recursos/graficas.js) y las hojas de estilo, a través de",
+    "scripts/paleta.py. Antes cada uno traía sus hex y tres se habían desviado: el azul",
+    "(#3b78d6 contra #5b9bd5), el verde (#2e8b57 / #4caf7d) y el naranja (#e07b1a /",
+    "#e8954a). Lo bastante parecidos para parecer un error y no una decisión.",
+    "",
+    "Los pasos salen de validar la paleta anterior y corregir lo que falló. La de antes",
+    "no pasaba tres de cinco comprobaciones sobre fondo oscuro: cuatro colores fuera de",
+    "la banda de luminosidad, un croma de 0.072 que se lee como gris, y —la seria— una",
+    "separación de 5.9 en protanopía entre el verde y el naranja, que son «producto",
+    "natural» y «BBB−», dos de las distinciones centrales del proyecto.",
+    "",
+    "Los tres categóricos de abajo pasan las cinco comprobaciones en los dos modos con",
+    "todas las parejas en juego. Se validan con el script de la guía de visualización:",
+    "  node validate_palette.js '#3987e5,#d95926,#199e70' --mode dark --surface '#1b2430' --pairs all"
+  ],
+
+  "categoricos": {
+    "_orden": ["positivo", "negativo", "natural"],
+    "_regla": "Se asignan en orden fijo, nunca en ciclo. Una cuarta serie se pliega en «otros» o se separa en gráficas pequeñas.",
+    "positivo": {
+      "significa": "BBB+, la clase mayoritaria; en el video también «entrenamiento»",
+      "claro": "#2a78d6",
+      "oscuro": "#3987e5"
+    },
+    "negativo": {
+      "significa": "BBB−, la clase minoritaria; en el video también «lo que se reserva»",
+      "claro": "#eb6834",
+      "oscuro": "#d95926"
+    },
+    "natural": {
+      "significa": "producto natural con coincidencia exacta en COCONUT",
+      "claro": "#1baf7a",
+      "oscuro": "#199e70",
+      "_aviso": "En modo claro queda en 2.74 de contraste, por debajo de 3:1. Pide etiqueta directa visible o vista de tabla."
+    }
+  },
+
+  "estado": {
+    "_regla": "Reservados. No se reusan como «serie 4», y van siempre con icono o etiqueta, nunca solo con color.",
+    "alerta": {
+      "significa": "error, fuga, lo que no se debe hacer",
+      "claro": "#e34948",
+      "oscuro": "#e66767"
+    }
+  },
+
+  "tintas": {
+    "_regla": "No son series: son texto y estructura. Por eso no pasan por el piso de croma.",
+    "fondo": { "claro": "#f6f8fb", "oscuro": "#1b2430" },
+    "texto": { "claro": "#1e252e", "oscuro": "#e8edf3" },
+    "tenue": { "claro": "#52514e", "oscuro": "#9aa8b8" },
+    "rejilla": { "claro": "#d7dde5", "oscuro": "#3a4654" },
+    "secundaria": {
+      "significa": "trazo de apoyo: contornos del cerebro, series no destacadas",
+      "claro": "#4a6fa5",
+      "oscuro": "#8fb3dd"
+    }
+  }
+}

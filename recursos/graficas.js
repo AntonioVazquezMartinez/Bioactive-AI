@@ -10,15 +10,24 @@
  * mano: si una gráfica muestra un número, salió de ahí.
  */
 
+// **Los colores salen de `recursos/paleta.json`**, repartidos por
+// `scripts/paleta.py` a `recursos/paleta.js`, que esta página carga antes.
+// Vivían duplicados aquí y en `animaciones/comun.py`, y tres se habían
+// desviado: el azul, el verde y el naranja.
+//
+// Se toman los pasos de modo oscuro porque el mazo va sobre fondo oscuro.
+// `resto` desaparece como color propio: no era una serie sino una tinta de
+// apoyo, y por eso fallaba el piso de croma —0.072, que se lee como gris—.
+const _P = (window.PALETA || {}).oscuro || {};
 const PAL = {
-  texto: "#e8edf3",
-  tenue: "#9aa8b8",
-  rejilla: "#3a4654",
-  positivo: "#5b9bd5",   // BBB+, la clase mayoritaria
-  negativo: "#e8954a",   // BBB−, la minoritaria
-  natural: "#4caf7d",
-  resto: "#8fb3dd",
-  alerta: "#d64541",
+  texto: _P.texto,
+  tenue: _P.tenue,
+  rejilla: _P.rejilla,
+  positivo: _P.positivo,   // BBB+, la clase mayoritaria
+  negativo: _P.negativo,   // BBB−, la minoritaria
+  natural: _P.natural,
+  resto: _P.secundaria,    // trazo de apoyo, no una identidad
+  alerta: _P.alerta,       // estado reservado: nunca como «serie 4»
 };
 
 const NS = "http://www.w3.org/2000/svg";
@@ -474,26 +483,165 @@ function enfermedades(destino, D) {
   es.forEach((e, i) => {
     const y = 14 + i * 23;
     const w = Math.max((e.n / max) * ancho, 1.5);
-    const pocos = e.n < 500;
+    // **El color dice si entra al alcance, que es de lo que habla el pie.**
+    // Codificaba `n < 500` —y encima con `alerta`, que está reservado para
+    // estados— así que Epilepsia y Neurodegeneración, que la 2.1 dejó fuera,
+    // se veían igual que las cinco que sí entran. Y pocos datos no es lo mismo
+    // que fuera de alcance: dentro de las cinco hay dianas pequeñas, y entran.
+    const dentro = i < 5;
     svg.append(
-      h("text", { x: izq - 12, y: y + 13, "text-anchor": "end", fill: PAL.texto, "font-size": 14 }, e.nombre),
-      h("rect", { x: izq, y, width: w, height: 17, fill: pocos ? PAL.alerta : PAL.resto, opacity: pocos ? 0.95 : 0.6, rx: 2 }),
-      h("text", { x: izq + w + 8, y: y + 13, fill: pocos ? PAL.alerta : PAL.tenue, "font-size": 13 }, num(e.n)),
+      h("text", { x: izq - 12, y: y + 13, "text-anchor": "end",
+                  fill: dentro ? PAL.texto : PAL.tenue, "font-size": 14 }, e.nombre),
+      h("rect", { x: izq, y, width: w, height: 17,
+                  fill: dentro ? PAL.positivo : PAL.resto,
+                  opacity: dentro ? 0.85 : 0.35, rx: 2 }),
+      h("text", { x: izq + w + 8, y: y + 13,
+                  fill: dentro ? PAL.texto : PAL.tenue, "font-size": 13 }, num(e.n)),
     );
   });
+
+  // La línea que marca dónde acaba el alcance: cinco barras arriba, el resto
+  // debajo. Sin ella el pie tenía que explicar un corte que no se veía.
+  const yCorte = 14 + 5 * 23 - 3;
+  svg.append(
+    h("line", { x1: izq - 150, y1: yCorte, x2: W - 8, y2: yCorte,
+                stroke: PAL.rejilla, "stroke-width": 1, "stroke-dasharray": "3 3" }),
+    // A la derecha y no a la izquierda: a la izquierda el rótulo caía justo
+    // sobre el nombre de la categoría que marca el corte.
+    h("text", { x: W - 8, y: yCorte - 5, "text-anchor": "end",
+                fill: PAL.tenue, "font-size": 11 },
+      "alcance del proyecto · decisión 2.1"),
+  );
 
   const pie = document.createElement("div");
   pie.className = "lectura";
   pie.innerHTML =
+    // **El alcance son cinco categorías, y está ratificado (2.1).** El pie decía
+    // que el multitarea era «la única forma de incluir» las de abajo, lo que
+    // prometía justo lo que esa decisión dejó fuera. El multitarea incluye las
+    // dianas pequeñas **dentro** de las cinco, no otras enfermedades.
     `A escala real. Alzheimer tiene <strong>${num(es[0].n)}</strong> registros y ELA ` +
-    `<strong>${num(es[es.length - 1].n)}</strong>: tres órdenes de magnitud. Las de abajo no sostienen un ` +
-    `modelo propio, y un modelo multitarea es la única forma de incluirlas, a costa de mezclar señales.`;
+    `<strong>${num(es[es.length - 1].n)}</strong>: tres órdenes de magnitud. Las cinco de arriba son ` +
+    `el alcance del proyecto; el resto se dibuja para situarlas y queda fuera por decisión ratificada. ` +
+    `Dentro de esas cinco, las dianas con pocos datos entran por el modelo multitarea.`;
   destino.append(svg, pie);
 }
 
 // ---------------------------------------------------------------------------
 // 9 · Qué error cuesta más, con la única regla que hoy está medida (C.5)
 // ---------------------------------------------------------------------------
+// --------------------------------------------------------------- partición
+// **La afirmación metodológica central del proyecto, y vivía como una tabla.**
+// Agrupar por andamio solo, en vez de unirlo al esqueleto de conectividad,
+// pone estereoisómeros del mismo compuesto a los dos lados del pliegue — y eso
+// infla el resultado más que elegir un modelo u otro.
+//
+// Por defecto se dibuja el agrupamiento correcto, con sus cifras y su barra de
+// comparación: **no hay que tocar nada para que enseñe la conclusión**. El
+// interruptor es la capa de encima: al pasar al agrupamiento malo, las familias
+// se reparten entre las dos cajas y las cifras suben.
+function particion(destino, D) {
+  const A = D.agrupamiento;
+  if (!A) return;
+  const W = 760, H = 300;
+  // **Tantas familias como colores categóricos, no más.** Con seis familias y
+  // tres hues, el color dejaba de identificar a la familia y el dibujo parecía
+  // decir que las familias se repartían incluso en el agrupamiento correcto —
+  // lo contrario de su propio rótulo.
+  const FAMILIAS = 3, POR_FAMILIA = 5;
+  let malo = false;
+
+  const svg = lienzo(W, H, "Qué cambia según cómo se agrupa");
+  const capa = h("g");
+  svg.appendChild(capa);
+
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  // Una familia es un esqueleto con sus estereoisómeros: mismo color.
+  const color = (i) => [PAL.positivo, PAL.natural, PAL.negativo][i % 3];
+
+  function pinta() {
+    capa.textContent = "";
+    const d = malo ? A.solo_andamio : A.andamio_esqueleto;
+    const cajaW = 300, cajaH = 150, sep = 60;
+    const x0 = (W - 2 * cajaW - sep) / 2, y0 = 54;
+
+    [["entrenamiento", x0], ["evaluación", x0 + cajaW + sep]].forEach(([t, x]) => {
+      capa.append(
+        h("rect", { x, y: y0, width: cajaW, height: cajaH, rx: 6, fill: "none",
+                    stroke: PAL.rejilla, "stroke-width": 1.5 }),
+        h("text", { x: x + cajaW / 2, y: y0 - 10, "text-anchor": "middle",
+                    fill: PAL.tenue, "font-size": 13 }, t));
+    });
+
+    // Bien agrupado: la última familia entera a evaluación. Mal: una de cada
+    // familia se va, así que las tres quedan a los dos lados.
+    const izq = [], der = [];
+    for (let f = 0; f < FAMILIAS; f++) {
+      for (let m = 0; m < POR_FAMILIA; m++) {
+        const derecha = malo ? (m === 0) : (f === FAMILIAS - 1);
+        (derecha ? der : izq).push(f);
+      }
+    }
+    const colocar = (lista, bx) => lista.forEach((f, i) => {
+      capa.append(h("circle", {
+        cx: bx + 34 + (i % 7) * 38,
+        cy: y0 + 40 + Math.floor(i / 7) * 38,
+        r: 9, fill: color(f), "fill-opacity": 0.85,
+        stroke: PAL.rejilla, "stroke-width": 2,
+      }));
+    });
+    colocar(izq, x0);
+    colocar(der, x0 + cajaW + sep);
+
+    const aviso = malo
+      ? "La misma familia está de los dos lados: al modelo le basta reconocerla."
+      : "Cada familia cae entera de un solo lado.";
+    capa.append(h("text", { x: W / 2, y: y0 + cajaH + 26, "text-anchor": "middle",
+                            fill: malo ? PAL.alerta : PAL.natural, "font-size": 14 }, aviso));
+
+    lectura.innerHTML =
+      `<strong>${d.grupos.toLocaleString("es-MX")}</strong> grupos · ` +
+      `AUROC <strong>${d.auroc.toFixed(3)}</strong> ` +
+      `[${d.ic[0].toFixed(3)}, ${d.ic[1].toFixed(3)}] · ` +
+      `MCC <strong>${d.mcc.toFixed(3)}</strong>` +
+      (malo
+        ? ` — infla ${((A.solo_andamio.auroc - A.andamio_esqueleto.auroc) * 100).toFixed(1)} puntos de AUROC y ` +
+          `${((A.solo_andamio.mcc - A.andamio_esqueleto.mcc) * 100).toFixed(1)} de MCC. En MCC eso es ` +
+          `más de tres veces lo que separa a los tres modelos entre sí ` +
+          `(${(A.entre_modelos.mcc * 100).toFixed(1)} puntos, con la misma medida).`
+        : " — es el agrupamiento que usa el proyecto.");
+  }
+
+  [["Andamio ∪ esqueleto", false], ["Solo andamio", true]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    // `bio-boton` es lo que los hace botones del mazo y no del navegador:
+    // sin esa clase salían como cajas blancas sobre el fondo oscuro.
+    b.className = v === malo ? "bio-boton activo" : "bio-boton";
+    b.addEventListener("click", () => {
+      malo = v;
+      [...control.children].forEach((x, i) => x.classList.toggle("activo", (i === 1) === malo));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Bosque aleatorio, una semilla, predicciones fuera de pliegue, intervalo por " +
+    "bootstrap de grupos — la misma medida en las dos filas y en la distancia entre " +
+    "modelos. Notebook 03, decisión 1.2. Las moléculas del dibujo son ilustrativas; " +
+    "las cifras, no.";
+  destino.append(control, svg, lectura, pie);
+}
+
 function costo(destino, D) {
   const T = D.tpsa;
   // **Entrenamiento, no el conjunto completo.** La serie `completo` incluye la
@@ -531,7 +679,8 @@ function costo(destino, D) {
       `<div class="bio-tarjeta alerta"><div class="t">Ensayos que no darán nada</div>
          <div class="v">${num(p.fallidos)}</div><div class="n">y ${num(p.perdidos)} reales quedan fuera (${(100 - exh).toFixed(0)}% perdido)</div></div>`;
     pie.innerHTML =
-      `Con el corte en <strong>TPSA &lt; ${p.corte} Å²</strong>. Es la única regla que el proyecto tiene ` +
+      `Con el corte en <strong>TPSA &lt; ${p.corte} Å²</strong>, sobre el <strong>entrenamiento</strong> (n = ${num(T.n.entrenamiento)}; la prueba queda ` +
+      `reservada y no se cuenta). Es la única regla que el proyecto tiene ` +
       `medida hoy, no el modelo final, pero la forma del dilema es la misma: <strong>acortar la lista sube ` +
       `la precisión y deja fuera más candidatos reales</strong>. Dónde conviene pararse depende de qué ` +
       `cuesta más en su laboratorio, y eso no lo decide la estadística.`;
@@ -691,7 +840,282 @@ function vocabulario(destino, D) {
 
 // ---------------------------------------------------------------------------
 
-const GRAFICAS = { grupos, naturales, tpsa, etapas, etiquetado,
+
+// ---------------------------------------------------------------------------
+// Por qué no plegamos: la colisión contra la trazabilidad.
+//
+// Por defecto dibuja Sort & Slice, que es lo que el proyecto usa y lo que se
+// sostiene; el interruptor enseña qué pasa al plegar. El mismo patrón que
+// `particion`: el estado por omisión lleva su conclusión y no hay que tocar
+// nada para entender la diapositiva.
+// ---------------------------------------------------------------------------
+function colision(destino, D) {
+  const BITS = 9;
+  // Tres subestructuras, los tres colores categóricos en su orden. Son
+  // ilustrativas: lo que se demuestra es la mecánica, no un caso real.
+  const FRAGMENTOS = [
+    { nombre: "anillo aromático", color: PAL.positivo },
+    { nombre: "grupo nitro", color: PAL.negativo },
+    { nombre: "amina terciaria", color: PAL.natural },
+  ];
+  // Al plegar, el primero y el tercero caen en el mismo bit: es lo que una
+  // función de dispersión hace cuando el vocabulario no cabe en las casillas.
+  const PLEGADO = [3, 6, 3];
+  const PROPIO = [1, 4, 7];
+  const W = 760, H = 300;
+  let plegado = false;
+
+  const svg = lienzo(W, H, "Dónde cae cada subestructura");
+  const capa = h("g");
+  svg.appendChild(capa);
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  function pinta() {
+    capa.textContent = "";
+    const destinoBit = plegado ? PLEGADO : PROPIO;
+    const bw = 54, bh = 54, sep = 10;
+    const fila = BITS * bw + (BITS - 1) * sep;
+    const bx0 = (W - fila) / 2, by = 196;
+
+    // Cuántos fragmentos acaban en cada bit: es lo que decide el color.
+    const cuantos = {};
+    destinoBit.forEach((b) => { cuantos[b] = (cuantos[b] || 0) + 1; });
+
+    for (let i = 0; i < BITS; i++) {
+      const n = cuantos[i] || 0;
+      const choca = n > 1;
+      const duenyo = destinoBit.indexOf(i);
+      capa.append(h("rect", {
+        x: bx0 + i * (bw + sep), y: by, width: bw, height: bh, rx: 4,
+        fill: choca ? PAL.alerta : (n ? FRAGMENTOS[duenyo].color : PAL.resto),
+        "fill-opacity": n ? 0.8 : 0.25,
+        stroke: PAL.rejilla, "stroke-width": 1.5,
+      }));
+    }
+    capa.append(h("text", {
+      x: W / 2, y: by + bh + 22, "text-anchor": "middle",
+      fill: PAL.tenue, "font-size": 13,
+    }, plegado ? "una fila de 2,048 bits" : "una columna por subestructura"));
+
+    // Las etiquetas arriba, y la flecha de cada una a su bit.
+    const ew = 190, ey = 54;
+    FRAGMENTOS.forEach((f, i) => {
+      const ex = (W - 3 * ew - 2 * 20) / 2 + i * (ew + 20);
+      capa.append(
+        h("rect", { x: ex, y: ey, width: ew, height: 38, rx: 4, fill: f.color,
+                    "fill-opacity": 0.18, stroke: f.color, "stroke-width": 1.5 }),
+        h("text", { x: ex + ew / 2, y: ey + 24, "text-anchor": "middle",
+                    fill: PAL.texto, "font-size": 14 }, f.nombre));
+      // La punta cae en el centro del bit, desplazada cuando lo comparte, para
+      // que se vea que son dos y no una.
+      const comparten = destinoBit.reduce(
+        (acc, b, k) => (b === destinoBit[i] ? acc.concat(k) : acc), []);
+      const corrimiento = comparten.length > 1
+        ? (comparten.indexOf(i) / (comparten.length - 1) - 0.5) * bw * 0.5 : 0;
+      const px = bx0 + destinoBit[i] * (bw + sep) + bw / 2 + corrimiento;
+      capa.append(h("path", {
+        d: `M ${ex + ew / 2} ${ey + 38} L ${px} ${by - 9}`,
+        stroke: f.color, "stroke-width": 2.5, fill: "none",
+        "marker-end": flechaPunta(svg, f.color),
+      }));
+    });
+
+    const aviso = plegado
+      ? "Dos subestructuras distintas, el mismo bit: si ese bit pesa, no se puede dibujar cuál la empujó."
+      : "Cada columna se puede dibujar: el bit importante tiene una subestructura y solo una.";
+    // Debajo de la fila y no entre las etiquetas y los bits: ahí lo cruzaban
+    // las tres flechas.
+    capa.append(h("text", { x: W / 2, y: by + bh + 48, "text-anchor": "middle",
+                            fill: plegado ? PAL.alerta : PAL.natural,
+                            "font-size": 14 }, aviso));
+
+    lectura.innerHTML = plegado
+      ? "<strong>Plegado.</strong> El vocabulario no cabe en las casillas, así que " +
+        "la función de dispersión mete varias subestructuras en el mismo bit. Es " +
+        "barato y de tamaño fijo, y rompe lo que la patrocinadora puso como no " +
+        "negociable: poder decir qué estructura empujó la predicción."
+      : "<strong>Sort & Slice.</strong> Se ordenan las subestructuras por frecuencia " +
+        "en el entrenamiento y se guardan las L más comunes, una por columna. El " +
+        "costo es que el vocabulario <strong>se aprende de los datos</strong>: se " +
+        "ajusta solo con entrenamiento, y lo que solo aparece en la prueba queda fuera.";
+  }
+
+  [["Sort & Slice", false], ["Plegado", true]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    b.className = v === plegado ? "bio-boton activo" : "bio-boton";
+    b.addEventListener("click", () => {
+      plegado = v;
+      [...control.children].forEach((x, i) => x.classList.toggle("activo", (i === 1) === plegado));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Decisión 1.7 · notebook 02. Las tres subestructuras y los nueve bits son " +
+    "ilustrativos: el vocabulario real son 11,475 subestructuras y L = 2,048 " +
+    "columnas. Lo que no es ilustrativo es la mecánica — plegar colisiona por " +
+    "construcción, Sort &amp; Slice no puede.";
+  destino.append(control, svg, lectura, pie);
+}
+
+// ---------------------------------------------------------------------------
+// Una medición censurada no es un hueco, y el umbral es una decisión de lectura.
+//
+// Mueve el corte entre 10 µM y 1 µM y enseña qué etiquetas cambian **sin que
+// cambie el archivo**: es el argumento de la 2.10, que por eso guarda el
+// intervalo y no la etiqueta.
+// ---------------------------------------------------------------------------
+function intervalo(destino, D) {
+  const W = 760, H = 270;
+  const EJE_MIN = 3, EJE_MAX = 9;
+  // Cuatro mediciones que cubren los cuatro casos del archivo. Ilustrativas en
+  // sus valores; los cuatro casos, no.
+  const MEDICIONES = [
+    { t: "exacta", v: 7.3, lo: 7.3, hi: 7.3, txt: "IC50 = 0.05 µM" },
+    { t: "exacta", v: 5.4, lo: 5.4, hi: 5.4, txt: "IC50 = 4 µM" },
+    { t: "censurada", v: 5.0, lo: -Infinity, hi: 5.0, txt: "> 10 µM" },
+    { t: "censurada", v: 6.0, lo: -Infinity, hi: 6.0, txt: "> 1 µM" },
+  ];
+  let corte = 5.0;   // 10 µM
+
+  const svg = lienzo(W, H, "Dónde cae el corte, y qué etiqueta cambia");
+  const capa = h("g");
+  svg.appendChild(capa);
+  const control = document.createElement("div");
+  control.className = "bio-pestanas";
+  const lectura = document.createElement("div");
+  lectura.className = "lectura";
+
+  const x = (v) => 90 + ((v - EJE_MIN) / (EJE_MAX - EJE_MIN)) * (W - 180);
+
+  function etiqueta(m) {
+    // La regla de la 2.10: la etiqueta sale del intervalo, no de un número.
+    // Si el intervalo entero cae de un lado del corte, la etiqueta es segura;
+    // si lo cruza, es ambigua y se deja fuera.
+    //
+    // El `<=` no es un detalle: un «> 10 µM» tiene su cota **exactamente** en
+    // el corte de 10 µM, así que con `<` salía ambiguo y el dibujo desmentía
+    // a la 2.3, que cuenta esas mediciones como inactivos declarados —son el
+    // 67.4% de las censuradas, justo por estar censuradas ahí.
+    if (m.lo >= corte) return "activo";
+    if (m.hi <= corte) return "inactivo";
+    return "ambiguo";
+  }
+
+  function pinta() {
+    capa.textContent = "";
+    const ejeY = 196;
+    capa.append(
+      h("line", { x1: x(EJE_MIN), y1: ejeY, x2: x(EJE_MAX), y2: ejeY,
+                  stroke: PAL.rejilla, "stroke-width": 2 }),
+      h("text", { x: x(EJE_MIN), y: ejeY + 24, fill: PAL.tenue, "font-size": 12 },
+        "menos potente"),
+      h("text", { x: x(EJE_MAX), y: ejeY + 24, "text-anchor": "end",
+                  fill: PAL.tenue, "font-size": 12 }, "más potente"),
+      h("text", { x: W / 2, y: ejeY + 44, "text-anchor": "middle",
+                  fill: PAL.tenue, "font-size": 12 },
+        "potencia · 6 − log₁₀ de la concentración en µM"));
+
+    // El corte, de arriba abajo.
+    capa.append(
+      h("line", { x1: x(corte), y1: 40, x2: x(corte), y2: ejeY + 8,
+                  stroke: PAL.texto, "stroke-width": 2, "stroke-dasharray": "5 4" }),
+      h("text", { x: x(corte), y: 32, "text-anchor": "middle",
+                  fill: PAL.texto, "font-size": 13 },
+        corte === 5 ? "corte: 10 µM" : "corte: 1 µM"));
+
+    const COLOR = { activo: PAL.natural, inactivo: PAL.negativo, ambiguo: PAL.alerta };
+    MEDICIONES.forEach((m, i) => {
+      const y = 62 + i * 30;
+      const e = etiqueta(m);
+      if (m.t === "censurada") {
+        // Media recta: llega hasta la cota y sigue hacia abajo sin fondo.
+        capa.append(h("path", {
+          d: `M ${x(m.hi)} ${y} L ${x(EJE_MIN) + 6} ${y}`,
+          stroke: COLOR[e], "stroke-width": 3, fill: "none",
+          "marker-end": flechaPunta(svg, COLOR[e]),
+        }), h("line", { x1: x(m.hi), y1: y - 7, x2: x(m.hi), y2: y + 7,
+                        stroke: COLOR[e], "stroke-width": 3 }));
+      } else {
+        capa.append(h("circle", { cx: x(m.v), cy: y, r: 7, fill: COLOR[e],
+                                  stroke: PAL.rejilla, "stroke-width": 2 }));
+      }
+      capa.append(
+        h("text", { x: W - 86, y: y + 4, fill: PAL.texto, "font-size": 13 }, m.txt),
+        h("text", { x: 82, y: y + 4, "text-anchor": "end", fill: COLOR[e],
+                    "font-size": 13 }, e));
+    });
+
+    lectura.innerHTML = corte === 5
+      ? "<strong>Con el corte en 10 µM</strong>, el «&gt; 10 µM» es <strong>inactivo</strong> " +
+        "—su cota está exactamente en el corte— y el «&gt; 1 µM» queda <strong>ambiguo</strong>: " +
+        "su intervalo cruza el corte, así que el archivo no dice de qué lado cae y se " +
+        "deja fuera. Es el corte principal, y no es un hallazgo: el <strong>67.4%</strong> " +
+        "de las mediciones censuradas lo está exactamente en 10 µM, que es la " +
+        "concentración a la que estos ensayos dejaron de mirar."
+      : "<strong>Con el corte en 1 µM</strong> cambian dos cosas en direcciones opuestas: " +
+        "el «&gt; 1 µM» deja de ser ambiguo y pasa a <strong>inactivo</strong>, y la " +
+        "medición exacta de 4 µM pasa de <strong>activo</strong> a <strong>inactivo</strong>. " +
+        "Un corte más exigente <strong>recupera</strong> evidencia negativa censurada en " +
+        "vez de perderla. Y ninguna fila del archivo cambió.";
+  }
+
+  [["10 µM", 5.0], ["1 µM", 6.0]].forEach(([t, v]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = t;
+    b.className = v === corte ? "bio-boton activo" : "bio-boton";
+    b.addEventListener("click", () => {
+      corte = v;
+      [...control.children].forEach((x2, i) => x2.classList.toggle("activo", (i === 1) === (corte === 6)));
+      pinta();
+    });
+    control.append(b);
+  });
+
+  pinta();
+  const pie = document.createElement("div");
+  pie.className = "lectura";
+  pie.innerHTML =
+    "Decisión 2.10 · notebook 02b. Las cuatro mediciones son ilustrativas; los " +
+    "cuatro casos que cubren, no — dos exactas a cada lado del corte, una censurada " +
+    "en el corte y una que lo cruza. Sobre el archivo entero, bajar a 1 µM deja " +
+    "<strong>53,359</strong> censuradas utilizables contra <strong>48,480</strong> a " +
+    "10 µM —4,879 negativos más— y el balance de clases pasa de 1.6:1 a 0.8:1. El corte " +
+    "principal sigue siendo 10 µM porque es el de la biblioteca, no porque dé mejores " +
+    "cifras; 1 µM se reporta siempre al lado.";
+  destino.append(control, svg, lectura, pie);
+}
+
+// La punta de flecha, una por color y reutilizada: SVG las quiere declaradas
+// en `defs` y referenciadas por id, así que crearlas al vuelo duplicaba una
+// por cada trazo.
+function flechaPunta(svg, color) {
+  const id = "punta-" + color.replace(/[^a-z0-9]/gi, "");
+  if (!svg.querySelector("#" + id)) {
+    let defs = svg.querySelector("defs");
+    if (!defs) { defs = h("defs"); svg.insertBefore(defs, svg.firstChild); }
+    const m = h("marker", {
+      id, viewBox: "0 0 10 10", refX: 8, refY: 5,
+      markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse",
+    });
+    m.append(h("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: color }));
+    defs.append(m);
+  }
+  return `url(#${id})`;
+}
+
+const GRAFICAS = { particion, colision, intervalo,
+                   grupos, naturales, tpsa, etapas, etiquetado,
                    archivo, dianas, enfermedades, costo,
                    escalado, vocabulario };
 

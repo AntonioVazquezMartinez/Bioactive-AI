@@ -2,7 +2,7 @@
 
 [tool.ruff]
 # Los notebooks entregados no se lintean: sus salidas no se tocan (ver CLAUDE.md).
-include = ["src/**/*.py", "scripts/**/*.py", "tests/**/*.py"]
+include = ["src/**/*.py", "scripts/**/*.py", "tests/**/*.py", "animaciones/**/*.py"]
 line-length = 100
 
 [tool.ruff.lint]
