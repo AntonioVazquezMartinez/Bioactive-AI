@@ -1,0 +1,41 @@
+{
+  "distingue_los_signos": true,
+  "referencia": {
+    "pa_media_censurados_derecha_cota": 4.753212062285447,
+    "pa_media_exactas_validacion": 6.279265931328412
+  },
+  "signo_correcto": {
+    "concordancia": 0.7733358697343808,
+    "fraccion_censurada": 0.20741482965931868,
+    "n_entrenamiento": 49425,
+    "n_exactas": 5537,
+    "n_total": 6986,
+    "pa_media_censurados_derecha": 5.280084870906358,
+    "respeta_la_cota": 0.2853932584269663,
+    "rmse_exactas": 0.9869603492747288,
+    "spearman_exactas": 0.6827353845509516
+  },
+  "signo_invertido": {
+    "concordancia": 0.7371007094355669,
+    "fraccion_censurada": 0.20741482965931868,
+    "n_entrenamiento": 49425,
+    "n_exactas": 5537,
+    "n_total": 6986,
+    "pa_media_censurados_derecha": 5.979786018843061,
+    "respeta_la_cota": 0.03670411985018727,
+    "rmse_exactas": 1.1301389153935242,
+    "spearman_exactas": 0.6532465330395185
+  },
+  "sin_ninguna_cota": 162,
+  "solo_exactas": {
+    "concordancia": 0.7566627025143465,
+    "fraccion_censurada": 0.20741482965931868,
+    "n_entrenamiento": 40563,
+    "n_exactas": 5537,
+    "n_total": 6986,
+    "pa_media_censurados_derecha": 5.801789749695567,
+    "respeta_la_cota": 0.08089887640449438,
+    "rmse_exactas": 0.9830229568372876,
+    "spearman_exactas": 0.6868031181834032
+  }
+}

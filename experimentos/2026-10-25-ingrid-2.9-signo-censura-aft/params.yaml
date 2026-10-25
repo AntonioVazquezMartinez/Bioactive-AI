@@ -1,0 +1,12 @@
+decision: '2.9'
+semillas:
+- 0
+params:
+  modelo: xgboost survival:aft normal, sin afinar
+  rondas: 300
+  escala_de_ajuste: µM
+  entrena_con: entrenamiento
+  evalua_en: validación
+  variantes:
+  - signo_correcto
+  - signo_invertido
