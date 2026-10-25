@@ -216,7 +216,24 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   puede hacer. Tampoco se puede concluir lo contrario: el vacío no demuestra que el tejido no
   influya, porque el experimento ocurrió en algún tejido y lo que falta es la columna. Está pedido a
   Jorge Uribe (acta de la reunión, documento interno). Lo que sí está en el 100% de las filas es
-  `assay_chembl_id` y `reference_id`.
+  `reference_id`; `assay_chembl_id` solo en las de ChEMBL (92.4%), porque NPASS y CMAUP no traen
+  identificador de ensayo.
+
+  **Por par, que es la unidad del modelo, queda casi nada.** De los 70,384 pares, 286 (0.4%)
+  tienen tejido, 589 (0.8%) línea celular y 656 (0.9%) formato de ensayo; 874 (1.2%) tienen alguno
+  de los tres. Entre los 1,126 pares en conflicto, que eran donde más importaba, el 3.8%. Quince de
+  las 26 dianas del modelo no tienen ningún par con tejido, y ninguna los tiene todos. **La
+  ausencia no es neutra:** los pares con tejido son 96.1% activos a 10 µM contra 72.7% de los
+  demás (`pActividad` mediana 7.99 contra 6.30), así que darle el tejido al modelo como entrada le
+  ofrecería una pista sobre la etiqueta que viene de cómo se armó el archivo y no de la química.
+  Tampoco se puede aislar el efecto del contexto del de la diana: de las 26 dianas, solo `APP`
+  tiene dos formatos con 10 o más mediciones exactas cada uno (células y tejido), y ahí la mediana
+  difiere en 1.26 unidades de `pActividad`. En todo el archivo el formato sí se asocia con la
+  potencia (mediana 5.42 en ensayos celulares contra 6.82 en tejido y 6.90 en membrana celular),
+  pero esas filas anotadas son casi todas de las que el modelo no usa: de las 84,286 exactas que
+  entran, solo 706 traen formato. Lo calcula `scripts/cifras_contexto_ensayo.py`; corrida
+  `experimentos/2026-10-24-ingrid-2.3-contexto-ensayo/`, tabla
+  `notebooks/datos/contexto_ensayo.csv`.
 
 - **La potencia no es comparable entre fuentes, y ahí está el riesgo del etiquetado.** Mediana de
   las mediciones exactas: ChEMBL **0.335 µM**, CMAUP 4.47, NPASS **6.56** — veinte veces. Fracción
