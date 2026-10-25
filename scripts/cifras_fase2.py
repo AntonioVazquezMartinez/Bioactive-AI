@@ -111,10 +111,23 @@ def main() -> None:
     categorias = df["diana_categoria"].value_counts()
     sin_diana = int(categorias.get("Sin diana de la lista", 0))
     print(f"  con diana de la lista          {len(df) - sin_diana:>8,}")
-    print(f"  sin diana de la lista          {sin_diana:>8,}  (fenotípicos)")
+    print(f"  sin diana de la lista          {sin_diana:>8,}")
     for categoria, n in categorias.items():
         if categoria != "Sin diana de la lista":
             print(f"    {categoria:<28} {n:>7,}")
+
+    # Qué son las filas sin diana de la lista. Se llamaron «fenotípicas», y por tipo de
+    # ensayo la mayoría son de unión sobre otras proteínas (decisión 2.4).
+    sin = df[df["diana_categoria"].eq("Sin diana de la lista")]
+    print("\nFilas sin diana de la lista, por tipo de ensayo")
+    por_tipo = sin["assay_type"].fillna("sin tipo (NPASS)").value_counts()
+    for tipo, n in por_tipo.items():
+        print(f"  {tipo:<20} {n:>8,}  ({n / len(sin):.1%})")
+    nombre = sin["target_name"]
+    print(f"  ChEMBL no asigna diana (Unchecked)  {int(nombre.eq('Unchecked').sum()):>8,}")
+    print(f"  NON-PROTEIN TARGET                  {int(nombre.eq('NON-PROTEIN TARGET').sum()):>8,}")
+    citotoxicidad = sin["activity_type"].isin(["GI50", "TGI"]).sum()
+    print(f"  GI50 y TGI (crecimiento celular)    {int(citotoxicidad):>8,}")
 
 
 if __name__ == "__main__":
