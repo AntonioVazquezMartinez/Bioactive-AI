@@ -44,7 +44,6 @@ Esto corrige la lectura contraria, que es la habitual en otros cursos y la que s
 |:--|:--|
 | `src/evaluation/cv.py` | validación cruzada agrupada por andamio y esqueleto, 3 semillas × 5 pliegues, predicciones fuera de pliegue, desglose por subgrupo en la misma pasada |
 | Las métricas del arnés | MCC, AUPRC de la minoritaria, AUROC y exactitud balanceada, por pliegue |
-|  | la fase 2 es una regresión de la potencia con censura ([2.9](decisiones.md#d2-9)): concordancia de Harrell, Spearman y RMSE solo sobre las exactas, y la conversión a µM que invierte el sentido de la censura. Las de ranking (enriquecimiento al 1% y 5%, BEDROC, precisión en los 100 primeros) están propuestas en la [C.5](decisiones.md#dc-5) y aún no se implementan |
 | `src/models/tareas.py` | las dos tareas con una llamada, y con el #113 el desglose por procedencia |
 | `scripts/experimento_rubrica3.py` | brecha de ajuste, curvas de aprendizaje, dos métodos de importancia, pisos triviales |
 | `src/tracking.py` y `experimentos/` | 9 corridas registradas con comando, entorno, métricas y parámetros |
