@@ -10,7 +10,9 @@ entrena el modelo traen el dato, ni si el contexto mueve la potencia.
 Calcula cuatro cosas:
 
 1. cobertura de las columnas de contexto por fuente y por ruta de selección (filas);
-2. potencia (`pActividad`) por formato, tipo de ensayo, tejido y línea celular;
+2. potencia (`pActividad`) por formato, tipo de ensayo, tejido y línea celular, sobre las
+   exactas que entran al modelo y sobre las de todo el archivo, porque no dicen lo mismo:
+   el contexto anotado está sobre todo en filas que el modelo no usa;
 3. cuántas dianas tienen dos formatos comparables, que decide si el efecto del contexto se
    puede separar del de la diana;
 4. cobertura **por par** esqueleto × gen, que es la unidad del modelo, por estrato de
@@ -50,7 +52,7 @@ sys.path.insert(0, str(RAIZ / "src"))
 from tracking import Corrida  # noqa: E402
 
 from src.data_prep.pares_fase2 import (EXACTA, RANGO_POTENCIA,  # noqa: E402
-                                       filas_de_pares, tabla_de_pares)
+                                       a_potencia, filas_de_pares, tabla_de_pares)
 
 ARCHIVO = (RAIZ / "data/external/profesora"
            / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv")
@@ -78,6 +80,18 @@ def cobertura_por_par(filas: pd.DataFrame) -> pd.DataFrame:
     por_par = marcas.groupby(["esqueleto", "target_gene"], sort=False).any().reset_index()
     por_par["alguno"] = por_par[["tejido", "celula", "formato"]].any(axis=1)
     return por_par
+
+
+def exactas_del_archivo(d: pd.DataFrame) -> pd.DataFrame:
+    """Las mediciones exactas de todo el archivo, también las que el modelo no usa.
+
+    Sin el filtro de categorías ni de estructura: incluye las 88,098 filas «Sin diana de la
+    lista», que son donde está casi todo el contexto anotado.
+    """
+    p = a_potencia(d["activity_value_used"], d["activity_units_used"])
+    sel = (d["activity_relation_used"].isin(EXACTA) & d["evidence_kind"].ne("inactivo_por_texto")
+           & p.between(*RANGO_POTENCIA))
+    return d[sel].assign(pActividad=p[sel])
 
 
 def dianas_con_dos_formatos(exactas: pd.DataFrame, minimo: int = MIN_FILAS) -> pd.DataFrame:
@@ -127,20 +141,25 @@ def main() -> None:
                         & filas["exacta"].notna()].copy()
         exactas["pActividad"] = exactas["exacta"]
 
-        print(f"2. pActividad por contexto ({len(exactas):,} exactas que entran al modelo)")
-        metricas["exactas_del_modelo"] = len(exactas)
-        for col, excluir in (("assay_format", None), ("assay_type", None),
-                             ("assay_tissue_raw", None), ("assay_cell_type_raw", "n.a.")):
-            s = exactas[exactas[col].notna()]
-            if excluir:
-                s = s[s[col].ne(excluir)]
-            t = (s.groupby(col)["pActividad"].agg(["size", "median"])
-                 .sort_values("size", ascending=False).round(2))
-            print(f"   {col}\n      " + t.head(8).to_string().replace("\n", "\n      "))
-            for valor, fila in t.iterrows():
-                largo.append((f"pActividad_por_{col}", valor, "n", int(fila["size"])))
-                largo.append((f"pActividad_por_{col}", valor, "mediana", fila["median"]))
-        print()
+        poblaciones = {"modelo": exactas, "archivo": exactas_del_archivo(d)}
+        for nombre, exa in poblaciones.items():
+            etiqueta = ("que entran al modelo" if nombre == "modelo"
+                        else "de todo el archivo, incluidas las que el modelo no usa")
+            print(f"2. pActividad por contexto ({len(exa):,} exactas {etiqueta})")
+            metricas[f"exactas_{nombre}"] = len(exa)
+            for col, excluir in (("assay_format", None), ("assay_type", None),
+                                 ("assay_tissue_raw", None), ("assay_cell_type_raw", "n.a.")):
+                s = exa[exa[col].notna()]
+                if excluir:
+                    s = s[s[col].ne(excluir)]
+                t = (s.groupby(col)["pActividad"].agg(["size", "median"])
+                     .sort_values("size", ascending=False).round(2))
+                print(f"   {col}\n      " + t.head(8).to_string().replace("\n", "\n      "))
+                for valor, fila in t.iterrows():
+                    tabla = f"pActividad_por_{col}_{nombre}"
+                    largo.append((tabla, valor, "n", int(fila["size"])))
+                    largo.append((tabla, valor, "mediana", fila["median"]))
+            print()
 
         print(f"3. Dianas con dos formatos comparables (≥ {MIN_FILAS} exactas en cada uno)")
         dos = dianas_con_dos_formatos(exactas)
