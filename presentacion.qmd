@@ -327,7 +327,7 @@ La regla de censura del diccionario ata el corte de los inactivos al de los acti
 :::
 
 ::: {.callout-note}
-Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sobre el par compuesto-diana, que es la unidad del modelo, salen **72.8%** de activos con 10 µM y **50.2%** con 1 µM.
+Los porcentajes de la gráfica son **por registro** e incluyen las filas sin diana de la lista. Sobre el par compuesto-diana, que es la unidad del modelo, salen **72.8%** de activos con 10 µM y **50.2%** con 1 µM.
 :::
 
 ::: {.callout-important}
