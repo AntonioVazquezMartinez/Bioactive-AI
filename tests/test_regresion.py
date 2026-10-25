@@ -78,3 +78,10 @@ def test_un_intervalo_vacio_no_devuelve_una_cota_inferior_mayor_que_la_superior(
     inferior_um, superior_um = limites_en_micromolar([5.0, 6.0], [4.0, 6.0])
     assert np.isnan(inferior_um[0]) and np.isnan(superior_um[0])
     assert inferior_um[1] == pytest.approx(1.0) == pytest.approx(superior_um[1])
+
+
+def test_spearman_de_una_prediccion_constante_es_nan_sin_avisos(recwarn):
+    inf = np.array([5.0, 6.0, 7.0, 8.0])
+    rho, n = spearman_exactas(inf, inf, np.full(4, 6.0))
+    assert np.isnan(rho) and n == 4
+    assert not [w for w in recwarn if "constant" in str(w.message).lower()]
