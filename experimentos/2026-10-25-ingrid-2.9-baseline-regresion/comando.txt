@@ -1,0 +1,1 @@
+python3.12.13 /tmp/claude-1000/-home-pamer-projects-Bioactive-AI/9e944334-5cc8-4730-997e-81f65cfef067/scratchpad/venv/lib/python3.12/site-packages/ipykernel_launcher.py -f /tmp/tmpk4sq8rl8.json

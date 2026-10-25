@@ -1,0 +1,130 @@
+{
+  "mixto": {
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.498,
+      "rmse_entrenamiento": 1.338,
+      "seg": 0.723,
+      "spearman": NaN
+    },
+    "ridge_exactas": {
+      "auroc": 0.5,
+      "concordancia": 0.51,
+      "desv_concordancia": 0.031,
+      "mcc": -0.002,
+      "rmse": 1.092,
+      "rmse_entrenamiento": 1.115,
+      "seg": 1.381,
+      "spearman": 0.043
+    },
+    "tobit": {
+      "auroc": 0.509,
+      "concordancia": 0.53,
+      "desv_concordancia": 0.035,
+      "mcc": 0.02,
+      "rmse": 1.184,
+      "rmse_entrenamiento": 1.181,
+      "seg": 9.276,
+      "spearman": 0.015
+    }
+  },
+  "solo_chembl": {
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.325,
+      "rmse_entrenamiento": 1.338,
+      "seg": 0.723,
+      "spearman": NaN
+    },
+    "ridge_exactas": {
+      "auroc": 0.762,
+      "concordancia": 0.681,
+      "desv_concordancia": 0.007,
+      "mcc": 0.172,
+      "rmse": 1.148,
+      "rmse_entrenamiento": 1.115,
+      "seg": 1.381,
+      "spearman": 0.503
+    },
+    "tobit": {
+      "auroc": 0.78,
+      "concordancia": 0.688,
+      "desv_concordancia": 0.009,
+      "mcc": 0.326,
+      "rmse": 1.215,
+      "rmse_entrenamiento": 1.181,
+      "seg": 9.276,
+      "spearman": 0.488
+    }
+  },
+  "solo_npass": {
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.64,
+      "rmse_entrenamiento": 1.338,
+      "seg": 0.723,
+      "spearman": NaN
+    },
+    "ridge_exactas": {
+      "auroc": 0.528,
+      "concordancia": 0.532,
+      "desv_concordancia": 0.029,
+      "mcc": 0.013,
+      "rmse": 1.296,
+      "rmse_entrenamiento": 1.115,
+      "seg": 1.381,
+      "spearman": 0.24
+    },
+    "tobit": {
+      "auroc": 0.624,
+      "concordancia": 0.639,
+      "desv_concordancia": 0.031,
+      "mcc": 0.114,
+      "rmse": 1.514,
+      "rmse_entrenamiento": 1.181,
+      "seg": 9.276,
+      "spearman": 0.192
+    }
+  },
+  "todos": {
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.337,
+      "rmse_entrenamiento": 1.338,
+      "seg": 0.723,
+      "spearman": NaN
+    },
+    "ridge_exactas": {
+      "auroc": 0.776,
+      "concordancia": 0.692,
+      "desv_concordancia": 0.006,
+      "mcc": 0.225,
+      "rmse": 1.156,
+      "rmse_entrenamiento": 1.115,
+      "seg": 1.381,
+      "spearman": 0.53
+    },
+    "tobit": {
+      "auroc": 0.792,
+      "concordancia": 0.7,
+      "desv_concordancia": 0.007,
+      "mcc": 0.362,
+      "rmse": 1.234,
+      "rmse_entrenamiento": 1.181,
+      "seg": 9.276,
+      "spearman": 0.512
+    }
+  }
+}
