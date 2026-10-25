@@ -22,7 +22,7 @@ flowchart TD
     end
 
     subgraph e2["Etapa 2 · actividad"]
-        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 fenotípicos aparte"]
+        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 sin diana de la lista aparte"]
         S2["99,585 esqueletos de conectividad"]
         S3["Cohorte descriptiva previa a partición<br/>71,145 pares · regla provisional"]
     end
@@ -155,7 +155,7 @@ La cobertura es muy desigual: Alzheimer reúne 52,676 registros y ELA solo 53. C
 | `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
 | `TARDBP` | TDP-43 | 8 en el archivo completo |
 
-El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
+El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`. No son en su mayoría fenotípicas: por tipo de ensayo, el 76.4% son de unión sobre otras proteínas (sigma-1, serotonina 1A, mu-opioide…), el 17.9% funcionales y el 4.2% (NPASS) no trae tipo, y a 30,511 ChEMBL no les asigna diana (`Unchecked`). Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
 
 ### La dirección en que se busca modular cada diana
 
@@ -177,7 +177,7 @@ Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, e
 
 ### Qué denominador usa cada porcentaje
 
-Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
+Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye las 88,098 filas sin diana de la lista. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
 
 ### Defectos conocidos del archivo de actividad
 

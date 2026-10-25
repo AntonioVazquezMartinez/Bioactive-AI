@@ -42,7 +42,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
 | [2.2](#d2-2) | Por diana, con multitarea como comparación | Vigente · revisada |
 | [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Vigente · revisada |
-| [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
+| [2.4](#d2-4) | Los 88,098 registros sin diana de la lista | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
 | [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
 | [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada |
@@ -695,7 +695,7 @@ Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% 
 
 Las cifras son las del archivo recibido (202,647 registros, el 89.9% del completo de 225,513, [2.6](#d2-6)), que es el que verá el modelo. Los porcentajes coinciden con los del diccionario de la patrocinadora (98%, 89%, 12%).
 
-**Denominadores.** Las proporciones dependen de la unidad. «Registro etiquetado» es todo el archivo, fenotípicos incluidos; «par esqueleto × gen» es un esqueleto de conectividad contra un gen (`target_gene`):
+**Denominadores.** Las proporciones dependen de la unidad. «Registro etiquetado» es todo el archivo, con las filas sin diana de la lista incluidas; «par esqueleto × gen» es un esqueleto de conectividad contra un gen (`target_gene`):
 
 | Unidad | Umbral | Denominador | Activos | Inactivos | % activos | Razón |
 |:---|:--|--:|--:|--:|--:|--:|
@@ -731,15 +731,17 @@ Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en v
 
 **Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
 
-#### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
+#### 2.4 · Los 88,098 registros sin diana de la lista {#d2-4 .propuesta}
 
 **Estado:** propuesta
 
-> **Pregunta:** ¿Van dentro de un modelo específico, aparte o fuera del alcance?
+> **Pregunta:** ¿Van dentro de un modelo específico, aparte o fuera del alcance? Y, de los ensayos sobre células, ¿cuáles miden protección y cuáles citotoxicidad?
 
-**Qué pasó.** El 43.5% de los registros no corresponde a ninguna diana de la lista; entraron por la ruta `neuronal_assay`: sistemas celulares neuronales donde se midió un efecto sin identificar la proteína responsable. Responden «¿hace algo en un sistema neuronal?», no «¿actúa sobre esta diana?».
+**Qué pasó.** El 43.5% de los registros (88,098) no corresponde a ninguna de las 39 dianas de la lista; entraron por la ruta `neuronal_assay`. **No son, en su mayoría, ensayos fenotípicos**, que es como se les llamó hasta el 24 de octubre. Por tipo de ensayo, 67,347 (76.4%) son de unión sobre proteínas, 15,746 (17.9%) funcionales, 789 de farmacocinética, 482 de toxicidad y 3,734 (las de NPASS) no traen tipo (`scripts/cifras_fase2.py`). Entre las proteínas hay receptores que no son de la lista, como sigma-1, serotonina 1A y mu-opioide; ChEMBL no asigna diana a 30,511 de las filas (`Unchecked`) y marca otras 3,113 como `NON-PROTEIN TARGET`. Los ensayos sobre células son una minoría y no todos miden protección: GI50 y TGI, que miden crecimiento celular, son 859 filas, y en líneas de tumor como `U-251` y `SH-SY5Y` la lectura depende de la descripción del ensayo, que el archivo no trae.
 
-**Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
+**Versión superada (24 de octubre).** Esta entrada decía que eran «sistemas celulares neuronales donde se midió un efecto sin identificar la proteína responsable» y que respondían «¿hace algo en un sistema neuronal?». Era una lectura del nombre de la ruta, no de los tipos de ensayo. El diccionario de la patrocinadora los describe como filas «cuya diana no es una de las 37 (p. ej. receptores de serotonina u opioides) o que ChEMBL no identifica».
+
+**Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Las 88,098 sin diana de la lista se conservan aparte; no se descartan. Las de unión sobre otras proteínas no hablan de neuroprotección por sí solas, y separar las celulares que sí la miden necesita la descripción del ensayo.
 
 #### 2.7 · Partición de la fase 2 {#d2-7 .vigente .revisada}
 
