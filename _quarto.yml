@@ -78,8 +78,13 @@ website:
             text: La ruta del proyecto
           - href: contenido/variable-objetivo-fase2.md
             text: La variable objetivo de la fase 2
-          - href: consulta.qmd
-            text: Consulta a la patrocinadora
+          # `consulta.qmd` se sigue construyendo y su URL sirve, pero sale del
+          # menú: de sus siete preguntas, cinco ya las contestó —la 1 y la 5 en
+          # la reunión del 15 de octubre, la 4 y la 7 en su correo del 25, y la
+          # 2 dejó de aplicar al decidir la 2.8—. Enlazarla ahí la invitaría a
+          # contestar lo que ya contestó. Vuelve al menú cuando se pode a las
+          # dos que siguen vivas, la brecha de los naturales (1.6) y la forma
+          # del modelo (2.2).
           - href: contenido/referencias/index.qmd
             text: Qué investigación sustenta cada una
       - text: Entregables
