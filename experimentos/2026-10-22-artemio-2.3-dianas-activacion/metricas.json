@@ -1,0 +1,65 @@
+{
+  "ac50_pares_que_cambian_de_etiqueta": 4,
+  "ac50_pares_que_dependen_solo_de_ac50": 1208,
+  "activacion": {
+    "base": {
+      "activos": 4184,
+      "inactivos": 1738,
+      "mediciones": 10818,
+      "pares": 6140,
+      "sin_decidir": 218
+    },
+    "sin_contrarias": {
+      "activos": 3600,
+      "inactivos": 1549,
+      "mediciones": 7794,
+      "pares": 5308,
+      "sin_decidir": 159
+    },
+    "solo_activacion": {
+      "activos": 3072,
+      "inactivos": 870,
+      "mediciones": 5377,
+      "pares": 4093,
+      "sin_decidir": 151
+    },
+    "solo_inhibicion": {
+      "activos": 1221,
+      "inactivos": 289,
+      "mediciones": 3024,
+      "pares": 1597,
+      "sin_decidir": 87
+    }
+  },
+  "activos_totales": 49332,
+  "dianas_de_activacion": 4,
+  "ic50_aparte": {
+    "pares_con_las_dos_direcciones": 703,
+    "pares_donde_discrepan": 70,
+    "pares_donde_las_dos_deciden": 675
+  },
+  "negativos_de_pares_solo_npass": 1914,
+  "negativos_solo_npass_que_dependen_de_ac50": 1161,
+  "negativos_totales": 18404,
+  "pares_sin_evidencia": {
+    "sin_contrarias": {
+      "con_dos_o_mas": 80,
+      "con_una_sola_medicion": 752,
+      "hoy_activos": 563,
+      "pares": 832
+    },
+    "solo_activacion": {
+      "con_dos_o_mas": 495,
+      "con_una_sola_medicion": 1552,
+      "hoy_activos": 1071,
+      "pares": 2047
+    },
+    "solo_inhibicion": {
+      "con_dos_o_mas": 880,
+      "con_una_sola_medicion": 3663,
+      "hoy_activos": 2919,
+      "pares": 4543
+    }
+  },
+  "pares_totales": 70384
+}

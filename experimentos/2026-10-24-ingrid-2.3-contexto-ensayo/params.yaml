@@ -1,0 +1,7 @@
+decision: '2.3'
+semillas: []
+params:
+  min_filas_por_formato: 10
+  rango_potencia:
+  - 2.0
+  - 12.0

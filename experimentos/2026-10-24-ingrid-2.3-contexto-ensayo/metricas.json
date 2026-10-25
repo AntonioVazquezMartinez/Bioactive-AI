@@ -1,0 +1,17 @@
+{
+  "activos_10um_con_tejido": 0.961,
+  "activos_10um_sin_tejido": 0.727,
+  "dianas_con_dos_formatos": 1,
+  "dianas_con_exactas": 26,
+  "dianas_con_formato": 14,
+  "dianas_del_modelo": 26,
+  "dianas_sin_tejido": 15,
+  "exactas_archivo": 145145,
+  "exactas_modelo": 84286,
+  "filas_n_a_celula": 7595,
+  "pares": 70384,
+  "pares_con_alguno": 874,
+  "pares_con_celula": 589,
+  "pares_con_formato": 656,
+  "pares_con_tejido": 286
+}

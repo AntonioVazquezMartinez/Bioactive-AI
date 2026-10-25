@@ -42,7 +42,7 @@ Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adop
 | [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
 | [2.2](#d2-2) | Por diana, con multitarea como comparación | Vigente · revisada |
 | [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Vigente · revisada |
-| [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
+| [2.4](#d2-4) | Los 88,098 registros sin diana de la lista | Propuesta |
 | [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
 | [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
 | [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada |
@@ -695,7 +695,7 @@ Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% 
 
 Las cifras son las del archivo recibido (202,647 registros, el 89.9% del completo de 225,513, [2.6](#d2-6)), que es el que verá el modelo. Los porcentajes coinciden con los del diccionario de la patrocinadora (98%, 89%, 12%).
 
-**Denominadores.** Las proporciones dependen de la unidad. «Registro etiquetado» es todo el archivo, fenotípicos incluidos; «par esqueleto × gen» es un esqueleto de conectividad contra un gen (`target_gene`):
+**Denominadores.** Las proporciones dependen de la unidad. «Registro etiquetado» es todo el archivo, con las filas sin diana de la lista incluidas; «par esqueleto × gen» es un esqueleto de conectividad contra un gen (`target_gene`):
 
 | Unidad | Umbral | Denominador | Activos | Inactivos | % activos | Razón |
 |:---|:--|--:|--:|--:|--:|--:|
@@ -731,15 +731,47 @@ Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en v
 
 **Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
 
-#### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
+**Y en cuatro dianas el tipo de medida no dice por sí solo si va en la dirección buscada.** El archivo trae `diana_efecto_buscado` —qué modulación de la diana se busca como tratamiento— y el proyecto no la usa: `src/data_prep/pares_fase2.py` no menciona `activity_type` ni una vez. En `PPARG`, `NFE2L2`, `SIRT1` y `TSPO` el efecto buscado es **activación**, y ahí el 28% de las mediciones son IC50. Lo señaló Pame al revisar el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95).
+
+**Una versión anterior de esta entrada leía el IC50 como potencia de inhibir, el sentido contrario al buscado, y esa lectura era falsa.** La señaló Artemio al revisar el correo para la patrocinadora. Un IC50 es la concentración que reduce a la mitad lo que se mide, y qué se reduce depende del ensayo: en uno de **unión** (desplazamiento de un radioligando, competencia por fluorescencia) mide cuánto se une, igual que un Ki, y vale lo mismo para un agonista que para un antagonista —ensayos como `CHEMBL2342574` miden el desplazamiento de [3H]-rosiglitazona, un agonista, de `PPARG`—; en uno **funcional** mide inhibición. El nombre del tipo no lleva la dirección.
+
+El archivo trae `assay_type` solo en la ruta `neuronal_assay`, y está vacío en las 2,015 mediciones IC50 de las tres dianas que aportan pares. Por eso el tipo y la descripción de cada ensayo se piden a ChEMBL por `assay_chembl_id` (`scripts/descargar_tipos_ensayo.py`). **Esto es provisional: se le preguntó a la patrocinadora si puede completarse así y está pendiente de su visto bueno.** Si dice que no, `DIRECCION_DE_ENSAYO` queda vacío, los IC vuelven a ser ambiguos y no hay que rehacer nada más; los datos viven en `notebooks/datos/tipos_ensayo_chembl.csv`.
+
+**Y el tipo de ChEMBL tampoco basta.** `B` es grueso: hay ensayos de unión según ChEMBL cuya descripción es funcional (`CHEMBL1116169`, *Inhibition of PPARgamma assessed as transcriptional activity*; `CHEMBL1000390`, *Inhibition of human plasma BChE… by Ellman's method*), como señaló Artemio. Por eso la medición lee además la descripción con una regla de palabras, estrecha y provisional: un ensayo `B` cuya descripción habla de inhibir o antagonizar y no de unión se lee como inhibición funcional. Sobre las 2,015 mediciones IC50 de `PPARG`, `NFE2L2` y `TSPO`, **1,429 (71%) se leen como afinidad, 399 (20%) como inhibición funcional y 187 (9%) no se pueden tipificar** (NPASS y CMAUP no traen identificador de ensayo, o el ensayo es de farmacocinética o toxicidad). Artemio, leyendo las descripciones a mano, contó 17% de funcionales entre los IC50 de ChEMBL: el mismo orden de magnitud.
+
+Cuánto está en juego lo mide `scripts/medicion_dianas_activacion.py`, con cada IC puesto en la dirección que dicen el tipo y la descripción de su ensayo:
+
+| En las dianas de activación | Pares | Activos |
+|:--|--:|--:|
+| Como está hoy | 6,140 | 4,184 |
+| Si se quita lo que mide inhibición funcional *(laxo)* | 5,985 | 4,087 |
+| Si además tiene que medir activación *(estricto)* | 4,093 | 3,072 |
+
+**Lo que se mueve no son las etiquetas, es la evidencia.** El criterio laxo deja sin ninguna medición a 155 pares (2.5%), el 98% de ellos con una sola medición, y cambia 2 etiquetas. El estricto deja sin medición a 2,047 (un tercio) y cambia 67; 1,552 de esos 2,047 descansan en una sola medición, aunque el máximo sube a 17. La diferencia entre los dos es la **afinidad**: el estricto quita también `Ki`, `Kd` y los IC50 de unión, que no declaran dirección, y de ahí que `TSPO`, que se mide por afinidad, caiga de 260 pares a 5. Y el diccionario advierte que `diana_efecto_buscado` **no dice qué hizo el compuesto en el ensayo**, así que la columna no decide sola.
+
+**Leer el tipo de ensayo no reduce los pares sin dirección; cambia por qué no la tienen.** De los 6,140 pares de las dianas de activación, 4,093 tienen una medición de activación y 2,047 no: **1,011 solo afinidad, 822 solo de tipo ambiguo, 155 solo inhibición funcional y 59 mezclas**. Antes se creía que los IC50 de esos pares contradecían lo buscado; ahora se sabe que la mayoría no dice nada sobre la dirección.
+
+**La pregunta real es una sola: ¿cuenta la afinidad sin dirección?** Un compuesto que se une con potencia a una diana de activación, sin ensayo funcional, puede ser un agonista, un antagonista o un modulador, y con este archivo no se distingue. Aplica igual a `DRD2` y a las dianas de inhibición con Ki. La variante que trata los IC50 aparte da 170 pares con evidencia de las dos direcciones, y en 19 de los 162 donde las dos deciden discrepan (11.7%); como el acuerdo del resto puede ser potencia general o promiscuidad y no dirección, no autoriza a decir que mezclarlas sea inofensivo.
+
+Dos cosas que la medición enseñó de paso. **`SIRT1` aporta cero pares** pese a sus 1,110 mediciones, porque su categoría —«Neurodegeneración (general)»— no está entre las cinco que ella ratificó ([2.1](#d2-1)): las dianas de activación son tres en la práctica. Y **`TSPO` casi desaparece con el criterio estricto**, porque es un marcador de PET y se mide por afinidad, no por activación.
+
+> **Pregunta:** en las dianas cuyo efecto buscado es activación (`PPARG`, `NFE2L2` y `TSPO`; `SIRT1` queda fuera por su categoría), ¿un compuesto que se une con potencia pero sin ensayo funcional (`Ki`, `Kd` o IC50 de unión) cuenta como candidato? Se propone que sí, marcado «solo afinidad», y reportar con y sin esos pares; si exige función, quedan 4,093 de 6,140. En `DRD2`, con 9,618 pares y efecto buscado «agonismo o antagonismo según enfermedad», la pregunta es la misma y más grande; y para Parkinson, ¿la dirección buscada es el agonismo?
+
+**Mientras no haya respuesta no se cambia el etiquetado.** La medición queda registrada y el desempeño del Avance 4 se reportará también sin las dianas de activación, que es el análisis de sensibilidad que mantiene la decisión reversible. La corrida está en `experimentos/2026-10-24-ingrid-2.3-dianas-activacion-descripcion/` y la tabla en `notebooks/datos/medicion_dianas_activacion.csv`; las versiones anteriores, con todos los IC50 como inhibición y con solo el tipo de ChEMBL, son `experimentos/2026-10-22-artemio-2.3-dianas-activacion/` y `experimentos/2026-10-24-ingrid-2.3-dianas-activacion/`.
+
+**La misma medición acota el otro extremo: qué sostiene la clase negativa de los productos naturales.** `AC50` existe solo en NPASS, son 1,374 mediciones y 1,246 de ellas censuradas, así que es de donde salen sus negativos. Medido sobre el par: **1,208 pares dependen solo de AC50** —todos del estrato `solo_npass`, 1,161 de ellos inactivos— y son el **61% de los 1,914 negativos de los pares que solo tiene NPASS**. Quitar AC50 para evitar el sesgo por fuente dejaría a los naturales casi sin clase negativa, que sesga en el otro sentido; se conserva, y lo que se reporta es el desempeño con y sin esos pares. Lo planteó Pame en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95).
+
+#### 2.4 · Los 88,098 registros sin diana de la lista {#d2-4 .propuesta}
 
 **Estado:** propuesta
 
-> **Pregunta:** ¿Van dentro de un modelo específico, aparte o fuera del alcance?
+> **Pregunta:** ¿Van dentro de un modelo específico, aparte o fuera del alcance? Y, de los ensayos sobre células, ¿cuáles miden protección y cuáles citotoxicidad?
 
-**Qué pasó.** El 43.5% de los registros no corresponde a ninguna diana de la lista; entraron por la ruta `neuronal_assay`: sistemas celulares neuronales donde se midió un efecto sin identificar la proteína responsable. Responden «¿hace algo en un sistema neuronal?», no «¿actúa sobre esta diana?».
+**Qué pasó.** El 43.5% de los registros (88,098) no corresponde a ninguna de las 39 dianas de la lista; entraron por la ruta `neuronal_assay`. **No son, en su mayoría, ensayos fenotípicos**, que es como se les llamó hasta el 24 de octubre. Por tipo de ensayo, 67,347 (76.4%) son de unión sobre proteínas, 15,746 (17.9%) funcionales, 789 de farmacocinética, 482 de toxicidad y 3,734 (las de NPASS) no traen tipo (`scripts/cifras_fase2.py`). Entre las proteínas hay receptores que no son de la lista, como sigma-1, serotonina 1A y mu-opioide; ChEMBL no asigna diana a 30,511 de las filas (`Unchecked`) y marca otras 3,113 como `NON-PROTEIN TARGET`. Los ensayos sobre células son una minoría y no todos miden protección: GI50 y TGI, que miden crecimiento celular, son 859 filas, y en líneas de tumor como `U-251` y `SH-SY5Y` la lectura depende de la descripción del ensayo, que el archivo no trae.
 
-**Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
+**Versión superada (24 de octubre).** Esta entrada decía que eran «sistemas celulares neuronales donde se midió un efecto sin identificar la proteína responsable» y que respondían «¿hace algo en un sistema neuronal?». Era una lectura del nombre de la ruta, no de los tipos de ensayo. El diccionario de la patrocinadora los describe como filas «cuya diana no es una de las 37 (p. ej. receptores de serotonina u opioides) o que ChEMBL no identifica».
+
+**Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Las 88,098 sin diana de la lista se conservan aparte; no se descartan. Las de unión sobre otras proteínas no hablan de neuroprotección por sí solas, y separar las celulares que sí la miden necesita la descripción del ensayo.
 
 #### 2.7 · Partición de la fase 2 {#d2-7 .vigente .revisada}
 
@@ -831,7 +863,7 @@ El AUROC es el de las predicciones fuera de pliegue agrupadas, con bootstrap de 
 | S2.2 | Una etiqueta describe una clase bajo un umbral y un ensayo, no una propiedad del compuesto | Asumido | El mismo compuesto cambia de clase según la concentración | Se declara el umbral en cada reporte |
 | S2.3 | El pChEMBL basta para etiquetar | Desmentido | Solo existe para ChEMBL ([2.3](#d2-3)) | Tres vías |
 | S2.4 | Un censurado «> 10 µM» sirve como negativo | Acotado | Solo si el límite es ≥ al umbral de «activo»; concentrado en DrugMatrix | Reportar el desempeño por vía |
-| S2.5 | «Activo» tiene una dirección clara | Sin comprobar | Falta verificar si el archivo distingue inhibir de activar | Aclararlo en la [2.3](#d2-3) antes de etiquetar |
+| S2.5 | «Activo» tiene una dirección clara | Desmentido en parte | El archivo **sí** trae la dirección buscada por diana (`diana_efecto_buscado`) y el proyecto no la usa, pero el tipo de medida no basta para cruzarla: un IC50 mide inhibición solo si el ensayo es funcional. En las tres dianas de activación con pares, 71% de las mediciones IC50 se leen como afinidad y 20% como inhibición funcional, según el tipo y la descripción que publica ChEMBL (provisional, pendiente del visto bueno de la patrocinadora). Medido: exigir medir activación deja 4,093 de 6,140 pares ([2.3](#d2-3)). La columna declara además el efecto **buscado como tratamiento**, no lo que hizo el compuesto | Preguntar si cuenta la afinidad sin dirección ([2.3](#d2-3)); mientras, reportar con y sin las dianas de activación |
 | S2.6 | Hay datos para las 39 dianas | Desmentido | Cuatro sin datos suficientes; Alzheimer 52,676 y ELA 53 | Excluir; modelo por categoría o multitarea |
 | S2.7 | Un mismo esqueleto y gen tienen etiquetas consistentes | Desmentido en parte | 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6 | Regla de resolución reproducible y análisis de sensibilidad |
 | S2.8 | El archivo recibido es el conjunto completo | Acotado | 89.9% de lo descrito en el diccionario ([2.6](#d2-6)) | Pedir la partición reservada |
