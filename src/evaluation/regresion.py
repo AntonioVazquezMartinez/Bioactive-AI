@@ -13,10 +13,17 @@ valor medido premia al modelo que lo repite, así que estas no lo hacen:
   forman: una cifra sin su `n` no se puede leer.
 
 Todo está en **pActividad** (6 − log₁₀ µM, mayor es más potente) porque es la
+<<<<<<< HEAD
 escala del artefacto ([2.10](../../docs/decisiones.md#d2-10)). Un modelo que
 ajuste en concentración (como `survival:aft` de XGBoost, candidato del Avance 5)
 necesita la escala de µM, donde el sentido de la censura es el contrario;
 `limites_en_micromolar` hace esa conversión y su prueba ata el signo.
+=======
+escala del artefacto ([2.10](../../docs/decisiones.md#d2-10)). Para ajustar
+`survival:aft` hace falta la escala de concentración, donde el sentido de la
+censura es el contrario; `limites_en_micromolar` hace esa conversión y su
+prueba ata el signo.
+>>>>>>> origin/feat/avance-4-andamiaje
 """
 
 from __future__ import annotations
@@ -24,10 +31,14 @@ from __future__ import annotations
 import numpy as np
 from scipy.stats import spearmanr
 
-# Reproducibilidad experimental documentada de la potencia en ChEMBL, en
-# unidades logarítmicas: es el piso del error que tiene sentido esperar. Un RMSE
-# muy por debajo no es un buen resultado sino una señal de fuga de datos
-# ([2.9](../../docs/decisiones.md#d2-9)). La fuente está por citar.
+# Reproducibilidad experimental de la potencia pública en ChEMBL, en unidades
+# logarítmicas: es el piso del error que tiene sentido esperar. Un RMSE muy por
+# debajo no es un buen resultado sino una señal de fuga de datos
+# ([2.9](../../docs/decisiones.md#d2-9)). Fuentes: IC50, Kalliokoski et al. (2013),
+# PLoS ONE 8(4):e61007 (σ de pIC50 ≈ 0.68); Ki, Kramer et al. (2012), J Med Chem
+# 55:5165 (≈ 0.47 según Kalliokoski). La lectura contraria, que con curación
+# mínima el ruido es mayor, es Landrum y Riniker (2024), J Chem Inf Model
+# 64(5):1560; el número no es un consenso.
 RUIDO_EXPERIMENTAL_IC50 = 0.7
 RUIDO_EXPERIMENTAL_KI = 0.5
 
@@ -38,14 +49,25 @@ def limites_en_micromolar(limite_inferior: np.ndarray,
 
     La conversión **invierte el sentido**: a más potencia, menos concentración.
     Un `> 10 µM` es, en pActividad, «menor que 5» (inferior −∞, superior 5), y
+<<<<<<< HEAD
     en µM es «mayor que 10» (inferior 10, superior +∞): censura por la derecha.
     Devuelve `(inferior_um, superior_um)`.
+=======
+    en µM es «mayor que 10» (inferior 10, superior +∞): censura por la derecha,
+    que es la que `survival:aft` espera. Devuelve `(inferior_um, superior_um)`.
+>>>>>>> origin/feat/avance-4-andamiaje
     """
     inf = np.asarray(limite_inferior, dtype=float)
     sup = np.asarray(limite_superior, dtype=float)
     with np.errstate(over="ignore"):
         inferior_um = np.where(np.isposinf(sup), 0.0, 10.0 ** (6.0 - sup))
         superior_um = np.where(np.isneginf(inf), np.inf, 10.0 ** (6.0 - inf))
+    # Un intervalo vacío (inferior > superior: cotas que se contradicen) no tiene
+    # concentración posible; se devuelve nan en los dos extremos para que quien
+    # lo use lo descarte, en vez de una cota inferior mayor que la superior.
+    vacio = inf > sup
+    inferior_um = np.where(vacio, np.nan, inferior_um)
+    superior_um = np.where(vacio, np.nan, superior_um)
     return inferior_um, superior_um
 
 
