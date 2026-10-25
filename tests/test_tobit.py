@@ -64,3 +64,13 @@ def test_leer_la_censura_al_reves_se_nota():
     err = lambda m: np.mean((m.predict(X) - y) ** 2)         # noqa: E731
     # `bien` queda en el piso del ruido (0.7² = 0.49); `mal` lo supera con holgura
     assert err(mal) > 1.3 * err(bien)
+
+
+def test_un_intervalo_finito_lejos_de_la_media_no_revienta_el_gradiente():
+    # masa de probabilidad ~1e-30: antes dividía por 1e-300 y daba gradientes de 1e295
+    X = np.zeros((3, 2))
+    inf = np.array([5.0, 5.0, 12.0])
+    sup = np.array([5.0, 5.0, 12.2])
+    theta = np.array([0.0, 0.0, 1.0, 0.0])
+    f, g = verosimilitud(theta, X, inf, sup, 0.0)
+    assert np.isfinite(f) and np.all(np.isfinite(g)) and np.abs(g).max() < 1e3

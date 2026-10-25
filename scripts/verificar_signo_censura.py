@@ -23,7 +23,8 @@ dependen de afinar nada:
 
 Entrena con el 70% de entrenamiento y evalúa en el 10% de validación; la prueba
 reservada no se toca ([2.7](../docs/decisiones.md#d2-7)). No es el modelo final.
-Las filas sin ninguna cota no informan nada y se cuentan aparte.
+Las filas sin ninguna cota, o con las cotas cruzadas (intervalo vacío), no informan
+nada: se excluyen del ajuste y de la evaluación y se cuentan aparte.
 
     python scripts/verificar_signo_censura.py
 """
@@ -75,12 +76,14 @@ def _medir(corrida: Corrida) -> None:
     sup = d["limite_superior"].to_numpy(dtype=float)
     ent = (d["particion"] == "entrenamiento").to_numpy()
     val = (d["particion"] == "validacion").to_numpy()
+    val &= ~((inf > sup) | (np.isneginf(inf) & np.isposinf(sup)))
     exacta = np.isfinite(inf) & (inf == sup)
-    sin_cota = np.isneginf(inf) & np.isposinf(sup)
+    # sin ninguna cota, o con el intervalo vacío (cotas que se cruzan): no informan
+    sin_cota = (np.isneginf(inf) & np.isposinf(sup)) | (inf > sup)
     # `> L µM` en concentración = `(−∞, U]` en pActividad
     debil_val = val & np.isneginf(inf) & np.isfinite(sup)
     print(f"entrenamiento {ent.sum():,} · validación {val.sum():,} · "
-          f"`> L µM` en validación {debil_val.sum():,} · sin ninguna cota {sin_cota.sum():,}")
+          f"`> L µM` en validación {debil_val.sum():,} · sin cota útil {sin_cota.sum():,}")
 
     inv_inf, inv_sup = invertir_censura(inf, sup)
     usa = ent & ~sin_cota

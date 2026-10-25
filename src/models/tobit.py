@@ -35,6 +35,22 @@ def _log_phi(z):
     return -0.5 * z * z - 0.5 * _LOG_2PI
 
 
+def _log_masa(zi, zs):
+    """log(Φ(zs) − Φ(zi)) sin perder la cola: la diferencia se hace en la cola
+    donde las dos probabilidades son pequeñas, no entre dos números cercanos a 1."""
+    out = np.empty_like(zi)
+    baja = zs <= 0
+    alta = zi >= 0
+    medio = ~(baja | alta)
+    a, b = log_ndtr(zs[baja]), log_ndtr(zi[baja])
+    out[baja] = a + np.log1p(-np.exp(b - a))
+    a, b = log_ndtr(-zi[alta]), log_ndtr(-zs[alta])
+    out[alta] = a + np.log1p(-np.exp(b - a))
+    out[medio] = np.log(np.maximum(
+        np.exp(log_ndtr(zs[medio])) - np.exp(log_ndtr(zi[medio])), 1e-300))
+    return out
+
+
 def verosimilitud(theta, X, inferior, superior, alfa):
     """Menos la log-verosimilitud media más la penalización, y su gradiente.
 
@@ -76,11 +92,12 @@ def verosimilitud(theta, X, inferior, superior, alfa):
     if otra.any():                                  # intervalo finito, poco común
         zi = (inferior[otra] - mu[otra]) / sigma
         zs = (superior[otra] - mu[otra]) / sigma
-        masa = np.maximum(np.exp(log_ndtr(zs)) - np.exp(log_ndtr(zi)), 1e-300)
-        ll[otra] = np.log(masa)
-        fi, fs = np.exp(_log_phi(zi)), np.exp(_log_phi(zs))
-        d_mu[otra] = (fi - fs) / sigma / masa
-        d_sigma[otra] = (fi * zi - fs * zs) / sigma / masa
+        lm = _log_masa(zi, zs)
+        ll[otra] = lm
+        fi = np.exp(_log_phi(zi) - lm)
+        fs = np.exp(_log_phi(zs) - lm)
+        d_mu[otra] = (fi - fs) / sigma
+        d_sigma[otra] = (fi * zi - fs * zs) / sigma
 
     perdida = -ll.mean() + 0.5 * alfa * float(w @ w)
     g_w = -(X.T @ d_mu) / n + alfa * w
@@ -104,6 +121,11 @@ class RegresionTobit:
         X = np.asarray(X, dtype=float)
         inferior = np.asarray(inferior, dtype=float)
         superior = np.asarray(superior, dtype=float)
+        # Un intervalo vacío (inferior > superior) es una evidencia incompatible,
+        # no una medición: no tiene verosimilitud y se descarta.
+        valida = inferior <= superior
+        X, inferior, superior = X[valida], inferior[valida], superior[valida]
+        self.n_descartadas_ = int((~valida).sum())
         self.media_ = X.mean(axis=0)
         self.escala_ = X.std(axis=0)
         self.escala_[self.escala_ == 0] = 1.0
