@@ -71,6 +71,7 @@ Eso permite correr las variantes sobre miles de filas en lugar de 202,647, y es
 lo que hace que el script tarde minutos y no horas.
 """
 
+import re
 import sys
 import warnings
 from pathlib import Path
@@ -82,7 +83,7 @@ sys.path.insert(0, str(RAIZ / "src"))
 
 import pandas as pd
 
-from src.data_prep.pares_fase2 import tabla_de_pares
+from src.data_prep.pares_fase2 import filas_de_pares, tabla_de_pares
 from tracking import Corrida
 
 ACTIVIDAD = (RAIZ / "data/external/profesora"
@@ -134,25 +135,69 @@ VARIANTES = {
 
 UMBRAL_UM = 10.0
 
+# Los tipos IC no tienen dirección por su nombre: depende del ensayo. Deben coincidir con las
+# entradas «ambigua» de DIRECCION_DE_TIPO, y la prueba lo comprueba. Es el mismo conjunto que
+# baja `descargar_tipos_ensayo.py`.
 TIPOS_IC = ("IC50", "IC33", "IC60")
 TIPOS_ENSAYO = RAIZ / "notebooks/datos/tipos_ensayo_chembl.csv"
 # Tipo de ensayo de ChEMBL → dirección de un IC. `B` es unión (desplazamiento,
 # competencia): afinidad. `F` es funcional: el IC mide inhibición. Otro tipo
-# (ADME, toxicidad) o ninguno —NPASS y CMAUP no traen identificador de ensayo—
-# queda ambigua.
+# —ADME o toxicidad: un IC50 de toxicidad es citotoxicidad— o ninguno (NPASS y
+# CMAUP no traen identificador de ensayo) queda ambigua. **Provisional**: el
+# tipo se trae de la API de ChEMBL y está pendiente del visto bueno de la
+# patrocinadora; si dice que no, este diccionario queda vacío y los IC vuelven
+# a ser ambiguos.
 DIRECCION_DE_ENSAYO = {"B": "afinidad", "F": "inhibicion"}
+
+# El tipo `B` es grueso: hay ensayos de unión según ChEMBL cuya descripción es
+# funcional («Inhibition of PPARgamma assessed as transcriptional activity»,
+# «Inhibition of human plasma BChE… by Ellman's method»). Un ensayo `B` cuya
+# descripción habla de inhibir o antagonizar y no de unión se lee como
+# inhibición funcional. Es una regla de palabras, provisional y deliberadamente
+# estrecha: lo que no encaja queda con el tipo de ChEMBL.
+INHIBE = re.compile(r"inhibit|antagonis|inverse agonist|suppress|transrepress|reduc",
+                    re.IGNORECASE)
+UNION = re.compile(r"displac|bindin|compet|\bbind|fret|scintillation|radioligand|affinity"
+                   r"|lanthascreen|alphascreen|\[3h\]|\[125i\]", re.IGNORECASE)
+
+
+def descripcion_de_inhibicion(descripcion: pd.Series) -> pd.Series:
+    """Verdadero si la descripción habla de inhibir o antagonizar y no de unión."""
+    d = descripcion.fillna("").astype(str)
+    return d.str.contains(INHIBE) & ~d.str.contains(UNION)
 
 
 def resolver_ic(actividad: pd.DataFrame, direccion: pd.Series,
-                tipos_ensayo: pd.Series) -> pd.Series:
-    """Reemplaza la dirección de los IC por la que dice el tipo de su ensayo.
+                ensayos: pd.DataFrame) -> pd.Series:
+    """Reemplaza la dirección de los IC por la que dicen el tipo y la descripción de su ensayo.
 
-    `tipos_ensayo` va de `assay_chembl_id` a `assay_type`. Si el archivo ya trae
-    `assay_type` en la fila se usa como respaldo del identificador.
+    `ensayos` está indexado por `assay_chembl_id` y trae `assay_type` y `description`. Si el
+    archivo ya trae `assay_type` en la fila se usa como respaldo del identificador.
     """
-    tipo = actividad["assay_chembl_id"].map(tipos_ensayo).fillna(actividad["assay_type"])
+    ids = actividad["assay_chembl_id"]
+    tipo = ids.map(ensayos["assay_type"]).fillna(actividad["assay_type"])
     resuelta = tipo.map(DIRECCION_DE_ENSAYO).fillna("ambigua")
+    # Un `B` que se describe como inhibición funcional contradice a su tipo.
+    contradice = tipo.eq("B") & descripcion_de_inhibicion(ids.map(ensayos["description"]))
+    resuelta = resuelta.where(~contradice, "inhibicion")
     return direccion.where(~actividad["activity_type"].isin(TIPOS_IC), resuelta)
+
+
+def tipo_de_evidencia(direcciones: set) -> str:
+    """Qué dice el conjunto de mediciones de un par sobre la dirección buscada.
+
+    Una activación decide a favor; sin ella, lo que queda no dice la dirección (afinidad,
+    tipo ambiguo) o la contradice (inhibición funcional).
+    """
+    if "activacion" in direcciones:
+        return "con activación"
+    if direcciones == {"inhibicion"}:
+        return "solo inhibición funcional"
+    if direcciones == {"afinidad"}:
+        return "solo afinidad"
+    if direcciones <= {"ambigua", "sin_clasificar"}:
+        return "solo tipo ambiguo"
+    return "mezcla sin activación"
 
 
 def _resumen(pares: pd.DataFrame, mediciones: int) -> dict:
@@ -184,8 +229,8 @@ def _medir(corrida: Corrida) -> None:
 
     direccion = actividad["activity_type"].map(DIRECCION_DE_TIPO).fillna(
         "sin_clasificar")
-    tipos_ensayo = pd.read_csv(TIPOS_ENSAYO).set_index("assay_chembl_id")["assay_type"]
-    direccion = resolver_ic(actividad, direccion, tipos_ensayo)
+    ensayos = pd.read_csv(TIPOS_ENSAYO).drop_duplicates("assay_chembl_id").set_index("assay_chembl_id")
+    direccion = resolver_ic(actividad, direccion, ensayos)
     sin_clasificar = actividad.loc[direccion.eq("sin_clasificar"),
                                    "activity_type"]
     if not sin_clasificar.empty:
@@ -203,6 +248,15 @@ def _medir(corrida: Corrida) -> None:
     ic = actividad["activity_type"].isin(TIPOS_IC) & actividad["target_gene"].isin(activacion)
     print(f"\nIC en las dianas de activación: {int(ic.sum()):,} mediciones, por dirección:"
           f" {direccion[ic].value_counts().to_dict()}")
+
+    # Qué dice cada par de las dianas de activación sobre la dirección: con una activación, o solo
+    # inhibición funcional, afinidad o tipos que no la declaran.
+    filas_act = filas_de_pares(actividad[actividad["target_gene"].isin(activacion)])
+    direcciones = (direccion.loc[filas_act.index]
+                   .groupby([filas_act["esqueleto"], filas_act["target_gene"]]).agg(set))
+    por_evidencia = direcciones.map(tipo_de_evidencia).value_counts()
+    print(f"\nPares de las dianas de activación según lo que dicen sus mediciones: "
+          f"{por_evidencia.to_dict()}")
 
     print("\nTabla de pares completa (la referencia)…")
     base = tabla_de_pares(actividad)
@@ -300,6 +354,9 @@ def _medir(corrida: Corrida) -> None:
         "negativos_solo_npass_que_dependen_de_ac50": neg_npass_ac50,
         "ic50_aparte": acuerdo,
         "pares_sin_evidencia": evidencia,
+        "pares_de_activacion_por_evidencia": {k: int(v) for k, v in por_evidencia.items()},
+        "ic_de_activacion_por_direccion": {k: int(v) for k, v
+                                           in direccion[ic].value_counts().items()},
     })
 
 

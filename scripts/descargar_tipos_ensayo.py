@@ -12,8 +12,14 @@ quedan sin tipo.
 
     python scripts/descargar_tipos_ensayo.py
 
-Escribe `notebooks/datos/tipos_ensayo_chembl.csv` (identificador y tipo de cada ensayo; los
-datos de ChEMBL son CC BY-SA 3.0). Pide solo los ensayos de filas IC50/IC33/IC60 que el
+Escribe `notebooks/datos/tipos_ensayo_chembl.csv` (identificador, tipo y descripción de cada
+ensayo; los datos de ChEMBL son CC BY-SA 3.0). La descripción importa porque el tipo es grueso:
+hay ensayos `B` (unión) cuya descripción es funcional, como «Inhibition of PPARgamma assessed as
+transcriptional activity», y `medicion_dianas_activacion.py` la lee además del tipo.
+
+**Provisional:** completar el tipo de ensayo desde la API de ChEMBL se le preguntó a la
+patrocinadora y está pendiente de su visto bueno. Si dice que no, los IC vuelven a `ambigua`
+(`DIRECCION_DE_ENSAYO` vacío) y no hay que rehacer nada más. Pide solo los ensayos de filas IC50/IC33/IC60 que el
 archivo no tipifica ya, por lotes; necesita red y tarda un par de minutos.
 """
 
@@ -42,7 +48,7 @@ def main() -> None:
         lote = ids[i:i + LOTE]
         for intento in range(4):
             r = requests.get(API, params={"assay_chembl_id__in": ",".join(lote),
-                                          "only": "assay_chembl_id,assay_type,assay_type_description",
+                                          "only": "assay_chembl_id,assay_type,assay_type_description,description",
                                           "limit": 1000}, timeout=60)
             if r.ok:
                 break
@@ -50,7 +56,8 @@ def main() -> None:
         r.raise_for_status()
         filas += r.json()["assays"]
         print(f"  {min(i + LOTE, len(ids)):,}/{len(ids):,}", end="\r", flush=True)
-    t = pd.DataFrame(filas).sort_values("assay_chembl_id")
+    t = (pd.DataFrame(filas).drop_duplicates("assay_chembl_id")
+         .sort_values("assay_chembl_id"))
     faltan = set(ids) - set(t["assay_chembl_id"])
     print(f"\n{len(t):,} ensayos devueltos · sin respuesta: {len(faltan)}")
     print(t["assay_type"].value_counts(dropna=False).to_dict())
