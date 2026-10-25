@@ -263,6 +263,13 @@ def _medir(corrida: Corrida) -> None:
     print(f"  {len(base):,} pares · {int(base['activo_10um'].sum()):,} activos"
           f" a {UMBRAL_UM:g} µM")
 
+    # El mismo reparto, solo en las dianas que aportan pares: SIRT1 no entra al modelo y sus
+    # 1,009 IC50 son casi todos de inhibición enzimática.
+    con_pares = actividad["target_gene"].isin(base["target_gene"].unique())
+    ic_modelo = ic & con_pares
+    print(f"IC en las dianas de activación que aportan pares: {int(ic_modelo.sum()):,}"
+          f" mediciones, por dirección: {direccion[ic_modelo].value_counts().to_dict()}")
+
     filas = []
     de_activacion = base[base["target_gene"].isin(activacion)]
     print(f"\nEn las {len(activacion)} dianas de activación:"
@@ -357,6 +364,8 @@ def _medir(corrida: Corrida) -> None:
         "pares_de_activacion_por_evidencia": {k: int(v) for k, v in por_evidencia.items()},
         "ic_de_activacion_por_direccion": {k: int(v) for k, v
                                            in direccion[ic].value_counts().items()},
+        "ic_de_activacion_con_pares_por_direccion": {
+            k: int(v) for k, v in direccion[ic_modelo].value_counts().items()},
     })
 
 
