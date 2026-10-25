@@ -1,35 +1,29 @@
 #!/usr/bin/env python3
 """Comprueba, con datos reales, que la censura entra al modelo del lado correcto.
 
-La regresión de la potencia ([2.9](../docs/decisiones.md#d2-9)) ajusta
-`survival:aft` de XGBoost en **concentración (µM)**, donde un `> 10 µM` es
-censura por la derecha. El artefacto guarda el intervalo en pActividad, donde
-el mismo `> 10 µM` es «menor que 5»: la conversión invierte el sentido, y un
-signo equivocado no falla, solo enseña lo contrario (que los compuestos
-inactivos son muy potentes).
+La regresión de la potencia ([2.9](../docs/decisiones.md#d2-9)) usa los censurados
+como cotas: un `> 10 µM` no es el valor 10 ni un dato faltante, es «la potencia
+es menor que 5». En el artefacto el intervalo está en pActividad, y un `> L µM`
+es `(−∞, 6 − log₁₀ L]`; leerlo del lado contrario no falla, solo enseña que los
+compuestos inactivos son muy potentes.
 
-La prueba unitaria (`tests/test_regresion.py`) ata la conversión sobre casos
-armados a mano. Esto la ata sobre los pares reales, de tres maneras que no
+La prueba unitaria (`tests/test_tobit.py`) ata la verosimilitud sobre datos
+sintéticos. Esto la ata sobre los pares reales, con el modelo individual y
+lineal del Avance 4 (`RegresionTobit`, sin ensambles), de tres maneras que no
 dependen de afinar nada:
 
-1. **La predicción respeta la cota.** De los pares de validación censurados por
-   la derecha en concentración (`> L µM`), qué fracción queda predicha con
-   concentración mayor que `L`. Con el signo bueno debe ser mucha; con el
-   invertido, poca.
-2. **Control negativo.** El mismo ajuste con el sentido de la censura invertido
-   a propósito (`> L` leído como `< L`). Si la comprobación no distingue los dos,
-   no comprueba nada.
-3. **Contra entrenar solo con las exactas** (lo que hace el baseline sencillo):
-   qué aporta la censura. Si no cambiara nada, usarla no valdría la maquinaria.
-4. **El orden de las exactas.** Spearman y concordancia de Harrell sobre la
-   validación, para ver que el signo bueno no cuesta lo que ya se sabe predecir.
-
-Las filas sin ninguna cota (intervalo de 0 a ∞ en µM) no informan nada y se
-cuentan aparte.
+1. **La predicción respeta la cota.** De los pares de validación `> L µM`, qué
+   fracción queda predicha más débil que la cota. Con el signo bueno debe ser
+   mucha más que con el invertido.
+2. **Control negativo.** El mismo ajuste con cada censura leída del lado
+   contrario. Si la comprobación no distingue los dos, no comprueba nada.
+3. **Contra la misma recta sin censura** (`Ridge` entrenada solo con las
+   exactas, que es lo que hace un baseline sencillo): qué aporta usar la censura
+   cuando el modelo es el mismo y solo cambia lo que ve.
 
 Entrena con el 70% de entrenamiento y evalúa en el 10% de validación; la prueba
-reservada no se toca ([2.7](../docs/decisiones.md#d2-7)). No es el modelo final:
-es una comprobación de signo, sin afinar.
+reservada no se toca ([2.7](../docs/decisiones.md#d2-7)). No es el modelo final.
+Las filas sin ninguna cota no informan nada y se cuentan aparte.
 
     python scripts/verificar_signo_censura.py
 """
@@ -39,53 +33,33 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import xgboost as xgb
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from src.evaluation.regresion import limites_en_micromolar, metricas_regresion  # noqa: E402
+from src.evaluation.regresion import metricas_regresion  # noqa: E402
+from src.models.tobit import RegresionTobit  # noqa: E402
 from src.tracking import Corrida  # noqa: E402
 
 PROCESADOS = RAIZ / "data" / "processed"
 SEMILLA = 0
-RONDAS = 300
-PARAMS = {
-    "objective": "survival:aft",
-    "eval_metric": "aft-nloglik",
-    "aft_loss_distribution": "normal",
-    "aft_loss_distribution_scale": 1.0,
-    "learning_rate": 0.1,
-    "max_depth": 6,
-    "subsample": 0.8,
-    "colsample_bytree": 0.5,
-    "tree_method": "hist",
-    "seed": SEMILLA,
-}
+ALFA_RIDGE = 100.0        # la misma penalización, en la escala de cada modelo
 
 
-def invertir_censura(inferior_um: np.ndarray, superior_um: np.ndarray
+def invertir_censura(inferior: np.ndarray, superior: np.ndarray
                      ) -> tuple[np.ndarray, np.ndarray]:
     """El error que se quiere detectar: leer cada censura del lado contrario.
 
-    Un `> L` (inferior L, superior ∞) pasa a `< L` (inferior 0, superior L), y un
-    `< U` (inferior 0, superior U) pasa a `> U`. Las exactas no cambian."""
-    inf, sup = inferior_um.copy(), superior_um.copy()
-    derecha = np.isinf(superior_um)
-    izquierda = (inferior_um == 0) & np.isfinite(superior_um)
-    inf[derecha], sup[derecha] = 0.0, inferior_um[derecha]
-    inf[izquierda], sup[izquierda] = superior_um[izquierda], np.inf
+    Un `(−∞, U]` pasa a `[U, +∞)` y un `[V, +∞)` a `(−∞, V]`. Las exactas no
+    cambian."""
+    inf, sup = inferior.copy(), superior.copy()
+    izq = np.isneginf(inferior) & np.isfinite(superior)
+    der = np.isfinite(inferior) & np.isposinf(superior)
+    inf[izq], sup[izq] = superior[izq], np.inf
+    inf[der], sup[der] = -np.inf, inferior[der]
     return inf, sup
-
-
-def ajustar(X_ent, inferior_um, superior_um, X_val) -> np.ndarray:
-    """Ajusta `survival:aft` en µM y devuelve la potencia predicha (pActividad)."""
-    ent = xgb.DMatrix(X_ent)
-    ent.set_float_info("label_lower_bound", inferior_um)
-    ent.set_float_info("label_upper_bound", superior_um)
-    modelo = xgb.train(PARAMS, ent, num_boost_round=RONDAS)
-    um = modelo.predict(xgb.DMatrix(X_val))              # la concentración, en µM
-    return 6.0 - np.log10(um)
 
 
 def _medir(corrida: Corrida) -> None:
@@ -97,50 +71,51 @@ def _medir(corrida: Corrida) -> None:
     X = np.hstack([d[columnas].to_numpy(dtype=np.float32),
                    pd.get_dummies(d["target_gene"]).to_numpy(dtype=np.float32)])
 
-    inf_pa = d["limite_inferior"].to_numpy(dtype=float)
-    sup_pa = d["limite_superior"].to_numpy(dtype=float)
-    inferior_um, superior_um = limites_en_micromolar(inf_pa, sup_pa)
-
+    inf = d["limite_inferior"].to_numpy(dtype=float)
+    sup = d["limite_superior"].to_numpy(dtype=float)
     ent = (d["particion"] == "entrenamiento").to_numpy()
     val = (d["particion"] == "validacion").to_numpy()
-    sin_cota = (inferior_um == 0) & np.isinf(superior_um)
-    derecha_val = val & np.isinf(superior_um) & ~sin_cota   # `> L µM` en validación
-    exacta = np.isfinite(inf_pa) & (inf_pa == sup_pa)
+    exacta = np.isfinite(inf) & (inf == sup)
+    sin_cota = np.isneginf(inf) & np.isposinf(sup)
+    # `> L µM` en concentración = `(−∞, U]` en pActividad
+    debil_val = val & np.isneginf(inf) & np.isfinite(sup)
     print(f"entrenamiento {ent.sum():,} · validación {val.sum():,} · "
-          f"censurados por la derecha en validación {derecha_val.sum():,} · "
-          f"sin ninguna cota {sin_cota.sum():,}")
+          f"`> L µM` en validación {debil_val.sum():,} · sin ninguna cota {sin_cota.sum():,}")
 
+    inv_inf, inv_sup = invertir_censura(inf, sup)
+    usa = ent & ~sin_cota
     variantes = {
-        "signo_correcto": (inferior_um, superior_um, ent),
-        "signo_invertido": (*invertir_censura(inferior_um, superior_um), ent),
-        "solo_exactas": (inferior_um, superior_um, ent & exacta),
+        "tobit_signo_correcto": ("tobit", inf, sup, usa),
+        "tobit_signo_invertido": ("tobit", inv_inf, inv_sup, usa),
+        "ridge_solo_exactas": ("ridge", inf, sup, ent & exacta),
     }
     resultados = {"sin_ninguna_cota": int(sin_cota.sum())}
-    for nombre, (lo, hi, filas) in variantes.items():
-        pred = ajustar(X[filas], lo[filas], hi[filas], X[val])
-        # La pActividad predicha de los `> L`: respeta la cota si la
-        # concentración predicha supera L, es decir si pActividad < 6 − log10 L.
+    for nombre, (modelo, lo, hi, filas) in variantes.items():
+        if modelo == "tobit":
+            ajuste = RegresionTobit(alfa=ALFA_RIDGE / filas.sum()).fit(
+                X[filas], lo[filas], hi[filas])
+            pred = ajuste.predict(X[val])
+        else:
+            esc = StandardScaler().fit(X[filas])
+            pred = Ridge(alpha=ALFA_RIDGE).fit(esc.transform(X[filas]), inf[filas]
+                                               ).predict(esc.transform(X[val]))
         pred_todo = np.full(len(d), np.nan)
         pred_todo[val] = pred
-        cota_pa = 6.0 - np.log10(inferior_um[derecha_val])
-        respeta = float(np.mean(pred_todo[derecha_val] < cota_pa))
-        m = metricas_regresion(inf_pa[val], sup_pa[val], pred)
-        m["respeta_la_cota"] = respeta
-        m["pa_media_censurados_derecha"] = float(np.mean(pred_todo[derecha_val]))
+        m = metricas_regresion(inf[val], sup[val], pred)
+        m["respeta_la_cota"] = float(np.mean(pred_todo[debil_val] < sup[debil_val]))
+        m["pa_media_de_los_mayor_que"] = float(np.mean(pred_todo[debil_val]))
         m["n_entrenamiento"] = int(filas.sum())
         resultados[nombre] = m
         print(f"\n{nombre}")
         for k, v in m.items():
             print(f"  {k:30s} {v:.3f}" if isinstance(v, float) else f"  {k:30s} {v}")
 
-    exactas = val & exacta
     resultados["referencia"] = {
-        "pa_media_exactas_validacion": float(np.mean(inf_pa[exactas])),
-        "pa_media_censurados_derecha_cota": float(np.mean(
-            6.0 - np.log10(inferior_um[derecha_val]))),
+        "cota_media_de_los_mayor_que": float(np.mean(sup[debil_val])),
+        "pa_media_exactas_validacion": float(np.mean(inf[val & exacta])),
     }
-    bueno = resultados["signo_correcto"]["respeta_la_cota"]
-    malo = resultados["signo_invertido"]["respeta_la_cota"]
+    bueno = resultados["tobit_signo_correcto"]["respeta_la_cota"]
+    malo = resultados["tobit_signo_invertido"]["respeta_la_cota"]
     resultados["distingue_los_signos"] = bool(bueno > malo + 0.2)
     print(f"\nrespeta la cota: correcto {bueno:.1%} · invertido {malo:.1%} "
           f"→ la comprobación {'distingue' if bueno > malo + 0.2 else 'NO distingue'} "
@@ -149,11 +124,12 @@ def _medir(corrida: Corrida) -> None:
 
 
 def main() -> None:
-    with Corrida("signo-censura-aft", decision="2.9",
-                 params={"modelo": "xgboost survival:aft normal, sin afinar",
-                         "rondas": RONDAS, "escala_de_ajuste": "µM",
+    with Corrida("signo-censura-tobit", decision="2.9",
+                 params={"modelo": "RegresionTobit (lineal, individual) y Ridge",
+                         "alfa_ridge": ALFA_RIDGE, "escala_de_ajuste": "pActividad",
                          "entrena_con": "entrenamiento", "evalua_en": "validación",
-                         "variantes": ["signo_correcto", "signo_invertido"]},
+                         "variantes": ["tobit_signo_correcto", "tobit_signo_invertido",
+                                       "ridge_solo_exactas"]},
                  semillas=[SEMILLA],
                  datos=[PROCESADOS / "fase2_pares.parquet",
                         PROCESADOS / "fase2_descriptores_limpios.parquet"]) as corrida:

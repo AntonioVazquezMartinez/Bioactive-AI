@@ -13,10 +13,10 @@ valor medido premia al modelo que lo repite, así que estas no lo hacen:
   forman: una cifra sin su `n` no se puede leer.
 
 Todo está en **pActividad** (6 − log₁₀ µM, mayor es más potente) porque es la
-escala del artefacto ([2.10](../../docs/decisiones.md#d2-10)). Para ajustar
-`survival:aft` hace falta la escala de concentración, donde el sentido de la
-censura es el contrario; `limites_en_micromolar` hace esa conversión y su
-prueba ata el signo.
+escala del artefacto ([2.10](../../docs/decisiones.md#d2-10)). Un modelo que
+ajuste en concentración (como `survival:aft` de XGBoost, candidato del Avance 5)
+necesita la escala de µM, donde el sentido de la censura es el contrario;
+`limites_en_micromolar` hace esa conversión y su prueba ata el signo.
 """
 
 from __future__ import annotations
@@ -38,8 +38,8 @@ def limites_en_micromolar(limite_inferior: np.ndarray,
 
     La conversión **invierte el sentido**: a más potencia, menos concentración.
     Un `> 10 µM` es, en pActividad, «menor que 5» (inferior −∞, superior 5), y
-    en µM es «mayor que 10» (inferior 10, superior +∞): censura por la derecha,
-    que es la que `survival:aft` espera. Devuelve `(inferior_um, superior_um)`.
+    en µM es «mayor que 10» (inferior 10, superior +∞): censura por la derecha.
+    Devuelve `(inferior_um, superior_um)`.
     """
     inf = np.asarray(limite_inferior, dtype=float)
     sup = np.asarray(limite_superior, dtype=float)
