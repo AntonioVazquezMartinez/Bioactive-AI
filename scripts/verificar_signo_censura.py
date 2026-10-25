@@ -76,7 +76,7 @@ def _medir(corrida: Corrida) -> None:
     sup = d["limite_superior"].to_numpy(dtype=float)
     ent = (d["particion"] == "entrenamiento").to_numpy()
     val = (d["particion"] == "validacion").to_numpy()
-    val &= ~((inf > sup) | (np.isneginf(inf) & np.isposinf(sup)))
+    val = val & ~((inf > sup) | (np.isneginf(inf) & np.isposinf(sup)))
     exacta = np.isfinite(inf) & (inf == sup)
     # sin ninguna cota, o con el intervalo vacío (cotas que se cruzan): no informan
     sin_cota = (np.isneginf(inf) & np.isposinf(sup)) | (inf > sup)
