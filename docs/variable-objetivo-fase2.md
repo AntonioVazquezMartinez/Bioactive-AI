@@ -63,7 +63,7 @@ La mediana, y no la medición más potente, porque el máximo sesga hacia los ac
 
 ### 5. Cómo se ajusta la regresión
 
-El modelo aprende la potencia con los censurados como cotas, no como valores ni como datos faltantes. Un `> 10 µM` es, en concentración, censura **por la derecha** (el valor real es mayor que 10), que es lo que `survival:aft` de XGBoost espera; en pActividad sería por la izquierda. Por eso se ajusta en µM y se convierte a pActividad al final. Excluir los censurados perdería el 49.4% de los negativos ([2.9](decisiones.md#d2-9)).
+El modelo aprende la potencia con los censurados como cotas, no como valores ni como datos faltantes. Un `> 10 µM` es, en concentración, censura **por la derecha** (el valor real es mayor que 10) y, en pActividad, por la izquierda (menor que 5): lo que importa es que el intervalo quede del lado correcto. El modelo lineal con censura (Tobit) lo usa en pActividad; un ajuste en concentración, como el de los árboles con `survival:aft`, necesita convertir a µM y volver al final. Excluir los censurados perdería el 49.4% de los negativos ([2.9](decisiones.md#d2-9)).
 
 ### 6. La clase derivada
 
