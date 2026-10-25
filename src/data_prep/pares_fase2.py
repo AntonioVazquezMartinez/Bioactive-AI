@@ -113,11 +113,15 @@ def _identificadores(serie: pd.Series) -> str:
     return ";".join(sorted(serie.dropna().astype(str).unique()))
 
 
-def tabla_de_pares(actividad: pd.DataFrame,
+def filas_de_pares(actividad: pd.DataFrame,
                    categorias: tuple[str, ...] = CINCO_CATEGORIAS,
                    recorte: tuple[float, float] = RANGO_POTENCIA,
                    ) -> pd.DataFrame:
-    """Una fila por par esqueleto × gen, con el intervalo de potencia.
+    """Las mediciones que alimentan los pares, cada una con su esqueleto.
+
+    Es el tramo de `tabla_de_pares` anterior a agrupar, separado para que quien
+    necesite una columna de la medición que el par no conserva (el contexto del
+    ensayo, por ejemplo) parta de las mismas filas y no repita los filtros.
 
     `actividad` es el archivo de la patrocinadora tal como se lee del CSV. Se
     queda con las filas que tienen categoría en `categorias`, gen, estructura
@@ -166,6 +170,19 @@ def tabla_de_pares(actividad: pd.DataFrame,
         cota_sup=np.where(relacion.isin(COTA_SUPERIOR_DE_POTENCIA) & dentro,
                           df["potencia"], np.inf),
     )
+    return df
+
+
+def tabla_de_pares(actividad: pd.DataFrame,
+                   categorias: tuple[str, ...] = CINCO_CATEGORIAS,
+                   recorte: tuple[float, float] = RANGO_POTENCIA,
+                   ) -> pd.DataFrame:
+    """Una fila por par esqueleto × gen, con el intervalo de potencia.
+
+    Qué mediciones entran y por qué se descartan los inactivos por texto está
+    en `filas_de_pares`.
+    """
+    df = filas_de_pares(actividad, categorias, recorte)
 
     pares = df.groupby(["esqueleto", "target_gene"], sort=False).agg(
         pActividad=("exacta", "median"),
