@@ -461,7 +461,7 @@ def _comparar(antes: pd.DataFrame, despues: pd.DataFrame,
 def main() -> None:
     if not ACTIVIDAD.exists():
         raise SystemExit(f"No está el archivo de actividad: {ACTIVIDAD}")
-    with Corrida("dianas-activacion", decision="2.3",
+    with Corrida("dianas-activacion-descripcion", decision="2.3",
                  params={"umbral_um": UMBRAL_UM,
                          "variantes": {k: list(v) for k, v in VARIANTES.items()},
                          "direccion_de_tipo": DIRECCION_DE_TIPO},
