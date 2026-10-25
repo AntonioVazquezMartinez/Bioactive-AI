@@ -13,8 +13,15 @@ por tipo de medida. Eso no se nota en la mayoría de las dianas, porque el filtr
 de gen ya deja fuera los ensayos fenotípicos (GI50, TGI, CC50 no traen gen). Pero
 el archivo trae además `diana_efecto_buscado`, que dice **qué modulación de la
 diana se busca como tratamiento**, y en cuatro dianas esa dirección es
-«Activación». Ahí un IC50 mide potencia de **inhibir**, que es lo contrario de lo
-buscado, y hoy entra a la mediana junto con los EC50 como si midiera lo mismo.
+«Activación». Ahí un EC50 mide activar, que es lo buscado, pero un IC50 **no dice
+por sí solo** en qué sentido actúa el compuesto: si el ensayo es de unión
+(desplazamiento de un radioligando, competencia por fluorescencia) mide cuánto se
+une, como el Ki, también para un agonista; solo si es funcional mide inhibición.
+En las tres dianas de activación el 92.5% de los IC50 de ChEMBL son de unión, así
+que el tipo de ensayo se pide a ChEMBL (`scripts/descargar_tipos_ensayo.py`) y
+decide la dirección de cada IC50. Una primera versión de este script los
+clasificaba a todos como inhibición, y esa lectura era falsa; la señaló Artemio
+al revisar el correo para la patrocinadora.
 
 El diccionario de la patrocinadora advierte que `diana_efecto_buscado` **no dice
 qué hizo el compuesto en el ensayo**, así que la columna no resuelve el caso por
@@ -83,9 +90,10 @@ ACTIVIDAD = (RAIZ / "data/external/profesora"
 ETIQUETAS = RAIZ / "data/external/profesora/etiquetas_dianas_2026-09-25.csv"
 SALIDA = RAIZ / "notebooks/datos/medicion_dianas_activacion.csv"
 
-# Qué mide cada tipo de medida, en términos de dirección. No es una decisión del
-# proyecto: es la lectura estándar de cada ensayo, y está aquí explícita para que
-# se pueda discutir línea por línea en lugar de quedar implícita en su ausencia.
+# Qué mide cada tipo de medida, en términos de dirección, y está aquí explícita para
+# que se pueda discutir línea por línea en lugar de quedar implícita en su ausencia.
+# No es una decisión del proyecto. Los tipos IC dependen del ensayo y se resuelven
+# aparte (`resolver_ic`).
 #
 # - `activacion`: la potencia con la que el compuesto **activa** la diana.
 # - `inhibicion`: la potencia con la que la **inhibe**.
@@ -103,7 +111,8 @@ DIRECCION_DE_TIPO = {
     # dianas de activación son 77 filas, todas de `PPARG` y 65 de ellas
     # censuradas, así que solo mueve la variante estricta.
     "AC50": "ambigua",
-    "IC50": "inhibicion", "IC33": "inhibicion", "IC60": "inhibicion",
+    # IC50/IC33/IC60: ambigua por defecto; `resolver_ic` la cambia según el tipo de ensayo.
+    "IC50": "ambigua", "IC33": "ambigua", "IC60": "ambigua",
     "Inhibition": "inhibicion", "INH": "inhibicion", "DC50": "inhibicion",
     "MIC": "inhibicion", "GI50": "inhibicion", "TGI": "inhibicion",
     "CC50": "inhibicion",
@@ -124,6 +133,26 @@ VARIANTES = {
 }
 
 UMBRAL_UM = 10.0
+
+TIPOS_IC = ("IC50", "IC33", "IC60")
+TIPOS_ENSAYO = RAIZ / "notebooks/datos/tipos_ensayo_chembl.csv"
+# Tipo de ensayo de ChEMBL → dirección de un IC. `B` es unión (desplazamiento,
+# competencia): afinidad. `F` es funcional: el IC mide inhibición. Otro tipo
+# (ADME, toxicidad) o ninguno —NPASS y CMAUP no traen identificador de ensayo—
+# queda ambigua.
+DIRECCION_DE_ENSAYO = {"B": "afinidad", "F": "inhibicion"}
+
+
+def resolver_ic(actividad: pd.DataFrame, direccion: pd.Series,
+                tipos_ensayo: pd.Series) -> pd.Series:
+    """Reemplaza la dirección de los IC por la que dice el tipo de su ensayo.
+
+    `tipos_ensayo` va de `assay_chembl_id` a `assay_type`. Si el archivo ya trae
+    `assay_type` en la fila se usa como respaldo del identificador.
+    """
+    tipo = actividad["assay_chembl_id"].map(tipos_ensayo).fillna(actividad["assay_type"])
+    resuelta = tipo.map(DIRECCION_DE_ENSAYO).fillna("ambigua")
+    return direccion.where(~actividad["activity_type"].isin(TIPOS_IC), resuelta)
 
 
 def _resumen(pares: pd.DataFrame, mediciones: int) -> dict:
@@ -155,6 +184,8 @@ def _medir(corrida: Corrida) -> None:
 
     direccion = actividad["activity_type"].map(DIRECCION_DE_TIPO).fillna(
         "sin_clasificar")
+    tipos_ensayo = pd.read_csv(TIPOS_ENSAYO).set_index("assay_chembl_id")["assay_type"]
+    direccion = resolver_ic(actividad, direccion, tipos_ensayo)
     sin_clasificar = actividad.loc[direccion.eq("sin_clasificar"),
                                    "activity_type"]
     if not sin_clasificar.empty:
@@ -168,6 +199,10 @@ def _medir(corrida: Corrida) -> None:
         etiquetas.loc[etiquetas["diana_efecto_buscado"].eq("Activación"),
                       "gen"].dropna()))
     print(f"\nDianas con efecto buscado «Activación»: {', '.join(activacion)}")
+
+    ic = actividad["activity_type"].isin(TIPOS_IC) & actividad["target_gene"].isin(activacion)
+    print(f"\nIC en las dianas de activación: {int(ic.sum()):,} mediciones, por dirección:"
+          f" {direccion[ic].value_counts().to_dict()}")
 
     print("\nTabla de pares completa (la referencia)…")
     base = tabla_de_pares(actividad)

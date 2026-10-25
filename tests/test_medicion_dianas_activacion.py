@@ -62,9 +62,9 @@ def test_ausentes_devuelve_las_filas_cuyo_par_ya_no_esta():
 def test_la_direccion_de_cada_tipo_esta_declarada_o_no_esta():
     """Un tipo sin dirección cae en «sin_clasificar», no en una por omisión."""
     direcciones = set(med.DIRECCION_DE_TIPO.values())
-    assert direcciones == {"activacion", "inhibicion", "afinidad", "ambigua"}
+    assert direcciones == {"activacion", "afinidad", "ambigua"} | {"inhibicion"}
     # Los dos tipos que deciden la medición, cada uno en su dirección.
-    assert med.DIRECCION_DE_TIPO["IC50"] == "inhibicion"
+    assert med.DIRECCION_DE_TIPO["IC50"] == "ambigua"  # depende del ensayo
     assert med.DIRECCION_DE_TIPO["EC50"] == "activacion"
     # `AC50` suena a activación y no lo es: en cribado puede medir en cualquiera
     # de las dos direcciones. Si alguien lo reclasifica, esta prueba lo frena.
@@ -100,3 +100,18 @@ def test_el_acuerdo_entre_direcciones_solo_mira_donde_las_dos_deciden():
     assert r["pares_con_las_dos_direcciones"] == 3
     assert r["pares_donde_las_dos_deciden"] == 2
     assert r["pares_donde_discrepan"] == 1
+
+
+def test_un_ic50_de_union_es_afinidad_y_solo_el_funcional_es_inhibicion():
+    """El tipo del ensayo decide la dirección de un IC, no el nombre de la medida."""
+    act = pd.DataFrame({
+        "activity_type": ["IC50", "IC50", "IC50", "IC50", "EC50", "Ki"],
+        "assay_chembl_id": ["A1", "A2", "A3", None, "A1", "A1"],
+        "assay_type": [None, None, None, "F", None, None],
+    })
+    tipos = pd.Series({"A1": "B", "A2": "F", "A3": "A"})
+    base = act["activity_type"].map(med.DIRECCION_DE_TIPO)
+    r = med.resolver_ic(act, base, tipos)
+    # unión → afinidad; funcional → inhibición; ADME → ambigua; sin id usa el assay_type de la fila
+    assert r.tolist() == ["afinidad", "inhibicion", "ambigua", "inhibicion",
+                          "activacion", "afinidad"]
