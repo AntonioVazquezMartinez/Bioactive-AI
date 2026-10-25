@@ -578,7 +578,7 @@ Un censurado `> L` solo sirve como negativo si su límite es igual o mayor que e
 
 **El mismo corte no exige lo mismo a cada diana.** Con 10 µM, `LRRK2` tiene 98.1% de activos y `NFE2L2` 50.7%. Mientras se clasifique, la tasa de activos se publica por diana junto con cualquier cifra agregada; la regresión elimina el problema ([2.9](#d2-9)).
 
-El desarrollo por medición y por par está en [la propuesta de variable objetivo](variable-objetivo-fase2.md); las cifras se recalculan con `scripts/cifras_fase2.py` y `scripts/cifras_etiqueta_fase2.py`.
+El desarrollo por medición y por par está en [la página de variables objetivo](variable-objetivo-fase2.md); las cifras se recalculan con `scripts/cifras_fase2.py` y `scripts/cifras_etiqueta_fase2.py`.
 
 #### 2.4 · Los 88,098 registros sin diana de la lista {#d2-4 .propuesta}
 

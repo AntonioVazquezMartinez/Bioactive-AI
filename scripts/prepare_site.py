@@ -85,7 +85,7 @@ DOCUMENTOS = [
      "Qué se decidió, propuso y supuso en cada fase, y qué falta preguntar"),
     ("docs/variable-objetivo-fase2.md",
      "variable-objetivo-fase2.md",
-     "Cómo se construye la etiqueta «activo» de la fase 2, y qué problemas tiene"),
+     "Qué se predice en cada fase, cómo se construye y cómo se evalúa"),
     ("docs/guia-del-proyecto.md",
      "guia-del-proyecto.md",
      "Quiénes participan, cómo se organiza el trabajo y qué lecciones costó aprender"),

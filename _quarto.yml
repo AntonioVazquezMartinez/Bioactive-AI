@@ -88,7 +88,7 @@ website:
           - href: contenido/decisiones.md
             text: La ruta del proyecto
           - href: contenido/variable-objetivo-fase2.md
-            text: La variable objetivo de la fase 2
+            text: Las variables objetivo
           - href: consulta.qmd
             text: Consulta a la patrocinadora
           - href: contenido/referencias/index.qmd

@@ -1,124 +1,89 @@
-# Propuesta: cómo definir la variable objetivo de la fase 2
+# Las variables objetivo de las dos fases
 
-**Estado:** propuesta del equipo, sin ratificar. Es la versión detallada de la decisión [2.3](decisiones.md#d2-3).
-**Qué contiene:** qué vamos a modelar en la fase 2, con qué reglas se construye la etiqueta «activo» o «inactivo», qué problemas tiene y cómo se acotan.
+**Estado:** vigente. Es la versión larga de las decisiones [2.3](decisiones.md#d2-3), [2.9](decisiones.md#d2-9), [2.10](decisiones.md#d2-10) y [2.11](decisiones.md#d2-11) para la fase 2, y de la [1.1](decisiones.md#d1-1) para la fase 1.
 
-## 1. Qué se modela
+## En una tabla
 
-La fase 2 responde una pregunta: **¿este compuesto es activo sobre esta diana?**
-
-- **Diana:** la proteína o el proceso sobre el que actúa el compuesto (por ejemplo, la acetilcolinesterasa). Ya viene en el archivo (`target_gene`).
-- **Variable objetivo:** lo que el modelo debe predecir. El archivo **no la trae**: no hay una columna «activo» o «inactivo», hay que construirla a partir de las mediciones.
-- **Unidad de predicción:** el **par compuesto-diana**, con una sola etiqueta por par (1 = activo, 0 = inactivo). Cada fila del archivo es una *medición* y un mismo par puede tener varias.
-- **Alcance:** las dianas de las categorías que la patrocinadora aprobó: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las otras categorías quedan fuera.
-- **Las dos fases son independientes:** la fase 1 (permeabilidad) y la fase 2 (actividad) no forman una cascada.
-- **Dos ejercicios:** la **clasificación** (activo o inactivo) es el modelo principal. A petición de la patrocinadora se hace además un **ejercicio de predicción de la potencia** como número (sección 8).
-
-## 2. De dónde sale la información
-
-El archivo de actividad (`data/external/profesora/snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv`) tiene 202,647 mediciones de tres fuentes. En las cinco categorías, con gen y estructura calculable, quedan 106,645 filas, y con la definición de abajo forman estos pares:
-
-| Fuente | Qué es | Pares | pChEMBL | Contexto del ensayo |
-|:--|:--|--:|:--|:--|
-| ChEMBL | Moléculas tipo fármaco; sobre todo sintéticas, pero también incluye productos naturales | 67,834 | Sí | Solo en la ruta `neuronal_assay` (sección 7) |
-| NPASS | Base de productos naturales | 4,024 | No | Solo línea celular |
-| CMAUP | Base de plantas medicinales y sus ingredientes | 1,005 | No | Ninguno |
-
-**La fuente no es el origen.** Que una fila sea de NPASS o CMAUP no equivale a que el compuesto sea natural, ni al revés: ChEMBL también contiene naturales. Según la decisión [2.8](decisiones.md#d2-8), el 65.4% de los esqueletos naturales (2,727 de 4,172) aparece también en ChEMBL, y solo 1,445 existen únicamente en NPASS y CMAUP. El archivo de actividad no trae una marca de origen natural.
-
-**Por qué no basta el pChEMBL.** Es −log10 de la concentración molar (6 equivale a 1 µM) y solo existe para ChEMBL. Etiquetar solo con él deja fuera NPASS y CMAUP y las mediciones con relación `>`.
-
-**Qué columnas se usan.** Las de la sección 5 del diccionario, a las que el propio diccionario remite («para entrenar conviene usar las columnas de la sección 5»). Existen en las tres fuentes y siempre traen valor:
-
-| Columna | Qué contiene |
-|:--|:--|
-| `activity_relation_used` | `=` (72% de las filas), `>` (27%) y, con menos del 1% entre todas, `<`, `<=`, `>=`, `~`, `>>` |
-| `activity_value_used` | Número mayor que 0 |
-| `activity_units_used` | nM (85%), uM (15%) y unas pocas unidades más |
-
-**Qué se deja fuera, y por qué.** Se usa **solo la relación y el valor**, que son homogéneos entre fuentes. No se mezclan los **inactivos declarados por texto** (`evidence_kind` = `inactivo_por_texto`, 29,730 filas): ChEMBL solo dice «Not active» —el comentario completo es «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite de 10 µM **sí viene de la fuente** y la codificación como `> 10 µM` es una traducción fiel—, pero todas salen de un **único documento** (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta. Es eso lo que las excluye: una sola campaña de tamizaje definiría el 61% de la clase negativa por registro. Entran solo como sensibilidad (sección 9).
-
-## 3. Cómo se clasifica cada medición
-
-Primero, el valor se pasa a µM: nM × 0.001, uM × 1. Se excluyen las **662 filas en masa por volumen** (`ug.mL-1`, `ug ml-1`, `pg/ml`, `ng/L`; 0.3%), porque convertirlas exige el peso molecular de cada compuesto. Otras 68 filas en unidades molares escritas de otra forma (`10^3nM`, `10^2 uM`, `10^6uM`, `M`, `mM`, `umol/L`, `um`) sí se convierten.
-
-Después se compara con el corte **T** según la relación, con la lectura de `>` de la sección 7 del diccionario («un `>` solo sirve como negativo si su límite es igual o mayor que el umbral de activo»):
-
-| Relación | Condición | Resultado |
+| | Fase 1 · Permeabilidad | Fase 2 · Actividad |
 |:--|:--|:--|
-| `=` o `~` | valor ≤ T | **activa** |
-| `<` o `<=` | valor ≤ T | **activa** |
-| `=` o `~` | valor > T | **inactiva** (medida) |
-| `>` o `>=` | límite ≥ T | **inactiva** (por límite) |
-| `<` o `<=` | valor > T | sin decisión |
-| `>` o `>=` | límite < T | sin decisión |
-| cualquier otra | | sin decisión |
+| **Pregunta** | ¿el compuesto cruza la barrera hematoencefálica? | ¿qué tan potente es el compuesto sobre esta diana? |
+| **Unidad** | el compuesto (un SMILES) | el **par** esqueleto de conectividad × diana |
+| **Variable objetivo** | la clase BBB+ o BBB− | la **potencia**, `pActividad` (regresión con censura) |
+| **Clase derivada** | — | activo o inactivo, aplicando un corte a la potencia predicha |
+| **Métricas** | MCC y AUPRC de la clase minoritaria | concordancia de Harrell, Spearman y RMSE sobre las exactas |
 
-Un `>` con límite menor que T no demuestra nada: si el ensayo llegó a 1 µM sin efecto, no sabemos qué pasa a 10 µM. Esas mediciones no cuentan como activas ni como inactivas.
+La diferencia de fondo: en la fase 1 la etiqueta viene dada y se predice como clase; en la fase 2 **no existe una columna «activo»**, existen mediciones de concentración, y lo que se predice es la concentración.
 
-## 4. El corte T
+## Fase 1 · La clase de permeabilidad
 
-**T = 10 µM (pChEMBL ≥ 5) para las tres fuentes.** Es la convención de ExCAPE-DB que recoge la investigación [04](referencias/04-datos-neuroactividad.md) (pXC50 ≥ 5), la concentración estándar de cribado y la que maximiza el número de pares utilizables. **El diccionario no fija el corte**: deja «el umbral de activo que se use». Es una decisión del equipo con precedente.
+La variable es `BBB+` o `BBB−`, del archivo curado de permeabilidad: 7,811 filas, 7,805 con clase. Cuando el compuesto trae un logBB medido, la clase sale del umbral −1.0 (logBB ≥ −1.0 es BBB+). Seis filas traen logBB sin clase ([1.4](decisiones.md#d1-4)). Hay 1.74 positivos por negativo, así que predecir siempre BBB+ acierta el 63.5% sin aprender nada: por eso se reporta MCC y AUPRC de la clase minoritaria ([C.1](decisiones.md#dc-1)). La columna de grupo A–D no se usa para filtrar ([1.1](decisiones.md#d1-1)).
 
-**1 µM (pChEMBL ≥ 6) se reporta siempre como sensibilidad.** Cambiar el corte cambia el balance: con 1 µM los activos pasan de 72.6% a 49.4%.
+## Fase 2 · La potencia de un par compuesto-diana
 
-## 5. Cómo se arma la etiqueta del par
+### 1. Qué es una fila del archivo
 
-**Llave del par:** el **esqueleto de conectividad** del compuesto (primeros 14 caracteres del InChIKey, `key14`, calculado desde `smiles_raw`) × `target_gene`, la misma llave que `grupos_cv` usa en `src/data_prep/splits.py`. No se usa `source_compound_id`: ChEMBL usa identificadores `CHEMBL…` y NPASS y CMAUP `NPC…`, que no comparten ningún valor, así que un compuesto medido en dos fuentes entraría como dos pares independientes y sus contradicciones serían invisibles. Las filas sin gen o sin estructura calculable no forman par.
+Una medición: un compuesto contra una proteína, con tipo de medida (`IC50`, `Ki`, `EC50`…), relación (`=`, `>`, `<`), valor y unidad. Dos ejemplos: «Ki = 50 nM» y «IC50 > 10 µM». La primera da la concentración exacta; la segunda solo dice que, hasta 10 µM, no se vio el efecto.
 
-**Regla:**
-1. Si alguna medición del par es **activa** y ninguna es **inactiva** → **activo (1)**.
-2. Si alguna es **inactiva** y ninguna es **activa** → **inactivo (0)**.
-3. Si el par tiene una medición activa **y** una inactiva (**conflicto**) → **se quita**: no entra al entrenamiento ni a la evaluación. Su número se reporta.
-4. Si todas quedan sin decisión → sin etiqueta.
+### 2. De la concentración a la potencia
 
-**Ejemplos (ilustrativos), con T = 10 µM:**
+Todo se pasa a µM (nM × 0.001, µM × 1). Las filas en unidades de masa (`ug/mL`) quedan fuera: sin el peso molecular no hay conversión a molar. La potencia es
 
-| Mediciones del par | Etiqueta |
+> **pActividad = 6 − log₁₀(concentración en µM)**
+
+Ejemplos: 10 µM da 5; 1 µM da 6; 0.1 µM da 7. Es solo la concentración en escala logarítmica y con el sentido invertido (más potente, número mayor): no agrega información ni ruido, y en ChEMBL coincide con el pChEMBL (sobre 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021). Se usa porque las concentraciones abarcan doce órdenes de magnitud. Se recorta a [2, 12], el rango del pChEMBL observado.
+
+La relación de cada fila decide qué dice del valor:
+
+| Relación | Qué dice la medición |
 |:--|:--|
-| IC50 = 0.3 µM | **1** |
-| IC50 = 25 µM; IC50 = 40 µM | **0** |
-| IC50 > 10 µM | **0** |
-| IC50 = 2 µM; IC50 = 30 µM | se quita (conflicto) |
-| IC50 > 1 µM | sin etiqueta |
+| `=` o `~` | la concentración, exacta |
+| `>` | la concentración es **mayor** que el límite (potencia menor que 6 − log₁₀ límite) |
+| `<` | la concentración es **menor** que el límite |
 
-## 6. Cuánto queda
+### 3. Qué entra como evidencia
 
-Con T = 10 µM, en las cinco categorías y sin los inactivos por texto:
+- **Las tres fuentes** (ChEMBL, NPASS, CMAUP), con las columnas `_used` del diccionario, que vienen informadas y homogéneas ([2.3](decisiones.md#d2-3)). Las 2,001 relaciones inferidas entran marcadas.
+- **La afinidad cuenta** (`Ki`, `Kd`, IC50 de unión) y ninguna medición se invierte ([2.11](decisiones.md#d2-11)). Ejemplo: un IC50 sobre `PPARG` (diana donde se busca activar) puede venir de un ensayo de unión, que mide cuánto se une, o de uno funcional de inhibición, que va en sentido contrario. Cada medición lleva una marca `direccion_consistente` (consistente, ambigua o contradictoria) y la sensibilidad se repite solo con las consistentes. `Potency` y `AC50` son potencia sin dirección.
+- **Fuera:** los inactivos declarados por texto (el panel DrugMatrix, [2.12](decisiones.md#d2-12)) y las 88,098 mediciones sobre proteínas fuera de la lista de dianas ([2.4](decisiones.md#d2-4)).
 
-| Conjunto | Pares | En conflicto (se quitan) | Con etiqueta | Activos |
-|:--|--:|--:|--:|--:|
-| **Las tres fuentes** | 70,384 | 1,784 (11.8% de los 15,153 con varias mediciones) | 66,121 | 72.6% |
-| ChEMBL | 67,834 | 1,561 (11.7%) | 63,796 | 74.8% |
-| NPASS | 4,024 | 321 (32.4%) | 3,688 | 22.9% |
-| CMAUP | 1,005 | 148 (38.9%) | 857 | 46.2% |
+### 4. Del conjunto de mediciones al par
 
-Con T = 1 µM, las tres fuentes dan 67,266 pares etiquetados y 49.4% de activos (2,535 en conflicto).
+La llave del par es **esqueleto de conectividad × gen**, no el identificador del compuesto, porque cada fuente numera los suyos y no comparten ninguno ([2.10](decisiones.md#d2-10)). De cada par se guarda el **intervalo** donde cae la potencia, no una etiqueta:
 
-## 7. Qué problemas tiene esta etiqueta, declarados
+| Columna | Qué es |
+|:--|:--|
+| `pActividad` | la mediana de las mediciones exactas; vacío si solo hay cotas |
+| `limite_inferior`, `limite_superior` | el intervalo, con ±∞ donde no hay cota |
+| `n_mediciones`, `n_exactas`, `rango_exactas` | cuántas hay y cuánto se separan |
+| `conflicto` | las mediciones son incompatibles entre sí |
 
-1. **La fuente y la etiqueta quedan confundidas, y este es el riesgo mayor.** Al unir las tres fuentes con el mismo corte, el porcentaje de activos va de 74.8% (ChEMBL) a 46.2% (CMAUP) y 22.9% (NPASS). Un modelo podría acertar solo con «viene de NPASS, entonces inactivo». Por eso el desempeño se reporta **siempre por fuente**, no solo en total, y se entrena el control de atajo de la sección 10. La sensibilidad «solo ChEMBL» es la alternativa si el control muestra que la fuente filtra la etiqueta.
-2. **Quitar los conflictos no es neutro.** Se pierde el 11.8% de los pares con varias mediciones, y más en NPASS y CMAUP (32% y 39%). El conjunto que queda es el más consistente, no el más representativo, y su desempeño será optimista para los pares difíciles. El número de pares quitados se reporta por fuente.
-3. **Medidas distintas en una misma columna.** `activity_type` tiene 41 tipos (IC50, Ki, EC50, Kd, GI50 y «Potency» de PubChem, entre otros). «Potency» pesa mucho en NPASS (2,427 filas) y CMAUP (775) y casi nada en ChEMBL. **Y los tipos pueden tener dirección:** un EC50 mide el efecto de activar, pero un IC50 depende del ensayo (en uno de unión mide afinidad, sin dirección; solo en uno funcional mide inhibición), y la etiqueta no mira el tipo. En las dianas donde se busca *activar* (`PPARG`, `SIRT1`, `NFE2L2`, `TSPO`; el 29% de sus filas son IC50) un compuesto puede quedar «activo» por unirse con potencia sin que se sepa si activa. La propuesta de esta sección no lo trata; está abierto en la [decisión 2.3](decisiones.md#d2-3) y en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95).
-4. **El mismo corte no significa lo mismo en todos los ensayos, y el contexto está ausente justo en las filas que se modelan.** Tipo de ensayo, formato, tejido y línea celular dependen por completo de la ruta por la que entró la fila (`selection_route`). En ChEMBL, `neuronal_assay` (89,470 filas) trae formato en el 100%, `both` (784) en el 100% y `cns_target` (97,100 filas, la ruta de casi todas las dianas de la lista) en **0**. No es dato faltante: son dos rutas anotadas de forma distinta al construir el archivo. Por eso no se puede comprobar con los datos si el tejido explica los conflictos; el vacío no es evidencia de que el tejido no influya, porque el experimento ocurrió en algún tejido y lo que falta es la columna. Lo que sí está en el 100% de las filas de ChEMBL es `assay_chembl_id` (8,803 ensayos distintos; NPASS y CMAUP no lo traen), y en todas las filas, `reference_id`.
-5. **Relaciones inferidas.** 2,001 filas de NPASS no traían relación; el equipo de la patrocinadora asignó `=` con una regla que el diccionario da con 98.4% de acierto. Se usan como vienen; la sensibilidad sin ellas está en la sección 9.
-6. **Filas marcadas por ChEMBL.** 5,287 filas (2.6%) llevan «Outside typical range» en `chembl_data_validity_comment`. Se mantienen y se repite el análisis sin ellas.
-7. **Copias.** 1,014 filas tuvieron copias idénticas que ya se quitaron (`n_registros_identicos` > 1); no hace falta deduplicar de nuevo.
-8. **El corte cae donde la medición es menos fiable.** Entre las mediciones exactas de las cinco categorías (sin los inactivos por texto y con pActividad entre 2 y 12), el 20.7% queda a menos de 0.5 unidades logarítmicas de 10 µM (18.2% en ChEMBL) y el 24.3% a esa distancia de 1 µM. Y entre los pares con al menos dos mediciones exactas (12,612), el rango mediano es 0.43 unidades, el 25.5% supera una unidad y el 9.0% tiene mediciones a los dos lados de 10 µM. Una etiqueta binaria con corte fijo es, por tanto, poco estable justo para esos pares; es la razón de fondo de la [2.9](decisiones.md#d2-9). *Cifras calculadas con las funciones de `scripts/cifras_etiqueta_fase2.py`; falta incorporarlas al script para que tengan una corrida versionada.*
+Dos ejemplos. Un par con Ki = 50 nM (pActividad 7.30) y IC50 = 120 nM (6.92) tiene mediana 7.11 y rango 0.38: es consistente. Si además trae un `> 10 µM` de otro ensayo, que exige potencia menor que 5, la mediana cae fuera de lo que permite esa cota y el par se marca en **conflicto**. Un par con 0.01 µM y 5 µM tiene rango 2.7, más de dos unidades logarítmicas (cien veces), y se marca como de **dispersión alta**.
 
-## 8. Ejercicio de predicción de la potencia
+La mediana, y no la medición más potente, porque el máximo sesga hacia los activos. El filtro de dirección se aplica antes de agregar.
 
-A petición de la patrocinadora, que quiere encontrar a partir de qué valor un compuesto se vuelve significativo, se hace además un modelo que **predice la potencia como número** y no necesita un corte.
+### 5. Cómo se ajusta la regresión
 
-- **Variable:** pActividad = −log10 de la concentración molar (= 6 − log10 del valor en µM); en ChEMBL coincide con el pChEMBL.
-- **Qué mediciones entran:** las exactas (`=` o `~`) en µM, que dan 58,001 pares con al menos una. Las censuradas (`<`, `>`) no se usan como si fueran valores exactos, como indica el diccionario.
-- **Cómo se agrega por par:** la **mediana** de sus mediciones exactas. Evita el concepto de conflicto (el rango mediano entre mediciones de un par es 0.44 unidades; el percentil 90, 1.85).
-- **Valores fuera de rango:** hay pares con pActividad de −6.7 a 16.4, que son errores de unidades o de captura; se revisan y se recortan antes de entrenar.
-- **Qué entrega:** el desempeño en función de la potencia y, a partir de él, el valor en el que el modelo empieza a separar bien. Es la respuesta a su pregunta sobre el umbral.
+El modelo aprende la potencia con los censurados como cotas, no como valores ni como datos faltantes. Un `> 10 µM` es, en concentración, censura **por la derecha** (el valor real es mayor que 10), que es lo que `survival:aft` de XGBoost espera; en pActividad sería por la izquierda. Por eso se ajusta en µM y se convierte a pActividad al final. Excluir los censurados perdería el 49.4% de los negativos ([2.9](decisiones.md#d2-9)).
 
-## 9. Protocolo de robustez
+### 6. La clase derivada
 
-La variabilidad entre ensayos no se resuelve con los datos disponibles; se **acota**. La etiqueta se construye una vez y el análisis se repite bajo estas variantes (T = 10 µM, cinco categorías):
+La clase sale de aplicar un corte a la potencia predicha: **10 µM** (pActividad ≥ 5) como principal y **1 µM** (≥ 6) como sensibilidad, siempre juntos. El corte no se estima: no hay columna de desenlace que lo calibre. Los 10 µM vienen de que el 67.4% de las mediciones censuradas lo están exactamente ahí, la concentración a la que esos ensayos dejaron de mirar.
+
+Ejemplo de por qué no es el objetivo: con 10 µM, un compuesto de 0.05 µM y otro de 9 µM son ambos «activos», aunque difieren 180 veces. Y el mismo corte exige distinto según la diana: con 10 µM, `LRRK2` queda en 98.1% de activos y `NFE2L2` en 50.7%.
+
+Para derivar la clase de un par, un `> L` solo cuenta como inactivo si su límite es igual o mayor que el corte; con `> 1 µM` y corte de 10 µM no se sabe nada. Una exacta justo en el corte es activa.
+
+### 7. Cómo se evalúa
+
+- **Concordancia de Harrell:** de los pares de mediciones cuyo orden se conoce, qué fracción ordena bien el modelo. Tolera la censura.
+- **Spearman y RMSE**, solo sobre las mediciones exactas, declarado así.
+- **Un techo:** repetir el mismo ensayo da diferencias de unas 0.7 unidades logarítmicas en IC50 y 0.5 en Ki (fuente por citar), y el 25.5% de los pares con dos o más exactas discrepa más de una unidad. Un RMSE muy por debajo no es un buen resultado, es una señal de fuga.
+- **Siempre por procedencia** (solo ChEMBL, mixtos, solo NPASS): el modelo separa mucho peor los pares que solo tiene NPASS ([2.5](decisiones.md#d2-5)).
+- Las métricas de ranking (enriquecimiento, precisión en los primeros 100) están en la [C.5](decisiones.md#dc-5).
+
+### 8. Cómo se acotan los problemas
+
+La variabilidad entre ensayos no se resuelve con los datos que hay; se acota repitiendo el análisis bajo variantes (corte de 10 µM, cinco categorías). Cifras de `scripts/cifras_etiqueta_fase2.py` (pares con etiqueta binaria, no con potencia):
 
 | Variante | Pares con etiqueta | Activos |
 |:--|--:|--:|
@@ -129,36 +94,17 @@ La variabilidad entre ensayos no se resuelve con los datos disponibles; se **aco
 | Solo IC50 | 45,050 | 71.0% |
 | Solo Ki | 15,418 | 86.8% |
 | Solo ChEMBL | 63,796 | 74.8% |
-| Por tipo de ensayo o tejido | no es viable hoy | — |
-| Por artículo disjunto | no es viable: 55.9% en un componente | — |
 
-- **Por tipo de ensayo o tejido** exige que la ruta `cns_target` esté anotada. Dos caminos, en orden: (1) **pedirle a Jorge la misma anotación para esa ruta**, que su equipo ya hizo con la misma tubería para 93,204 filas; no es una capacidad nueva y mantiene una sola versión de ChEMBL, con las dos fases comparables; (2) como plan B y en paralelo, el volcado de ChEMBL 37 uniendo por `assay_chembl_id`, que el proyecto ya declara como alternativa de la fase 2.
-- **Validación por artículo disjunto: en su versión estricta no es viable.** La idea era agrupar también por `reference_id` para probar el modelo en artículos que no vio. Con las referencias que `fase2_pares.parquet` ya guarda, conectando dos pares que comparten al menos una referencia, **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, que es lo que lo hace parecer fácil; lo que los enlaza son los compuestos medidos en varios artículos. Separar por componentes pondría más de la mitad de los datos de un lado y la prueba sería un solo bloque.
+Si el resultado no cambia entre variantes, el modelo no depende de esas diferencias; si cambia, se reporta cuánto. Problemas que no se pueden quitar y se declaran:
 
-  Quedan dos versiones aproximadas, las dos posibles con lo que el artefacto ya trae, y **no se elige todavía**: reportar el desempeño **por referencia** dentro de la validación cruzada, sin exigir que los grupos sean disjuntos; o agrupar cada par por su **referencia principal**, aceptando que algunos compuestos aparezcan en más de un artículo. La primera no cambia la partición y solo añade un corte al reporte; la segunda sí la cambia y hay que medir cuánta fuga deja. Se decide en el Avance 3, con la cifra de fuga de la segunda medida. El cálculo está en la sección 6.4 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb).
+1. **La fuente y la potencia están correlacionadas.** El porcentaje de activos va de 74.8% (ChEMBL) a 22.9% (NPASS). Un modelo podría acertar con «viene de NPASS, entonces débil». La fuente, el tipo de ensayo, el tejido y el artículo **no entran como entrada del modelo**; un control de atajo que solo ve la procedencia mide cuánta señal llevan ([2.5](decisiones.md#d2-5)).
+2. **El contexto del ensayo falta justo donde se modela.** Solo 286 de los 70,384 pares (0.4%) traen tejido, porque la anotación existe en una ruta del archivo y las dianas de la lista entran por otra ([2.3](decisiones.md#d2-3)). Sirve para auditar los pares en conflicto, no como variable.
+3. **Quitar los conflictos no es neutro:** se pierde el 11.8% de los pares con varias mediciones, más en NPASS y CMAUP, y el conjunto que queda es más consistente que representativo.
+4. **Medidas distintas en una columna:** `activity_type` tiene 41 tipos; `Potency` pesa en NPASS (2,427 filas) y CMAUP (775) y casi nada en ChEMBL.
+5. **El corte cae donde la medición es menos fiable:** el 20.7% de las exactas queda a menos de 0.5 unidades logarítmicas de 10 µM.
+6. **Filas marcadas por ChEMBL** («Outside typical range», 5,287 filas, 2.6%): se mantienen y se repite el análisis sin ellas.
+7. **Por artículo disjunto no es viable:** un solo componente conectado reúne el 55.9% de los pares; se reporta el desempeño por referencia.
 
-Si el resultado no cambia entre variantes, el modelo no depende de esas diferencias; si cambia, se reporta cuánto.
+### 9. Cifras y cómo se calcularon
 
-## 10. Regla para variables y fuentes
-
-La fuente, el tipo de ensayo, el tejido y el artículo **no entran como características** del modelo: la entrada del sistema es un SMILES y un compuesto nuevo no las tiene. Se entrena además un **control de atajo** que solo ve esas variables, sin estructura química. Si ese control se acerca al desempeño del modelo con química, esas variables llevan información de la etiqueta; se quedan fuera y el desempeño se reporta por estrato. Si, al revisar la importancia de las características, aparecieran variables que actúan como identificador de fuente o de ensayo, se descartan esas variables (o la fuente). Es el control del issue #32. La diana sí es una entrada válida.
-
-## 11. Qué queda por confirmar
-
-Nada de esta lista bloquea el modelado: las cinco entradas que esperaban a la patrocinadora quedaron vigentes por decisión del equipo (el 17 de octubre), cada una con lo que la haría cambiar. Lo que sigue es lo que **se le informa** y lo que **falta construir**.
-
-1. **Con la patrocinadora: informar, no esperar.**
-   - **Que las tres fuentes se etiquetan con el mismo corte** ([2.3](decisiones.md#d2-3)). En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa». Aquí se lee como respuesta a lo que se le preguntó en la reunión (construir el valor en las otras bases para partir en activo e inactivo), y no como rechazo de las columnas que cada fuente ya informa. Es una lectura del equipo, no una respuesta suya, así que se le muestra con filas reales y con la pregunta literal: *las columnas de la sección 5 dan una concentración y una relación en las tres bases; ¿descartó usarlas con el mismo corte, o solo inferir lo que no viene informado, como las 2,001 relaciones de NPASS?* Si dice que descartó usarlas, el análisis «solo ChEMBL» pasa a ser el principal; no hay que reconstruir nada, porque ya se reporta al lado.
-   - **Su petición de revisar la distribución por tejido y tipo de experimento.** La respuesta es un hallazgo: esas columnas están vacías en las filas que se modelan (la ruta `cns_target`, 108,640 filas), así que no se puede revisar con este archivo.
-   - **Que estrés oxidativo es 47.7% NPASS y CMAUP.** Si además se descartara el etiquetado de esas dos fuentes, la categoría que ella pidió conservar pasaría de 2,456 filas a 1,285. Sus dos decisiones se restan entre sí.
-   - **El método con que se separó el 10%**, que Jorge va a compartir, y el experimento que Artemio ofreció: comparar el desempeño contra ese 10% y contra la partición por andamio, que debería salir inflado.
-   - Lo que **ya no se le pregunta**: el cruce con COCONUT del archivo de actividad lo calcula el equipo ([2.8](decisiones.md#d2-8)), y el punto de operación del entregable no se fija: se entrega la curva ([C.5](decisiones.md#dc-5)).
-2. **Con Jorge.** Anotar la ruta `cns_target` con tipo de ensayo, formato, tejido y línea celular, o el volcado de ChEMBL 37 como plan B (los dos caminos están en la sección 9). No es necesario para entrenar; sirve para comprobar si el tejido y el tipo de ensayo explican los conflictos.
-3. **Del lado del equipo.**
-   - **El control de atajo** ([#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32)) tiene que correrse antes de citar cualquier cifra por fuente: es lo que sostiene la decisión de etiquetar las tres.
-   - **La sección 8** de este documento describe la potencia como un ejercicio sobre mediciones exactas con la mediana por par. La [2.9](decisiones.md#d2-9) propone en cambio un solo modelo de regresión con los censurados como observaciones censuradas, y la [2.10](decisiones.md#d2-10) guarda el objetivo como intervalo. Hay que alinearlas cuando se decida la 2.9 (Avance 4).
-   - **Las cifras** de este documento salen de `scripts/cifras_etiqueta_fase2.py`, que las reproduce (70,384 pares). La diferencia con una versión anterior eran las filas en µg/mL, que no pueden etiquetarse sin el peso molecular.
-
-## 12. Cómo se calcularon las cifras
-
-Todas salen del archivo de actividad recibido (202,647 filas). Las filas se restringen a las cinco categorías, con `target_gene` y estructura calculable (`smiles_raw`). Las cifras del diccionario (225,513 filas) corresponden al archivo completo, no al recibido. Los porcentajes por registro y por par se declaran como tales.
+Las cifras salen del archivo recibido (202,647 filas; el diccionario describe 225,513 del archivo completo), restringido a las cinco categorías, con `target_gene` y estructura calculable: 70,384 pares sobre 59,532 compuestos y 26 dianas; 57,832 con potencia y 12,552 solo con cotas. Los reproducen `scripts/cifras_fase2.py`, `scripts/cifras_etiqueta_fase2.py` y `scripts/cifras_contexto_ensayo.py`; porcentajes por registro y por par se declaran como tales.

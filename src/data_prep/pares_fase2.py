@@ -106,7 +106,7 @@ def _identificadores(serie: pd.Series) -> str:
 
     Se guardan además de sus conteos porque `n_referencias` dice cuántos
     artículos sostienen el par y no **cuáles**, y la validación por artículo
-    disjunto —que la propuesta de variable objetivo plantea en su sección 9—
+    disjunto —que la página de variables objetivo plantea en su sección 8—
     necesita los identificadores para poder agrupar por ellos. Ordenados para
     que el archivo sea reproducible byte a byte.
     """
