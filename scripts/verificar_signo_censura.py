@@ -19,8 +19,13 @@ dependen de afinar nada:
 2. **Control negativo.** El mismo ajuste con el sentido de la censura invertido
    a propósito (`> L` leído como `< L`). Si la comprobación no distingue los dos,
    no comprueba nada.
-3. **El orden de las exactas.** Spearman y concordancia de Harrell sobre la
+3. **Contra entrenar solo con las exactas** (lo que hace el baseline sencillo):
+   qué aporta la censura. Si no cambiara nada, usarla no valdría la maquinaria.
+4. **El orden de las exactas.** Spearman y concordancia de Harrell sobre la
    validación, para ver que el signo bueno no cuesta lo que ya se sabe predecir.
+
+Las filas sin ninguna cota (intervalo de 0 a ∞ en µM) no informan nada y se
+cuentan aparte.
 
 Entrena con el 70% de entrenamiento y evalúa en el 10% de validación; la prueba
 reservada no se toca ([2.7](../docs/decisiones.md#d2-7)). No es el modelo final:
@@ -98,17 +103,21 @@ def _medir(corrida: Corrida) -> None:
 
     ent = (d["particion"] == "entrenamiento").to_numpy()
     val = (d["particion"] == "validacion").to_numpy()
-    derecha_val = val & np.isinf(superior_um)          # `> L µM` en validación
+    sin_cota = (inferior_um == 0) & np.isinf(superior_um)
+    derecha_val = val & np.isinf(superior_um) & ~sin_cota   # `> L µM` en validación
+    exacta = np.isfinite(inf_pa) & (inf_pa == sup_pa)
     print(f"entrenamiento {ent.sum():,} · validación {val.sum():,} · "
-          f"censurados por la derecha en validación {derecha_val.sum():,}")
+          f"censurados por la derecha en validación {derecha_val.sum():,} · "
+          f"sin ninguna cota {sin_cota.sum():,}")
 
     variantes = {
-        "signo_correcto": (inferior_um, superior_um),
-        "signo_invertido": invertir_censura(inferior_um, superior_um),
+        "signo_correcto": (inferior_um, superior_um, ent),
+        "signo_invertido": (*invertir_censura(inferior_um, superior_um), ent),
+        "solo_exactas": (inferior_um, superior_um, ent & exacta),
     }
-    resultados = {}
-    for nombre, (lo, hi) in variantes.items():
-        pred = ajustar(X[ent], lo[ent], hi[ent], X[val])
+    resultados = {"sin_ninguna_cota": int(sin_cota.sum())}
+    for nombre, (lo, hi, filas) in variantes.items():
+        pred = ajustar(X[filas], lo[filas], hi[filas], X[val])
         # La pActividad predicha de los `> L`: respeta la cota si la
         # concentración predicha supera L, es decir si pActividad < 6 − log10 L.
         pred_todo = np.full(len(d), np.nan)
@@ -118,12 +127,13 @@ def _medir(corrida: Corrida) -> None:
         m = metricas_regresion(inf_pa[val], sup_pa[val], pred)
         m["respeta_la_cota"] = respeta
         m["pa_media_censurados_derecha"] = float(np.mean(pred_todo[derecha_val]))
+        m["n_entrenamiento"] = int(filas.sum())
         resultados[nombre] = m
         print(f"\n{nombre}")
         for k, v in m.items():
             print(f"  {k:30s} {v:.3f}" if isinstance(v, float) else f"  {k:30s} {v}")
 
-    exactas = val & np.isfinite(inf_pa) & (inf_pa == sup_pa)
+    exactas = val & exacta
     resultados["referencia"] = {
         "pa_media_exactas_validacion": float(np.mean(inf_pa[exactas])),
         "pa_media_censurados_derecha_cota": float(np.mean(
