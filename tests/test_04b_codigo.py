@@ -1,13 +1,16 @@
-"""El cuaderno 04b trae el código de sus métricas y `src/` guarda la misma lógica.
+"""El cuaderno 04b muestra el código de sus métricas, y es el de `src/`, que es el que corre.
 
-Que el cuaderno se lea solo es el motivo de tener el código en sus celdas; que `src/`
-lo pruebe es el motivo de tenerlo allá. Si las dos copias se separan, el cuaderno dejaría
-de describir lo que `src/` prueba, así que esta prueba compara el árbol sintáctico de
-cada función: los espacios y los comentarios no cuentan, la lógica sí.
+El cuaderno ejecuta las métricas importándolas de `src/evaluation/regresion.py`, y una celda
+de texto las muestra para que se lea sin abrir otro archivo. Si el código que se muestra
+dejara de ser el que se ejecuta, el cuaderno describiría algo que no corrió. Esta prueba ata
+las dos cosas: compara el árbol sintáctico de cada función mostrada contra la de `src/`
+(los espacios y los comentarios no cuentan, la lógica sí) y comprueba que la celda de código
+siga importándolas de `src/`.
 """
 
 import ast
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -23,19 +26,30 @@ def _definiciones(fuente: str) -> dict[str, str]:
 
 
 @pytest.fixture(scope="module")
-def del_cuaderno() -> dict[str, str]:
-    celdas = json.loads(CUADERNO.read_text(encoding="utf-8"))["cells"]
+def celdas() -> list[dict]:
+    return json.loads(CUADERNO.read_text(encoding="utf-8"))["cells"]
+
+
+@pytest.fixture(scope="module")
+def mostrado(celdas) -> dict[str, str]:
+    """Las funciones que el cuaderno muestra en bloques de código de sus celdas de texto."""
     out: dict[str, str] = {}
     for c in celdas:
-        if c["cell_type"] == "code":
-            out.update(_definiciones("".join(c["source"])))
+        if c["cell_type"] == "markdown":
+            for bloque in re.findall(r"```python\n(.*?)```", "".join(c["source"]), re.S):
+                out.update(_definiciones(bloque))
     return out
 
 
 @pytest.mark.parametrize("nombre", FUNCIONES)
-def test_cada_funcion_del_cuaderno_es_la_de_src(nombre, del_cuaderno):
+def test_cada_funcion_mostrada_es_la_de_src(nombre, mostrado):
     de_src = _definiciones(
         (RAIZ / "src" / "evaluation" / "regresion.py").read_text(encoding="utf-8"))
-    assert nombre in del_cuaderno, f"{nombre} no está en el cuaderno 04b"
-    assert del_cuaderno[nombre] == de_src[nombre], (
+    assert nombre in mostrado, f"{nombre} no se muestra en el cuaderno 04b"
+    assert mostrado[nombre] == de_src[nombre], (
         f"{nombre}: el cuaderno 04b y src/evaluation/regresion.py dicen cosas distintas")
+
+
+def test_lo_que_se_ejecuta_se_importa_de_src(celdas):
+    codigo = "\n".join("".join(c["source"]) for c in celdas if c["cell_type"] == "code")
+    assert "from src.evaluation.regresion import concordancia_harrell, rmse_exactas" in codigo
