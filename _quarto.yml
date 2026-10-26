@@ -85,6 +85,8 @@ website:
             text: "05 · Fuentes de datos abiertas"
       - text: Ruta
         menu:
+          - href: contenido/recorrido-del-dato.md
+            text: De un SMILES a una lista de candidatos
           - href: contenido/decisiones.md
             text: La ruta del proyecto
           - href: contenido/variable-objetivo-fase2.md
