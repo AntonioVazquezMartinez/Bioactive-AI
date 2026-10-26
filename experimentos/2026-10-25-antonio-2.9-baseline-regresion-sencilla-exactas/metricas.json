@@ -1,0 +1,202 @@
+{
+  "mixto": {
+    "arbol": {
+      "auroc": 0.556,
+      "desv_mcc": 0.053,
+      "mae": 0.947,
+      "mcc": 0.096,
+      "seg": 2.888,
+      "spearman": 0.128
+    },
+    "knn": {
+      "auroc": 0.616,
+      "desv_mcc": 0.079,
+      "mae": 0.727,
+      "mcc": 0.142,
+      "seg": 0.054,
+      "spearman": 0.282
+    },
+    "media": {
+      "auroc": 0.5,
+      "desv_mcc": 0.0,
+      "mae": 1.326,
+      "mcc": 0.0,
+      "seg": 0.017,
+      "spearman": NaN
+    },
+    "mlp": {
+      "auroc": 0.623,
+      "desv_mcc": 0.08,
+      "mae": 0.863,
+      "mcc": 0.168,
+      "seg": 51.121,
+      "spearman": 0.249
+    },
+    "ridge": {
+      "auroc": 0.51,
+      "desv_mcc": 0.084,
+      "mae": 0.876,
+      "mcc": -0.006,
+      "seg": 0.109,
+      "spearman": 0.062
+    },
+    "svr": {
+      "auroc": 0.604,
+      "desv_mcc": 0.077,
+      "mae": 0.732,
+      "mcc": 0.135,
+      "seg": 141.753,
+      "spearman": 0.228
+    }
+  },
+  "solo_chembl": {
+    "arbol": {
+      "auroc": 0.711,
+      "desv_mcc": 0.018,
+      "mae": 0.989,
+      "mcc": 0.273,
+      "seg": 2.888,
+      "spearman": 0.469
+    },
+    "knn": {
+      "auroc": 0.796,
+      "desv_mcc": 0.016,
+      "mae": 0.774,
+      "mcc": 0.32,
+      "seg": 0.054,
+      "spearman": 0.642
+    },
+    "media": {
+      "auroc": 0.5,
+      "desv_mcc": 0.0,
+      "mae": 1.083,
+      "mcc": 0.0,
+      "seg": 0.017,
+      "spearman": NaN
+    },
+    "mlp": {
+      "auroc": 0.795,
+      "desv_mcc": 0.023,
+      "mae": 0.823,
+      "mcc": 0.346,
+      "seg": 51.121,
+      "spearman": 0.629
+    },
+    "ridge": {
+      "auroc": 0.761,
+      "desv_mcc": 0.016,
+      "mae": 0.912,
+      "mcc": 0.168,
+      "seg": 0.109,
+      "spearman": 0.502
+    },
+    "svr": {
+      "auroc": 0.808,
+      "desv_mcc": 0.013,
+      "mae": 0.8,
+      "mcc": 0.313,
+      "seg": 141.753,
+      "spearman": 0.622
+    }
+  },
+  "solo_npass": {
+    "arbol": {
+      "auroc": 0.51,
+      "desv_mcc": 0.042,
+      "mae": 0.917,
+      "mcc": -0.001,
+      "seg": 2.888,
+      "spearman": 0.181
+    },
+    "knn": {
+      "auroc": 0.492,
+      "desv_mcc": 0.06,
+      "mae": 0.595,
+      "mcc": -0.002,
+      "seg": 0.054,
+      "spearman": 0.362
+    },
+    "media": {
+      "auroc": 0.5,
+      "desv_mcc": 0.0,
+      "mae": 1.556,
+      "mcc": 0.0,
+      "seg": 0.017,
+      "spearman": NaN
+    },
+    "mlp": {
+      "auroc": 0.569,
+      "desv_mcc": 0.059,
+      "mae": 0.792,
+      "mcc": 0.071,
+      "seg": 51.121,
+      "spearman": 0.26
+    },
+    "ridge": {
+      "auroc": 0.521,
+      "desv_mcc": 0.055,
+      "mae": 0.752,
+      "mcc": 0.005,
+      "seg": 0.109,
+      "spearman": 0.256
+    },
+    "svr": {
+      "auroc": 0.542,
+      "desv_mcc": 0.051,
+      "mae": 0.583,
+      "mcc": 0.018,
+      "seg": 141.753,
+      "spearman": 0.313
+    }
+  },
+  "todos": {
+    "arbol": {
+      "auroc": 0.717,
+      "desv_mcc": 0.021,
+      "mae": 0.986,
+      "mcc": 0.291,
+      "seg": 2.888,
+      "spearman": 0.484
+    },
+    "knn": {
+      "auroc": 0.803,
+      "desv_mcc": 0.015,
+      "mae": 0.769,
+      "mcc": 0.343,
+      "seg": 0.054,
+      "spearman": 0.658
+    },
+    "media": {
+      "auroc": 0.5,
+      "desv_mcc": 0.0,
+      "mae": 1.1,
+      "mcc": 0.0,
+      "seg": 0.017,
+      "spearman": NaN
+    },
+    "mlp": {
+      "auroc": 0.801,
+      "desv_mcc": 0.022,
+      "mae": 0.823,
+      "mcc": 0.372,
+      "seg": 51.121,
+      "spearman": 0.642
+    },
+    "ridge": {
+      "auroc": 0.774,
+      "desv_mcc": 0.025,
+      "mae": 0.907,
+      "mcc": 0.22,
+      "seg": 0.109,
+      "spearman": 0.529
+    },
+    "svr": {
+      "auroc": 0.818,
+      "desv_mcc": 0.016,
+      "mae": 0.794,
+      "mcc": 0.35,
+      "seg": 141.753,
+      "spearman": 0.641
+    }
+  }
+}
