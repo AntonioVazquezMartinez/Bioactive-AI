@@ -1,0 +1,37 @@
+decision: '2.9'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - media
+  - ridge
+  - bayes_ridge
+  - arbol
+  - knn
+  - svr
+  - mlp
+  pliegues: 5
+  entrena_con: solo exactas
+  objetivo: pActividad
+  corte_mcc: 5.0
+  estratos: procedencia
+  metrica_principal: concordancia
+  afinados:
+  - svr
+  - knn
+  rejillas:
+    svr:
+      svr__C:
+      - 1
+      - 10
+    knn:
+      kneighborsregressor__n_neighbors:
+      - 15
+      - 30
+      kneighborsregressor__weights:
+      - uniform
+      - distance
+  semillas_afinado:
+  - 0
