@@ -71,3 +71,10 @@ def test_el_resumen_dice_cuanto_es_censurado():
     sup = np.array([5.0, 5.0])
     m = metricas_regresion(inf, sup, np.array([5.0, 3.0]))
     assert m["n_exactas"] == 1 and m["fraccion_censurada"] == 0.5
+
+
+def test_un_intervalo_vacio_no_devuelve_una_cota_inferior_mayor_que_la_superior():
+    # cotas cruzadas (inferior 5 > superior 4): no hay concentración posible
+    inferior_um, superior_um = limites_en_micromolar([5.0, 6.0], [4.0, 6.0])
+    assert np.isnan(inferior_um[0]) and np.isnan(superior_um[0])
+    assert inferior_um[1] == pytest.approx(1.0) == pytest.approx(superior_um[1])
