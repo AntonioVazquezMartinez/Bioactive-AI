@@ -44,6 +44,61 @@ import yaml
 RAIZ = Path(__file__).resolve().parents[1]
 DECISION = re.compile(r"^(C|1|2)\.\d+[a-z]?$")
 PAQUETES = ("numpy", "pandas", "scipy", "scikit-learn", "xgboost", "rdkit", "imbalanced-learn")
+BITACORA = "prueba.csv"
+
+
+def tomar_prueba(pares, *, final: bool = False, motivo: str = "", raiz: Path = RAIZ,
+                 col: str = "particion", col_estrato: str = "estrato", valor: str = "prueba"):
+    """Las filas de la partición de prueba, solo con `final=True` y dejando constancia.
+
+    Fila 0.4 de `docs/roadmap-mlops.md`. La prueba se toca **una vez**, con el
+    modelo ya elegido; el riesgo no es que alguien la mire a propósito, es que
+    un `df[df.particion == "prueba"]` escrito para depurar se quede en el
+    cuaderno y nadie lo note. Por eso la guarda vive en la **lectura** y no en
+    el registro de métricas: es el único punto por el que la prueba sale del
+    archivo.
+
+    `final=True` escribe una línea en `experimentos/prueba.csv`, que se versiona.
+    Que esté en git es lo que hace visible la segunda vez: un diff con dos
+    líneas nuevas es una pregunta en la revisión, y un registro que vive solo en
+    la máquina de quien corrió no la provoca.
+
+    También imprime el tamaño de cada estrato, porque **el momento en que
+    alguien pone `final=True` es el último momento en que se puede avisar**
+    (#54, #91): la prueba trae 117 pares de solo NPASS y 229 mixtos contra más
+    de 13,000 de solo ChEMBL, así que cualquier cifra sobre naturales sale con
+    un intervalo ancho y conviene verlo venir antes de leer el resultado, no
+    después.
+    """
+    if not final:
+        raise RuntimeError(
+            "la partición de prueba se evalúa una sola vez, con el modelo ya elegido "
+            "(roadmap-mlops 0.4). Si es esa vez, llame tomar_prueba(..., final=True, "
+            "motivo='por qué') y la corrida quedará anotada en experimentos/prueba.csv. "
+            "Para entrenar y comparar modelos use las otras particiones: "
+            f"pares[pares[{col!r}].ne({valor!r})]")
+    if not motivo.strip():
+        raise ValueError("tomar_prueba necesita `motivo`: qué modelo se evalúa y por qué es "
+                         "el elegido. Es lo único que distingue una segunda vez legítima "
+                         "de un descuido.")
+
+    prueba = pares[pares[col] == valor]
+    if col_estrato in prueba:
+        conteo = prueba[col_estrato].value_counts()
+        print(f"partición de prueba: {len(prueba):,} filas · " +
+              " · ".join(f"{e} {n:,}" for e, n in conteo.items()))
+        print("  cuidado: los estratos chicos dan intervalos anchos; léalos con su intervalo.")
+
+    bitacora = Path(raiz) / "experimentos" / BITACORA
+    nueva = not bitacora.exists()
+    bitacora.parent.mkdir(parents=True, exist_ok=True)
+    with open(bitacora, "a", encoding="utf-8", newline="") as f:
+        if nueva:
+            f.write("fecha,autor,commit,filas,motivo\n")
+        f.write(",".join([date.today().isoformat(), _autor(Path(raiz)),
+                          _git("rev-parse", "--short", "HEAD", raiz=Path(raiz)) or "",
+                          str(len(prueba)), '"' + motivo.replace('"', "'") + '"']) + "\n")
+    return prueba
 
 
 def sha256(ruta: Path) -> str:
