@@ -6,7 +6,7 @@ Se lee sin saber de química ni de modelado.
 
 ---
 
-## El recorrido en diez pasos
+## El recorrido en doce pasos
 
 | | Paso | En una línea |
 |--:|:--|:--|
@@ -15,11 +15,13 @@ Se lee sin saber de química ni de modelado.
 | 3 | Se quitan columnas inútiles | Quedan 151 |
 | 4 | Se agrupan las moléculas parecidas | 1,048 grupos |
 | 5 | Se parte sin que un grupo cruce | 70% / 10% / 20% |
-| 6 | **Fase 1:** ¿cruza al cerebro? | Una clase: BBB+ o BBB− |
-| 7 | **Fase 2:** ¿qué tan potente es contra cada diana? | Un número: la potencia |
-| 8 | La potencia se puede cortar en una clase | Activo o inactivo a 10 µM |
-| 9 | Se ordena la lista | De más a menos prometedor |
-| 10 | Cada candidato sale con sus marcas | Natural, PAINS, dirección, citotoxicidad |
+| 6 | Cada modelo prepara sus columnas | El escalado se decide por modelo |
+| 7 | Se entrenan seis familias y se elige una | Con un piso contra el que compararse |
+| 8 | **Fase 1:** ¿cruza al cerebro? | Una clase: BBB+ o BBB− |
+| 9 | **Fase 2:** ¿qué tan potente es contra cada diana? | Un número: la potencia |
+| 10 | La potencia se puede cortar en una clase | Activo o inactivo a 10 µM |
+| 11 | Se ordena la lista | De más a menos prometedor |
+| 12 | Cada candidato sale con sus marcas | Natural, PAINS, dirección, citotoxicidad |
 
 ---
 
@@ -57,7 +59,37 @@ Dos moléculas van al mismo grupo si comparten **andamio** —el esqueleto de an
 
 **Y todo lo que aprende de los datos se ajusta dentro del pliegue** —escalar, seleccionar, imputar—. Un escalador ajustado antes de partir filtra la media y la varianza del pliegue de evaluación, y el resultado sale mejor de lo que es.
 
-## 6 · Fase 1 · ¿cruza al cerebro?
+## 6 · Cada modelo prepara sus columnas
+
+Un descriptor mide gramos por mol y otro cuenta anillos. Algunos modelos necesitan que esas escalas se parezcan y otros no.
+
+| Necesita escalar | No necesita |
+|:--|:--|
+| Regresión logística, kNN, SVM, red neuronal | Árboles |
+
+**Por qué se decide por modelo y no de una vez.** Un árbol parte por umbrales, así que la escala le da igual; una distancia o un gradiente sí dependen de ella. Cada canalización lleva su propio escalado dentro, y así se ajusta solo con el pliegue de entrenamiento.
+
+**Y el escalado de la logística se eligió por convergencia, no por desempeño.** Entre las tres formas de escalar la medición no las distingue; sin escalar, el modelo agota sus iteraciones ([1.5](decisiones.md#d1-5)).
+
+**Reducir dimensión se midió y se descartó.** El PCA resume las 151 columnas en 85 componentes sin cambiar el resultado de forma distinguible, pero una componente no se puede leer. Se prefiere explicar antes que comprimir.
+
+## 7 · Se entrenan seis familias y se elige una
+
+Seis algoritmos distintos, **individuales y sin ensambles**: logística, árbol, kNN, bayesiano, SVM y red neuronal.
+
+**Por qué seis y no el mejor de entrada.** Ninguna familia gana siempre; cuál conviene depende de los datos, y eso se mide, no se supone.
+
+**Cómo se valida.** Tres semillas por cinco pliegues, quince evaluaciones. La dispersión entre ellas **no es un error estándar**: las semillas comparten filas, así que sirve para saber si dos modelos se distinguen, no para un intervalo de confianza.
+
+**Siempre hay un piso.** En regresión es un modelo que predice el promedio y nada más. Si uno elaborado no le gana, lo elaborado no está aportando, y decirlo es un resultado válido.
+
+**El ajuste fino va dentro del pliegue.** Probar combinaciones de parámetros mirando los datos de evaluación los contamina: el modelo parece mejor porque ya los vio.
+
+**Y afinar no siempre sirve.** Medido en la fase 1: el SVM **empeoró** cuatro milésimas de MCC al afinarse y tardó veintiuna veces más. La razón es que su parámetro principal no tiene un óptimo estable —recorre toda la rejilla y toca los dos extremos—, así que la búsqueda está ajustando ruido de partición.
+
+**El mejor por métrica no es automáticamente el elegido.** También pesan cuánto cuesta entrenarlo y si se puede explicar por qué predice lo que predice. En la fase 1 cuatro familias empatan dentro de la dispersión, así que la métrica sola no decide.
+
+## 8 · Fase 1 · ¿cruza al cerebro?
 
 Sale una clase: **BBB+** si el compuesto atraviesa la barrera hematoencefálica, **BBB−** si no.
 
@@ -65,7 +97,7 @@ Sale una clase: **BBB+** si el compuesto atraviesa la barrera hematoencefálica,
 
 **Y un BBB− no descarta al compuesto.** Solo 1,033 esqueletos tienen medición en las dos fases, así que filtrar por una predicción no verificada tiraría el 99% restante. Las dos fases son evidencia paralela que se combina al ordenar, no una cascada.
 
-## 7 · Fase 2 · ¿qué tan potente es contra cada diana?
+## 9 · Fase 2 · ¿qué tan potente es contra cada diana?
 
 La unidad **no es el compuesto, es el par compuesto-diana**: 70,384 pares de 59,532 compuestos contra 26 dianas.
 
@@ -79,7 +111,7 @@ Cada medición se convierte a **potencia**: `pActividad = 6 − log₁₀(concen
 
 **Por qué importa tanto.** El 98% de los pares activos tiene una medición exacta, pero **solo el 50.6% de los negativos**: la mitad de la evidencia de inactividad existe únicamente como cota. Y se midió lo que cuesta tirarla: entrenando solo con exactas, **las seis familias de modelos quedan en el azar sobre los productos naturales**, mientras que una recta que sí usa las cotas alcanza 0.639 de concordancia en ese mismo grupo ([2.9](decisiones.md#d2-9)).
 
-## 8 · La potencia se puede cortar en una clase
+## 10 · La potencia se puede cortar en una clase
 
 Lo que se guarda es **el intervalo donde cae la potencia**, no una etiqueta. La clase «activo a 10 µM» sale de aplicar el corte a la predicción, al final.
 
@@ -89,19 +121,19 @@ Guardarlo así tuvo una consecuencia concreta: **el 25 de octubre la patrocinado
 
 **Y la dirección del efecto no entra en la etiqueta, viaja como marca.** Una diana se quiere frenar y otra encender, pero muchas mediciones solo dicen cuánto se pega el compuesto, no qué le hace. **Por qué no se invierte la etiqueta:** un antagonista potente es estructuralmente casi idéntico a un agonista potente, así que marcarlo como negativo metería moléculas gemelas con etiquetas contrarias, que no es información sino ruido que ningún modelo puede aprender ([2.11](decisiones.md#d2-11)).
 
-## 9 · Se ordena la lista
+## 11 · Se ordena la lista
 
 El entregable es **una lista de candidatos priorizados**, no un sí o un no.
 
 **Por qué no se fija dónde cortar la lista.** Depende de qué error cuesta más, y eso no lo decide la estadística: un falso positivo manda al laboratorio a ensayar algo que no sirve, y un falso negativo descarta un candidato sin que nadie se entere. Se entrega **la curva de precisión contra profundidad**, con un corte sugerido en los veinte primeros, que es lo que un laboratorio ensaya en un semestre ([C.5](decisiones.md#dc-5)).
 
-## 10 · Cada candidato sale con sus marcas
+## 12 · Cada candidato sale con sus marcas
 
 | Marca | Qué dice | Por qué |
 |:--|:--|:--|
 | Origen natural | Si viene de NPASS o CMAUP | Son los que el proyecto quiere priorizar |
 | PAINS | Si es un falso positivo frecuente | Los naturales llevan esa alerta **2.1 veces más seguido**; la curcumina aparece contra 32 dianas ([C.4](decisiones.md#dc-4)) |
-| Dirección | Si la evidencia dice en qué sentido actúa | Ver el paso 8 |
+| Dirección | Si la evidencia dice en qué sentido actúa | Ver el paso 10 |
 | Citotoxicidad | Si lo que se midió fue que mata células | Propuesta: un ranking que la ignore pondría arriba a los promiscuos tóxicos ([C.7](decisiones.md#dc-7)) |
 
 **Y todo se reporta por procedencia, nunca solo en agregado.** Un modelo que solo ve de dónde viene el compuesto ya alcanza el **65% del MCC** que consigue la química. Una cifra global no describe a los productos naturales, que son el 5.8% de los pares y la razón de ser del proyecto ([2.5](decisiones.md#d2-5)).
