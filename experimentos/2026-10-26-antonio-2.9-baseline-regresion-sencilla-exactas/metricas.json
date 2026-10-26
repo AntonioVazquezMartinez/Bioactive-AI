@@ -1,0 +1,282 @@
+{
+  "ajuste_fino": {
+    "knn afinado": {
+      "auroc": 0.809,
+      "concordancia": 0.749,
+      "desv_mcc": 0.017,
+      "mcc": 0.355,
+      "rmse_exactas": 0.989,
+      "seg": 38.48,
+      "spearman_exactas": 0.677
+    },
+    "svr afinado": {
+      "auroc": 0.83,
+      "concordancia": 0.759,
+      "desv_mcc": 0.015,
+      "mcc": 0.393,
+      "rmse_exactas": 0.982,
+      "seg": 1235.567,
+      "spearman_exactas": 0.685
+    }
+  },
+  "mixto": {
+    "arbol": {
+      "auroc": 0.556,
+      "concordancia": 0.542,
+      "desv_mcc": 0.053,
+      "mcc": 0.096,
+      "rmse_exactas": 1.259,
+      "seg": 2.862,
+      "spearman_exactas": 0.128
+    },
+    "bayes_ridge": {
+      "auroc": 0.508,
+      "concordancia": 0.516,
+      "desv_mcc": 0.085,
+      "mcc": -0.007,
+      "rmse_exactas": 1.091,
+      "seg": 1.017,
+      "spearman_exactas": 0.059
+    },
+    "knn": {
+      "auroc": 0.616,
+      "concordancia": 0.563,
+      "desv_mcc": 0.079,
+      "mcc": 0.142,
+      "rmse_exactas": 0.985,
+      "seg": 0.045,
+      "spearman_exactas": 0.282
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_mcc": 0.0,
+      "mcc": 0.0,
+      "rmse_exactas": 1.499,
+      "seg": 0.018,
+      "spearman_exactas": NaN
+    },
+    "mlp": {
+      "auroc": 0.623,
+      "concordancia": 0.584,
+      "desv_mcc": 0.08,
+      "mcc": 0.168,
+      "rmse_exactas": 1.142,
+      "seg": 51.912,
+      "spearman_exactas": 0.249
+    },
+    "ridge": {
+      "auroc": 0.51,
+      "concordancia": 0.518,
+      "desv_mcc": 0.084,
+      "mcc": -0.006,
+      "rmse_exactas": 1.091,
+      "seg": 0.101,
+      "spearman_exactas": 0.062
+    },
+    "svr": {
+      "auroc": 0.604,
+      "concordancia": 0.566,
+      "desv_mcc": 0.077,
+      "mcc": 0.135,
+      "rmse_exactas": 0.983,
+      "seg": 140.135,
+      "spearman_exactas": 0.228
+    }
+  },
+  "solo_chembl": {
+    "arbol": {
+      "auroc": 0.711,
+      "concordancia": 0.668,
+      "desv_mcc": 0.018,
+      "mcc": 0.273,
+      "rmse_exactas": 1.311,
+      "seg": 2.862,
+      "spearman_exactas": 0.469
+    },
+    "bayes_ridge": {
+      "auroc": 0.761,
+      "concordancia": 0.687,
+      "desv_mcc": 0.016,
+      "mcc": 0.169,
+      "rmse_exactas": 1.15,
+      "seg": 1.017,
+      "spearman_exactas": 0.503
+    },
+    "knn": {
+      "auroc": 0.796,
+      "concordancia": 0.736,
+      "desv_mcc": 0.016,
+      "mcc": 0.32,
+      "rmse_exactas": 1.018,
+      "seg": 0.045,
+      "spearman_exactas": 0.642
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_mcc": 0.0,
+      "mcc": 0.0,
+      "rmse_exactas": 1.325,
+      "seg": 0.018,
+      "spearman_exactas": NaN
+    },
+    "mlp": {
+      "auroc": 0.795,
+      "concordancia": 0.733,
+      "desv_mcc": 0.023,
+      "mcc": 0.346,
+      "rmse_exactas": 1.134,
+      "seg": 51.912,
+      "spearman_exactas": 0.629
+    },
+    "ridge": {
+      "auroc": 0.761,
+      "concordancia": 0.687,
+      "desv_mcc": 0.016,
+      "mcc": 0.168,
+      "rmse_exactas": 1.15,
+      "seg": 0.101,
+      "spearman_exactas": 0.502
+    },
+    "svr": {
+      "auroc": 0.808,
+      "concordancia": 0.734,
+      "desv_mcc": 0.013,
+      "mcc": 0.313,
+      "rmse_exactas": 1.04,
+      "seg": 140.135,
+      "spearman_exactas": 0.622
+    }
+  },
+  "solo_npass": {
+    "arbol": {
+      "auroc": 0.51,
+      "concordancia": 0.502,
+      "desv_mcc": 0.042,
+      "mcc": -0.001,
+      "rmse_exactas": 1.24,
+      "seg": 2.862,
+      "spearman_exactas": 0.181
+    },
+    "bayes_ridge": {
+      "auroc": 0.522,
+      "concordancia": 0.53,
+      "desv_mcc": 0.051,
+      "mcc": 0.004,
+      "rmse_exactas": 1.103,
+      "seg": 1.017,
+      "spearman_exactas": 0.256
+    },
+    "knn": {
+      "auroc": 0.492,
+      "concordancia": 0.469,
+      "desv_mcc": 0.06,
+      "mcc": -0.002,
+      "rmse_exactas": 0.866,
+      "seg": 0.045,
+      "spearman_exactas": 0.362
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_mcc": 0.0,
+      "mcc": 0.0,
+      "rmse_exactas": 1.638,
+      "seg": 0.018,
+      "spearman_exactas": NaN
+    },
+    "mlp": {
+      "auroc": 0.569,
+      "concordancia": 0.551,
+      "desv_mcc": 0.059,
+      "mcc": 0.071,
+      "rmse_exactas": 1.15,
+      "seg": 51.912,
+      "spearman_exactas": 0.26
+    },
+    "ridge": {
+      "auroc": 0.521,
+      "concordancia": 0.528,
+      "desv_mcc": 0.055,
+      "mcc": 0.005,
+      "rmse_exactas": 1.05,
+      "seg": 0.101,
+      "spearman_exactas": 0.256
+    },
+    "svr": {
+      "auroc": 0.542,
+      "concordancia": 0.537,
+      "desv_mcc": 0.051,
+      "mcc": 0.018,
+      "rmse_exactas": 0.816,
+      "seg": 140.135,
+      "spearman_exactas": 0.313
+    }
+  },
+  "todos": {
+    "arbol": {
+      "auroc": 0.717,
+      "concordancia": 0.673,
+      "desv_mcc": 0.021,
+      "mcc": 0.291,
+      "rmse_exactas": 1.308,
+      "seg": 2.862,
+      "spearman_exactas": 0.484
+    },
+    "bayes_ridge": {
+      "auroc": 0.774,
+      "concordancia": 0.698,
+      "desv_mcc": 0.025,
+      "mcc": 0.221,
+      "rmse_exactas": 1.148,
+      "seg": 1.017,
+      "spearman_exactas": 0.529
+    },
+    "knn": {
+      "auroc": 0.803,
+      "concordancia": 0.741,
+      "desv_mcc": 0.015,
+      "mcc": 0.343,
+      "rmse_exactas": 1.014,
+      "seg": 0.045,
+      "spearman_exactas": 0.658
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_mcc": 0.0,
+      "mcc": 0.0,
+      "rmse_exactas": 1.338,
+      "seg": 0.018,
+      "spearman_exactas": NaN
+    },
+    "mlp": {
+      "auroc": 0.801,
+      "concordancia": 0.738,
+      "desv_mcc": 0.022,
+      "mcc": 0.372,
+      "rmse_exactas": 1.135,
+      "seg": 51.912,
+      "spearman_exactas": 0.642
+    },
+    "ridge": {
+      "auroc": 0.774,
+      "concordancia": 0.698,
+      "desv_mcc": 0.025,
+      "mcc": 0.22,
+      "rmse_exactas": 1.147,
+      "seg": 0.101,
+      "spearman_exactas": 0.529
+    },
+    "svr": {
+      "auroc": 0.818,
+      "concordancia": 0.742,
+      "desv_mcc": 0.016,
+      "mcc": 0.35,
+      "rmse_exactas": 1.034,
+      "seg": 140.135,
+      "spearman_exactas": 0.641
+    }
+  }
+}
