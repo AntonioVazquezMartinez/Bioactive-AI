@@ -1,0 +1,22 @@
+{
+  "arbol_sucio": false,
+  "commit": "6bff60924100d183555f2b71dce90921706c6361",
+  "datos_sha256": {
+    "data/processed/fase2_descriptores_limpios.parquet": "818efbe384d5d6ca74da0af7f96be18ff69322a2777224e1be7c6194533e67a3",
+    "data/processed/fase2_pares.parquet": "8f5ccfe82347cc5d1749c0759fdbc7580b4a26b723eb1010dc494b8cfc04bf03"
+  },
+  "decision": "2.3",
+  "duracion_s": 0.0,
+  "lock_sha256": "8897d93a78c01bea19b5f61b04ccdc4e273c989f7a2c0e3d219ccabe1ab8cc0b",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.15",
+  "sistema": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41"
+}

@@ -1,0 +1,15 @@
+decision: '2.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - logistica
+  - arbol
+  - knn
+  - bayes
+  - svm_rbf
+  - mlp
+  pliegues: 5
+  estratos: procedencia
