@@ -22,7 +22,7 @@ flowchart TD
     end
 
     subgraph e2["Etapa 2 · actividad"]
-        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 fenotípicos aparte"]
+        S1["114,549 registros con categoría de diana<br/>109,264 etiquetados · 88,098 sin diana de la lista aparte"]
         S2["99,585 esqueletos de conectividad"]
         S3["Cohorte descriptiva previa a partición<br/>71,145 pares · regla provisional"]
     end
@@ -155,7 +155,13 @@ La cobertura es muy desigual: Alzheimer reúne 52,676 registros y ELA solo 53. C
 | `GABRB2` | Receptor GABA-A, subunidad β2 | 1 |
 | `TARDBP` | TDP-43 | 8 en el archivo completo |
 
-El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`, ensayos fenotípicos sobre sistemas celulares neuronales donde se midió un efecto sin identificar la proteína. Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
+El **43.5% de las filas (88,098)** no corresponde a ninguna diana de la lista (44% en el archivo completo, 98,298): entraron por la ruta `neuronal_assay`. No son en su mayoría fenotípicas: por tipo de ensayo, el 76.4% son de unión sobre otras proteínas (sigma-1, serotonina 1A, mu-opioide…), el 17.9% funcionales y el 4.2% (NPASS) no trae tipo, y a 30,511 ChEMBL no les asigna diana (`Unchecked`). Qué hacer con ellas es la [decisión 2.4](decisiones.md#d2-4).
+
+### La dirección en que se busca modular cada diana
+
+El archivo trae tres columnas que describen la **diana**, no la medición: `diana_enfermedades`, `diana_mecanismo` (el sistema biológico: colinérgico, dopaminérgico, inflamatorio…) y `diana_efecto_buscado`, que dice **en qué dirección habría que modularla para que sirva como tratamiento** ([glosario](glosario.md)). Se llenaron a mano, con fármacos conocidos como respaldo. De las 39 dianas, 16 buscan inhibición, 5 modulación positiva, 4 antagonismo, 4 activación (`PPARG`, `SIRT1`, `NFE2L2`, `TSPO`), 3 reducir agregación, 3 reducir niveles y 1 modulación negativa; `DRD2` es «agonismo o antagonismo según la enfermedad», `CX3CR1` no tiene dirección establecida y `AIF1` es un marcador.
+
+**La columna no dice qué hizo el compuesto en el ensayo**, y el proyecto todavía no la usa. Importa porque el tipo de medida puede tener dirección: un EC50 mide el efecto de activar, pero un IC50 depende del ensayo: si es de unión (desplazar otra molécula) mide afinidad, sin decir si el compuesto activa o bloquea, y solo si es funcional mide inhibición. En las dianas de activación (11,100 filas) el 48% son EC50 y el 29% IC50; de las 2,015 mediciones IC50 de `PPARG`, `NFE2L2` y `TSPO`, el archivo no trae el tipo de ensayo, y según el que publica ChEMBL (con su descripción) 71% se leen como afinidad y 20% como inhibición funcional. Es una lectura provisional, pendiente de confirmar con la patrocinadora. Así que ahí un compuesto puede quedar «activo» por unirse con potencia sin que se sepa si activa. Cuánto está en juego y qué se propone está en la [decisión 2.3](decisiones.md#d2-3) y en el [#95](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/95); mientras no haya respuesta de la patrocinadora, el etiquetado no cambia.
 
 ### Cómo se mide la actividad
 
@@ -171,7 +177,7 @@ Con un umbral de 1 µM el 98% de esas filas son negativos seguros; con 10 µM, e
 
 ### Qué denominador usa cada porcentaje
 
-Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye ensayos fenotípicos. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
+Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 corresponde a 119,835 activos entre 194,086 registros etiquetados e incluye las 88,098 filas sin diana de la lista. Para los **71,145 pares únicos de esqueleto de conectividad × gen**, el recuento exploratorio da **70.5%** (50,177 pares activos) al clasificar como activo un par con al menos una observación activa. No son el mismo denominador, y la primera cifra no describe el conjunto por diana. Esa agrupación no es un andamio Bemis–Murcko, cuenta como activos pares con observaciones discordantes y todavía debe revisarse; la cohorte también está pendiente de partición. Los conteos de ambos umbrales y las exclusiones están en la [decisión 2.3](decisiones.md#d2-3) y se calculan en el [EDA de actividad SNC](../notebooks/01b_EDA_actividad_snc.ipynb).
 
 ### Defectos conocidos del archivo de actividad
 
@@ -190,7 +196,7 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   grande de «inactivos» del archivo contesta «¿este compuesto perturbó esta diana en un tamiz de
   toxicidad?», no «¿es candidato neuroprotector?». A 10 µM esa sola referencia aporta el 61% de los
   negativos seguros **por registro**; por par compuesto-diana aporta el 10.8%, porque son 772
-  compuestos, y la [propuesta de variable objetivo](variable-objetivo-fase2.md) la deja fuera de la
+  compuestos, y la [página de variables objetivo](variable-objetivo-fase2.md) la deja fuera de la
   definición principal, con lo que baja al 0.1% ([decisión 2.3](decisiones.md#d2-3)).
 
 - **El contexto del ensayo está ausente justo en las filas que se modelan, y no es dato faltante.**
@@ -210,7 +216,24 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   puede hacer. Tampoco se puede concluir lo contrario: el vacío no demuestra que el tejido no
   influya, porque el experimento ocurrió en algún tejido y lo que falta es la columna. Está pedido a
   Jorge Uribe (acta de la reunión, documento interno). Lo que sí está en el 100% de las filas es
-  `assay_chembl_id` y `reference_id`.
+  `reference_id`; `assay_chembl_id` solo en las de ChEMBL (92.4%), porque NPASS y CMAUP no traen
+  identificador de ensayo.
+
+  **Por par, que es la unidad del modelo, queda casi nada.** De los 70,384 pares, 286 (0.4%)
+  tienen tejido, 589 (0.8%) línea celular y 656 (0.9%) formato de ensayo; 874 (1.2%) tienen alguno
+  de los tres. Entre los 1,126 pares en conflicto, que eran donde más importaba, el 3.8%. Quince de
+  las 26 dianas del modelo no tienen ningún par con tejido, y ninguna los tiene todos. **La
+  ausencia no es neutra:** los pares con tejido son 96.1% activos a 10 µM contra 72.7% de los
+  demás (`pActividad` mediana 7.99 contra 6.30), así que darle el tejido al modelo como entrada le
+  ofrecería una pista sobre la etiqueta que viene de cómo se armó el archivo y no de la química.
+  Tampoco se puede aislar el efecto del contexto del de la diana: de las 26 dianas, solo `APP`
+  tiene dos formatos con 10 o más mediciones exactas cada uno (células y tejido), y ahí la mediana
+  difiere en 1.26 unidades de `pActividad`. En todo el archivo el formato sí se asocia con la
+  potencia (mediana 5.42 en ensayos celulares contra 6.82 en tejido y 6.90 en membrana celular),
+  pero esas filas anotadas son casi todas de las que el modelo no usa: de las 84,286 exactas que
+  entran, solo 706 traen formato. Lo calcula `scripts/cifras_contexto_ensayo.py`; corrida
+  `experimentos/2026-10-24-ingrid-2.3-contexto-ensayo/`, tabla
+  `notebooks/datos/contexto_ensayo.csv`.
 
 - **La potencia no es comparable entre fuentes, y ahí está el riesgo del etiquetado.** Mediana de
   las mediciones exactas: ChEMBL **0.335 µM**, CMAUP 4.47, NPASS **6.56** — veinte veces. Fracción
