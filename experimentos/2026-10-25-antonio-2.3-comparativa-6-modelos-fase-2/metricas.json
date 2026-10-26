@@ -1,0 +1,46 @@
+{
+  "seis": {
+    "arbol": {
+      "auprc_minoritaria": 0.499,
+      "auroc": 0.728,
+      "desv_mcc": 0.016,
+      "mcc": 0.368,
+      "seg": 4.539
+    },
+    "bayes": {
+      "auprc_minoritaria": 0.399,
+      "auroc": 0.629,
+      "desv_mcc": 0.03,
+      "mcc": 0.247,
+      "seg": 0.094
+    },
+    "knn": {
+      "auprc_minoritaria": 0.692,
+      "auroc": 0.846,
+      "desv_mcc": 0.014,
+      "mcc": 0.496,
+      "seg": 0.046
+    },
+    "logistica": {
+      "auprc_minoritaria": 0.612,
+      "auroc": 0.795,
+      "desv_mcc": 0.019,
+      "mcc": 0.387,
+      "seg": 0.85
+    },
+    "mlp": {
+      "auprc_minoritaria": 0.69,
+      "auroc": 0.838,
+      "desv_mcc": 0.014,
+      "mcc": 0.499,
+      "seg": 45.467
+    },
+    "svm_rbf": {
+      "auprc_minoritaria": 0.678,
+      "auroc": 0.831,
+      "desv_mcc": 0.019,
+      "mcc": 0.441,
+      "seg": 155.749
+    }
+  }
+}
