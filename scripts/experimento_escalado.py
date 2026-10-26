@@ -17,8 +17,8 @@ la sección 8.2 con sus mismos hiperparámetros.
 actúa sobre coeficientes cuya magnitud depende de la escala de cada columna, así
 que con `C = 1` fijo cada transformación recibe una regularización distinta, y
 una diferencia entre ellas no se puede atribuir al escalador. Por eso cada
-transformación se mide dos veces (salvo «sin escalar», cuya logística no converge
-con ningún C y cuya búsqueda tardaría horas): con `C = 1` (el valor por defecto, `LogReg`) y
+transformación se mide dos veces (salvo «sin escalar», cuya búsqueda tardaría
+horas): con `C = 1` (el valor por defecto, `LogReg`) y
 con el `C` que **cada una elige para sí** dentro del pliegue (`LogReg-C`), por
 validación cruzada interna agrupada sobre la parte de ajuste, de modo que la
 evaluación nunca interviene en la elección.

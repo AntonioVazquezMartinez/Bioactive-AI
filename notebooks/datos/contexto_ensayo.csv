@@ -1,0 +1,500 @@
+tabla,grupo,metrica,valor
+filas_por_source,chembl,filas,187354.0
+filas_por_source,chembl,assay_tissue_raw,72003.0
+filas_por_source,chembl,assay_cell_type_raw,18255.0
+filas_por_source,chembl,assay_organism,0.0
+filas_por_source,chembl,assay_type,90254.0
+filas_por_source,chembl,assay_format,90254.0
+filas_por_source,cmaup,filas,3301.0
+filas_por_source,cmaup,assay_tissue_raw,0.0
+filas_por_source,cmaup,assay_cell_type_raw,0.0
+filas_por_source,cmaup,assay_organism,0.0
+filas_por_source,cmaup,assay_type,0.0
+filas_por_source,cmaup,assay_format,0.0
+filas_por_source,npass,filas,11992.0
+filas_por_source,npass,assay_tissue_raw,0.0
+filas_por_source,npass,assay_cell_type_raw,11992.0
+filas_por_source,npass,assay_organism,11992.0
+filas_por_source,npass,assay_type,0.0
+filas_por_source,npass,assay_format,0.0
+filas_por_selection_route,both,filas,803.0
+filas_por_selection_route,both,assay_tissue_raw,312.0
+filas_por_selection_route,both,assay_cell_type_raw,491.0
+filas_por_selection_route,both,assay_organism,19.0
+filas_por_selection_route,both,assay_type,784.0
+filas_por_selection_route,both,assay_format,784.0
+filas_por_selection_route,cns_target,filas,108640.0
+filas_por_selection_route,cns_target,assay_tissue_raw,0.0
+filas_por_selection_route,cns_target,assay_cell_type_raw,8239.0
+filas_por_selection_route,cns_target,assay_organism,8239.0
+filas_por_selection_route,cns_target,assay_type,0.0
+filas_por_selection_route,cns_target,assay_format,0.0
+filas_por_selection_route,neuronal_assay,filas,93204.0
+filas_por_selection_route,neuronal_assay,assay_tissue_raw,71691.0
+filas_por_selection_route,neuronal_assay,assay_cell_type_raw,21517.0
+filas_por_selection_route,neuronal_assay,assay_organism,3734.0
+filas_por_selection_route,neuronal_assay,assay_type,89470.0
+filas_por_selection_route,neuronal_assay,assay_format,89470.0
+pActividad_por_assay_format_modelo,cell-based format,n,406.0
+pActividad_por_assay_format_modelo,cell-based format,mediana,6.8
+pActividad_por_assay_format_modelo,tissue-based format,n,271.0
+pActividad_por_assay_format_modelo,tissue-based format,mediana,8.11
+pActividad_por_assay_format_modelo,assay format,n,27.0
+pActividad_por_assay_format_modelo,assay format,mediana,7.07
+pActividad_por_assay_format_modelo,subcellular format,n,2.0
+pActividad_por_assay_format_modelo,subcellular format,mediana,7.33
+pActividad_por_assay_type_modelo,B,n,704.0
+pActividad_por_assay_type_modelo,B,mediana,7.44
+pActividad_por_assay_type_modelo,F,n,2.0
+pActividad_por_assay_type_modelo,F,mediana,7.33
+pActividad_por_assay_tissue_raw_modelo,Brain,n,280.0
+pActividad_por_assay_tissue_raw_modelo,Brain,mediana,8.1
+pActividad_por_assay_tissue_raw_modelo,Cortex,n,20.0
+pActividad_por_assay_tissue_raw_modelo,Cortex,mediana,7.07
+pActividad_por_assay_cell_type_raw_modelo,SH-SY5Y,n,358.0
+pActividad_por_assay_cell_type_raw_modelo,SH-SY5Y,mediana,7.08
+pActividad_por_assay_cell_type_raw_modelo,BTI-TN-5B1-4,n,127.0
+pActividad_por_assay_cell_type_raw_modelo,BTI-TN-5B1-4,mediana,5.18
+pActividad_por_assay_cell_type_raw_modelo,HEK293,n,113.0
+pActividad_por_assay_cell_type_raw_modelo,HEK293,mediana,6.67
+pActividad_por_assay_cell_type_raw_modelo,CHO,n,54.0
+pActividad_por_assay_cell_type_raw_modelo,CHO,mediana,6.69
+pActividad_por_assay_cell_type_raw_modelo,PC-12,n,47.0
+pActividad_por_assay_cell_type_raw_modelo,PC-12,mediana,4.7
+pActividad_por_assay_cell_type_raw_modelo,HepG2,n,40.0
+pActividad_por_assay_cell_type_raw_modelo,HepG2,mediana,6.64
+pActividad_por_assay_cell_type_raw_modelo,BTI,n,35.0
+pActividad_por_assay_cell_type_raw_modelo,BTI,mediana,5.13
+pActividad_por_assay_cell_type_raw_modelo,Sf9,n,18.0
+pActividad_por_assay_cell_type_raw_modelo,Sf9,mediana,7.18
+pActividad_por_assay_cell_type_raw_modelo,Sf21,n,17.0
+pActividad_por_assay_cell_type_raw_modelo,Sf21,mediana,5.8
+pActividad_por_assay_cell_type_raw_modelo,CV-1,n,16.0
+pActividad_por_assay_cell_type_raw_modelo,CV-1,mediana,6.51
+pActividad_por_assay_cell_type_raw_modelo,Erythrocyte,n,15.0
+pActividad_por_assay_cell_type_raw_modelo,Erythrocyte,mediana,7.52
+pActividad_por_assay_cell_type_raw_modelo,CHO-K1,n,15.0
+pActividad_por_assay_cell_type_raw_modelo,CHO-K1,mediana,7.74
+pActividad_por_assay_cell_type_raw_modelo,COS-7,n,11.0
+pActividad_por_assay_cell_type_raw_modelo,COS-7,mediana,6.7
+pActividad_por_assay_cell_type_raw_modelo,COS-1,n,10.0
+pActividad_por_assay_cell_type_raw_modelo,COS-1,mediana,7.66
+pActividad_por_assay_cell_type_raw_modelo,HEK-293T,n,9.0
+pActividad_por_assay_cell_type_raw_modelo,HEK-293T,mediana,6.98
+pActividad_por_assay_cell_type_raw_modelo,Primary neuron,n,7.0
+pActividad_por_assay_cell_type_raw_modelo,Primary neuron,mediana,5.72
+pActividad_por_assay_cell_type_raw_modelo,U2OS,n,7.0
+pActividad_por_assay_cell_type_raw_modelo,U2OS,mediana,6.59
+pActividad_por_assay_cell_type_raw_modelo,U-87MG ATCC,n,6.0
+pActividad_por_assay_cell_type_raw_modelo,U-87MG ATCC,mediana,6.23
+pActividad_por_assay_cell_type_raw_modelo,BMMSC,n,6.0
+pActividad_por_assay_cell_type_raw_modelo,BMMSC,mediana,6.02
+pActividad_por_assay_cell_type_raw_modelo,DLD-1,n,6.0
+pActividad_por_assay_cell_type_raw_modelo,DLD-1,mediana,6.52
+pActividad_por_assay_cell_type_raw_modelo,LNCaP,n,4.0
+pActividad_por_assay_cell_type_raw_modelo,LNCaP,mediana,5.43
+pActividad_por_assay_cell_type_raw_modelo,NIH3T3,n,4.0
+pActividad_por_assay_cell_type_raw_modelo,NIH3T3,mediana,5.66
+pActividad_por_assay_cell_type_raw_modelo,COS7,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,COS7,mediana,5.8
+pActividad_por_assay_cell_type_raw_modelo,HEK293T,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,HEK293T,mediana,7.18
+pActividad_por_assay_cell_type_raw_modelo,CHOp,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,CHOp,mediana,7.19
+pActividad_por_assay_cell_type_raw_modelo,Arec32,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,Arec32,mediana,5.91
+pActividad_por_assay_cell_type_raw_modelo,Huh-7 ,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,Huh-7 ,mediana,6.66
+pActividad_por_assay_cell_type_raw_modelo,MCF7,n,3.0
+pActividad_por_assay_cell_type_raw_modelo,MCF7,mediana,5.77
+pActividad_por_assay_cell_type_raw_modelo,COS,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,COS,mediana,7.17
+pActividad_por_assay_cell_type_raw_modelo,BL21-DE3,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,BL21-DE3,mediana,5.86
+pActividad_por_assay_cell_type_raw_modelo,LtK,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,LtK,mediana,7.42
+pActividad_por_assay_cell_type_raw_modelo,MG-63,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,MG-63,mediana,7.96
+pActividad_por_assay_cell_type_raw_modelo,HepG2-ARE-C8,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,HepG2-ARE-C8,mediana,4.38
+pActividad_por_assay_cell_type_raw_modelo,L02,n,2.0
+pActividad_por_assay_cell_type_raw_modelo,L02,mediana,5.78
+pActividad_por_assay_cell_type_raw_modelo,HEK293-T-REx,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,HEK293-T-REx,mediana,7.24
+pActividad_por_assay_cell_type_raw_modelo,Endothelial cell,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,Endothelial cell,mediana,4.61
+pActividad_por_assay_cell_type_raw_modelo,GL26,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,GL26,mediana,9.0
+pActividad_por_assay_cell_type_raw_modelo,H4,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,H4,mediana,6.97
+pActividad_por_assay_cell_type_raw_modelo,143982,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,143982,mediana,7.1
+pActividad_por_assay_cell_type_raw_modelo,BHK-21,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,BHK-21,mediana,6.35
+pActividad_por_assay_cell_type_raw_modelo,293T,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,293T,mediana,7.54
+pActividad_por_assay_cell_type_raw_modelo,293H-DA,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,293H-DA,mediana,8.62
+pActividad_por_assay_cell_type_raw_modelo,CHO-hIR,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,CHO-hIR,mediana,4.51
+pActividad_por_assay_cell_type_raw_modelo,A-431,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,A-431,mediana,5.22
+pActividad_por_assay_cell_type_raw_modelo,BMMC,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,BMMC,mediana,6.55
+pActividad_por_assay_cell_type_raw_modelo,BL21,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,BL21,mediana,6.35
+pActividad_por_assay_cell_type_raw_modelo,Mononuclear cell line,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,Mononuclear cell line,mediana,6.3
+pActividad_por_assay_cell_type_raw_modelo,Monocyte,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,Monocyte,mediana,7.59
+pActividad_por_assay_cell_type_raw_modelo,LTK,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,LTK,mediana,6.77
+pActividad_por_assay_cell_type_raw_modelo,Ltk,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,Ltk,mediana,6.28
+pActividad_por_assay_cell_type_raw_modelo,HeLa,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,HeLa,mediana,7.82
+pActividad_por_assay_cell_type_raw_modelo,HNSCC 1483,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,HNSCC 1483,mediana,7.27
+pActividad_por_assay_cell_type_raw_modelo,HEKT,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,HEKT,mediana,6.01
+pActividad_por_assay_cell_type_raw_modelo,HepG2/C3A,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,HepG2/C3A,mediana,8.42
+pActividad_por_assay_cell_type_raw_modelo,ReNcell VM,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,ReNcell VM,mediana,8.0
+pActividad_por_assay_cell_type_raw_modelo,PathHunter U2OS Keap1-NRF2 Nuclear Translocation,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,PathHunter U2OS Keap1-NRF2 Nuclear Translocation,mediana,3.9
+pActividad_por_assay_cell_type_raw_modelo,Osteosarcoma cell,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,Osteosarcoma cell,mediana,7.1
+pActividad_por_assay_cell_type_raw_modelo,PBMC,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,PBMC,mediana,6.3
+pActividad_por_assay_cell_type_raw_modelo,U-87,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,U-87,mediana,8.1
+pActividad_por_assay_cell_type_raw_modelo,THP-1,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,THP-1,mediana,6.48
+pActividad_por_assay_cell_type_raw_modelo,U-87 MG,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,U-87 MG,mediana,5.09
+pActividad_por_assay_cell_type_raw_modelo,U-937,n,1.0
+pActividad_por_assay_cell_type_raw_modelo,U-937,mediana,6.14
+pActividad_por_assay_format_archivo,tissue-based format,n,20315.0
+pActividad_por_assay_format_archivo,tissue-based format,mediana,6.82
+pActividad_por_assay_format_archivo,cell-based format,n,14532.0
+pActividad_por_assay_format_archivo,cell-based format,mediana,5.42
+pActividad_por_assay_format_archivo,cell membrane format,n,14432.0
+pActividad_por_assay_format_archivo,cell membrane format,mediana,6.9
+pActividad_por_assay_format_archivo,subcellular format,n,2898.0
+pActividad_por_assay_format_archivo,subcellular format,mediana,6.81
+pActividad_por_assay_format_archivo,assay format,n,2483.0
+pActividad_por_assay_format_archivo,assay format,mediana,6.86
+pActividad_por_assay_format_archivo,organism-based format,n,1393.0
+pActividad_por_assay_format_archivo,organism-based format,mediana,6.08
+pActividad_por_assay_format_archivo,microsome format,n,309.0
+pActividad_por_assay_format_archivo,microsome format,mediana,6.0
+pActividad_por_assay_format_archivo,mitochondrion format,n,173.0
+pActividad_por_assay_format_archivo,mitochondrion format,mediana,5.16
+pActividad_por_assay_type_archivo,B,n,42761.0
+pActividad_por_assay_type_archivo,B,mediana,6.82
+pActividad_por_assay_type_archivo,F,n,13027.0
+pActividad_por_assay_type_archivo,F,mediana,5.39
+pActividad_por_assay_type_archivo,A,n,468.0
+pActividad_por_assay_type_archivo,A,mediana,4.82
+pActividad_por_assay_type_archivo,T,n,279.0
+pActividad_por_assay_type_archivo,T,mediana,4.53
+pActividad_por_assay_tissue_raw_archivo,Brain,n,27634.0
+pActividad_por_assay_tissue_raw_archivo,Brain,mediana,6.77
+pActividad_por_assay_tissue_raw_archivo,Cerebral cortex,n,7294.0
+pActividad_por_assay_tissue_raw_archivo,Cerebral cortex,mediana,6.95
+pActividad_por_assay_tissue_raw_archivo,Hippocampus,n,2622.0
+pActividad_por_assay_tissue_raw_archivo,Hippocampus,mediana,7.15
+pActividad_por_assay_tissue_raw_archivo,Frontal cortex,n,1722.0
+pActividad_por_assay_tissue_raw_archivo,Frontal cortex,mediana,6.95
+pActividad_por_assay_tissue_raw_archivo,Cortex,n,1184.0
+pActividad_por_assay_tissue_raw_archivo,Cortex,mediana,6.76
+pActividad_por_assay_tissue_raw_archivo,Forebrain,n,423.0
+pActividad_por_assay_tissue_raw_archivo,Forebrain,mediana,6.5
+pActividad_por_assay_tissue_raw_archivo,Midbrain,n,410.0
+pActividad_por_assay_tissue_raw_archivo,Midbrain,mediana,6.61
+pActividad_por_assay_tissue_raw_archivo,Prefrontal cortex,n,184.0
+pActividad_por_assay_tissue_raw_archivo,Prefrontal cortex,mediana,6.0
+pActividad_por_assay_tissue_raw_archivo,Neocortex,n,117.0
+pActividad_por_assay_tissue_raw_archivo,Neocortex,mediana,7.26
+pActividad_por_assay_tissue_raw_archivo,Brainstem,n,54.0
+pActividad_por_assay_tissue_raw_archivo,Brainstem,mediana,5.93
+pActividad_por_assay_tissue_raw_archivo,Blood brain barrier,n,32.0
+pActividad_por_assay_tissue_raw_archivo,Blood brain barrier,mediana,4.55
+pActividad_por_assay_tissue_raw_archivo,Entorhinal cortex,n,31.0
+pActividad_por_assay_tissue_raw_archivo,Entorhinal cortex,mediana,7.85
+pActividad_por_assay_tissue_raw_archivo,Brain/Plasma,n,25.0
+pActividad_por_assay_tissue_raw_archivo,Brain/Plasma,mediana,6.84
+pActividad_por_assay_tissue_raw_archivo,Hindbrain,n,9.0
+pActividad_por_assay_tissue_raw_archivo,Hindbrain,mediana,6.51
+pActividad_por_assay_tissue_raw_archivo,brain,n,3.0
+pActividad_por_assay_tissue_raw_archivo,brain,mediana,9.01
+pActividad_por_assay_tissue_raw_archivo,Cerebellar cortex,n,3.0
+pActividad_por_assay_tissue_raw_archivo,Cerebellar cortex,mediana,7.07
+pActividad_por_assay_tissue_raw_archivo,Cingulate cortex,n,3.0
+pActividad_por_assay_tissue_raw_archivo,Cingulate cortex,mediana,5.49
+pActividad_por_assay_tissue_raw_archivo,Temporal cortex,n,3.0
+pActividad_por_assay_tissue_raw_archivo,Temporal cortex,mediana,5.4
+pActividad_por_assay_tissue_raw_archivo,Brain cortex,n,2.0
+pActividad_por_assay_tissue_raw_archivo,Brain cortex,mediana,8.9
+pActividad_por_assay_tissue_raw_archivo,Piriform cortex,n,2.0
+pActividad_por_assay_tissue_raw_archivo,Piriform cortex,mediana,4.54
+pActividad_por_assay_tissue_raw_archivo,Parietal cortex,n,1.0
+pActividad_por_assay_tissue_raw_archivo,Parietal cortex,mediana,9.12
+pActividad_por_assay_tissue_raw_archivo,Occipital cortex,n,1.0
+pActividad_por_assay_tissue_raw_archivo,Occipital cortex,mediana,9.06
+pActividad_por_assay_cell_type_raw_archivo,SH-SY5Y,n,4167.0
+pActividad_por_assay_cell_type_raw_archivo,SH-SY5Y,mediana,5.64
+pActividad_por_assay_cell_type_raw_archivo,U-87MG ATCC,n,3674.0
+pActividad_por_assay_cell_type_raw_archivo,U-87MG ATCC,mediana,5.56
+pActividad_por_assay_cell_type_raw_archivo,U-251,n,2625.0
+pActividad_por_assay_cell_type_raw_archivo,U-251,mediana,5.1
+pActividad_por_assay_cell_type_raw_archivo,BV-2,n,2453.0
+pActividad_por_assay_cell_type_raw_archivo,BV-2,mediana,4.79
+pActividad_por_assay_cell_type_raw_archivo,PC-12,n,1595.0
+pActividad_por_assay_cell_type_raw_archivo,PC-12,mediana,5.49
+pActividad_por_assay_cell_type_raw_archivo,SK-N-SH,n,633.0
+pActividad_por_assay_cell_type_raw_archivo,SK-N-SH,mediana,5.14
+pActividad_por_assay_cell_type_raw_archivo,HT-22,n,496.0
+pActividad_por_assay_cell_type_raw_archivo,HT-22,mediana,5.32
+pActividad_por_assay_cell_type_raw_archivo,N2a,n,314.0
+pActividad_por_assay_cell_type_raw_archivo,N2a,mediana,5.27
+pActividad_por_assay_cell_type_raw_archivo,U-87 MG,n,213.0
+pActividad_por_assay_cell_type_raw_archivo,U-87 MG,mediana,5.31
+pActividad_por_assay_cell_type_raw_archivo,ScN2a,n,212.0
+pActividad_por_assay_cell_type_raw_archivo,ScN2a,mediana,6.3
+pActividad_por_assay_cell_type_raw_archivo,U87,n,167.0
+pActividad_por_assay_cell_type_raw_archivo,U87,mediana,6.32
+pActividad_por_assay_cell_type_raw_archivo,N2a-cl3,n,149.0
+pActividad_por_assay_cell_type_raw_archivo,N2a-cl3,mediana,6.0
+pActividad_por_assay_cell_type_raw_archivo,Microglia,n,144.0
+pActividad_por_assay_cell_type_raw_archivo,Microglia,mediana,5.51
+pActividad_por_assay_cell_type_raw_archivo,Astrocyte,n,137.0
+pActividad_por_assay_cell_type_raw_archivo,Astrocyte,mediana,5.32
+pActividad_por_assay_cell_type_raw_archivo,BTI-TN-5B1-4,n,127.0
+pActividad_por_assay_cell_type_raw_archivo,BTI-TN-5B1-4,mediana,5.18
+pActividad_por_assay_cell_type_raw_archivo,HEK293,n,113.0
+pActividad_por_assay_cell_type_raw_archivo,HEK293,mediana,6.67
+pActividad_por_assay_cell_type_raw_archivo,U-87,n,88.0
+pActividad_por_assay_cell_type_raw_archivo,U-87,mediana,6.74
+pActividad_por_assay_cell_type_raw_archivo,Cortical neurone,n,73.0
+pActividad_por_assay_cell_type_raw_archivo,Cortical neurone,mediana,5.62
+pActividad_por_assay_cell_type_raw_archivo,Primary neuron,n,71.0
+pActividad_por_assay_cell_type_raw_archivo,Primary neuron,mediana,6.15
+pActividad_por_assay_cell_type_raw_archivo,CHO,n,54.0
+pActividad_por_assay_cell_type_raw_archivo,CHO,mediana,6.69
+pActividad_por_assay_cell_type_raw_archivo,Hippocampal neurone,n,44.0
+pActividad_por_assay_cell_type_raw_archivo,Hippocampal neurone,mediana,5.55
+pActividad_por_assay_cell_type_raw_archivo,Neuro-2a,n,42.0
+pActividad_por_assay_cell_type_raw_archivo,Neuro-2a,mediana,7.96
+pActividad_por_assay_cell_type_raw_archivo,HepG2,n,40.0
+pActividad_por_assay_cell_type_raw_archivo,HepG2,mediana,6.64
+pActividad_por_assay_cell_type_raw_archivo,Primary neocortical neuron,n,37.0
+pActividad_por_assay_cell_type_raw_archivo,Primary neocortical neuron,mediana,5.27
+pActividad_por_assay_cell_type_raw_archivo,Cortical neuron,n,36.0
+pActividad_por_assay_cell_type_raw_archivo,Cortical neuron,mediana,4.77
+pActividad_por_assay_cell_type_raw_archivo,BTI,n,35.0
+pActividad_por_assay_cell_type_raw_archivo,BTI,mediana,5.13
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2),n,29.0
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2),mediana,5.92
+pActividad_por_assay_cell_type_raw_archivo,N2a #58 F3,n,29.0
+pActividad_por_assay_cell_type_raw_archivo,N2a #58 F3,mediana,6.1
+pActividad_por_assay_cell_type_raw_archivo,U87MG Human EGFR vIII,n,28.0
+pActividad_por_assay_cell_type_raw_archivo,U87MG Human EGFR vIII,mediana,5.57
+pActividad_por_assay_cell_type_raw_archivo,Neuro2a,n,26.0
+pActividad_por_assay_cell_type_raw_archivo,Neuro2a,mediana,7.41
+pActividad_por_assay_cell_type_raw_archivo,U-87MG,n,26.0
+pActividad_por_assay_cell_type_raw_archivo,U-87MG,mediana,7.6
+pActividad_por_assay_cell_type_raw_archivo,Neuro2A,n,25.0
+pActividad_por_assay_cell_type_raw_archivo,Neuro2A,mediana,5.23
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE,n,21.0
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE,mediana,8.29
+pActividad_por_assay_cell_type_raw_archivo,U87MG.deltaEGFR,n,18.0
+pActividad_por_assay_cell_type_raw_archivo,U87MG.deltaEGFR,mediana,5.31
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2)-M17,n,18.0
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2)-M17,mediana,5.29
+pActividad_por_assay_cell_type_raw_archivo,Sf9,n,18.0
+pActividad_por_assay_cell_type_raw_archivo,Sf9,mediana,7.18
+pActividad_por_assay_cell_type_raw_archivo,Sf21,n,17.0
+pActividad_por_assay_cell_type_raw_archivo,Sf21,mediana,5.8
+pActividad_por_assay_cell_type_raw_archivo,CV-1,n,16.0
+pActividad_por_assay_cell_type_raw_archivo,CV-1,mediana,6.51
+pActividad_por_assay_cell_type_raw_archivo,Erythrocyte,n,15.0
+pActividad_por_assay_cell_type_raw_archivo,Erythrocyte,mediana,7.52
+pActividad_por_assay_cell_type_raw_archivo,CHO-K1,n,15.0
+pActividad_por_assay_cell_type_raw_archivo,CHO-K1,mediana,7.74
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2)-C,n,13.0
+pActividad_por_assay_cell_type_raw_archivo,SK-N-BE(2)-C,mediana,5.52
+pActividad_por_assay_cell_type_raw_archivo,COS-7,n,11.0
+pActividad_por_assay_cell_type_raw_archivo,COS-7,mediana,6.7
+pActividad_por_assay_cell_type_raw_archivo,COS-1,n,10.0
+pActividad_por_assay_cell_type_raw_archivo,COS-1,mediana,7.66
+pActividad_por_assay_cell_type_raw_archivo,N2a695,n,10.0
+pActividad_por_assay_cell_type_raw_archivo,N2a695,mediana,5.3
+pActividad_por_assay_cell_type_raw_archivo,Primary cortical neuron,n,9.0
+pActividad_por_assay_cell_type_raw_archivo,Primary cortical neuron,mediana,6.56
+pActividad_por_assay_cell_type_raw_archivo,HEK-293T,n,9.0
+pActividad_por_assay_cell_type_raw_archivo,HEK-293T,mediana,6.98
+pActividad_por_assay_cell_type_raw_archivo,U87G,n,8.0
+pActividad_por_assay_cell_type_raw_archivo,U87G,mediana,5.51
+pActividad_por_assay_cell_type_raw_archivo,U87-TxR,n,7.0
+pActividad_por_assay_cell_type_raw_archivo,U87-TxR,mediana,5.11
+pActividad_por_assay_cell_type_raw_archivo,U2OS,n,7.0
+pActividad_por_assay_cell_type_raw_archivo,U2OS,mediana,6.59
+pActividad_por_assay_cell_type_raw_archivo,Oocyte,n,7.0
+pActividad_por_assay_cell_type_raw_archivo,Oocyte,mediana,5.52
+pActividad_por_assay_cell_type_raw_archivo,KBv200,n,6.0
+pActividad_por_assay_cell_type_raw_archivo,KBv200,mediana,5.56
+pActividad_por_assay_cell_type_raw_archivo,BMMSC,n,6.0
+pActividad_por_assay_cell_type_raw_archivo,BMMSC,mediana,6.02
+pActividad_por_assay_cell_type_raw_archivo,DLD-1,n,6.0
+pActividad_por_assay_cell_type_raw_archivo,DLD-1,mediana,6.52
+pActividad_por_assay_cell_type_raw_archivo,KBV20C,n,6.0
+pActividad_por_assay_cell_type_raw_archivo,KBV20C,mediana,6.23
+pActividad_por_assay_cell_type_raw_archivo,HMC3,n,5.0
+pActividad_por_assay_cell_type_raw_archivo,HMC3,mediana,4.7
+pActividad_por_assay_cell_type_raw_archivo,LNCaP,n,4.0
+pActividad_por_assay_cell_type_raw_archivo,LNCaP,mediana,5.43
+pActividad_por_assay_cell_type_raw_archivo,NIH3T3,n,4.0
+pActividad_por_assay_cell_type_raw_archivo,NIH3T3,mediana,5.66
+pActividad_por_assay_cell_type_raw_archivo,tsA-201,n,4.0
+pActividad_por_assay_cell_type_raw_archivo,tsA-201,mediana,5.77
+pActividad_por_assay_cell_type_raw_archivo,Huh-7 ,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,Huh-7 ,mediana,6.66
+pActividad_por_assay_cell_type_raw_archivo,MCF7,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,MCF7,mediana,5.77
+pActividad_por_assay_cell_type_raw_archivo,HEK293T,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,HEK293T,mediana,7.18
+pActividad_por_assay_cell_type_raw_archivo,CHOp,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,CHOp,mediana,7.19
+pActividad_por_assay_cell_type_raw_archivo,Arec32,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,Arec32,mediana,5.91
+pActividad_por_assay_cell_type_raw_archivo,COS7,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,COS7,mediana,5.8
+pActividad_por_assay_cell_type_raw_archivo,BL21-DE3,n,3.0
+pActividad_por_assay_cell_type_raw_archivo,BL21-DE3,mediana,4.59
+pActividad_por_assay_cell_type_raw_archivo,COS,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,COS,mediana,7.17
+pActividad_por_assay_cell_type_raw_archivo,HepG2-ARE-C8,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,HepG2-ARE-C8,mediana,4.38
+pActividad_por_assay_cell_type_raw_archivo,U87/TMZ,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,U87/TMZ,mediana,5.29
+pActividad_por_assay_cell_type_raw_archivo,L02,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,L02,mediana,5.78
+pActividad_por_assay_cell_type_raw_archivo,LtK,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,LtK,mediana,7.42
+pActividad_por_assay_cell_type_raw_archivo,MG-63,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,MG-63,mediana,7.96
+pActividad_por_assay_cell_type_raw_archivo,U251HRE,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,U251HRE,mediana,5.18
+pActividad_por_assay_cell_type_raw_archivo,U251SP,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,U251SP,mediana,4.03
+pActividad_por_assay_cell_type_raw_archivo,TSA201,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,TSA201,mediana,6.18
+pActividad_por_assay_cell_type_raw_archivo,U251-HRE,n,2.0
+pActividad_por_assay_cell_type_raw_archivo,U251-HRE,mediana,4.99
+pActividad_por_assay_cell_type_raw_archivo,Hippocampal neuron,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Hippocampal neuron,mediana,5.92
+pActividad_por_assay_cell_type_raw_archivo,HepG2/C3A,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,HepG2/C3A,mediana,8.42
+pActividad_por_assay_cell_type_raw_archivo,HNSCC 1483,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,HNSCC 1483,mediana,7.27
+pActividad_por_assay_cell_type_raw_archivo,HeLa,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,HeLa,mediana,7.82
+pActividad_por_assay_cell_type_raw_archivo,H4,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,H4,mediana,6.97
+pActividad_por_assay_cell_type_raw_archivo,GL26,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,GL26,mediana,9.0
+pActividad_por_assay_cell_type_raw_archivo,HEK293-T-REx,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,HEK293-T-REx,mediana,7.24
+pActividad_por_assay_cell_type_raw_archivo,HEKT,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,HEKT,mediana,6.01
+pActividad_por_assay_cell_type_raw_archivo,CHO-hIR,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,CHO-hIR,mediana,4.51
+pActividad_por_assay_cell_type_raw_archivo,Endothelial cell,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Endothelial cell,mediana,4.61
+pActividad_por_assay_cell_type_raw_archivo,143982,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,143982,mediana,7.1
+pActividad_por_assay_cell_type_raw_archivo,293H-DA,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,293H-DA,mediana,8.62
+pActividad_por_assay_cell_type_raw_archivo,BHK-21,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,BHK-21,mediana,6.35
+pActividad_por_assay_cell_type_raw_archivo,A-431,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,A-431,mediana,5.22
+pActividad_por_assay_cell_type_raw_archivo,BL21,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,BL21,mediana,6.35
+pActividad_por_assay_cell_type_raw_archivo,BMMC,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,BMMC,mediana,6.55
+pActividad_por_assay_cell_type_raw_archivo,293T,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,293T,mediana,7.54
+pActividad_por_assay_cell_type_raw_archivo,PathHunter U2OS Keap1-NRF2 Nuclear Translocation,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,PathHunter U2OS Keap1-NRF2 Nuclear Translocation,mediana,3.9
+pActividad_por_assay_cell_type_raw_archivo,PBMC,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,PBMC,mediana,6.3
+pActividad_por_assay_cell_type_raw_archivo,Osteosarcoma cell,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Osteosarcoma cell,mediana,7.1
+pActividad_por_assay_cell_type_raw_archivo,LTK,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,LTK,mediana,6.77
+pActividad_por_assay_cell_type_raw_archivo,Ltk,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Ltk,mediana,6.28
+pActividad_por_assay_cell_type_raw_archivo,Mononuclear cell line,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Mononuclear cell line,mediana,6.3
+pActividad_por_assay_cell_type_raw_archivo,Monocyte,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,Monocyte,mediana,7.59
+pActividad_por_assay_cell_type_raw_archivo,ReNcell VM,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,ReNcell VM,mediana,8.0
+pActividad_por_assay_cell_type_raw_archivo,TZM-resistant U-87 MG cell,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,TZM-resistant U-87 MG cell,mediana,4.78
+pActividad_por_assay_cell_type_raw_archivo,U-251MG,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,U-251MG,mediana,4.8
+pActividad_por_assay_cell_type_raw_archivo,TMZ-sensitive U-251MG cell,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,TMZ-sensitive U-251MG cell,mediana,4.4
+pActividad_por_assay_cell_type_raw_archivo,THP-1,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,THP-1,mediana,6.48
+pActividad_por_assay_cell_type_raw_archivo,SKNBE2,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,SKNBE2,mediana,6.11
+pActividad_por_assay_cell_type_raw_archivo,TMZ-resistant U-251MG cell,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,TMZ-resistant U-251MG cell,mediana,4.52
+pActividad_por_assay_cell_type_raw_archivo,U-937,n,1.0
+pActividad_por_assay_cell_type_raw_archivo,U-937,mediana,6.14
+dianas_con_dos_formatos,APP,rango_pActividad,1.26
+cobertura_pares,todos,tejido,286.0
+cobertura_pares,todos,celula,589.0
+cobertura_pares,todos,formato,656.0
+cobertura_pares,todos,alguno,874.0
+cobertura_pares_estrato,mixto,pares,1828.0
+cobertura_pares_estrato,mixto,tejido_pct,0.3
+cobertura_pares_estrato,mixto,celula_pct,12.7
+cobertura_pares_estrato,mixto,formato_pct,1.1
+cobertura_pares_estrato,mixto,alguno_pct,13.0
+cobertura_pares_estrato,solo_chembl,pares,66324.0
+cobertura_pares_estrato,solo_chembl,tejido_pct,0.4
+cobertura_pares_estrato,solo_chembl,celula_pct,0.5
+cobertura_pares_estrato,solo_chembl,formato_pct,1.0
+cobertura_pares_estrato,solo_chembl,alguno_pct,1.0
+cobertura_pares_estrato,solo_cmaup,pares,1.0
+cobertura_pares_estrato,solo_cmaup,tejido_pct,0.0
+cobertura_pares_estrato,solo_cmaup,celula_pct,0.0
+cobertura_pares_estrato,solo_cmaup,formato_pct,0.0
+cobertura_pares_estrato,solo_cmaup,alguno_pct,0.0
+cobertura_pares_estrato,solo_npass,pares,2231.0
+cobertura_pares_estrato,solo_npass,tejido_pct,0.0
+cobertura_pares_estrato,solo_npass,celula_pct,0.0
+cobertura_pares_estrato,solo_npass,formato_pct,0.0
+cobertura_pares_estrato,solo_npass,alguno_pct,0.0
+cobertura_pares_conflicto,False,pares,69258.0
+cobertura_pares_conflicto,False,tejido_pct,0.4
+cobertura_pares_conflicto,False,celula_pct,0.8
+cobertura_pares_conflicto,False,formato_pct,0.9
+cobertura_pares_conflicto,False,alguno_pct,1.2
+cobertura_pares_conflicto,True,pares,1126.0
+cobertura_pares_conflicto,True,tejido_pct,0.5
+cobertura_pares_conflicto,True,celula_pct,3.3
+cobertura_pares_conflicto,True,formato_pct,1.9
+cobertura_pares_conflicto,True,alguno_pct,3.8
+par_con_tejido,sin,pares,70098.0
+par_con_tejido,sin,activos_10um,0.727
+par_con_tejido,sin,pActividad_mediana,6.298
+par_con_tejido,con,pares,286.0
+par_con_tejido,con,activos_10um,0.961
+par_con_tejido,con,pActividad_mediana,7.991
