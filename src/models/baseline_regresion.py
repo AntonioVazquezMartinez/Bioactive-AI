@@ -9,10 +9,14 @@ es justo lo que se quiere medir:
 |:--|:--|:--|
 | `media` | las exactas; predice siempre su promedio | el piso: un modelo que no le gane no aprendió nada |
 | `ridge_exactas` | solo las exactas | la regresión lineal que un baseline sencillo haría |
-| `tobit` | las exactas **y** las censuradas como cotas | la misma recta que Ridge, con la censura |
+| `ridge_cota_imputada` | las exactas **y** las censuradas, tomando la cota como si fuera el valor | lo ingenuo de quien no quiere tirar los inactivos ni implementar una verosimilitud |
+| `tobit` | las exactas y las censuradas como cotas, con su verosimilitud | la misma recta, tratando la censura como lo que es |
 
-`ridge_exactas` y `tobit` son la misma familia (lineal, con la misma penalización), de
-modo que si difieren es por lo que cada uno ve, no por el modelo.
+Los tres últimos son la misma recta con la misma penalización. `ridge_exactas` contra
+`ridge_cota_imputada` mide lo que vale **no tirar los censurados**; `ridge_cota_imputada`
+contra `tobit` mide lo que vale **tratarlos con una verosimilitud** en lugar de como un
+valor. Sin el segundo control, un Tobit que gana sobre `ridge_exactas` no distingue las dos
+cosas: el Tobit ve más filas *y* usa otra pérdida.
 """
 
 from __future__ import annotations
@@ -52,6 +56,25 @@ class SoloExactas:
         return self.modelo.predict(X)
 
 
+class ImputadaEnCota:
+    """Entrena un modelo de sklearn con las exactas y con cada censurada **tomando su cota
+    como si fuera el valor medido**: un `(−∞, 5]` entra como 5 y un `[6, ∞)` como 6. Es lo
+    que haría quien no quiere tirar los inactivos y no implementa una verosimilitud; sirve
+    de control del Tobit. Descarta las filas sin ninguna cota y las de cotas cruzadas."""
+
+    def __init__(self, modelo):
+        self.modelo = modelo
+
+    def fit(self, X, inferior, superior):
+        util = intervalo_util(inferior, superior)
+        valor = np.where(np.isfinite(inferior), inferior, superior)
+        self.modelo.fit(X[util], valor[util])
+        return self
+
+    def predict(self, X):
+        return self.modelo.predict(X)
+
+
 class TobitComparable(RegresionTobit):
     """El Tobit con la penalización de Ridge escrita en su escala (`alfa = A / n`)."""
 
@@ -69,6 +92,8 @@ def baselines() -> dict:
     return {
         "media": SoloExactas(DummyRegressor()),
         "ridge_exactas": SoloExactas(make_pipeline(StandardScaler(), Ridge(alpha=ALFA_RIDGE))),
+        "ridge_cota_imputada": ImputadaEnCota(
+            make_pipeline(StandardScaler(), Ridge(alpha=ALFA_RIDGE))),
         "tobit": TobitComparable(),
     }
 

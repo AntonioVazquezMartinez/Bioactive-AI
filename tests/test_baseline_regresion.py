@@ -43,8 +43,8 @@ def test_ridge_ignora_las_cotas_y_el_tobit_las_usa():
 def test_el_arnes_devuelve_una_fila_por_modelo_semilla_pliegue_y_estrato():
     X, inf, sup, g, est, clase = _datos()
     res = evaluar_baselines(X, inf, sup, g, est, clase, semillas=(0,), pliegues=3)
-    assert set(res["modelo"]) == {"media", "ridge_exactas", "tobit"}
-    assert len(res[(res.estrato == "todos")]) == 3 * 3
+    assert set(res["modelo"]) == {"media", "ridge_exactas", "ridge_cota_imputada", "tobit"}
+    assert len(res[(res.estrato == "todos")]) == 4 * 3
     t = tabla(res)
     assert t.loc["media", "concordancia"] == 0.5          # predecir siempre lo mismo
     assert t.loc["tobit", "concordancia"] > 0.8
@@ -54,3 +54,14 @@ def test_intervalo_util_descarta_sin_cota_y_vacio():
     inf = np.array([-INF, 5.0, 6.0, -INF])
     sup = np.array([INF, 4.0, 6.0, 5.0])
     assert intervalo_util(inf, sup).tolist() == [False, False, True, True]
+
+
+def test_la_imputada_toma_la_cota_como_valor_y_ridge_exactas_no_la_ve():
+    X, inf, sup, *_ = _datos()
+    imp = baselines()["ridge_cota_imputada"].fit(X, inf, sup)
+    # a mano: el valor que debió ver es la cota donde el límite inferior es -inf
+    valor = np.where(np.isfinite(inf), inf, sup)
+    ridge = baselines()["ridge_exactas"].modelo.fit(X, valor)
+    np.testing.assert_allclose(imp.predict(X), ridge.predict(X))
+    solo = baselines()["ridge_exactas"].fit(X, inf, sup)
+    assert not np.allclose(imp.predict(X), solo.predict(X))
