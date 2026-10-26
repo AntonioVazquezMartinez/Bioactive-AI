@@ -55,7 +55,7 @@ Dos moléculas van al mismo grupo si comparten **andamio** —el esqueleto de an
 
 **Por qué no al azar.** Una partición aleatoria **infla el resultado entre 7 y 13 puntos**, porque deja análogos casi idénticos a los dos lados. El modelo parece reconocer química nueva cuando en realidad reconoce a un primo hermano.
 
-**Por qué una prueba reservada.** La patrocinadora lo pidió cuatro veces en la misma reunión: no espera encontrar otra base con la que validar después ([2.6](decisiones.md#d2-6)).
+**Por qué una prueba reservada.** No se espera encontrar otra base de datos con la que validar después, así que la única evaluación sobre química que el modelo nunca vio es la que se aparte ahora ([2.6](decisiones.md#d2-6)).
 
 **Y todo lo que aprende de los datos se ajusta dentro del pliegue** —escalar, seleccionar, imputar—. Un escalador ajustado antes de partir filtra la media y la varianza del pliegue de evaluación, y el resultado sale mejor de lo que es.
 
@@ -117,7 +117,7 @@ Lo que se guarda es **el intervalo donde cae la potencia**, no una etiqueta. La 
 
 **Por qué el intervalo y no la etiqueta.** Porque el corte no es estimable: no hay ninguna columna que diga si un compuesto funcionó, así que el umbral se elige, no se mide. Y no significa lo mismo en cada diana: con el mismo corte, `LRRK2` queda en 98.1% de activos y `NFE2L2` en 50.7%.
 
-Guardarlo así tuvo una consecuencia concreta: **el 25 de octubre la patrocinadora cambió la variable objetivo de clase a potencia y no hubo que reconstruir nada**, porque los dos salen del mismo archivo ([2.10](decisiones.md#d2-10)).
+Guardarlo así tuvo una consecuencia concreta. Al revisar de dónde venían los datos y qué mide cada ensayo apareció una ambigüedad sobre qué debía predecir la fase 2; se consultó y se resolvió que lo que se predice es la potencia. **El cambio no obligó a reconstruir nada**, porque la clase y la potencia salen del mismo archivo ([2.10](decisiones.md#d2-10)).
 
 **Y la dirección del efecto no entra en la etiqueta, viaja como marca.** Una diana se quiere frenar y otra encender, pero muchas mediciones solo dicen cuánto se pega el compuesto, no qué le hace. **Por qué no se invierte la etiqueta:** un antagonista potente es estructuralmente casi idéntico a un agonista potente, así que marcarlo como negativo metería moléculas gemelas con etiquetas contrarias, que no es información sino ruido que ningún modelo puede aprender ([2.11](decisiones.md#d2-11)).
 
