@@ -146,3 +146,20 @@ Desde el Avance 4 cada libreta cierra con la declaración, en tres partes, segú
 - **Las tres decisiones salen del registro**, comprimidas a una línea de justificación y una de alternativa descartada. El registro ya guarda las dos cosas.
 
 Y hay algo que declarar con nombre: las auditorías del #113 las hizo un agente que no participó en la tarea, incluyendo la revisión de redacción que contrastó unas 90 cifras. Eso es más que fragmentos de código y va en la declaración tal como fue.
+
+## 9. Lo que pasa al Avance 5
+
+Del correo de la patrocinadora del 25 de octubre quedan pendientes los puntos siguientes. Ninguno es un criterio de la rúbrica del Avance 4, y todos importan cuando se evalúa el modelo final, así que pasan al Avance 5 en este orden:
+
+| Orden | Qué | Dónde está escrito |
+|:--|:--|:--|
+| 1 | Las **sensibilidades**, declaradas de antemano: sin inferidas, solo dirección consistente, con y sin DrugMatrix, y el corte de 1 µM junto al de 10 µM. La declaración **ya está hecha** ([variable objetivo, §9](variable-objetivo-fase2.md)); falta medirlas | [2.11](decisiones.md#d2-11), [2.12](decisiones.md#d2-12) |
+| 2 | **DrugMatrix:** el desempeño con y sin los 29,730 inactivos, y el análisis de esqueletos de los 772 compuestos | [2.12](decisiones.md#d2-12) |
+| 3 | En la matriz: la **marca de las relaciones inferidas**, la **bandera de dispersión** mayor a cien veces y `direccion_consistente` para las 26 dianas | [2.10](decisiones.md#d2-10), [2.11](decisiones.md#d2-11) |
+| 4 | Las **métricas de ranking** (enriquecimiento al 1% y 5%, BEDROC, precisión en los primeros 100, área bajo la curva de precisión-recall) y el análisis de escenarios, con la métrica principal declarada antes de ver resultados | [C.5](decisiones.md#dc-5) |
+| 5 | Los **campos de la API de ChEMBL** (formato BAO, confianza, organismo, `action_type`), con caché y fecha de descarga, como filtro y descriptor del reporte, nunca como entrada; antes hay que medir cuánto cubren nuestras filas (en todo ChEMBL, `action_type` está en el 2.4% de las actividades) | [2.3](decisiones.md#d2-3), [2.11](decisiones.md#d2-11) |
+| 6 | Los ensayos celulares como **anotación de citotoxicidad**, separada, para la priorización | [2.4](decisiones.md#d2-4), [C.7](decisiones.md#dc-7) |
+| 7 | El método del 10% apartado, que debe compartir Jorge Uribe, y la partición por esqueleto en paralelo | [2.6](decisiones.md#d2-6) |
+
+Lo que no alcance a medirse en el Avance 5 se declara en el informe como trabajo pendiente.
+

@@ -113,7 +113,7 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 **Por qué una curva.** No hay que elegir **un** punto de operación: entregando la curva, mover el corte no cuesta reentrenar nada, es leer otra fila de la misma tabla. Ejemplo: de una lista de veinte donde acierte cuatro de cada cinco se pasa a una de cien donde acierte una de cada dos, sin tocar el modelo.
 
-**Métricas del ranking (propuesta; la principal se declara antes de ver resultados).** Cuántos compuestos se pueden ensayar no se sabe, así que se resuelve como análisis de escenarios y se dice cuál gobierna bajo cada supuesto. Ejemplo: si el laboratorio ensaya 20 compuestos, importa que los primeros 20 funcionen; si ensaya 1,000, importa no dejar fuera candidatos reales.
+**Métricas del ranking (propuesta; la principal se declara antes de ver resultados; se implementan en el Avance 5).** Cuántos compuestos se pueden ensayar no se sabe, así que se resuelve como análisis de escenarios y se dice cuál gobierna bajo cada supuesto. Ejemplo: si el laboratorio ensaya 20 compuestos, importa que los primeros 20 funcionen; si ensaya 1,000, importa no dejar fuera candidatos reales.
 
 | Escenario | Qué manda | Métricas |
 |:--|:--|:--|
@@ -767,7 +767,7 @@ Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pa
 
 **`DRD2`** tiene 9,618 pares y `diana_efecto_buscado` «agonismo o antagonismo (según enfermedad)»: agonistas en Parkinson, antagonistas en esquizofrenia. En 14,732 mediciones, 11,230 son Ki (conteo manual, sin script). Queda como trabajo futuro.
 
-**Pendiente.** Definir `direccion_consistente` para las 26 dianas (la tabla de tipos hoy solo cubre las tres de activación; por ejemplo, un EC50 sobre `GSK3B`, de inhibición). Medir cuánto cubre la API de los campos pedidos en nuestros compuestos.
+**Pendiente, para el Avance 5.** Definir `direccion_consistente` para las 26 dianas (la tabla de tipos hoy solo cubre las tres de activación; por ejemplo, un EC50 sobre `GSK3B`, de inhibición) y su sensibilidad, declarada en la [página de variables objetivo](variable-objetivo-fase2.md). Medir cuánto cubre la API de los campos pedidos en nuestros compuestos: en todo ChEMBL, `action_type` está en 582,238 de unos 24.5 millones de actividades (2.4%).
 
 #### 2.12 · Los inactivos de DrugMatrix {#d2-12 .propuesta}
 
@@ -777,7 +777,7 @@ Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pa
 
 **Con regresión aportan poco.** Las 5,658 filas dicen lo mismo: `pActividad` < 5, sin cuánto menos. Como clasificación pesaban mucho (61% de los negativos por registro, 10.8% por par); como cota de regresión son una sola cota repetida, concentrada en una campaña, cuatro dianas y fármacos conocidos (espacio químico sesgado).
 
-**Se propone.** Fuera del modelo principal. Una sensibilidad con ellas como negativos censurados y sin ellas, reportada al lado, con un análisis de esqueletos de los 772 compuestos. Como todas son de un solo documento, agrupar por documento en la validación cruzada las deja juntas en un pliegue, y eso hay que declararlo. El valor que podrían tener es el déficit de negativos verdaderos de cualquier conjunto derivado de la literatura, donde se publica lo que funciona.
+**Se propone.** Fuera del modelo principal. **La medición del desempeño con y sin ellas queda para el Avance 5.** Una sensibilidad con ellas como negativos censurados y sin ellas, reportada al lado, con un análisis de esqueletos de los 772 compuestos. Como todas son de un solo documento, agrupar por documento en la validación cruzada las deja juntas en un pliegue, y eso hay que declararlo. El valor que podrían tener es el déficit de negativos verdaderos de cualquier conjunto derivado de la literatura, donde se publica lo que funciona.
 
 ### Supuestos
 

@@ -105,6 +105,20 @@ Si el resultado no cambia entre variantes, el modelo no depende de esas diferenc
 6. **Filas marcadas por ChEMBL** («Outside typical range», 5,287 filas, 2.6%): se mantienen y se repite el análisis sin ellas.
 7. **Por artículo disjunto no es viable:** un solo componente conectado reúne el 55.9% de los pares; se reporta el desempeño por referencia.
 
-### 9. Cifras y cómo se calcularon
+### 9. Sensibilidades declaradas de antemano
+
+Se fijan **antes de ver el desempeño del modelo final**, y no cambian por lo que muestren. Cada una se reporta **al lado de la definición principal**, en la misma tabla y por procedencia; la principal es la que se describe en las secciones 2 a 6 y no se reemplaza por ninguna sensibilidad.
+
+| # | Sensibilidad | Qué cambia respecto de la principal | Estado |
+|:--|:--|:--|:--|
+| 1 | **Sin las relaciones inferidas** | Se quitan las 2,001 mediciones cuya relación no venía en la fuente y se asignó con una regla | Medida para la etiqueta de clasificación (sección 8: 65,368 pares, 73.2% activos). Para la regresión, **Avance 5** |
+| 2 | **Solo dirección consistente** | Se queda el subconjunto marcado `consistente` en `direccion_consistente` (la contradictoria, un IC50 funcional sobre una diana de activación, sale; no se invierte). El filtro de dirección se aplica **antes** de agregar el par | Falta la columna, que exige definir la regla para las 26 dianas. **Avance 5** |
+| 3 | **Con DrugMatrix** | La principal excluye los 29,730 inactivos declarados por texto. Aquí entran como negativos censurados (`> 10 µM`), agrupando por documento en la validación cruzada, con un análisis de esqueletos de los 772 compuestos | Solo se sabe cuánto sumaría (2,169 pares en cuatro dianas). El desempeño con y sin ellos es del **Avance 5** |
+| 4 | **Corte de 1 µM** | La clase derivada se corta en 1 µM en lugar de 10 µM | Declarada como acompañante del principal; los cuadernos 03b y 04b todavía reportan solo el corte de 10 µM. **Avance 5** |
+| 5 | **Conflictos como activos** | Los pares con evidencia incompatible no se marcan sino que cuentan como activos | Medida para la etiqueta (sección 8: 67,905 pares, 73.3%) |
+
+Otras dos cosas se declaran sin ser sensibilidades: los pares con **dispersión mayor a cien veces** (rango de las exactas mayor que 2) se **marcan** y se reportan aparte, y el **tejido** solo audita los pares en conflicto. La bandera de dispersión y la marca de las relaciones inferidas se agregan a la matriz en el Avance 5.
+
+### 10. Cifras y cómo se calcularon
 
 Las cifras salen del archivo recibido (202,647 filas; el diccionario describe 225,513 del archivo completo), restringido a las cinco categorías, con `target_gene` y estructura calculable: 70,384 pares sobre 59,532 compuestos y 26 dianas; 57,832 con potencia y 12,552 solo con cotas. Los reproducen `scripts/cifras_fase2.py`, `scripts/cifras_etiqueta_fase2.py` y `scripts/cifras_contexto_ensayo.py`; porcentajes por registro y por par se declaran como tales.
