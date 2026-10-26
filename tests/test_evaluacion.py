@@ -121,3 +121,69 @@ def test_el_resumen_no_llama_error_estandar_a_la_desviacion(datos):
     r = resumen(res)
     assert isinstance(r, pd.DataFrame)
     assert ("mcc", "std") in r.columns
+
+
+def test_el_tiempo_de_ajuste_se_mide_y_no_se_repite_por_estrato(datos):
+    """La rúbrica de los Avances 4 y 5 pide los tiempos en la misma tabla.
+
+    Un ajuste ocurre una vez por (modelo, semilla, pliegue), no una vez por
+    subgrupo. Si los segundos se copiaran a las filas de estrato, cualquier
+    promedio sobre la tabla larga los contaría varias veces y el tiempo del
+    modelo saldría inflado por el número de estratos que tenga la corrida.
+    """
+    X, y, grupos, estratos = datos
+    # `min_minoritaria` baja para que los dos estratos del fixture se reporten;
+    # con el mínimo real de 20 ninguno llega y la prueba no comprobaría nada.
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos,
+                     estratos=estratos, semillas=(0,), pliegues=5,
+                     min_minoritaria=5, verboso=False)
+
+    todos = res[res.estrato.eq("todos")]
+    assert (todos.segundos_ajuste > 0).all()
+    assert (todos.segundos_prediccion > 0).all()
+    assert todos.segundos_ajuste.notna().all()
+
+    por_estrato = res[res.estrato.ne("todos")]
+    assert len(por_estrato) > 0, "la prueba no comprueba nada si no hay estratos"
+    assert por_estrato.segundos_ajuste.isna().all()
+
+
+def test_la_tabla_comparativa_ordena_por_la_metrica_que_se_le_pida(datos):
+    """Cuál métrica ordena es decisión del equipo, no una constante del código."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos, _ = datos
+    res, _ = evaluar(canalizaciones(), X, y, grupos, semillas=(0,), pliegues=3,
+                     verboso=False)
+
+    por_mcc = tabla_comparativa(res, principal="mcc")
+    assert list(por_mcc.index) == list(por_mcc.sort_values("mcc", ascending=False).index)
+    assert "segundos_ajuste" in por_mcc.columns
+    assert (por_mcc.pliegues == 3).all()
+
+    por_auroc = tabla_comparativa(res, principal="auroc", otras=("mcc",))
+    assert list(por_auroc.columns)[:2] == ["auroc", "desv"]
+    assert set(por_auroc.index) == set(CANALIZACIONES)
+
+
+def test_la_tabla_comparativa_avisa_si_el_estrato_no_existe(datos):
+    """Pedir un estrato que no se reportó debe fallar, no devolver nada en silencio."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos, _ = datos
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos, semillas=(0,),
+                     pliegues=3, verboso=False)
+    with pytest.raises(ValueError, match="estrato"):
+        tabla_comparativa(res, estrato="inexistente")
+
+
+def test_la_tabla_no_se_rompe_si_la_principal_esta_entre_las_otras(datos):
+    """Pasa con los valores por omisión al pedir AUROC: la columna salía dos veces."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos = datos[0], datos[1], datos[2]
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos, semillas=(0,),
+                     pliegues=3, verboso=False)
+    tabla = tabla_comparativa(res, principal="auroc")
+    assert list(tabla.columns).count("auroc") == 1
+    assert list(tabla.columns)[:2] == ["auroc", "desv"]
