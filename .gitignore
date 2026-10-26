@@ -65,3 +65,6 @@ animaciones/voz/*.mp3
 # Se ignora `worktrees/` y no `.claude/` completo a propósito: ahí pueden
 # vivir configuración o skills del proyecto que sí convenga versionar.
 .claude/worktrees/
+
+# Las presentaciones las arma scripts/armar_deck.py a partir de los notebooks.
+_decks/
