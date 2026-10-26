@@ -390,7 +390,3 @@ ensayos celulares **no son evidencia de neuroprotección por sí mismos** —BV-
 glioma, y un ensayo de crecimiento ahí mide citotoxicidad—, así que contarlos como actividad
 favorable premiaría compuestos tóxicos. Van como anotación de citotoxicidad, aparte.
 
-**Lo que pidió para antes del Avance 4.** La especificación de la variable objetivo **en una
-página**: definición primaria, reglas de agregación, manejo de la censura y las sensibilidades
-declaradas de antemano. Su razón: «fijar la variable antes de ver resultados es lo que separa un
-hallazgo de un artefacto».
