@@ -1,0 +1,18 @@
+decision: '2.9'
+semillas:
+- 0
+- 1
+- 2
+- 3
+- 4
+params:
+  modelos:
+  - media
+  - ridge_exactas
+  - ridge_cota_imputada
+  - tobit
+  pliegues: 5
+  alfa_ridge: 100.0
+  objetivo: pActividad, con las censuradas como cotas (Tobit)
+  corte_mcc: 5.0
+  estratos: procedencia

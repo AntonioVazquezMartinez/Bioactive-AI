@@ -94,10 +94,12 @@ def spearman_exactas(limite_inferior: np.ndarray, limite_superior: np.ndarray,
                      prediccion: np.ndarray) -> tuple[float, int]:
     """Spearman sobre las mediciones exactas; devuelve `(rho, n)`."""
     e = _exactas(limite_inferior, limite_superior)
-    if e.sum() < 3:
+    pred = np.asarray(prediccion, dtype=float)[e]
+    # Con una predicción constante (un modelo que siempre devuelve el promedio) el
+    # orden no está definido: se declara nan en vez de dejar que scipy avise cada vez.
+    if e.sum() < 3 or np.ptp(pred) == 0:
         return float("nan"), int(e.sum())
-    rho = spearmanr(np.asarray(limite_inferior, dtype=float)[e],
-                    np.asarray(prediccion, dtype=float)[e]).statistic
+    rho = spearmanr(np.asarray(limite_inferior, dtype=float)[e], pred).statistic
     return float(rho), int(e.sum())
 
 
