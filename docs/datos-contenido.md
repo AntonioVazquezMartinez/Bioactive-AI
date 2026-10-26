@@ -196,7 +196,7 @@ Los porcentajes de actividad dependen de la unidad: **61.7%** con pChEMBL ≥ 5 
   grande de «inactivos» del archivo contesta «¿este compuesto perturbó esta diana en un tamiz de
   toxicidad?», no «¿es candidato neuroprotector?». A 10 µM esa sola referencia aporta el 61% de los
   negativos seguros **por registro**; por par compuesto-diana aporta el 10.8%, porque son 772
-  compuestos, y la [propuesta de variable objetivo](variable-objetivo-fase2.md) la deja fuera de la
+  compuestos, y la [página de variables objetivo](variable-objetivo-fase2.md) la deja fuera de la
   definición principal, con lo que baja al 0.1% ([decisión 2.3](decisiones.md#d2-3)).
 
 - **El contexto del ensayo está ausente justo en las filas que se modelan, y no es dato faltante.**

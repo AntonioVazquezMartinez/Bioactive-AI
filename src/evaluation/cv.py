@@ -16,6 +16,10 @@ necesita:
   pares de ChEMBL y mucho menos los de NPASS ([2.3](../../docs/decisiones.md#d2-3)).
   Por eso `evaluar` acepta `estratos` y devuelve una fila por pliegue **y por
   estrato**, en vez de dejar que cada script lo recalcule a su manera.
+- **Cronometra el ajuste.** Las rúbricas de los Avances 4 y 5 piden los
+  tiempos de entrenamiento en la misma tabla que las métricas, así que se miden
+  donde ocurre el ajuste y no en un script aparte que los volvería a medir con
+  otra partición.
 - **No toca la prueba.** Recibe solo lo que se le da; reservar la prueba es de
   quien construye la matriz ([2.7](../../docs/decisiones.md#d2-7)).
 
@@ -27,6 +31,7 @@ rehacer el cálculo.
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Mapping, Sequence
+from time import perf_counter
 
 import numpy as np
 import pandas as pd
@@ -41,18 +46,28 @@ from sklearn.model_selection import StratifiedGroupKFold
 MIN_MINORITARIA = 20
 
 
+def orientar_minoritaria(y: np.ndarray, p: np.ndarray) -> tuple[np.ndarray, np.ndarray, bool]:
+    """Devuelve `(y, p)` vistos desde la clase menos frecuente, y si hubo que voltear.
+
+    Cuál es la minoritaria cambia entre fases —en permeabilidad es BBB−, en
+    actividad es la inactiva— y entre estratos, así que se decide aquí sobre los
+    datos y no se fija por convención. Vive en una función propia porque la usan
+    el AUPRC y la curva de precisión-exhaustividad, y si cada uno la resolviera a
+    su manera la curva podría dibujar una clase distinta de la que mide la tabla.
+    """
+    if y.mean() <= 0.5:
+        return y, p, False
+    return 1 - y, 1 - p, True
+
+
 def _auprc_minoritaria(y: np.ndarray, p: np.ndarray) -> float:
     """AUPRC sobre la clase menos frecuente **de este subconjunto**.
 
     Medida sobre la mayoritaria, la línea base es más alta y los valores
-    parecen mejores de lo que son. Cuál es la minoritaria cambia entre fases
-    —en permeabilidad es BBB−, en actividad es la inactiva— y entre estratos,
-    así que se decide aquí y no se fija por convención.
+    parecen mejores de lo que son.
     """
-    positiva_es_minoritaria = y.mean() <= 0.5
-    if positiva_es_minoritaria:
-        return average_precision_score(y, p)
-    return average_precision_score(1 - y, 1 - p)
+    ym, pm, _ = orientar_minoritaria(y, p)
+    return average_precision_score(ym, pm)
 
 
 METRICAS: Mapping[str, Callable[[np.ndarray, np.ndarray], float]] = {
@@ -94,9 +109,24 @@ def evaluar(
     `estratos` es opcional y puede ser cualquier etiqueta por fila: procedencia,
     diana, grupo A–D. Un subgrupo se reporta solo si su clase minoritaria llega
     a `min_minoritaria`.
+
+    **Los tiempos van solo en la fila `todos`.** Son `segundos_ajuste` y
+    `segundos_prediccion`, de reloj de pared, y se miden una vez por (modelo,
+    semilla, pliegue): un ajuste no es un atributo del estrato, así que
+    repetirlos en cada fila de subgrupo haría que cualquier promedio los
+    contara varias veces. En las filas de estrato quedan vacíos a propósito.
+
+    **Y el tiempo de reloj no es comparable entre canalizaciones que paralelizan
+    distinto.** El bosque del baseline trae `n_jobs=-1` y las demás no, así que
+    su cifra es la de un ajuste en todos los núcleos frente a ajustes en uno.
+    Para que la columna de la tabla comparativa signifique lo mismo en todas las
+    filas hay que fijar el mismo `n_jobs` en las canalizaciones que se comparen,
+    o declarar cuál usa cada una. El arnés mide lo que de verdad tardó; igualar
+    las condiciones es de quien arma la comparativa.
     """
     X_arr = X.to_numpy() if isinstance(X, pd.DataFrame) else X
     y = np.asarray(y)
+    grupos = np.asarray(grupos)
     filas: list[dict] = []
     fuera_de_pliegue = {
         nombre: np.full((len(semillas), len(y)), np.nan) for nombre in canalizaciones}
@@ -118,13 +148,39 @@ def evaluar(
                 # modelo; variar también la del modelo ensancharía el error
                 # estándar y queda para el Avance 4. Lo que no se puede es
                 # decir que se varía cuando no se varía.
-                modelo.fit(X_arr[ajuste], y[ajuste])
+                reloj = perf_counter()
+                # Una canalización que ajusta hiperparámetros por dentro necesita
+                # **los grupos de su parte del pliegue**: si su validación interna
+                # parte al azar, deja análogos del mismo andamio a los dos lados y
+                # elige los hiperparámetros sobre una medición inflada. El ajuste
+                # externo seguiría siendo honesto y la rejilla elegida no, que es
+                # la fuga difícil de ver. Lo declara con `necesita_grupos`.
+                if getattr(canalizacion, "necesita_grupos", False):
+                    modelo.fit(X_arr[ajuste], y[ajuste], grupos=grupos[ajuste])
+                else:
+                    modelo.fit(X_arr[ajuste], y[ajuste])
+                segundos_ajuste = perf_counter() - reloj
+                reloj = perf_counter()
                 p = modelo.predict_proba(X_arr[val])[:, 1]
+                segundos_prediccion = perf_counter() - reloj
                 fuera_de_pliegue[nombre][s, val] = p
 
-                filas.append({"modelo": nombre, "semilla": semilla, "pliegue": pliegue,
-                              "estrato": "todos", "n": len(val),
-                              "activos": float(y[val].mean()), **_medir(y[val], p)})
+                fila = {"modelo": nombre, "semilla": semilla, "pliegue": pliegue,
+                        "estrato": "todos", "n": len(val),
+                        "activos": float(y[val].mean()),
+                        "segundos_ajuste": segundos_ajuste,
+                        "segundos_prediccion": segundos_prediccion,
+                        **_medir(y[val], p)}
+                # Lo que la canalización haya elegido por dentro se guarda aquí y
+                # no en el objeto que se pasó: `clone` deja lo ajustado en la
+                # copia del pliegue, así que fuera de esta función se perdería.
+                # Sin esta columna no se puede decir si la elección fue estable
+                # entre pliegues o si cambió con la partición, que es justo lo
+                # que distingue un ajuste fino de una corrida afortunada.
+                elegidos = getattr(modelo, "elegidos_", None)
+                if elegidos is not None:
+                    fila["elegidos"] = str(elegidos)
+                filas.append(fila)
                 if estratos is None:
                     continue
                 for e in pd.unique(estratos[val]):
@@ -154,6 +210,48 @@ def resumen(resultados: pd.DataFrame,
     """
     return (resultados.groupby(["estrato", "modelo"])[list(metricas)]
             .agg(["mean", "std"]).round(4))
+
+
+def tabla_comparativa(resultados: pd.DataFrame,
+                      *,
+                      principal: str = "mcc",
+                      otras: Iterable[str] = ("auprc_minoritaria", "auroc"),
+                      estrato: str = "todos",
+                      ) -> pd.DataFrame:
+    """La tabla que piden las rúbricas de los Avances 4 y 5, en un solo lugar.
+
+    Una fila por canalización, ordenada por `principal` de mayor a menor, con
+    las otras métricas y el tiempo medio de ajuste por pliegue. `principal` es
+    un argumento y no una constante **a propósito**: cuál es la métrica que
+    ordena es una decisión del equipo ([C.1](../../docs/decisiones.md#dc-1)), y
+    cambiarla no debe obligar a tocar este código ni a rehacer la corrida.
+
+    Dos cosas que esta tabla **no** dice, y que hay que escribir al lado:
+
+    - **El orden no es un ganador.** Ordenar por la media no prueba que la
+      primera fila se distinga de la segunda; las semillas comparten filas, así
+      que `desv` es dispersión y no error estándar. Para afirmar que dos
+      canalizaciones se distinguen está `intervalo_por_grupos`, que remuestrea
+      grupos. El Avance 3 cerró con que ninguna de las tres se distinguía.
+    - **El tiempo compara condiciones, no solo modelos.** Es reloj de pared, así
+      que una canalización con `n_jobs=-1` frente a otra en un núcleo mide dos
+      cosas distintas. Igualar el paralelismo antes de comparar es de quien arma
+      la corrida; aquí solo se promedia lo que se midió.
+    """
+    # `principal` puede venir también en `otras` —pasa con los valores por
+    # omisión si se pide ordenar por AUROC—, y entonces la columna sale dos
+    # veces y `sort_values` no sabe por cuál ordenar.
+    columnas = [principal, *(c for c in otras if c != principal)]
+    d = resultados[resultados["estrato"].eq(estrato)]
+    if d.empty:
+        raise ValueError(f"no hay filas con estrato {estrato!r}")
+
+    agregado = d.groupby("modelo")[columnas].mean()
+    agregado.insert(1, "desv", d.groupby("modelo")[principal].std())
+    if "segundos_ajuste" in d.columns:
+        agregado["segundos_ajuste"] = d.groupby("modelo")["segundos_ajuste"].mean()
+    agregado["pliegues"] = d.groupby("modelo")[principal].size()
+    return agregado.sort_values(principal, ascending=False).round(4)
 
 
 def intervalo_por_grupos(y: np.ndarray, p: np.ndarray, grupos: np.ndarray,
