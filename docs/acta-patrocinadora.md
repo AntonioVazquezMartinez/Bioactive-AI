@@ -327,11 +327,12 @@ qué error pesa más), **P2** (el cruce con COCONUT) y **P3** (la brecha de los 
 
 | Qué | Quién | Para cuándo |
 |:--|:--|:--|
-| Compartir el método con que se separó el 10% y verificar si sesga | Jorge Uribe | correo del 16 de octubre, pendiente |
+| Compartir el método con que se separó el 10% y verificar si sesga | Jorge Uribe | **vuelto a pedir** en su correo del 25 de octubre, pendiente |
 | Entregar el archivo completo, sin el 10% apartado | Patrocinadora / Jorge | acordado el 15 de octubre, pendiente |
-| Anotar la ruta `cns_target` con tipo de ensayo, formato, tejido y línea celular | Jorge Uribe | por pedir |
-| Mostrarle filas reales de cada fuente con las columnas de la sección 5 | Equipo | antes de la siguiente sesión |
-| Mostrarle que estrés oxidativo es 47.7% NPASS/CMAUP | Equipo | antes de la siguiente sesión |
+| Anotar la ruta `cns_target` con tipo de ensayo, formato, tejido y línea celular | Jorge Uribe | **ya no hace falta pedirlo:** el 25 de octubre autorizó traerlo de la API de ChEMBL |
+| Mostrarle filas reales de cada fuente con las columnas de la sección 5 | Equipo | **cumplido** en el correo del 24 de octubre |
+| Mostrarle que estrés oxidativo es 47.7% NPASS/CMAUP | Equipo | **cumplido** en el correo del 24 de octubre, como consecuencia de la lectura (b) |
+| Dar su VoBo a las respuestas del 25 de octubre | Jorge Uribe | pedido por ella en ese correo, pendiente |
 
 ### Siguiente paso del equipo
 
@@ -347,3 +348,45 @@ Pegar aquí el bloque que genera la [página de consulta](https://antoniovazquez
 
 ```
 ```
+
+---
+
+## Anexo 2 · Correo del 25 de octubre de 2026
+
+> **Qué es esto y qué no.** Es el registro de lo que contestó, en sus términos y con la fecha, al
+> correo que el equipo le mandó el 24 de octubre. **No es la decisión:** cada punto se pasa a su
+> entrada de [la ruta](decisiones.md), que es donde el proyecto declara qué hace y qué lo cambiaría.
+> Si esta minuta y la ruta se contradicen, manda la ruta, y lo que esté aquí y no allá es porque
+> todavía no se ha pasado. Copia al correo: Jorge Alberto Uribe Echeverría, a quien le pidió su VoBo.
+
+**Lo que cerró.**
+
+| Qué preguntó el equipo | Qué contestó |
+|:--|:--|
+| Alcance de «no hacer la inferencia» | La lectura (a): lo que descartó fue **deducir una etiqueta donde la fuente no la trae**. «Usar una columna entregada no es inferir», así que las columnas `_used` de Jorge sí se usan, con el mismo corte para las tres fuentes |
+| Las 2,001 relaciones marcadas «inferida» | Que entren, **marcadas**, con una sensibilidad sin ellas reportada en una línea |
+| La dirección del efecto | La opción (1): **la afinidad cuenta y la etiqueta no se invierte.** Variable objetivo agnóstica a la dirección, más una columna de tres valores que la califique. Solo un IC50 **funcional** sobre diana de activación es contradictorio, y ahí se marca y se excluye de la sensibilidad |
+| `Potency` y `AC50` | Etiquetas genéricas de cribado, «concentración de actividad al 50% en cualquier dirección». Tratarlas como potencia agnóstica |
+| `DRD2` | No se resuelve con Ki y no hay que forzarlo. Agonista contra antagonista es otra tarea, con su propio conjunto funcional, **fuera del alcance de la fase 2** |
+| Consultar la API de ChEMBL | De acuerdo: «consultarla no es inferir, es recuperar un dato registrado que no venía en el corte». Pidió tipo de ensayo, formato BAO, puntaje de confianza, organismo y `action_type`, con caché y fecha de descarga |
+| Corte o potencia | **La potencia es la variable principal** y la clasificación se deriva aplicando el corte a la predicción continua, al final |
+| Tejido | El argumento del equipo es correcto: con 0.4% de cobertura, esa columna informa de cómo se armó el archivo. Solo para auditar los pares en conflicto |
+
+**Lo que corrigió, y conviene conservar porque es un error nuestro que ella encontró.** En escala
+`pActividad` un «> 10 µM» es censura **por la izquierda**, y el objetivo `survival:aft` de XGBoost
+está pensado para la derecha. Hay que ajustar en µM y convertir al final, verificando el signo con
+una muestra antes de procesar todo el conjunto.
+
+**Lo que pidió y el equipo no tenía.** Índice de concordancia de Harrell y Spearman, que toleran la
+censura, con RMSE solo sobre las no censuradas; para el ranking, enriquecimiento al 1% y 5%, BEDROC,
+precisión en los primeros 100 y AUPRC, con el falso positivo como el error caro; y que **la métrica
+principal quede declarada antes de ver resultados**. Añadió un techo: la reproducibilidad del IC50
+ronda 0.7 unidades logarítmicas, así que un RMSE muy por debajo sería señal de fuga y no un
+resultado. Pidió buscar y citar la fuente.
+
+**Las tres que devolvió al equipo**, con su posición pero sin decidirlas: las 88,098 mediciones
+fuera de la lista, los inactivos de DrugMatrix y qué error pesa más. En una fue explícita: los
+ensayos celulares **no son evidencia de neuroprotección por sí mismos** —BV-2 es microglía, U-251
+glioma, y un ensayo de crecimiento ahí mide citotoxicidad—, así que contarlos como actividad
+favorable premiaría compuestos tóxicos. Van como anotación de citotoxicidad, aparte.
+
