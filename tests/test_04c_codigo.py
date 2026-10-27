@@ -19,6 +19,7 @@ CUADERNO = RAIZ / "notebooks" / "04c_Regresion_actividad_huellas.ipynb"
 CUADERNO_04B = RAIZ / "notebooks" / "04b_Regresion_actividad.ipynb"
 FUNCIONES = {
     "identificadores_morgan": "src/features/huellas.py",
+    "agrupar_iguales": "src/features/huellas.py",
     "AgregarHuellas": "src/features/huellas.py",
     "poder_spearman": "src/features/seleccion.py",
     "DepuracionDescriptores": "src/features/seleccion.py",
@@ -72,7 +73,7 @@ def test_cada_funcion_mostrada_es_la_de_src(nombre, archivo, mostrado):
 
 def test_lo_que_se_ejecuta_se_importa_de_src(celdas):
     codigo = "\n".join("".join(c["source"]) for c in celdas if c["cell_type"] == "code")
-    assert "from src.features.huellas import AgregarHuellas, identificadores_morgan" in codigo
+    assert "from src.features.huellas import AgregarHuellas, agrupar_iguales, identificadores_morgan" in codigo
     assert "from src.features.seleccion import DepuracionDescriptores, SeleccionL1" in codigo
     assert "from src.evaluation.regresion import concordancia_harrell, rmse_exactas" in codigo
 

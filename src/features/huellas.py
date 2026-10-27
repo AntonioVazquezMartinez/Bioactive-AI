@@ -57,6 +57,29 @@ def identificadores_morgan(smiles, radio: int = 2) -> tuple[sparse.csr_matrix, n
     return por_molecula[inverso], identificadores
 
 
+def agrupar_iguales(huellas: sparse.csr_matrix, identificadores: np.ndarray
+                    ) -> tuple[sparse.csr_matrix, np.ndarray, list[tuple[int, ...]]]:
+    """Deja una sola columna por cada grupo de subestructuras que valen lo mismo en todas las filas.
+
+    Dos subestructuras que siempre aparecen juntas (el `S` y el `O=S` de un sulfonilo, por ejemplo)
+    son la misma variable para cualquier modelo, y si ambas entran el modelo reparte su peso entre
+    ellas de forma arbitraria. No se mira la etiqueta, y lo que es idéntico en todas las filas lo es
+    también en cualquier subconjunto, así que hacerlo una vez sobre todo el conjunto no filtra
+    información de la validación. Se queda la primera columna de cada grupo y se devuelve, para cada
+    columna conservada, la tupla con los identificadores de todas las que representa (la propia
+    primero), para poder nombrar la variable con todas sus subestructuras.
+    """
+    columnas = huellas.tocsc()
+    columnas.sort_indices()
+    grupos: dict[bytes, list[int]] = {}
+    for j in range(columnas.shape[1]):
+        grupos.setdefault(columnas.indices[columnas.indptr[j]:columnas.indptr[j + 1]].tobytes(),
+                          []).append(j)
+    conservadas = [g[0] for g in grupos.values()]
+    equivalentes = [tuple(int(i) for i in identificadores[g]) for g in grupos.values()]
+    return columnas[:, conservadas].tocsr(), identificadores[conservadas], equivalentes
+
+
 class AgregarHuellas(BaseEstimator, TransformerMixin):
     """Entrada mixta → matriz densa con las columnas `densas` y las `n_bits` huellas más frecuentes.
 
@@ -77,7 +100,7 @@ class AgregarHuellas(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         huellas = sparse.csr_matrix(X)[:, self.n_densas:]
         frecuencia = np.asarray(huellas.sum(axis=0)).ravel()
-        orden = np.lexsort((np.arange(len(frecuencia)), -frecuencia))
+        orden = np.lexsort((np.arange(len(frecuencia)), -frecuencia.astype(np.int64)))
         usadas = orden[:self.n_bits]
         self.columnas_ = usadas[frecuencia[usadas] > 0]
         return self

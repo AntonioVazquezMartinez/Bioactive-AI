@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from scipy import sparse
 
-from src.features.huellas import AgregarHuellas, identificadores_morgan
+from src.features.huellas import AgregarHuellas, agrupar_iguales, identificadores_morgan
 from src.features.molecular import SortAndSlice, a_mol
 
 SMILES = ["CCO", "CCN", "c1ccccc1O", "CC(=O)O", "c1ccccc1", "CCCCO", "CC(C)O", "c1ccncc1",
@@ -59,3 +59,29 @@ def test_con_pocas_subestructuras_no_inventa_columnas():
     X = _mixta(["CCO", "CCO"])
     t = AgregarHuellas(n_densas=3, n_bits=2048).fit(X)
     assert len(t.columnas_) == X.shape[1] - 3
+
+
+def test_agrupar_iguales_deja_una_columna_por_grupo_y_recuerda_las_otras():
+    m = sparse.csr_matrix(np.array([[1, 1, 0, 1], [0, 0, 1, 0], [1, 1, 1, 1]], dtype=np.uint8))
+    ids = np.array([10, 20, 30, 40])
+    unica, ids_u, equivalentes = agrupar_iguales(m, ids)
+    assert unica.shape == (3, 2) and list(ids_u) == [10, 30]
+    assert equivalentes == [(10, 20, 40), (30,)]
+    assert (unica.toarray() == m.toarray()[:, [0, 2]]).all()
+
+
+def test_agrupar_iguales_no_cambia_nada_si_no_hay_duplicadas():
+    m, ids = identificadores_morgan(SMILES)
+    unica, ids_u, equivalentes = agrupar_iguales(m, ids)
+    n_iguales = m.shape[1] - unica.shape[1]
+    assert sum(len(e) - 1 for e in equivalentes) == n_iguales
+    assert len(set(ids_u)) == len(ids_u)
+    dens = unica.toarray().T
+    assert len({c.tobytes() for c in dens}) == dens.shape[0]      # ya no quedan columnas iguales
+
+
+def test_frecuencia_sin_signo_no_vacia_el_vocabulario():
+    huellas, _ = identificadores_morgan(SMILES)
+    X = sparse.hstack([sparse.csr_matrix(np.zeros((len(SMILES), 2), dtype=np.uint8)),
+                       huellas.astype(np.uint8)]).tocsr()
+    assert len(AgregarHuellas(n_densas=2, n_bits=5).fit(X).columnas_) == 5
