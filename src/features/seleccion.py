@@ -19,7 +19,9 @@ from __future__ import annotations
 import numpy as np
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.linear_model import Lasso
 from sklearn.metrics import roc_auc_score
+from sklearn.preprocessing import StandardScaler
 
 
 def casi_constantes(X: np.ndarray, frecuencia_modal: float = 0.99) -> np.ndarray:
@@ -112,12 +114,43 @@ class DepuracionDescriptores(BaseEstimator, TransformerMixin):
     def fit(self, X, y):
         desc = np.asarray(X[:, :self.n_descriptores], dtype=float)
         variables = np.flatnonzero(casi_constantes(desc, self.frecuencia_modal))
+        self.quitadas_constantes_ = np.setdiff1d(np.arange(self.n_descriptores), variables)
         sub = desc[:, variables]
         en_sub = tuple(int(np.flatnonzero(variables == p)[0]) for p in self.protegidas
                        if p in variables)
         sin_redundancia = filtro_correlacion(sub, poder_spearman(sub, np.asarray(y, float)),
                                              self.umbral, en_sub)
         self.descriptores_ = variables[sin_redundancia]
+        self.quitadas_redundantes_ = variables[~sin_redundancia]
+        self.columnas_ = np.r_[self.descriptores_, np.arange(self.n_descriptores, X.shape[1])]
+        return self
+
+    def transform(self, X):
+        return X[:, self.columnas_]
+
+
+class SeleccionL1(BaseEstimator, TransformerMixin):
+    """Se queda con los descriptores a los que una penalización L1 no les lleva el peso a cero.
+
+    Actúa sobre las primeras `n_descriptores` columnas y deja pasar el resto (la diana en 0/1).
+    En cada ajuste escala los descriptores, entrena un Lasso contra el objetivo con las filas de
+    entrenamiento y conserva los de coeficiente distinto de cero. Las `protegidas` se quedan
+    siempre. `alpha` es un hiperparámetro que se fija de antemano; no se elige mirando la
+    validación.
+    """
+
+    def __init__(self, n_descriptores: int, alpha: float = 0.01, protegidas: tuple[int, ...] = ()):
+        self.n_descriptores = n_descriptores
+        self.alpha = alpha
+        self.protegidas = protegidas
+
+    def fit(self, X, y):
+        desc = np.asarray(X[:, :self.n_descriptores], dtype=float)
+        lasso = Lasso(alpha=self.alpha, max_iter=5000).fit(
+            StandardScaler().fit_transform(desc), np.asarray(y, float))
+        elegidas = set(np.flatnonzero(lasso.coef_ != 0)) | set(self.protegidas)
+        self.descriptores_ = np.array(sorted(elegidas), dtype=int)
+        self.quitadas_ = np.setdiff1d(np.arange(self.n_descriptores), self.descriptores_)
         self.columnas_ = np.r_[self.descriptores_, np.arange(self.n_descriptores, X.shape[1])]
         return self
 
