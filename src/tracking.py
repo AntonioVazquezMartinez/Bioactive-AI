@@ -26,6 +26,7 @@ scripts ponen `src/` en el path) o como `src.tracking`.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import os
@@ -44,6 +45,45 @@ import yaml
 RAIZ = Path(__file__).resolve().parents[1]
 DECISION = re.compile(r"^(C|1|2)\.\d+[a-z]?$")
 PAQUETES = ("numpy", "pandas", "scipy", "scikit-learn", "xgboost", "rdkit", "imbalanced-learn")
+BITACORA = "prueba.csv"
+
+
+def tomar_prueba(pares, *, final: bool = False, motivo: str = "", raiz: Path = RAIZ,
+                 col: str = "particion", col_estrato: str = "estrato", valor: str = "prueba"):
+    """Filtra y devuelve las filas del conjunto de prueba dejando registro en la bitácora.
+    La guarda vive en la lectura y no en las métricas porque es el único punto de salida
+    de los datos: evita que filtros exploratorios en el cuaderno miren la prueba sin aviso.
+    No bloquea una segunda corrida para permitir correcciones legítimas, pero deja registro
+    en git para que cualquier uso repetido sea visible en el diff durante la revisión.
+    """
+    if not final:
+        raise ValueError(
+            "La partición de prueba solo debe evaluarse al final con el modelo definitivo. "
+            f"Para desarrollo o validación usa: pares[pares[{col!r}] != {valor!r}]"
+        )
+    if not motivo or not motivo.strip():
+        raise ValueError("Debes especificar un 'motivo' para evaluar el conjunto de prueba.")
+    prueba = pares[pares[col] == valor]
+    if col_estrato in prueba:
+        conteo = prueba[col_estrato].value_counts()
+        print(f"Evaluando partición de prueba ({len(prueba):,} filas):")
+        for estrato, n in conteo.items():
+            print(f"  - {estrato}: {n:,}")
+    bitacora = Path(raiz) / "experimentos" / BITACORA
+    bitacora.parent.mkdir(parents=True, exist_ok=True)
+    existe = bitacora.exists()
+    with open(bitacora, mode="a", encoding="utf-8", newline="") as f:
+        escritor = csv.writer(f)
+        if not existe:
+            escritor.writerow(["fecha", "autor", "commit", "filas", "motivo"])
+        escritor.writerow([
+            date.today().isoformat(),
+            _autor(Path(raiz)),
+            _git("rev-parse", "--short", "HEAD", raiz=Path(raiz)) or "",
+            len(prueba),
+            motivo.strip(),
+        ])
+    return prueba
 
 
 def sha256(ruta: Path) -> str:
