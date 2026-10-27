@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import numpy as np
 from scipy.stats import rankdata
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.metrics import roc_auc_score
 
 
@@ -76,3 +77,49 @@ def filtro_correlacion(X: np.ndarray, poder: np.ndarray, umbral: float = 0.95,
                     descartar.add(i)
                     break
     return np.array([i not in descartar for i in range(X.shape[1])])
+
+
+def poder_spearman(X: np.ndarray, y: np.ndarray) -> np.ndarray:
+    """|Spearman| de cada columna contra un objetivo continuo: la versión de `poder_univariado`
+    para una regresión. Una columna constante da 0."""
+    rx = np.apply_along_axis(rankdata, 0, X)
+    ry = rankdata(y)
+    rx = rx - rx.mean(axis=0)
+    ry = ry - ry.mean()
+    den = np.sqrt((rx ** 2).sum(axis=0) * (ry ** 2).sum())
+    with np.errstate(invalid="ignore", divide="ignore"):
+        r = (rx * ry[:, None]).sum(axis=0) / den
+    return np.abs(np.nan_to_num(r))
+
+
+class DepuracionDescriptores(BaseEstimator, TransformerMixin):
+    """Los dos filtros de siempre, pero aprendidos con las filas de entrenamiento de cada pliegue.
+
+    Actúa sobre las primeras `n_descriptores` columnas y deja pasar el resto (la diana en 0/1).
+    Quita las casi constantes (un valor reúne `frecuencia_modal` de las filas) y, de cada par con
+    |Spearman| mayor que `umbral`, la que menos se relaciona con el objetivo. Las `protegidas`
+    (posiciones dentro de los descriptores) ganan cualquier par. Es el criterio de
+    `casi_constantes` y `filtro_correlacion`; lo que cambia es dónde se ajusta.
+    """
+
+    def __init__(self, n_descriptores: int, protegidas: tuple[int, ...] = (),
+                 frecuencia_modal: float = 0.99, umbral: float = 0.95):
+        self.n_descriptores = n_descriptores
+        self.protegidas = protegidas
+        self.frecuencia_modal = frecuencia_modal
+        self.umbral = umbral
+
+    def fit(self, X, y):
+        desc = np.asarray(X[:, :self.n_descriptores], dtype=float)
+        variables = np.flatnonzero(casi_constantes(desc, self.frecuencia_modal))
+        sub = desc[:, variables]
+        en_sub = tuple(int(np.flatnonzero(variables == p)[0]) for p in self.protegidas
+                       if p in variables)
+        sin_redundancia = filtro_correlacion(sub, poder_spearman(sub, np.asarray(y, float)),
+                                             self.umbral, en_sub)
+        self.descriptores_ = variables[sin_redundancia]
+        self.columnas_ = np.r_[self.descriptores_, np.arange(self.n_descriptores, X.shape[1])]
+        return self
+
+    def transform(self, X):
+        return X[:, self.columnas_]

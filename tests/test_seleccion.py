@@ -50,3 +50,35 @@ def test_las_protegidas_ganan_el_par_aunque_separen_menos():
     poder = np.array([0.1, 0.4])
     assert list(filtro_correlacion(X, poder)) == [False, True]
     assert list(filtro_correlacion(X, poder, protegidas=(0,))) == [True, False]
+
+
+def test_depuracion_aprende_con_el_ajuste_y_deja_pasar_la_diana():
+    from src.features.seleccion import DepuracionDescriptores
+
+    rng = np.random.default_rng(0)
+    n = 2000
+    y = rng.normal(size=n)
+    util = y + rng.normal(size=n)
+    X = np.column_stack([
+        util,                                   # 0: informativa
+        util + 0.01 * rng.normal(size=n),       # 1: casi duplicada de la 0
+        np.r_[np.ones(n - 5), np.zeros(5)],     # 2: casi constante (99.75%)
+        rng.normal(size=n),                     # 3: ruido, pero distinta
+        (rng.random(n) > .5).astype(float),     # 4: diana en 0/1
+    ])
+    t = DepuracionDescriptores(n_descriptores=4).fit(X, y)
+    assert list(t.columnas_) in ([0, 3, 4], [1, 3, 4])    # una de las dos duplicadas
+    assert t.transform(X).shape == (n, 3)
+
+
+def test_depuracion_protege_las_columnas_indicadas():
+    from src.features.seleccion import DepuracionDescriptores
+
+    rng = np.random.default_rng(1)
+    n = 2000
+    y = rng.normal(size=n)
+    a = y + rng.normal(size=n)
+    X = np.column_stack([a + 0.01 * rng.normal(size=n), a])   # la 0 es peor que la 1
+    sin = DepuracionDescriptores(n_descriptores=2).fit(X, y)
+    con = DepuracionDescriptores(n_descriptores=2, protegidas=(0,)).fit(X, y)
+    assert len(sin.columnas_) == 1 and list(con.columnas_) == [0]
