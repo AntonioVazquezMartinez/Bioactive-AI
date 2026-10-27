@@ -31,3 +31,10 @@ partición.
 recién creada ensucia el árbol para la corrida que venga después y la hace registrar
 `arbol_sucio: true` sin que nadie haya tocado el código. Al retropoblar las dos mediciones de la
 fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran en `false`.
+
+**La partición de prueba solo sale por `tomar_prueba`** (`src/tracking.py`). Exige `final=True` y un
+`motivo`, imprime cuántas filas hay por estrato y agrega una línea a `experimentos/prueba.csv`
+(fecha, autor, commit, filas, motivo). No impide una segunda lectura, porque a veces hay que
+corregir una corrida; la deja a la vista en el `git diff` del PR. Para desarrollo se filtra con
+`pares[pares["particion"] != "prueba"]`. Hoy la guarda solo protege a quien la llama: el 04b
+todavía filtra a mano, y el primer cuaderno que la usa es el 05b.
