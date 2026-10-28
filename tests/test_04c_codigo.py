@@ -93,13 +93,33 @@ def test_medir_es_la_del_04b():
     assert _medir(CUADERNO) == _medir(CUADERNO_04B)
 
 
-def test_los_modelos_son_los_del_04b(celdas):
-    """Los seis modelos y sus hiperparámetros se copian del 04b: la comparación depende de eso."""
-    def modelos(ruta):
-        for c in _celdas(ruta):
-            fuente = "".join(c["source"])
-            if c["cell_type"] == "code" and "MODELOS = {" in fuente:
-                bloque = fuente.split("MODELOS = {", 1)[1].split("\n}", 1)[0]
-                return re.sub(r"\s+", "", bloque)
-        raise AssertionError(f"{ruta.name} no define MODELOS")
-    assert modelos(CUADERNO) == modelos(CUADERNO_04B)
+def _modelos(ruta: Path) -> dict[str, str]:
+    """`MODELOS` como nombre → definición sin espacios, ignorando los comentarios del bloque."""
+    for c in _celdas(ruta):
+        fuente = "".join(c["source"])
+        if c["cell_type"] == "code" and "MODELOS = {" in fuente:
+            bloque = fuente.split("MODELOS = {", 1)[1].split("\n}", 1)[0]
+            pares = {}
+            for linea in bloque.splitlines():
+                if not linea.strip() or linea.strip().startswith("#"):
+                    continue
+                nombre, definicion = linea.split(":", 1)
+                pares[nombre.strip().strip('"')] = re.sub(r"\s+", "", definicion).rstrip(",")
+            return pares
+    raise AssertionError(f"{ruta.name} no define MODELOS")
+
+
+def test_los_modelos_del_04b_estan_iguales_en_el_04c():
+    """Cada modelo del 04b se copia con sus hiperparámetros: de eso depende que el brazo de control
+    repita la corrida registrada, y que cada fila de la comparativa sea un par.
+
+    El 04c **puede añadir** modelos y no puede cambiar ninguno de los seis. `linear_svr` está de más
+    a propósito: el SVR con núcleo no cabe en los brazos anchos (un solo ajuste pasó de 27 minutos),
+    así que la familia de márgenes se cubre ahí con el núcleo lineal, y para que sea comparable se
+    corre también en los tres brazos estrechos. No tiene par en el 04b, y la lectura lo dice.
+    """
+    del_04c, del_04b = _modelos(CUADERNO), _modelos(CUADERNO_04B)
+    faltan = sorted(set(del_04b) - set(del_04c))
+    assert not faltan, f"el 04c perdió modelos del 04b: {faltan}"
+    distintos = {n: (del_04b[n], del_04c[n]) for n in del_04b if del_04c[n] != del_04b[n]}
+    assert not distintos, f"definiciones que difieren del 04b: {distintos}"
