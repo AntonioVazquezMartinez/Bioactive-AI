@@ -228,6 +228,8 @@ En MCC la elección de modelo mueve 1.5 puntos entre la logística y el boosting
 
 **Qué pasó.** `Ipc` alcanza ~1e41, finito en float64 pero fuera de float32, y sklearn convierte internamente; `isfinite` no lo detecta y costó una ejecución fallida, así que se descarta. El fingerprint plegado además mezcla subestructuras en un mismo bit; por eso se evalúa **Sort & Slice**, sin colisiones y con el vocabulario aprendido solo del entrenamiento. Con 2048 columnas cubre el 84.8% de las subestructuras del entrenamiento y el 68.0% de las del conjunto de prueba (el vocabulario se aprende solo con el entrenamiento, y la prueba trae los andamios raros). Esa brecha de 16.8 puntos crece con el vocabulario: 13.6 con 512 columnas y 17.8 con 4096. No es la cobertura en validación de la tabla de más abajo (71.0% con 2048), que se mide dentro de la validación cruzada.
 
+**Lo que se ejecutó hasta ahora.** Los modelos de los Avances 3, 4 y 4b se entrenaron solo con los descriptores: el cargador (`src/models/tareas.py`) usa `descriptores` por defecto y nadie lo cambió, no fue una decisión. La única comparación con huellas es una corrida de Random Forest del Avance 2 (MCC 0.594 con descriptores y Morgan contra 0.558 con descriptores), dentro de la dispersión entre evaluaciones. El cuaderno `04c_Regresion_actividad_huellas` las mide en la fase 2 con los seis modelos del 04b, con el vocabulario reaprendido en cada pliegue y una regla de mejora cerrada antes de correr (umbral 0.007, la mayor dispersión del 04b, y 12 de 15 evaluaciones) pero fijada después de explorar un pliegue, así que no está pre-registrada; la fase 1 y los ensambles quedan para el Avance 5 (#152).
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
