@@ -24,6 +24,7 @@ FUNCIONES = {
     "poder_spearman": "src/features/seleccion.py",
     "DepuracionDescriptores": "src/features/seleccion.py",
     "SeleccionL1": "src/features/seleccion.py",
+    "MediaPorDiana": "src/models/pisos.py",
 }
 
 
