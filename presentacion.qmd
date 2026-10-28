@@ -78,9 +78,9 @@ Un archivo por etapa, y uno que dice qué se mide en la segunda. **Cada tramo qu
 %%{init: {"themeVariables": {"fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "16px"}}}%%
 flowchart LR
     A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
-    A --> C["Fingerprint ECFP4<br/>2,048 bits"]
+    A -.-> C["Fingerprint ECFP4<br/>2,048 bits<br/>(en evaluación)"]
     B --> D["Tabla de<br/>características"]
-    C --> D
+    C -.-> D
     D --> E["Etapa 1<br/>permeabilidad"]
     D --> F["Etapa 2<br/>actividad"]
     E --> G["Priorización con<br/>atribución a fragmentos"]
@@ -202,7 +202,7 @@ El que casi rompe todo: `Ipc` llega a **10⁴¹**. Es finito en float64, pero no
 
 Cuidado con el nombre: se genera con `radius=2` porque el número del nombre es el **diámetro**, no el radio.
 
-Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. Se usan juntos.
+Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. La decisión es usarlos juntos, y conviene separarla de lo que ha corrido: **los modelos entregados hasta ahora usan solo descriptores**. La comparación de las dos representaciones, con el vocabulario de fragmentos aprendido dentro de cada pliegue, está en curso.
 :::
 :::
 
