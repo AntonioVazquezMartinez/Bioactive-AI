@@ -2,7 +2,8 @@
 
 Mismo criterio que la prueba del 04c: lo mostrado y lo importado se comparan por su árbol
 sintáctico, sin docstrings. Además el 03c no puede redefinir los modelos: tienen que venir de
-`src/models/baseline.py`, porque su brazo de control debe repetir el 03.
+`src/models/alternativos.py`, porque su brazo de control debe repetir la corrida registrada de los
+seis modelos del 04.
 """
 
 import ast
@@ -72,11 +73,13 @@ def test_lo_que_se_ejecuta_se_importa_de_src(celdas):
     codigo = "\n".join("".join(c["source"]) for c in celdas if c["cell_type"] == "code")
     assert "from src.features.huellas import AgregarHuellas, agrupar_iguales, identificadores_morgan" in codigo
     assert "from src.features.seleccion import DepuracionDescriptores, SeleccionL1" in codigo
-    assert "from src.models import canalizaciones, cargar" in codigo
+    assert "from src.models import cargar, seleccion" in codigo
 
 
-def test_los_modelos_son_los_del_03(celdas):
-    """El cuaderno no define sus propios modelos: usa `canalizaciones()` del baseline."""
+def test_los_modelos_son_los_seis_del_04(celdas):
+    """El cuaderno no define sus propios modelos: usa `seleccion()` del catálogo, con las seis claves del 04."""
     codigo = "\n".join("".join(c["source"]) for c in celdas if c["cell_type"] == "code")
-    for ajeno in ("RandomForestClassifier(", "LogisticRegression(", "HistGradientBoostingClassifier("):
-        assert ajeno not in codigo, f"el 03c define {ajeno} en vez de usar el baseline"
+    for ajeno in ("RandomForestClassifier(", "LogisticRegression(", "HistGradientBoostingClassifier(",
+                  "KNeighborsClassifier(", "MLPClassifier(", "SVC("):
+        assert ajeno not in codigo, f"el 03c define {ajeno} en vez de usar el catálogo"
+    assert 'CLAVES = ("logistica", "arbol", "knn", "bayes", "svm_rbf", "mlp")' in codigo
