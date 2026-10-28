@@ -19,14 +19,25 @@ class MediaPorDiana(BaseEstimator, RegressorMixin):
 
     `columnas` son las posiciones de las columnas de diana (una por diana, con 1 en la que
     corresponde y 0 en las demás). Una diana que no aparece en las filas de ajuste recibe la
-    media de todas ellas.
+    media de todas ellas. Si esas columnas no son un one-hot (cada fila con un solo 1 y el
+    resto 0) revienta, porque con las posiciones equivocadas el piso devolvería la media global
+    en todas las filas: una cifra creíble y falsa.
     """
 
     def __init__(self, columnas: tuple[int, ...]):
         self.columnas = columnas
 
-    def fit(self, X, y):
+    def _dianas(self, X):
         diana = np.asarray(X)[:, list(self.columnas)]
+        if not (np.isin(diana, (0, 1)).all() and (diana.sum(axis=1) == 1).all()):
+            raise ValueError(
+                "las columnas de diana no son un one-hot: cada fila debe tener un solo 1 y el "
+                "resto 0; revisa las posiciones que se le pasaron"
+            )
+        return diana
+
+    def fit(self, X, y):
+        diana = self._dianas(X)
         y = np.asarray(y, dtype=float)
         self.media_global_ = float(y.mean())
         n = diana.sum(axis=0)
@@ -35,8 +46,4 @@ class MediaPorDiana(BaseEstimator, RegressorMixin):
         return self
 
     def predict(self, X):
-        diana = np.asarray(X)[:, list(self.columnas)]
-        sin_diana = diana.sum(axis=1) == 0
-        p = diana @ self.medias_
-        p[sin_diana] = self.media_global_
-        return p
+        return self._dianas(X) @ self.medias_
