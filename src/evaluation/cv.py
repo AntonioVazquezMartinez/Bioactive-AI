@@ -47,17 +47,33 @@ MIN_MINORITARIA = 20
 
 
 def orientar_minoritaria(y: np.ndarray, p: np.ndarray) -> tuple[np.ndarray, np.ndarray, bool]:
-    """Devuelve `(y, p)` vistos desde la clase menos frecuente, y si hubo que voltear.
+    """Devuelve `(y, puntaje)` vistos desde la clase menos frecuente, y si hubo que voltear.
 
     Cuál es la minoritaria cambia entre fases —en permeabilidad es BBB−, en
     actividad es la inactiva— y entre estratos, así que se decide aquí sobre los
     datos y no se fija por convención. Vive en una función propia porque la usan
     el AUPRC y la curva de precisión-exhaustividad, y si cada uno la resolviera a
     su manera la curva podría dibujar una clase distinta de la que mide la tabla.
+
+    **Al voltear devuelve `-p` y no `1 - p`, y el segundo valor deja de ser una
+    probabilidad: es un puntaje que solo sirve para ordenar.** Los dos invierten el
+    orden, pero `1 - p` lo hace perdiendo resolución y `-p` no, porque negar es exacto
+    en punto flotante y restar no. Con un modelo que satura —`GaussianNB` en la fase 1
+    deja la mitad de las filas en `p == 1.0` exacto— la resta aplasta en empates las
+    filas de `p` más cercano a cero, que son justamente las que el modelo da por
+    minoritarias con más confianza y las que encabezan el orden que mide el AUPRC. En
+    el 03c eso le quitaba 0.104 de AUPRC a `bayes` y 0.027 de AUROC, y hacía que la
+    cifra no se pudiera comparar entre máquinas: en Linux la resta no colapsaba y en
+    macOS sí. La prueba de que `-p` es lo correcto es una identidad que tiene que
+    cumplirse: el AUROC no depende de la orientación, así que `roc_auc_score(1-y, -p)`
+    es igual a `roc_auc_score(y, p)`, y con `1 - p` no lo era.
+
+    Quien necesite una probabilidad para umbralizar —la matriz de confusión, por
+    ejemplo— tiene que usar `p` sin voltear; estas dos salidas son para ordenar.
     """
     if y.mean() <= 0.5:
         return y, p, False
-    return 1 - y, 1 - p, True
+    return 1 - y, -p, True
 
 
 def _auprc_minoritaria(y: np.ndarray, p: np.ndarray) -> float:

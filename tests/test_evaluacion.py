@@ -187,3 +187,46 @@ def test_la_tabla_no_se_rompe_si_la_principal_esta_entre_las_otras(datos):
     tabla = tabla_comparativa(res, principal="auroc")
     assert list(tabla.columns).count("auroc") == 1
     assert list(tabla.columns)[:2] == ["auroc", "desv"]
+
+
+def test_voltear_a_la_minoritaria_no_pierde_resolucion():
+    """`1 - p` aplastaba en empates las filas más confiadas de la clase minoritaria.
+
+    Un modelo que satura deja `p` tan cerca de 0 que `1 - p` redondea a 1.0 exacto, y
+    esas filas son las que el modelo da por minoritarias con más confianza. En el 03c
+    eso le quitaba 0.104 de AUPRC a `bayes` y hacía que la cifra cambiara entre Linux
+    y macOS. Negar es exacto, restar no.
+    """
+    from src.evaluation.cv import orientar_minoritaria
+
+    # Mayoritaria la clase 1, así que voltea. Las tres primeras filas son clase 0 con
+    # probabilidades distintas pero por debajo de la resolución de `1 - p`.
+    y = np.array([0, 0, 0, 1, 1, 1, 1])
+    p = np.array([1e-20, 1e-18, 1e-17, 0.9, 0.95, 1.0, 1.0])
+    ym, puntaje, volteada = orientar_minoritaria(y, p)
+
+    assert volteada
+    assert np.array_equal(ym, 1 - y)
+    assert len(np.unique(1 - p)) < len(np.unique(p))        # la resta sí colapsaba
+    assert len(np.unique(puntaje)) == len(np.unique(p))     # negar no
+
+
+def test_el_auroc_no_depende_de_la_orientacion():
+    """La identidad que `1 - p` rompía: el AUROC es el mismo visto desde cualquier clase.
+
+    Es la comprobación que delata la pérdida de resolución sin tener que saber de
+    punto flotante, porque tiene que cumplirse por definición.
+    """
+    from sklearn.metrics import roc_auc_score
+
+    from src.evaluation.cv import orientar_minoritaria
+
+    # Las dos filas de clase 0 y una de clase 1 tienen `p` por debajo de la resolución
+    # de la resta, así que `1 - p` las empata entre sí y mezcla las dos clases; el orden
+    # de `p` las separa bien. Con `-p` el AUROC sale 1.0, igual que sin voltear.
+    y = np.array([0, 0, 1, 1, 1, 1, 1])
+    p = np.array([1e-20, 1e-18, 1e-17, 0.9, 0.9, 0.9, 0.9])
+    ym, puntaje, _ = orientar_minoritaria(y, p)
+
+    assert roc_auc_score(ym, puntaje) == pytest.approx(roc_auc_score(y, p))
+    assert roc_auc_score(ym, 1 - p) < roc_auc_score(y, p)   # lo que hacía antes
