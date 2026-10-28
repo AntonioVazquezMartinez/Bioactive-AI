@@ -193,9 +193,10 @@ def test_voltear_a_la_minoritaria_no_pierde_resolucion():
     """`1 - p` aplastaba en empates las filas más confiadas de la clase minoritaria.
 
     Un modelo que satura deja `p` tan cerca de 0 que `1 - p` redondea a 1.0 exacto, y
-    esas filas son las que el modelo da por minoritarias con más confianza. En el 03c
-    eso le quitaba 0.104 de AUPRC a `bayes` y hacía que la cifra cambiara entre Linux
-    y macOS. Negar es exacto, restar no.
+    esas filas son las que el modelo da por minoritarias con más confianza: quedan
+    empatadas en la cima del orden, junto con filas de la mayoritaria igual de
+    pequeñas. En el 03c eso le quitaba 0.104 de AUPRC a `bayes`. Negar es exacto,
+    restar no.
     """
     from src.evaluation.cv import orientar_minoritaria
 
