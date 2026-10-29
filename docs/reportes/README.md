@@ -46,9 +46,20 @@ Tres cosas que deja establecidas, y que condicionan cómo se leen las cifras sig
 
 La prueba reservada no se ha mirado.
 
+## Avance 4 · Modelos alternativos
+
+Entregado el 25 de octubre: [`notebooks/04_Models.ipynb`](../../notebooks/04_Models.ipynb). Seis familias **sin ensamble** en las dos fases, ordenadas por la métrica principal, con los tiempos de ajuste y el ajuste fino de las dos mejores.
+
+- **El modelo individual final de la fase 1 es el SVM con núcleo RBF, sin afinar**, con 0.703 de MCC. No gana por distinguirse: entre los dos afinados la diferencia es menor que la dispersión entre evaluaciones, así que gana por consistencia. Afinarlo no mejoró nada, y eso es un resultado: su `C` no tiene un óptimo estable, se acomoda a cada partición.
+- **En la fase 2 el objetivo es la potencia, no una clase.** El corte de 10 µM no significa lo mismo en cada diana —deja a `LRRK2` en 98.1% de activos y a `NFE2L2` en 50.7%— y clasificar tira el orden dentro de cada clase, así que la fase 2 es una regresión con censura ([2.9](../decisiones.md#d2-9)) y la tabla de clasificación queda solo como referencia. Mejor concordancia de Harrell: kNN con 0.739.
+- **La misma comparativa en dos máquinas da las mismas cifras a tres decimales, pero no los mismos tiempos** (el SVR, 247 s en una y 51 s en otra). La columna de tiempos solo se compara dentro de una misma corrida.
+
+Dos análisis acompañantes miden qué añaden las huellas moleculares Sort & Slice, y la respuesta **depende de la fase** ([1.3](../decisiones.md#d1-3)): en la [fase 2](../../notebooks/04c_Regresion_actividad_huellas.ipynb) mejoran a cinco de los seis modelos en las 15 evaluaciones y en buena medida *sustituyen* a los descriptores; en la [fase 1](../../notebooks/03c_Permeabilidad_huellas.ipynb) no mejoran a nadie y ensanchan la brecha entre entrenamiento y validación. En las dos fases la ganancia se concentra donde el proyecto no la necesita: en los pares que solo tiene ChEMBL y en los compuestos sin equivalente natural.
+
+La prueba reservada sigue sin mirarse. Se toca una sola vez, en el Avance 5.
+
 ## Próximas entregas
 
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
-| Avance 4 · Modelos alternativos | 25 de octubre | Ingeniería del modelo (b) |
 | Avance 5 · Ensambles | 1 de noviembre | Ingeniería del modelo (c) |
