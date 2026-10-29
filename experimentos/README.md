@@ -32,6 +32,20 @@ recién creada ensucia el árbol para la corrida que venga después y la hace re
 `arbol_sucio: true` sin que nadie haya tocado el código. Al retropoblar las dos mediciones de la
 fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran en `false`.
 
+**La partición de prueba solo sale por `tomar_prueba`** (`src/tracking.py`). Exige `final=True` y un
+`motivo`, imprime cuántas filas hay por estrato y agrega una línea a `experimentos/prueba.csv`
+(fecha, autor, commit, filas, motivo). No impide una segunda lectura, porque a veces hay que
+corregir una corrida; la deja a la vista en el `git diff` del PR. Para desarrollo se filtra con
+`pares[pares["particion"] != "prueba"]`. Hoy la guarda solo protege a quien la llama: el 04b
+todavía filtra a mano, y el primer cuaderno que la usa es el 05b.
+
+**Y la bitácora cae en el aviso de arriba, así que el orden importa:** `prueba.csv` no está
+versionado hasta que alguien lo escriba, así que la primera llamada a `tomar_prueba` ensucia el
+árbol. Llamarla **dentro** del `with Corrida(...)` está bien, porque el entorno se captura al
+entrar al contexto; llamarla antes hace que la corrida registre `arbol_sucio: true` sin que nadie
+haya tocado el código. No se arregla ignorando el archivo: que una reejecución cante en el
+`git diff` es justamente para lo que la bitácora existe.
+
 ## El AUPRC de la minoritaria de antes del arreglo de `orientar_minoritaria`
 
 Hasta `fix/auprc-minoritaria`, el AUPRC de la clase minoritaria se medía puntuando con `1 - p`,
