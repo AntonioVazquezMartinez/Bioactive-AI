@@ -47,17 +47,39 @@ MIN_MINORITARIA = 20
 
 
 def orientar_minoritaria(y: np.ndarray, p: np.ndarray) -> tuple[np.ndarray, np.ndarray, bool]:
-    """Devuelve `(y, p)` vistos desde la clase menos frecuente, y si hubo que voltear.
+    """Devuelve `(y, puntaje)` vistos desde la clase menos frecuente, y si hubo que voltear.
 
     Cuál es la minoritaria cambia entre fases —en permeabilidad es BBB−, en
     actividad es la inactiva— y entre estratos, así que se decide aquí sobre los
     datos y no se fija por convención. Vive en una función propia porque la usan
     el AUPRC y la curva de precisión-exhaustividad, y si cada uno la resolviera a
     su manera la curva podría dibujar una clase distinta de la que mide la tabla.
+
+    **Al voltear devuelve `-p` y no `1 - p`, y el segundo valor deja de ser una
+    probabilidad: es un puntaje que solo sirve para ordenar.** Los dos invierten el
+    orden, pero `1 - p` lo hace perdiendo resolución y `-p` no, porque negar es exacto
+    en punto flotante y restar no.
+
+    El daño cae donde más pesa. Toda `p` menor que la mitad del épsilon de la máquina
+    da `1 - p == 1.0`, así que las filas que el modelo considera minoritarias con más
+    confianza quedan empatadas **en la cima** del orden, y en el mismo empate entran
+    filas de la clase mayoritaria con `p` igual de pequeña. La precisión de los
+    primeros puestos se desploma y el AUPRC con ella. Solo pasa con modelos que
+    saturan: `GaussianNB` es el caso de este repositorio.
+
+    La prueba de que `-p` es lo correcto no exige saber de punto flotante, es una
+    identidad que tiene que cumplirse: el AUROC no depende de la orientación, así que
+    `roc_auc_score(1-y, -p)` tiene que dar lo mismo que `roc_auc_score(y, p)`. Con
+    `1 - p` no lo daba. `tests/test_evaluacion.py` ata eso y la pérdida de resolución.
+
+    Esto nunca afectó al AUROC de la tabla, que se calcula con `p` sin voltear y no
+    pasa por aquí; movía solo el AUPRC. Y quien necesite una probabilidad para
+    umbralizar —la matriz de confusión, por ejemplo— tiene que usar `p` sin voltear:
+    estas dos salidas son para ordenar.
     """
     if y.mean() <= 0.5:
         return y, p, False
-    return 1 - y, 1 - p, True
+    return 1 - y, -p, True
 
 
 def _auprc_minoritaria(y: np.ndarray, p: np.ndarray) -> float:
