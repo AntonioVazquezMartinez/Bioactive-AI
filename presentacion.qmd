@@ -78,7 +78,7 @@ Un archivo por etapa, y uno que dice qué se mide en la segunda. **Cada tramo qu
 %%{init: {"themeVariables": {"fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "16px"}}}%%
 flowchart LR
     A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
-    A -.-> C["Fingerprint ECFP4<br/>2,048 bits<br/>(en evaluación)"]
+    A -.-> C["Fingerprint ECFP4<br/>2,048 bits<br/>(no en los entregados)"]
     B --> D["Tabla de<br/>características"]
     C -.-> D
     D --> E["Etapa 1<br/>permeabilidad"]
@@ -202,7 +202,9 @@ El que casi rompe todo: `Ipc` llega a **10⁴¹**. Es finito en float64, pero no
 
 Cuidado con el nombre: se genera con `radius=2` porque el número del nombre es el **diámetro**, no el radio.
 
-Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. La decisión es usarlos juntos, y conviene separarla de lo que ha corrido: **los modelos entregados hasta ahora usan solo descriptores**. La comparación de las dos representaciones, con el vocabulario de fragmentos aprendido dentro de cada pliegue, está en curso.
+Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. La decisión es usarlos juntos, y conviene separarla de lo que ha corrido: **los modelos entregados hasta ahora usan solo descriptores**.
+
+La comparación de las dos representaciones ya está medida, con el vocabulario de fragmentos aprendido dentro de cada pliegue, y **da resultados opuestos en las dos fases**: en la actividad los fragmentos mejoran a cinco de los seis modelos que los reciben, y en la permeabilidad no mejoran a ninguno. Tiene sentido: la permeabilidad depende de propiedades de la molécula entera —TPSA y los donadores de hidrógeno dominan—, y la actividad, de qué fragmento se une a qué diana.
 :::
 :::
 
