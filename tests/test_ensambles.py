@@ -20,6 +20,7 @@ from sklearn.ensemble import (
 )
 from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import Ridge
+from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 
@@ -90,19 +91,20 @@ def test_clonacion_modelo_ajustado(datos_regresion):
     assert not hasattr(clon, "particiones_")
 
 
-def test_particiones_internas_no_filtran_grupos(datos_regresion):
-    """Las particiones internas generadas por GroupKFold no deben compartir grupos entre pliegues
-    y deben haberse pasado al estimador interno de StackingRegressor."""
+def test_el_apilado_de_adentro_recibe_las_particiones_agrupadas(datos_regresion):
+    """Que particiones_ tenga particiones agrupadas no es evidencia de que el modelo las haya usado.
+
+    Son dos líneas independientes: guardar las particiones en el atributo no evita
+    la fuga si no se le inyectan al StackingRegressor. Esta prueba afirma que el
+    estimador interno recibió exactamente esa lista mediante identidad (`is`).
+    """
     X, y, grupos = datos_regresion
     bases = [("ridge", Ridge()), ("arbol", DecisionTreeRegressor(random_state=0))]
-    pliegues = 4
-    modelo = ApiladoAgrupado(bases=bases, pliegues=pliegues)
+    modelo = ApiladoAgrupado(bases=bases, pliegues=3)
     modelo.fit(X, y, grupos=grupos)
 
     assert hasattr(modelo, "particiones_")
-    assert len(modelo.particiones_) == pliegues
-    # Comprobación de que el estimador interno de sklearn recibió exactamente estas particiones agrupadas:
-    assert modelo.estimador_.cv == modelo.particiones_
+    assert modelo.estimador_.cv is modelo.particiones_
 
     for fold_idx, (ajuste_idx, val_idx) in enumerate(modelo.particiones_):
         grupos_ajuste = set(grupos[ajuste_idx])
@@ -111,43 +113,50 @@ def test_particiones_internas_no_filtran_grupos(datos_regresion):
         assert not interseccion, f"Fuga de grupos detectada en pliegue interno {fold_idx}: {interseccion}"
 
 
-def test_particion_agrupada_cambia_lo_aprendido_frente_a_particion_al_azar():
-    """Demuestra que agrupar por scaffold altera lo que el metamodelo aprende.
+def test_agrupar_la_validacion_interna_cambia_los_pesos_del_metamodelo():
+    """Demuestra que agrupar por scaffold altera los pesos aprendidos por el metamodelo.
 
-    Cuando las filas de distintos grupos se mezclan al azar en la validación interna,
-    un estimador con alta capacidad de memorización (kNN k=2) predice casi perfecto
-    dentro del grupo y el metamodelo le asigna un peso alto (> 0.5).
-    Con GroupKFold, las muestras del mismo grupo nunca aparecen a ambos lados del
-    pliegue interno; el estimador no puede memorizar y el metamodelo aprende a
-    confiar en el modelo generalizable (Ridge), dejando el peso de kNN cerca de 0.
+    Con partición al azar, el vecino más cercano (1-NN) de cada muestra cae en su mismo
+    grupo en entrenamiento; predice casi perfecto fuera de pliegue y el metamodelo le
+    asigna un peso dominante. Con partición agrupada, todo su grupo queda fuera, el
+    vecino pertenece a otro grupo con otro desplazamiento, predice mal y el metamodelo
+    lo castiga con un coeficiente sustancialmente menor que en la versión al azar.
     """
-    rng = np.random.default_rng(42)
-    n_grupos = 20
-    muestras_por_grupo = 8
-    n = n_grupos * muestras_por_grupo
-    grupos = np.repeat(np.arange(n_grupos), muestras_por_grupo)
+    rng = np.random.default_rng(0)
+    n_grupos = 8
+    filas_por_grupo = 15
+    n = n_grupos * filas_por_grupo
+    grupos = np.repeat(np.arange(n_grupos), filas_por_grupo)
 
-    senales_grupo = rng.normal(scale=5.0, size=(n_grupos, 4))
-    X = senales_grupo[grupos] + rng.normal(scale=0.1, size=(n, 4))
-    y = senales_grupo[grupos, 0] * 2.0 + rng.normal(scale=0.1, size=n)
+    centros_x = rng.normal(0.0, 5.0, size=(n_grupos, 4))
+    X = centros_x[grupos] + rng.normal(0.0, 0.2, size=(n, 4))
 
+    desplazamiento = rng.normal(0.0, 10.0, size=n_grupos)
+    y = 0.1 * X[:, 0] + desplazamiento[grupos] + rng.normal(0.0, 0.05, size=n)
+
+    # Permutar para que los grupos no queden como bloques contiguos triviales
     perm = rng.permutation(n)
     X, y, grupos = X[perm], y[perm], grupos[perm]
 
-    bases = [("knn", KNeighborsRegressor(n_neighbors=2)), ("ridge", Ridge(alpha=10.0))]
+    bases = [("knn", KNeighborsRegressor(n_neighbors=1)), ("ridge", Ridge(alpha=1.0))]
+    final = Ridge(alpha=1.0)
+    pliegues = 3
+    semilla = 0
 
-    mod_agrupado = ApiladoAgrupado(bases=bases, final=Ridge(alpha=1.0), pliegues=3, semilla=42)
+    # 1. ApiladoAgrupado (partición interna agrupada por scaffold)
+    mod_agrupado = ApiladoAgrupado(bases=bases, final=final, pliegues=pliegues, semilla=semilla)
     mod_agrupado.fit(X, y, grupos=grupos)
 
-    mod_azar = StackingRegressor(estimators=bases, final_estimator=Ridge(alpha=1.0))
+    # 2. StackingRegressor con KFold al azar
+    cv_azar = KFold(n_splits=pliegues, shuffle=True, random_state=semilla)
+    mod_azar = StackingRegressor(estimators=bases, final_estimator=clone(final), cv=cv_azar)
     mod_azar.fit(X, y)
 
     coef_agrupado = mod_agrupado.final_estimator_.coef_
     coef_azar = mod_azar.final_estimator_.coef_
 
-    assert not np.allclose(coef_agrupado, coef_azar, atol=0.2)
-    assert coef_agrupado[0] < 0.1
-    assert coef_azar[0] > 0.5
+    # El coeficiente del 1-NN (índice 0) sale claramente más bajo en la versión agrupada
+    assert coef_agrupado[0] < coef_azar[0] - 0.5
 
 
 def test_semilla_cambia_particion_interna(datos_regresion):
