@@ -5,6 +5,11 @@ stacking use los mejores individuales del Avance 4. Aquí están armados como
 canalizaciones del arnés, igual que los individuales, para que entren a la misma
 tabla con los mismos pliegues.
 
+El nombre lleva la fase a propósito: los ensambles de la fase 2 son de regresión,
+tienen su propia `ensambles()` con otra firma y viven en el módulo del 05b. Son
+dos archivos y no uno porque cada fase tiene su propio catálogo de individuales,
+igual que `baseline.py` y `baseline_regresion.py`.
+
 | clave | estrategia | qué combina |
 |:--|:--|:--|
 | `bosque` | homogénea, bagging de árboles con columnas al azar | árboles de decisión |

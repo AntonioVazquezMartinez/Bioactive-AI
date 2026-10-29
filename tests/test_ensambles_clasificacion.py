@@ -11,7 +11,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 
 from src.evaluation.cv import evaluar
 from src.models.alternativos import seleccion
-from src.models.ensambles import StackingAgrupado, ensambles
+from src.models.ensambles_clasificacion import StackingAgrupado, ensambles
 
 BASE = ("logistica", "knn")
 

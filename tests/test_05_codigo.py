@@ -2,7 +2,7 @@
 
 Mismo criterio que las pruebas del 03c y el 04c: lo mostrado y lo importado se comparan por
 su árbol sintáctico, sin docstrings. Además el 05 no puede definir sus propios modelos
-—tienen que venir del catálogo y de `ensambles.py`, porque su fila de referencia debe
+—tienen que venir del catálogo y de `ensambles_clasificacion.py`, porque su fila de referencia debe
 comparar con lo que el 04 registró— y la prueba reservada solo puede salir por `tomar_prueba`,
 que es la guarda del #54.
 """
@@ -17,8 +17,8 @@ import pytest
 RAIZ = Path(__file__).resolve().parents[1]
 CUADERNO = RAIZ / "notebooks" / "05_Modelo_Final.ipynb"
 FUNCIONES = {
-    "StackingAgrupado": "src/models/ensambles.py",
-    "ensambles": "src/models/ensambles.py",
+    "StackingAgrupado": "src/models/ensambles_clasificacion.py",
+    "ensambles": "src/models/ensambles_clasificacion.py",
 }
 
 
@@ -69,14 +69,14 @@ def test_cada_definicion_mostrada_es_la_de_src(nombre, archivo, mostrado):
 
 def test_lo_que_se_ejecuta_se_importa_de_src(codigo):
     for linea in ("from src.models import cargar, seleccion",
-                  "from src.models.ensambles import ensambles",
+                  "from src.models.ensambles_clasificacion import ensambles",
                   "from src.models.ajuste import BusquedaAnidada",
                   "from src.tracking import tomar_prueba"):
         assert linea in codigo, linea
 
 
 def test_no_define_sus_propios_modelos(codigo):
-    """Los individuales salen del catálogo y los ensambles de `ensambles.py`."""
+    """Los individuales salen del catálogo y los ensambles de `ensambles_clasificacion.py`."""
     for ajeno in ("RandomForestClassifier(", "HistGradientBoostingClassifier(",
                   "LogisticRegression(", "KNeighborsClassifier(", "MLPClassifier(",
                   "SVC(", "VotingClassifier(", "StackingClassifier(", "BaggingClassifier("):
