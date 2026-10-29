@@ -26,6 +26,7 @@ from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator, clone
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
 from sklearn.metrics import matthews_corrcoef, roc_auc_score
@@ -41,22 +42,32 @@ CORTE_10_UM = 5.0         # pActividad 5 = 10 µM
 MIN_POR_CLASE = 20        # un estrato se reporta si tiene 20 casos de cada clase derivada
 
 
-class SoloExactas:
+class SoloExactas(BaseEstimator):
     """Entrena un modelo de sklearn con las mediciones exactas y descarta las cotas."""
 
     def __init__(self, modelo):
         self.modelo = modelo
 
-    def fit(self, X, inferior, superior):
+    @property
+    def necesita_grupos(self) -> bool:
+        return getattr(self.modelo, "necesita_grupos", False)
+
+    def fit(self, X, inferior, superior, grupos=None):
         exacta = np.isfinite(inferior) & (inferior == superior)
-        self.modelo.fit(X[exacta], inferior[exacta])
+        X_ex = X[exacta]
+        y_ex = inferior[exacta]
+        if getattr(self.modelo, "necesita_grupos", False):
+            g_ex = np.asarray(grupos)[exacta] if grupos is not None else None
+            self.modelo.fit(X_ex, y_ex, grupos=g_ex)
+        else:
+            self.modelo.fit(X_ex, y_ex)
         return self
 
     def predict(self, X):
         return self.modelo.predict(X)
 
 
-class ImputadaEnCota:
+class ImputadaEnCota(BaseEstimator):
     """Entrena un modelo de sklearn con las exactas y con cada censurada **tomando su cota
     como si fuera el valor medido**: un `(−∞, 5]` entra como 5 y un `[6, ∞)` como 6. Es lo
     que haría quien no quiere tirar los inactivos y no implementa una verosimilitud; sirve
@@ -65,10 +76,20 @@ class ImputadaEnCota:
     def __init__(self, modelo):
         self.modelo = modelo
 
-    def fit(self, X, inferior, superior):
+    @property
+    def necesita_grupos(self) -> bool:
+        return getattr(self.modelo, "necesita_grupos", False)
+
+    def fit(self, X, inferior, superior, grupos=None):
         util = intervalo_util(inferior, superior)
         valor = np.where(np.isfinite(inferior), inferior, superior)
-        self.modelo.fit(X[util], valor[util])
+        X_ut = X[util]
+        y_ut = valor[util]
+        if getattr(self.modelo, "necesita_grupos", False):
+            g_ut = np.asarray(grupos)[util] if grupos is not None else None
+            self.modelo.fit(X_ut, y_ut, grupos=g_ut)
+        else:
+            self.modelo.fit(X_ut, y_ut)
         return self
 
     def predict(self, X):
@@ -105,9 +126,10 @@ def intervalo_util(inferior: np.ndarray, superior: np.ndarray) -> np.ndarray:
 
 
 def evaluar_baselines(X, inferior, superior, grupos, estratos, clase,
-                      semillas: Sequence[int] = (0, 1, 2), pliegues: int = 5) -> pd.DataFrame:
-    """Validación cruzada agrupada de los tres baselines; una fila por (modelo, semilla,
-    pliegue, estrato).
+                      semillas: Sequence[int] = (0, 1, 2), pliegues: int = 5,
+                      modelos: dict | None = None) -> pd.DataFrame:
+    """Validación cruzada agrupada de los baselines (o de los modelos indicados);
+    una fila por (modelo, semilla, pliegue, estrato).
 
     `clase` es la etiqueta derivada a 10 µM (1, 0 o NaN si el intervalo no decide); con ella
     se calculan MCC y AUROC cortando la potencia predicha en 5. Las métricas de regresión
@@ -117,15 +139,20 @@ def evaluar_baselines(X, inferior, superior, grupos, estratos, clase,
     X = np.asarray(X, dtype=float)
     inferior = np.asarray(inferior, dtype=float)
     superior = np.asarray(superior, dtype=float)
+    grupos = np.asarray(grupos)
     clase = np.asarray(clase, dtype=float)
     estratificar = np.where(np.isnan(clase), -1, clase).astype(int)
     filas = []
     for semilla in semillas:
         cv = StratifiedGroupKFold(pliegues, shuffle=True, random_state=semilla)
         for k, (ajuste, val) in enumerate(cv.split(X, estratificar, grupos), 1):
-            for nombre, modelo in baselines().items():
+            catalogo = baselines() if modelos is None else {n: clone(m) for n, m in modelos.items()}
+            for nombre, modelo in catalogo.items():
                 reloj = time.perf_counter()
-                modelo.fit(X[ajuste], inferior[ajuste], superior[ajuste])
+                if getattr(modelo, "necesita_grupos", False):
+                    modelo.fit(X[ajuste], inferior[ajuste], superior[ajuste], grupos=grupos[ajuste])
+                else:
+                    modelo.fit(X[ajuste], inferior[ajuste], superior[ajuste])
                 seg = time.perf_counter() - reloj
                 pred = modelo.predict(X[val])
                 rmse_ent, _ = rmse_exactas(inferior[ajuste], superior[ajuste],
