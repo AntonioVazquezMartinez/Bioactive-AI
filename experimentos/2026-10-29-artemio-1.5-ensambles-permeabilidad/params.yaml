@@ -1,0 +1,69 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  individuales:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  ensambles:
+  - bosque
+  - boosting
+  - bagging_svm
+  - votacion
+  - stacking
+  - bosque afinado
+  - boosting afinado
+  base_heterogeneos:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  mejor_individual: svm_rbf
+  pliegues: 5
+  representacion: descriptores
+  metricas_principales:
+  - mcc
+  - auprc_minoritaria
+  metrica_tercera_lectura: auroc
+  rejillas:
+    bosque:
+      modelo__max_features:
+      - sqrt
+      - '0.3'
+      - '0.5'
+      modelo__min_samples_leaf:
+      - '1'
+      - '2'
+      - '5'
+      modelo__max_depth:
+      - None
+      - '20'
+    boosting:
+      modelo__learning_rate:
+      - '0.03'
+      - '0.1'
+      - '0.3'
+      modelo__max_leaf_nodes:
+      - '15'
+      - '31'
+      - '63'
+      modelo__l2_regularization:
+      - '0.0'
+      - '1.0'
+  pliegues_internos_busqueda: 3
+  regla_mejora:
+    umbral_por_metrica:
+      mcc: 0.073
+      auprc_minoritaria: 0.041
+    minimo_evaluaciones: 12
+    de: 15
+    criterio: las dos metricas principales a la vez
+    umbral: mayor desviacion del mejor individual entre sus 15 evaluaciones
+    comparacion_decisiva: agregado contra svm_rbf
+    estratos: exploratorios
+    estado: no pre-registrada; la misma del 04c y el 03c
+  estratos: origen
