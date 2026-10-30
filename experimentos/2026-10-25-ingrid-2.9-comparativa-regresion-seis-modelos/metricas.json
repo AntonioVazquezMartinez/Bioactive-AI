@@ -1,0 +1,290 @@
+{
+  "mixto": {
+    "arbol": {
+      "auroc": 0.536,
+      "concordancia": 0.532,
+      "desv_concordancia": 0.016,
+      "mcc": 0.07,
+      "rmse": 1.266,
+      "seg": 4.371,
+      "spearman": 0.104,
+      "supera_minimos": 0
+    },
+    "bayesian_ridge": {
+      "auroc": 0.501,
+      "concordancia": 0.51,
+      "desv_concordancia": 0.031,
+      "mcc": -0.003,
+      "rmse": 1.092,
+      "seg": 1.516,
+      "spearman": 0.044,
+      "supera_minimos": 1
+    },
+    "knn": {
+      "auroc": 0.615,
+      "concordancia": 0.565,
+      "desv_concordancia": 0.025,
+      "mcc": 0.138,
+      "rmse": 0.981,
+      "seg": 0.073,
+      "spearman": 0.294,
+      "supera_minimos": 1
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.498,
+      "seg": 0.052,
+      "spearman": NaN,
+      "supera_minimos": 0
+    },
+    "mlp": {
+      "auroc": 0.616,
+      "concordancia": 0.582,
+      "desv_concordancia": 0.027,
+      "mcc": 0.154,
+      "rmse": 1.128,
+      "seg": 131.648,
+      "spearman": 0.232,
+      "supera_minimos": 1
+    },
+    "ridge": {
+      "auroc": 0.507,
+      "concordancia": 0.515,
+      "desv_concordancia": 0.03,
+      "mcc": -0.005,
+      "rmse": 1.091,
+      "seg": 0.221,
+      "spearman": 0.052,
+      "supera_minimos": 1
+    },
+    "svr": {
+      "auroc": 0.601,
+      "concordancia": 0.564,
+      "desv_concordancia": 0.022,
+      "mcc": 0.128,
+      "rmse": 0.988,
+      "seg": 246.851,
+      "spearman": 0.211,
+      "supera_minimos": 1
+    }
+  },
+  "solo_chembl": {
+    "arbol": {
+      "auroc": 0.71,
+      "concordancia": 0.665,
+      "desv_concordancia": 0.007,
+      "mcc": 0.268,
+      "rmse": 1.312,
+      "seg": 4.371,
+      "spearman": 0.468,
+      "supera_minimos": 0
+    },
+    "bayesian_ridge": {
+      "auroc": 0.762,
+      "concordancia": 0.681,
+      "desv_concordancia": 0.007,
+      "mcc": 0.172,
+      "rmse": 1.148,
+      "seg": 1.516,
+      "spearman": 0.502,
+      "supera_minimos": 1
+    },
+    "knn": {
+      "auroc": 0.798,
+      "concordancia": 0.733,
+      "desv_concordancia": 0.004,
+      "mcc": 0.32,
+      "rmse": 1.013,
+      "seg": 0.073,
+      "spearman": 0.644,
+      "supera_minimos": 3
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.325,
+      "seg": 0.052,
+      "spearman": NaN,
+      "supera_minimos": 0
+    },
+    "mlp": {
+      "auroc": 0.795,
+      "concordancia": 0.73,
+      "desv_concordancia": 0.007,
+      "mcc": 0.352,
+      "rmse": 1.122,
+      "seg": 131.648,
+      "spearman": 0.628,
+      "supera_minimos": 3
+    },
+    "ridge": {
+      "auroc": 0.761,
+      "concordancia": 0.68,
+      "desv_concordancia": 0.007,
+      "mcc": 0.169,
+      "rmse": 1.151,
+      "seg": 0.221,
+      "spearman": 0.501,
+      "supera_minimos": 1
+    },
+    "svr": {
+      "auroc": 0.808,
+      "concordancia": 0.73,
+      "desv_concordancia": 0.005,
+      "mcc": 0.318,
+      "rmse": 1.04,
+      "seg": 246.851,
+      "spearman": 0.62,
+      "supera_minimos": 3
+    }
+  },
+  "solo_npass": {
+    "arbol": {
+      "auroc": 0.51,
+      "concordancia": 0.497,
+      "desv_concordancia": 0.036,
+      "mcc": -0.002,
+      "rmse": 1.175,
+      "seg": 4.371,
+      "spearman": 0.191,
+      "supera_minimos": 0
+    },
+    "bayesian_ridge": {
+      "auroc": 0.528,
+      "concordancia": 0.532,
+      "desv_concordancia": 0.029,
+      "mcc": 0.013,
+      "rmse": 1.292,
+      "seg": 1.516,
+      "spearman": 0.24,
+      "supera_minimos": 0
+    },
+    "knn": {
+      "auroc": 0.49,
+      "concordancia": 0.464,
+      "desv_concordancia": 0.019,
+      "mcc": -0.013,
+      "rmse": 0.859,
+      "seg": 0.073,
+      "spearman": 0.342,
+      "supera_minimos": 1
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.64,
+      "seg": 0.052,
+      "spearman": NaN,
+      "supera_minimos": 0
+    },
+    "mlp": {
+      "auroc": 0.575,
+      "concordancia": 0.559,
+      "desv_concordancia": 0.027,
+      "mcc": 0.071,
+      "rmse": 1.075,
+      "seg": 131.648,
+      "spearman": 0.234,
+      "supera_minimos": 1
+    },
+    "ridge": {
+      "auroc": 0.517,
+      "concordancia": 0.522,
+      "desv_concordancia": 0.027,
+      "mcc": 0.013,
+      "rmse": 1.056,
+      "seg": 0.221,
+      "spearman": 0.236,
+      "supera_minimos": 1
+    },
+    "svr": {
+      "auroc": 0.542,
+      "concordancia": 0.535,
+      "desv_concordancia": 0.028,
+      "mcc": 0.015,
+      "rmse": 0.813,
+      "seg": 246.851,
+      "spearman": 0.313,
+      "supera_minimos": 1
+    }
+  },
+  "todos": {
+    "arbol": {
+      "auroc": 0.717,
+      "concordancia": 0.67,
+      "desv_concordancia": 0.007,
+      "mcc": 0.284,
+      "rmse": 1.308,
+      "seg": 4.371,
+      "spearman": 0.484,
+      "supera_minimos": 0
+    },
+    "bayesian_ridge": {
+      "auroc": 0.776,
+      "concordancia": 0.692,
+      "desv_concordancia": 0.006,
+      "mcc": 0.225,
+      "rmse": 1.157,
+      "seg": 1.516,
+      "spearman": 0.53,
+      "supera_minimos": 0
+    },
+    "knn": {
+      "auroc": 0.805,
+      "concordancia": 0.739,
+      "desv_concordancia": 0.004,
+      "mcc": 0.341,
+      "rmse": 1.01,
+      "seg": 0.073,
+      "spearman": 0.66,
+      "supera_minimos": 3
+    },
+    "media": {
+      "auroc": 0.5,
+      "concordancia": 0.5,
+      "desv_concordancia": 0.0,
+      "mcc": 0.0,
+      "rmse": 1.337,
+      "seg": 0.052,
+      "spearman": NaN,
+      "supera_minimos": 0
+    },
+    "mlp": {
+      "auroc": 0.803,
+      "concordancia": 0.736,
+      "desv_concordancia": 0.006,
+      "mcc": 0.378,
+      "rmse": 1.121,
+      "seg": 131.648,
+      "spearman": 0.641,
+      "supera_minimos": 3
+    },
+    "ridge": {
+      "auroc": 0.774,
+      "concordancia": 0.691,
+      "desv_concordancia": 0.006,
+      "mcc": 0.222,
+      "rmse": 1.148,
+      "seg": 0.221,
+      "spearman": 0.528,
+      "supera_minimos": 1
+    },
+    "svr": {
+      "auroc": 0.819,
+      "concordancia": 0.738,
+      "desv_concordancia": 0.004,
+      "mcc": 0.353,
+      "rmse": 1.034,
+      "seg": 246.851,
+      "spearman": 0.64,
+      "supera_minimos": 3
+    }
+  }
+}

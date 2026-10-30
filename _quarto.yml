@@ -19,6 +19,11 @@ project:
     - contenido/notebooks/02_Feature_Eng.ipynb
     - contenido/notebooks/02b_Feature_Eng_actividad.ipynb
     - contenido/notebooks/03_Baseline.ipynb
+    - contenido/notebooks/03b_Baseline_regresion_actividad.ipynb
+    - contenido/notebooks/03c_Permeabilidad_huellas.ipynb
+    - contenido/notebooks/04_Models.ipynb
+    - contenido/notebooks/04b_Regresion_actividad.ipynb
+    - contenido/notebooks/04c_Regresion_actividad_huellas.ipynb
 
 website:
   title: "Bioactive AI"
@@ -117,6 +122,18 @@ website:
           - text: "Avance 3 · Modelo de referencia"
           - href: contenido/notebooks/03_Baseline.ipynb
             text: Análisis · Modelo de referencia
+          - href: contenido/notebooks/03b_Baseline_regresion_actividad.ipynb
+            text: Análisis · Referencia de la regresión de actividad
+          - text: "---"
+          - text: "Avance 4 · Modelos alternativos"
+          - href: contenido/notebooks/04_Models.ipynb
+            text: Análisis · Seis familias y el modelo individual final
+          - href: contenido/notebooks/04b_Regresion_actividad.ipynb
+            text: Análisis · La comparativa de la fase 2
+          - href: contenido/notebooks/04c_Regresion_actividad_huellas.ipynb
+            text: Análisis · Qué añaden las huellas en la fase 2
+          - href: contenido/notebooks/03c_Permeabilidad_huellas.ipynb
+            text: Análisis · Qué añaden las huellas en la fase 1
       - href: bibliografia.qmd
         text: Bibliografía
     right:
