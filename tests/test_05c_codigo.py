@@ -120,6 +120,16 @@ def test_la_regla_de_mejora_es_la_misma_de_los_demas(codigo):
 
 
 def test_el_control_se_contrasta_con_una_corrida_registrada(codigo):
-    """Una cifra citada necesita una corrida detrás, y el control necesita reproducir."""
-    assert "2026-10-29-ingrid-1.5-ensambles-permeabilidad" in codigo
+    """Una cifra citada necesita una corrida detrás, y el control necesita reproducir.
+
+    No se fija un identificador literal: el control tiene que apuntar a la corrida del 05
+    **de la máquina donde se ejecuta**, porque la matriz de la fase 1 no es idéntica entre
+    las del equipo (#166). Lo que se ata es que la corrida nombrada esté en el repositorio,
+    que es más de lo que ataba el literal: una carpeta renombrada lo pasaba igual.
+    """
+    ids = re.findall(r"20\d\d-\d\d-\d\d-[a-z]+-1\.5-ensambles-permeabilidad", codigo)
+    assert ids, "el control tiene que nombrar una corrida del 05"
+    for corrida in sorted(set(ids)):
+        assert (RAIZ / "experimentos" / corrida / "metricas.json").exists(), (
+            f"{corrida} no está en experimentos/: el control compararía contra nada")
     assert 'json.loads(REGISTRO.read_text())["comparativa"]' in codigo
