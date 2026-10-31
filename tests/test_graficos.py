@@ -15,8 +15,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 from src.evaluation.cv import orientar_minoritaria  # noqa: E402
-from src.evaluation.graficos import (concordantes, curva_precision_exhaustividad,  # noqa: E402
-                                     curva_roc, importancias_dos_metodos,
+from src.evaluation.graficos import (concordancia_por_estrato, concordantes,  # noqa: E402
+                                     curva_enriquecimiento,
+                                     curva_precision_exhaustividad,
+                                     curva_roc, dispersion_censurada,
+                                     ganancia_arboles, importancias_dos_metodos,
                                      matriz_confusion)
 
 RAIZ_DATOS = "notebooks/datos/rubrica3_importancias.csv"
@@ -103,3 +106,82 @@ def test_la_barra_de_importancias_marca_las_concordantes():
     # mismas quedan en `ax.patches`.
     colores = {tuple(b.get_facecolor()) for b in ax.patches}
     assert len(colores) == 2, "deben verse dos colores: concordante y no"
+
+
+def test_la_dispersion_pone_el_observado_en_x_y_el_predicho_en_y():
+    """Transponer los ejes no rompe nada y deja el gráfico mintiendo sobre sus etiquetas."""
+    inf = np.array([5.0, 6.0])
+    sup = np.array([5.0, 6.0])
+    p = np.array([5.2, 5.8])
+    _, ax = plt.subplots()
+    dispersion_censurada(inf, sup, p, ax=ax)
+    assert np.allclose(ax.collections[0].get_offsets(), np.column_stack([inf, p]))
+    assert ax.get_xlabel() == "pActividad observada"
+    assert ax.get_ylabel() == "pActividad predicha"
+    plt.close("all")
+
+
+def test_la_dispersion_marca_la_cota_superior_en_su_limite_finito():
+    """La censurada con `-inf` abajo va en `sup`: dibujada en `-inf`, matplotlib la descarta."""
+    inf = np.array([5.0, -np.inf])
+    sup = np.array([5.0, 4.5])
+    p = np.array([5.1, 4.9])
+    _, ax = plt.subplots()
+    dispersion_censurada(inf, sup, p, ax=ax)
+    cotas = np.asarray(ax.collections[1].get_offsets())
+    assert np.isfinite(cotas).all(), "quedó una coordenada infinita y el punto desaparece"
+    assert np.allclose(cotas, [[4.5, 4.9]])
+    plt.close("all")
+
+
+def test_las_barras_por_estrato_son_la_media_y_no_otro_resumen():
+    """Con `max` o `median` las barras se ven igual de bien y dicen otra cosa."""
+    res = pd.DataFrame({
+        "modelo": ["aft"] * 4 + ["bosque"] * 4,
+        "estrato": ["todos", "todos", "solo_npass", "solo_npass"] * 2,
+        "concordancia": [0.70, 0.80, 0.60, 0.64, 0.76, 0.78, 0.50, 0.52],
+        "semilla": [0, 1] * 4,
+        "pliegue": [1, 1, 2, 2] * 2,
+    })
+    _, ax = plt.subplots()
+    concordancia_por_estrato(res, ["aft", "bosque"], ax=ax)
+    alturas = sorted(round(b.get_height(), 3) for b in ax.patches)
+    assert alturas == [0.51, 0.62, 0.75, 0.77]
+    plt.close("all")
+
+
+def test_el_enriquecimiento_criba_primero_lo_mas_potente():
+    """Si ordenara al revés la curva caería bajo la diagonal y nadie lo notaría."""
+    y = np.array([1, 1, 1, 0, 0, 0, 0, 0])
+    p = np.array([9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0])
+    _, ax = plt.subplots()
+    curva_enriquecimiento(y, p, ax=ax)
+    cribado = np.asarray(ax.lines[0].get_xdata())
+    hallados = np.asarray(ax.lines[0].get_ydata())
+    assert np.all(hallados >= cribado - 1e-9), "la curva va bajo el azar: ordena al revés"
+    assert hallados[np.argmax(cribado >= 37.5)] == 100.0, \
+        "los tres activos deben estar en el primer 37.5% del listado"
+    plt.close("all")
+
+
+def test_el_enriquecimiento_no_cambia_si_la_prediccion_se_reescala():
+    """Solo usa el orden, así que una transformación monótona no lo mueve."""
+    y = np.array([1, 0, 1, 1, 0, 0, 1, 0])
+    p = np.array([9.0, 1.0, 8.0, 7.0, 2.0, 3.0, 6.0, 4.0])
+    curvas = []
+    for q in (p, 2 * p + 100):
+        _, ax = plt.subplots()
+        curva_enriquecimiento(y, q, ax=ax)
+        curvas.append(np.asarray(ax.lines[0].get_ydata()))
+        plt.close("all")
+    assert np.allclose(*curvas)
+
+
+def test_la_ganancia_dibuja_el_top_de_menor_a_mayor_hacia_arriba():
+    """`nsmallest`, o un reverso de más, deja el gráfico mostrando lo irrelevante."""
+    ganancias = pd.Series({"MolLogP": 12.0, "TPSA": 8.0, "diana=DRD2": 15.0, "ruido": 0.3})
+    _, ax = plt.subplots()
+    ganancia_arboles(ganancias, ax=ax, n=2)
+    assert [t.get_text() for t in ax.get_yticklabels()] == ["MolLogP", "diana=DRD2"]
+    assert [round(b.get_width(), 3) for b in ax.patches] == [12.0, 15.0]
+    plt.close("all")

@@ -71,14 +71,8 @@ def test_lo_que_se_ejecuta_se_importa_de_src(celdas):
     assert "from src.models.ensambles import AfinadoAgrupado, ApiladoAgrupado, ensambles" in codigo
     assert "from src.models.aft import RegresionAFT" in codigo
     assert "from src.features.huellas import AgregarHuellas, agrupar_iguales, identificadores_morgan" in codigo
-    assert "from src.models.baseline_regresion import SoloExactas, evaluar_baselines, tabla" in codigo
+    assert "from src.models.baseline_regresion import CORTE_10_UM, MIN_POR_CLASE, SoloExactas, evaluar_baselines, tabla" in codigo
     assert "from src.models.pisos import MediaPorDiana" in codigo
     assert "from src.tracking import Corrida" in codigo
 
 
-def test_las_celdas_de_codigo_no_tienen_salidas_guardadas(celdas):
-    """El cuaderno 05b debe mantener sus salidas limpias antes de la corrida completa."""
-    for i, c in enumerate(celdas):
-        if c["cell_type"] == "code":
-            assert not c.get("outputs"), f"La celda de código {i} tiene salidas guardadas"
-            assert c.get("execution_count") is None, f"La celda {i} tiene execution_count no nulo"
