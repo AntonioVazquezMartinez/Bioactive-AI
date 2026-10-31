@@ -1,0 +1,48 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  - bosque
+  - boosting
+  - bagging_svm
+  - votacion
+  - stacking
+  brazos:
+  - descriptores
+  - descriptores+huellas
+  base_heterogeneos:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  mejor_individual: svm_rbf
+  pliegues: 5
+  n_bits_sortslice: 2048
+  radio_morgan: 2
+  vocabulario: se aprende en cada ajuste; los pliegues internos del stacking lo heredan
+  metricas_principales:
+  - mcc
+  - auprc_minoritaria
+  metrica_tercera_lectura: auroc
+  afinados: ninguno; el 05 midió que no pagan
+  pliegues_brecha: 2
+  regla_mejora:
+    umbral_por_metrica:
+      mcc: 0.081
+      auprc_minoritaria: 0.045
+    minimo_evaluaciones: 12
+    de: 15
+    criterio: las dos metricas principales a la vez
+    umbral: mayor desviacion del control entre sus 15 evaluaciones
+    comparacion_decisiva: agregado contra descriptores
+    estratos: exploratorios
+    estado: no pre-registrada; las 15 evaluaciones no son independientes
+  control_registrado: 2026-10-29-artemio-1.5-ensambles-permeabilidad
+  prueba_reservada: no se toca; se lee una sola vez en el 05

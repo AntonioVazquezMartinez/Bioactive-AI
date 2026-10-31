@@ -1,0 +1,1142 @@
+{
+  "análogo estereoquímico": {
+    "descriptores+huellas/bagging_svm": {
+      "auprc_minoritaria": 0.8684,
+      "auroc": 0.901,
+      "desv_mcc": 0.1138,
+      "mcc": 0.6244,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/boosting": {
+      "auprc_minoritaria": 0.8992,
+      "auroc": 0.9178,
+      "desv_mcc": 0.092,
+      "mcc": 0.6769,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bosque": {
+      "auprc_minoritaria": 0.9044,
+      "auroc": 0.9222,
+      "desv_mcc": 0.1108,
+      "mcc": 0.6602,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8147,
+      "auroc": 0.8788,
+      "desv_mcc": 0.106,
+      "mcc": 0.5757,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8629,
+      "auroc": 0.8862,
+      "desv_mcc": 0.1103,
+      "mcc": 0.5991,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8239,
+      "auroc": 0.8606,
+      "desv_mcc": 0.1079,
+      "mcc": 0.5834,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/stacking": {
+      "auprc_minoritaria": 0.884,
+      "auroc": 0.9006,
+      "desv_mcc": 0.0985,
+      "mcc": 0.6072,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.864,
+      "auroc": 0.899,
+      "desv_mcc": 0.1156,
+      "mcc": 0.6134,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/votacion": {
+      "auprc_minoritaria": 0.8798,
+      "auroc": 0.8992,
+      "desv_mcc": 0.1107,
+      "mcc": 0.5971,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bagging_svm": {
+      "auprc_minoritaria": 0.869,
+      "auroc": 0.9135,
+      "desv_mcc": 0.1007,
+      "mcc": 0.6911,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/boosting": {
+      "auprc_minoritaria": 0.898,
+      "auroc": 0.9227,
+      "desv_mcc": 0.1037,
+      "mcc": 0.683,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bosque": {
+      "auprc_minoritaria": 0.9016,
+      "auroc": 0.9239,
+      "desv_mcc": 0.0967,
+      "mcc": 0.666,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.8638,
+      "auroc": 0.903,
+      "desv_mcc": 0.0962,
+      "mcc": 0.6187,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.8673,
+      "auroc": 0.905,
+      "desv_mcc": 0.0914,
+      "mcc": 0.6916,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.8517,
+      "auroc": 0.899,
+      "desv_mcc": 0.1127,
+      "mcc": 0.6558,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/stacking": {
+      "auprc_minoritaria": 0.8942,
+      "auroc": 0.9199,
+      "desv_mcc": 0.0996,
+      "mcc": 0.6841,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.8603,
+      "auroc": 0.9099,
+      "desv_mcc": 0.0919,
+      "mcc": 0.6958,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/votacion": {
+      "auprc_minoritaria": 0.8928,
+      "auroc": 0.9221,
+      "desv_mcc": 0.1069,
+      "mcc": 0.69,
+      "segundos_ajuste": NaN
+    }
+  },
+  "brecha": {
+    "descriptores+huellas/bagging_svm": {
+      "auroc_entrenamiento": 0.9865658715612563,
+      "auroc_validacion": 0.9183176933777174,
+      "brecha": 0.0682481781835389
+    },
+    "descriptores+huellas/boosting": {
+      "auroc_entrenamiento": 0.9990911577314008,
+      "auroc_validacion": 0.9277486925392241,
+      "brecha": 0.07134246519217669
+    },
+    "descriptores+huellas/bosque": {
+      "auroc_entrenamiento": 0.997430501195935,
+      "auroc_validacion": 0.930681913979079,
+      "brecha": 0.06674858721685606
+    },
+    "descriptores+huellas/knn": {
+      "auroc_entrenamiento": 0.9718723038026997,
+      "auroc_validacion": 0.9133925352489701,
+      "brecha": 0.058479768553729605
+    },
+    "descriptores+huellas/logistica": {
+      "auroc_entrenamiento": 0.9926274199367838,
+      "auroc_validacion": 0.8959897083030952,
+      "brecha": 0.09663771163368862
+    },
+    "descriptores+huellas/mlp": {
+      "auroc_entrenamiento": 0.9989681970677821,
+      "auroc_validacion": 0.8766420064785565,
+      "brecha": 0.12232619058922556
+    },
+    "descriptores+huellas/stacking": {
+      "auroc_entrenamiento": 0.9883665500073157,
+      "auroc_validacion": 0.9239344762669477,
+      "brecha": 0.06443207374036797
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auroc_entrenamiento": 0.9855629531597976,
+      "auroc_validacion": 0.9119012230295205,
+      "brecha": 0.0736617301302771
+    },
+    "descriptores+huellas/votacion": {
+      "auroc_entrenamiento": 0.9950405638280004,
+      "auroc_validacion": 0.9166490349309631,
+      "brecha": 0.07839152889703738
+    },
+    "descriptores/bagging_svm": {
+      "auroc_entrenamiento": 0.9622925006295777,
+      "auroc_validacion": 0.9160202808777624,
+      "brecha": 0.04627221975181528
+    },
+    "descriptores/boosting": {
+      "auroc_entrenamiento": 0.9991197009273934,
+      "auroc_validacion": 0.9258249416043303,
+      "brecha": 0.07329475932306317
+    },
+    "descriptores/bosque": {
+      "auroc_entrenamiento": 0.9980751003553815,
+      "auroc_validacion": 0.9280637210270603,
+      "brecha": 0.07001137932832124
+    },
+    "descriptores/knn": {
+      "auroc_entrenamiento": 0.9684016556377079,
+      "auroc_validacion": 0.9192084585626619,
+      "brecha": 0.04919319707504599
+    },
+    "descriptores/logistica": {
+      "auroc_entrenamiento": 0.9428250950045356,
+      "auroc_validacion": 0.9070811427792682,
+      "brecha": 0.035743952225267384
+    },
+    "descriptores/mlp": {
+      "auroc_entrenamiento": 0.994609824227983,
+      "auroc_validacion": 0.91618445067517,
+      "brecha": 0.0784253735528131
+    },
+    "descriptores/stacking": {
+      "auroc_entrenamiento": 0.9790273338292752,
+      "auroc_validacion": 0.9298166544411195,
+      "brecha": 0.04921067938815571
+    },
+    "descriptores/svm_rbf": {
+      "auroc_entrenamiento": 0.9600790088635343,
+      "auroc_validacion": 0.9126103072643227,
+      "brecha": 0.04746870159921157
+    },
+    "descriptores/votacion": {
+      "auroc_entrenamiento": 0.9838951173015712,
+      "auroc_validacion": 0.9315644027875074,
+      "brecha": 0.05233071451406379
+    }
+  },
+  "comparacion_todos": {
+    "descriptores+huellas/bagging_svm/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.012,
+      "dif_media": -0.0042,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "descriptores+huellas/bagging_svm/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0131,
+      "dif_media": 0.002,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/bagging_svm/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0297,
+      "dif_media": 0.0034,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "descriptores+huellas/boosting/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0117,
+      "dif_media": 0.0007,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "descriptores+huellas/boosting/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0054,
+      "dif_media": 0.0015,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/boosting/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0179,
+      "dif_media": 0.0068,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "descriptores+huellas/bosque/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0059,
+      "dif_media": 0.0021,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/bosque/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0042,
+      "dif_media": 0.0028,
+      "evaluaciones": 15,
+      "mejor_en": 10
+    },
+    "descriptores+huellas/bosque/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0164,
+      "dif_media": 0.0043,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0256,
+      "dif_media": -0.0064,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.023,
+      "dif_media": -0.0056,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0425,
+      "dif_media": -0.0187,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0235,
+      "dif_media": -0.0191,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "descriptores+huellas/logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0218,
+      "dif_media": -0.0043,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0562,
+      "dif_media": -0.0237,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0333,
+      "dif_media": -0.036,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "descriptores+huellas/mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0224,
+      "dif_media": -0.0146,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "descriptores+huellas/mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.049,
+      "dif_media": -0.0302,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/stacking/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0186,
+      "dif_media": -0.0063,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/stacking/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0134,
+      "dif_media": -0.005,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/stacking/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0393,
+      "dif_media": -0.0166,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "descriptores+huellas/svm_rbf/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0124,
+      "dif_media": -0.01,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "descriptores+huellas/svm_rbf/auroc": {
+      "cumple": false,
+      "dif_desv": 0.015,
+      "dif_media": -0.0016,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/svm_rbf/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0347,
+      "dif_media": -0.0076,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/votacion/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0185,
+      "dif_media": -0.0129,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "descriptores+huellas/votacion/auroc": {
+      "cumple": false,
+      "dif_desv": 0.013,
+      "dif_media": -0.0092,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "descriptores+huellas/votacion/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0509,
+      "dif_media": -0.0263,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    }
+  },
+  "contra_individual/descriptores": {
+    "bagging_svm/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0021,
+      "dif_media": 0.002,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "bagging_svm/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0026,
+      "dif_media": 0.0022,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "bagging_svm/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0096,
+      "dif_media": -0.0069,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "boosting/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0171,
+      "dif_media": 0.0001,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "boosting/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0127,
+      "dif_media": 0.0112,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "boosting/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0211,
+      "dif_media": 0.0003,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "bosque/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0123,
+      "dif_media": 0.0108,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "bosque/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0124,
+      "dif_media": 0.0138,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "bosque/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0188,
+      "dif_media": -0.0021,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0179,
+      "dif_media": -0.0209,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0144,
+      "dif_media": -0.0049,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0278,
+      "dif_media": -0.0324,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0129,
+      "dif_media": -0.0117,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0093,
+      "dif_media": -0.0057,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0236,
+      "dif_media": -0.015,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0126,
+      "dif_media": -0.0201,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0119,
+      "dif_media": -0.008,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0295,
+      "dif_media": -0.0274,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "stacking/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0105,
+      "dif_media": 0.0093,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "stacking/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0087,
+      "dif_media": 0.0128,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "stacking/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0161,
+      "dif_media": 0.0093,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "votacion/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0096,
+      "dif_media": 0.0108,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "votacion/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0083,
+      "dif_media": 0.0139,
+      "evaluaciones": 15,
+      "mejor_en": 15
+    },
+    "votacion/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0156,
+      "dif_media": 0.0075,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    }
+  },
+  "contra_individual/descriptores+huellas": {
+    "bagging_svm/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0056,
+      "dif_media": 0.0078,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "bagging_svm/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0035,
+      "dif_media": 0.0058,
+      "evaluaciones": 15,
+      "mejor_en": 15
+    },
+    "bagging_svm/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0168,
+      "dif_media": 0.0042,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "boosting/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0121,
+      "dif_media": 0.0108,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "boosting/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0095,
+      "dif_media": 0.0143,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "boosting/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0284,
+      "dif_media": 0.0147,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "bosque/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0116,
+      "dif_media": 0.0228,
+      "evaluaciones": 15,
+      "mejor_en": 14
+    },
+    "bosque/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0104,
+      "dif_media": 0.0183,
+      "evaluaciones": 15,
+      "mejor_en": 15
+    },
+    "bosque/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0336,
+      "dif_media": 0.0099,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0236,
+      "dif_media": -0.0173,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0189,
+      "dif_media": -0.0089,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0314,
+      "dif_media": -0.0435,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0149,
+      "dif_media": -0.0208,
+      "evaluaciones": 15,
+      "mejor_en": 1
+    },
+    "logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0124,
+      "dif_media": -0.0083,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0345,
+      "dif_media": -0.0311,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0325,
+      "dif_media": -0.0461,
+      "evaluaciones": 15,
+      "mejor_en": 0
+    },
+    "mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0162,
+      "dif_media": -0.021,
+      "evaluaciones": 15,
+      "mejor_en": 1
+    },
+    "mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0304,
+      "dif_media": -0.0499,
+      "evaluaciones": 15,
+      "mejor_en": 1
+    },
+    "stacking/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0117,
+      "dif_media": 0.013,
+      "evaluaciones": 15,
+      "mejor_en": 13
+    },
+    "stacking/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0063,
+      "dif_media": 0.0094,
+      "evaluaciones": 15,
+      "mejor_en": 13
+    },
+    "stacking/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0247,
+      "dif_media": 0.0003,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "votacion/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0119,
+      "dif_media": 0.0078,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "votacion/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0079,
+      "dif_media": 0.0064,
+      "evaluaciones": 15,
+      "mejor_en": 12
+    },
+    "votacion/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0309,
+      "dif_media": -0.0111,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    }
+  },
+  "control_reproduce": {
+    "auprc_minoritaria": 4.640202428096707e-05,
+    "auroc": 4.7765640139418863e-05,
+    "mcc": 4.099466502915927e-05
+  },
+  "natural exacto": {
+    "descriptores+huellas/bagging_svm": {
+      "auprc_minoritaria": 0.9152,
+      "auroc": 0.9296,
+      "desv_mcc": 0.0825,
+      "mcc": 0.7087,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/boosting": {
+      "auprc_minoritaria": 0.9215,
+      "auroc": 0.9359,
+      "desv_mcc": 0.0744,
+      "mcc": 0.7253,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bosque": {
+      "auprc_minoritaria": 0.9347,
+      "auroc": 0.9409,
+      "desv_mcc": 0.0891,
+      "mcc": 0.7208,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8983,
+      "auroc": 0.9155,
+      "desv_mcc": 0.1057,
+      "mcc": 0.6606,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8938,
+      "auroc": 0.9149,
+      "desv_mcc": 0.102,
+      "mcc": 0.6832,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8779,
+      "auroc": 0.9011,
+      "desv_mcc": 0.0892,
+      "mcc": 0.6596,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/stacking": {
+      "auprc_minoritaria": 0.9246,
+      "auroc": 0.9334,
+      "desv_mcc": 0.0836,
+      "mcc": 0.7013,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.9087,
+      "auroc": 0.9258,
+      "desv_mcc": 0.0812,
+      "mcc": 0.707,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/votacion": {
+      "auprc_minoritaria": 0.921,
+      "auroc": 0.93,
+      "desv_mcc": 0.0872,
+      "mcc": 0.6961,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bagging_svm": {
+      "auprc_minoritaria": 0.9196,
+      "auroc": 0.9269,
+      "desv_mcc": 0.0768,
+      "mcc": 0.7092,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/boosting": {
+      "auprc_minoritaria": 0.92,
+      "auroc": 0.9346,
+      "desv_mcc": 0.063,
+      "mcc": 0.719,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bosque": {
+      "auprc_minoritaria": 0.931,
+      "auroc": 0.939,
+      "desv_mcc": 0.0811,
+      "mcc": 0.7145,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.9041,
+      "auroc": 0.9212,
+      "desv_mcc": 0.084,
+      "mcc": 0.6935,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.9021,
+      "auroc": 0.9177,
+      "desv_mcc": 0.0683,
+      "mcc": 0.6924,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.8966,
+      "auroc": 0.9124,
+      "desv_mcc": 0.0764,
+      "mcc": 0.6703,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/stacking": {
+      "auprc_minoritaria": 0.9228,
+      "auroc": 0.9339,
+      "desv_mcc": 0.0727,
+      "mcc": 0.7194,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.9177,
+      "auroc": 0.9242,
+      "desv_mcc": 0.0801,
+      "mcc": 0.7182,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/votacion": {
+      "auprc_minoritaria": 0.9235,
+      "auroc": 0.9339,
+      "desv_mcc": 0.0753,
+      "mcc": 0.7204,
+      "segundos_ajuste": NaN
+    }
+  },
+  "sin equivalente natural": {
+    "descriptores+huellas/bagging_svm": {
+      "auprc_minoritaria": 0.6938,
+      "auroc": 0.8755,
+      "desv_mcc": 0.1033,
+      "mcc": 0.5599,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/boosting": {
+      "auprc_minoritaria": 0.6933,
+      "auroc": 0.8895,
+      "desv_mcc": 0.0949,
+      "mcc": 0.5409,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bosque": {
+      "auprc_minoritaria": 0.7071,
+      "auroc": 0.8961,
+      "desv_mcc": 0.0973,
+      "mcc": 0.5257,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.6642,
+      "auroc": 0.8752,
+      "desv_mcc": 0.1228,
+      "mcc": 0.5102,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.6349,
+      "auroc": 0.8643,
+      "desv_mcc": 0.1367,
+      "mcc": 0.5083,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.6147,
+      "auroc": 0.8566,
+      "desv_mcc": 0.1289,
+      "mcc": 0.4941,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/stacking": {
+      "auprc_minoritaria": 0.7012,
+      "auroc": 0.8849,
+      "desv_mcc": 0.1222,
+      "mcc": 0.5745,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.6738,
+      "auroc": 0.8622,
+      "desv_mcc": 0.1003,
+      "mcc": 0.5478,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/votacion": {
+      "auprc_minoritaria": 0.6864,
+      "auroc": 0.8818,
+      "desv_mcc": 0.1472,
+      "mcc": 0.5437,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bagging_svm": {
+      "auprc_minoritaria": 0.6819,
+      "auroc": 0.8768,
+      "desv_mcc": 0.0985,
+      "mcc": 0.4958,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/boosting": {
+      "auprc_minoritaria": 0.6834,
+      "auroc": 0.8859,
+      "desv_mcc": 0.0876,
+      "mcc": 0.5209,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bosque": {
+      "auprc_minoritaria": 0.6961,
+      "auroc": 0.8895,
+      "desv_mcc": 0.0936,
+      "mcc": 0.5218,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.6537,
+      "auroc": 0.8641,
+      "desv_mcc": 0.1087,
+      "mcc": 0.4762,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.666,
+      "auroc": 0.8629,
+      "desv_mcc": 0.0735,
+      "mcc": 0.5001,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.6789,
+      "auroc": 0.8657,
+      "desv_mcc": 0.1064,
+      "mcc": 0.5406,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/stacking": {
+      "auprc_minoritaria": 0.7201,
+      "auroc": 0.8969,
+      "desv_mcc": 0.0953,
+      "mcc": 0.5527,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.6795,
+      "auroc": 0.8748,
+      "desv_mcc": 0.0898,
+      "mcc": 0.4989,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/votacion": {
+      "auprc_minoritaria": 0.725,
+      "auroc": 0.9001,
+      "desv_mcc": 0.0911,
+      "mcc": 0.5367,
+      "segundos_ajuste": NaN
+    }
+  },
+  "todos": {
+    "descriptores+huellas/bagging_svm": {
+      "auprc_minoritaria": 0.882,
+      "auroc": 0.9232,
+      "desv_mcc": 0.0777,
+      "mcc": 0.6982,
+      "segundos_ajuste": 192.7878
+    },
+    "descriptores+huellas/boosting": {
+      "auprc_minoritaria": 0.885,
+      "auroc": 0.9317,
+      "desv_mcc": 0.0729,
+      "mcc": 0.7087,
+      "segundos_ajuste": 9.0738
+    },
+    "descriptores+huellas/bosque": {
+      "auprc_minoritaria": 0.897,
+      "auroc": 0.9357,
+      "desv_mcc": 0.0753,
+      "mcc": 0.7039,
+      "segundos_ajuste": 2.3647
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8569,
+      "auroc": 0.9085,
+      "desv_mcc": 0.0916,
+      "mcc": 0.6505,
+      "segundos_ajuste": 0.0157
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8534,
+      "auroc": 0.9091,
+      "desv_mcc": 0.0915,
+      "mcc": 0.6629,
+      "segundos_ajuste": 0.0649
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8281,
+      "auroc": 0.8964,
+      "desv_mcc": 0.0913,
+      "mcc": 0.6441,
+      "segundos_ajuste": 1.6843
+    },
+    "descriptores+huellas/stacking": {
+      "auprc_minoritaria": 0.8872,
+      "auroc": 0.9268,
+      "desv_mcc": 0.0827,
+      "mcc": 0.6944,
+      "segundos_ajuste": 57.1198
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.8742,
+      "auroc": 0.9174,
+      "desv_mcc": 0.0758,
+      "mcc": 0.694,
+      "segundos_ajuste": 20.0604
+    },
+    "descriptores+huellas/votacion": {
+      "auprc_minoritaria": 0.882,
+      "auroc": 0.9238,
+      "desv_mcc": 0.0901,
+      "mcc": 0.6829,
+      "segundos_ajuste": 21.779
+    },
+    "descriptores/bagging_svm": {
+      "auprc_minoritaria": 0.8862,
+      "auroc": 0.9213,
+      "desv_mcc": 0.073,
+      "mcc": 0.6948,
+      "segundos_ajuste": 14.8233
+    },
+    "descriptores/boosting": {
+      "auprc_minoritaria": 0.8843,
+      "auroc": 0.9302,
+      "desv_mcc": 0.0633,
+      "mcc": 0.7019,
+      "segundos_ajuste": 0.7193
+    },
+    "descriptores/bosque": {
+      "auprc_minoritaria": 0.895,
+      "auroc": 0.9329,
+      "desv_mcc": 0.071,
+      "mcc": 0.6996,
+      "segundos_ajuste": 2.404
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.8633,
+      "auroc": 0.9141,
+      "desv_mcc": 0.0812,
+      "mcc": 0.6692,
+      "segundos_ajuste": 0.0013
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.8724,
+      "auroc": 0.9133,
+      "desv_mcc": 0.0663,
+      "mcc": 0.6866,
+      "segundos_ajuste": 0.0079
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.864,
+      "auroc": 0.911,
+      "desv_mcc": 0.0638,
+      "mcc": 0.6743,
+      "segundos_ajuste": 1.8616
+    },
+    "descriptores/stacking": {
+      "auprc_minoritaria": 0.8935,
+      "auroc": 0.9318,
+      "desv_mcc": 0.0698,
+      "mcc": 0.7109,
+      "segundos_ajuste": 9.2321
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "desv_mcc": 0.0731,
+      "mcc": 0.7017,
+      "segundos_ajuste": 1.4551
+    },
+    "descriptores/votacion": {
+      "auprc_minoritaria": 0.8949,
+      "auroc": 0.9329,
+      "desv_mcc": 0.0718,
+      "mcc": 0.7092,
+      "segundos_ajuste": 3.3348
+    }
+  }
+}
