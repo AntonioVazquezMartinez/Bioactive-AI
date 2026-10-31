@@ -45,6 +45,31 @@ from .alternativos import seleccion
 from .baseline import canalizaciones
 
 
+class CanalizacionConGrupos(Pipeline):
+    """Canalización que le pasa `grupos` a su último paso cuando este los exige.
+
+    El arnés mira `necesita_grupos` en el objeto que recibe y, si está puesto, llama
+    `fit(X, y, grupos=...)`. Un `Pipeline` corriente no declara ese atributo y su `fit`
+    no acepta ese argumento, así que envolver el `stacking` en una canalización —para
+    ponerle delante una transformación de la representación— rompe la cadena en
+    silencio: el arnés dejaría de pasar los grupos y `StackingAgrupado` reventaría.
+    Esta subclase reenvía el argumento al último paso con la sintaxis `paso__grupos`
+    y hereda su exigencia, de modo que la invariante sobrevive a la envoltura.
+
+    Existe porque el 05c le pone un `AgregarHuellas` delante a los mismos ensambles del
+    05. Si el último paso no pide grupos, se comporta como cualquier canalización.
+    """
+
+    @property
+    def necesita_grupos(self) -> bool:
+        return bool(getattr(self.steps[-1][1], "necesita_grupos", False))
+
+    def fit(self, X, y=None, grupos=None, **kw):
+        if grupos is not None:
+            kw[f"{self.steps[-1][0]}__grupos"] = grupos
+        return super().fit(X, y, **kw)
+
+
 class StackingAgrupado(BaseEstimator, ClassifierMixin):
     """Stacking cuya validación interna agrupa con los grupos del pliegue externo.
 
