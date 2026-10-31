@@ -824,17 +824,17 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 
 **Resultado.** La corrida `2026-10-31-antonio-2.13-comparativa-regresion-ensambles` evaluó los nueve modelos sobre la misma partición agrupada, con tres semillas y cinco pliegues (una sola semilla para el afinado), de modo que los tiempos y las métricas son comparables entre sí. La corrida completa tardó **7 h 16 min** en un contenedor con dieciséis núcleos, de las cuales 5 h 56 min son el bucle de los nueve modelos y los 80 minutos restantes se reparten entre la lectura de datos, el armado de las huellas, la evaluación sobre la prueba reservada y las figuras.
 
-| modelo | concordancia | NPASS | AUROC | MCC | seg |
-|:--|--:|--:|--:|--:|--:|
-| `bosque` | **0.765 ± 0.006** | 0.511 | 0.833 | 0.310 | 2,486 |
-| `aft` | 0.761 ± 0.005 | **0.632** | **0.846** | **0.467** | **74** |
-| `apilado` | 0.761 ± 0.006 | 0.527 | 0.832 | 0.298 | 3,512 |
-| `knn_afinado` | 0.761 ± 0.006 | 0.554 | 0.828 | 0.376 | 1,362 |
-| `votacion` | 0.757 ± 0.006 | 0.514 | 0.829 | 0.339 | 2,875 |
-| `knn_referencia` | 0.756 ± 0.005 | 0.547 | 0.823 | 0.369 | 2,772 |
-| `boosting` | 0.750 ± 0.006 | 0.511 | 0.825 | 0.291 | 781 |
-| `bagging_knn` | 0.673 ± 0.006 | 0.518 | 0.711 | 0.221 | 7,467 |
-| `media_por_diana` | 0.642 ± 0.006 | 0.403 | 0.720 | 0.000 | 37 |
+| modelo | concordancia | NPASS | AUROC | MCC | ajuste s/pliegue | reloj total |
+|:--|--:|--:|--:|--:|--:|--:|
+| `bosque` | **0.765 ± 0.006** | 0.511 | 0.833 | 0.310 | 163.6 | 2,486 |
+| `aft` | 0.761 ± 0.005 | **0.632** | **0.846** | **0.467** | **3.9** | **74** |
+| `apilado` | 0.761 ± 0.006 | 0.527 | 0.832 | 0.298 | 44.7 | 3,512 |
+| `knn_afinado` | 0.761 ± 0.006 | 0.554 | 0.828 | 0.376 | 88.2 | 1,362 |
+| `votacion` | 0.757 ± 0.006 | 0.514 | 0.829 | 0.339 | 4.1 | 2,875 |
+| `knn_referencia` | 0.756 ± 0.005 | 0.547 | 0.823 | 0.369 | 0.8 | 2,772 |
+| `boosting` | 0.750 ± 0.006 | 0.511 | 0.825 | 0.291 | 49.0 | 781 |
+| `bagging_knn` | 0.673 ± 0.006 | 0.518 | 0.711 | 0.221 | 19.8 | 7,467 |
+| `media_por_diana` | 0.642 ± 0.006 | 0.403 | 0.720 | 0.000 | 0.8 | 37 |
 
 **El modelo final de la fase 2 es el `aft`, y no el que gana el agregado.** El `bosque` queda por encima en concordancia global y lo hace de forma consistente, en catorce de los quince pliegues, así que no es un empate. Pero el `aft` gana en AUROC, en MCC y, sobre todo, en la concordancia de los compuestos que solo aparecen en NPASS, que son los que este proyecto existe para priorizar. Ahí gana los quince pliegues contra cada uno de los ocho modelos restantes, y el segundo mejor se queda en 0.554.
 
@@ -844,7 +844,13 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 
 **Sobre la partición reservada.** Primera toma de la prueba en el proyecto, registrada en `experimentos/prueba.csv`. El `aft` da 0.720 de concordancia global sobre los 13,944 pares, con AUROC de 0.793 y MCC de 0.277. En los 117 pares que solo tiene NPASS baja a 0.530 con un Spearman de 0.083, que es ruido alrededor del azar. Eso no respalda el argumento de NPASS ni lo contradice, porque la prevalencia de activos pasa del 12.3% en ajuste al 44.4% en prueba sobre esos 117 pares. El argumento se sostiene en los quince pliegues de la validación cruzada, y así está dicho en la lectura del cuaderno.
 
-**Dos advertencias para leer la tabla.** La columna `seg` mide el tiempo de reloj con dieciséis núcleos y solo cubre el ajuste, no la predicción, de modo que subestima a los modelos basados en kNN, cuyo costo está en predecir. Y el `knn_afinado` sale con un RMSE de entrenamiento de 0.000 porque la rejilla eligió `weights="distance"`, con lo que cada punto de entrenamiento se predice a sí mismo. Su brecha entre entrenamiento y validación no es comparable con la de los demás.
+**Tres advertencias para leer la tabla.**
+
+*Las dos columnas de tiempo no miden lo mismo, y hacen falta las dos.* `ajuste s/pliegue` es la que registra `metricas.json`: solo la llamada a `fit`, promediada entre pliegues. `reloj total` es el tiempo de pared de evaluar ese modelo entero —quince pliegues, cinco en el `knn_afinado`— e incluye las **dos** predicciones que el arnés hace en cada pliegue, sobre validación y sobre el conjunto de ajuste completo para calcular el `rmse_entrenamiento`. De ahí que el `knn_referencia` ajuste en 0.8 s y gaste 2,772 s: en los modelos por vecinos el costo está en predecir, no en ajustar, y con una sola columna la lectura sale al revés. Las dos se tomaron con dieciséis núcleos (`n_jobs=-1`), así que ninguna es comparable con las mono-hilo del 04b ni del 04c. El `nota_seg` que quedó registrado en el `params.yaml` de la corrida describe la columna `seg` como tiempo de reloj, y eso es lo que aquí se corrige; el archivo no se reescribe porque es el registro de la corrida.
+
+*La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
+
+*El `knn_afinado` sale con un RMSE de entrenamiento de 0.000* porque cada punto de entrenamiento se predice a sí mismo, lo que solo ocurre con `weights="distance"`. La corrida no dejó registrado qué punto de la rejilla eligió —es lo primero que habría que añadir a la siguiente—, pero de las dos opciones de la rejilla (`uniform` y `distance`) esa es la única que da exactamente 0. Su brecha entre entrenamiento y validación no es comparable con la de los demás.
 
 ### Supuestos
 
