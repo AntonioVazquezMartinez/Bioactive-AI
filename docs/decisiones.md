@@ -47,6 +47,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente | 24 oct |
 | [2.11](#d2-11) | Dirección del efecto: la afinidad cuenta | Vigente | 24 oct |
 | [2.12](#d2-12) | Los inactivos de DrugMatrix | Propuesta | 24 oct |
+| [2.13](#d2-13) | Ensambles para la regresión de potencia | Vigente | |
 
 Estados: **vigente** (se trabaja sobre ella, y es reversible), **revisada** (se decidió, se midió y cambió; conserva visible la versión superada), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió: la 2.1 y la 2.6, el 15 de octubre de 2026). *Consulta* es la fecha en que la patrocinadora recibió la entrada: el 17 de octubre la [consulta](../consulta.qmd) con lo decidido por el equipo y el 24 el correo con las dudas, cuya respuesta está [en la fase 2](#respuesta-correo-24-oct).
 
@@ -796,6 +797,32 @@ Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pa
 **Con regresión aportan poco.** Las 5,658 filas dicen lo mismo: `pActividad` < 5, sin cuánto menos. Como clasificación pesaban mucho (61% de los negativos por registro, 10.8% por par); como cota de regresión son una sola cota repetida, concentrada en una campaña, cuatro dianas y fármacos conocidos (espacio químico sesgado).
 
 **Se propone.** Fuera del modelo principal. **La medición del desempeño con y sin ellas queda para el Avance 5.** Una sensibilidad con ellas como negativos censurados y sin ellas, reportada al lado, con un análisis de esqueletos de los 772 compuestos. Como todas son de un solo documento, agrupar por documento en la validación cruzada las deja juntas en un pliegue, y eso hay que declararlo. El valor que podrían tener es el déficit de negativos verdaderos de cualquier conjunto derivado de la literatura, donde se publica lo que funciona.
+
+#### 2.13 · Ensambles para la regresión de potencia {#d2-13 .vigente}
+
+**Estado:** vigente
+
+**Qué se decidió.** Se definen e implementan cinco familias de ensamble para la predicción continua de potencia (`pActividad`), cubriendo tanto estrategias homogéneas como heterogéneas, además de un modelo acelerado de tiempo de falla (AFT) con manejo nativo de censura:
+
+1. **Ensambles homogéneos (tres familias):**
+   - `bosque` (`RandomForestRegressor`): ensamble paralelo por embolsado (bagging) sobre árboles de decisión, reduciendo la varianza mediante el promediado de estimadores independientes.
+   - `boosting` (`HistGradientBoostingRegressor`): ensamble secuencial por potenciación de gradiente sobre árboles discretizados por histogramas, reduciendo el sesgo de forma computacionalmente eficiente.
+   - `bagging_knn` (`BaggingRegressor` sobre `KNeighborsRegressor`): ensamble homogéneo no basado en árboles, aplicando bagging sobre un regresor local por vecinos cercanos para estabilizar estimaciones basadas en distancias químicas.
+2. **Ensambles heterogéneos (dos familias):**
+   - `votacion` (`VotingRegressor`): combinación lineal directa por promedio simple de estimadores de distinta naturaleza inductiva (`Ridge` como control lineal regularizado global y `kNN` como modelo local no paramétrico). No introduce meta-parámetros ni requiere particiones internas.
+   - `apilado` (`ApiladoAgrupado`): ensamble de apilamiento (stacking) que entrena un meta-estimador (`Ridge`) sobre las predicciones fuera de pliegue generadas por los estimadores base.
+
+La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallazgos de la [1.3](#d1-3) / #164, donde ambas familias obtuvieron la mayor concordancia al incorporar huellas estructurales (kNN alcanzó 0.756 con descriptores y huellas; 0.739 con descriptores solos; Ridge 0.724), mientras que el perceptrón multicapa (MLP) quedó descartado por degradar el desempeño (−0.027) y mostrar sobreajuste severo.
+
+**El apilado agrupa su partición interna.** Para que el apilamiento (`ApiladoAgrupado`) estime honestamente los coeficientes del meta-regresor sin sesgo optimista, las predicciones fuera de pliegue deben generarse respetando estrictamente los grupos de andamio (`GroupKFold`). Como se demostró empíricamente en la [1.2](#d1-2), no respetar el agrupamiento estructural infla las métricas en **2.2 puntos de AUROC y 7.1 puntos de MCC** por fuga de información entre análogos moleculares de los pliegues. En regresión, una partición aleatoria interna asignaría análogos del mismo andamio a entrenamiento y validación de las bases, produciendo predicciones artificialmente precisas y distorsionando las ponderaciones asignadas por el meta-modelo.
+
+**El AFT entra sin envoltorio sobre la matriz densa.** `RegresionAFT` (`survival:aft` con XGBoost) utiliza directamente las observaciones censuradas por intervalos convirtiendo los límites de potencia a escala micromolar (cota inferior y superior), según lo resuelto en la [2.9](#d2-9) y [2.10](#d2-10). A diferencia de los regresores clásicos, que requieren el envoltorio `SoloExactas` para omitir los registros censurados durante el ajuste, el AFT entra sin envoltorio porque modela la verosimilitud de supervivencia con censura de forma nativa. Entra exclusivamente sobre la matriz densa (227 columnas: descriptores fisicoquímicos 2D de RDKit más variables indicadoras de diana, sin las huellas dispersas de Morgan / Sort & Slice) por una razón mecánica directa: `RegresionAFT.fit(X, inferior, superior)` recibe tres argumentos posicionales, por lo que no puede envolverse en un `Pipeline` (dado que `Pipeline.fit(X, y, superior)` no acepta un tercer argumento posicional), y sin canalización no existe forma de aplicarle `AgregarHuellas` dentro del pliegue sin introducir código compartido nuevo. Esto genera una consecuencia directa y transparente en la columna de tiempos de ejecución (`seg`), que contrasta con la de los ensambles evaluados sobre la matriz mixta.
+
+**El afinado corre con una semilla y su métrica interna no es la principal.** La búsqueda de hiperparámetros (`AfinadoAgrupado` sobre kNN, con la rejilla tomada del `params.yaml` de la corrida `2026-10-26-antonio-2.9-baseline-regresion-sencilla-exactas`) se evalúa con una sola semilla (`SEMILLAS[0]`), preservando el protocolo del notebook 04b para no multiplicar el costo computacional. Su métrica interna de optimización (`neg_root_mean_squared_error`) no es la métrica principal del proyecto: el afinado corre envuelto en `SoloExactas`, por lo que la búsqueda interna nunca ve las mediciones censuradas. La evaluación externa del modelo final se rige por la concordancia de Harrell y la correlación de Spearman ([C.1](#dc-1), [2.9](#d2-9)), calculadas sobre la totalidad de los datos (exactos e intervalos censurados).
+
+**Las tres semillas mueven el reparto y no el azar del modelo.** Para la evaluación final con tres semillas (`SEMILLAS = (0, 1, 2)`), el cambio de semilla controla la asignación de pliegues en la validación cruzada agrupada por andamio (`GroupKFold(shuffle=True, random_state=semilla)`), modificando el reparto de compuestos y análogos entre pliegues. A diferencia del notebook 04c, donde cada semilla movía simultáneamente el reparto en `StratifiedGroupKFold` y el azar interno del estimador (`random_state`), en el 05b las semillas mueven exclusivamente el reparto entre pliegues al mantener fijas las semillas de los estimadores base. Esto evalúa la estabilidad de los ensambles frente a distintas distribuciones de familias químicas en entrenamiento y validación.
+
+**Resultado.** Pendiente: la ejecución completa de producción con las tres semillas (`SEMILLAS = (0, 1, 2)`) incorporará las cifras definitivas de concordancia y correlación de Spearman en la tabla comparativa.
 
 ### Supuestos
 

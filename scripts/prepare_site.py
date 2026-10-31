@@ -248,7 +248,8 @@ def main() -> int:
                    "notebooks/03c_Permeabilidad_huellas.ipynb",
                    "notebooks/04_Models.ipynb",
                    "notebooks/04b_Regresion_actividad.ipynb",
-                   "notebooks/04c_Regresion_actividad_huellas.ipynb"]:
+                   "notebooks/04c_Regresion_actividad_huellas.ipynb",
+                   "notebooks/05b_Ensambles_actividad.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
