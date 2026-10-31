@@ -26,6 +26,7 @@ from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
+from scipy import sparse
 from sklearn.base import BaseEstimator, clone
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
@@ -136,7 +137,7 @@ def evaluar_baselines(X, inferior, superior, grupos, estratos, clase,
     usan el intervalo completo: la concordancia con las censuradas, y Spearman y RMSE solo
     con las exactas. El estrato se reporta si tiene `MIN_POR_CLASE` casos de cada clase.
     """
-    X = np.asarray(X, dtype=float)
+    X = X if sparse.issparse(X) else np.asarray(X, dtype=float)
     inferior = np.asarray(inferior, dtype=float)
     superior = np.asarray(superior, dtype=float)
     grupos = np.asarray(grupos)

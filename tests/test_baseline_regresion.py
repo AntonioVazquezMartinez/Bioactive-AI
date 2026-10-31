@@ -159,3 +159,33 @@ def test_solo_exactas_con_apilado_grupo_totalmente_censurado():
     assert np.isfinite(preds).all()
 
 
+def test_evaluar_baselines_acepta_matriz_dispersa():
+    """`evaluar_baselines` debe aceptar `scipy.sparse.csr_matrix` sin tronar ni densificar."""
+    from scipy import sparse
+    from sklearn.base import BaseEstimator, RegressorMixin
+    from src.models.baseline_regresion import SoloExactas
+
+    vio_dispersa = []
+
+    class _EspiaDispersa(BaseEstimator, RegressorMixin):
+        def fit(self, X, y=None):
+            vio_dispersa.append(sparse.issparse(X))
+            return self
+
+        def predict(self, X):
+            vio_dispersa.append(sparse.issparse(X))
+            return np.zeros(X.shape[0])
+
+    X, inf, sup, _, est, clase = _datos(n=60)
+    grupos = np.repeat(np.arange(6), 10)
+    X_sp = sparse.csr_matrix(X)
+    modelo = SoloExactas(_EspiaDispersa())
+    res = evaluar_baselines(X_sp, inf, sup, grupos, est, clase, semillas=(0,), pliegues=2,
+                            modelos={"espia": modelo})
+    assert len(res) > 0
+    assert np.isfinite(res["concordancia"]).all()
+    assert len(vio_dispersa) > 0 and all(vio_dispersa)
+
+
+
+

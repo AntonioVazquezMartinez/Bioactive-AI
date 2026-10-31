@@ -20,11 +20,11 @@ from sklearn.ensemble import (
 )
 from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV, GroupKFold, KFold
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 
-from src.models.ensambles import ApiladoAgrupado, ensambles
+from src.models.ensambles import AfinadoAgrupado, ApiladoAgrupado, ensambles
 
 
 @pytest.fixture
@@ -554,6 +554,164 @@ def test_validacion_formato_bases_invalido():
     m3 = ApiladoAgrupado(bases=[(123, Ridge())], pliegues=2)
     with pytest.raises(ValueError, match=r"tupla \(nombre, estimador\)"):
         m3.fit(X, y, grupos=grupos)
+
+
+def test_afinado_necesita_grupos_es_true():
+    """`AfinadoAgrupado` debe exponer `necesita_grupos = True` tanto en clase como en instancia."""
+    assert AfinadoAgrupado.necesita_grupos is True
+    modelo = AfinadoAgrupado(KNeighborsRegressor(), {"n_neighbors": [3, 5]})
+    assert modelo.necesita_grupos is True
+
+
+def test_afinado_fit_sin_grupos_lanza_value_error(datos_regresion):
+    """`fit(X, y)` sin el argumento `grupos` debe lanzar ValueError explicando la fuga."""
+    X, y, _ = datos_regresion
+    modelo = AfinadoAgrupado(KNeighborsRegressor(), {"n_neighbors": [3, 5]})
+
+    with pytest.raises(ValueError, match="grupos"):
+        modelo.fit(X, y)
+
+    with pytest.raises(ValueError, match="scaffold|fuga"):
+        modelo.fit(X, y, grupos=None)
+
+
+def test_afinado_guardas_de_pliegues_y_longitudes(datos_regresion):
+    """`AfinadoAgrupado.fit` debe validar discrepancias de longitud y límites de pliegues."""
+    X, y, grupos = datos_regresion
+    rejilla = {"n_neighbors": [3, 5]}
+
+    # Longitud incorrecta de grupos
+    with pytest.raises(ValueError, match="longitud"):
+        AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=3).fit(X, y, grupos=grupos[:-1])
+
+    # Pliegues < 2
+    with pytest.raises(ValueError, match="al menos 2"):
+        AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=1).fit(X, y, grupos=grupos)
+
+    # Pliegues > n_grupos únicos
+    n_grupos_unicos = len(np.unique(grupos))
+    with pytest.raises(ValueError, match="no puede ser mayor"):
+        AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=n_grupos_unicos + 1).fit(X, y, grupos=grupos)
+
+
+def test_afinado_predict_antes_de_fit_lanza_error(datos_regresion):
+    """Llamar a `predict` antes de `fit` debe lanzar error de estimador no ajustado."""
+    X, _, _ = datos_regresion
+    modelo = AfinadoAgrupado(KNeighborsRegressor(), {"n_neighbors": [3, 5]})
+
+    with pytest.raises(NotFittedError):
+        modelo.predict(X)
+
+
+def test_afinado_el_gridsearch_de_adentro_recibe_las_particiones_agrupadas(datos_regresion):
+    """La búsqueda interna de `AfinadoAgrupado` debe recibir las particiones agrupadas por scaffold y no cv=5 por omisión.
+
+    Comprueba que `busqueda_.cv` sea exactamente la lista de tuplas (ajuste, val) generada
+    por `GroupKFold` respetando los grupos y sin fuga cruzada.
+    """
+    X, y, grupos = datos_regresion
+    rejilla = {"n_neighbors": [3, 5]}
+    modelo = AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=3, semilla=0)
+    modelo.fit(X, y, grupos=grupos)
+
+    assert hasattr(modelo, "busqueda_")
+    cv_interno = modelo.busqueda_.cv
+    assert cv_interno is not None
+    assert cv_interno != 5
+    assert isinstance(cv_interno, list)
+    assert len(cv_interno) == 3
+
+    # Comprobar que en cada pliegue no hay fuga de grupos entre ajuste y validación interna
+    for fold_idx, (ajuste_idx, val_idx) in enumerate(cv_interno):
+        grupos_ajuste = set(grupos[ajuste_idx])
+        grupos_val = set(grupos[val_idx])
+        interseccion = grupos_ajuste & grupos_val
+        assert not interseccion, f"Fuga de grupos detectada en pliegue interno {fold_idx}: {interseccion}"
+
+    # Comprobar que coincide exactamente con GroupKFold agrupado
+    esperadas = list(GroupKFold(n_splits=3, shuffle=True, random_state=0).split(X, y, grupos))
+    for (tr_act, val_act), (tr_exp, val_exp) in zip(cv_interno, esperadas):
+        np.testing.assert_array_equal(tr_act, tr_exp)
+        np.testing.assert_array_equal(val_act, val_exp)
+
+
+def test_afinado_agrupar_la_validacion_interna_cambia_el_hiperparametro_elegido():
+    """Demuestra que agrupar por scaffold altera el hiperparámetro óptimo seleccionado en kNN.
+
+    Con partición al azar, el vecino más cercano (1-NN) de cada muestra pertenece
+    a su mismo grupo y predice casi perfecto, haciendo que gane n_neighbors chico.
+    Con partición agrupada, todo su grupo queda fuera y 1-NN predice mal frente al
+    ruido entre grupos; promediar sobre muchos vecinos suaviza el sesgo y hace
+    que gane n_neighbors grande.
+    """
+    rng = np.random.default_rng(0)
+    n_grupos = 12
+    filas_por_grupo = 15
+    n = n_grupos * filas_por_grupo
+    grupos = np.repeat(np.arange(n_grupos), filas_por_grupo)
+
+    desplazamiento = rng.normal(0.0, 10.0, size=n_grupos)
+    # Columna que es el identificador del grupo más ruido
+    X = np.column_stack([grupos.astype(float), rng.normal(0.0, 1.0, size=(n, 2))])
+    # Objetivo que depende fuertemente del grupo
+    y = desplazamiento[grupos] + rng.normal(0.0, 0.1, size=n)
+
+    perm = rng.permutation(n)
+    X, y, grupos = X[perm], y[perm], grupos[perm]
+
+    rejilla = {"n_neighbors": [1, 20]}
+
+    # 1. Búsqueda con partición agrupada por scaffold (AfinadoAgrupado)
+    mod_agrupado = AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=3, semilla=0)
+    mod_agrupado.fit(X, y, grupos=grupos)
+
+    # 2. Búsqueda con partición al azar (KFold estándar sin grupos)
+    cv_azar = KFold(n_splits=3, shuffle=True, random_state=0)
+    mod_azar = GridSearchCV(
+        KNeighborsRegressor(),
+        rejilla,
+        scoring="neg_root_mean_squared_error",
+        cv=cv_azar,
+    ).fit(X, y)
+
+    # Con partición al azar gana n_neighbors chico (1); con partición agrupada gana el grande (20)
+    assert mod_azar.best_params_["n_neighbors"] == 1
+    assert mod_agrupado.elegidos_["n_neighbors"] == 20
+    assert mod_agrupado.elegidos_["n_neighbors"] != mod_azar.best_params_["n_neighbors"]
+
+
+def test_afinado_clonacion_sklearn_clone():
+    """`AfinadoAgrupado` debe clonarse con `sklearn.base.clone` preservando hiperparámetros."""
+    estimador = KNeighborsRegressor(n_neighbors=5)
+    rejilla = {"n_neighbors": [3, 5, 7]}
+    modelo = AfinadoAgrupado(estimador, rejilla, pliegues=4, metrica="r2", semilla=42, n_jobs=2)
+    clon = clone(modelo)
+
+    assert clon is not modelo
+    assert clon.pliegues == 4
+    assert clon.metrica == "r2"
+    assert clon.semilla == 42
+    assert clon.n_jobs == 2
+    assert clon.rejilla == rejilla
+    assert clon.canalizacion is not estimador
+    assert isinstance(clon.canalizacion, KNeighborsRegressor)
+
+
+def test_afinado_acepta_matriz_dispersa(datos_regresion):
+    """`AfinadoAgrupado.fit` y `predict` deben operar sobre matrices dispersas `scipy.sparse.csr_matrix`."""
+    X, y, grupos = datos_regresion
+    X_sp = sp.csr_matrix(X)
+    rejilla = {"n_neighbors": [3, 5]}
+
+    modelo = AfinadoAgrupado(KNeighborsRegressor(), rejilla, pliegues=3, semilla=0)
+    modelo.fit(X_sp, y, grupos=grupos)
+
+    preds = modelo.predict(X_sp)
+    assert preds.shape == (len(y),)
+    assert np.isfinite(preds).all()
+    assert hasattr(modelo, "puntaje_interno_")
+    assert np.isfinite(modelo.puntaje_interno_)
+
 
 
 

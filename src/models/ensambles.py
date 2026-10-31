@@ -32,7 +32,7 @@ from collections.abc import Mapping, Sequence
 from typing import Any
 
 import numpy as np
-from sklearn.base import BaseEstimator, RegressorMixin, check_is_fitted
+from sklearn.base import BaseEstimator, RegressorMixin, check_is_fitted, clone
 from sklearn.ensemble import (
     BaggingRegressor,
     HistGradientBoostingRegressor,
@@ -41,7 +41,7 @@ from sklearn.ensemble import (
     VotingRegressor,
 )
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import GridSearchCV, GroupKFold
 from sklearn.neighbors import KNeighborsRegressor
 
 
@@ -172,6 +172,92 @@ class ApiladoAgrupado(BaseEstimator, RegressorMixin):
         """Obtiene los nombres de las características de salida transformadas."""
         check_is_fitted(self, "estimador_")
         return self.estimador_.get_feature_names_out(input_features)
+
+
+class AfinadoAgrupado(BaseEstimator, RegressorMixin):
+    """Búsqueda de hiperparámetros con validación cruzada interna agrupada por andamio.
+
+    Envuelve `GridSearchCV` asegurando que las particiones internas respeten los
+    grupos estructurales (`GroupKFold`), evitando la sobreestimación por fuga de
+    información entre análogos moleculares.
+
+    Utiliza `GroupKFold` y no `StratifiedGroupKFold` porque la variable objetivo
+    (`pActividad`) es continua en regresión (a diferencia de `BusquedaAnidada` en
+    `src/models/ajuste.py`, diseñada para clasificación binaria). Esta clase duplica
+    temporalmente a `BusquedaAnidada` para no romper la entrega del Avance 5;
+    ambas se fusionarán en un estimador unificado tras la entrega.
+    """
+
+    necesita_grupos: bool = True
+
+    def __init__(
+        self,
+        canalizacion: Any,
+        rejilla: Mapping[str, Sequence[Any]] | Any,
+        *,
+        pliegues: int = 3,
+        metrica: str = "neg_root_mean_squared_error",
+        semilla: int = 0,
+        n_jobs: int | None = None,
+    ) -> None:
+        self.canalizacion = canalizacion
+        self.rejilla = rejilla
+        self.pliegues = pliegues
+        self.metrica = metrica
+        self.semilla = semilla
+        self.n_jobs = n_jobs
+
+    def fit(self, X: Any, y: Any, grupos: Any = None) -> AfinadoAgrupado:
+        """Ajusta la búsqueda de hiperparámetros respetando los grupos en la partición interna."""
+        if grupos is None:
+            raise ValueError(
+                "AfinadoAgrupado requiere 'grupos' para la validación cruzada interna "
+                "por andamio (scaffold) para evitar fuga de datos entre pliegues."
+            )
+
+        grupos_arr = np.asarray(grupos)
+        y_arr = np.asarray(y).ravel()
+
+        if len(grupos_arr) != len(y_arr):
+            raise ValueError(
+                f"La longitud de 'grupos' ({len(grupos_arr)}) debe coincidir con la cantidad "
+                f"de muestras en 'y' ({len(y_arr)})."
+            )
+
+        if self.pliegues < 2:
+            raise ValueError(
+                f"El número de pliegues debe ser al menos 2, pero se recibió pliegues={self.pliegues}."
+            )
+
+        n_grupos_unicos = len(np.unique(grupos_arr))
+        if self.pliegues > n_grupos_unicos:
+            raise ValueError(
+                f"El número de pliegues (pliegues={self.pliegues}) no puede ser mayor que "
+                f"el número de grupos únicos ({n_grupos_unicos})."
+            )
+
+        particiones = list(
+            GroupKFold(n_splits=self.pliegues, shuffle=True, random_state=self.semilla).split(
+                X, y_arr, grupos_arr
+            )
+        )
+        self.busqueda_ = GridSearchCV(
+            clone(self.canalizacion),
+            dict(self.rejilla),
+            scoring=self.metrica,
+            cv=particiones,
+            n_jobs=self.n_jobs,
+            refit=True,
+        ).fit(X, y_arr)
+        self.best_estimator_ = self.busqueda_.best_estimator_
+        self.elegidos_ = self.busqueda_.best_params_
+        self.puntaje_interno_ = float(self.busqueda_.best_score_)
+        return self
+
+    def predict(self, X: Any) -> np.ndarray:
+        """Predice utilizando el mejor estimador ajustado."""
+        check_is_fitted(self, "busqueda_")
+        return self.busqueda_.best_estimator_.predict(X)
 
 
 def ensambles(
