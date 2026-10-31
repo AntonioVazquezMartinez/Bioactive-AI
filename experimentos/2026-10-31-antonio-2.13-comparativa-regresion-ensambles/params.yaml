@@ -1,0 +1,39 @@
+decision: '2.13'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - knn_referencia
+  - media_por_diana
+  - bosque
+  - boosting
+  - bagging_knn
+  - votacion
+  - apilado
+  - aft
+  - knn_afinado
+  pliegues: 5
+  entrena_con: solo exactas (ensambles) / censuradas (aft)
+  objetivo: pActividad
+  metrica_principal: concordancia
+  n_bits_sortslice: 2048
+  radio_morgan: 2
+  estratos: procedencia
+  afinados:
+  - knn
+  rejillas:
+    knn:
+      kneighborsregressor__n_neighbors:
+      - 15
+      - 30
+      kneighborsregressor__weights:
+      - uniform
+      - distance
+  semillas_afinado:
+  - 0
+  metrica_interna: neg_root_mean_squared_error
+  n_jobs: -1
+  nota_seg: tiempo de reloj con diecis?is n?cleos (n_jobs=-1); no comparable con el
+    mono-hilo del 04b ni 04c

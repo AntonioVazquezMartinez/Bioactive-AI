@@ -185,7 +185,7 @@ class AfinadoAgrupado(BaseEstimator, RegressorMixin):
     (`pActividad`) es continua en regresión (a diferencia de `BusquedaAnidada` en
     `src/models/ajuste.py`, diseñada para clasificación binaria). Esta clase duplica
     temporalmente a `BusquedaAnidada` para no romper la entrega del Avance 5;
-    ambas se fusionarán en un estimador unificado tras la entrega.
+    ambas se fusionarán en un estimador unificado tras la entrega (#174).
     """
 
     necesita_grupos: bool = True

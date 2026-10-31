@@ -822,7 +822,29 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 
 **Las tres semillas mueven el reparto y no el azar del modelo.** Para la evaluación final con tres semillas (`SEMILLAS = (0, 1, 2)`), el cambio de semilla controla la asignación de pliegues en la validación cruzada agrupada por andamio (`GroupKFold(shuffle=True, random_state=semilla)`), modificando el reparto de compuestos y análogos entre pliegues. A diferencia del notebook 04c, donde cada semilla movía simultáneamente el reparto en `StratifiedGroupKFold` y el azar interno del estimador (`random_state`), en el 05b las semillas mueven exclusivamente el reparto entre pliegues al mantener fijas las semillas de los estimadores base. Esto evalúa la estabilidad de los ensambles frente a distintas distribuciones de familias químicas en entrenamiento y validación.
 
-**Resultado.** Pendiente: la ejecución completa de producción con las tres semillas (`SEMILLAS = (0, 1, 2)`) incorporará las cifras definitivas de concordancia y correlación de Spearman en la tabla comparativa.
+**Resultado.** La corrida `2026-10-31-antonio-2.13-comparativa-regresion-ensambles` evaluó los nueve modelos sobre la misma partición agrupada, con tres semillas y cinco pliegues (una sola semilla para el afinado), de modo que los tiempos y las métricas son comparables entre sí. La corrida completa tardó **7 h 16 min** en un contenedor con dieciséis núcleos, de las cuales 5 h 56 min son el bucle de los nueve modelos y los 80 minutos restantes se reparten entre la lectura de datos, el armado de las huellas, la evaluación sobre la prueba reservada y las figuras.
+
+| modelo | concordancia | NPASS | AUROC | MCC | seg |
+|:--|--:|--:|--:|--:|--:|
+| `bosque` | **0.765 ± 0.006** | 0.511 | 0.833 | 0.310 | 2,486 |
+| `aft` | 0.761 ± 0.005 | **0.632** | **0.846** | **0.467** | **74** |
+| `apilado` | 0.761 ± 0.006 | 0.527 | 0.832 | 0.298 | 3,512 |
+| `knn_afinado` | 0.761 ± 0.006 | 0.554 | 0.828 | 0.376 | 1,362 |
+| `votacion` | 0.757 ± 0.006 | 0.514 | 0.829 | 0.339 | 2,875 |
+| `knn_referencia` | 0.756 ± 0.005 | 0.547 | 0.823 | 0.369 | 2,772 |
+| `boosting` | 0.750 ± 0.006 | 0.511 | 0.825 | 0.291 | 781 |
+| `bagging_knn` | 0.673 ± 0.006 | 0.518 | 0.711 | 0.221 | 7,467 |
+| `media_por_diana` | 0.642 ± 0.006 | 0.403 | 0.720 | 0.000 | 37 |
+
+**El modelo final de la fase 2 es el `aft`, y no el que gana el agregado.** El `bosque` queda por encima en concordancia global y lo hace de forma consistente, en catorce de los quince pliegues, así que no es un empate. Pero el `aft` gana en AUROC, en MCC y, sobre todo, en la concordancia de los compuestos que solo aparecen en NPASS, que son los que este proyecto existe para priorizar. Ahí gana los quince pliegues contra cada uno de los ocho modelos restantes, y el segundo mejor se queda en 0.554.
+
+**El mecanismo está medido y no supuesto.** En el conjunto de ajuste, el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL. Como los ensambles corren envueltos en `SoloExactas`, que descarta las censuradas, reciben 982 de las 2,114 filas de NPASS, mientras el `aft` las recibe todas. La ventaja no viene de una química mejor sino de ver datos que a los demás se les quitan.
+
+**La limitación se escribe con el resultado.** El `aft` difiere de los ensambles en dos cosas a la vez, la verosimilitud censurada y que no recibe las huellas de Morgan / Sort & Slice (por la razón mecánica explicada arriba). Esta corrida no permite atribuir la ganancia en NPASS solo a la censura, y separarlas exige una corrida adicional con los ensambles sobre la matriz densa.
+
+**Sobre la partición reservada.** Primera toma de la prueba en el proyecto, registrada en `experimentos/prueba.csv`. El `aft` da 0.720 de concordancia global sobre los 13,944 pares, con AUROC de 0.793 y MCC de 0.277. En los 117 pares que solo tiene NPASS baja a 0.530 con un Spearman de 0.083, que es ruido alrededor del azar. Eso no respalda el argumento de NPASS ni lo contradice, porque la prevalencia de activos pasa del 12.3% en ajuste al 44.4% en prueba sobre esos 117 pares. El argumento se sostiene en los quince pliegues de la validación cruzada, y así está dicho en la lectura del cuaderno.
+
+**Dos advertencias para leer la tabla.** La columna `seg` mide el tiempo de reloj con dieciséis núcleos y solo cubre el ajuste, no la predicción, de modo que subestima a los modelos basados en kNN, cuyo costo está en predecir. Y el `knn_afinado` sale con un RMSE de entrenamiento de 0.000 porque la rejilla eligió `weights="distance"`, con lo que cada punto de entrenamiento se predice a sí mismo. Su brecha entre entrenamiento y validación no es comparable con la de los demás.
 
 ### Supuestos
 
