@@ -9,6 +9,7 @@ Una carpeta por corrida, `experimentos/<id>/`, escrita por `src/tracking.py` y v
 | `metricas.json` | las métricas; nunca registros de los datos (licencias, entrada C.6) |
 | `entorno.json` | commit y si el árbol estaba sucio, sistema, Python, versiones, `sha256` del lock y de los datos |
 | `comando.txt` | el comando que la lanzó |
+| `pliegues.csv` | opcional: una fila por modelo, semilla, pliegue y estrato, cuando la decisión se apoya en conteos y no solo en medias |
 
 El `id` es `AAAA-MM-DD-<autor>-<decisión>-<nombre>`, por ejemplo `2026-10-14-ingrid-1.7-L`. La fecha del `id` es la local de quien corre (el commit que registra puede caer en otro día en UTC). El
 autor sale de `BIOACTIVE_AUTOR` o del primer nombre de `git config user.name`. Una corrida no se
@@ -25,6 +26,15 @@ with Corrida("L", decision="1.7", params={"L": 64}, semillas=[0, 1, 2], datos=[r
 Si MLflow está instalado, la corrida también se registra en `mlruns/` (ignorado por git), que es
 solo un visor. Una corrida no decide: se compara con validación cruzada agrupada, no con una
 partición.
+
+**`pliegues.csv` existe porque un agregado no deja verificar un conteo.** `metricas.json` guarda
+medias y desviaciones, y con eso no se puede comprobar una afirmación del tipo «gana en 15 de los
+15 pliegues», que es sobre la que descansa la elección del modelo final de la
+[2.13](../docs/decisiones.md#d2-13). La primera que lo trae es
+`2026-10-31-antonio-2.13-comparativa-regresion-ensambles`, con una fila por modelo, semilla,
+pliegue y estrato. No lo escribe `Corrida`, lo deja el cuaderno al ir anotando sus parciales, y se
+copia a la carpeta al cerrar. Son decenas de kilobytes, así que solo vale la pena cuando el
+argumento es un conteo.
 
 **Commitea cada corrida antes de lanzar la siguiente.** `entorno.json` toma `arbol_sucio` de
 `git status --porcelain`, que cuenta los archivos sin seguimiento: una carpeta de `experimentos/`
