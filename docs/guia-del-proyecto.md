@@ -56,16 +56,18 @@ Estas ideas aparecieron desde la primera reunión con los asesores y condicionan
 
 El curso pide seguir la metodología **CRISP-ML(Q)**, un marco de trabajo por fases para proyectos de machine learning con control de calidad en cada paso, y usa los **5 principios de la OCDE** para validar modelos de este tipo (endpoint definido, algoritmo inequívoco, dominio de aplicabilidad, bondad de ajuste y predictividad, e interpretación mecanística) como lista de verificación final.
 
-El trabajo se entrega en avances semanales (ver `docs/Entregas_canvas.md` para el detalle completo de fechas y rúbricas):
+El trabajo se entrega en avances semanales (ver `docs/Entregas_canvas.md` para el detalle completo de fechas y rúbricas). **Las dos últimas entregas no son libretas sino documentos en PDF**, cada una con su plantilla de LaTeX y su rúbrica propia:
 
-| Avance | Qué es | Fecha |
+| Entrega | Qué es | Fecha |
 |---|---|---|
-| 0 | Propuesta del proyecto | 27 de septiembre |
-| 1 | Análisis exploratorio de datos (EDA) | 4 de octubre |
-| 2 | Ingeniería de características y partición de los datos | 11 de octubre |
-| 3 | Modelo de referencia (baseline) | 18 de octubre |
-| 4 | Modelos alternativos | 25 de octubre |
-| 5 | Modelo final | 1 de noviembre |
+| Avance 0 | Propuesta del proyecto | 27 de septiembre |
+| Avance 1 | Análisis exploratorio de datos (EDA) | 4 de octubre |
+| Avance 2 | Ingeniería de características y partición de los datos | 11 de octubre |
+| Avance 3 | Modelo de referencia (baseline) | 18 de octubre |
+| Avance 4 | Modelos alternativos | 25 de octubre |
+| Avance 5 | Modelo final | 1 de noviembre |
+| Producto de difusión | Artículo de 12–18 páginas con las ocho secciones del curso | 8 de noviembre |
+| Resumen ejecutivo | Tres páginas dirigidas a la dirección de la patrocinadora, con beneficios mensuales, TCO a 12 meses y riesgos | 15 de noviembre |
 
 ---
 
@@ -79,15 +81,17 @@ Cada decisión técnica, con su contexto, lo que se descartó, lo que cuesta, su
 
 El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 
-| Avance | Entregable | Estado (19 de octubre de 2026) |
+| Avance | Entregable | Estado (1 de noviembre de 2026) |
 |---|---|---|
 | 0 | Propuesta del proyecto | Entregado (PDF) |
 | 1 | Análisis exploratorio de datos (`notebooks/01_EDA.ipynb`) | Entregado el 4 de octubre |
 | — | EDA de la etapa 2 (`notebooks/01b_EDA_actividad_snc.ipynb`) | Hecho; acompaña al Avance 1 y no es un entregable |
 | 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Hecho y revisado con la retroalimentación de la asesora: matriz de 151 columnas, partición por andamio con la prueba reservada; reporte en PDF publicado. La fase 2 tiene su propio notebook, `02b_Feature_Eng_actividad.ipynb`: matriz de 70,384 pares y partición con prueba reservada |
 | 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Entregado el 18 de octubre: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar |
-| 4 | Modelos alternativos | En curso · vence el 25 de octubre |
-| 5 | Modelo final | Pendiente · vence el 1 de noviembre |
+| 4 | Modelos alternativos (`notebooks/04_Models.ipynb`) | Entregado el 25 de octubre: seis familias sin ensamble en las dos fases, con el ajuste fino de las dos mejores. El individual final de la fase 1 es el SVM RBF sin afinar. Tres acompañantes miden qué añaden las huellas moleculares |
+| 5 | Modelo final | Vence el 1 de noviembre. La fase 2 (`notebooks/05b_Ensambles_actividad.ipynb`) está en `main`: nueve modelos, el AFT censurado como final y la prueba reservada de la fase 2 ya tomada. La fase 1 (`notebooks/05_Modelo_Final.ipynb`) tiene la comparativa corrida y espera la elección del modelo final |
+| — | Producto de difusión | Vence el 8 de noviembre · sin empezar |
+| — | Resumen ejecutivo | Vence el 15 de noviembre · sin empezar |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
 
