@@ -30,6 +30,20 @@ BUILD = RAIZ / "contenido"
 BIB = RAIZ / "docs" / "referencias" / "bibliografia.bib"
 REPO = "https://github.com/AntonioVazquezMartinez/Bioactive-AI/blob/main"
 
+
+def codigo_al_repositorio(texto: str) -> str:
+    """Los enlaces al código apuntan al repositorio, porque el sitio no lo publica.
+
+    `src/`, `tests/`, `scripts/` y las corridas de `experimentos/` no se copian a
+    `contenido/`, igual que los datos de la patrocinadora. Un enlace relativo a un
+    `.py` resuelve bien en GitHub, que es donde se leen los notebooks, y queda roto
+    en el sitio. Lo encontró `verificar_sitio.py` al publicar el 03b, que enlazaba a
+    `src/models/tobit.py`; la alternativa era pedirle a cada cuaderno que escribiera
+    la URL completa, que es justo lo que se desincroniza.
+    """
+    return re.sub(r"\]\((?:\.\./)*((?:src|tests|scripts|experimentos)/[^)]+)\)",
+                  rf"]({REPO}/\1)", texto)
+
 # (origen, destino relativo a contenido/, subtítulo)
 DOCUMENTOS = [
     ("docs/planteamiento/marco-teorico/README.md",
@@ -174,6 +188,7 @@ def reescribir_enlaces(texto: str, profundidad: int) -> str:
     # roto en el sitio, así que se apunta al repositorio.
     texto = re.sub(r"\]\((?:\.\./)*data/external/profesora/([^)]+)\)",
                    rf"]({REPO}/data/external/profesora/\1)", texto)
+    texto = codigo_al_repositorio(texto)
     texto = re.sub(r"\]\(README\.md\)", "](index.html)", texto)
     # cualquier otro .md del proyecto -> .html
     texto = re.sub(rf"\]\(((?:\.\./)*(?:docs/)?[\w/-]+)\.md{FRAG}\)", r"](\1.html\2)", texto)
@@ -228,7 +243,12 @@ def main() -> int:
     for nb_rel in ["notebooks/01_EDA.ipynb", "notebooks/01b_EDA_actividad_snc.ipynb",
                    "notebooks/02_Feature_Eng.ipynb",
                    "notebooks/02b_Feature_Eng_actividad.ipynb",
-                   "notebooks/03_Baseline.ipynb"]:
+                   "notebooks/03_Baseline.ipynb",
+                   "notebooks/03b_Baseline_regresion_actividad.ipynb",
+                   "notebooks/03c_Permeabilidad_huellas.ipynb",
+                   "notebooks/04_Models.ipynb",
+                   "notebooks/04b_Regresion_actividad.ipynb",
+                   "notebooks/04c_Regresion_actividad_huellas.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")
@@ -247,6 +267,7 @@ def main() -> int:
             # sobrevive al sitio y `verificar_sitio.py` lo marca como roto.
             nuevo = re.sub(rf"\]\((?:\.\./)*notebooks/([\w.]+)\.ipynb{FRAG}\)",
                            r"](\1.html\2)", nuevo)
+            nuevo = codigo_al_repositorio(nuevo)
             if nuevo != original:
                 celda["source"] = [l + "\n" for l in nuevo.split("\n")[:-1]] + [nuevo.split("\n")[-1]]
                 cambios += 1

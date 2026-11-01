@@ -1,0 +1,25 @@
+decision: '2.9'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - ridge
+  - arbol
+  - knn
+  - bayesian_ridge
+  - svr
+  - mlp
+  referencia:
+  - media
+  pliegues: 5
+  entrena_con: solo exactas
+  objetivo: pActividad
+  metrica_principal: concordancia
+  corte_mcc: 5.0
+  minimos_03b:
+    concordancia: 0.7
+    spearman: 0.531
+    rmse: 1.156
+  estratos: procedencia
