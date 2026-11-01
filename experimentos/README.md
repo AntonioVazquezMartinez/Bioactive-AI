@@ -56,6 +56,23 @@ entrar al contexto; llamarla antes hace que la corrida registre `arbol_sucio: tr
 haya tocado el código. No se arregla ignorando el archivo: que una reejecución cante en el
 `git diff` es justamente para lo que la bitácora existe.
 
+**Qué se puede reparar y qué no, porque no es lo mismo una carpeta de corrida que una bitácora.**
+`experimentos/<id>/` es el registro de lo que una corrida produjo y **no se reescribe**: si
+`params.yaml` dice algo, eso es lo que la corrida escribió, y corregirlo haría que el registro
+afirmara algo que no pasó. Cuando ese contenido está mal, la corrección va en el registro de
+decisiones citando la corrida, no en la carpeta. `experimentos/prueba.csv` es otra cosa: es una
+bitácora del proyecto, se agrega línea por línea y la lee una persona. Ahí sí se repara lo que no
+es un hecho de la corrida —un acento perdido en el `motivo`— y nunca una fecha, un commit, un
+conteo, ni un motivo distinto del que se dio.
+
+El caso que obligó a escribir la regla: la corrida del 05b se lanzó con el código sin acentos, así
+que dejó un `?` literal en los dos sitios. En `prueba.csv` se restauró el texto; en `params.yaml`
+el `nota_seg` sigue diciendo `diecis?is n?cleos`, y lo que esa nota afirma de más —describe la
+columna `seg` como tiempo de reloj, y no lo es— queda corregido en la
+[2.13](../docs/decisiones.md#d2-13). Arreglar uno y no el otro parece incoherente hasta que la
+regla está dicha, y de hecho lo pareció en revisión: la carpeta se queda como quedó, la bitácora
+se lee.
+
 ## El AUPRC de la minoritaria de antes del arreglo de `orientar_minoritaria`
 
 Hasta `fix/auprc-minoritaria`, el AUPRC de la clase minoritaria se medía puntuando con `1 - p`,
