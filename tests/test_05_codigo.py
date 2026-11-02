@@ -19,6 +19,13 @@ CUADERNO = RAIZ / "notebooks" / "05_Modelo_Final.ipynb"
 FUNCIONES = {
     "StackingAgrupado": "src/models/ensambles_clasificacion.py",
     "ensambles": "src/models/ensambles_clasificacion.py",
+    # El catálogo define los cuatro individuales, y el final de la fase es uno de ellos: sus
+    # hiperparámetros no se leían en ninguna celda del cuaderno entregado (#210).
+    "_con_escala": "src/models/alternativos.py",
+    "catalogo": "src/models/alternativos.py",
+    "seleccion": "src/models/alternativos.py",
+    "BusquedaAnidada": "src/models/ajuste.py",
+    "tomar_prueba": "src/tracking.py",
 }
 
 

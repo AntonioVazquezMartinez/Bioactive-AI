@@ -17,7 +17,16 @@ import pytest
 
 RAIZ = Path(__file__).resolve().parents[1]
 CUADERNO = RAIZ / "notebooks" / "05c_Ensambles_permeabilidad_huellas.ipynb"
-FUNCIONES = {"CanalizacionConGrupos": "src/models/ensambles_clasificacion.py"}
+FUNCIONES = {
+    "CanalizacionConGrupos": "src/models/ensambles_clasificacion.py",
+    # Los nueve modelos venían del catálogo sin que el cuaderno mostrara uno solo de sus
+    # hiperparámetros, y `AgregarHuellas` es el sujeto del cuaderno (#210).
+    "ensambles": "src/models/ensambles_clasificacion.py",
+    "_con_escala": "src/models/alternativos.py",
+    "catalogo": "src/models/alternativos.py",
+    "seleccion": "src/models/alternativos.py",
+    "AgregarHuellas": "src/features/huellas.py",
+}
 
 
 def _sin_docstring(nodo):
