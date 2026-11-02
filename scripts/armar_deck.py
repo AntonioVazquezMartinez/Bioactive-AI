@@ -50,7 +50,13 @@ OBJETIVO = 900
 # bajarles la letra o quitarles columnas, que es decisión de cada tabla— y
 # nadie expone el EDA, así que meterlas aquí sería dejar la prueba roja desde
 # el primer día. Agrega un notebook a esta lista cuando vayas a presentarlo.
-CON_DECK = ("03_Baseline", "04_Models")
+#
+# El 05b entró al partir sus dos lecturas largas (la discusión de resultados y
+# los cuatro gráficos): su peor diapositiva bajó a 1,715. El **05 y el 05c
+# siguen fuera por la misma razón que el 01 y el 02**, no por su prosa: lo que
+# les desborda son los desgloses por origen que imprimen sus celdas de código,
+# 11,536 caracteres en el 05 y 12,394 en el 05c.
+CON_DECK = ("03_Baseline", "04_Models", "05b_Ensambles_actividad")
 
 
 def _texto(celda: dict) -> str:
