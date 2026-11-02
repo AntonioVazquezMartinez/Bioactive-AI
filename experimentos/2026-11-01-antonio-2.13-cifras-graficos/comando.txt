@@ -1,0 +1,1 @@
+python3.12.14 'scripts\cifras_graficos_05b.py'

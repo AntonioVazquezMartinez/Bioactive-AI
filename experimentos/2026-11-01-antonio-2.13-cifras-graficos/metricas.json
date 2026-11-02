@@ -1,0 +1,101 @@
+{
+  "grafico_1": {
+    "cotas_en_franjas": 1381,
+    "cotas_superiores": 1972,
+    "exactas": 11744,
+    "franjas": {
+      "4.0": {
+        "n": 215,
+        "um": 100.0
+      },
+      "4.3": {
+        "n": 109,
+        "um": 50.0
+      },
+      "4.5": {
+        "n": 142,
+        "um": 30.0
+      },
+      "5.0": {
+        "n": 729,
+        "um": 10.0
+      },
+      "6.0": {
+        "n": 186,
+        "um": 1.0
+      }
+    },
+    "n_prueba": 13944,
+    "otras_cotas": 228,
+    "pendiente": 0.423,
+    "rango_observado": [
+      2.1,
+      12.0
+    ],
+    "rango_predicho": [
+      2.4,
+      9.4
+    ]
+  },
+  "grafico_3": {
+    "solo_npass": {
+      "activos": 52,
+      "al_1%": {
+        "del_techo": 0.855,
+        "encontrado": 0.0192,
+        "factor": 1.923
+      },
+      "al_10%": {
+        "del_techo": 0.598,
+        "encontrado": 0.1346,
+        "factor": 1.346
+      },
+      "al_5%": {
+        "del_techo": 0.513,
+        "encontrado": 0.0577,
+        "factor": 1.154
+      },
+      "n": 117,
+      "prevalencia": 0.4444,
+      "techo": 2.25
+    },
+    "todos": {
+      "activos": 10510,
+      "al_1%": {
+        "del_techo": 1.003,
+        "encontrado": 0.0127,
+        "factor": 1.275
+      },
+      "al_10%": {
+        "del_techo": 0.995,
+        "encontrado": 0.1265,
+        "factor": 1.265
+      },
+      "al_5%": {
+        "del_techo": 0.996,
+        "encontrado": 0.0633,
+        "factor": 1.265
+      },
+      "n": 13360,
+      "prevalencia": 0.7867,
+      "techo": 1.271
+    }
+  },
+  "grafico_4": {
+    "columnas_con_corte": 210,
+    "columnas_totales": 227,
+    "diana_con_corte": 26,
+    "diana_totales": 26,
+    "dianas_en_top_20": 5,
+    "fraccion_diana": 0.1614,
+    "fraccion_quimica": 0.8386,
+    "mayor": "fr_benzene",
+    "mayor_fraccion": 0.2189,
+    "mayor_ganancia": 10100.5,
+    "quimica_con_corte": 184,
+    "quimica_totales": 201,
+    "razon_primera_segunda": 6.31,
+    "segunda": "NumSpiroAtoms",
+    "segunda_fraccion": 0.0347
+  }
+}
