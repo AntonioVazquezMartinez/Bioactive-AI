@@ -125,3 +125,46 @@ class RegresionAFT(BaseEstimator, RegressorMixin):
         # Asegurar positividad antes del logaritmo
         pred_um_pos = np.maximum(pred_um, 1e-12)
         return 6.0 - np.log10(pred_um_pos)
+
+
+class AftConCensuraIzquierda(RegresionAFT):
+    """El mismo AFT, pero sin descartar la censura **por la izquierda** en µM.
+
+    El filtro de `RegresionAFT.fit` exige `inf_um > 0`, y con eso elimina de golpe dos
+    cosas distintas: los intervalos `[0, +inf)`, que no informan, y los `[0, c]` con `c`
+    finito, que sí — son el «más potente que c µM», y XGBoost los admite de forma nativa
+    con `label_lower_bound = 0`. En la corrida de la [2.13](../../docs/decisiones.md#d2-13)
+    eso descartó 745 filas de ajuste cuya cota inferior mediana es pActividad 7.00, de las
+    que 726 son activas al corte de 10 µM: la evidencia «es muy potente».
+
+    **Lo único que rechaza el cero es el propio filtro del padre.** `limites_en_micromolar`
+    devuelve exactamente `0.0` para estas filas y XGBoost admite `label_lower_bound = 0` con
+    cota superior finita (lo comprueba `tests/test_aft_censura_izquierda.py`). Así que el
+    arreglo de `RegresionAFT` cuando le llegue el turno es **esa línea** —aceptar `inf_um >= 0`
+    y excluir aparte los `[0, +inf)`—, no inyectar un centinela.
+
+    El centinela existe solo porque `RegresionAFT` no se toca: el cuaderno 05b muestra su
+    código y lo ejecutó tal cual, y `tests/test_05b_codigo.py` ata las dos cosas. Para medir
+    qué valen esas filas sin repetir el ajuste entero, esta clase reescribe la cota: un
+    `superior` infinito en pActividad pasa a `PACTIVIDAD_CENTINELA`, que en µM es 1e-12, y la
+    fila sobrevive al filtro del padre.
+
+    La equivalencia es de punto flotante, no exacta: Φ(ln 1e-12) vale 2.36e-168, que **no es
+    cero**. Lo que es exacto es la resta — `Φ(ln c) − Φ(ln 1e-12) == Φ(ln c)` da `True`,
+    porque 1e-168 cae unos 160 órdenes por debajo del último bit de `Φ(ln c)`. Eso depende de
+    que `c` no sea a su vez absurdamente potente: la igualdad se rompe cuando `c` se acerca a
+    1e-12 µM, y la fila más potente de las 745 tiene `c = 8.0e-05 µM` (pActividad 10.10), ocho
+    órdenes de margen.
+    """
+
+    PACTIVIDAD_CENTINELA = 18.0      # 6 − log10(1e-12); muy por encima de cualquier medición
+
+    def fit(self, X, inferior, superior, grupos=None) -> "AftConCensuraIzquierda":
+        inferior = np.asarray(inferior, dtype=float)
+        superior = np.asarray(superior, dtype=float)
+        # Solo las informativas: un (−inf, +inf) sigue sin decir nada y tiene que irse.
+        izquierda = np.isposinf(superior) & np.isfinite(inferior)
+        superior = np.where(izquierda, self.PACTIVIDAD_CENTINELA, superior)
+        super().fit(X, inferior, superior, grupos=grupos)
+        self.n_recuperadas_ = int(izquierda.sum())
+        return self
