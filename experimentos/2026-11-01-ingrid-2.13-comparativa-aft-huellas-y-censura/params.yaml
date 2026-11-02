@@ -1,0 +1,25 @@
+decision: '2.13'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - aft
+  - aft_huellas
+  - xgb_sin_censura
+  - aft_filtro
+  pliegues: 5
+  n_bits_sortslice: 2048
+  radio_morgan: 2
+  objetivo: pActividad
+  estratos: procedencia
+  metrica_principal: concordancia en solo_npass, declarada antes de correr
+  entrena_con:
+    aft: todas las censuradas por la derecha
+    aft_huellas: idem, con las huellas dentro del pliegue
+    xgb_sin_censura: solo las exactas (SoloExactas)
+    aft_filtro: también las censuradas por la izquierda
+  arboles: 100 rondas, profundidad 6, los cuatro brazos
+  nota_seg: tiempo de ajuste con dieciséis núcleos; no comparable con la corrida de
+    la 2.13, que corrió en otra máquina

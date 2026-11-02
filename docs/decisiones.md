@@ -816,7 +816,7 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 
 **El apilado agrupa su partición interna.** Para que el apilamiento (`ApiladoAgrupado`) estime honestamente los coeficientes del meta-regresor sin sesgo optimista, las predicciones fuera de pliegue deben generarse respetando estrictamente los grupos de andamio (`GroupKFold`). Como se demostró empíricamente en la [1.2](#d1-2), no respetar el agrupamiento estructural infla las métricas en **2.2 puntos de AUROC y 7.1 puntos de MCC** por fuga de información entre análogos moleculares de los pliegues. En regresión, una partición aleatoria interna asignaría análogos del mismo andamio a entrenamiento y validación de las bases, produciendo predicciones artificialmente precisas y distorsionando las ponderaciones asignadas por el meta-modelo.
 
-**El AFT entra sin envoltorio sobre la matriz densa.** `RegresionAFT` (`survival:aft` con XGBoost) utiliza directamente las observaciones censuradas por intervalos convirtiendo los límites de potencia a escala micromolar (cota inferior y superior), según lo resuelto en la [2.9](#d2-9) y [2.10](#d2-10). A diferencia de los regresores clásicos, que requieren el envoltorio `SoloExactas` para omitir los registros censurados durante el ajuste, el AFT entra sin envoltorio porque modela la verosimilitud de supervivencia con censura de forma nativa. Entra exclusivamente sobre la matriz densa (227 columnas: descriptores fisicoquímicos 2D de RDKit más variables indicadoras de diana, sin las huellas dispersas de Morgan / Sort & Slice) por una razón mecánica directa: `RegresionAFT.fit(X, inferior, superior)` recibe tres argumentos posicionales, por lo que no puede envolverse en un `Pipeline` (dado que `Pipeline.fit(X, y, superior)` no acepta un tercer argumento posicional), y sin canalización no existe forma de aplicarle `AgregarHuellas` dentro del pliegue sin introducir código compartido nuevo. Esto genera una consecuencia directa y transparente en la columna de tiempos de ejecución (`seg`), que contrasta con la de los ensambles evaluados sobre la matriz mixta.
+**El AFT entra sin envoltorio sobre la matriz densa.** `RegresionAFT` (`survival:aft` con XGBoost) utiliza directamente las observaciones censuradas por intervalos convirtiendo los límites de potencia a escala micromolar (cota inferior y superior), según lo resuelto en la [2.9](#d2-9) y [2.10](#d2-10). A diferencia de los regresores clásicos, que requieren el envoltorio `SoloExactas` para omitir los registros censurados durante el ajuste, el AFT entra sin envoltorio porque modela la verosimilitud de supervivencia con censura de forma nativa. Entró sobre la matriz densa (227 columnas: descriptores fisicoquímicos 2D de RDKit más variables indicadoras de diana, sin las huellas dispersas de Morgan / Sort & Slice). La razón **era** mecánica —`RegresionAFT.fit(X, inferior, superior)` recibe tres argumentos posicionales y no cabe en un `Pipeline`, que solo pasa una `y`— y ya no lo es: `ConHuellasCensurado` resuelve eso en doce líneas y el brazo con huellas está medido más abajo. **Ahora la razón es medida, y es otra.** Esto genera una consecuencia directa y transparente en la columna de tiempos de ejecución (`seg`), que contrasta con la de los ensambles evaluados sobre la matriz mixta.
 
 **El afinado corre con una semilla y su métrica interna no es la principal.** La búsqueda de hiperparámetros (`AfinadoAgrupado` sobre kNN, con la rejilla tomada del `params.yaml` de la corrida `2026-10-26-antonio-2.9-baseline-regresion-sencilla-exactas`) se evalúa con una sola semilla (`SEMILLAS[0]`), preservando el protocolo del notebook 04b para no multiplicar el costo computacional. Su métrica interna de optimización (`neg_root_mean_squared_error`) no es la métrica principal del proyecto: el afinado corre envuelto en `SoloExactas`, por lo que la búsqueda interna nunca ve las mediciones censuradas. La evaluación externa del modelo final se rige por la concordancia de Harrell y la correlación de Spearman ([C.1](#dc-1), [2.9](#d2-9)), calculadas sobre la totalidad de los datos (exactos e intervalos censurados).
 
@@ -847,6 +847,63 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 **Tres advertencias para leer la tabla.**
 
 *Las dos columnas de tiempo no miden lo mismo, y hacen falta las dos.* `ajuste s/pliegue` es la que registra `metricas.json`: solo la llamada a `fit`, promediada entre pliegues. `reloj total` es el tiempo de pared de evaluar ese modelo entero —quince pliegues, cinco en el `knn_afinado`— e incluye las **dos** predicciones que el arnés hace en cada pliegue, sobre validación y sobre el conjunto de ajuste completo para calcular el `rmse_entrenamiento`. De ahí que el `knn_referencia` ajuste en 0.8 s y gaste 2,772 s: en los modelos por vecinos el costo está en predecir, no en ajustar, y con una sola columna la lectura sale al revés. Las dos se tomaron con dieciséis núcleos (`n_jobs=-1`), así que ninguna es comparable con las mono-hilo del 04b ni del 04c. El `nota_seg` que quedó registrado en el `params.yaml` de la corrida describe la columna `seg` como tiempo de reloj, y eso es lo que aquí se corrige; el archivo no se reescribe porque es el registro de la corrida.
+
+**Los tres confundidos del `aft`, separados.** La elección se apoyaba en un modelo que difiere
+de los demás en **tres** cosas a la vez: la librería (XGBoost contra el `HistGradientBoosting` de
+sklearn, que es lo que el `boosting` de esta corrida usa), la pérdida censurada, y las 227 columnas
+densas. Corrida `2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura`: cuatro brazos sobre los
+mismos pliegues y semillas, con la métrica principal —la concordancia en `solo_npass`— declarada en
+el script antes de ejecutarlo. Diferencia pareada contra el `aft` y evaluaciones ganadas:
+
+| Brazo | todos | solo_chembl | mixto | solo_npass |
+|:--|--:|--:|--:|--:|
+| `xgb_sin_censura` | −0.0154 · 0/15 | −0.0133 · 0/15 | −0.0548 · 0/15 | −0.1248 · 0/15 |
+| `aft_huellas` | +0.0048 · 14/15 | +0.0051 · 14/15 | −0.0120 · 6/15 | −0.0076 · 4/15 |
+| `aft_filtro` | +0.0007 · 10/15 | +0.0010 · 10/15 | −0.0047 · 6/15 | +0.0021 · 8/15 |
+
+**La ventaja es de la censura, no de la librería.** `xgb_sin_censura` es XGBoost con
+`reg:squarederror` sobre las mismas 227 columnas, los mismos 100 árboles y la misma profundidad 6,
+ajustando solo con las exactas: **pierde las sesenta evaluaciones pareadas**. En `solo_npass` cae a
+0.5073, que es donde quedan todos los modelos que descartan las censuradas —`bosque` 0.5107,
+`boosting` 0.5108, `votacion` 0.5143— independientemente de su familia. En MCC, 0.4668 contra
+0.3485. Eso es lo que cerraba el confundido de la librería, y lo cierra en la dirección que el
+argumento necesitaba.
+
+**Las huellas ganan donde hay ChEMBL y no cuestan nada distinguible.** En `todos` y en `solo_chembl`
+mejoran la concordancia (+0.005 con dispersión propia de 0.003), el RMSE (−0.017, 15 de 15) y el
+AUROC (+0.005). En `mixto` y en `solo_npass` todas las diferencias quedan **entre 0.1 y 0.9 de su
+propia dispersión**: la pérdida apunta a la baja en los cinco indicadores de los dos estratos, y
+esta corrida sola **no la establece**. Lo que sí es consistente es la dirección, y es la tercera vez
+que aparece: el 04c y el 03c ya la midieron ([1.3](#d1-3)), siempre con la ganancia del lado de
+ChEMBL. Y una advertencia de lectura: con huellas la concordancia agregada sube a 0.7659 y supera al
+`bosque` (0.7650), así que **el brazo que gana el agregado es el que va peor en los dos estratos con
+naturales** — el mismo reparto por volumen que ya tenía el agregado, con el 93% de las filas de
+ChEMBL.
+
+**Las huellas entran en la fase 2 para explicar, no porque midan mejor**, igual que la
+[1.3](#d1-3) lo resolvió para la fase 1. El modelo entregado es el `aft` sin ellas, porque es el que
+corrió, el que tomó la partición reservada y el que este cuaderno sostiene. El brazo `aft_huellas`
+queda como **modelo de explicación**: es el mismo XGBoost con la misma pérdida, los mismos datos y
+los mismos pliegues, y lo único que cambia es la representación, con la medición de arriba diciendo
+que esa diferencia no se distingue del ruido en ninguno de los cuatro estratos. Una columna
+Sort & Slice es una subestructura concreta, así que es lo que permite la atribución a nivel de
+fragmento que pide la [C.2](#dc-2), y los descriptores no. Se reportan los dos brazos. **Si el
+ranking final sale peor en los naturales, esto es lo primero que hay que revisar**, porque la
+dirección de la pérdida ya apareció en tres cuadernos independientes.
+
+**Las 745 filas que el filtro descarta no costaban nada medible.** `aft_filtro` da +0.0021 en
+`solo_npass` con 8 de 15. El defecto es real —el filtro conserva las 9,396 censuradas por la derecha
+y 0 de las 745 por la izquierda, que son las potentes: cota inferior mediana de pActividad 7.00 y 726
+de 745 activas al corte de 10 µM— y queda **acotado**: las cifras agregadas del `aft` eran un piso de
+dos milésimas, no de más. Arreglarlo es una línea, y lo único que rechaza el cero es el `inf_um > 0`
+del propio filtro, porque `limites_en_micromolar` devuelve `0.0` y XGBoost admite
+`label_lower_bound = 0`. No hace falta reejecutar las 7 h 16.
+
+**Y una regularidad que ordena las tres lecturas:** el RMSE y el Spearman los gana siempre quien
+ajusta solo con exactas —`xgb_sin_censura` saca el mejor RMSE agregado de la corrida, 0.9967, y el
+mejor Spearman de `solo_npass`, 0.2586—, porque son las métricas que se calculan sobre ese mismo
+subconjunto ([C.1](#dc-1)). La censura compra concordancia y MCC, que es donde vive el umbral, y el
+entregable es una lista priorizada con un corte ([C.5](#dc-5)).
 
 *La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
 
