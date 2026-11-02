@@ -62,4 +62,8 @@ La prueba reservada sigue sin mirarse. Se toca una sola vez, en el Avance 5.
 
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
-| Avance 5 · Ensambles | 1 de noviembre | Ingeniería del modelo (c) |
+| Avance 5 · Modelo final | 1 de noviembre | Ingeniería del modelo (c) |
+| Producto de difusión · artículo de 12–18 páginas | 8 de noviembre | Evaluación y despliegue |
+| Resumen ejecutivo · tres páginas para la dirección | 15 de noviembre | Evaluación y despliegue |
+
+Las dos últimas no son libretas sino documentos en PDF, y entre las dos piden lo que el proyecto todavía no tiene escrito: una arquitectura de despliegue con su monitoreo, y una evaluación económica con beneficios mensuales, costo total de propiedad a doce meses y riesgos con su mitigación.

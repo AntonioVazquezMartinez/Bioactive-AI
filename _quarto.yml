@@ -24,6 +24,7 @@ project:
     - contenido/notebooks/04_Models.ipynb
     - contenido/notebooks/04b_Regresion_actividad.ipynb
     - contenido/notebooks/04c_Regresion_actividad_huellas.ipynb
+    - contenido/notebooks/05b_Ensambles_actividad.ipynb
 
 website:
   title: "Bioactive AI"
@@ -134,6 +135,10 @@ website:
             text: Análisis · Qué añaden las huellas en la fase 2
           - href: contenido/notebooks/03c_Permeabilidad_huellas.ipynb
             text: Análisis · Qué añaden las huellas en la fase 1
+          - text: "---"
+          - text: "Avance 5 · Ensambles"
+          - href: contenido/notebooks/05b_Ensambles_actividad.ipynb
+            text: Análisis · Ensambles para la regresión de potencia
       - href: bibliografia.qmd
         text: Bibliografía
     right:

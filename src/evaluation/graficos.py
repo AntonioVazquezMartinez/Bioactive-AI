@@ -147,3 +147,129 @@ def importancias_dos_metodos(importancias: pd.DataFrame, *,
     ax.set_xlabel("caída de desempeño al permutar")
     ax.set_title(f"azul fuerte: también en el top {n} por impureza", fontsize="small")
     return ax
+
+
+def dispersion_censurada(inferior: np.ndarray, superior: np.ndarray, pred: np.ndarray, *,
+                         ax: plt.Axes | None = None) -> plt.Axes:
+    """Diagrama de dispersi?n entre pActividad predicha y observada, separando exactas de censuradas.
+
+    Las mediciones exactas se grafican como puntos sobre la diagonal ideal y las
+    censuradas como cotas para comprobar visualmente si el modelo respeta el
+    sentido y escala de las cotas experimentales.
+    """
+    ax = _eje(ax)
+    inf, sup, p = np.asarray(inferior), np.asarray(superior), np.asarray(pred)
+    exacta = np.isfinite(inf) & (inf == sup)
+    cens = ~exacta
+
+    if exacta.any():
+        ax.scatter(inf[exacta], p[exacta], alpha=0.3, s=14, color="#1f77b4",
+                   label=f"exactas ({exacta.sum():,})", edgecolors="none")
+        vals = inf[exacta]
+        lo, hi = vals.min(), vals.max()
+        ax.plot([lo, hi], [lo, hi], "--", color="0.5", linewidth=1, label="identidad")
+
+    if cens.any():
+        cota_sup = np.isneginf(inf) & np.isfinite(sup)
+        if cota_sup.any():
+            ax.scatter(sup[cota_sup], p[cota_sup], alpha=0.25, s=12, marker="<",
+                       color="#ff7f0e", label=f"cota sup. ({cota_sup.sum():,})", edgecolors="none")
+        resto = cens & ~cota_sup
+        if resto.any():
+            ax.scatter(inf[resto], p[resto], alpha=0.25, s=12, marker=">",
+                       color="#2ca02c", label=f"otras cotas ({resto.sum():,})", edgecolors="none")
+
+    ax.set_xlabel("pActividad observada")
+    ax.set_ylabel("pActividad predicha")
+    ax.legend(loc="upper left", fontsize="small")
+    if exacta.any() and lo < hi:
+        ax.set_xlim(lo, hi)
+        ax.set_ylim(lo, hi)
+        ax.set_aspect("equal", adjustable="box")
+    return ax
+
+
+def concordancia_por_estrato(res: pd.DataFrame, modelos: list[str], *,
+                             ax: plt.Axes | None = None) -> plt.Axes:
+    """Comparativa de concordancia de Harrell por estrato de procedencia qu?mica.
+
+    Compara los modelos seleccionados a lo largo de los estratos ('todos',
+    'solo_chembl', 'solo_npass', 'mixto') con barras de error que reflejan la
+    desviaci?n est?ndar entre semillas y pliegues.
+    """
+    ax = _eje(ax)
+    orden_estratos = [e for e in ["todos", "solo_chembl", "solo_npass", "mixto"]
+                      if e in res["estrato"].unique()]
+    sub = res[res["modelo"].isin(modelos) & res["estrato"].isin(orden_estratos)]
+
+    piv_mean = sub.pivot_table(index="estrato", columns="modelo", values="concordancia",
+                               aggfunc="mean").reindex(orden_estratos)
+    piv_std = sub.pivot_table(index="estrato", columns="modelo", values="concordancia",
+                              aggfunc="std").reindex(orden_estratos)
+
+    mods = [m for m in modelos if m in piv_mean.columns]
+    x = np.arange(len(orden_estratos))
+    ancho = 0.8 / max(len(mods), 1)
+
+    for i, mod in enumerate(mods):
+        offset = (i - (len(mods) - 1) / 2) * ancho
+        yerr = piv_std[mod].values if mod in piv_std else None
+        ax.bar(x + offset, piv_mean[mod].values, width=ancho, yerr=yerr,
+               label=mod, capsize=3, error_kw={"elinewidth": 1, "ecolor": "0.3"})
+
+    ax.axhline(0.5, linestyle="--", color="0.6", linewidth=1, label="azar (0.500)")
+    ax.set_xticks(x, orden_estratos)
+    ax.set_ylabel("concordancia de Harrell")
+    ax.set_ylim(0.35, 0.82)
+    ax.legend(loc="lower left", fontsize="small")
+    return ax
+
+
+def curva_enriquecimiento(y: np.ndarray, pred: np.ndarray, *,
+                          ax: plt.Axes | None = None,
+                          etiqueta: str | None = None) -> plt.Axes:
+    """Curva de enriquecimiento de activos ordenando por la potencia predicha.
+
+    Calcula la fracci?n acumulada de compuestos activos conforme se inspecciona
+    una fracci?n creciente de la biblioteca ordenada por potencia predicha.
+    """
+    ax = _eje(ax)
+    y_arr = np.asarray(y)
+    p_arr = np.asarray(pred)
+    valido = ~np.isnan(y_arr) & ~np.isnan(p_arr)
+    y_v = y_arr[valido].astype(int)
+    p_v = p_arr[valido]
+
+    if len(y_v) > 0 and y_v.sum() > 0:
+        orden = np.argsort(p_v)[::-1]
+        y_ord = y_v[orden]
+        cum_activos = np.insert(np.cumsum(y_ord) / y_ord.sum(), 0, 0.0)
+        frac_cribada = np.linspace(0, 1, len(y_ord) + 1)
+        nombre = f"{etiqueta or 'modelo'} ({y_ord.sum():,} activos)"
+        ax.plot(frac_cribada * 100, cum_activos * 100, label=nombre)
+
+    if not any(ln.get_linestyle() == "--" for ln in ax.lines):
+        ax.plot([0, 100], [0, 100], "--", color="0.6", linewidth=1, label="azar")
+
+    ax.set_xlabel("% del conjunto cribado (ordenado por predicci?n)")
+    ax.set_ylabel("% de activos encontrados")
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 102)
+    ax.legend(loc="lower right", fontsize="small")
+    return ax
+
+
+def ganancia_arboles(ganancias: pd.Series, *,
+                     ax: plt.Axes | None = None, n: int = 20) -> plt.Axes:
+    """Top `n` de variables por ganancia media de cortes.
+
+    **Es descriptivo y no es una afirmaci?n de explicabilidad.** La C.2 exige dos
+    m?todos independientes coincidiendo antes de sostener algo estructural, y la
+    ganancia es uno solo, con el sesgo de la impureza. Para eso est?n `concordantes`
+    e `importancias_dos_metodos` de este mismo m?dulo.
+    """
+    ax = _eje(ax)
+    top = ganancias.nlargest(n).iloc[::-1]
+    ax.barh(top.index, top.values, color="#1f77b4")
+    ax.set_xlabel("ganancia media (gain)")
+    return ax

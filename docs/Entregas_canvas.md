@@ -10,12 +10,15 @@
 | 4 | Avance 3. Baseline | **18 de octubre de 2026** | `Avance3.#Equipo` | Liga a GitHub | 100 |
 | 5 | Avance 4. Modelos alternativos | **25 de octubre de 2026** | `Avance4.#Equipo` | Liga a GitHub | 100 |
 | 6 | Avance 5. Modelo final | **1 de noviembre de 2026** | `Avance5.#Equipo` | Liga a GitHub | 100 |
+| 7 | Producto de difusión (artículo) | **8 de noviembre de 2026** | `articulo.#Equipo` | PDF | 100 |
+| 8 | Resumen ejecutivo | **15 de noviembre de 2026** | `resumen_ejecutivo.#Equipo` | PDF | 100 |
 
 **Condiciones comunes a todas las entregas**
 
 - **Modalidad:** en equipo.
 - **Medio:** botón "Entregar tarea" de la actividad en Canvas.
 - **Avances 1 a 5:** la libreta debe ejecutarse de principio a fin de manera **SECUENCIAL** antes de enviarla.
+- **Entregas 7 y 8:** no son libretas sino documentos en PDF, cada uno con su plantilla de LaTeX provista por el curso y con la declaración de uso de IA obligatoria.
 - **Estilo de referencias:** el mismo (APA 7 o IEEE) en todo el documento y en todas las fases del proyecto.
 
 ## Contenido
@@ -26,6 +29,8 @@
 4. [Entrega 4. Avance 3, baseline (18 oct)](#entrega-4--18-de-octubre-de-2026)
 5. [Entrega 5. Avance 4, modelos alternativos (25 oct)](#entrega-5--25-de-octubre-de-2026)
 6. [Entrega 6. Avance 5, modelo final (1 nov)](#entrega-6--1-de-noviembre-de-2026)
+7. [Entrega 7. Producto de difusión, artículo (8 nov)](#entrega-7--8-de-noviembre-de-2026)
+8. [Entrega 8. Resumen ejecutivo (15 nov)](#entrega-8--15-de-noviembre-de-2026)
 
 ---
 
@@ -464,4 +469,134 @@ Revisa los criterios con que se evaluará este avance en la rúbrica al final de
 | **Ensambles** | Se generan al menos cuatro modelos, cubriendo ambas estrategias de ensamble: homogéneas y heterogéneas. Se utilizan los mejores modelos individuales, obtenidos de la fase previa, para el stacking y/o blending. **(60 pts)** | Se generan al menos cuatro modelos, pero sólo se cubre una de las estrategias de ensamble, lo que limita la adaptación del enfoque a la naturaleza única del problema en cuestión (diferentes problemas y conjuntos de datos pueden beneficiarse de estrategias de ensamble específicas). **(30 pts)** | No se incluye la cantidad mínima especificada de ensambles, lo que puede reducir la capacidad para capturar patrones complejos en los datos. **(0 pts)** | /60 |
 | **Selección** | En la comparativa se incluyen el modelo individual de mejor rendimiento y los cuatro ensambles generados en esta fase, ordenados por la métrica principal. Se presentan en la tabla al menos otras dos métricas relevantes y los tiempos de entrenamiento. Se presentan argumentos sólidos para la elección del modelo final. **(20 pts)** | La comparativa incluye todos los modelos requeridos, pero no la cantidad mínima de métricas solicitadas. La argumentación para la selección del modelo es débil. **(10 pts)** | No se incluye la cantidad mínima especificada de modelos, ni se presentan argumentos para la selección del modelo final. **(0 pts)** | /20 |
 | **Gráficos** | Se incluyen al menos cuatro gráficos relevantes para el análisis del rendimiento del modelo final. Cada gráfico cuenta con una interpretación detallada del resultado. **(20 pts)** | Se incluyen los gráficos recomendados, pero no se proporciona una interpretación que agregue contexto y ayude a entender el propósito y la implicación de las visualizaciones. **(10 pts)** | No se incluye la cantidad mínima especificada de gráficos, ni su interpretación, lo que limita su utilidad para las recomendaciones de las fases subsecuentes. **(0 pts)** | /20 |
+| | | | **Total** | **/100** |
+
+---
+
+# Entrega 7 : 8 de noviembre de 2026
+
+**Producto de difusión**
+
+## Objetivos
+
+- **4.1** Determinar si el modelo se puede implementar o si es necesario retroceder a fases anteriores (modelado o incluso preparación de datos).
+- **4.2** Exponer las medidas o decisiones específicas que deben tomarse en respuesta a los resultados o hallazgos del proyecto.
+- **4.3** Proponer un entorno de producción para garantizar que los modelos sean confiables, escalables y eficientes.
+
+## Instrucciones
+
+Integrar y comunicar los principales hallazgos del proyecto en un artículo que presente de manera clara y rigurosa el trabajo realizado, los resultados obtenidos y las conclusiones derivadas del análisis.
+
+**Las ocho secciones, en este orden:**
+
+1. Resumen (abstract, 150–250 palabras)
+2. Contexto de negocio y problema (Avance 0 revisado: si hubo cambios de enfoque, documentar cuál se adoptó finalmente)
+3. Datos y preparación (Avances 1 y 2 comprimidos)
+4. Metodología y modelos (Avances 3, 4 y 5: baseline → candidatos → modelo final, con las cifras decisivas)
+5. Resultados y validación (desempeño del modelo final contra el baseline y contra los umbrales aceptables para el proyecto; significado de los errores en el contexto del negocio)
+6. Implementación y operación (requisitos para producción, arquitectura de despliegue, monitoreo)
+7. Conclusiones clave (hallazgos principales, limitaciones y trabajo futuro)
+8. Referencias y anexos
+
+## Formato
+
+- Extensión 12–18 páginas contadas desde el título hasta las referencias; los anexos no cuentan.
+- Página carta (8.5 × 11 in), una columna, letra de 11 pt, márgenes de 2.5 cm, interlineado 1.15.
+- Figuras y tablas numeradas y con pie. Un solo estilo de referencias en todo el documento: APA 7 o IEEE.
+- Plantilla de LaTeX provista por el curso (`Articulo.zip`); compila en Overleaf.
+
+## Declaración de uso de IA
+
+Obligatoria y explícita: hay que indicar la herramienta, el modelo y la finalidad del uso (revisión de redacción, formato del documento, generación de imágenes). En ningún caso se presenta como propio un producto generado total o parcialmente por esas herramientas, y la responsabilidad final del contenido recae en los autores.
+
+## Especificaciones de entrega
+
+| Concepto | Detalle |
+|:---------|:--------|
+| Modalidad | En equipo |
+| Medio de realización/entrega | Botón "Entregar tarea" de esta actividad |
+| Formato | Archivo en PDF |
+| Nombre del entregable | `articulo.#Equipo` |
+
+## Recursos de apoyo
+
+- Korolov, M. (2022, septiembre 7). *Measuring the business impact of AI*. CIO. <https://www.cio.com/article/405620/measuring-the-business-impact-of-ai.html>
+- Miller, G. (2022, diciembre). *Stakeholder roles in artificial intelligence projects*. Project Leadership and Society, 3. <https://doi.org/10.1016/j.plas.2022.100068>
+- Sitios de los proveedores a valorar para el entorno de producción: AWS, Azure, Google Cloud e IBM Watson.
+
+## Rúbrica
+
+**Producto de difusión**
+
+| Criterio | Excelente | Bien | Insuficiente | Puntos |
+|:---------|:----------|:-----|:-------------|-------:|
+| **Estructura y calidad del artículo** | Se usa la plantilla de LaTeX establecida y se incluyen las 8 secciones en orden. El abstract se comprende de manera independiente. Se respeta la extensión de 12–18 páginas (anexos aparte). Figuras y tablas numeradas y con pie. Referencias consistentes en APA 7 o IEEE. Redacción fluida, sin duplicaciones ni errores ortográficos. **(20 a >15 pts)** | Se usa la plantilla y están las 8 secciones, con debilidades menores de estructura o forma: inconsistencias en la numeración o los pies, problemas de extensión del abstract, pequeñas inconsistencias en las referencias. Algunas redundancias que no afectan la comprensión. **(15 a >10 pts)** | No se usa la plantilla, faltan secciones o no se respeta el orden. Extensión fuera de rango. El abstract no permite comprender propósito y resultados por sí solo. Deficiencias importantes en figuras, tablas o referencias. Texto reciclado de entregas previas sin integración. **(10 a >0 pts)** | /20 |
+| **Integración técnica fiel (Avances 1–5)** | La evolución del proyecto se presenta como una historia continua y coherente, destacando **la** decisión que importó y su porqué, no todo lo que se hizo. Cifras exactas y consistentes con los notebooks calificados: la métrica primaria final, el lift respecto al baseline, el umbral establecido, el resultado observado y la brecha. Las limitaciones identificadas durante el proyecto —validez de las etiquetas, contaminación de datos, supuestos— integradas al relato, no omitidas. **(35 a >30 pts)** | Se presenta la evolución, pero enciclopédica: cuenta todo. Inconsistencias menores en las cifras respecto a los notebooks calificados, o limitaciones mencionadas sin explicar su impacto. **(30 a >20 pts)** | Omisiones importantes, o no se comprenden las decisiones técnicas y su justificación. Cifras incorrectas o no verificables en los notebooks calificados. Se omiten limitaciones relevantes. **(20 a >0 pts)** | /35 |
+| **Implementación y operación** | En la sección 5 se identifican los requisitos para operar la solución y se sugieren responsables para cada uno. Se incluye un diagrama de la arquitectura de despliegue y se especifican los aspectos a supervisar durante la operación. **(25 a >20 pts)** | Están los elementos, pero alguno con desarrollo limitado: requisitos sin responsables claros, diagrama incompleto o monitoreo impreciso. **(20 a >15 pts)** | Se omiten uno o más elementos. Los requisitos no permiten identificar qué se necesita, no hay arquitectura de despliegue o no se definen aspectos a supervisar. **(15 a >0 pts)** | /25 |
+| **Conclusiones clave** | Se sintetizan los hallazgos principales. Se reconocen las limitaciones y se proponen líneas de trabajo futuro pertinentes y directamente relacionadas con los resultados. **(20 a >15 pts)** | Están los hallazgos, las limitaciones y el trabajo futuro, pero alguno con desarrollo limitado o conexión poco clara con los resultados. **(15 a >10 pts)** | Conclusiones superficiales. Se omiten limitaciones relevantes o el trabajo futuro es genérico o inexistente. **(10 a >0 pts)** | /20 |
+| | | | **Total** | **/100** |
+
+---
+
+# Entrega 8 : 15 de noviembre de 2026
+
+**Resumen ejecutivo**
+
+## Objetivos
+
+- **4.4** Establecer supuestos racionales para presentar cifras sobre los costos y beneficios.
+- **4.5** Enumerar los riesgos o desafíos potenciales de la solución propuesta.
+
+## Instrucciones
+
+Se dirige a la dirección de la patrocinadora, no es un informe académico ni una reproducción de la rúbrica. Los seis temas se integran en una narrativa fluida y **no** como encabezados independientes:
+
+1. El problema y la solución: qué necesidad del negocio se atiende y cómo responde la solución.
+2. Qué tan bien funciona: de 3 a 5 cifras clave que permitan valorar el desempeño.
+3. Beneficios para la organización: cuantificables e intangibles.
+4. Qué implica implementarla: inversión y costos de desarrollo, implementación y operación.
+5. Riesgos y condiciones para avanzar: los 3 a 5 principales y cómo mitigarlos.
+6. Transferencia y continuidad: qué se entrega a la patrocinadora para dar continuidad.
+
+**Beneficios cuantificables.** Se eligen los indicadores pertinentes de la tabla del curso y se reporta valor estimado, unidad y base de cálculo con sus supuestos. **Todos se expresan en términos mensuales.** El cuerpo lleva los resultados principales; el detalle de cálculos y supuestos va en el anexo. Los indicadores de la tabla: ahorro de tiempo (horas/mes o % de reducción/mes), ahorro en costos operativos (MXN/mes o %), incremento en productividad (unidades/mes o %), reducción de errores (errores/mes o %), incremento en ventas (MXN/mes o %), reducción de eventos de riesgo (eventos/mes o %) e incremento en capacidad de atención o procesamiento (volumen/mes). Se pueden añadir otros con el mismo formato.
+
+**Beneficios intangibles.** Una descripción breve de en qué consiste cada uno y cómo se refleja en la organización: mejora en la toma de decisiones, innovación o diferenciación competitiva, mejora en la calidad, o facilidad del trabajo.
+
+**Inversión y costos.** Costo total de propiedad (TCO) de los primeros 12 meses, considerando desarrollo, implementación y operación. Resumen en el cuerpo, desglose por servicio en una tabla del anexo, y una recomendación concreta a la patrocinadora sobre la inversión requerida y las condiciones para avanzar.
+
+## Formato
+
+- Extensión 3 páginas contadas desde el título hasta las referencias; los anexos no cuentan.
+- Página carta (8.5 × 11 in), una columna, letra de 11 pt, márgenes de 2.5 cm, interlineado 1.15.
+- Figuras y tablas numeradas y con pie. Referencias en APA 7.
+- Plantilla de LaTeX provista por el curso (`Resumen ejecutivo.zip`); compila en Overleaf.
+
+## Declaración de uso de IA
+
+Las mismas condiciones de la entrega 7, y aquí la rúbrica la pide de forma explícita dentro del criterio de estructura.
+
+## Especificaciones de entrega
+
+| Concepto | Detalle |
+|:---------|:--------|
+| Modalidad | En equipo |
+| Medio de realización/entrega | Botón "Entregar tarea" de esta actividad |
+| Formato | Archivo en PDF |
+| Nombre del entregable | `resumen_ejecutivo.#Equipo` |
+
+## Recursos de apoyo
+
+- Baccarin, F. (2020, diciembre 28). *Machine learning that pays the bills: choosing models in business contexts*. Medium. <https://towardsdatascience.com/machine-learning-that-pays-the-bills-choosing-models-in-business-contexts-e9003fd434a1>
+- Babic, B., Cohen, I. G., Evgeniou, T., y Gerke, S. (2021). *When Machine Learning Goes Off the Rails*. Harvard Business Review. <https://hbr.org/2021/01/when-machine-learning-goes-off-the-rails>
+
+## Rúbrica
+
+**Resumen ejecutivo**
+
+| Criterio | Excelente | Bien | Insuficiente | Puntos |
+|:---------|:----------|:-----|:-------------|-------:|
+| **Estructura y calidad del resumen** | Se usa la plantilla de LaTeX establecida. Integra los seis elementos de la narrativa en el orden indicado y respeta las 3 páginas (anexos aparte). Figuras y tablas numeradas y con pie. Referencias en APA 7 e incluye la declaración de uso de IA. Redacción fluida y coherente, sin duplicaciones ni errores ortográficos. **(15 a >10 pts)** | Se usa la plantilla y están los seis elementos, con inconsistencias en el orden, la extensión, las figuras y tablas, el formato de referencias o la declaración de IA. Algunas redundancias o errores menores. **(10 a >5 pts)** | No se usa la plantilla o hay omisiones importantes. Se incumple la extensión o el orden, falta numeración o pies, referencias inconsistentes, o no incluye la declaración de uso de IA. Problemas de claridad o errores recurrentes. **(5 a >0 pts)** | /15 |
+| **Propuesta de valor** | El problema y la solución se explican en términos del proceso de negocio, con lenguaje accesible para una audiencia directiva, evitando tecnicismos o explicándolos. De 3 a 5 métricas pertinentes, explicadas en términos no técnicos, y **todos los valores coinciden con el artículo**. La información permite responder si el desempeño alcanza para producción. **(30 a >25 pts)** | Se explican problema y solución con imprecisiones o tecnicismos. Hay métricas, pero algunas poco pertinentes, mal explicadas o con pequeñas inconsistencias respecto al artículo. Permite valorar parcialmente la conveniencia de implementar. **(25 a >15 pts)** | La explicación es confusa, incompleta o demasiado técnica. Se omiten métricas relevantes, hay resultados incorrectos o no coincidentes con el artículo, o no se explica su significado. **(15 a >0 pts)** | /30 |
+| **Evaluación económica** | Estimación de beneficios cuantificables con supuestos razonables y coherentes con el contexto de la patrocinadora. Resumen de beneficios y supuestos en el cuerpo, desglose y bases de cálculo en tablas del anexo. Beneficios intangibles descritos con claridad. TCO de los primeros 12 meses con desarrollo, implementación y operación, resumido en el cuerpo y desglosado por servicio en el anexo. Recomendación concreta sobre la inversión y las condiciones para avanzar. **(30 a >25 pts)** | Hay estimaciones, pero algunos supuestos necesitan justificación o no son coherentes con el contexto. Los intangibles se describen de forma general. El resumen o los desgloses están incompletos. Hay recomendación, pero poco específica. **(25 a >15 pts)** | No hay estimaciones de beneficios o carecen de sustento. Se omiten los intangibles. El TCO está incompleto o no cubre los 12 meses. Faltan los desgloses o la recomendación. **(15 a >0 pts)** | /30 |
+| **Implementación y continuidad** | De 3 a 5 riesgos relevantes, **incluyendo al menos uno de datos o del modelo** —deriva, calidad de los datos o validez de las etiquetas— además de los operativos, cada uno con una medida de mitigación concreta. Se describen los elementos que se entregan a la patrocinadora para asumir la operación: los artefactos necesarios y una guía con instrucciones operativas. **(25 a >20 pts)** | Hay riesgos relevantes, pero alguno poco específico, mitigaciones poco desarrolladas o falta alguno de los tipos solicitados. La transferencia se describe, pero omite o trata superficialmente algún componente. **(20 a >10 pts)** | Se omiten riesgos relevantes o no hay mitigaciones. No se consideran riesgos de datos o del modelo. La transferencia es incompleta. **(10 a >0 pts)** | /25 |
 | | | | **Total** | **/100** |

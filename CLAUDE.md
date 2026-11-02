@@ -77,6 +77,8 @@ Documentation lives in three places and each has a different job. Keeping them a
 
 **Close the issue from the PR body, and in English.** GitHub only acts on `Closes #N` / `Fixes #N` / `Resolves #N`; the Spanish «Cierra #N» reads fine and does nothing, so five finished issues (#51, #52, #55, #56, #57) sat open after their PRs merged and had to be closed by hand. The rest of the repo is in Spanish — this one line is not.
 
+**And do not use `git blame` to find out who wrote something.** Every PR here is squash-merged, which collapses the branch into one commit authored by whoever opened the PR, so blame credits the PR author for every line — including lines someone else wrote. `src/evaluation/regresion.py` is the clear case: `git blame` gives 40 of the 45 lines of `concordancia_harrell` to the author of #118, while the function actually entered in `9e8f816`, was reverted in `599592e` and restored in `f3048db`, all three by someone else. This matters because each deliverable carries a per-person contribution table, and a table verified by blame comes out backwards. Use `git log --follow -- <file>` and the PR that introduced the change, or read the issue it closed.
+
 ### The decision register
 
 Every technical decision in this file has an entry in `docs/decisiones.md` with its context, what was discarded, what it costs, and, when it needs the sponsor, **the literal question** to ask. It does not record who decides.
