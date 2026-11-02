@@ -26,7 +26,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente | |
 | [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente | |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta | |
-| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Propuesta | |
+| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Revisada | |
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
@@ -259,9 +259,9 @@ En MCC la elección de modelo mueve 1.5 puntos entre la logística y el boosting
 
 **Se propone.** Excluirlas de la clasificación y no imputar una etiqueta desde la conectividad, porque la estereoquímica puede cambiar la clase.
 
-#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .propuesta .revisada}
+#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .revisada}
 
-**Estado:** propuesta · revisada el 12 de octubre
+**Estado:** revisada · el 12 de octubre y el 2 de noviembre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 151 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
@@ -287,7 +287,21 @@ Con una sola configuración por familia **no se declara ganador**, que es el err
 
 Y la curva de aprendizaje —submuestreando **por grupo**, no por fila, porque tomar filas al azar partiría andamios y mediría cuánto ayuda ver más análogos en vez de más estructuras— separa los dos diagnósticos: en los árboles la línea de ajuste es plana desde 168 estructuras; en la logística baja de 0.81 a 0.74 y se acerca a la de validación. **La brecha de los árboles sí se cierra** —de 0.327 a 0.270 en boosting y de 0.299 a 0.256 en el bosque, más que la brecha entera de la logística, que es 0.052— pero por el lado equivocado: no porque el ajuste baje, que es plano, sino porque la validación sube. Quintuplicar las estructuras quitó una quinta parte de la brecha, así que cerrarla por este camino pediría órdenes de magnitud más compuestos. Las tres líneas de validación suben cada vez menos, y el último 20% de estructuras aporta menos de 0.01 de MCC en los tres. **Más compuestos del mismo tipo ayudarían poco**: lo que falta es regularizar los árboles.
 
-**El piso es 0.000 de MCC, 0.500 de AUROC y 0.350 de AUPRC sobre la minoritaria.** El tercero importa justamente porque no es cero: el 0.88 del baseline se lee contra 0.350, no contra 0. No hay desempeño histórico con el que comparar —la patrocinadora no tenía modelo previo— así que el piso lo ponen los clasificadores triviales con la misma partición agrupada. Importa decirlo porque con 65.0% de BBB+ un clasificador que diga siempre «permeable» acierta dos de cada tres veces, y esa exactitud del 65% parecería un resultado. **El desempeño mínimo que el Avance 4 tiene que superar queda fijado en el 0.70 de MCC y el 0.93 de AUROC de este baseline**, medido con esta partición y estas semillas.
+**El piso es 0.000 de MCC, 0.500 de AUROC y 0.350 de AUPRC sobre la minoritaria.** El tercero importa justamente porque no es cero: el 0.88 del baseline se lee contra 0.350, no contra 0. No hay desempeño histórico con el que comparar —la patrocinadora no tenía modelo previo— así que el piso lo ponen los clasificadores triviales con la misma partición agrupada. Importa decirlo porque con 65.0% de BBB+ un clasificador que diga siempre «permeable» acierta dos de cada tres veces, y esa exactitud del 65% parecería un resultado. **El desempeño mínimo que el Avance 4 tenía que superar quedó fijado en el 0.70 de MCC y el 0.93 de AUROC de este baseline**, medido con esta partición y estas semillas. Es una vara de **validación cruzada**, y por eso no es comparable con la cifra de la prueba reservada del apartado siguiente. *Versión superada (2 de noviembre):* esta entrada dejaba la frase sola, sin el resultado del Avance 5, así que quien entrara por el registro —que es el documento canónico— se llevaba 0.70 donde la cifra sobre datos no vistos es 0.3385, el doble de lo que el modelo hace (#190).
+
+**El modelo final de la fase 1 es `svm_rbf`, y lo eligió el Avance 5 por descarte.** Ninguna de las treinta comparaciones de los cinco ensambles contra el mejor individual pasó la regla de mejora, que se fijó antes de medir y no se bajó después, así que el final es el mejor individual del Avance 4. La estabilidad y los intervalos solapados de AUROC apuntan al mismo modelo. Reajustado con entrenamiento y validación, y evaluado **una sola vez** sobre los 1,499 compuestos reservados (`notebooks/05_Modelo_Final.ipynb` celda 30, corrida `experimentos/2026-11-01-artemio-1.5-modelo-final-permeabilidad/`):
+
+| | MCC | AUROC | AUPRC min. | exactitud bal. |
+|:--|--:|--:|--:|--:|
+| validación cruzada | 0.7017 | 0.9190 | 0.8842 | |
+| **prueba reservada** | **0.3385** | **0.7928** | 0.7198 | 0.6386 |
+| · natural exacto | 0.2567 | 0.7802 | 0.7613 | 0.5960 |
+| · análogo estereoquímico | 0.2788 | 0.7304 | 0.5652 | 0.6537 |
+| · sin equivalente natural | 0.3173 | 0.7934 | 0.5997 | 0.6249 |
+
+Se esperaba que bajaran: la prueba tiene los andamios raros a propósito y otra prevalencia (57.3% de BBB+ contra 65.0% de las 6,306 filas con las que se reajustó). Bajan más de lo que esa advertencia prepara. El MCC se parte por la mitad, y el AUROC pierde 0.126 sin depender del umbral, así que la prevalencia no lo explica: **sobre esqueletos que no se parecen a los de entrenamiento el modelo ordena peor**. El estrato más flojo en exactitud balanceada es `natural exacto` (0.596), que es justo el que el proyecto quiere priorizar. La distancia entre las dos primeras filas **es** el resultado del Avance 5: mide cuánto de lo que promete la validación cruzada sobrevive a un esqueleto nuevo, y que sobreviva poco es un resultado válido, que es el que va al artículo. Parte de la caída del MCC es de colocación del umbral y no de orden, y recuperarla pide reportarlo a un umbral elegido en validación, que es lo que queda abierto en el #191.
+
+**Qué cambiaría la elección del modelo final:** que el umbral elegido en validación recupere buena parte del MCC de la prueba, lo que cambiaría la lectura de la caída pero no la del AUROC; o que la matriz canónica de la fase 1 quede decidida (#166) y mueva el orden de los once modelos, aunque el `svm_rbf` es uno de los cinco que salen idénticos al cuarto decimal entre las dos máquinas.
 
 **Dos métodos de atribución coinciden en 11 de sus 15 primeras características**, que es lo que la [C.2](#dc-2) exige antes de afirmar nada estructural: la impureza del bosque pone a TPSA arriba, la permutación sobre el pliegue de evaluación pone a `fr_lactam` y `fr_COO`. En la intersección están TPSA, donadores de hidrógeno y `MolLogP`, y los coeficientes de la logística les dan el signo esperado —TPSA −1.42, donadores −2.43—, de modo que la regla de los dos parámetros sale de tres caminos independientes en vez de citarse. **24 de las 151 columnas no dañan al modelo al permutarlas**, y la cuenta lleva su ruido: en solo 4 de esas 24 la media supera en magnitud a su propia desviación entre repeticiones, y en toda la matriz solo 75 de 151. El orden de la cola no está medido; el de la cabeza sí —`fr_lactam` da 0.0058 ± 0.0012— y es de donde sale la intersección. Retirarlas es candidato de poda para el Avance 4, no una decisión que una sola configuración pueda tomar.
 
@@ -842,7 +856,7 @@ La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallaz
 
 **La limitación se escribe con el resultado.** El `aft` difiere de los ensambles en dos cosas a la vez, la verosimilitud censurada y que no recibe las huellas de Morgan / Sort & Slice (por la razón mecánica explicada arriba). Esta corrida no permite atribuir la ganancia en NPASS solo a la censura, y separarlas exige una corrida adicional con los ensambles sobre la matriz densa.
 
-**Sobre la partición reservada.** Primera toma de la prueba en el proyecto, registrada en `experimentos/prueba.csv`. El `aft` da 0.720 de concordancia global sobre los 13,944 pares, con AUROC de 0.793 y MCC de 0.277. En los 117 pares que solo tiene NPASS baja a 0.530 con un Spearman de 0.083, que es ruido alrededor del azar. Eso no respalda el argumento de NPASS ni lo contradice, porque la prevalencia de activos pasa del 12.3% en ajuste al 44.4% en prueba sobre esos 117 pares. El argumento se sostiene en los quince pliegues de la validación cruzada, y así está dicho en la lectura del cuaderno.
+**Sobre la partición reservada.** Primera toma de la prueba en el proyecto, registrada en `experimentos/prueba.csv`. El `aft` da 0.720 de concordancia global sobre los 13,944 pares, con AUROC de 0.793 y MCC de 0.277. En los 117 pares que solo tiene NPASS baja a 0.530 con un Spearman de 0.083, que es ruido alrededor del azar. Eso no respalda el argumento de NPASS ni lo contradice, porque la prevalencia de activos pasa del 12.3% en ajuste al 44.4% en prueba sobre esos 117 pares. El argumento se sostiene en los quince pliegues de la validación cruzada. El punto 6 de la lectura del [05b](../notebooks/05b_Ensambles_actividad.ipynb) resuelve ahí la condición de refutación que el punto 5 había declarado y dejado anotada (#186): trae el desglose de la prueba por procedencia, y concluye que el estrato de naturales no refuta el 0.632 ni lo confirma, así que la ventaja del AFT en productos naturales está medida en validación cruzada y no verificada sobre esqueletos nuevos.
 
 **Tres advertencias para leer la tabla.**
 
