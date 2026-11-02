@@ -1,0 +1,14 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelo_final: svm_rbf
+  motivo: Ninguna comparación pasó la regla de mejora, así que el final es el mejor
+    individual; la estabilidad y los intervalos solapados de AUROC apuntan al mismo
+    modelo.
+  representacion: descriptores
+  ajustado_con: entrenamiento y validacion, sin la prueba
+  prueba: una sola vez, por tomar_prueba(final=True)
+  estratos: origen
