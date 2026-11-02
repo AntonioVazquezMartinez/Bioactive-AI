@@ -125,3 +125,34 @@ class RegresionAFT(BaseEstimator, RegressorMixin):
         # Asegurar positividad antes del logaritmo
         pred_um_pos = np.maximum(pred_um, 1e-12)
         return 6.0 - np.log10(pred_um_pos)
+
+
+class AftConCensuraIzquierda(RegresionAFT):
+    """El mismo AFT, pero sin descartar la censura **por la izquierda** en µM.
+
+    El filtro de `RegresionAFT.fit` exige `inf_um > 0`, y con eso elimina de golpe dos
+    cosas distintas: los intervalos `[0, +inf)`, que no informan, y los `[0, c]` con `c`
+    finito, que sí — son el «más potente que c µM», y XGBoost los admite de forma nativa
+    con `label_lower_bound = 0`. En la corrida de la [2.13](../../docs/decisiones.md#d2-13)
+    eso descartó 745 filas de ajuste cuya cota inferior mediana es pActividad 7.00, de las
+    que 726 son activas al corte de 10 µM: la evidencia «es muy potente».
+
+    `RegresionAFT` no se toca porque el cuaderno 05b muestra su código y lo ejecutó tal
+    cual; esta clase es la variante que mide qué valen esas filas. En lugar de repetir el
+    ajuste entero, reescribe la cota: un `superior` infinito en pActividad pasa a
+    `PACTIVIDAD_CENTINELA`, que en µM es 1e-12. La verosimilitud de un `[1e-12, c]` y la de
+    un `[0, c]` no se distinguen —la normal acumulada en log(1e-12) = −27.6 es cero en
+    doble precisión— y así la fila sobrevive al filtro del padre sin cambiarle la lógica.
+    """
+
+    PACTIVIDAD_CENTINELA = 18.0      # 6 − log10(1e-12); muy por encima de cualquier medición
+
+    def fit(self, X, inferior, superior, grupos=None) -> "AftConCensuraIzquierda":
+        inferior = np.asarray(inferior, dtype=float)
+        superior = np.asarray(superior, dtype=float)
+        # Solo las informativas: un (−inf, +inf) sigue sin decir nada y tiene que irse.
+        izquierda = np.isposinf(superior) & np.isfinite(inferior)
+        superior = np.where(izquierda, self.PACTIVIDAD_CENTINELA, superior)
+        super().fit(X, inferior, superior, grupos=grupos)
+        self.n_recuperadas_ = int(izquierda.sum())
+        return self

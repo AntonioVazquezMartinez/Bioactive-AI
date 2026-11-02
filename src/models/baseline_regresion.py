@@ -36,6 +36,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from ..evaluation.regresion import metricas_regresion, rmse_exactas
+from ..features.huellas import AgregarHuellas
 from .tobit import RegresionTobit
 
 ALFA_RIDGE = 100.0        # penalización de Ridge; el Tobit usa la misma en su escala
@@ -95,6 +96,40 @@ class ImputadaEnCota(BaseEstimator):
 
     def predict(self, X):
         return self.modelo.predict(X)
+
+
+class ConHuellasCensurado(BaseEstimator):
+    """`AgregarHuellas` ajustado dentro del pliegue, para un modelo que recibe el intervalo.
+
+    `make_pipeline` no sirve para esto: sklearn pasa una sola `y` y el contrato del arnés
+    es `fit(X, inferior, superior)`. No hay nada que reenviar, porque `AgregarHuellas.fit`
+    no usa `y` —elige el vocabulario contando en cuántas filas aparece cada subestructura—,
+    así que basta ajustarlo con la X del pliegue de ajuste y transformar en `predict`.
+
+    A diferencia de `SoloExactas` y de `ImputadaEnCota`, **no descarta ninguna fila**: el
+    intervalo llega completo al modelo, que es quien decide qué hacer con la censura.
+    """
+
+    def __init__(self, modelo, n_densas: int, n_bits: int = 2048):
+        self.modelo = modelo
+        self.n_densas = n_densas
+        self.n_bits = n_bits
+
+    @property
+    def necesita_grupos(self) -> bool:
+        return getattr(self.modelo, "necesita_grupos", False)
+
+    def fit(self, X, inferior, superior, grupos=None):
+        self.huellas_ = AgregarHuellas(self.n_densas, n_bits=self.n_bits).fit(X)
+        X_h = self.huellas_.transform(X)
+        if getattr(self.modelo, "necesita_grupos", False):
+            self.modelo.fit(X_h, inferior, superior, grupos=grupos)
+        else:
+            self.modelo.fit(X_h, inferior, superior)
+        return self
+
+    def predict(self, X):
+        return self.modelo.predict(self.huellas_.transform(X))
 
 
 class TobitComparable(RegresionTobit):
