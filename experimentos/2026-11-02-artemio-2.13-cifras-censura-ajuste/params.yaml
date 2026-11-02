@@ -1,0 +1,6 @@
+decision: '2.13'
+semillas: []
+params:
+  particion: ajuste (entrenamiento + validacion)
+  censurada: no isfinite(inferior) o inferior != superior
+  tras_cruce_con_descriptores: true
