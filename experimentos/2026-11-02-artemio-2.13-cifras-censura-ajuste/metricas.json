@@ -1,0 +1,29 @@
+{
+  "ajuste_total": 56241,
+  "por_estrato": {
+    "mixto": {
+      "censuradas": 311,
+      "exactas": 1286,
+      "filas": 1597,
+      "pct_censuradas": 19.5
+    },
+    "solo_chembl": {
+      "censuradas": 8698,
+      "exactas": 43831,
+      "filas": 52529,
+      "pct_censuradas": 16.6
+    },
+    "solo_cmaup": {
+      "censuradas": 0,
+      "exactas": 1,
+      "filas": 1,
+      "pct_censuradas": 0.0
+    },
+    "solo_npass": {
+      "censuradas": 1132,
+      "exactas": 982,
+      "filas": 2114,
+      "pct_censuradas": 53.5
+    }
+  }
+}
