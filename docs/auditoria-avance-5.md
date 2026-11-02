@@ -35,8 +35,21 @@ corridas registradas. Las cinco se sostienen, y una de ellas corrige al propio e
 | 1.2 · la condición de refutación de la fase 2 quedó sin comprobar | [#186](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/186) |
 | 1.3 · el AUPRC por estrato promedia dos clases | [#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187) |
 | 1.4 · el umbral de la regla | [#188](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/188) |
+| 2.1 · la calibración del SVM parte sin agrupar | [#191](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/191) |
+| 2.2 · la σ del AFT está en unidades equivocadas | [#192](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/192) |
+| 2.3 · el filtro del AFT y su prueba unitaria | [#193](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/193) |
+| 2.4 · un error estándar presentado como dispersión | [#194](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/194) |
+| 2.5 · fuga de selección de características, medida en cero | [#195](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/195) |
+| 2.6 · el registro no recoge la fase 1 | [#190](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/190) |
+| 3.1 · cinco conteos sin corrida detrás | [#196](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/196) |
+| 3.2 · tres tiempos de una corrida superada | [#197](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/197) |
+| 3.3 · el valor pareado y la resta de medias en dos párrafos seguidos | [#198](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/198) |
+| 3.4 · el estimador puntual del intervalo | [#199](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/199) |
+| 3.5 · higiene del registro | [#200](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/200) |
+| 3.6 · dos imprecisiones de signo y de método | [#201](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/201) |
+| 3.7 · riesgos latentes menores | [#202](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/202) |
 
-Los de prioridad 2 y 3 se abren a continuación. El [#183](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/183), abierto antes de esta auditoría, guarda el caso de las huellas y el estrato de análogos estereoquímicos.
+Los trece de prioridad 2 y 3 se abrieron el 2 de noviembre, un día después de la entrega. El [#183](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/183), abierto antes de esta auditoría, guarda el caso de las huellas y el estrato de análogos estereoquímicos; el [#203](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/203) recoge un hallazgo del equipo que la auditoría no vio: `asignar_origen` contamina en un solo sentido, así que `natural exacto` es más puro pero más pequeño de lo que debería ser.
 
 ---
 
