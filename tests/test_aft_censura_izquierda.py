@@ -81,3 +81,19 @@ def test_con_huellas_censurado_se_puede_clonar():
     m = ConHuellasCensurado(RegresionAFT(semilla=0), n_densas=2, n_bits=3)
     c = clone(m)
     assert c.n_densas == 2 and c.n_bits == 3 and isinstance(c.modelo, RegresionAFT)
+
+
+def test_el_centinela_es_indistinguible_del_cero_en_la_verosimilitud():
+    """No es que Φ(ln 1e-12) sea cero —vale 2.36e-168—: es que la resta no se distingue.
+
+    Y eso depende de que la cota superior no sea ella misma del orden del centinela. La
+    fila más potente de las 745 de la corrida de la 2.13 tiene c = 8.0e-05 µM, ocho
+    órdenes por encima, así que el margen sobra; a 1e-12 la igualdad se rompe.
+    """
+    from scipy.stats import norm
+
+    a = np.log(1e-12)
+    assert norm.cdf(a) > 0.0, "Φ(ln 1e-12) no es cero, y la justificación no puede decirlo"
+    for c in (8.0e-05, 0.1, 1e-9, 1e-11):
+        assert norm.cdf(np.log(c)) - norm.cdf(a) == norm.cdf(np.log(c)), c
+    assert norm.cdf(a) - norm.cdf(a) != norm.cdf(a), "a 1e-12 la equivalencia se rompe"

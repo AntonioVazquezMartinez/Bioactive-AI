@@ -137,12 +137,24 @@ class AftConCensuraIzquierda(RegresionAFT):
     eso descartó 745 filas de ajuste cuya cota inferior mediana es pActividad 7.00, de las
     que 726 son activas al corte de 10 µM: la evidencia «es muy potente».
 
-    `RegresionAFT` no se toca porque el cuaderno 05b muestra su código y lo ejecutó tal
-    cual; esta clase es la variante que mide qué valen esas filas. En lugar de repetir el
-    ajuste entero, reescribe la cota: un `superior` infinito en pActividad pasa a
-    `PACTIVIDAD_CENTINELA`, que en µM es 1e-12. La verosimilitud de un `[1e-12, c]` y la de
-    un `[0, c]` no se distinguen —la normal acumulada en log(1e-12) = −27.6 es cero en
-    doble precisión— y así la fila sobrevive al filtro del padre sin cambiarle la lógica.
+    **Lo único que rechaza el cero es el propio filtro del padre.** `limites_en_micromolar`
+    devuelve exactamente `0.0` para estas filas y XGBoost admite `label_lower_bound = 0` con
+    cota superior finita (lo comprueba `tests/test_aft_censura_izquierda.py`). Así que el
+    arreglo de `RegresionAFT` cuando le llegue el turno es **esa línea** —aceptar `inf_um >= 0`
+    y excluir aparte los `[0, +inf)`—, no inyectar un centinela.
+
+    El centinela existe solo porque `RegresionAFT` no se toca: el cuaderno 05b muestra su
+    código y lo ejecutó tal cual, y `tests/test_05b_codigo.py` ata las dos cosas. Para medir
+    qué valen esas filas sin repetir el ajuste entero, esta clase reescribe la cota: un
+    `superior` infinito en pActividad pasa a `PACTIVIDAD_CENTINELA`, que en µM es 1e-12, y la
+    fila sobrevive al filtro del padre.
+
+    La equivalencia es de punto flotante, no exacta: Φ(ln 1e-12) vale 2.36e-168, que **no es
+    cero**. Lo que es exacto es la resta — `Φ(ln c) − Φ(ln 1e-12) == Φ(ln c)` da `True`,
+    porque 1e-168 cae unos 160 órdenes por debajo del último bit de `Φ(ln c)`. Eso depende de
+    que `c` no sea a su vez absurdamente potente: la igualdad se rompe cuando `c` se acerca a
+    1e-12 µM, y la fila más potente de las 745 tiene `c = 8.0e-05 µM` (pActividad 10.10), ocho
+    órdenes de margen.
     """
 
     PACTIVIDAD_CENTINELA = 18.0      # 6 − log10(1e-12); muy por encima de cualquier medición
