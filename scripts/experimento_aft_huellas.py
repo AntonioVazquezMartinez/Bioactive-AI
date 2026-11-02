@@ -21,6 +21,7 @@ Harrell en `solo_npass`**, que es el estrato por el que la 2.13 eligió este mod
 """
 from __future__ import annotations
 
+import math
 import os
 
 os.environ["OMP_NUM_THREADS"] = "1"   # un hilo por proceso: no competir con n_jobs=-1
@@ -89,6 +90,24 @@ def datos():
             "clase": d["activo_10um"].to_numpy(float)[fuera]}
 
 
+# σ de la pérdida AFT, en unidades de ln(µM). El docstring de `src/models/aft.py` justifica
+# el 1.0 por omisión como «comparable» a la dispersión de ~0.7 que ChEMBL reporta — pero ese
+# 0.7 está en pActividad, que es log10, y σ vive en ln. El factor es ln(10) = 2.3026, así que
+# el 1.0 supone las mediciones 1.6 veces más precisas de lo que su propia justificación cita.
+# σ gobierna cuánta información lleva un intervalo censurado, y la ventaja del `aft` en los
+# naturales viene entera de la censura, así que el supuesto manda sobre el mecanismo.
+ESCALA_EQUIVALENTE = 0.7 * math.log(10)      # 1.6118 en ln(µM) = 0.7 en pActividad
+
+
+def brazos_escala() -> dict:
+    """El `aft` con la σ que su propia justificación implica, contra el `aft` tal cual."""
+    return {
+        "aft": ("X", RegresionAFT(semilla=SEMILLAS[0])),
+        "aft_escala_equivalente": ("X", RegresionAFT(semilla=SEMILLAS[0],
+                                                     escala=ESCALA_EQUIVALENTE)),
+    }
+
+
 def brazos(n_densas: int) -> dict:
     """Los cuatro, con los mismos árboles y la misma profundidad: 100 rondas, profundidad 6."""
     return {
@@ -132,21 +151,26 @@ def resumen(res: pd.DataFrame) -> dict:
 
 
 def main() -> None:
+    solo_escala = "--solo-escala" in sys.argv
     d = datos()
-    catalogo = brazos(d["n_densas"])
+    catalogo = brazos_escala() if solo_escala else brazos(d["n_densas"])
     params = {
         "modelos": list(catalogo), "pliegues": PLIEGUES, "n_bits_sortslice": N_BITS,
         "radio_morgan": 2, "objetivo": "pActividad", "estratos": "procedencia",
         "metrica_principal": "concordancia en solo_npass, declarada antes de correr",
+        "solo_escala": solo_escala,
         "entrena_con": {"aft": "todas las censuradas por la derecha",
                         "aft_huellas": "idem, con las huellas dentro del pliegue",
                         "xgb_sin_censura": "solo las exactas (SoloExactas)",
                         "aft_filtro": "también las censuradas por la izquierda"},
-        "arboles": "100 rondas, profundidad 6, los cuatro brazos",
+        "arboles": "100 rondas, profundidad 6, todos los brazos",
+        "escala_aft": {"aft": 1.0, "aft_escala_equivalente": round(ESCALA_EQUIVALENTE, 4)}
+                      if solo_escala else 1.0,
         "nota_seg": "tiempo de ajuste con dieciséis núcleos; no comparable con la corrida "
                     "de la 2.13, que corrió en otra máquina",
     }
-    with Corrida("comparativa-aft-huellas-y-censura", decision="2.13", params=params,
+    nombre = "sensibilidad-escala-aft" if solo_escala else "comparativa-aft-huellas-y-censura"
+    with Corrida(nombre, decision="2.13", params=params,
                  semillas=SEMILLAS, datos=[PARES, DESCRIPTORES]) as c:
         partes = []
         for nombre, (matriz, modelo) in catalogo.items():
