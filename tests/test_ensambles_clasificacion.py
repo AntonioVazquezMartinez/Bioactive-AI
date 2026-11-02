@@ -1,8 +1,10 @@
 """Los ensambles entran al arnés como cualquier canalización, y el stacking no filtra.
 
 Lo que atan: que el stacking se niegue a ajustar sin grupos y que sus pliegues
-internos no crucen grupos, que es la fuga que no aparece en ninguna métrica; y que
-los cinco ensambles corran por `evaluar` con predicciones fuera de pliegue.
+internos no crucen grupos, que es la fuga que no aparece en ninguna métrica; que
+los cinco ensambles corran por `evaluar` con predicciones fuera de pliegue; y que
+envolverlos en una canalización no corte el paso de los grupos, que es como el 05c
+les pone delante las huellas.
 """
 
 import numpy as np
@@ -11,7 +13,8 @@ from sklearn.model_selection import StratifiedGroupKFold
 
 from src.evaluation.cv import evaluar
 from src.models.alternativos import seleccion
-from src.models.ensambles_clasificacion import StackingAgrupado, ensambles
+from src.models.ensambles_clasificacion import (CanalizacionConGrupos, StackingAgrupado,
+                                                ensambles)
 
 BASE = ("logistica", "knn")
 
@@ -59,3 +62,21 @@ def test_los_cinco_ensambles_corren_por_el_arnes(datos):
         assert not np.isnan(p).any(), nombre
         assert ((p >= 0) & (p <= 1)).all(), nombre
     assert set(res["modelo"]) == set(modelos)
+
+
+def test_la_canalizacion_mantiene_el_paso_de_los_grupos(datos):
+    """Envolver el stacking no puede cortar la cadena: el arnés mira el objeto de fuera."""
+    X, y, grupos = datos
+    from sklearn.preprocessing import FunctionTransformer
+
+    envuelto = CanalizacionConGrupos([("identidad", FunctionTransformer()),
+                                      ("stacking", StackingAgrupado(list(seleccion(BASE).items()),
+                                                                    pliegues=3))])
+    suelto = CanalizacionConGrupos([("identidad", FunctionTransformer()),
+                                    ("logistica", seleccion(("logistica",))["logistica"])])
+    assert envuelto.necesita_grupos and not suelto.necesita_grupos
+    # Un `Pipeline` corriente no acepta `grupos`, y por eso hace falta esta subclase.
+    res, fdp = evaluar({"envuelto": envuelto, "suelto": suelto}, X, y, grupos,
+                       semillas=(0,), pliegues=3, verboso=False)
+    for nombre, p in fdp.items():
+        assert not np.isnan(p).any(), nombre
