@@ -1,0 +1,35 @@
+{
+  "contraste_c2": {
+    "NumHDonors": {
+      "puesto_impureza": 6,
+      "puesto_permutacion": 4
+    },
+    "TPSA": {
+      "puesto_impureza": 1,
+      "puesto_permutacion": 40
+    }
+  },
+  "interseccion": {
+    "MolLogP": {
+      "impureza": 0.02289,
+      "indice": 98,
+      "permutacion": 0.00363
+    },
+    "NumHDonors": {
+      "impureza": 0.03068,
+      "indice": 87,
+      "permutacion": 0.01096
+    },
+    "VSA_EState3": {
+      "impureza": 0.02276,
+      "indice": 69,
+      "permutacion": 0.00894
+    },
+    "fr_lactam": {
+      "impureza": 0.02367,
+      "indice": 130,
+      "permutacion": 0.04461
+    }
+  },
+  "n_en_interseccion": 4
+}

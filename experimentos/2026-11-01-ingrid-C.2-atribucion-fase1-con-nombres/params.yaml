@@ -1,0 +1,13 @@
+decision: C.2
+semillas:
+- 0
+params:
+  modelo_final: svm_rbf
+  segundo_metodo: impureza del bosque
+  puntuacion_permutacion: matthews_corrcoef
+  repeticiones: 5
+  pliegues: 5
+  primeras: 15
+  umbral_racimo: 0.76
+  nota: 'la permutacion mide el modelo final y la impureza el bosque, porque el SVM
+    no tiene importancia interna: la interseccion es entre dos modelos distintos'
