@@ -56,6 +56,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **PAINS** (*Pan-Assay Interference Compounds*)
 : Compuestos que dan positivo en casi cualquier ensayo por mecanismos inespecíficos, no porque actúen sobre la diana. **Por qué importa:** la curcumina es el caso clásico, con más de 120 ensayos clínicos sin un resultado positivo controlado. El modelo los va a rankear alto, así que hay que filtrarlos antes de reportar cualquier candidato.
 
+**HTS** (*High-Throughput Screening* / tamizaje de alto rendimiento)
+: Ensayos biológicos automatizados que prueban colecciones masivas de compuestos a concentraciones fijas estándar (frecuentemente 10 µM o 100 µM) para cribar actividad preliminar. **Por qué importa:** es el origen físico de la censura masiva en el dataset. Si una molécula no alcanza el 50% de inhibición al corte ensayado, el protocolo no mide diluciones completas y registra una cota superior («≤ 10 µM»); el 67.4% de las mediciones censuradas del archivo histórico proceden de este corte heredado.
+
 ---
 
 ## Descriptores moleculares
@@ -121,6 +124,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Error estándar corregido** (Nadeau y Bengio)
 : Cuando se repite la validación cruzada con varias semillas, las mediciones **comparten datos de entrenamiento** y no son independientes, así que el error estándar ingenuo las trata como si lo fueran y sale demasiado estrecho. La corrección multiplica la varianza por (1/n + n_prueba/n_entrenamiento) y, con 5 pliegues y 15 mediciones, resulta unas 2.2 veces mayor. **Por qué importa:** sin ella, diferencias que son ruido parecen reales, y en este proyecto eso ya habría sesgado dos decisiones —el tamaño del vocabulario y la transformación— hacia la opción más grande.
 
+**Factor de enriquecimiento (EF)**
+: Cociente entre la tasa de activos recuperados en una fracción temprana superior de la biblioteca priorizada ($f$, típicamente 1% o 5%) y la tasa esperada por simple azar ($f$). **Por qué importa:** mide la eficacia práctica del modelo en campañas de cribado virtual de laboratorio. Su límite matemático máximo es $1/p$ (con $p$ siendo la prevalencia de activos), por lo que una curva visualmente plana en un conjunto dominado por activos puede deberse a que el modelo ya satura el 100% del techo alcanzable.
+
 ---
 
 ## Datos y metodología
@@ -157,6 +163,12 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **Sort & Slice**
 : Fingerprint que conserva las subestructuras más frecuentes de un conjunto de entrenamiento en un vocabulario de tamaño fijo, con una columna por subestructura. **Por qué importa:** evita que varias subestructuras compartan un bit como en un fingerprint plegado y permite rastrear las columnas hasta sus fragmentos. El vocabulario se aprende solo con entrenamiento.
+
+**Compresión hacia la media (*shrinkage*)**
+: Propiedad intrínseca de los estimadores regularizados y ensambles de árboles que suaviza las predicciones hacia el promedio global, sacrificando los valores extremos para minimizar la varianza del error. **Por qué importa:** en el modelo AFT contrae el rango observado (de 2.1 a 12.0) a un intervalo predicho de 2.4 a 9.4 (pendiente 0.423 sobre exactas). Invalida al modelo para predicciones cuantitativas puntuales exactas, pero preserva fielmente el orden relativo necesario para clasificar y priorizar candidatos.
+
+**Importancia por permutación**
+: Método agnóstico de interpretabilidad que mide la importancia de una variable evaluando cuánto decae la métrica predictiva al desordenar aleatoriamente los valores de esa columna fuera de muestra, destruyendo su relación con la etiqueta sin reentrenar. **Por qué importa:** a diferencia de la ganancia interna de los árboles (que se sesga hacia variables de alta cardinalidad y no indica direccionalidad), la permutación mide el impacto observable sobre la métrica y es una de las candidatas para el par de métodos que la patrocinadora exige, par que todavía no se elige.
 
 **Umbral de varianza**
 : Filtro que descarta columnas cuya variación queda por debajo de un valor elegido. **Por qué importa:** elimina columnas constantes o casi constantes que apenas distinguen moléculas; el umbral debe ajustarse en entrenamiento.
