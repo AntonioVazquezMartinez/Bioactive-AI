@@ -81,7 +81,7 @@ Cada decisión técnica, con su contexto, lo que se descartó, lo que cuesta, su
 
 El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 
-| Avance | Entregable | Estado (1 de noviembre de 2026) |
+| Avance | Entregable | Estado (2 de noviembre de 2026) |
 |---|---|---|
 | 0 | Propuesta del proyecto | Entregado (PDF) |
 | 1 | Análisis exploratorio de datos (`notebooks/01_EDA.ipynb`) | Entregado el 4 de octubre |
@@ -89,9 +89,9 @@ El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 | 2 | Ingeniería de características (`notebooks/02_Feature_Eng.ipynb`) | Hecho y revisado con la retroalimentación de la asesora: matriz de 151 columnas, partición por andamio con la prueba reservada; reporte en PDF publicado. La fase 2 tiene su propio notebook, `02b_Feature_Eng_actividad.ipynb`: matriz de 70,384 pares y partición con prueba reservada |
 | 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Entregado el 18 de octubre: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar |
 | 4 | Modelos alternativos (`notebooks/04_Models.ipynb`) | Entregado el 25 de octubre: seis familias sin ensamble en las dos fases, con el ajuste fino de las dos mejores. El individual final de la fase 1 es el SVM RBF sin afinar. Tres acompañantes miden qué añaden las huellas moleculares |
-| 5 | Modelo final | Vence el 1 de noviembre. La fase 2 (`notebooks/05b_Ensambles_actividad.ipynb`) está en `main`: nueve modelos, el AFT censurado como final y la prueba reservada de la fase 2 ya tomada. La fase 1 (`notebooks/05_Modelo_Final.ipynb`) tiene la comparativa corrida y espera la elección del modelo final |
-| — | Producto de difusión | Vence el 8 de noviembre · sin empezar |
-| — | Resumen ejecutivo | Vence el 15 de noviembre · sin empezar |
+| 5 | Modelo final | Entregado el 1 de noviembre, en tres cuadernos. Fase 1 (`notebooks/05_Modelo_Final.ipynb`): el SVM RBF como final, porque ninguna de las 30 comparaciones pasa la regla, con la prueba reservada tomada una vez. Fase 2 (`notebooks/05b_Ensambles_actividad.ipynb`): el AFT censurado como final. Y `notebooks/05c_Ensambles_permeabilidad_huellas.ipynb`, las huellas sobre los ensambles de la fase 1. Una auditoría posterior abrió sus hallazgos como issues `deuda` |
+| — | Producto de difusión | Vence el 8 de noviembre · sin redactar |
+| — | Resumen ejecutivo | Vence el 15 de noviembre · sin redactar |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
 
