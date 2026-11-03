@@ -170,7 +170,9 @@ la prueba (20%) queda reservada. Nunca aleatoria ([1.2](../decisiones.md#d1-2)).
 **Por qué.** Los andamios grandes tienen pureza de clase extrema: uno de 410 compuestos es
 99.5% BBB+. Con partición aleatoria basta reconocer el andamio. Medido en la fase 1: agrupar
 solo por andamio da 2,239 grupos contra 1,048 y **infla 2.2 puntos de AUROC y 7.1 de MCC**,
-casi cinco veces lo que separa a las familias de modelos.
+algo más de tres veces lo que separa a las familias de modelos en MCC, medido igual —una
+semilla, media de pliegues— ([1.2](../decisiones.md#d1-2)). En AUROC no: ahí las dos
+distancias son casi la misma.
 
 | partición | filas | andamios | % BBB+ |
 |:--|--:|--:|--:|
