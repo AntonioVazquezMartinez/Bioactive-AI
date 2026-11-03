@@ -5,7 +5,8 @@ import pandas as pd
 import pytest
 
 from src.models import tareas
-from src.models.tareas import _etiquetas_estratos, asignar_origen, cargar
+from src.models.tareas import (_etiquetas_estratos, _pesos_moleculares,
+                               asignar_origen, cargar, etiquetas_por_tamano)
 
 NATURAL, ANALOGO, SIN = tareas.ORIGENES
 
@@ -43,7 +44,7 @@ def test_estratos_invalido_da_error():
 
 
 def test_actividad_solo_admite_estratos_de_procedencia():
-    for e in ("origen", "origen_grupo"):
+    for e in ("origen", "origen_grupo", "tamano"):
         with pytest.raises(ValueError, match="procedencia"):
             cargar("actividad", estratos=e)
 
@@ -60,3 +61,62 @@ def test_conteos_de_origen_sobre_las_7805_filas():
     g = cargar("permeabilidad", incluir_prueba=True)
     assert set(g.estratos) <= {"A", "B", "C", "D"}
     assert "origen" not in g.meta
+
+
+# --- El estrato de tamaño (#215) ---------------------------------------------
+
+
+def test_los_tramos_son_cerrados_por_arriba():
+    """Un peso igual al corte cae en el tramo de abajo, y eso se fija aquí."""
+    pesos = np.array([100.0, 250.0, 250.1, 350.0, 400.0, 500.0, 500.1, 900.0])
+    assert list(etiquetas_por_tamano(pesos)) == [
+        "≤250 Da", "≤250 Da", "250–350 Da", "250–350 Da",
+        "350–500 Da", "350–500 Da", ">500 Da", ">500 Da"]
+
+
+def test_la_etiqueta_lleva_el_corte_dentro():
+    """Una figura que no dice con qué se partió no se puede comparar con otra."""
+    for etiqueta in set(etiquetas_por_tamano(np.array([100.0, 300.0, 400.0, 900.0]))):
+        assert "Da" in etiqueta
+        assert any(c.isdigit() for c in etiqueta)
+
+
+def test_otros_cortes_dan_otros_tramos():
+    assert list(etiquetas_por_tamano(np.array([100.0, 500.0]), cortes=(300.0,))) == [
+        "≤300 Da", ">300 Da"]
+
+
+def test_los_cortes_tienen_que_crecer():
+    for malos in ((), (350.0, 250.0), (250.0, 250.0)):
+        with pytest.raises(ValueError, match="crecientes"):
+            etiquetas_por_tamano(np.array([100.0]), cortes=malos)
+
+
+def test_el_estrato_de_tamano_ignora_grupo_y_origen():
+    etiquetas = _etiquetas_estratos(
+        "tamano", np.array(["A", "A"]), np.array([NATURAL, SIN]),
+        np.array([100.0, 900.0]))
+    assert list(etiquetas) == ["≤250 Da", ">500 Da"]
+
+
+@procesados
+def test_el_peso_sale_de_la_matriz_de_descriptores_y_no_de_meta():
+    """Siempre la misma fuente, o los dos brazos compararían particiones distintas."""
+    d = pd.read_parquet(tareas.PROCESADOS / tareas.DESCRIPTORES["descriptores"],
+                        columns=["MolWt"])
+    filas = np.array([0, 5, 100])
+    assert np.allclose(_pesos_moleculares(filas), d["MolWt"].to_numpy()[filas])
+
+
+@procesados
+def test_cargar_con_tamano_da_los_cuatro_tramos_y_ninguno_es_marginal():
+    t = cargar("permeabilidad", estratos="tamano")
+    conteos = pd.Series(t.estratos).value_counts()
+    assert set(conteos.index) == {"≤250 Da", "250–350 Da", "350–500 Da", ">500 Da"}
+    assert conteos.sum() == len(t.y)
+    # El arnés solo reporta un subgrupo si su clase minoritaria llega a 20 casos.
+    for tramo in conteos.index:
+        sel = t.estratos == tramo
+        assert min(int(t.y[sel].sum()), int((1 - t.y[sel]).sum())) >= 20, tramo
+    # Y no se calcula el origen cuando nadie lo pidió.
+    assert "origen" not in t.meta
