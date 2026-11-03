@@ -53,8 +53,9 @@ TAREAS = ("permeabilidad", "actividad")
 ESTRATOS = ("grupo", "origen", "origen_grupo", "tamano")
 ARCHIVO_PATROCINADORA = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
 ORIGENES = ("natural exacto", "análogo estereoquímico", "sin equivalente natural")
-# Cortes del estrato de tamaño, en daltons. 500 es la línea de Lipinski (#215).
-PESOS_CORTE = (250.0, 350.0, 500.0)
+# Cortes del estrato de tamaño, en daltons (#215). 500 es la línea de Lipinski; 800 acota el
+# tramo de en medio, que de otro modo iria de 500 hasta el compuesto mas pesado de cada fase.
+PESOS_CORTE = (250.0, 350.0, 500.0, 800.0)
 REPRESENTACIONES = ("descriptores", "descriptores_transformados", "morgan",
                     "sortslice", "descriptores+morgan")
 
@@ -170,10 +171,26 @@ def etiquetas_por_tamano(peso: np.ndarray,
     de abajo. El corte va dentro de la etiqueta por la misma razón que
     `grupos_cv` dice cómo agrupó: una figura que no dice con qué se partió no
     se puede comparar con otra.
+
+    **El tramo abierto de arriba no significa lo mismo en las dos fases**, y es el
+    único: con los cortes por omisión va de 800 Da al compuesto más pesado de cada
+    conjunto, que en las filas de ajuste son 1,449 en la fase 1 y 4,114 en la fase 2.
+    Los otros cuatro tramos están acotados y sí son comparables entre fases. Por eso
+    hay un corte en 800 y no un solo tramo de más de 500: la hipótesis que este
+    estrato pone a prueba apunta justo a las moléculas grandes, y esa barra tiene
+    que poder leerse sin que cambie de población de una fase a otra.
+
+    Un peso ausente o no finito **falla** en vez de etiquetarse: `searchsorted` manda
+    un NaN al final y lo habría puesto en el tramo más grande sin que ninguna figura
+    lo mostrara.
     """
     bordes = np.asarray(cortes, dtype=float)
     if bordes.size == 0 or not np.all(np.diff(bordes) > 0):
         raise ValueError(f"cortes {cortes!r}; hacen falta cortes crecientes")
+    peso = np.asarray(peso, dtype=float)
+    if not np.isfinite(peso).all():
+        raise ValueError(f"{int((~np.isfinite(peso)).sum())} pesos ausentes o no finitos; "
+                         "no se asigna ningún tramo a un peso que no se conoce")
     nombres = ([f"≤{bordes[0]:.0f} Da"]
                + [f"{a:.0f}–{b:.0f} Da" for a, b in zip(bordes, bordes[1:])]
                + [f">{bordes[-1]:.0f} Da"])
