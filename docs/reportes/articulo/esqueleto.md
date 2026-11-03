@@ -100,10 +100,24 @@ el experimento no vuelva a medir densidad.
 | 7 | Conclusiones clave | — | la escalera, las limitaciones y el #215 como trabajo futuro |
 | 8 | Referencias y anexos | `docs/referencias/` | 211 entradas en `bibliografia.bib` |
 
-**Una incoherencia del material del curso que hay que resolver antes de maquetar:** la lista
-de secciones pone «Implementación y operación» en la **6**, y la rúbrica dice que esos
-elementos se evalúan «en la sección **5**». Son 25 puntos. Preguntarlo en la reunión del 3 de
-noviembre; mientras tanto, escribirlo en la 6 y anunciarlo al final de la 5.
+**La aparente incoherencia de la sección 5 contra la 6 no existe, y la plantilla lo zanja.**
+El `\section` de «Implementación y operación» es el **5**, no el 6. La plantilla declara que
+«el resumen y las referencias no llevan número; las demás secciones sí», y lo demuestra con
+`\setcounter{section}{3}` antes de «Resultados y validación» para que salga como **4**. Así
+que es la **parte** 6 de ocho y la **sección numerada** 5: la rúbrica y la lista cuentan lo
+mismo de dos maneras. Escribirlo en la 6 lo habría puesto dentro de Conclusiones, y son 25
+puntos.
+
+| parte | sección numerada |
+|:--|--:|
+| Resumen | *sin número* |
+| Contexto de negocio y problema | 1 |
+| Datos y preparación | 2 |
+| Metodología y modelos | 3 |
+| Resultados y validación | 4 |
+| **Implementación y operación** | **5** |
+| Conclusiones clave | 6 |
+| Referencias y anexos | *sin número* |
 
 ## La tabla de cifras decisivas
 
@@ -184,7 +198,8 @@ el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la 
   e IBM Watson.
 - **El abstract**, que tiene que comprenderse de forma independiente.
 - **La declaración de uso de IA** con herramienta, modelo y finalidad.
-- **La plantilla de LaTeX**, sin bajar.
+- ~~La plantilla de LaTeX, sin bajar.~~ Está en esta misma carpeta: `articulo.tex`,
+  con APA 7 fijado y la bibliografía del proyecto por enlace simbólico.
 
 ## Lo que depende de la reunión del 3 de noviembre
 
