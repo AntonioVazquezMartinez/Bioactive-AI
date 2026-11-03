@@ -134,9 +134,13 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | concordancia agregada, `aft` | 0.7610 | ídem |
 | el agregado es 93% ChEMBL | 52,529 de 56,241 | ídem |
 | concordancia en `solo_npass`, `bosque` | 0.5107 | ídem |
-| concordancia en `solo_npass`, `aft` | **0.6322** | ídem |
+| concordancia en `solo_npass`, `aft`, **en validación cruzada** | **0.6322** | ídem |
 | control sin censura, en `solo_npass` | 0.5073, pierde **60 de 60** pareadas | `2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura` |
-| concordancia en la prueba reservada | 0.7200 | `2026-10-31-antonio-2.13-comparativa-regresion-ensambles` |
+| concordancia en la prueba reservada, agregada | 0.7200 | `2026-10-31-antonio-2.13-comparativa-regresion-ensambles` |
+| **concordancia en la prueba reservada, solo `solo_npass`** | **0.530**, sobre **117 pares** (114 exactos) | ídem |
+| Spearman en la prueba reservada, solo `solo_npass` | 0.083 | ídem |
+
+**Regla de cita para esta fase: el 0.6322 no viaja sin el 0.530 al lado.** El primero es de validación cruzada y **no está verificado sobre esqueletos nuevos**; el segundo es lo que pasó cuando se midió ahí, y es el único estrato que aterriza en el azar. La prueba no refuta el 0.6322 —con 117 pares no hay potencia para distinguir 0.530 de 0.632, y los 117 no son la misma población, porque la prevalencia de activos pasa del 12.3% al 44.4%— pero tampoco lo confirma. Citar uno sin el otro es afirmar más de lo que los números sostienen.
 
 ### Representación
 
@@ -151,7 +155,7 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 ## Las limitaciones que entran al relato
 
 La rúbrica pide que estén «integradas al relato, no omitidas», y da puntos por ello. Las que
-el proyecto midió y declara:
+el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la prosa afirma más de lo que sus números sostienen**, que es el defecto que la auditoría encontró en el propio repositorio y que no debe repetirse en el artículo, que es público:
 
 1. **El estrato de origen mide dos cosas a la vez.** Un natural cuyo registro no declara la
    estereoquímica cae en «análogo» sin diferencia estereoquímica real, así que «natural
@@ -169,6 +173,9 @@ el proyecto midió y declara:
    no cambia, porque con el umbral mayor tampoco pasa nadie.
 6. **Las etiquetas dependen de la concentración**: 10 µM es la concentración de cribado
    heredada del archivo, no un criterio del proyecto.
+7. **El resultado de los naturales en la fase 2 no está verificado sobre química nueva.** El 0.6322 es de validación cruzada. Sobre la prueba reservada la concordancia de los compuestos que solo tiene NPASS es 0.530 con 117 pares (114 exactos) y un Spearman de 0.083. Es el estrato que justifica elegir el `aft`, y es el único que aterriza en el azar cuando se mide sobre esqueletos nuevos. Va junto a toda cita del 0.6322, no en un anexo.
+8. **El enriquecimiento en naturales no se puede presentar como resultado.** La lectura del gráfico 3 del 05b dice que el modelo alcanza 1.92× al 1% (el 85% del techo) en `solo_npass` y que los cortes al 1% y al 5% «certifican su utilidad práctica». El 1% de 117 pares es 1.17 compuestos, y la corrida registra que ahí se encontró el 0.0192 de los 52 activos, es decir **uno solo**. La propia auditoría lo dejó anotado como salvedad y es la única que no pasó a issue; «certifican» no se sostiene. `2026-11-01-antonio-2.13-cifras-graficos`.
+9. **El AUPRC por estrato no es comparable entre filas** ([#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187)): promedia dos clases distintas, así que ninguna cifra de AUPRC por estrato debe ir al artículo como si se pudiera leer contra la de otro estrato.
 
 ## Lo que todavía no existe y hay que construir
 
