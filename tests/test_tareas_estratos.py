@@ -68,10 +68,10 @@ def test_conteos_de_origen_sobre_las_7805_filas():
 
 def test_los_tramos_son_cerrados_por_arriba():
     """Un peso igual al corte cae en el tramo de abajo, y eso se fija aquí."""
-    pesos = np.array([100.0, 250.0, 250.1, 350.0, 400.0, 500.0, 500.1, 800.0, 800.1, 4000.0])
+    pesos = np.array([100.0, 250.0, 250.1, 350.0, 400.0, 500.0, 500.1, 4000.0])
     assert list(etiquetas_por_tamano(pesos)) == [
-        "≤250 Da", "≤250 Da", "250–350 Da", "250–350 Da", "350–500 Da", "350–500 Da",
-        "500–800 Da", "500–800 Da", ">800 Da", ">800 Da"]
+        "≤250 Da", "≤250 Da", "250–350 Da", "250–350 Da",
+        "350–500 Da", "350–500 Da", ">500 Da", ">500 Da"]
 
 
 def test_la_etiqueta_lleva_el_corte_dentro():
@@ -96,7 +96,7 @@ def test_el_estrato_de_tamano_ignora_grupo_y_origen():
     etiquetas = _etiquetas_estratos(
         "tamano", np.array(["A", "A"]), np.array([NATURAL, SIN]),
         np.array([100.0, 900.0]))
-    assert list(etiquetas) == ["≤250 Da", ">800 Da"]
+    assert list(etiquetas) == ["≤250 Da", ">500 Da"]
 
 
 @procesados
@@ -109,18 +109,39 @@ def test_el_peso_sale_de_la_matriz_de_descriptores_y_no_de_meta():
 
 
 @procesados
-def test_cargar_con_tamano_da_los_cuatro_tramos_y_ninguno_es_marginal():
+def test_cargar_con_tamano_da_los_cuatro_tramos():
     t = cargar("permeabilidad", estratos="tamano")
     conteos = pd.Series(t.estratos).value_counts()
-    assert set(conteos.index) == {"≤250 Da", "250–350 Da", "350–500 Da", "500–800 Da",
-                                  ">800 Da"}
+    assert set(conteos.index) == {"≤250 Da", "250–350 Da", "350–500 Da", ">500 Da"}
     assert conteos.sum() == len(t.y)
-    # El arnés solo reporta un subgrupo si su clase minoritaria llega a 20 casos.
-    for tramo in conteos.index:
-        sel = t.estratos == tramo
-        assert min(int(t.y[sel].sum()), int((1 - t.y[sel]).sum())) >= 20, tramo
     # Y no se calcula el origen cuando nadie lo pidió.
     assert "origen" not in t.meta
+
+
+@procesados
+def test_los_tramos_se_reportan_con_el_criterio_del_arnes_y_no_sobre_el_ajuste_entero():
+    """El arnés exige MIN_MINORITARIA casos de la clase minoritaria *dentro de cada pliegue de
+    validación*, por semilla y pliegue (cv.py). Comprobarlo sobre las filas de ajuste enteras
+    deja pasar un tramo que no aparece en ninguna figura: con un corte en 800, el de arriba
+    tiene 25 casos en el ajuste y se reporta en 0 de 15 evaluaciones."""
+    from sklearn.model_selection import StratifiedGroupKFold
+
+    from src.evaluation.cv import MIN_MINORITARIA
+
+    t = cargar("permeabilidad", estratos="tamano")
+    reportado = {tramo: 0 for tramo in set(t.estratos)}
+    for semilla in (0, 1, 2):
+        cv = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=semilla)
+        for _, val in cv.split(t.X, t.y, t.grupos):
+            for tramo in reportado:
+                ys = t.y[val][t.estratos[val] == tramo]
+                if len(ys) and min(int(ys.sum()), int((1 - ys).sum())) >= MIN_MINORITARIA:
+                    reportado[tramo] += 1
+    # Los tres de en medio y el de arriba se reportan siempre; el de abajo en 13 de 15, que se
+    # declara en la documentacion y aqui se fija como piso.
+    for tramo in ("250–350 Da", "350–500 Da", ">500 Da"):
+        assert reportado[tramo] == 15, (tramo, reportado)
+    assert reportado["≤250 Da"] >= 12, reportado
 
 
 def test_un_peso_ausente_falla_en_vez_de_caer_en_el_tramo_mas_grande():
@@ -136,11 +157,11 @@ def test_el_mensaje_dice_cuantos_pesos_faltan():
         etiquetas_por_tamano(np.array([100.0, np.nan, np.nan]))
 
 
-def test_los_cuatro_tramos_de_abajo_estan_acotados_y_solo_el_ultimo_es_abierto():
+def test_los_tres_tramos_de_abajo_estan_acotados_y_solo_el_ultimo_es_abierto():
     """Lo que hace comparables las dos fases: los tramos cerrados significan lo mismo en las dos;
-    el abierto no, y por eso es el unico que se declara."""
-    cortes = tareas.PESOS_CORTE
-    assert cortes == (250.0, 350.0, 500.0, 800.0)
+    el abierto no, y por eso es el unico que se declara. No se acota con un corte mas arriba: en
+    la fase 1 el arnes no lo reportaria, y esta medido en el docstring de la funcion."""
+    assert tareas.PESOS_CORTE == (250.0, 350.0, 500.0)
     etiquetas = etiquetas_por_tamano(np.array([1.0, 300.0, 400.0, 600.0, 1e6]))
-    assert [e for e in etiquetas if e.startswith(">")] == [">800 Da"]
-    assert all("–" in e or e.startswith("≤") for e in etiquetas[:-1])
+    assert {e for e in etiquetas if e.startswith(">")} == {">500 Da"}
+    assert all("–" in e or e.startswith("≤") for e in etiquetas if not e.startswith(">"))

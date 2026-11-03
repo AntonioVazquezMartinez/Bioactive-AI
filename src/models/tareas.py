@@ -53,9 +53,9 @@ TAREAS = ("permeabilidad", "actividad")
 ESTRATOS = ("grupo", "origen", "origen_grupo", "tamano")
 ARCHIVO_PATROCINADORA = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
 ORIGENES = ("natural exacto", "análogo estereoquímico", "sin equivalente natural")
-# Cortes del estrato de tamaño, en daltons (#215). 500 es la línea de Lipinski; 800 acota el
-# tramo de en medio, que de otro modo iria de 500 hasta el compuesto mas pesado de cada fase.
-PESOS_CORTE = (250.0, 350.0, 500.0, 800.0)
+# Cortes del estrato de tamaño, en daltons (#215). 500 es la línea de Lipinski. Un corte más
+# arriba (800) se probó y no sirve en la fase 1: el arnés nunca reporta el tramo de encima.
+PESOS_CORTE = (250.0, 350.0, 500.0)
 REPRESENTACIONES = ("descriptores", "descriptores_transformados", "morgan",
                     "sortslice", "descriptores+morgan")
 
@@ -173,12 +173,18 @@ def etiquetas_por_tamano(peso: np.ndarray,
     se puede comparar con otra.
 
     **El tramo abierto de arriba no significa lo mismo en las dos fases**, y es el
-    único: con los cortes por omisión va de 800 Da al compuesto más pesado de cada
-    conjunto, que en las filas de ajuste son 1,449 en la fase 1 y 4,114 en la fase 2.
-    Los otros cuatro tramos están acotados y sí son comparables entre fases. Por eso
-    hay un corte en 800 y no un solo tramo de más de 500: la hipótesis que este
-    estrato pone a prueba apunta justo a las moléculas grandes, y esa barra tiene
-    que poder leerse sin que cambie de población de una fase a otra.
+    único: va de 500 Da al compuesto más pesado de cada conjunto, que en las filas de
+    ajuste son 1,449 en la fase 1 y 4,114 en la fase 2. Los tres de abajo están
+    acotados y sí son comparables. Quien lea ese tramo tiene que decir qué población
+    cubre en cada fase.
+
+    **No se acota con un corte más arriba, y está medido.** El arnés reporta un
+    estrato solo si su clase minoritaria llega a `MIN_MINORITARIA` casos *dentro de
+    cada pliegue de validación*, por semilla y pliegue, no sobre el ajuste entero. En
+    la fase 1, con cortes en 500, 550, 600, 650 y 800 el tramo de arriba se reporta en
+    15, 13, 2, 0 y 0 de las 15 evaluaciones. Un corte en 800 deja la barra de las
+    moléculas más grandes —la que la hipótesis señala— fuera de toda figura sin avisar.
+    El tramo de `≤250 Da` tampoco llega siempre: se reporta en 13 de 15.
 
     Un peso ausente o no finito **falla** en vez de etiquetarse: `searchsorted` manda
     un NaN al final y lo habría puesto en el tramo más grande sin que ninguna figura
