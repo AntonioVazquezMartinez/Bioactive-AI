@@ -18,6 +18,11 @@ CUADERNO = RAIZ / "notebooks" / "05b_Ensambles_actividad.ipynb"
 DONDE = {
     "src/models/ensambles.py": ["AfinadoAgrupado", "ApiladoAgrupado", "ensambles"],
     "src/models/aft.py": ["RegresionAFT"],
+    # `SoloExactas` es el mecanismo del que depende la elección del modelo final: todos los
+    # modelos menos el `aft` corren dentro de él. No se mostraba (#210).
+    "src/models/baseline_regresion.py": ["SoloExactas"],
+    "src/models/pisos.py": ["MediaPorDiana"],
+    "src/evaluation/regresion.py": ["_exactas", "concordancia_harrell", "metricas_regresion"],
 }
 
 
