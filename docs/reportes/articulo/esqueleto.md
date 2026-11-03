@@ -94,7 +94,7 @@ el experimento no vuelva a medir densidad.
 | 1 | Resumen, 150–250 palabras | nuevo | tiene que comprenderse solo: problema, escalera, resultado |
 | 2 | Contexto de negocio y problema | Avance 0 revisado | el cambio de enfoque: la fase 1 deja de ser filtro duro |
 | 3 | Datos y preparación | Avances 1 y 2 | el peldaño de la partición, que es el más alto de los controlables |
-| 4 | Metodología y modelos | Avances 3, 4 y 5 | la regla fijada antes de medir, y que no se bajó |
+| 4 | Metodología y modelos | Avances 3, 4 y 5 | la regla escrita antes de correr —no pre-registrada— y que no se bajó |
 | 5 | Resultados y validación | Avance 5 | la prueba reservada contra la validación cruzada |
 | 6 | Implementación y operación | **no existe** | arquitectura, requisitos con responsables, monitoreo |
 | 7 | Conclusiones clave | — | la escalera, las limitaciones y el #215 como trabajo futuro |
