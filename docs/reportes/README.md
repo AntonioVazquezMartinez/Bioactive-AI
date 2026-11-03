@@ -41,7 +41,7 @@ Entregado el 18 de octubre: [`notebooks/03_Baseline.ipynb`](../../notebooks/03_B
 Tres cosas que deja establecidas, y que condicionan cómo se leen las cifras siguientes:
 
 - **Ninguna canalización gana.** Los intervalos del 95% se solapan; con una configuración por familia, declarar un ganador sería prematuro. Afinar es del Avance 4.
-- **El criterio de agrupamiento pesa más que la elección de modelo.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 6.2 — más de lo que separa a las tres familias entre sí.
+- **El criterio de agrupamiento pesa más que la elección de modelo, en MCC.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 7.1 — en MCC, algo más de tres veces lo que separa a las tres familias entre sí; en AUROC, lo mismo que las separa.
 - **El desempeño de la fase 2 no es un número.** Por estrato de procedencia: 0.855 de AUROC donde solo hay ChEMBL y 0.607 donde solo hay NPASS, que son los productos naturales que el proyecto existe para priorizar.
 
 La prueba reservada no se ha mirado.
