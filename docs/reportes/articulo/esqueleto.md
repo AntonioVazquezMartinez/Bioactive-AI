@@ -16,24 +16,44 @@ cuenta todo*. Así que el artículo necesita una columna vertebral, no un recorr
 
 La propuesta es esta:
 
-> **En este problema, qué datos se usan, cómo se parten y cómo se representan mueven el
-> resultado entre cinco y veinte veces más que elegir un modelo.**
+> **El criterio con que se parten los datos y la representación con que se describen mueven
+> el resultado más que elegir el modelo. Y lo que más lo mueve, con diferencia, no es una
+> decisión nuestra: es la dificultad del conjunto sobre el que se evalúa.**
 
-No es una opinión. Es la escalera que el proyecto midió, ordenada por cuánto mueve el MCC de
-la fase 1:
+La vara con la que se comparan todas las filas es **la dispersión entre los once modelos de
+la comparativa de la fase 1, que es de 4.2 puntos de MCC** —de 0.6692 el `knn` a 0.7109 el
+`stacking`—, medida en la corrida que se entregó.
 
-| qué se cambia | cuánto mueve | dónde está medido |
-|:--|:--|:--|
-| el modelo, entre familias | 1.5 puntos | [1.2](../../decisiones.md#d1-2) |
-| añadir ensambles sobre el mejor individual | +0.9 puntos, **indistinguible** | `2026-11-01-artemio-1.5-ensambles-permeabilidad` |
-| cómo se compiló RDKit en la máquina | hasta 0.6 puntos y **cuatro puestos** | `2026-10-29-{artemio,ingrid}-1.5-ensambles-permeabilidad` |
-| el criterio de partición | **7.1 puntos** | [1.2](../../decisiones.md#d1-2) |
-| evaluar sobre esqueletos nunca vistos | **el MCC se parte por la mitad** | `2026-11-01-artemio-1.5-modelo-final-permeabilidad` |
-| la representación, en la fase 2 | las huellas **reemplazan** a los descriptores | [1.3](../../decisiones.md#d1-3) |
+### Lo que el equipo eligió
 
-Leída así, la escalera convierte el resultado negativo en la evidencia central en vez de en
-una disculpa: **que ningún ensamble mejore al modelo simple no es un fracaso del modelado, es
-el peldaño más bajo de la escalera.**
+| qué se cambia | cuánto mueve el MCC | contra la dispersión entre modelos |
+|:--|:--|--:|
+| el modelo, entre los once | 4.2 puntos | — |
+| añadir ensambles sobre el mejor individual | +0.9 puntos, **indistinguible** | 0.2× |
+| el criterio de partición ([1.2](../../decisiones.md#d1-2)) | **7.1 puntos** | **1.7×** |
+| la representación, en la fase 2 ([1.3](../../decisiones.md#d1-3)) | las huellas **reemplazan** a los descriptores | no comparable |
+
+### Lo que el problema impone
+
+| qué cambia | cuánto mueve | |
+|:--|:--|--:|
+| cómo se compiló RDKit en esa máquina | hasta 0.6 puntos, y **0.0 en cinco de los once** | 0.1× |
+| evaluar sobre esqueletos nunca vistos | **36.3 puntos**: el MCC se parte por la mitad | **8.7×** |
+
+**Las dos tablas no son la misma escalera, y por eso van separadas.** Arriba hay palancas que
+el equipo movió; abajo hay condiciones del problema. Juntarlas haría parecer que evaluar
+sobre datos difíciles es una decisión de diseño, y la fila más llamativa del artículo está
+precisamente en la tabla de abajo.
+
+**Y una advertencia que el artículo tiene que llevar escrita:** *ninguna corrida se diseñó
+para esta comparación*. Cada fila viene de una corrida distinta, con otro propósito y otra
+base, así que indican el orden de magnitud y no miden el efecto de cada factor. La única fila
+con un control propio es la de la representación, y la del tamaño de molécula que el
+[#215](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/215) viene a añadir.
+
+Leído así, el eje convierte el resultado negativo en la evidencia central en vez de en una
+disculpa: **que ningún ensamble mejore al modelo simple no es un fracaso del modelado, es el
+peldaño más bajo de una escalera donde el modelo nunca iba a ser el factor grande.**
 
 ### El capítulo principal: la representación
 
