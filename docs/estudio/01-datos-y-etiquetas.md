@@ -403,6 +403,8 @@ que se ven al leer con cuidado y es mejor decirlas antes de que se pregunten.
 | 7 | `02` §12.7 | la prueba de humo (RF con descriptores+Morgan, MCC 0.594) se cita como apoyo de la 1.3 | es una sola partición de validación y el propio cuaderno dice que «nada de esto está asentado»; la comparación agrupada posterior (03c) no encuentra que las huellas cumplan la regla de mejora en ningún modelo de la fase 1 (solo el árbol sube, +0.013). **No citar esa tabla como evidencia** |
 | 8 | C.2 y `regla_2p` | verifican contra TPSA < 67 | el proyecto derivó 107 y mostró que se mueve (ver §1.5) |
 
+**Las filas 1 a 4 tienen issue propio, [#224](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/224)**, porque tocan una cifra publicada: una lista dentro de un documento no se asigna ni se cierra. Las filas 5 a 8 son diferencias de definición o preguntas sin respuesta escrita, y viven aquí.
+
 ## Qué sigue sin ratificarse
 
 Los cuadernos lo repiten y el registro lo confirma: **la escala, la reducción de dimensión
