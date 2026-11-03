@@ -50,9 +50,12 @@ RAIZ = Path(__file__).resolve().parents[2]
 PROCESADOS = RAIZ / "data/processed"
 
 TAREAS = ("permeabilidad", "actividad")
-ESTRATOS = ("grupo", "origen", "origen_grupo")
+ESTRATOS = ("grupo", "origen", "origen_grupo", "tamano")
 ARCHIVO_PATROCINADORA = RAIZ / "data/external/profesora/bbb_permeability_experimental.csv"
 ORIGENES = ("natural exacto", "análogo estereoquímico", "sin equivalente natural")
+# Cortes del estrato de tamaño, en daltons (#215). 500 es la línea de Lipinski. Un corte más
+# arriba (800) se probó y no sirve en la fase 1: el arnés nunca reporta el tramo de encima.
+PESOS_CORTE = (250.0, 350.0, 500.0)
 REPRESENTACIONES = ("descriptores", "descriptores_transformados", "morgan",
                     "sortslice", "descriptores+morgan")
 
@@ -155,19 +158,80 @@ def _origen_por_fila(meta: pd.DataFrame) -> np.ndarray:
     return origen.to_numpy()
 
 
-def _etiquetas_estratos(estratos: str, grupo: np.ndarray, origen: np.ndarray) -> np.ndarray:
-    """Etiqueta de estrato por fila; `origen` solo se usa si `estratos` lo pide."""
+def etiquetas_por_tamano(peso: np.ndarray,
+                         cortes: tuple[float, ...] = PESOS_CORTE) -> np.ndarray:
+    """Tramos de peso molecular, con el corte dentro de la etiqueta.
+
+    **Los cortes son fijos en daltons y no cuantiles**, y esa es la decisión
+    que importa. Este estrato existe para comparar las dos fases (#215), y un
+    cuantil significa pesos distintos en cada una: «el tramo 2» de la fase 1
+    no sería «el tramo 2» de la fase 2 y la comparación quedaría sin sentido.
+
+    Los tramos son `(lo, hi]`, así que un peso igual al corte cae en el tramo
+    de abajo. El corte va dentro de la etiqueta por la misma razón que
+    `grupos_cv` dice cómo agrupó: una figura que no dice con qué se partió no
+    se puede comparar con otra.
+
+    **El tramo abierto de arriba no significa lo mismo en las dos fases**, y es el
+    único: va de 500 Da al compuesto más pesado de cada conjunto, que en las filas de
+    ajuste son 1,449 en la fase 1 y 4,114 en la fase 2. Los tres de abajo están
+    acotados y sí son comparables. Quien lea ese tramo tiene que decir qué población
+    cubre en cada fase.
+
+    **No se acota con un corte más arriba, y está medido.** El arnés reporta un
+    estrato solo si su clase minoritaria llega a `MIN_MINORITARIA` casos *dentro de
+    cada pliegue de validación*, por semilla y pliegue, no sobre el ajuste entero. En
+    la fase 1, con cortes en 500, 550, 600, 650 y 800 el tramo de arriba se reporta en
+    15, 13, 2, 0 y 0 de las 15 evaluaciones. Un corte en 800 deja la barra de las
+    moléculas más grandes —la que la hipótesis señala— fuera de toda figura sin avisar.
+    El tramo de `≤250 Da` tampoco llega siempre: se reporta en 13 de 15.
+
+    Un peso ausente o no finito **falla** en vez de etiquetarse: `searchsorted` manda
+    un NaN al final y lo habría puesto en el tramo más grande sin que ninguna figura
+    lo mostrara.
+    """
+    bordes = np.asarray(cortes, dtype=float)
+    if bordes.size == 0 or not np.all(np.diff(bordes) > 0):
+        raise ValueError(f"cortes {cortes!r}; hacen falta cortes crecientes")
+    peso = np.asarray(peso, dtype=float)
+    if not np.isfinite(peso).all():
+        raise ValueError(f"{int((~np.isfinite(peso)).sum())} pesos ausentes o no finitos; "
+                         "no se asigna ningún tramo a un peso que no se conoce")
+    nombres = ([f"≤{bordes[0]:.0f} Da"]
+               + [f"{a:.0f}–{b:.0f} Da" for a, b in zip(bordes, bordes[1:])]
+               + [f">{bordes[-1]:.0f} Da"])
+    idx = np.searchsorted(bordes, np.asarray(peso, dtype=float), side="left")
+    return np.array(nombres, dtype=object)[idx]
+
+
+def _pesos_moleculares(filas: np.ndarray) -> np.ndarray:
+    """El peso por fila, para el estrato de tamaño.
+
+    Se lee de la matriz de descriptores porque `bbb_meta.parquet` no guarda el
+    peso, y **se lee siempre la de descriptores aunque la representación sean
+    huellas**: el estrato tiene que ser idéntico en los dos brazos que se
+    comparan, o la comparación mide dos particiones distintas.
+    """
+    d = pd.read_parquet(PROCESADOS / DESCRIPTORES["descriptores"], columns=["MolWt"])
+    return d["MolWt"].to_numpy(dtype=float)[filas]
+
+
+def _etiquetas_estratos(estratos: str, grupo: np.ndarray, origen: np.ndarray,
+                        tamano: np.ndarray | None = None) -> np.ndarray:
+    """Etiqueta por fila; `origen` y `tamano` solo se usan si `estratos` los pide."""
     if estratos == "grupo":
         return grupo
     if estratos == "origen":
         return origen
+    if estratos == "tamano":
+        return etiquetas_por_tamano(tamano)
     return np.char.add(np.char.add(origen.astype(str), "·"), grupo.astype(str))
 
 
 def _permeabilidad(representacion: str, incluir_prueba: bool,
                    estratos: str = "grupo") -> Tarea:
     meta = pd.read_parquet(PROCESADOS / "bbb_meta.parquet")
-    if estratos != "grupo":
+    if estratos in ("origen", "origen_grupo"):
         meta = meta.assign(origen=_origen_por_fila(meta))
     # La prueba se reserva (1.2); el baseline mide sobre entrenamiento y validación.
     filas = np.flatnonzero(meta["particion"].ne("prueba").to_numpy()
@@ -190,7 +254,8 @@ def _permeabilidad(representacion: str, incluir_prueba: bool,
         # El grupo A–D estratifica, nunca excluye (1.1).
         estratos=_etiquetas_estratos(
             estratos, m["group"].astype(str).to_numpy(),
-            m["origen"].to_numpy() if "origen" in m else np.array([])),
+            m["origen"].to_numpy() if "origen" in m else np.array([]),
+            _pesos_moleculares(filas) if estratos == "tamano" else None),
         meta=m,
         objetivo="bbb_class (BBB+ = 1)",
         representacion=representacion,
@@ -249,6 +314,10 @@ def cargar(tarea: str = "permeabilidad", *, representacion: str = "descriptores"
     - `"origen"`: natural exacto, análogo estereoquímico o sin equivalente
       natural, según COCONUT (`asignar_origen`).
     - `"origen_grupo"`: las dos etiquetas juntas, p. ej. `"natural exacto·B"`.
+    - `"tamano"`: cuatro tramos de peso molecular con cortes fijos en daltons
+      (#215). No son cuantiles a propósito, porque el estrato existe para
+      comparar las dos fases y un cuantil significa pesos distintos en cada
+      una.
 
     Existe por la [1.6](../../docs/decisiones.md#d1-6) y el #102. Juntar los
     análogos con los compuestos sin equivalente natural diluye la brecha entre
