@@ -1,0 +1,16 @@
+decision: '2.13'
+semillas: []
+params:
+  metrica_principal: fraccion de pares de la base externa con andamio ya en el ajuste
+  corte_declarado: 0.05
+  vias:
+  - smiles canonico
+  - esqueleto de conectividad
+  - andamio de Bemis-Murcko
+  huella_similitud:
+    tipo: ECFP4
+    radio: 2
+    bits: 2048
+  similitud_de_la_prueba_reservada: 0.414
+  control: validacion contra entrenamiento, cero por construccion; no lee la prueba
+  regla: declarada en el docstring antes de correr; nada se decide con esto

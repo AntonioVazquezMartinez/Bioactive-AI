@@ -1,0 +1,331 @@
+{
+  "por_tramo": [
+    {
+      "d_auroc_medio_6_modelos": -0.0148,
+      "estrato": "250–350 Da",
+      "evaluaciones": 90
+    },
+    {
+      "d_auroc_medio_6_modelos": -0.0091,
+      "estrato": "350–500 Da",
+      "evaluaciones": 90
+    },
+    {
+      "d_auroc_medio_6_modelos": -0.0187,
+      "estrato": ">500 Da",
+      "evaluaciones": 90
+    },
+    {
+      "d_auroc_medio_6_modelos": -0.0214,
+      "estrato": "todos",
+      "evaluaciones": 90
+    },
+    {
+      "d_auroc_medio_6_modelos": -0.032,
+      "estrato": "≤250 Da",
+      "evaluaciones": 78
+    }
+  ],
+  "por_tramo_y_modelo": [
+    {
+      "auroc_desc": 0.7478,
+      "d_auroc": -0.009,
+      "d_mcc": 0.014,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "modelo": "arbol",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8076,
+      "d_auroc": -0.0742,
+      "d_mcc": -0.055,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 0,
+      "modelo": "bayes",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8399,
+      "d_auroc": 0.0054,
+      "d_mcc": -0.0246,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "modelo": "knn",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8594,
+      "d_auroc": -0.0046,
+      "d_mcc": -0.0285,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "modelo": "logistica",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8559,
+      "d_auroc": -0.0132,
+      "d_mcc": -0.0382,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "modelo": "mlp",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8536,
+      "d_auroc": 0.0066,
+      "d_mcc": -0.0223,
+      "estrato": "250–350 Da",
+      "evaluaciones": 15,
+      "mejora_en": 12,
+      "modelo": "svm_rbf",
+      "n_medio": 348.8
+    },
+    {
+      "auroc_desc": 0.8402,
+      "d_auroc": 0.011,
+      "d_mcc": 0.0339,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 8,
+      "modelo": "arbol",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.8793,
+      "d_auroc": -0.0454,
+      "d_mcc": 0.0891,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 2,
+      "modelo": "bayes",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.9272,
+      "d_auroc": -0.0082,
+      "d_mcc": 0.019,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 6,
+      "modelo": "knn",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.9198,
+      "d_auroc": 0.0028,
+      "d_mcc": -0.0155,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "logistica",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.924,
+      "d_auroc": -0.0136,
+      "d_mcc": -0.0329,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 3,
+      "modelo": "mlp",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.9289,
+      "d_auroc": -0.0014,
+      "d_mcc": -0.0074,
+      "estrato": "350–500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "svm_rbf",
+      "n_medio": 480.0
+    },
+    {
+      "auroc_desc": 0.7713,
+      "d_auroc": 0.0114,
+      "d_mcc": -0.0067,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "modelo": "arbol",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.8474,
+      "d_auroc": -0.0581,
+      "d_mcc": 0.2214,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "modelo": "bayes",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.8887,
+      "d_auroc": -0.0001,
+      "d_mcc": -0.0747,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "knn",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.8933,
+      "d_auroc": -0.0251,
+      "d_mcc": -0.0245,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 3,
+      "modelo": "logistica",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.8711,
+      "d_auroc": -0.0133,
+      "d_mcc": -0.0136,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 6,
+      "modelo": "mlp",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.9085,
+      "d_auroc": -0.0272,
+      "d_mcc": 0.0175,
+      "estrato": ">500 Da",
+      "evaluaciones": 15,
+      "mejora_en": 1,
+      "modelo": "svm_rbf",
+      "n_medio": 205.0
+    },
+    {
+      "auroc_desc": 0.8314,
+      "d_auroc": 0.0042,
+      "d_mcc": 0.0144,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "modelo": "arbol",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.8754,
+      "d_auroc": -0.1045,
+      "d_mcc": -0.0483,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 0,
+      "modelo": "bayes",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.9142,
+      "d_auroc": -0.0056,
+      "d_mcc": -0.019,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "knn",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.9134,
+      "d_auroc": -0.0043,
+      "d_mcc": -0.0241,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "logistica",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.9132,
+      "d_auroc": -0.0168,
+      "d_mcc": -0.0343,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 3,
+      "modelo": "mlp",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.919,
+      "d_auroc": -0.0016,
+      "d_mcc": -0.0076,
+      "estrato": "todos",
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "svm_rbf",
+      "n_medio": 1261.2
+    },
+    {
+      "auroc_desc": 0.6919,
+      "d_auroc": -0.006,
+      "d_mcc": 0.0061,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 8,
+      "modelo": "arbol",
+      "n_medio": 237.6923
+    },
+    {
+      "auroc_desc": 0.7853,
+      "d_auroc": -0.1199,
+      "d_mcc": -0.0294,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 0,
+      "modelo": "bayes",
+      "n_medio": 237.6923
+    },
+    {
+      "auroc_desc": 0.8132,
+      "d_auroc": 0.0067,
+      "d_mcc": -0.1053,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 9,
+      "modelo": "knn",
+      "n_medio": 237.6923
+    },
+    {
+      "auroc_desc": 0.822,
+      "d_auroc": -0.0068,
+      "d_mcc": 0.0003,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 6,
+      "modelo": "logistica",
+      "n_medio": 237.6923
+    },
+    {
+      "auroc_desc": 0.8397,
+      "d_auroc": -0.0534,
+      "d_mcc": -0.0659,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 2,
+      "modelo": "mlp",
+      "n_medio": 237.6923
+    },
+    {
+      "auroc_desc": 0.8268,
+      "d_auroc": -0.0127,
+      "d_mcc": -0.0535,
+      "estrato": "≤250 Da",
+      "evaluaciones": 13,
+      "mejora_en": 4,
+      "modelo": "svm_rbf",
+      "n_medio": 237.6923
+    }
+  ]
+}

@@ -65,7 +65,7 @@ def main() -> None:
     res["fase1_por_natural"] = {
         str(v): {"filas": int(len(x)), "prop_andamio_nuevo": float((~x["andamio"].isin(vistos)).mean())}
         for v, x in prueba.groupby("natural")}
-    with Corrida("andamios-de-la-prueba", decision="1.6", params={"regla": "proporcion ausente del entrenamiento"},
+    with Corrida("andamios-de-la-prueba", decision="1.6", params={"regla": "proporcion ausente del entrenamiento", "toca_prueba": "solo columnas estructurales, sin etiquetas"},
                  semillas=[], datos=[FASE1, FASE2]) as c:
         c.metricas(res)
     for k, v in res.items():
