@@ -24,6 +24,7 @@ PERMITIDOS = {
     "cifras_graficos_05b.py",            # la lectura de la prueba para los gráficos del 05b
     "experimento_escalera_ampliada.py",  # acceso solo de SMILES, sin etiquetas (E1+)
     "experimento_prueba_rareza.py",      # la prueba por rareza (E2)
+    "experimento_dificultad_de_la_prueba.py",  # distribución de la similitud de la prueba, solo SMILES (E14)
 }
 PIDE_PRUEBA = re.compile(r"incluir_prueba\s*=\s*True")
 LLAMA_GUARDA = re.compile(r"\btomar_prueba\s*\(")
