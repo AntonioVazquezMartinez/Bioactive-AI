@@ -247,6 +247,15 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 - **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
 - **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
 
+**Las 151 columnas de la fase 1 se eligieron una vez, con las etiquetas de entrenamiento, y la validación cruzada corre sobre entrenamiento más validación** ([#195](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/195)). Cada pliegue de evaluación contiene filas cuya etiqueta ayudó a decidir qué columnas existen. La prueba reservada no participó. Es una fuga de selección y se declara como tal. Su magnitud ya está medida, sin proponérselo, por el brazo `depurados` del 03c, que repite el filtro **dentro de cada pliegue** (`notebooks/datos/03c_brazos.csv`, estrato `todos`, diferencia pareada `depurados` − `descriptores` en 15 evaluaciones):
+
+| métrica | media de la diferencia, rango entre los seis modelos | una evaluación suelta, rango |
+|:--|:--|:--|
+| MCC | de −0.0141 (`bayes`) a +0.0102 (`knn`) | de −0.107 a +0.060 |
+| AUROC | de −0.0045 (`knn`) a +0.0022 (`arbol`) | de −0.033 a +0.027 |
+
+Para el modelo que se entrega, `svm_rbf`: −0.0003 de MCC (desviación pareada 0.0100) y +0.0005 de AUROC. Ninguno de los seis cumple la regla de mejora, y el signo no es el de una ventaja del brazo sin fuga: `knn` mejora en MCC y empeora en AUROC. Contra la desviación del control (0.094 de MCC) **el sesgo no es medible**, y eso es todo lo que se afirma: no que no exista. **En consecuencia, «el brazo `descriptores` es el control» del 03c y del 05c quiere decir que repite la corrida registrada, no que esté libre de esta fuga.** No se reejecuta nada: el cierre es la declaración.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
