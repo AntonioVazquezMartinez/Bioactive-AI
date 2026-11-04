@@ -1,8 +1,8 @@
 # Qué mueve el resultado al predecir la actividad de compuestos naturales
 
 **Borrador del 4 de noviembre, segunda versión.** Cada cifra sale de una corrida registrada en
-`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están
-por escribir.
+`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas
+en primera versión.
 
 ## 1. Resumen
 
@@ -10,7 +10,7 @@ Buscamos compuestos naturales con potencial neuroprotector con dos modelos en pa
 clasifica si una molécula cruza la barrera hematoencefálica (fase 1) y otro que predice su potencia
 contra una diana, usando también las mediciones censuradas (fase 2). Comparamos once modelos y
 ningún ensamble mejora de forma distinguible al mejor modelo individual. Lo que sí mueve el resultado
-es una lección conocida, medida aquí con sus magnitudes: **cuánta semejanza se permite entre lo que
+es una lección conocida (`sheridan2013`), medida aquí con sus magnitudes: **cuánta semejanza se permite entre lo que
 se entrena y lo que se evalúa**. Con el modelo que entregamos, el MCC baja 33.3 puntos al exigir que
 ningún compuesto de entrenamiento se parezca más de 0.4 a uno de validación, contra 4.2 puntos entre
 los once modelos; la fase 2 muestra la misma escalera. Tres hallazgos propios: la prueba reservada es
@@ -146,9 +146,35 @@ coincide con su ventaja de AUROC (+0.012).
 
 ## 6. Implementación y operación
 
-*Por escribir.* Sin servicio: un cuaderno que el equipo de la patrocinadora ejecuta con sus propios
-compuestos, con modelos reentrenables y requisitos con responsable. Uso no comercial (NPASS es
-CC BY-NC).
+**Qué se entrega: un cuaderno, no un servicio.** En la reunión del 3 de noviembre la patrocinadora
+dijo que no habrá un punto de acceso productivo; lo que conviene es dejarle un cuaderno que ella
+ejecute con sus propios compuestos. La entrada es una lista de SMILES; la salida, para cada
+compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha con su intervalo
+(fase 2) y los dos juntos como evidencia paralela para un ranking, **no como cascada**: un BBB− no
+descarta un compuesto.
+
+**Estado hoy.** Los dos modelos finales se entrenan dentro de los cuadernos y se descartan; `models/`
+está vacío y el reajuste de la fase 2 no reproduce exactamente la cifra de la prueba (0.7234 contra
+0.7200). Entregar los modelos es trabajo del 9 al 15 de noviembre, con un script que los entrene y
+serialice y el cuaderno que los usa. **Con qué filas se entrenan** lo decide la curva de aprendizaje:
+en la fase 1 la ganancia de usar el 100% sobre el 75% de las filas es +0.002 de AUROC (meseta, se
+sirve con las filas de ajuste); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y
+servir con todas las filas a cambio de no poder evaluarlas es una decisión del equipo.
+
+| requisito | por qué | responsable |
+|:--|:--|:--|
+| script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | equipo, 9 a 15 nov |
+| cuaderno de uso con SMILES propios | es la forma de operación acordada | equipo |
+| **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | equipo |
+| reentrenar al llegar datos nuevos y **reevaluar con la escalera**, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
+| decidir si hay una evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella; puede solaparse con el entrenamiento | por asignar |
+
+**Dos límites que el cuaderno tiene que decir.** La advertencia de extrapolación es una heurística:
+la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que
+una similitud alta no garantiza un buen resultado. Y la probabilidad de la fase 1 se corta en 0.5,
+un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 5.1): conviene mostrar la
+probabilidad y no solo la clase. **Uso no comercial**: NPASS es CC BY-NC. El **retorno de detectar un
+buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra medida.
 
 ## 7. Conclusiones y limitaciones
 
@@ -169,6 +195,18 @@ palancas de la Figura 1.
 
 ## 8. Referencias y anexos
 
-*Por escribir.* Bibliografía en `docs/referencias/bibliografia.bib` (211 entradas; falta citar la
-literatura de validación por bloques y por tiempo, de donde viene la lección de la escalera). Anexos
-A–E según `esqueleto.md`.
+**Fuentes de datos:** B3DB `meng2021b3db`; NPASS `zhao2023npass` y `lin2026npass`; CMAUP `hou2024cmaup`;
+ChEMBL `zdrazil2024chembl`. **Representación y partición:** huellas de Morgan / ECFP `rogers2010ecfp`;
+RDKit `rdkit`; andamios de Bemis–Murcko `bemis1996properties`. **La lección de la escalera:** la
+partición por tiempo como estimación de la predicción prospectiva `sheridan2013`; hay literatura
+equivalente de validación por bloques en ecología que falta buscar y citar.
+
+**Por añadir a `docs/referencias/bibliografia.bib` antes de maquetar** (no están y no se inventan
+aquí): XGBoost (Chen y Guestrin, 2016), la concordancia de Harrell (Harrell et al., 1982) y la
+corrección de Nadeau y Bengio (2003) para los intervalos.
+
+**Código y datos.** Cada cifra tiene su corrida en `experimentos/` (parámetros, commit, `sha256`
+de los datos, comando) y se repite con `experimentos/README.md`; las lecturas de la prueba reservada
+están en `experimentos/prueba.csv`. **Anexos A a E** según `esqueleto.md`: la escalera con seis
+modelos, la línea base de tamaño, el ranking de la fase 2, la curva de aprendizaje y cómo repetir
+cada corrida.
