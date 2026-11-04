@@ -1,0 +1,218 @@
+{
+  "mixto": {
+    "auroc": {
+      "aft": 0.6215,
+      "aft_mejor_en": 9,
+      "bosque": 0.6066,
+      "dif_desv": 0.0353,
+      "dif_media": 0.0148,
+      "evaluaciones": 15
+    },
+    "concordancia": {
+      "aft": 0.6037,
+      "aft_mejor_en": 13,
+      "bosque": 0.5799,
+      "dif_desv": 0.0229,
+      "dif_media": 0.0238,
+      "evaluaciones": 15
+    },
+    "frac_activa_a_5": {
+      "aft": 0.4465,
+      "aft_mejor_en": 0,
+      "bosque": 0.7563,
+      "dif_desv": 0.063,
+      "dif_media": -0.3098,
+      "evaluaciones": 15
+    },
+    "mcc_fijo": {
+      "aft": 0.158,
+      "aft_mejor_en": 10,
+      "bosque": 0.121,
+      "dif_desv": 0.0663,
+      "dif_media": 0.0371,
+      "evaluaciones": 15
+    },
+    "mcc_optimo": {
+      "aft": 0.2309,
+      "aft_mejor_en": 8,
+      "bosque": 0.2218,
+      "dif_desv": 0.0598,
+      "dif_media": 0.0091,
+      "evaluaciones": 15
+    },
+    "mcc_prevalencia": {
+      "aft": 0.1605,
+      "aft_mejor_en": 9,
+      "bosque": 0.1185,
+      "dif_desv": 0.0604,
+      "dif_media": 0.042,
+      "evaluaciones": 15
+    }
+  },
+  "reproduccion_del_corte_fijo": {
+    "dentro_de_tolerancia": {
+      "aft": true,
+      "bosque": true
+    },
+    "obtenido": {
+      "aft": 0.466,
+      "bosque": 0.3106
+    },
+    "referencia": {
+      "aft": 0.4668,
+      "bosque": 0.3103
+    }
+  },
+  "solo_chembl": {
+    "auroc": {
+      "aft": 0.8376,
+      "aft_mejor_en": 15,
+      "bosque": 0.8278,
+      "dif_desv": 0.0044,
+      "dif_media": 0.0099,
+      "evaluaciones": 15
+    },
+    "concordancia": {
+      "aft": 0.7528,
+      "aft_mejor_en": 0,
+      "bosque": 0.7606,
+      "dif_desv": 0.0031,
+      "dif_media": -0.0077,
+      "evaluaciones": 15
+    },
+    "frac_activa_a_5": {
+      "aft": 0.8483,
+      "aft_mejor_en": 0,
+      "bosque": 0.9523,
+      "dif_desv": 0.0048,
+      "dif_media": -0.104,
+      "evaluaciones": 15
+    },
+    "mcc_fijo": {
+      "aft": 0.4413,
+      "aft_mejor_en": 15,
+      "bosque": 0.2938,
+      "dif_desv": 0.0173,
+      "dif_media": 0.1476,
+      "evaluaciones": 15
+    },
+    "mcc_optimo": {
+      "aft": 0.4716,
+      "aft_mejor_en": 15,
+      "bosque": 0.4463,
+      "dif_desv": 0.0122,
+      "dif_media": 0.0252,
+      "evaluaciones": 15
+    },
+    "mcc_prevalencia": {
+      "aft": 0.4656,
+      "aft_mejor_en": 15,
+      "bosque": 0.4397,
+      "dif_desv": 0.0128,
+      "dif_media": 0.0259,
+      "evaluaciones": 15
+    }
+  },
+  "solo_npass": {
+    "auroc": {
+      "aft": 0.6493,
+      "aft_mejor_en": 15,
+      "bosque": 0.5383,
+      "dif_desv": 0.0402,
+      "dif_media": 0.111,
+      "evaluaciones": 15
+    },
+    "concordancia": {
+      "aft": 0.6308,
+      "aft_mejor_en": 15,
+      "bosque": 0.5099,
+      "dif_desv": 0.0401,
+      "dif_media": 0.1208,
+      "evaluaciones": 15
+    },
+    "frac_activa_a_5": {
+      "aft": 0.3249,
+      "aft_mejor_en": 0,
+      "bosque": 0.7014,
+      "dif_desv": 0.0655,
+      "dif_media": -0.3765,
+      "evaluaciones": 15
+    },
+    "mcc_fijo": {
+      "aft": 0.1254,
+      "aft_mejor_en": 14,
+      "bosque": 0.0708,
+      "dif_desv": 0.0575,
+      "dif_media": 0.0546,
+      "evaluaciones": 15
+    },
+    "mcc_optimo": {
+      "aft": 0.1863,
+      "aft_mejor_en": 15,
+      "bosque": 0.1071,
+      "dif_desv": 0.0391,
+      "dif_media": 0.0792,
+      "evaluaciones": 15
+    },
+    "mcc_prevalencia": {
+      "aft": 0.1432,
+      "aft_mejor_en": 13,
+      "bosque": 0.0711,
+      "dif_desv": 0.0417,
+      "dif_media": 0.0721,
+      "evaluaciones": 15
+    },
+    "se_sostiene_con_prevalencia": true
+  },
+  "todos": {
+    "auroc": {
+      "aft": 0.8454,
+      "aft_mejor_en": 15,
+      "bosque": 0.8332,
+      "dif_desv": 0.0038,
+      "dif_media": 0.0122,
+      "evaluaciones": 15
+    },
+    "concordancia": {
+      "aft": 0.7609,
+      "aft_mejor_en": 1,
+      "bosque": 0.7649,
+      "dif_desv": 0.0029,
+      "dif_media": -0.004,
+      "evaluaciones": 15
+    },
+    "frac_activa_a_5": {
+      "aft": 0.816,
+      "aft_mejor_en": 0,
+      "bosque": 0.9363,
+      "dif_desv": 0.0054,
+      "dif_media": -0.1203,
+      "evaluaciones": 15
+    },
+    "mcc_fijo": {
+      "aft": 0.466,
+      "aft_mejor_en": 15,
+      "bosque": 0.3106,
+      "dif_desv": 0.0153,
+      "dif_media": 0.1554,
+      "evaluaciones": 15
+    },
+    "mcc_optimo": {
+      "aft": 0.4984,
+      "aft_mejor_en": 15,
+      "bosque": 0.471,
+      "dif_desv": 0.0111,
+      "dif_media": 0.0273,
+      "evaluaciones": 15
+    },
+    "mcc_prevalencia": {
+      "aft": 0.495,
+      "aft_mejor_en": 15,
+      "bosque": 0.467,
+      "dif_desv": 0.0132,
+      "dif_media": 0.028,
+      "evaluaciones": 15
+    },
+    "se_sostiene_con_prevalencia": true
+  }
+}
