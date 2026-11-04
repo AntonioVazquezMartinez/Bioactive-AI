@@ -121,6 +121,19 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 | Pocos compuestos (el realista) | ordenar bien; el falso positivo es el caro porque gasta presupuesto de ensayo | **enriquecimiento al 1%** (principal), enriquecimiento al 5%, precisión en los primeros 100, BEDROC, área bajo la curva de precisión-recall |
 | Cribado amplio | la sensibilidad: no perder candidatos reales | recall a precisión fija, enriquecimiento al 5% |
 
+**Primera medición de estas métricas, fase 2 (4 de noviembre).** Corrida `2026-11-03-artemio-C.5-ranking-fase2-aft`: `aft` con predicciones fuera de pliegue (una semilla, 5 pliegues, sin tocar la prueba), α de BEDROC = 20 declarado antes, ordenando los pares por potencia predicha. Dos controles: azar y ordenar solo por la potencia media de la diana. Enriquecimiento, activos recuperados y tasa base:
+
+| estrato | tasa base | EF 1% (activos / k) | EF 5% | precisión en 100 | BEDROC | `solo_diana`, EF 1% |
+|:--|--:|:--|--:|--:|--:|--:|
+| todos | 71.4% | 1.40 (544/544) | 1.39 | 1.00 | 0.99 | 1.36 |
+| solo ChEMBL | 74.8% | 1.34 (507/507) | 1.33 | 1.00 | 0.99 | 1.30 |
+| mixto | 40.3% | 1.55 (10/16), IC 0.86–2.24 | 1.51 | 0.59 | 0.59 | 1.40 |
+| solo NPASS | 12.3% | 3.09 (8/21), IC 1.59–5.16 | 2.40 | 0.31 | 0.29 | 1.16 |
+
+- **El enriquecimiento tiene un techo de 1/tasa base**, 1.40 con 71.4% de activos: en `todos` y `solo_chembl` el `aft` ya está en el techo (544 de 544) y el número no discrimina. Ahí se lee mejor la precisión en 100 y el control: **saber la diana ya da casi todo** (1.36 contra 1.40), así que el ranking global mide sobre todo qué diana, no qué molécula.
+- **En `solo_npass`, el único estrato donde el techo no estorba, el `aft` pone 8 activos entre los 21 primeros del 1% (3.1×) y 31 de 105 en el 5% (2.4×)**, contra 1.2× y 0.6× de ordenar por diana. El intervalo del 1% es ancho (1.6–5.2) porque son 21 pares y 8 aciertos: es la forma de cuidar de no repetir el 1.92× que era un compuesto. Con el azar el 1% dio 4 de 21 (1.5×), lo que muestra el ruido de esa celda.
+- Una semilla, ranking sobre pares y no sobre compuestos. La curva por diana de la C.5 sigue sin calcular.
+
 **Qué arrastra.** La forma del entregable define buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2).
 
 **Qué lo cambiaría.** Que pida un modelo ejecutable en vez de una lista —lo que arrastra empaquetado y la [C.6](#dc-6)— o que el laboratorio tenga una capacidad de ensayo muy distinta de veinte compuestos, que mueve el corte sugerido pero no la forma del entregable.
