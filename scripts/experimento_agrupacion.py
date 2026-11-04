@@ -32,7 +32,7 @@ from pathlib import Path
 
 warnings.filterwarnings("ignore")
 RAIZ = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(RAIZ / "src"))
+sys.path.insert(0, str(RAIZ))
 
 import numpy as np
 import pandas as pd
@@ -46,10 +46,10 @@ from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
-from evaluation.cv import evaluar
-from models.alternativos import seleccion
-from models.tareas import DESCRIPTORES, PROCESADOS, cargar
-from tracking import Corrida
+from src.evaluation.cv import evaluar
+from src.models.alternativos import seleccion
+from src.models.tareas import DESCRIPTORES, PROCESADOS, cargar
+from src.tracking import Corrida
 
 RDLogger.DisableLog("rdApp.*")
 SEMILLAS = (0, 1, 2)
