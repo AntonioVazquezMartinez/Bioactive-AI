@@ -94,6 +94,38 @@ def similitud_al_vecino_de(fps: list, ajuste: np.ndarray, validacion: np.ndarray
                      for i in validacion])
 
 
+def bits_como_matriz(fps: list) -> np.ndarray:
+    """Las huellas como matriz `float32` de 0 y 1, una fila por molécula, para multiplicar."""
+    A = np.zeros((len(fps), fps[0].GetNumBits()), dtype=np.float32)
+    fila = np.zeros(A.shape[1], dtype=np.uint8)
+    for i, fp in enumerate(fps):
+        DataStructs.ConvertToNumpyArray(fp, fila)
+        A[i] = fila
+    return A
+
+
+def similitud_al_vecino_matricial(A: np.ndarray, ajuste: np.ndarray, validacion: np.ndarray,
+                                  bloque: int = 256) -> np.ndarray:
+    """La misma cifra que `similitud_al_vecino_de`, con un producto de matrices por bloques.
+
+    Tanimoto = |a ∧ b| / (|a| + |b| − |a ∧ b|), y el numerador de todos los pares de un bloque es un
+    producto de matrices. Es exacto y varios órdenes de magnitud más rápido cuando el ajuste tiene
+    decenas de miles de moléculas: `BulkTanimotoSimilarity` sobre una lista de 36,000 huellas, repetido
+    por cada compuesto de validación, tardó más de 30 minutos en la fase 2 sin terminar un peldaño.
+    """
+    cuenta = A.sum(axis=1)
+    A_ajuste, cuenta_ajuste = A[ajuste], cuenta[ajuste]
+    salida = np.empty(len(validacion), dtype=np.float32)
+    for i in range(0, len(validacion), bloque):
+        v = validacion[i:i + bloque]
+        inter = A[v] @ A_ajuste.T
+        union = cuenta[v][:, None] + cuenta_ajuste[None, :] - inter
+        with np.errstate(divide="ignore", invalid="ignore"):
+            sim = np.where(union > 0, inter / union, 0.0)
+        salida[i:i + bloque] = sim.max(axis=1)
+    return salida
+
+
 def resumen_grupos(grupos: np.ndarray) -> dict:
     """Número de grupos y fracción de filas del mayor: la partición en 5 pliegues falla si pasa de 20%."""
     _, cuenta = np.unique(grupos, return_counts=True)

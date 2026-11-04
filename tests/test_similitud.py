@@ -55,3 +55,20 @@ def test_reproduce_los_grupos_de_la_escalera_registrada():
     esperado = {0.6: 1413, 0.5: 1017, 0.4: 631}
     for u, grupos in esperado.items():
         assert resumen_grupos(grupos_por_similitud(D, u))["grupos"] == grupos, u
+
+
+def test_vecino_matricial_coincide_con_la_version_por_huellas_y_con_la_matriz_densa():
+    from src.features.similitud import bits_como_matriz, similitud_al_vecino_matricial
+    fps = huellas(SMILES)
+    S = matriz_densa(fps)
+    A = bits_como_matriz(fps)
+    ajuste, val = np.arange(0, 8), np.arange(8, 12)
+    a = similitud_al_vecino_matricial(A, ajuste, val, bloque=3)     # bloque chico: ejerce el ciclo
+    assert np.allclose(a, similitud_al_vecino_de(fps, ajuste, val), atol=1e-6)
+    assert np.allclose(a, similitud_al_vecino(S, ajuste, val), atol=1e-6)
+
+
+def test_vecino_matricial_de_una_molecula_con_su_copia_es_uno():
+    from src.features.similitud import bits_como_matriz, similitud_al_vecino_matricial
+    A = bits_como_matriz(huellas(["CCO", "CCO", "c1ccccc1"]))
+    assert similitud_al_vecino_matricial(A, np.array([0]), np.array([1]))[0] == pytest.approx(1.0)
