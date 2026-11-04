@@ -1,0 +1,402 @@
+{
+  "afirmadas_top30_de_los_dos": [
+    {
+      "columna": "BertzCT",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00792,
+      "rango_permutacion": 3,
+      "rango_shap": 1,
+      "shap": 0.2802,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "diana:MAOA",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.0276,
+      "rango_permutacion": 1,
+      "rango_shap": 2,
+      "shap": 0.2652,
+      "tipo": "diana"
+    },
+    {
+      "columna": "id:2041434490",
+      "en_pliegues": 5,
+      "fragmento": "n",
+      "molecula_de_ejemplo": "Bc1ccc(C(NC(=O)c2cc(-c3ccccc3Cl)n(-c3ccc(S(N)(=O)=O)cc3)n2)P(=O)(OCC)OCC)cc1",
+      "perdida_de_concordancia": 0.00268,
+      "radio": 0,
+      "rango_permutacion": 9,
+      "rango_shap": 3,
+      "shap": 0.2317,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "id:3777168895",
+      "en_pliegues": 5,
+      "fragmento": "c(c)n",
+      "molecula_de_ejemplo": "Br.CCCCCc1n/c(=N\\Cc2cccnc2)sn1-c1ccccc1",
+      "perdida_de_concordancia": 0.00207,
+      "radio": 1,
+      "rango_permutacion": 10,
+      "rango_shap": 4,
+      "shap": 0.1616,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "SMR_VSA3",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00411,
+      "rango_permutacion": 6,
+      "rango_shap": 5,
+      "shap": 0.1466,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "diana:DRD2",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00519,
+      "rango_permutacion": 4,
+      "rango_shap": 6,
+      "shap": 0.137,
+      "tipo": "diana"
+    },
+    {
+      "columna": "fr_halogen",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.0029,
+      "rango_permutacion": 8,
+      "rango_shap": 7,
+      "shap": 0.1305,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "diana:MAOB",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.01232,
+      "rango_permutacion": 2,
+      "rango_shap": 8,
+      "shap": 0.1168,
+      "tipo": "diana"
+    },
+    {
+      "columna": "diana:LRRK2",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00432,
+      "rango_permutacion": 5,
+      "rango_shap": 9,
+      "shap": 0.1018,
+      "tipo": "diana"
+    },
+    {
+      "columna": "diana:BCHE",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00389,
+      "rango_permutacion": 7,
+      "rango_shap": 10,
+      "shap": 0.0868,
+      "tipo": "diana"
+    },
+    {
+      "columna": "MolLogP",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00142,
+      "rango_permutacion": 18,
+      "rango_shap": 11,
+      "shap": 0.0831,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "PEOE_VSA7",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00185,
+      "rango_permutacion": 11,
+      "rango_shap": 12,
+      "shap": 0.0779,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "id:2246699815",
+      "en_pliegues": 5,
+      "fragmento": "C",
+      "molecula_de_ejemplo": "Bc1ccc(C(NC(=O)c2cc(-c3ccccc3Cl)n(-c3ccc(S(N)(=O)=O)cc3)n2)P(=O)(OCC)OCC)cc1",
+      "perdida_de_concordancia": 0.00124,
+      "radio": 0,
+      "rango_permutacion": 21,
+      "rango_shap": 16,
+      "shap": 0.0577,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "FpDensityMorgan3",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00175,
+      "rango_permutacion": 13,
+      "rango_shap": 17,
+      "shap": 0.0567,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "SMR_VSA7",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00143,
+      "rango_permutacion": 17,
+      "rango_shap": 19,
+      "shap": 0.0536,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "diana:ACHE",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00183,
+      "rango_permutacion": 12,
+      "rango_shap": 21,
+      "shap": 0.0497,
+      "tipo": "diana"
+    },
+    {
+      "columna": "SlogP_VSA2",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00173,
+      "rango_permutacion": 14,
+      "rango_shap": 25,
+      "shap": 0.0429,
+      "tipo": "descriptor"
+    }
+  ],
+  "compartidas_top15": 11,
+  "concuerdan": false,
+  "control_aditividad_max": 1.430511474609375e-06,
+  "control_contra_shap_explainer_max": 0.0,
+  "control_tratamiento_pasa": true,
+  "fraccion_shap_en_huellas": 0.4236,
+  "identificadores_con_otra_api_discrepancias_de_20": 0,
+  "solo_un_metodo_no_se_afirman": [
+    {
+      "columna": "id:994485099",
+      "en_pliegues": 5,
+      "fragmento": "c(c)c",
+      "molecula_de_ejemplo": "Bc1ccc(C(NC(=O)c2cc(-c3ccccc3Cl)n(-c3ccc(S(N)(=O)=O)cc3)n2)P(=O)(OCC)OCC)cc1",
+      "perdida_de_concordancia": 0.00097,
+      "radio": 1,
+      "rango_permutacion": 35,
+      "rango_shap": 13,
+      "shap": 0.0721,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "id:2976816164",
+      "en_pliegues": 5,
+      "fragmento": "[C@]",
+      "molecula_de_ejemplo": "Br.COc1ccc2c3c1O[C@H]1C[C@@H](O)C=C[C@@]31CCN(C)C2",
+      "perdida_de_concordancia": 0.00063,
+      "radio": 0,
+      "rango_permutacion": 68,
+      "rango_shap": 14,
+      "shap": 0.0671,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "SlogP_VSA10",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00074,
+      "rango_permutacion": 58,
+      "rango_shap": 15,
+      "shap": 0.0636,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "PEOE_VSA1",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00102,
+      "rango_permutacion": 32,
+      "rango_shap": 18,
+      "shap": 0.0556,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "VSA_EState7",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00062,
+      "rango_permutacion": 70,
+      "rango_shap": 20,
+      "shap": 0.0511,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "NumUnspecifiedAtomStereoCenters",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00054,
+      "rango_permutacion": 86,
+      "rango_shap": 22,
+      "shap": 0.0474,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "EState_VSA8",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00101,
+      "rango_permutacion": 33,
+      "rango_shap": 23,
+      "shap": 0.0464,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "SPS",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00088,
+      "rango_permutacion": 42,
+      "rango_shap": 24,
+      "shap": 0.0452,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "id:3701504231",
+      "en_pliegues": 5,
+      "fragmento": "N(c(c)c)(CC)CC",
+      "molecula_de_ejemplo": "Br.Br.COc1cc(F)ccc1N1CCN(C[C@H]2C[C@@H]2c2ccccc2)CC1",
+      "perdida_de_concordancia": 0.00098,
+      "radio": 2,
+      "rango_permutacion": 34,
+      "rango_shap": 26,
+      "shap": 0.0422,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "id:882399112",
+      "en_pliegues": 5,
+      "fragmento": "F",
+      "molecula_de_ejemplo": "Br.Br.COc1cc(F)ccc1N1CCN(C[C@H]2C[C@@H]2c2ccccc2)CC1",
+      "perdida_de_concordancia": 0.00043,
+      "radio": 0,
+      "rango_permutacion": 107,
+      "rango_shap": 27,
+      "shap": 0.0414,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "BalabanJ",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.0009,
+      "rango_permutacion": 37,
+      "rango_shap": 28,
+      "shap": 0.0414,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "SMR_VSA5",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00086,
+      "rango_permutacion": 45,
+      "rango_shap": 29,
+      "shap": 0.0411,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "id:3337745083",
+      "en_pliegues": 5,
+      "fragmento": "Fc",
+      "molecula_de_ejemplo": "Br.Br.COc1cc(F)ccc1N1CCN(C[C@H]2C[C@@H]2c2ccccc2)CC1",
+      "perdida_de_concordancia": 0.00024,
+      "radio": 1,
+      "rango_permutacion": 176,
+      "rango_shap": 30,
+      "shap": 0.0406,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "diana:BACE1",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00156,
+      "rango_permutacion": 15,
+      "rango_shap": 62,
+      "shap": 0.0212,
+      "tipo": "diana"
+    },
+    {
+      "columna": "id:3286720230",
+      "en_pliegues": 5,
+      "fragmento": "c(C)(c)n",
+      "molecula_de_ejemplo": "C#CCN(C)CCCn1ccc(=O)c(O)c1C",
+      "perdida_de_concordancia": 0.00147,
+      "radio": 1,
+      "rango_permutacion": 16,
+      "rango_shap": 90,
+      "shap": 0.0148,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "id:2267380519",
+      "en_pliegues": 5,
+      "fragmento": "C(CO)c(c)n",
+      "molecula_de_ejemplo": "C#CCOC(=O)N1CCc2c(OCCc3nc(-c4ccccc4)oc3C)ccc(CCC(=O)O)c2C1",
+      "perdida_de_concordancia": 0.00131,
+      "radio": 2,
+      "rango_permutacion": 19,
+      "rango_shap": 122,
+      "shap": 0.0109,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    },
+    {
+      "columna": "TPSA",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00125,
+      "rango_permutacion": 20,
+      "rango_shap": 51,
+      "shap": 0.0232,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "VSA_EState6",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.0012,
+      "rango_permutacion": 22,
+      "rango_shap": 48,
+      "shap": 0.025,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "Chi4n",
+      "en_pliegues": 5,
+      "perdida_de_concordancia": 0.00117,
+      "rango_permutacion": 23,
+      "rango_shap": 41,
+      "shap": 0.0283,
+      "tipo": "descriptor"
+    },
+    {
+      "columna": "id:759348397",
+      "en_pliegues": 5,
+      "fragmento": "S(N)(=O)(=O)c(c)c",
+      "molecula_de_ejemplo": "Bc1ccc(C(NC(=O)c2cc(-c3ccccc3Cl)n(-c3ccc(S(N)(=O)=O)cc3)n2)P(=O)(OCC)OCC)cc1",
+      "perdida_de_concordancia": 0.00116,
+      "radio": 2,
+      "rango_permutacion": 24,
+      "rango_shap": 116,
+      "shap": 0.0115,
+      "subestructuras_equivalentes": 1,
+      "tipo": "subestructura"
+    }
+  ],
+  "spearman_union_top100": 0.378,
+  "subestructuras_entre_las_afirmadas": 3,
+  "tpsa_y_hbd": {
+    "NumHDonors": {
+      "rango_permutacion": 274,
+      "rango_shap": 259
+    },
+    "TPSA": {
+      "rango_permutacion": 20,
+      "rango_shap": 51
+    }
+  }
+}
