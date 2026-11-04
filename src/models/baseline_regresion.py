@@ -108,19 +108,28 @@ class ConHuellasCensurado(BaseEstimator):
 
     A diferencia de `SoloExactas` y de `ImputadaEnCota`, **no descarta ninguna fila**: el
     intervalo llega completo al modelo, que es quien decide qué hacer con la censura.
+
+    El parámetro `densas` recorta cuáles columnas densas se conservan —por ejemplo solo la
+    diana, omitiendo los descriptores fisicoquímicos— delegando en `AgregarHuellas`, que ya
+    lo soportaba. Existe porque sin él la única salida era duplicar este `fit`:
+    `scripts/experimento_aft_brazos.py` define `HuellasConDianaCensurado` haciendo
+    exactamente eso, y con este parámetro esa clase se puede borrar.
     """
 
-    def __init__(self, modelo, n_densas: int, n_bits: int = 2048):
+    def __init__(self, modelo, n_densas: int, n_bits: int = 2048,
+                 densas: tuple[int, ...] | None = None):
         self.modelo = modelo
         self.n_densas = n_densas
         self.n_bits = n_bits
+        self.densas = densas
 
     @property
     def necesita_grupos(self) -> bool:
         return getattr(self.modelo, "necesita_grupos", False)
 
     def fit(self, X, inferior, superior, grupos=None):
-        self.huellas_ = AgregarHuellas(self.n_densas, n_bits=self.n_bits).fit(X)
+        self.huellas_ = AgregarHuellas(self.n_densas, densas=self.densas,
+                                       n_bits=self.n_bits).fit(X)
         X_h = self.huellas_.transform(X)
         if getattr(self.modelo, "necesita_grupos", False):
             self.modelo.fit(X_h, inferior, superior, grupos=grupos)

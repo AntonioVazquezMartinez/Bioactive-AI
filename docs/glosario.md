@@ -118,6 +118,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **MCC** (coeficiente de correlación de Matthews)
 : Métrica que resume la matriz de confusión completa en un número de −1 a 1. Solo da un valor alto si al modelo le va bien en las dos clases a la vez. **Por qué importa:** junto con el AUPRC, es la métrica principal del proyecto.
 
+**Concordancia de Harrell** (índice c)
+: De todos los pares de compuestos cuyo orden real se conoce, la proporción que el modelo ordena bien. Va de 0.5 (azar) a 1. **Admite mediciones censuradas** (ver **medición censurada**): un par cuyo orden la cota no determina —dos «> 10 µM», por ejemplo— simplemente no se cuenta, en vez de obligar a inventarle un valor. **Por qué importa:** es la métrica principal de la fase 2, y lo es porque mide lo único que el proyecto necesita —priorizar, es decir ordenar— sin exigir que la predicción puntual sea exacta, que es justo lo que la **compresión hacia la media** impide. Un RMSE la ignoraría y castigaría al modelo por algo que no se le pide.
+
 **Validación cruzada agrupada**
 : Partir el entrenamiento en k pliegues y medir k veces, rotando cuál se usa para evaluar, **manteniendo juntos los compuestos que comparten estructura**. **Por qué importa:** es la forma de comparar dos opciones sin que la conclusión dependa de una sola partición. Sin agrupar, dos estereoisómeros del mismo compuesto caerían en pliegues distintos y el resultado saldría inflado por la misma razón que una partición aleatoria.
 
@@ -197,6 +200,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 **Medición censurada**
 : Una medición que no da un número sino una cota: «> 10 µM» quiere decir que se probó hasta esa concentración y no se vio efecto, sin saber dónde aparecería. Son 54,498 de los 202,647 registros. **Por qué importa:** no se pueden tirar, porque son evidencia de que algo *no* funciona, y son la mayor fuente de negativos. Pero solo sirven como negativo si la cota llega al umbral de «activo»: un «> 1 µM» no dice nada si «activo» se definió en 10 µM. Es la regla de la sección 7 del diccionario de la patrocinadora.
 
+**Censura por la derecha y por la izquierda**
+: De qué lado del intervalo falta el dato. **Y el lado depende de la escala, porque la pActividad invierte el signo**, así que la misma medición tiene los dos nombres y hay que decir siempre en cuál se habla. Un «> 10 µM» (se probó hasta ahí y no se vio efecto) es en concentración el intervalo [10, +∞): censura por la **derecha en µM**; en pActividad es (−∞, 5]: una cota **superior**, es decir censura por la izquierda en pActividad. Y al revés, un «más potente que 10 µM» es [0, 10] en µM —censura por la **izquierda en µM**— y [5, +∞) en pActividad. **Por qué importa:** el signo invertido ya fue un defecto real dos veces, una en esta misma entrada del glosario y otra en un comentario de `tests/test_aft.py`. La convención del proyecto es nombrar el lado **en µM**, porque es la escala en la que XGBoost recibe las cotas (`label_lower_bound` y `label_upper_bound`): por eso `AftConCensuraIzquierda`, en `src/models/aft.py`, se refiere a las filas con cota inferior 0 µM —las más potentes— y no a los inactivos. Ver **medición censurada**, más abajo, para qué son y cuántas hay.
+
 **Inactivo declarado**
 : Un registro donde el ensayo original dice en texto que el compuesto no actuó. Son 29,730, y en este archivo son **todos la misma cosa**: `> 10 µM`, con el texto «Not active» y la referencia `CHEMBL1909046`. **Por qué importa:** no son una vía de etiquetado aparte de la censura, como podría parecer, sino las mismas filas vistas de otra manera —el texto confirma lo que la cota ya decía—. Y pesan muchísimo **por registro**: con el corte de «activo» en 10 µM son el 61% de todos los negativos seguros. **Por par compuesto-diana pesan mucho menos**, el 10.8%, porque las 29,730 filas son 772 compuestos; y la [propuesta de variable objetivo](variable-objetivo-fase2.md) los deja fuera de la definición principal, con lo que bajan al 0.1%. Es un buen ejemplo de por qué conviene decir si una proporción es por registro o por par compuesto-diana. Es parte de lo que está en juego en la [decisión 2.12](decisiones.md#d2-12).
 
@@ -253,6 +259,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 **SHAP**
 : Método que reparte la predicción del modelo entre sus variables de entrada, diciendo cuánto aportó cada una. **Por qué importa:** es una de las vías para cumplir el requisito de explicabilidad, enlazando un bit del fingerprint con la subestructura que lo activó.
+
+**TreeSHAP**
+: La variante de **SHAP** para ensambles de árboles, que recorre la estructura del árbol en vez de muestrear, y por eso es exacta y barata. **Por qué importa:** es el método que la fase 2 usa sobre el booster del AFT, y trae una trampa de signo: explica el **margen** del modelo, que en el AFT está en ln(µM), donde más alto es **menos** potente. Para leerlo en **pActividad** hay que invertirlo y reescalarlo (−SHAP / ln 10); sin eso, las conclusiones estructurales salen al revés. Y por sí solo no cumple la explicabilidad exigida, que pide **dos** métodos independientes y reportar solo aquello en que coinciden: el otro es la **importancia por permutación**.
 
 **Explicabilidad a nivel de subestructura**
 : Poder señalar qué fragmento concreto de la molécula sustenta la predicción, no solo qué variable pesó más. **Por qué importa:** la patrocinadora lo planteó como requisito no negociable. Un modelo que acierta pero no se puede interpretar no sirve para orientar trabajo de laboratorio.
