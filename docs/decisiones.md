@@ -814,6 +814,15 @@ Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pa
 
 **Se propone.** Fuera del modelo principal. **La medición del desempeño con y sin ellas queda para el Avance 5.** Una sensibilidad con ellas como negativos censurados y sin ellas, reportada al lado, con un análisis de esqueletos de los 772 compuestos. Como todas son de un solo documento, agrupar por documento en la validación cruzada las deja juntas en un pliegue, y eso hay que declararlo. El valor que podrían tener es el déficit de negativos verdaderos de cualquier conjunto derivado de la literatura, donde se publica lo que funciona.
 
+**Medición · base externa de la patrocinadora** (4 nov, corrida `2026-11-04-artemio-2.13-muestra-de-jorge`). El archivo `…_Testeo.csv` (22,866 mediciones; huella sha256 en `params.yaml`; **no se copia al repositorio**) no comparte ningún identificador ni SMILES canónico con el de entrenamiento. Regla y script commiteados antes de correr; el `aft` guardado en `models/finales/` se evalúa sin reentrenar. Control: el constructor de pares reproduce los 70,384 pares de `fase2_pares.parquet` desde el archivo de entrenamiento (pasó).
+
+- **Alcance:** de 8,151 pares (esqueleto × gen) con las 26 dianas del modelo quedan 8,134 con predicción (17 sin descriptores). Las otras 10 dianas del archivo no se pueden evaluar.
+- **Resultado global:** concordancia **0.792** [0.787, 0.797] (IC95% remuestreando esqueletos), Spearman 0.733 sobre 6,664 exactas, 18.1% censurado. La prueba reservada dio 0.720: no está dentro del intervalo, y la externa sale **mejor**, no peor.
+- **Por procedencia:** `solo_chembl` 0.786 (7,681 pares); `mixto` 0.615 (204); `solo_npass` 0.667 (249 pares, 113 exactas, Spearman 0.309; sin intervalo por tener menos de 500). En la prueba reservada el `solo_npass` dio 0.530 con 117 pares. Los naturales siguen siendo el estrato débil, con muestras pequeñas.
+- **Con/sin hermano estereoisomérico** (esqueleto presente entre los de ajuste): con 541 pares 0.818 [0.794, 0.836]; sin 7,593 pares 0.790 [0.783, 0.795]. Solo 6.7% de los pares tiene hermano, y la diferencia es pequeña.
+- **Qué no dice:** que el modelo generalice mejor de lo medido. No se midió qué tan cerca están estos compuestos del ajuste (la escalera de similitud), y que la base externa salga más fácil que la prueba reservada es compatible con que se haya separado por InChIKey y no por andamio. Verificado dos veces: predicciones una a una contra en lote (diferencia 0) y concordancia por doble bucle sobre 1,500 pares contra la función (0.78967 las dos).
+- **Lectura única** de esta base; una variante nueva se declara como corrida aparte.
+
 #### 2.13 · Ensambles para la regresión de potencia {#d2-13 .vigente}
 
 **Estado:** vigente

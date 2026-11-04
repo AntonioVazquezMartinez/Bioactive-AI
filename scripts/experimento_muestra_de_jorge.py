@@ -44,7 +44,7 @@ sys.path.insert(0, str(RAIZ))
 from src import inferencia  # noqa: E402
 from src.data_prep.pares_fase2 import tabla_de_pares  # noqa: E402
 from src.evaluation.regresion import concordancia_harrell, metricas_regresion  # noqa: E402
-from src.tracking import Corrida  # noqa: E402
+from src.tracking import Corrida, sha256  # noqa: E402
 
 ENTRENAMIENTO = RAIZ / "data" / "external" / "profesora" / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv"
 TESTEO = Path.home() / "Downloads" / "snc_activity_crudo_v3_final_2026-09-25_Testeo.csv"
@@ -106,8 +106,8 @@ def main() -> None:
     res["prueba_reservada_global"] = 0.720
     ic = res["global"]["concordancia_ic95"]
     res["0.720_dentro_del_ic"] = bool(ic[0] <= 0.720 <= ic[1])
-    with Corrida("muestra-de-jorge", decision="2.13", params={"replicas": REPLICAS, "semilla": 0},
-                 semillas=[0], datos=[testeo, PARES]) as c:
+    with Corrida("muestra-de-jorge", decision="2.13", params={"replicas": REPLICAS, "semilla": 0, "testeo_sha256": sha256(testeo)},
+                 semillas=[0], datos=[PARES]) as c:
         c.metricas(res)
     print(pd.json_normalize(res).T.to_string())
 
