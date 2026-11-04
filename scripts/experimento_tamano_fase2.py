@@ -21,7 +21,7 @@ segundo corte, por procedencia dentro de cada tramo para `solo_chembl`.
   4,114 en la fase 2), y se reporta diciendo qué población cubre. No se iguala el tamaño de los
   tramos por submuestreo; si aparece un patrón, es la corrida siguiente. No toca la prueba.
 
-    ./env/bin/python scripts/experimento_tamano_fase2.py     # unos 40 min en macOS con 16 núcleos
+    ./env/bin/python scripts/experimento_tamano_fase2.py     # 159 s medidos en macOS arm64
 """
 import os
 
