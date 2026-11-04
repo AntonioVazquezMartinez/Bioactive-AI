@@ -219,6 +219,19 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 
 **Consecuencias.** La prueba tiene 1,390 andamios en 1,499 compuestos y 57.3% BBB+ contra 64.0% del entrenamiento: se evalúa sobre una distribución distinta de la que aprendió, que es lo realista. Construida al revés, con los frecuentes en prueba, daba 45 andamios con el benceno ocupando el 26%; la dirección de la asignación es el detalle crítico.
 
+**¿Cuánto del derrumbe del MCC en la escalera es colocación del corte? Una parte, pero el corte de igual prevalencia no la recupera (4 de noviembre).** Corrida `2026-11-04-artemio-1.2-mcc-en-la-escalera-permeabilidad` (`scripts/experimento_mcc_en_la_escalera.py`), sin tocar la prueba reservada. A lo largo de la escalera el AUROC del `svm_rbf` baja de 0.947 a 0.780 y el MCC de 0.752 a 0.419, y en la prueba el MCC cae más que el AUROC; el MCC corta la probabilidad en 0.5, un punto fijo. Se lee el MCC de tres maneras con las mismas predicciones fuera de pliegue: `fijo` (0.5), `prevalencia` (el cuantil que declara positiva la misma fracción que el ajuste; no usa etiquetas de validación) y `óptimo` (el mejor corte del pliegue: cota optimista, usa etiquetas). La regla se declaró antes: la colocación explica parte del derrumbe si lo `recuperado` (prevalencia − fijo) en ≥ 0.5 o ≥ 0.4 supera 0.020 y es mayor que en el peldaño del proyecto.
+
+| peldaño | MCC fijo | MCC igual prevalencia | MCC óptimo (cota) | recuperado | fracción BBB+ a 0.5 |
+|:--|--:|--:|--:|--:|--:|
+| al azar | 0.7515 | 0.7521 | 0.7634 | +0.0006 | 0.710 |
+| por andamio | 0.7209 | 0.7122 | 0.7330 | −0.0087 | 0.707 |
+| andamio + esqueleto (el del proyecto) | 0.7017 | 0.6791 | 0.7135 | −0.0225 | 0.709 |
+| similitud ≥ 0.6 | 0.6876 | 0.6767 | 0.7072 | −0.0109 | 0.698 |
+| similitud ≥ 0.5 | 0.4859 | 0.5327 | 0.6554 | **+0.0468** | 0.606 |
+| similitud ≥ 0.4 | 0.4190 | 0.4233 | 0.5598 | +0.0043 | 0.590 |
+
+La prevalencia real del ajuste es 0.650. **Los seis controles pasan** (el MCC fijo es el de la escalera registrada). Por la regla declarada la colocación explica parte del derrumbe, **pero solo en el peldaño de 0.5** (+0.047) y no en el de 0.4 (+0.004), y en el peldaño del proyecto el corte de igual prevalencia es *peor* que el de 0.5 (−0.023): no es una mejora gratuita. **Lo que sí se ve es la cota:** con un corte óptimo el MCC sería 0.655 en ≥ 0.5 y 0.560 en ≥ 0.4, contra 0.486 y 0.419 con el fijo, es decir, **0.17 y 0.14 de MCC dependen de dónde se corta**; y el corte fijo declara BBB+ al 71% de los compuestos en los peldaños laxos contra una prevalencia de 65%, y a 61% y 59% en los estrictos. Es decir, bajo un cambio de distribución el modelo cambia de sesgo (de declarar de más a declarar de menos), y ningún corte fijo ni de igual prevalencia lo sigue. Para la prueba reservada (AUROC 0.793, MCC 0.339), un AUROC parecido al de los peldaños de 0.5 y 0.4 con un MCC menor que el fijo de ellos (0.486 y 0.419) es consistente con esa colocación extra, pero **no se afirma como causa**. **Verificado de forma independiente:** recalculé el peldaño ≥ 0.5 con una matriz densa de RDKit, un MCC escrito a mano y el corte como el k-ésimo mayor puntaje: 0.4859 y 0.5326 contra 0.4859 y 0.5327 (la diferencia de 0.0001 es el empate en el cuantil). **Límites:** un solo modelo (el `svm_rbf`); el corte óptimo usa las etiquetas del pliegue y no es un resultado; y ninguna de las tres lecturas es el umbral elegido con validación interna agrupada, que sigue sin medirse.
+
 #### 1.3 · Descriptores RDKit más Morgan/ECFP4 {#d1-3 .vigente}
 
 **Estado:** vigente
