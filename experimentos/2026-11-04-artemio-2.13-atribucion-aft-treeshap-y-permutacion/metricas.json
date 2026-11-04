@@ -1,0 +1,146 @@
+{
+  "aviso_subestructuras": "el aft final no usa huellas: sus columnas son descriptores y dianas, no subestructuras",
+  "compartidas": [
+    {
+      "columna": "BertzCT",
+      "perdida_de_concordancia": 0.0168,
+      "rango_permutacion": 3,
+      "rango_shap": 1,
+      "shap": 0.3779
+    },
+    {
+      "columna": "diana:MAOA",
+      "perdida_de_concordancia": 0.0326,
+      "rango_permutacion": 1,
+      "rango_shap": 2,
+      "shap": 0.2951
+    },
+    {
+      "columna": "fr_halogen",
+      "perdida_de_concordancia": 0.0052,
+      "rango_permutacion": 8,
+      "rango_shap": 3,
+      "shap": 0.1647
+    },
+    {
+      "columna": "diana:MAOB",
+      "perdida_de_concordancia": 0.0227,
+      "rango_permutacion": 2,
+      "rango_shap": 4,
+      "shap": 0.161
+    },
+    {
+      "columna": "SMR_VSA3",
+      "perdida_de_concordancia": 0.0058,
+      "rango_permutacion": 6,
+      "rango_shap": 5,
+      "shap": 0.1451
+    },
+    {
+      "columna": "diana:DRD2",
+      "perdida_de_concordancia": 0.0069,
+      "rango_permutacion": 5,
+      "rango_shap": 6,
+      "shap": 0.1433
+    },
+    {
+      "columna": "FpDensityMorgan3",
+      "perdida_de_concordancia": 0.0039,
+      "rango_permutacion": 11,
+      "rango_shap": 7,
+      "shap": 0.1369
+    },
+    {
+      "columna": "SlogP_VSA10",
+      "perdida_de_concordancia": 0.0036,
+      "rango_permutacion": 15,
+      "rango_shap": 8,
+      "shap": 0.1342
+    },
+    {
+      "columna": "diana:LRRK2",
+      "perdida_de_concordancia": 0.0071,
+      "rango_permutacion": 4,
+      "rango_shap": 9,
+      "shap": 0.1149
+    },
+    {
+      "columna": "MolLogP",
+      "perdida_de_concordancia": 0.0038,
+      "rango_permutacion": 12,
+      "rango_shap": 11,
+      "shap": 0.1056
+    },
+    {
+      "columna": "diana:BCHE",
+      "perdida_de_concordancia": 0.0056,
+      "rango_permutacion": 7,
+      "rango_shap": 13,
+      "shap": 0.0969
+    },
+    {
+      "columna": "BalabanJ",
+      "perdida_de_concordancia": 0.0036,
+      "rango_permutacion": 14,
+      "rango_shap": 14,
+      "shap": 0.0904
+    }
+  ],
+  "compartidas_top15": 12,
+  "concuerdan": true,
+  "control_aditividad_max": 2.1457672119140625e-06,
+  "control_contra_shap_explainer_max": 0.0,
+  "control_pasa": true,
+  "estabilidad_entre_pliegues": {
+    "permutacion": 0.6709,
+    "shap": 0.9091
+  },
+  "fraccion_de_la_atribucion_en_la_diana": {
+    "shap": 0.1547
+  },
+  "spearman_entre_metodos": 0.9312,
+  "top15_permutacion": [
+    "diana:MAOA",
+    "diana:MAOB",
+    "BertzCT",
+    "diana:LRRK2",
+    "diana:DRD2",
+    "SMR_VSA3",
+    "diana:BCHE",
+    "fr_halogen",
+    "MaxAbsEStateIndex",
+    "diana:ACHE",
+    "FpDensityMorgan3",
+    "MolLogP",
+    "SMR_VSA7",
+    "BalabanJ",
+    "SlogP_VSA10"
+  ],
+  "top15_shap": [
+    "BertzCT",
+    "diana:MAOA",
+    "fr_halogen",
+    "diana:MAOB",
+    "SMR_VSA3",
+    "diana:DRD2",
+    "FpDensityMorgan3",
+    "SlogP_VSA10",
+    "diana:LRRK2",
+    "fr_Ar_N",
+    "MolLogP",
+    "PEOE_VSA1",
+    "diana:BCHE",
+    "BalabanJ",
+    "SMR_VSA9"
+  ],
+  "tpsa_y_hbd": {
+    "NumHDonors": {
+      "rango_permutacion": 165,
+      "rango_shap": 165
+    },
+    "TPSA": {
+      "rango_permutacion": 40,
+      "rango_shap": 44
+    }
+  }
+}
