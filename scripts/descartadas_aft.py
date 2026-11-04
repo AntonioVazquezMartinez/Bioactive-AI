@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Las filas que el filtro del AFT descarta, y sobre qué partición se cuentan.
 
-Evidencia del defecto que la lectura del 05b y la decisión 2.13 citan. El AFT
-censurado es el modelo final de la fase 2, y el argumento para elegirlo es que
-ajusta con las mediciones censuradas que `SoloExactas` tira. Pero su propio
-filtro, en `src/models/aft.py`, exige `inf_um > 0`:
+Reproduce el conteo que la lectura del 05b y la decisión 2.13 ya citan, con la
+partición sobre la que se cuenta. El AFT censurado es el modelo final de la fase 2,
+y el argumento para elegirlo es que ajusta con las mediciones censuradas que
+`SoloExactas` tira. Pero su propio filtro, en `src/models/aft.py`, exige
+`inf_um > 0`:
 
     valida = (inf_um > 0) & np.isfinite(inf_um) & (sup_um >= inf_um)
 
@@ -20,6 +21,13 @@ completo, prueba reservada incluida. La cifra que el registro cita es la de
 ajuste, porque es la que el modelo ve.
 
     python scripts/descartadas_aft.py
+
+El defecto no sigue abierto a ciegas: `AftConCensuraIzquierda`, en el mismo módulo,
+es la vía que conserva esas filas, y el brazo `aft_filtro` de la corrida
+`experimentos/2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura` mide lo que
+valen en `solo_npass`: +0.0021 de concordancia, mejor en 8 de 15 evaluaciones, con
+una desviación pareada de 0.0212. Volverla el comportamiento por omisión obliga a
+reejecutar el 05b, así que es una decisión aparte.
 
 Se mide sobre `data/processed/fase2_pares.parquet`, antes del cruce con los
 descriptores. Ese cruce filtra por química disponible, no por procedencia, así
