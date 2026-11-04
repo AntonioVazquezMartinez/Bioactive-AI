@@ -195,8 +195,8 @@ Limitaciones: la prueba se leyó siete veces; los modelos finales todavía no se
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
-cuatro familias de modelos, no las seis de la fase 1; la atribución del modelo final no llega a
-subestructuras; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
+cuatro familias de modelos, no las seis de la fase 1; los dos métodos de atribución
+no concuerdan a nivel de subestructura; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
 comparar las palancas de la Figura 1.
 
 ## 8. Referencias y anexos
@@ -240,5 +240,12 @@ solas casi igualaban al brazo ancho: en el estrato por el que se eligió el mode
 concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (`MAOA`,
 `MAOB`, `DRD2`, `LRRK2`, `BCHE`, el 15% de la atribución) y, en la química, la complejidad topológica
 (`BertzCT`), la lipofilia y los halógenos. **TPSA y los donadores de hidrógeno, que dominan la
-permeabilidad, no dominan la potencia** (lugares 44 y 165). El modelo final no usa huellas, así que no hay
-atribución por subestructura; hace falta el brazo con huellas.
+permeabilidad, no dominan la potencia** (lugares 44 y 165).
+
+**Por subestructura.** El modelo final no usa huellas, así que se repitió el diseño con el brazo que sí
+(`aft_huellas`, que no mejora en NPASS). **Ahí los dos métodos no concuerdan según la regla declarada**
+(Spearman 0.38 contra 0.50, aunque comparten 11 de 15; la permutación es ruidosa con ~2,270 columnas). Las
+tres subestructuras que ven los dos son genéricas y frecuentes (un nitrógeno de anillo tipo piridina, un
+CH aromático vecino a ese nitrógeno y un carbono de tipo carbonilo, en el 57%, 21% y 52% de las moléculas):
+indican que el modelo usa heterociclos nitrogenados y carbonilos, no un farmacóforo específico. **No se
+afirma ninguna subestructura específica.**
