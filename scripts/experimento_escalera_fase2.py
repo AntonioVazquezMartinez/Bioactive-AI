@@ -44,8 +44,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 
-from src.features.similitud import (grupos_por_similitud, huellas, matriz_dispersa, resumen_grupos,
-                                    similitud_al_vecino_de)
+from src.features.similitud import (bits_como_matriz, grupos_por_similitud, huellas, matriz_dispersa,
+                                    resumen_grupos, similitud_al_vecino_matricial)
 from src.models.aft import RegresionAFT
 from src.models.baseline_regresion import evaluar_baselines
 from src.tracking import Corrida
@@ -91,7 +91,7 @@ def peldanos(d: dict, mol: np.ndarray, componentes: dict) -> dict:
     return salida
 
 
-def vecino(fps: list, mol: np.ndarray, estratificar: np.ndarray, grupos: np.ndarray, semilla: int = 0) -> float:
+def vecino(A: np.ndarray, mol: np.ndarray, estratificar: np.ndarray, grupos: np.ndarray, semilla: int = 0) -> float:
     """Similitud media al vecino más cercano de ajuste, con 1,500 filas de validación por pliegue."""
     rng = np.random.default_rng(0)
     cv = StratifiedGroupKFold(PLIEGUES, shuffle=True, random_state=semilla)
@@ -99,7 +99,7 @@ def vecino(fps: list, mol: np.ndarray, estratificar: np.ndarray, grupos: np.ndar
     for ajuste, val in cv.split(np.zeros(len(mol)), estratificar, grupos):
         ajuste_mol = np.unique(mol[ajuste])
         muestra = rng.choice(val, size=min(MUESTRA_VECINO, len(val)), replace=False)
-        valores.append(similitud_al_vecino_de(fps, ajuste_mol, mol[muestra]))
+        valores.append(similitud_al_vecino_matricial(A, ajuste_mol, mol[muestra]))
     return float(np.concatenate(valores).mean())
 
 
@@ -109,6 +109,7 @@ def main() -> None:
     print(f"{len(d['smiles']):,} filas · {len(unicos):,} moléculas únicas", flush=True)
     t = time.perf_counter()
     fps = huellas(unicos.tolist())
+    A = bits_como_matriz(fps)
     S = matriz_dispersa(fps, min(UMBRALES))
     componentes = {u: grupos_por_similitud(S, u) for u in UMBRALES}
     print(f"similitud: {S.nnz // 2:,} pares ≥ {min(UMBRALES)} en {time.perf_counter() - t:.0f} s", flush=True)
@@ -132,11 +133,12 @@ def main() -> None:
             r = evaluar_baselines(d["X"], d["inferior"], d["superior"], g, d["procedencia"], d["clase"],
                                   semillas=SEMILLAS, pliegues=PLIEGUES,
                                   modelos={"aft": RegresionAFT(semilla=SEMILLAS[0])})
+            print(f"  {nombre}: aft evaluado en {time.perf_counter() - t:.0f} s", flush=True)
             for estrato in ("todos", "solo_npass"):
                 sub = r[r["estrato"] == estrato]
                 if len(sub):
                     fila[f"concordancia_{estrato}"] = round(float(sub["concordancia"].mean()), 4)
-            fila["vecino_mas_cercano"] = round(vecino(fps, mol, estratificar, g), 4)
+            fila["vecino_mas_cercano"] = round(vecino(A, mol, estratificar, g), 4)
             filas.append(fila)
             print(fila, f"{time.perf_counter() - t:.0f} s", flush=True)
             pd.DataFrame(filas).to_csv(c.carpeta / "escalera.csv", index=False)
