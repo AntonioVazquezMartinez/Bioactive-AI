@@ -2,8 +2,7 @@
 
 **Borrador del 4 de noviembre, tercera versión, para 6 a 8 páginas** (decisión del 4 de noviembre: el cuerpo
 lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registrada en
-`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas
-en primera versión.
+`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas.
 
 ## 1. Resumen
 
@@ -11,7 +10,7 @@ Buscamos compuestos naturales con potencial neuroprotector con dos modelos en pa
 clasifica si una molécula cruza la barrera hematoencefálica (fase 1) y otro que predice su potencia
 contra una diana, usando también las mediciones censuradas (fase 2). Comparamos once modelos y
 ningún ensamble mejora de forma distinguible al mejor modelo individual. Lo que sí mueve el resultado
-es una lección conocida (`sheridan2013`), medida aquí con sus magnitudes: **cuánta semejanza se permite entre lo que
+es una lección conocida (`sheridan2013`, `roberts2017crossvalidation`), medida aquí con sus magnitudes: **cuánta semejanza se permite entre lo que
 se entrena y lo que se evalúa**. Con el modelo que entregamos, el MCC baja 33.3 puntos al exigir que
 ningún compuesto de entrenamiento se parezca más de 0.4 a uno de validación, contra 4.2 puntos entre
 los once modelos; la fase 2 muestra la misma escalera. Tres hallazgos propios: la prueba reservada es
@@ -47,7 +46,7 @@ cascada.
 
 **Modelos.** Once modelos de clasificación (de regresión logística a ensambles) y nueve de
 regresión. Final de la fase 1: `svm_rbf` sobre 151 descriptores RDKit. Final de la fase 2: un
-modelo de supervivencia acelerada (AFT, XGBoost) que aprende de las mediciones censuradas.
+modelo de supervivencia acelerada (AFT, XGBoost `chen2016xgboost`) que aprende de las mediciones censuradas.
 
 **Rigor.** Las reglas de decisión se escribieron antes de cada corrida y no se ajustaron después
 (no están pre-registradas); cada corrida reproduce una cifra ya registrada como control, y cada
@@ -206,12 +205,11 @@ comparar las palancas de la Figura 1.
 **Fuentes de datos:** B3DB `meng2021b3db`; NPASS `zhao2023npass` y `lin2026npass`; CMAUP `hou2024cmaup`;
 ChEMBL `zdrazil2024chembl`. **Representación y partición:** huellas de Morgan / ECFP `rogers2010ecfp`;
 RDKit `rdkit`; andamios de Bemis–Murcko `bemis1996properties`. **La lección de la escalera:** la
-partición por tiempo como estimación de la predicción prospectiva `sheridan2013`; hay literatura
-equivalente de validación por bloques en ecología que falta buscar y citar.
-
-**Por añadir a `docs/referencias/bibliografia.bib` antes de maquetar** (no están y no se inventan
-aquí): XGBoost (Chen y Guestrin, 2016), la concordancia de Harrell (Harrell et al., 1982) y la
-corrección de Nadeau y Bengio (2003) para los intervalos.
+partición por tiempo como estimación de la predicción prospectiva `sheridan2013`, y la validación por
+bloques que corrige la subestimación del error cuando los datos tienen estructura `roberts2017crossvalidation`.
+**Modelos y métricas:** XGBoost `chen2016xgboost`; la concordancia de Harrell `harrell1982yield`; la corrección de
+Nadeau y Bengio para los intervalos de la validación cruzada `nadeau2003inference`. Las cuatro últimas entradas
+se verificaron contra su DOI antes de añadirlas a `docs/referencias/bibliografia.bib`.
 
 **Código y datos.** Cada cifra tiene su corrida en `experimentos/` (parámetros, commit, `sha256` de los
 datos, comando) y se repite con `experimentos/README.md`; las lecturas de la prueba reservada están en
