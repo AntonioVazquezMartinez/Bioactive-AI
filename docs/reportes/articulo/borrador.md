@@ -144,6 +144,19 @@ coincide con su ventaja de AUROC (+0.012).
 
 *Figura 7. Izquierda: concordancia solo-NPASS. Derecha: ventaja en MCC del AFT sobre el bosque.*
 
+**Qué ve el modelo.** De los cuatro brazos con los mismos pliegues, ninguno supera al `aft` en NPASS:
+filtrar los descriptores no cambia nada que se distinga del ruido (+0.002), y **quitar los descriptores y
+dejar solo huellas y diana lo empeora en las 15 evaluaciones** (−0.041), aunque en el agregado empata. Esto
+matiza la lectura del registro (1.3) de que en la fase 2 se pueden tirar los descriptores, porque las huellas
+solas casi igualaban al brazo ancho: en el estrato por el que se eligió el modelo no se pueden.
+
+**Qué pesa.** Dos métodos independientes, TreeSHAP (lee los árboles) y permutación (solo la salida),
+concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (`MAOA`,
+`MAOB`, `DRD2`, `LRRK2`, `BCHE`, el 15% de la atribución) y, en la química, la complejidad topológica
+(`BertzCT`), la lipofilia y los halógenos. **TPSA y los donadores de hidrógeno, que dominan la
+permeabilidad, no dominan la potencia** (lugares 44 y 165). El modelo final no usa huellas, así que no hay
+atribución por subestructura; hace falta el brazo con huellas.
+
 ## 6. Implementación y operación
 
 **Qué se entrega: un cuaderno, no un servicio.** En la reunión del 3 de noviembre la patrocinadora
@@ -190,8 +203,9 @@ Limitaciones: la prueba se leyó siete veces; los modelos finales todavía no se
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
-cuatro familias de modelos, no las seis de la fase 1; y ninguna corrida se diseñó para comparar las
-palancas de la Figura 1.
+cuatro familias de modelos, no las seis de la fase 1; la atribución del modelo final no llega a
+subestructuras; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
+comparar las palancas de la Figura 1.
 
 ## 8. Referencias y anexos
 
