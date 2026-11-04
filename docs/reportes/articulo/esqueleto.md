@@ -30,7 +30,8 @@ la comparativa de la fase 1, que es de 4.2 puntos de MCC** —de 0.6692 el `knn`
 |:--|:--|--:|
 | el modelo, entre los once | 4.2 puntos | — |
 | añadir ensambles sobre el mejor individual | +0.9 puntos, **indistinguible** | 0.2× |
-| el criterio de partición ([1.2](../../decisiones.md#d1-2)) | **7.1 puntos** | **1.7×** |
+| el criterio de partición, con el `svm_rbf` entregado ([1.2](../../decisiones.md#d1-2)) | 1.9 puntos (7.1 con el bosque) | 0.45× |
+| cuánta semejanza se permite entre entrenamiento y validación (la escalera de E1) | **33.3 puntos**, de 0.752 a 0.419 | **7.9×** |
 | la representación, en la fase 2 ([1.3](../../decisiones.md#d1-3)) | las huellas **reemplazan** a los descriptores | no comparable |
 
 ### Lo que el problema impone
