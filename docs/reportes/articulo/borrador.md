@@ -153,9 +153,10 @@ primer plano y TPSA y los donadores de hidrógeno lejos (Anexo F).
 **Qué se entrega: un cuaderno, no un servicio.** En la reunión del 3 de noviembre la patrocinadora
 dijo que no habrá un punto de acceso productivo; lo que conviene es dejarle un cuaderno que ella
 ejecute con sus propios compuestos. La entrada es una lista de SMILES; la salida, para cada
-compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha con su intervalo
-(fase 2) y los dos juntos como evidencia paralela para un ranking, **no como cascada**: un BBB− no
-descarta un compuesto.
+compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha contra cada una de las 26 dianas
+(fase 2, una pActividad por diana y sin intervalo) y qué tan cerca queda de lo que los modelos vieron. **El cuaderno
+no combina las dos fases en un ranking**: esa combinación sigue pendiente (decisión C.3), y cuando exista será
+evidencia paralela y **no una cascada**, porque un BBB− no descarta un compuesto.
 
 **Estado hoy.** Los dos modelos finales están guardados en `models/finales/` (unos 3 MB), con un módulo de
 inferencia que no necesita los datos de entrenamiento, un script que los regenera y el cuaderno que los usa
@@ -171,15 +172,15 @@ esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 |:--|:--|:--|
 | script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | hecho (#261), por revisar |
 | cuaderno de uso con SMILES propios | es la forma de operación acordada | hecho (#261), por revisar |
-| **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | equipo |
+| **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | hecho en el cuaderno (#261), por revisar |
 | reentrenar al llegar datos nuevos y **reevaluar con la escalera**, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
 | decidir si hay una evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella; puede solaparse con el entrenamiento | por asignar |
 
 **Dos límites que el cuaderno tiene que decir.** La advertencia de extrapolación es una heurística:
 la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que
-una similitud alta no garantiza un buen resultado. Y la probabilidad de la fase 1 se corta en 0.5,
-un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 5.1): conviene mostrar la
-probabilidad y no solo la clase. **Uso no comercial**: NPASS es CC BY-NC. El **retorno de detectar un
+una similitud alta no garantiza un buen resultado. Y la probabilidad de la fase 1 **no se corta**: a 0.5 sería
+un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 5.1), y por eso el cuaderno entrega
+la probabilidad y no una clase. **Uso no comercial**: NPASS es CC BY-NC. El **retorno de detectar un
 buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra medida.
 
 ## 7. Conclusiones y limitaciones
@@ -192,7 +193,7 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
 3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta;
    la densidad del espacio químico queda como pista sin confirmar.
 
-Limitaciones: la prueba se leyó siete veces; los modelos finales todavía no se sirven; las 151
+Limitaciones: la prueba se leyó siete veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
