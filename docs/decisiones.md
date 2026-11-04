@@ -219,6 +219,16 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 
 **Consecuencias.** La prueba tiene 1,390 andamios en 1,499 compuestos y 57.3% BBB+ contra 64.0% del entrenamiento: se evalúa sobre una distribución distinta de la que aprendió, que es lo realista. Construida al revés, con los frecuentes en prueba, daba 45 andamios con el benceno ocupando el 26%; la dirección de la asignación es el detalle crítico.
 
+**¿La escalera depende de cómo se define «parecido»? La forma sí, la caída total no tanto (4 de noviembre).** Corrida `2026-11-04-artemio-1.2-escalera-definicion-de-parecido-permeabilidad` (`scripts/experimento_escalera_definicion_de_parecido.py`), sin tocar la prueba reservada. La escalera agrupa con Tanimoto sobre Morgan radio 2 (ECFP4); se repite con ECFP6 (radio 3) y con atom-pair, 2,048 bits. Un umbral de 0.5 no significa lo mismo en dos huellas, así que **se comparan peldaños de igual severidad**: para cada huella se elige el umbral (en pasos de 0.01) cuyo número de grupos queda más cerca de los de ECFP4 (1,413, 1,017 y 631). La regla se declaró antes: la escalera es robusta a la definición si en cada peldaño el AUROC del `svm_rbf` difiere de ECFP4 en menos de 0.020.
+
+| huella | umbral | grupos | mayor grupo | AUROC `svm_rbf` | MCC `svm_rbf` | diferencia de AUROC con ECFP4 |
+|:--|--:|--:|--:|--:|--:|--:|
+| ECFP4 | 0.60 / 0.50 / 0.40 | 1,413 / 1,017 / 631 | 12.1 / 14.4 / 15.9% | 0.9127 / 0.8348 / 0.7798 | 0.688 / 0.486 / 0.419 | control |
+| ECFP6 | 0.52 / 0.42 / 0.32 | 1,422 / 1,043 / 608 | 11.8 / 13.2 / 14.9% | 0.9157 / 0.8688 / 0.8088 | 0.676 / 0.636 / 0.434 | +0.003 / **+0.034** / **+0.029** |
+| atom-pair | 0.65 / 0.56 / 0.48 | 1,407 / 1,010 / 645 | 13.7 / **32.7** / **62.4**% | 0.8939 / no evaluable / no evaluable | 0.663 / | −0.019 |
+
+**Los controles pasan** (los grupos de ECFP4 y sus AUROC son los de la escalera registrada). **Por la regla declarada la escalera depende de la definición:** ECFP6 difiere 0.034 y 0.029 en los dos peldaños estrictos y con atom-pair no se pueden construir (un grupo reúne el 32.7% y el 62.4% de las filas). La lectura: **la caída total es parecida** (MCC de 0.752 al azar a 0.419 con ECFP4 y a 0.434 con ECFP6 en el peldaño más estricto), pero **la forma no**: con ECFP4 casi todo el derrumbe ocurre entre el peldaño de 0.6 y el de 0.5 (de 0.688 a 0.486 de MCC), con ECFP6 es gradual. Por eso el artículo tiene que decir qué huella usó y no presentar el peldaño intermedio como una propiedad del problema. **Verificado de forma independiente:** los grupos y el mayor grupo de ECFP6 y atom-pair se reproducen con la matriz densa de RDKit, y el AUROC 0.8688 de ECFP6 a 0.42 con un ciclo de pliegues escrito aparte. **Límites:** los grupos de igual número no son igual de estrictos (hay una diferencia de hasta 26 grupos), un solo modelo para la regla (el `svm_rbf`), y las huellas son de estructura, no de farmacóforo.
+
 #### 1.3 · Descriptores RDKit más Morgan/ECFP4 {#d1-3 .vigente}
 
 **Estado:** vigente
