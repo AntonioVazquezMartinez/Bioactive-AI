@@ -37,8 +37,17 @@ antes de ver la base externa**, que es para lo que el control está.
 
 La similitud de Tanimoto al vecino más cercano del ajuste se reporta siempre, porque el
 andamio es binario y la similitud ordena: dos bases con cero solapamiento de andamio pueden
-estar a distancias muy distintas. El valor de referencia es el de la prueba reservada, 0.414,
-de la corrida `2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad`.
+estar a distancias muy distintas. **La referencia es el control de esta misma corrida**, que
+la mide sobre la validación de la fase 2 contra el ajuste.
+
+**Y no el 0.414 que este script citaba antes:** ese sale de
+`2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad`, que es la prueba reservada de la
+**fase 1**. Todo lo que esta corrida compara —la base externa, el control, el 0.792 contra el
+0.720— es de la fase 2, así que poner el 0.414 al lado contrasta dos fases y exagera la
+distancia: contra el control en fase la diferencia es de 0.108 y no de 0.373. La similitud de
+la prueba reservada **de la fase 2 no está medida**, porque medirla cuesta un acceso a la
+prueba; mientras no se mida, la referencia es la validación y hay que escribir esa palabra al
+citarla.
 
 **Nada se decide con esto.** No cambia el modelo, ni la elección, ni ninguna cifra publicada:
 solo dice si dos números son comparables.
@@ -79,8 +88,9 @@ RDLogger.DisableLog("rdApp.*")
 PARES = RAIZ / "data" / "processed" / "fase2_pares.parquet"
 TESTEO_POR_OMISION = Path.home() / "Downloads" / "snc_activity_crudo_v3_final_2026-09-25_Testeo.csv"
 
-# El de la prueba reservada, para situar la cifra de la base externa.
-SIMILITUD_DE_LA_PRUEBA = 0.414
+# La referencia la mide el control de la propia corrida, no una constante: una cifra de otra
+# fase no sitúa esta, y una constante escrita a mano no lleva su fase pegada.
+REFERENCIA_SIMILITUD = "el control de esta corrida: la validacion de la fase 2 contra el ajuste"
 # La lectura declarada arriba.
 CORTE_COMPARABLE = 0.05
 
@@ -157,7 +167,7 @@ def main() -> None:
             "corte_declarado": CORTE_COMPARABLE,
             "vias": ["smiles canonico", "esqueleto de conectividad", "andamio de Bemis-Murcko"],
             "huella_similitud": {"tipo": "ECFP4", "radio": 2, "bits": 2048},
-            "similitud_de_la_prueba_reservada": SIMILITUD_DE_LA_PRUEBA,
+            "referencia_de_similitud": REFERENCIA_SIMILITUD,
             "control": "validacion contra entrenamiento, cero por construccion; no lee la prueba",
             "regla": "declarada en el docstring antes de correr; nada se decide con esto",
             "externa_sha256": sha256(externa) if externa else None,
@@ -213,6 +223,8 @@ def main() -> None:
                 "similitud_media": round(float(np.nanmean(sim)), 4),
                 "similitud_p90": round(float(np.nanpercentile(sim, 90)), 4),
                 "fraccion_por_encima_de_0.6": round(float(np.nanmean(sim > 0.6)), 4),
+                # En fase, y al lado de la cifra, para que nadie la contraste con otra fase.
+                "similitud_mediana_del_control": ctrl["similitud_mediana_al_entrenamiento"],
             })
             f = res["andamio_fraccion_pares"]
             piso = ctrl["piso_andamio_recalculado"]
