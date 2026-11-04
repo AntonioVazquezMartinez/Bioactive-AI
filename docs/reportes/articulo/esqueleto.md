@@ -160,12 +160,13 @@ Corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`, sin tocar la
 | cifra | valor |
 |:--|:--|
 | `svm_rbf`, AUROC según cómo se agrupa | 0.947 al azar → 0.919 actual → 0.835 con similitud ≥ 0.5 → 0.780 con similitud ≥ 0.4 |
-| prueba reservada, AUROC | 0.793, entre las filas de similitud ≥ 0.5 y ≥ 0.4 |
+| prueba reservada, AUROC | 0.793, entre las filas de similitud ≥ 0.5 y ≥ 0.4 **por su AUROC**; por su similitud al vecino más cercano (0.414) está al nivel de la fila ≥ 0.6 (0.422) |
+| `logistica` menos `svm_rbf`, AUROC pareado | −0.013 al azar, +0.003 a ≥ 0.5 y +0.025 a ≥ 0.4; los dos últimos con intervalo que incluye el cero: ruido |
 | línea base de solo peso y TPSA, AUROC | 0.847, contra 0.919 de `svm_rbf` |
 | ventaja de `svm_rbf` sobre esa línea base | 0.032 en grupos de 2 a 4 filas, 0.076 en los de 5 o más |
 | lo que sube la cifra al agrupar solo por andamio | 1.3 de AUROC con `svm_rbf`, 1.0 con `logistica`; los 2.2 de la 1.2 son del bosque |
 
-**Qué aporta al relato.** La caída de 0.919 a 0.793 no es solo sobreajuste: la escalera de agrupamiento la reproduce, y la química rara pesa más que el modelo. Y la línea base muestra que, donde la química es rara, el modelo sabe poco más que tamaño y polaridad. **Falta** medir la similitud de la prueba con el entrenamiento para ubicarla en la escalera, repetir la línea base dentro de la prueba y poner un intervalo a la diferencia pareada entre `logistica` y `svm_rbf` en las filas estrictas.
+**Qué aporta al relato.** La caída de 0.919 a 0.793 no es solo sobreajuste: la escalera de agrupamiento muestra cuánto cae un modelo cuando se le quitan los vecinos, pero **la prueba no es tan lejana al entrenamiento como la fila donde su AUROC cae**: algo más que la similitud explica su caída (E2). Y la línea base muestra que, donde la química es rara, el modelo sabe poco más que tamaño y polaridad. **Falta** repetir la línea base dentro de la prueba y separar rareza de tamaño (E2). La idea de que la `logistica` resiste mejor el agrupamiento estricto se probó con intervalo y no se sostiene en AUROC.
 
 ## Las limitaciones que entran al relato
 
