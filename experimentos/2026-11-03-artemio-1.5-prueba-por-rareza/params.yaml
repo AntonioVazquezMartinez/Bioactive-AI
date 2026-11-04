@@ -1,0 +1,21 @@
+decision: '1.5'
+semillas:
+- 0
+params:
+  modelos:
+    fase1: svm_rbf
+    fase2: aft
+  lineas_base:
+    fase1: logistica sobre MolWt y TPSA
+    fase2: aft sobre MolWt, TPSA y diana
+  rareza: terciles de similitud de Tanimoto (Morgan r2, 2048) al vecino más cercano
+    del ajuste, dentro de cada tramo de peso
+  min_minoritaria_celda: 20
+  registrado:
+    fase1_auroc: 0.7928
+    fase2_concordancia: 0.72
+    fase2_solo_npass: 0.53
+  remuestras:
+    fase1: 1000
+    fase2: 200
+  toca_prueba: 'sí: dos lecturas anotadas en experimentos/prueba.csv, una por fase'

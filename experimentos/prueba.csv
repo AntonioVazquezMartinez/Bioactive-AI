@@ -2,3 +2,5 @@ fecha,autor,commit,filas,motivo
 2026-10-31,antonio,8759bbc,13944,Evaluación final del 05b (decisión 2.13) con aft
 2026-11-01,antonio,7bc114e,13944,"Recálculo de las cifras que acompañan a los cuatro gráficos del 05b, con el modelo final ya elegido"
 2026-11-01,artemio,a19158a,1499,"Ninguna comparación pasó la regla de mejora, así que el final es el mejor individual; la estabilidad y los intervalos solapados de AUROC apuntan al mismo modelo."
+2026-11-03,artemio,7362f3f,1499,E2 fase 1: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso y TPSA; modelos reajustados con las filas de ajuste
+2026-11-03,artemio,7362f3f,13944,"E2 fase 2: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso, TPSA y diana; modelos reajustados con las filas de ajuste"
