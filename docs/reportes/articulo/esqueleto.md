@@ -16,9 +16,10 @@ cuenta todo*. Así que el artículo necesita una columna vertebral, no un recorr
 
 La propuesta es esta:
 
-> **El criterio con que se parten los datos y la representación con que se describen mueven
-> el resultado más que elegir el modelo. Y lo que más lo mueve, con diferencia, no es una
-> decisión nuestra: es la dificultad del conjunto sobre el que se evalúa.**
+> **Cuánta semejanza se permite entre lo que se entrena y lo que se evalúa mueve el resultado
+> más que elegir el modelo: 33.3 puntos de MCC sobre el modelo que se entrega, contra 4.2 entre
+> los once. La prueba reservada cae sobre esa escalera, y lo raro de su química explica buena
+> parte de la caída en la fase 1 y mucho menos en la fase 2.**
 
 La vara con la que se comparan todas las filas es **la dispersión entre los once modelos de
 la comparativa de la fase 1, que es de 4.2 puntos de MCC** —de 0.6692 el `knn` a 0.7109 el
@@ -119,7 +120,7 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | MCC en validación cruzada | 0.7017 | `2026-11-01-artemio-1.5-ensambles-permeabilidad` |
 | AUROC en validación cruzada | 0.9190 | ídem |
 | umbral de la regla (MCC / AUPRC) | 0.073 / 0.041 | ídem — ver [#188](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/188) |
-| comparaciones que pasan la regla | **0 de 30** | ídem |
+| modelos que pasan la regla | **ninguno de 10**: cada uno se juzga en MCC y AUPRC a la vez; el AUROC no decide y las «30» comparaciones son casillas de tabla | ídem |
 | mejor ganancia pareada observada | +0.0093 de MCC, 12 de 15 | ídem |
 | **MCC en la prueba reservada** | **0.3385** | `2026-11-01-artemio-1.5-modelo-final-permeabilidad` |
 | **AUROC en la prueba reservada** | **0.7928** | ídem |
@@ -153,6 +154,29 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | fase 1, la brecha con huellas | se ensancha en 7 de 9 modelos | ídem |
 | atribución, lo que coinciden los dos métodos | `fr_lactam`, `NumHDonors`, `VSA_EState3`, `MolLogP` | `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres` |
 
+### Prueba reservada, lecturas y rareza (E2)
+
+Corrida `2026-11-03-artemio-1.5-prueba-por-rareza`. Terciles de similitud al vecino más cercano del ajuste, **dentro de cada tramo de peso**.
+
+| cifra | valor |
+|:--|:--|
+| fase 1, ventaja de `svm_rbf` sobre peso y TPSA (AUROC) | +0.036 en lo más raro (incluye el cero), +0.067, +0.106 en lo más parecido |
+| fase 1, diferencia de ventajas parecido − raro | **+0.069** (IC95% 0.011 a 0.124) |
+| fase 2, diferencia de ventajas en concordancia | +0.018 (0.005 a 0.030), unas cuatro veces menor |
+| fase 2, `solo_npass` en la prueba | `aft` 0.511 contra 0.565 de la línea base (117 pares); registrada 0.530 |
+| lecturas de la prueba (`prueba.csv`) | 6: fase 1 tres (evaluación, un acceso solo de SMILES, E2); fase 2 tres (dos de Antonio y E2) |
+
+### Ranking (E5), tamaño (E6) y curva de aprendizaje (E8)
+
+| cifra | valor | corrida |
+|:--|:--|:--|
+| enriquecimiento del `aft`, `todos` | 1.40 en el 1% (544 de 544), techo 1/tasa base = 1.40 | `2026-11-03-artemio-C.5-ranking-fase2-aft` |
+| enriquecimiento del `aft`, `solo_npass` | 3.09 en el 1% (8 de 21, IC 1.6–5.2); ordenar por diana, 1.16 | ídem |
+| huellas por tramo de peso, fase 1 | media negativa en los cuatro tramos, sin tendencia | `2026-11-03-artemio-1.3-tamano-huellas-permeabilidad` |
+| huellas por tramo de peso, fase 2 | −0.0035, +0.0023, +0.0085, +0.0089 de concordancia, creciente | `2026-11-03-artemio-1.3-tamano-huellas-actividad` |
+| curva de aprendizaje, fase 1 | +0.002 de AUROC del 75 al 100% (8 de 15): meseta | `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales` |
+| curva de aprendizaje, fase 2 | +0.0076 de concordancia (15 de 15): sigue subiendo | ídem |
+
 ### Partición y tamaño
 
 Corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`, sin tocar la prueba reservada. El detalle y sus límites están en la [1.2](../../decisiones.md#d1-2).
@@ -168,10 +192,25 @@ Corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`, sin tocar la
 
 **Qué aporta al relato.** La caída de 0.919 a 0.793 no es solo sobreajuste: la escalera de agrupamiento muestra cuánto cae un modelo cuando se le quitan los vecinos, pero **la prueba no es tan lejana al entrenamiento como la fila donde su AUROC cae**: algo más que la similitud explica su caída (E2). Y la línea base muestra que, donde la química es rara, el modelo sabe poco más que tamaño y polaridad. **Falta** repetir la línea base dentro de la prueba y separar rareza de tamaño (E2). La idea de que la `logistica` resiste mejor el agrupamiento estricto se probó con intervalo y no se sostiene en AUROC.
 
+## Estructura: cuerpo, anexos y trabajo futuro
+
+**Decisión del 4 de noviembre: el artículo del 8 lleva todo lo que tiene una corrida detrás.** El cuerpo sigue un solo hilo para que la rúbrica lea *la* decisión; los resultados completos van a anexos; dos artículos derivados quedan como trabajo futuro destilado. La extensión (3 páginas sin anexos o 12 a 18) sigue abierta y decide cuánto del cuerpo cabe.
+
+| parte | contenido | corridas |
+|:--|:--|:--|
+| **Cuerpo** | la escalera de agrupación (33.3 puntos sobre el modelo entregado); la prueba por rareza (E2); la representación entre fases, con el tamaño (E6); los modelos finales y sus límites | `…escalera-agrupacion…`, `…prueba-por-rareza`, `…tamano-huellas-*` |
+| **Anexo A** | la escalera con seis modelos y las diferencias pareadas (E1+): la `logistica` no se degrada menos de forma distinguible | `…escalera-ampliada-permeabilidad` |
+| **Anexo B** | la línea base de peso y TPSA (E0), por tramo y por tamaño del grupo | `…escalera-agrupacion…` |
+| **Anexo C** | métricas de ranking de la C.5 en la fase 2 (E5) | `…C.5-ranking-fase2-aft` |
+| **Anexo D** | la curva de aprendizaje y con qué filas se sirven los modelos (E8) | `…curva-aprendizaje-modelos-finales` |
+| **Anexo E** | cómo repetir cada corrida, con tiempos y `sha256` de los datos | `experimentos/README.md` |
+| **Trabajo futuro 1** | *Evaluar bien un clasificador de permeabilidad*: la escalera como metodología, el agrupamiento por similitud, la lectura por rareza. Falta: una segunda fuente de datos y el control por pre-registro | — |
+| **Trabajo futuro 2** | *Qué representación para qué fenómeno*: tamaño contra densidad de datos. Falta: igualar los tramos por submuestreo, controlar la rareza, y el brazo de huellas solas del `aft` (E3) | — |
+
 ## Las limitaciones que entran al relato
 
 La rúbrica pide que estén «integradas al relato, no omitidas», y da puntos por ello. Las que
-el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la prosa afirma más de lo que sus números sostienen**, que es el defecto que la auditoría encontró en el propio repositorio y que no debe repetirse en el artículo, que es público:
+el proyecto midió y declara, doce. **Las numeradas 7 a 9 son del mismo tipo: la prosa afirma más de lo que sus números sostienen**, que es el defecto que la auditoría encontró en el propio repositorio y que no debe repetirse en el artículo, que es público:
 
 1. **El estrato de origen mide dos cosas a la vez.** Un natural cuyo registro no declara la
    estereoquímica cae en «análogo» sin diferencia estereoquímica real, así que «natural
@@ -192,6 +231,9 @@ el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la 
 7. **El resultado de los naturales en la fase 2 no está verificado sobre química nueva.** El 0.6322 es de validación cruzada. Sobre la prueba reservada la concordancia de los compuestos que solo tiene NPASS es 0.530 con 117 pares (114 exactos) y un Spearman de 0.083. Es el estrato que justifica elegir el `aft`, y es el único que aterriza en el azar cuando se mide sobre esqueletos nuevos. Va junto a toda cita del 0.6322, no en un anexo.
 8. **El enriquecimiento en naturales no se puede presentar como resultado.** La lectura del gráfico 3 del 05b dice que el modelo alcanza 1.92× al 1% (el 85% del techo) en `solo_npass` y que los cortes al 1% y al 5% «certifican su utilidad práctica». El 1% de 117 pares es 1.17 compuestos, y la corrida registra que ahí se encontró el 0.0192 de los 52 activos, es decir **uno solo**. La propia auditoría lo dejó anotado como salvedad y es la única que no pasó a issue; «certifican» no se sostiene. `2026-11-01-antonio-2.13-cifras-graficos`.
 9. **El AUPRC por estrato no es comparable entre filas** ([#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187)): promedia dos clases distintas, así que ninguna cifra de AUPRC por estrato debe ir al artículo como si se pudiera leer contra la de otro estrato.
+10. **La prueba reservada se leyó 6 veces, no «una».** Fase 1: la evaluación, un acceso solo de SMILES (E1+) y E2; fase 2: dos de Antonio y E2. Ningún modelo se ajustó ni se eligió después de ver la prueba. Es lo primero que un revisor querrá verificar, y `prueba.csv` lo permite ([#200](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/200)).
+11. **Los modelos finales todavía no se sirven.** `models/` está vacío: los dos se entrenan en los cuadernos y se descartan. El reajuste de la fase 2 no reproduce la prueba exactamente (0.7234 contra 0.7200). Entregar un modelo a la patrocinadora es trabajo del 9 al 15, con una decisión pendiente sobre con qué filas se sirve la fase 2 (E8).
+12. **El efecto del agrupamiento depende del modelo.** El 2.2 de AUROC y el 7.1 de MCC son del bosque; con el `svm_rbf` son 1.3 y 1.9 ([#237](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/237)).
 
 ## Lo que todavía no existe y hay que construir
 
@@ -200,7 +242,8 @@ el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la 
   e IBM Watson.
 - **El abstract**, que tiene que comprenderse de forma independiente.
 - **La declaración de uso de IA** con herramienta, modelo y finalidad.
-- **La plantilla de LaTeX**, sin bajar.
+- **La plantilla de LaTeX**: ya está bajada (el #227 la trae); falta maquetar.
+- **Los modelos servidos y el cuaderno para la profesora**, del 9 al 15.
 
 ## Lo que salió de la reunión del 3 de noviembre
 
