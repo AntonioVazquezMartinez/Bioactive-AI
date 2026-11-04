@@ -97,6 +97,8 @@ Dentro de la prueba, la ventaja del modelo sobre una línea base de peso molecul
 parecido que es cada compuesto (+0.036 en el tercil más raro, +0.106 en el más parecido; diferencia
 +0.069, IC95% 0.011 a 0.124); en la fase 2 la diferencia es cuatro veces menor.
 
+**La caída baja con la similitud.** Dividiendo la prueba en terciles de similitud al ajuste (cortes 0.31 y 0.46), el AUROC sube de 0.697 a 0.793 y a 0.875: +0.178 entre el tercil más parecido y el menos parecido, IC95% [+0.119, +0.238] remuestreando esqueletos. En los compuestos sin equivalente natural la diferencia es +0.223 [+0.142, +0.306]; en los naturales exactos es +0.086 con un intervalo que incluye el cero [−0.029, +0.204], así que con 446 compuestos no se distingue, y en los análogos estereoquímicos el tercil más parecido tiene menos de 20 casos de la minoritaria y no se reporta. Es una correlación dentro de la prueba y la similitud no explica toda la brecha (0.89 esperado contra 0.79).
+
 ![Rareza](figuras/f2_rareza.svg)
 
 *Figura 4. Ventaja sobre la línea base por tercil de rareza, con IC95% por bootstrap de grupos.*
