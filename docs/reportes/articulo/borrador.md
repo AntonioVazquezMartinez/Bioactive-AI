@@ -9,7 +9,7 @@ lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registra
 Buscamos compuestos naturales con potencial neuroprotector con dos modelos en paralelo: uno que
 clasifica si una molécula cruza la barrera hematoencefálica (fase 1) y otro que predice su potencia
 contra una diana, usando también las mediciones censuradas (fase 2). Comparamos once modelos y
-ningún ensamble mejora de forma distinguible al mejor modelo individual. Lo que sí mueve el resultado
+ningún ensamble mejora de forma distinguible al mejor modelo individual en MCC ni en AUPRC; en AUROC dos ensambles lo superan por 1.3 puntos, diferencia que no sobrevive a la corrección por diez comparaciones. Lo que sí mueve el resultado
 es una lección conocida (`sheridan2013`, `roberts2017crossvalidation`), medida aquí con sus magnitudes: **cuánta semejanza se permite entre lo que
 se entrena y lo que se evalúa**. Con el modelo que entregamos, el MCC baja 33.3 puntos al exigir que
 ningún compuesto de entrenamiento se parezca más de 0.4 a uno de validación, contra 4.2 puntos entre
@@ -185,8 +185,11 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
 
 ## 7. Conclusiones y limitaciones
 
-1. **Los ensambles no mejoran al modelo simple; no es un fracaso**, es el peldaño más bajo de una
-   escalera donde el modelo nunca fue el factor grande.
+1. **Los ensambles no mejoran al modelo simple en MCC ni AUPRC; no es un fracaso**, es el peldaño más bajo de una
+   escalera donde el modelo nunca fue el factor grande. En AUROC, votación (+0.0139 [+0.0038, +0.0239]) y stacking
+   (+0.0128 [+0.0023, +0.0233]) sí superan al `svm_rbf` con el intervalo corregido de Nadeau y Bengio, pero con Holm sobre
+   diez comparaciones los valores p son 0.103 y 0.180: ninguno sobrevive. Acomodar el escalador dentro de la calibración
+   del SVM no cambia nada (MCC 0.7015 contra 0.7017; AUROC y AUPRC idénticos).
 2. **Una cifra de validación cruzada no describe a la química nueva**, y la similitud al vecino más
    cercano no basta para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10
    más de lo que su similitud predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
