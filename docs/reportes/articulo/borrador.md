@@ -2,7 +2,7 @@
 
 **Borrador del 4 de noviembre, tercera versión, para 6 a 8 páginas** (decisión del 4 de noviembre: el cuerpo
 lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registrada en
-`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas.
+`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas y pendientes de la revisión del equipo.
 
 ## 1. Resumen
 
