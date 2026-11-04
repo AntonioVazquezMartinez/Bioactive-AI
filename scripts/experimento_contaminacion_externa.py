@@ -72,7 +72,7 @@ sys.path.insert(0, str(RAIZ / "src"))
 sys.path.insert(0, str(RAIZ))
 
 from src.data_prep.splits import andamio_murcko, esqueleto_conectividad  # noqa: E402
-from src.tracking import Corrida  # noqa: E402
+from src.tracking import Corrida, sha256  # noqa: E402
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -148,7 +148,9 @@ def main() -> None:
         externa = TESTEO_POR_OMISION
 
     pares = pd.read_parquet(PARES)
-    datos = [PARES] + ([externa] if externa else [])
+    # El archivo externo queda fuera del repositorio: `Corrida` solo acepta rutas dentro de él, así que
+    # su huella va en los parámetros (misma solución que la corrida de la muestra de Jorge).
+    datos = [PARES]
 
     with Corrida("contaminacion-externa", decision="2.13", params={
             "metrica_principal": "fraccion de pares de la base externa con andamio ya en el ajuste",
@@ -158,6 +160,7 @@ def main() -> None:
             "similitud_de_la_prueba_reservada": SIMILITUD_DE_LA_PRUEBA,
             "control": "validacion contra entrenamiento, cero por construccion; no lee la prueba",
             "regla": "declarada en el docstring antes de correr; nada se decide con esto",
+            "externa_sha256": sha256(externa) if externa else None,
     }, semillas=[], datos=datos) as c:
 
         metricas: dict = {}
