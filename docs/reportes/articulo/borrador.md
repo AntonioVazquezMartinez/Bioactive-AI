@@ -121,10 +121,13 @@ modelos probados (AUROC +0.017 a +0.085).
 
 *Figura 6. Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta.*
 
-Quedan en pie dos hipótesis, **sin medir**: que las huellas ganen donde el espacio químico está
-densamente muestreado, y que la permeabilidad dependa de propiedades globales que los descriptores ya
-capturan mientras la unión depende de subestructuras. Los resultados valen para esas familias de
-modelos y no prueban qué pasa en la fase 1.
+Quedan en pie dos hipótesis. **La densidad del espacio químico** (que las huellas ganen donde hay muchos
+vecinos) se midió a igual peso molecular y el resultado es **no concluyente**: la fase 2 es 1.8 veces
+más densa que la 1 (61.9 contra 33.8 vecinos fuera del grupo), y en la fase 1 la pérdida por añadir
+huellas se concentra en el tercio más disperso, pero las diferencias no superan su desviación. Y que
+**la permeabilidad dependa de propiedades globales** que los descriptores ya capturan mientras la unión
+depende de subestructuras: no está medida. Los resultados valen para esas familias de modelos y no
+prueban qué pasa en la fase 1.
 
 ### 5.4 El modelo de potencia en NPASS
 
@@ -154,7 +157,8 @@ CC BY-NC).
 2. **Una cifra de validación cruzada no describe a la química nueva**, y la similitud al vecino más
    cercano no basta para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10
    más de lo que su similitud predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
-3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta.
+3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta;
+   la densidad del espacio químico queda como pista sin confirmar.
 
 Limitaciones: la prueba se leyó siete veces; los modelos finales todavía no se sirven; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la

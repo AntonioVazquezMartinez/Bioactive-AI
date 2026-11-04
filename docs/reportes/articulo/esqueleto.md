@@ -82,9 +82,9 @@ describe un encuentro entre dos objetos, y ahí importa qué partes tiene cada u
 > ayudando a los cuatro modelos probados (E10, #248), así que la granularidad de la etiqueta no es la
 > causa. Y tampoco el tamaño de datos: con el ajuste de la fase 2 reducido a 5,000 filas la ganancia
 > es mayor, no menor (E9, #247). **El artículo ya no debe presentar la granularidad como su
-> aportación**: afirma solo que la representación no se traslada entre fases. Quedan la densidad del
-> espacio químico (E11, sin medir) y que la permeabilidad dependa de propiedades globales que los
-> descriptores ya capturan.
+> aportación**: afirma solo que la representación no se traslada entre fases. La densidad del espacio
+> químico se midió a igual peso (E11, #254) y es **no concluyente**; queda que la permeabilidad dependa
+> de propiedades globales que los descriptores ya capturan, sin medir.
 
 ### La explicación rival, que el artículo nombra
 
