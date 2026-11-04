@@ -1,0 +1,28 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - logistica
+  - arbol
+  - bayes
+  - svm_sgd
+  brazos:
+  - descriptores
+  - huellas
+  - descriptores+huellas
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  n_bits_sortslice: 2048
+  etiqueta: molécula activa si algún par tiene activo_10um = 1
+  moleculas: 44174
+  prevalencia: 0.791
+  regla_evaluaciones: 12
+  min_modelos: 3
+  sesgo_maximo_auroc_n_pares: 0.7
+  toca_prueba: false

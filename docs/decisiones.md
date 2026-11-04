@@ -247,6 +247,17 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 - **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
 - **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
 
+**¿Las huellas ayudan en la fase 2 porque su etiqueta es de un encuentro y no de la molécula entera? No: con la etiqueta por molécula siguen ayudando (4 de noviembre).** Corrida `2026-11-04-artemio-1.3-huellas-por-etiqueta-de-molecula-actividad` (`scripts/experimento_huellas_por_etiqueta_de_molecula.py`), sin tocar la prueba reservada. Se cambia **solo** la etiqueta, de «el par molécula–diana es activo a 10 µM» a «la molécula es activa contra alguna diana», con las mismas moléculas y el tamaño de datos de la fase 2 (44,174 moléculas de ajuste, 10,071 grupos, 79.1% activas) y la misma partición por `grupo_cv`. Tres brazos como el 03c y cuatro modelos baratos del catálogo de la fase 1, en 15 evaluaciones. La regla se declaró antes: la hipótesis de granularidad se contradice si al menos 3 de 4 modelos son ayudados por `descriptores+huellas` con la regla del proyecto (diferencia pareada positiva y mejor en 12 de 15, en AUROC y MCC a la vez).
+
+| modelo | AUROC con descriptores | ΔAUROC con huellas añadidas (desv.) | mejor en | ΔMCC |
+|:--|--:|:--|--:|--:|
+| `arbol` | 0.6728 | +0.0172 (0.0119) | 14 de 15 | +0.0285 |
+| `bayes` | 0.5865 | +0.0848 (0.0270) | 15 de 15 | +0.0974 |
+| `logistica` | 0.7443 | +0.0736 (0.0110) | 15 de 15 | +0.1531 |
+| `svm_sgd` | 0.7437 | +0.0452 (0.0151) | 15 de 15 | +0.1267 |
+
+**Ayudan a los cuatro modelos, y el brazo de solo huellas queda al nivel del ancho** (+0.040 a +0.083 de AUROC contra los descriptores): el patrón de la fase 2 se repite con la etiqueta por molécula. Por la regla declarada **la granularidad de la etiqueta no explica la diferencia entre fases.** El control declarado del sesgo de la etiqueta (una molécula probada contra más dianas tiene más ocasiones de ser activa) es bajo: el AUROC de `n_pares` solo es 0.451. Dos comprobaciones independientes dan diferencia 0: reconstruir la tabla por molécula con pandas (44,174 y 0.791) y recalcular la semilla 0 de `logistica` con un ciclo de pliegues escrito aparte (AUROC 0.74377 y 0.81803, idénticos al guardado). **Límites:** son cuatro modelos y no los seis de la fase 1; las moléculas y la etiqueta siguen siendo de actividad, no de permeabilidad, así que **esto no prueba qué pasa en la fase 1**, solo que la etiqueta de un encuentro no es la causa; y queda una explicación sin medir: que la permeabilidad dependa de propiedades globales que los descriptores ya capturan, mientras la unión depende de subestructuras. Con E9 (el tamaño tampoco lo explica), quedan en pie la densidad del espacio químico (E11) y esa naturaleza de la propiedad.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
