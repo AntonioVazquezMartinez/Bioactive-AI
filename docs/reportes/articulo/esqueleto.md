@@ -207,7 +207,7 @@ Corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`, sin tocar la
 
 ## Estructura: cuerpo, anexos y trabajo futuro
 
-**Decisión del 4 de noviembre: el artículo del 8 lleva todo lo que tiene una corrida detrás.** El cuerpo sigue un solo hilo para que la rúbrica lea *la* decisión; los resultados completos van a anexos; dos artículos derivados quedan como trabajo futuro destilado. La extensión (3 páginas sin anexos o 12 a 18) sigue abierta y decide cuánto del cuerpo cabe.
+**Decisión del 4 de noviembre: el artículo del 8 lleva todo lo que tiene una corrida detrás.** El cuerpo sigue un solo hilo para que la rúbrica lea *la* decisión; los resultados completos van a anexos; dos artículos derivados quedan como trabajo futuro destilado. **La extensión quedó decidida el 4 de noviembre: 6 a 8 páginas** (entre las 3 de la plantilla y las 12 a 18 de la rúbrica), con el cuerpo de un solo hilo y el detalle en anexos A a F. **«Implementación y operación» va en la sección 6**, y la sección 5 cierra con una línea que remite a ella. **Los dos modelos se sirven con las filas de ajuste** (no con las de validación): en la fase 2 se renuncia a unos +0.007 de concordancia a cambio de poder evaluar y repetir la cifra registrada.
 
 | parte | contenido | corridas |
 |:--|:--|:--|
@@ -266,7 +266,7 @@ Notas del equipo, sin transcripción:
 - **Resumen ejecutivo:** supuestos, costo de pruebas y ROI de detectar un buen candidato.
 - **Operación:** no habrá endpoint productivo; se le deja a la profesora un notebook.
 
-La plantilla del curso numera «Implementación y operación» como sección 5, así que la incoherencia con la rúbrica que registra más abajo no existe. Sigue abierta la extensión: la plantilla dice 3 páginas sin anexos y la rúbrica 12 a 18. No se habló de la hipótesis de representaciones.
+La plantilla del curso numera «Implementación y operación» como sección 5, así que la incoherencia con la rúbrica que registra más abajo no existe. La extensión se decidió el 4 de noviembre en 6 a 8 páginas (la plantilla dice 3 sin anexos y la rúbrica 12 a 18). No se habló de la hipótesis de representaciones.
 
 ## Lo que dependía de la reunión del 3 de noviembre
 

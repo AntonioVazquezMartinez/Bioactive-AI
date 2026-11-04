@@ -1,6 +1,7 @@
 # Qué mueve el resultado al predecir la actividad de compuestos naturales
 
-**Borrador del 4 de noviembre, segunda versión.** Cada cifra sale de una corrida registrada en
+**Borrador del 4 de noviembre, tercera versión, para 6 a 8 páginas** (decisión del 4 de noviembre: el cuerpo
+lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registrada en
 `experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas
 en primera versión.
 
@@ -107,9 +108,7 @@ Las huellas Sort & Slice **no mejoran a ningún modelo de la fase 1** y bajan el
 en la fase 2 mejoran a cinco de seis en las 15 evaluaciones. Por tramo de peso la media es negativa en
 la fase 1 sin tendencia y crece con el peso en la fase 2.
 
-![Huellas](figuras/f3_huellas.svg)
-
-*Figura 5. Cambio por añadir huellas, por tramo de peso. Magnitudes menores a 0.01 en la fase 2.*
+El detalle por tramo de peso está en el Anexo C.
 
 Dos explicaciones simples se **descartaron** con experimentos propios. **No es el tamaño de los
 datos**: con el ajuste de la fase 2 reducido a 5,000 filas (el de la fase 1) la ganancia del `aft` es
@@ -119,7 +118,7 @@ modelos probados (AUROC +0.017 a +0.085).
 
 ![Rivales](figuras/f5_rivales.svg)
 
-*Figura 6. Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta.*
+*Figura 5. Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta.*
 
 Quedan en pie dos hipótesis. **La densidad del espacio químico** (que las huellas ganen donde hay muchos
 vecinos) se midió a igual peso molecular y el resultado es **no concluyente**: la fase 2 es 1.8 veces
@@ -142,20 +141,13 @@ coincide con su ventaja de AUROC (+0.012).
 
 ![AFT](figuras/f4_aft.svg)
 
-*Figura 7. Izquierda: concordancia solo-NPASS. Derecha: ventaja en MCC del AFT sobre el bosque.*
+*Figura 6. Izquierda: concordancia solo-NPASS. Derecha: ventaja en MCC del AFT sobre el bosque.*
 
-**Qué ve el modelo.** De los cuatro brazos con los mismos pliegues, ninguno supera al `aft` en NPASS:
-filtrar los descriptores no cambia nada que se distinga del ruido (+0.002), y **quitar los descriptores y
-dejar solo huellas y diana lo empeora en las 15 evaluaciones** (−0.041), aunque en el agregado empata. Esto
-matiza la lectura del registro (1.3) de que en la fase 2 se pueden tirar los descriptores, porque las huellas
-solas casi igualaban al brazo ancho: en el estrato por el que se eligió el modelo no se pueden.
+Ningún otro brazo supera al `aft` en NPASS (filtrar los descriptores no cambia nada y quitarlos lo
+empeora 0.041), y dos métodos de atribución independientes concuerdan en lo que pesa, con la diana en
+primer plano y TPSA y los donadores de hidrógeno lejos (Anexo F).
 
-**Qué pesa.** Dos métodos independientes, TreeSHAP (lee los árboles) y permutación (solo la salida),
-concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (`MAOA`,
-`MAOB`, `DRD2`, `LRRK2`, `BCHE`, el 15% de la atribución) y, en la química, la complejidad topológica
-(`BertzCT`), la lipofilia y los halógenos. **TPSA y los donadores de hidrógeno, que dominan la
-permeabilidad, no dominan la potencia** (lugares 44 y 165). El modelo final no usa huellas, así que no hay
-atribución por subestructura; hace falta el brazo con huellas.
+*La operación de estos modelos —un cuaderno, no un servicio— está en la sección 6.*
 
 ## 6. Implementación y operación
 
@@ -169,10 +161,10 @@ descarta un compuesto.
 **Estado hoy.** Los dos modelos finales se entrenan dentro de los cuadernos y se descartan; `models/`
 está vacío y el reajuste de la fase 2 no reproduce exactamente la cifra de la prueba (0.7234 contra
 0.7200). Entregar los modelos es trabajo del 9 al 15 de noviembre, con un script que los entrene y
-serialice y el cuaderno que los usa. **Con qué filas se entrenan** lo decide la curva de aprendizaje:
-en la fase 1 la ganancia de usar el 100% sobre el 75% de las filas es +0.002 de AUROC (meseta, se
-sirve con las filas de ajuste); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y
-servir con todas las filas a cambio de no poder evaluarlas es una decisión del equipo.
+serialice y el cuaderno que los usa. **Con qué filas se entrenan** lo decide la curva de aprendizaje y la decisión del 4 de noviembre: **los
+dos modelos se sirven con las filas de ajuste**. En la fase 1 la ganancia de usar el 100% sobre el 75% es
++0.002 de AUROC (meseta); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y se renuncia a
+esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 
 | requisito | por qué | responsable |
 |:--|:--|:--|
@@ -219,8 +211,34 @@ equivalente de validación por bloques en ecología que falta buscar y citar.
 aquí): XGBoost (Chen y Guestrin, 2016), la concordancia de Harrell (Harrell et al., 1982) y la
 corrección de Nadeau y Bengio (2003) para los intervalos.
 
-**Código y datos.** Cada cifra tiene su corrida en `experimentos/` (parámetros, commit, `sha256`
-de los datos, comando) y se repite con `experimentos/README.md`; las lecturas de la prueba reservada
-están en `experimentos/prueba.csv`. **Anexos A a E** según `esqueleto.md`: la escalera con seis
-modelos, la línea base de tamaño, el ranking de la fase 2, la curva de aprendizaje y cómo repetir
-cada corrida.
+**Código y datos.** Cada cifra tiene su corrida en `experimentos/` (parámetros, commit, `sha256` de los
+datos, comando) y se repite con `experimentos/README.md`; las lecturas de la prueba reservada están en
+`experimentos/prueba.csv`.
+
+## Anexos
+
+**A. La escalera con seis modelos y con otra definición de «parecido»** (E1+, E13): la logística no se
+degrada menos que el `svm_rbf` de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los
+peldaños estrictos no se pueden construir. **B. La línea base de peso y TPSA** (E0). **C. Las huellas por
+tramo de peso**, con la figura de abajo. **D. El ranking de la fase 2** (E5) y **la curva de aprendizaje**
+(E8). **E. La densidad del espacio químico a igual peso** (E11, no concluyente) y **cómo repetir cada corrida**,
+con tiempos y `sha256` de los datos.
+
+![Huellas](figuras/f3_huellas.svg)
+
+*Figura C1. Cambio por añadir huellas, por tramo de peso. Magnitudes menores a 0.01 en la fase 2.*
+
+**F. Los cuatro brazos del `aft` y la atribución.**
+
+**Qué ve el modelo.** De los cuatro brazos con los mismos pliegues, ninguno supera al `aft` en NPASS:
+filtrar los descriptores no cambia nada que se distinga del ruido (+0.002), y **quitar los descriptores y
+dejar solo huellas y diana lo empeora en las 15 evaluaciones** (−0.041), aunque en el agregado empata. Esto
+matiza la lectura del registro (1.3) de que en la fase 2 se pueden tirar los descriptores, porque las huellas
+solas casi igualaban al brazo ancho: en el estrato por el que se eligió el modelo no se pueden.
+
+**Qué pesa.** Dos métodos independientes, TreeSHAP (lee los árboles) y permutación (solo la salida),
+concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (`MAOA`,
+`MAOB`, `DRD2`, `LRRK2`, `BCHE`, el 15% de la atribución) y, en la química, la complejidad topológica
+(`BertzCT`), la lipofilia y los halógenos. **TPSA y los donadores de hidrógeno, que dominan la
+permeabilidad, no dominan la potencia** (lugares 44 y 165). El modelo final no usa huellas, así que no hay
+atribución por subestructura; hace falta el brazo con huellas.
