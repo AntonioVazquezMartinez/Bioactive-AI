@@ -247,6 +247,22 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 - **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
 - **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
 
+
+**Las huellas por tramo de peso, fase 2 (4 de noviembre).** Corrida `2026-11-03-artemio-1.3-tamano-huellas-actividad` (`scripts/experimento_tamano_fase2.py`): `aft` contra `aft_huellas`, mismas semillas, pliegues y 56,241 filas que la 2.13, concordancia de Harrell por tramo de peso con los mismos cortes fijos de la fase 1. La lectura se declaró antes: la hipótesis se sostendría si la ganancia creciera con el tramo, y si fuera plana no se sostendría.
+
+| tramo | pares de validación por pliegue | evaluaciones | `aft` | `aft_huellas` | diferencia | mejora en |
+|:--|--:|--:|--:|--:|--:|--:|
+| ≤ 250 Da | 1,049 | 3 | 0.661 | 0.658 | −0.0035 | 1 de 3 |
+| 250–350 Da | 2,941 | 15 | 0.723 | 0.726 | +0.0023 | 9 de 15 |
+| 350–500 Da | 5,830 | 15 | 0.761 | 0.769 | +0.0085 | 15 de 15 |
+| > 500 Da | 1,689 | 15 | 0.757 | 0.766 | +0.0089 | 12 de 15 |
+| todos | 11,248 | 15 | 0.761 | 0.767 | +0.0057 | 15 de 15 |
+
+- **La ganancia crece con el peso, y en la fase 1 no.** De −0.0035 a +0.0089 en la fase 2, con el orden monótono entre los cuatro tramos (los dos últimos casi iguales); en la fase 1 la misma pregunta dio una media negativa en los cuatro tramos y sin tendencia. Cumple la regla declarada, pero **las magnitudes son pequeñas** (menos de 0.01 de concordancia) y el tramo ligero solo se reporta en 3 de las 15 evaluaciones, así que su signo es la parte más débil.
+- **No es solo cuántas filas hay.** El tramo > 500 Da tiene menos pares de validación que el de 250–350 (1,689 contra 2,941) y gana más con las huellas. Eso va contra la lectura de que el efecto sea sobre todo de densidad de datos, pero **no la descarta**: no se igualó el tamaño de los tramos por submuestreo, ni se controló la rareza.
+- **El tramo de arriba cubre poblaciones distintas** (hasta 1,449 Da en la fase 1 y hasta 4,114 en la 2), así que el cruce de las dos fases es más sólido en los tres tramos de abajo.
+- **Qué falta para sostener la hipótesis:** igualar los tramos por submuestreo y repetirlo con el control de rareza. Hasta entonces se reporta como un patrón consistente con la hipótesis de tamaño, no como su prueba.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
