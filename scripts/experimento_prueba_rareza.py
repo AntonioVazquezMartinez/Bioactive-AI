@@ -118,7 +118,8 @@ def ic_por_grupos(grupos, tercil, ventaja, remuestras, semilla=0):
 
 
 def fase1(c):
-    t = cargar("permeabilidad", estratos="tamano", incluir_prueba=True)
+    t = cargar("permeabilidad", estratos="tamano", incluir_prueba=True,
+               motivo="E2: la prueba por rareza, lectura registrada con tomar_prueba más abajo")
     meta = t.meta.reset_index(drop=True)
     es_prueba = (meta["particion"] == "prueba").to_numpy()
     X, y = np.asarray(t.X, float), np.asarray(t.y)
