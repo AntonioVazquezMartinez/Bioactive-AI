@@ -79,7 +79,8 @@ def main() -> None:
     modelo = clone(seleccion(("svm_rbf",))["svm_rbf"])
     with Corrida("octava-lectura-origen-similitud", decision="1.5",
                  params={"regla": "terciles de similitud fijos sobre toda la prueba; IC por esqueleto",
-                         "replicas": REPLICAS, "minimo_minoritaria": MINIMO, "motivo": MOTIVO},
+                         "replicas": REPLICAS, "minimo_minoritaria": MINIMO, "motivo": MOTIVO,
+                         "toca_prueba": "una lectura con etiquetas, por tomar_prueba"},
                  semillas=[0], datos=[META]) as c:
         prueba = tomar_prueba(meta.assign(estrato=completo.estratos), final=True, motivo=MOTIVO)
         idx = prueba["fila"].to_numpy()

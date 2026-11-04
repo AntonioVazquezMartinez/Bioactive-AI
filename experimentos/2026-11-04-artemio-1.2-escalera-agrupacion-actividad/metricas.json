@@ -1,0 +1,66 @@
+{
+  "caida_desde_por_molecula": 0.1118,
+  "control_actual": {
+    "dentro_de_tolerancia": true,
+    "obtenido": 0.7609,
+    "referencia": 0.761
+  },
+  "escalera": [
+    {
+      "concordancia_solo_npass": 0.6697,
+      "concordancia_todos": 0.81,
+      "grupos": 56241,
+      "mayor_grupo_pct": 0.0,
+      "nota": NaN,
+      "peldano": "1 par al azar",
+      "vecino_mas_cercano": 0.8439
+    },
+    {
+      "concordancia_solo_npass": 0.6408,
+      "concordancia_todos": 0.8071,
+      "grupos": 45662,
+      "mayor_grupo_pct": 0.0,
+      "nota": NaN,
+      "peldano": "2 por molécula",
+      "vecino_mas_cercano": 0.7693
+    },
+    {
+      "concordancia_solo_npass": 0.6308,
+      "concordancia_todos": 0.7609,
+      "grupos": 10242,
+      "mayor_grupo_pct": 2.2,
+      "nota": NaN,
+      "peldano": "3 grupo_cv (el del proyecto)",
+      "vecino_mas_cercano": 0.6447
+    },
+    {
+      "concordancia_solo_npass": 0.6233,
+      "concordancia_todos": 0.6953,
+      "grupos": 5286,
+      "mayor_grupo_pct": 16.1,
+      "nota": NaN,
+      "peldano": "4 similitud ≥ 0.6",
+      "vecino_mas_cercano": 0.439
+    },
+    {
+      "concordancia_solo_npass": NaN,
+      "concordancia_todos": NaN,
+      "grupos": 2512,
+      "mayor_grupo_pct": 69.1,
+      "nota": "no evaluable: un grupo pasa del 20% de las filas",
+      "peldano": "4 similitud ≥ 0.5",
+      "vecino_mas_cercano": NaN
+    },
+    {
+      "concordancia_solo_npass": NaN,
+      "concordancia_todos": NaN,
+      "grupos": 1028,
+      "mayor_grupo_pct": 90.5,
+      "nota": "no evaluable: un grupo pasa del 20% de las filas",
+      "peldano": "4 similitud ≥ 0.4",
+      "vecino_mas_cercano": NaN
+    }
+  ],
+  "la_escalera_existe": true,
+  "peldano_mas_estricto_evaluable": "4 similitud ≥ 0.6"
+}

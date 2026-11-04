@@ -1,0 +1,15 @@
+decision: C.5
+semillas:
+- 0
+params:
+  modelo: aft
+  semilla_particion: 0
+  pliegues: 5
+  alfa_bedroc: 20.0
+  remuestras: 300
+  controles:
+  - azar
+  - solo_diana
+  toca_prueba: false
+  etiqueta: activo_10um; se excluyen los pares sin etiqueta
+  filas_ajuste: 56241
