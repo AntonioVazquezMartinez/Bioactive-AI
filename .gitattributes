@@ -1,4 +1,1 @@
 data/external/profesora/snc_activity_*.csv filter=lfs diff=lfs merge=lfs -text
-models/finales/*.joblib filter=lfs diff=lfs merge=lfs -text
-models/finales/*.npz filter=lfs diff=lfs merge=lfs -text
-models/finales/fase2_aft.json filter=lfs diff=lfs merge=lfs -text
