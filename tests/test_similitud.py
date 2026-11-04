@@ -5,7 +5,7 @@ import pytest
 from src.features.similitud import (grupos_por_similitud, huellas, matriz_densa,
                                     matriz_dispersa, resumen_grupos, similitud_al_vecino,
                                     similitud_al_vecino_de)
-from src.models.tareas import cargar
+from src.models.tareas import PROCESADOS, cargar
 
 SMILES = ["CCO", "CCCO", "CCCCO", "c1ccccc1", "Cc1ccccc1", "CCc1ccccc1", "CC(=O)O", "CCC(=O)O",
           "C1CCCCC1", "CC1CCCCC1", "NCCN", "NCCCN"]
@@ -47,6 +47,8 @@ def test_vecino_mas_cercano_coincide_con_y_sin_matriz():
     assert np.allclose(similitud_al_vecino(S, ajuste, val), similitud_al_vecino_de(fps, ajuste, val), atol=1e-6)
 
 
+@pytest.mark.skipif(not (PROCESADOS / "bbb_meta.parquet").exists(),
+                    reason="faltan los datos procesados (no se versionan)")
 def test_reproduce_los_grupos_de_la_escalera_registrada():
     """Corrida 2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad: 1413, 1017 y 631 grupos."""
     smiles = cargar("permeabilidad", estratos="tamano").meta["SMILES"].tolist()
