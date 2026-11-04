@@ -25,6 +25,7 @@ PERMITIDOS = {
     "experimento_escalera_ampliada.py",  # acceso solo de SMILES, sin etiquetas (E1+)
     "experimento_prueba_rareza.py",      # la prueba por rareza (E2)
     "experimento_dificultad_de_la_prueba.py",  # distribución de la similitud de la prueba, solo SMILES (E14)
+    "experimento_andamios_de_la_prueba.py",    # proporción de andamios y esqueletos nuevos en la prueba, sin etiquetas (#264)
 }
 PIDE_PRUEBA = re.compile(r"incluir_prueba\s*=\s*True")
 LLAMA_GUARDA = re.compile(r"\btomar_prueba\s*\(")
