@@ -174,7 +174,14 @@ esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 | cuaderno de uso con SMILES propios | es la forma de operación acordada | hecho (#261), por revisar |
 | **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | hecho en el cuaderno (#261), por revisar |
 | reentrenar al llegar datos nuevos y **reevaluar con la escalera**, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
-| decidir si hay una evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella; puede solaparse con el entrenamiento | por asignar |
+| evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella | **hecha una vez** con el `aft` final: concordancia 0.792 [0.787, 0.797] en 8,134 pares (`solo_npass` 0.667, 249 pares), sin ser un argumento de más generalización; ver abajo |
+
+**La base externa de la patrocinadora (4 nov).** El archivo `Testeo` no comparte identificador ni SMILES canónico con el de
+entrenamiento. Con el `aft` guardado, sin reentrenar, la concordancia en 8,134 pares de las 26 dianas del modelo es **0.792**
+(IC95% remuestreando esqueletos: 0.787 a 0.797), mayor que el 0.720 de la prueba reservada; en `solo_chembl` 0.786, en `mixto`
+0.615 y en `solo_npass` 0.667 (249 pares, Spearman 0.309). Que salga mejor no prueba más generalización: no se midió su
+similitud con el ajuste y pudo separarse por InChIKey y no por andamio. Los naturales siguen siendo el estrato débil. Es una
+lectura única; el control reconstruye los 70,384 pares del entrenamiento sin diferencia.
 
 **Dos límites que el cuaderno tiene que decir.** La advertencia de extrapolación es una heurística:
 la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que
