@@ -198,9 +198,13 @@ def predecir(smiles: Sequence[str], modelos: Modelos | None = None) -> pd.DataFr
         for j, d in enumerate(m.dianas):
             salida.loc[idx, f"pActividad_{d}"] = pred[:, j]
     cols = [f"pActividad_{d}" for d in m.dianas]
-    con = salida[cols].notna().any(axis=1)
-    salida["mejor_diana"] = salida[cols].idxmax(axis=1).where(con).str.replace("pActividad_", "", regex=False)
-    salida["pActividad_max"] = salida[cols].max(axis=1)
+    valores = salida[cols].to_numpy(float)
+    con = ~np.isnan(valores).all(axis=1)
+    mejor = np.full(len(salida), None, dtype=object)
+    if con.any():
+        mejor[con] = np.array(m.dianas, dtype=object)[np.nanargmax(valores[con], axis=1)]
+    salida["mejor_diana"] = mejor
+    salida["pActividad_max"] = np.where(con, np.nanmax(np.where(np.isnan(valores), -np.inf, valores), axis=1), np.nan)
     h = huellas_empaquetadas(smiles)
     salida["similitud_fase1"] = np.where(ok, similitud_al_vecino(h, m.huellas_fase1), np.nan)
     salida["similitud_fase2"] = np.where(ok, similitud_al_vecino(h, m.huellas_fase2), np.nan)
