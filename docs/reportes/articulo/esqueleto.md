@@ -18,8 +18,12 @@ La propuesta es esta:
 
 > **Cuánta semejanza se permite entre lo que se entrena y lo que se evalúa mueve el resultado
 > más que elegir el modelo: 33.3 puntos de MCC sobre el modelo que se entrega, contra 4.2 entre
-> los once. La prueba reservada cae sobre esa escalera, y lo raro de su química explica buena
-> parte de la caída en la fase 1 y mucho menos en la fase 2.**
+> los once. La prueba reservada rinde como los peldaños más estrictos de la escalera (en AUROC),
+> pero su similitud al ajuste no lo anticipa: es más difícil de lo que esa medida predice.**
+
+*(Corregido el 4 de noviembre: la versión anterior decía «cae sobre esa escalera» y que lo raro de su
+química explicaba la caída. E14 mostró que la similitud al vecino predice un AUROC de 0.89 y el real es
+0.79; lo raro explica la ventaja de la fase 1 sobre la línea base de tamaño, no el nivel de la prueba.)*
 
 La vara con la que se comparan todas las filas es **la dispersión entre los once modelos de
 la comparativa de la fase 1, que es de 4.2 puntos de MCC** —de 0.6692 el `knn` a 0.7109 el
@@ -72,6 +76,15 @@ La hipótesis que lo explica, y que es la aportación del artículo: **la repres
 que igualar la granularidad de la etiqueta.** En la fase 1 la etiqueta es una propiedad de la
 molécula entera —cruza o no cruza—, así que resumirla *es* la tarea. En la fase 2 la etiqueta
 describe un encuentro entre dos objetos, y ahí importa qué partes tiene cada uno.
+
+> **Corregido el 4 de noviembre: esta hipótesis se puso a prueba y no se sostuvo.** Con la etiqueta
+> **por molécula** («activa contra alguna diana») y los datos de la fase 2, las huellas siguen
+> ayudando a los cuatro modelos probados (E10, #248), así que la granularidad de la etiqueta no es la
+> causa. Y tampoco el tamaño de datos: con el ajuste de la fase 2 reducido a 5,000 filas la ganancia
+> es mayor, no menor (E9, #247). **El artículo ya no debe presentar la granularidad como su
+> aportación**: afirma solo que la representación no se traslada entre fases. Quedan la densidad del
+> espacio químico (E11, sin medir) y que la permeabilidad dependa de propiedades globales que los
+> descriptores ya capturan.
 
 ### La explicación rival, que el artículo nombra
 
@@ -164,7 +177,7 @@ Corrida `2026-11-03-artemio-1.5-prueba-por-rareza`. Terciles de similitud al vec
 | fase 1, diferencia de ventajas parecido − raro | **+0.069** (IC95% 0.011 a 0.124) |
 | fase 2, diferencia de ventajas en concordancia | +0.018 (0.005 a 0.030), unas cuatro veces menor |
 | fase 2, `solo_npass` en la prueba | `aft` 0.511 contra 0.565 de la línea base (117 pares); registrada 0.530 |
-| lecturas de la prueba (`prueba.csv`) | 6: fase 1 tres (evaluación, un acceso solo de SMILES, E2); fase 2 tres (dos de Antonio y E2) |
+| lecturas de la prueba (`prueba.csv`) | 7: fase 1 cuatro (evaluación, dos accesos solo de SMILES —E1+ y E14— y E2); fase 2 tres (dos de Antonio y E2) |
 
 ### Ranking (E5), tamaño (E6) y curva de aprendizaje (E8)
 
@@ -231,7 +244,7 @@ el proyecto midió y declara, doce. **Las numeradas 7 a 9 son del mismo tipo: la
 7. **El resultado de los naturales en la fase 2 no está verificado sobre química nueva.** El 0.6322 es de validación cruzada. Sobre la prueba reservada la concordancia de los compuestos que solo tiene NPASS es 0.530 con 117 pares (114 exactos) y un Spearman de 0.083. Es el estrato que justifica elegir el `aft`, y es el único que aterriza en el azar cuando se mide sobre esqueletos nuevos. Va junto a toda cita del 0.6322, no en un anexo.
 8. **El enriquecimiento en naturales no se puede presentar como resultado.** La lectura del gráfico 3 del 05b dice que el modelo alcanza 1.92× al 1% (el 85% del techo) en `solo_npass` y que los cortes al 1% y al 5% «certifican su utilidad práctica». El 1% de 117 pares es 1.17 compuestos, y la corrida registra que ahí se encontró el 0.0192 de los 52 activos, es decir **uno solo**. La propia auditoría lo dejó anotado como salvedad y es la única que no pasó a issue; «certifican» no se sostiene. `2026-11-01-antonio-2.13-cifras-graficos`.
 9. **El AUPRC por estrato no es comparable entre filas** ([#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187)): promedia dos clases distintas, así que ninguna cifra de AUPRC por estrato debe ir al artículo como si se pudiera leer contra la de otro estrato.
-10. **La prueba reservada se leyó 6 veces, no «una».** Fase 1: la evaluación, un acceso solo de SMILES (E1+) y E2; fase 2: dos de Antonio y E2. Ningún modelo se ajustó ni se eligió después de ver la prueba. Es lo primero que un revisor querrá verificar, y `prueba.csv` lo permite ([#200](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/200)).
+10. **La prueba reservada se leyó 7 veces, no «una».** Fase 1: la evaluación, dos accesos solo de SMILES (E1+ y E14) y E2; fase 2: dos de Antonio y E2. Ningún modelo se ajustó ni se eligió después de ver la prueba. Es lo primero que un revisor querrá verificar, y `prueba.csv` lo permite ([#200](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/200)).
 11. **Los modelos finales todavía no se sirven.** `models/` está vacío: los dos se entrenan en los cuadernos y se descartan. El reajuste de la fase 2 no reproduce la prueba exactamente (0.7234 contra 0.7200). Entregar un modelo a la patrocinadora es trabajo del 9 al 15, con una decisión pendiente sobre con qué filas se sirve la fase 2 (E8).
 12. **El efecto del agrupamiento depende del modelo.** El 2.2 de AUROC y el 7.1 de MCC son del bosque; con el `svm_rbf` son 1.3 y 1.9 ([#237](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/237)).
 

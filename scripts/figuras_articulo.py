@@ -32,6 +32,9 @@ ESCALERA = "2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad"
 RAREZA = "2026-11-03-artemio-1.5-prueba-por-rareza"
 TAM1 = "2026-11-03-artemio-1.3-tamano-huellas-permeabilidad"
 TAM2 = "2026-11-03-artemio-1.3-tamano-huellas-actividad"
+E9 = "2026-11-04-artemio-1.3-huellas-por-tamano-de-datos-actividad"
+E10 = "2026-11-04-artemio-1.3-huellas-por-etiqueta-de-molecula-actividad"
+E12 = "2026-11-04-artemio-1.2-escalera-agrupacion-actividad"
 UMBRAL = "2026-11-04-artemio-2.13-mcc-por-umbral-aft-contra-bosque"
 MCC_PRUEBA = 0.3385        # de: 2026-11-01-artemio-1.5-modelo-final-permeabilidad
 CONC_CV_NPASS = 0.6322     # de: 2026-10-31-antonio-2.13-comparativa-regresion-ensambles
@@ -230,9 +233,86 @@ def fig_aft() -> None:
     guardar(fig, "f4_aft")
 
 
+def fig_rivales() -> None:
+    """Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta."""
+    e9 = leer(E9)["por_tamano"]
+    e10 = leer(E10)["por_modelo"]
+    fig, axs = plt.subplots(1, 2, figsize=(6.6, 2.9), gridspec_kw={"width_ratios": [1, 1.1]})
+
+    ax = axs[0]
+    tamanos = ["5000", "10000", "20000", "completo"]
+    etiquetas = ["5 mil", "10 mil", "20 mil", "completo\n(≈45 mil)"]
+    vals = [e9[k]["todos"]["dif_media"] for k in tamanos]
+    mejor = [e9[k]["todos"]["huellas_mejor_en"] for k in tamanos]
+    x = np.arange(4)
+    ax.plot(x, vals, color=AZUL, lw=1.8, zorder=2)
+    ax.scatter(x, vals, color=AZUL, s=34, zorder=3, edgecolor="white", linewidth=1)
+    for xi, v, m in zip(x, vals, mejor, strict=True):
+        ax.annotate(f"{v:+.4f}\n{m}/15", (xi, v), textcoords="offset points", xytext=(0, 7), ha="center",
+                    fontsize=8, color=TINTA_2)
+    ax.axhline(0, color=TINTA_2, lw=0.8)
+    ax.set_xticks(x, etiquetas, fontsize=8)
+    ax.set_xlabel("filas de ajuste (fase 2)")
+    ax.set_ylim(-0.002, 0.016)
+    ax.set_title("Δ concordancia del aft al añadir huellas", fontsize=9.5)
+    limpiar(ax)
+
+    ax = axs[1]
+    modelos = ["bayes", "logistica", "svm_sgd", "arbol"]
+    y = np.arange(len(modelos))[::-1]
+    d = [e10[m]["descriptores+huellas"]["auroc"]["dif_media"] for m in modelos]
+    ax.barh(y, d, color=AZUL, height=0.55)
+    for yi, v, m in zip(y, d, modelos, strict=True):
+        ax.text(v + 0.002, yi, f"{v:+.3f}", va="center", fontsize=8.5, color=TINTA_2)
+    ax.set_yticks(y, modelos, fontsize=8.5)
+    ax.axvline(0, color=TINTA_2, lw=0.8)
+    ax.set_xlim(0, 0.115)
+    ax.set_xlabel("Δ AUROC con etiqueta por molécula")
+    ax.set_title("Etiqueta «molécula activa»", fontsize=9.5)
+    limpiar(ax, y_rejilla=False)
+    ax.spines["left"].set_visible(False)
+    fig.suptitle("Ni el tamaño de datos ni el tipo de etiqueta explican que las huellas ayuden en la fase 2",
+                 x=0.0, ha="left", fontweight="bold", fontsize=10.5, y=1.02)
+    fig.tight_layout()
+    guardar(fig, "f5_rivales")
+
+
+def fig_escalera_fase2() -> None:
+    """La escalera de semejanza en la fase 2, con los peldaños que no se pueden construir."""
+    filas = leer(E12)["escalera"]
+    nombres = ["par al\nazar", "por\nmolécula", "grupo_cv\n(proyecto)", "similitud\n≥ 0.6", "similitud\n≥ 0.5", "similitud\n≥ 0.4"]
+    fig, ax = plt.subplots(figsize=(6.6, 3.2))
+    x = np.arange(len(filas))
+    def hay(valor) -> bool:
+        return valor is not None and not pd.isna(valor)
+
+    ok = [hay(f.get("concordancia_todos")) for f in filas]
+    v = [f["concordancia_todos"] for f, o in zip(filas, ok, strict=True) if o]
+    xs = x[np.array(ok)]
+    ax.plot(xs, v, color=AZUL, lw=2.2, marker="o", ms=6, mec="white", mew=1.2, zorder=3)
+    for xi, vi in zip(xs, v, strict=True):
+        ax.annotate(f"{vi:.3f}", (xi, vi), textcoords="offset points", xytext=(0, 9), ha="center",
+                    fontsize=8.5, color=AZUL, fontweight="bold")
+    npass = [f["concordancia_solo_npass"] for f, o in zip(filas, ok, strict=True) if o]
+    ax.plot(xs, npass, color=GRIS, lw=1.4, marker="o", ms=4, zorder=2)
+    ax.annotate("solo NPASS", (xs[-1], npass[-1]), textcoords="offset points", xytext=(6, -2),
+                fontsize=8, color=GRIS)
+    for xi, f, o in zip(x, filas, ok, strict=True):
+        if not o:
+            ax.annotate(f"no se puede\npartir:\n{f['mayor_grupo_pct']:.0f}% en\nun grupo",
+                        (xi, 0.66), ha="center", fontsize=7.5, color=NARANJA, fontweight="bold")
+    ax.set_xticks(x, nombres[:len(filas)], fontsize=8)
+    ax.set_ylim(0.55, 0.88)
+    ax.set_ylabel("concordancia del aft")
+    ax.set_xlim(-0.3, len(filas) - 0.3)
+    limpiar(ax)
+    ax.set_title("La escalera existe en la fase 2, y a 0.5 de similitud el espacio químico no se puede partir")
+    guardar(fig, "f6_escalera_fase2")
+
+
 def main() -> int:
     print("figuras ->", SALIDA)
-    for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft):
+    for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2):
         f()
     return 0
 
