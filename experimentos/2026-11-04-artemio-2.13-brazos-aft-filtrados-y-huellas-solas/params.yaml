@@ -1,0 +1,35 @@
+decision: '2.13'
+semillas:
+- 0
+- 1
+- 2
+params:
+  brazos:
+  - aft
+  - aft_filtrados
+  - aft_huellas_diana
+  - aft_huellas
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  n_bits_sortslice: 2048
+  n_descriptores: 201
+  n_diana: 26
+  protegidas:
+  - TPSA
+  - NumHDonors
+  filtro: DepuracionDescriptores dentro del pliegue (0.99 modal, |Spearman| 0.95)
+  metrica_principal: concordancia en solo_npass, declarada antes de correr
+  referencia_control:
+    todos:
+      aft: 0.761
+      aft_huellas: 0.7659
+    solo_npass:
+      aft: 0.6322
+      aft_huellas: 0.6246
+  tolerancia: 0.003
+  regla_evaluaciones: 12
+  sigma: 1.0
+  toca_prueba: false

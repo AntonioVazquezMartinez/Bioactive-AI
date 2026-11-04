@@ -1,0 +1,70 @@
+{
+  "curvas": [
+    {
+      "desv_ganancia": 0.0073,
+      "faltan_datos_segun_regla": false,
+      "fase": "fase1",
+      "ganancia_75_a_100": 0.002,
+      "metrica": "auroc",
+      "n_medio": {
+        "0.25": 1290,
+        "0.5": 2542,
+        "0.75": 3829,
+        "1.0": 5044
+      },
+      "pendiente_por_ln_n": 0.019,
+      "por_fraccion": {
+        "0.25": 0.8938,
+        "0.5": 0.91,
+        "0.75": 0.917,
+        "1.0": 0.919
+      },
+      "positiva_en": "8 de 15",
+      "proyeccion_con_filas_de_prueba": 0.0041
+    },
+    {
+      "desv_ganancia": 0.0137,
+      "faltan_datos_segun_regla": false,
+      "fase": "fase1",
+      "ganancia_75_a_100": 0.0054,
+      "metrica": "mcc",
+      "n_medio": {
+        "0.25": 1290,
+        "0.5": 2542,
+        "0.75": 3829,
+        "1.0": 5044
+      },
+      "pendiente_por_ln_n": 0.045,
+      "por_fraccion": {
+        "0.25": 0.6412,
+        "0.5": 0.6842,
+        "0.75": 0.6963,
+        "1.0": 0.7017
+      },
+      "positiva_en": "10 de 15",
+      "proyeccion_con_filas_de_prueba": 0.0096
+    },
+    {
+      "desv_ganancia": 0.0026,
+      "faltan_datos_segun_regla": true,
+      "fase": "fase2",
+      "ganancia_75_a_100": 0.0076,
+      "metrica": "concordancia",
+      "n_medio": {
+        "0.25": 11271,
+        "0.5": 22506,
+        "0.75": 33822,
+        "1.0": 44992
+      },
+      "pendiente_por_ln_n": 0.0302,
+      "por_fraccion": {
+        "0.25": 0.7192,
+        "0.5": 0.7424,
+        "0.75": 0.7533,
+        "1.0": 0.7609
+      },
+      "positiva_en": "15 de 15",
+      "proyeccion_con_filas_de_prueba": 0.0067
+    }
+  ]
+}
