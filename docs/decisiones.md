@@ -247,6 +247,21 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 - **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
 - **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
 
+
+**Las huellas por tramo de peso, fase 1 (4 de noviembre).** Corrida `2026-11-03-artemio-1.3-tamano-huellas-permeabilidad` (`scripts/experimento_tamano_fase1.py`): los seis modelos del Avance 4 sin afinar, `descriptores` contra `descriptores+huellas` (2,048 bits, vocabulario relearned dentro de cada pliegue), 3 semillas × 5 pliegues, sin tocar la prueba. La lectura se declaró antes: la hipótesis de tamaño se sostendría si la ganancia fuera mayor en los tramos pesados que en los ligeros en la mayoría de los modelos.
+
+| tramo | n medio | diferencia media de AUROC (huellas − descriptores), 6 modelos |
+|:--|--:|--:|
+| ≤ 250 Da | 238 | −0.032 |
+| 250–350 Da | 349 | −0.015 |
+| 350–500 Da | 480 | −0.009 |
+| > 500 Da | 205 | −0.019 |
+| todos | 1,261 | −0.021 |
+
+- **Las huellas no ayudan en ningún tramo de la fase 1, y no hay tendencia con el peso.** La media es negativa en los cuatro. Comparando el tramo ligero con el pesado, la ganancia sube en 3 modelos (`arbol`, `bayes`, `mlp`) y baja en 3 (`knn`, `logistica`, `svm_rbf`): no cumple la regla declarada. El `svm_rbf`, el modelo final, empeora más en el tramo pesado (−0.027) que en el ligero (−0.013).
+- **La media la arrastra `bayes`** (−0.12 a −0.05 por tramo; las huellas violan su supuesto de independencia). Sin él las medias son −0.015, −0.003, −0.003 y −0.011 por tramo de menor a mayor peso: cerca de cero y sin subir con el peso.
+- **Es la mitad de la pregunta.** Falta la fase 2 con el mismo diseño: la hipótesis se contrasta con el cruce de las dos. Esta pasada no iguala los tramos por submuestreo (el ligero y el pesado tienen ~200 filas y más ruido, y el ligero solo se reporta en 13 de las 15 evaluaciones), así que **no distingue tamaño de densidad de datos**. Como en la fase 1 no hay efecto que separar, la igualación importa sobre todo en la fase 2.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}

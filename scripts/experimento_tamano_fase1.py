@@ -34,7 +34,6 @@ RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
 import numpy as np
-import pandas as pd
 from scipy import sparse
 from sklearn.pipeline import make_pipeline
 
