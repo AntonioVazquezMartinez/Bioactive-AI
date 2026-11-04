@@ -247,6 +247,17 @@ En MCC, con la misma medida en las dos comparaciones —una semilla, media de pl
 - **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
 - **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
 
+**¿Las huellas ayudan en la fase 2 y no en la 1 solo porque la 2 tiene nueve veces más datos? No: el tamaño no lo explica (4 de noviembre).** Corrida `2026-11-04-artemio-1.3-huellas-por-tamano-de-datos-actividad` (`scripts/experimento_huellas_por_tamano_de_datos.py`), sin tocar la prueba reservada. Se ajusta el `aft` con y sin huellas con un submuestreo **por grupos** (`grupo_cv`) a 5,000, 10,000, 20,000 filas y completo, y se evalúa siempre sobre el pliegue completo, en las mismas 15 evaluaciones. 5,000 es el tamaño de un ajuste de la fase 1 (0.8 × 6,306 = 5,045). La regla se declaró antes: el tamaño explica la diferencia si la ganancia con 5,000 filas es ≤ 0, o menor que la mitad de la del ajuste completo y en menos de 12 de 15 evaluaciones.
+
+| filas de ajuste | `aft` | `aft` + huellas | diferencia pareada (desviación) | huellas mejor en |
+|--:|--:|--:|:--|--:|
+| 5,000 | 0.6917 | 0.7022 | **+0.0105** (0.0060) | 14 de 15 |
+| 10,000 | 0.7164 | 0.7278 | +0.0114 (0.0037) | 15 de 15 |
+| 20,000 | 0.7392 | 0.7470 | +0.0078 (0.0034) | 15 de 15 |
+| completo (≈45,000) | 0.7609 | 0.7666 | +0.0057 (0.0035) | 15 de 15 |
+
+El control del ajuste completo reproduce la corrida de la 2.13 (0.7610 y 0.7659) dentro de 0.003, y recalcular de forma independiente la semilla 0 con 5,000 filas da diferencia 0.0. **La ganancia no desaparece al achicar los datos; si algo, es mayor con menos filas.** La ventaja de las huellas en la fase 2 no es un efecto de tener más datos. **Límites:** es una sola familia de modelos (el `aft`), y no los seis de la fase 1; 5,000 *pares* contienen menos moléculas distintas que 5,045 compuestos; y en `solo_npass` la ganancia no existe a ningún tamaño (de −0.001 a −0.014, 4 a 8 de 15). Descarta la explicación C (tamaño de datos); no separa la granularidad (A) de la densidad (B), que mide E10 y E11.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
