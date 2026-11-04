@@ -36,11 +36,28 @@ pliegue y estrato. No lo escribe `Corrida`, lo deja el cuaderno al ir anotando s
 copia a la carpeta al cerrar. Son decenas de kilobytes, así que solo vale la pena cuando el
 argumento es un conteo.
 
-**Commitea cada corrida antes de lanzar la siguiente.** `entorno.json` toma `arbol_sucio` de
-`git status --porcelain`, que cuenta los archivos sin seguimiento: una carpeta de `experimentos/`
-recién creada ensucia el árbol para la corrida que venga después y la hace registrar
-`arbol_sucio: true` sin que nadie haya tocado el código. Al retropoblar las dos mediciones de la
-fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran en `false`.
+**`arbol_sucio` cuenta solo los archivos seguidos, y desde el 4 de noviembre.** La bandera
+existe para responder una sola pregunta: *¿el código que produjo esta cifra es el del `commit` de
+al lado?* Un archivo sin seguimiento no la cambia, así que ya no la dispara; se cuentan aparte en
+`sin_seguimiento`, que informa y no acusa.
+
+**Versión anterior:** tomaba `git status --porcelain` entero, que incluye los sin seguimiento.
+Por eso una carpeta de `experimentos/` recién creada ensuciaba la corrida siguiente, y la
+instrucción era *commitea cada corrida antes de lanzar la siguiente* — al retropoblar las dos
+mediciones de la fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran
+en `false`. Era un aviso en la documentación donde cabía un arreglo de dos líneas en el código.
+
+**Y por eso las 9 corridas que ya lo traen en `true` no se pueden releer**, porque la bandera no
+distinguía las dos causas: `…-1.5-baseline-permeabilidad-descriptores`, `…-1.5-baseline-permeabilidad-171col`,
+`…-2.3-baseline-actividad-descriptores-diana-10um`, `…-1.5-rubrica3`, `…-2.3-dianas-activacion`,
+`…-2.9-baseline-regresion-sencilla-exactas`, `…-1.5-modelo-final-permeabilidad`,
+`…-2.13-contaminacion-externa` y `…-2.3-atajo-procedencia`. De cualquiera de ellas solo se sabe
+que había **algo** en el árbol. La que más importa es `2026-11-01-artemio-1.5-modelo-final-permeabilidad`,
+que es la corrida detrás del MCC de 0.3385 y el AUROC de 0.7928 de la prueba reservada, las dos
+cifras de resultado del artículo: su `commit` puede no describir el código que las produjo. No se
+repara desde aquí —una carpeta de corrida no se reescribe— y reejecutarla costaría una lectura más
+de la prueba, así que lo que queda es saberlo. De las corridas nuevas en adelante la bandera dice
+lo que su nombre dice.
 
 **La partición de prueba solo sale por `tomar_prueba`** (`src/tracking.py`). Exige `final=True` y un
 `motivo`, imprime cuántas filas hay por estrato y agrega una línea a `experimentos/prueba.csv`
@@ -49,12 +66,13 @@ corregir una corrida; la deja a la vista en el `git diff` del PR. Para desarroll
 `pares[pares["particion"] != "prueba"]`. Hoy la guarda solo protege a quien la llama: el 04b
 todavía filtra a mano, y el primer cuaderno que la usa es el 05b.
 
-**Y la bitácora cae en el aviso de arriba, así que el orden importa:** `prueba.csv` no está
-versionado hasta que alguien lo escriba, así que la primera llamada a `tomar_prueba` ensucia el
-árbol. Llamarla **dentro** del `with Corrida(...)` está bien, porque el entorno se captura al
-entrar al contexto; llamarla antes hace que la corrida registre `arbol_sucio: true` sin que nadie
-haya tocado el código. No se arregla ignorando el archivo: que una reejecución cante en el
-`git diff` es justamente para lo que la bitácora existe.
+**Y la bitácora sigue haciendo que el orden importe, aunque por menos.** `prueba.csv` ya está
+versionado, así que cada línea nueva **modifica un archivo seguido** y eso sí ensucia el árbol.
+Llamar a `tomar_prueba` **dentro** del `with Corrida(...)` está bien, porque el entorno se captura
+al entrar al contexto; llamarla antes hace que la corrida se registre con `arbol_sucio: true`, y
+ahora esa bandera quiere decir algo, así que conviene más que antes no dispararla por el orden. No
+se arregla ignorando el archivo: que una reejecución cante en el `git diff` es justamente para lo
+que la bitácora existe.
 
 **Qué se puede reparar y qué no, porque no es lo mismo una carpeta de corrida que una bitácora.**
 `experimentos/<id>/` es el registro de lo que una corrida produjo y **no se reescribe**: si
