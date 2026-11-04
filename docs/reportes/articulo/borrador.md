@@ -253,6 +253,8 @@ concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas
 (`BertzCT`), la lipofilia y los halógenos. **TPSA y los donadores de hidrógeno, que dominan la
 permeabilidad, no dominan la potencia** (lugares 44 y 165).
 
+**Qué pesa en la fase 1.** Los dos métodos (permutación y KernelSHAP) miran el mismo `svm_rbf`; una versión anterior mezclaba la permutación con la impureza de un bosque, que son dos modelos, y se quitó. Coinciden en seis descriptores entre sus quince primeros (`fr_lactam`, `NumHDonors`, `NumAliphaticCarbocycles`, `VSA_EState3`, `fr_Ar_OH`, `fr_ether`), estables entre dos muestras de compuestos; la correlación entre los dos rankings completos es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); **TPSA no** (40 por permutación y 10 por SHAP), porque comparte información con un racimo de columnas. No se afirma ninguna estructura: son seis nombres de descriptor, no un mecanismo.
+
 **Por subestructura.** El modelo final no usa huellas, así que se repitió el diseño con el brazo que sí
 (`aft_huellas`, que no mejora en NPASS). **Ahí los dos métodos no concuerdan según la regla declarada**
 (Spearman 0.38 contra 0.50, aunque comparten 11 de 15; la permutación es ruidosa con ~2,270 columnas). Las
