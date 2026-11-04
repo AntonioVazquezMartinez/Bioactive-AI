@@ -158,18 +158,20 @@ compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha c
 (fase 2) y los dos juntos como evidencia paralela para un ranking, **no como cascada**: un BBB− no
 descarta un compuesto.
 
-**Estado hoy.** Los dos modelos finales se entrenan dentro de los cuadernos y se descartan; `models/`
-está vacío y el reajuste de la fase 2 no reproduce exactamente la cifra de la prueba (0.7234 contra
-0.7200). Entregar los modelos es trabajo del 9 al 15 de noviembre, con un script que los entrene y
-serialice y el cuaderno que los usa. **Con qué filas se entrenan** lo decide la curva de aprendizaje y la decisión del 4 de noviembre: **los
+**Estado hoy.** Los dos modelos finales están guardados en `models/finales/` (unos 3 MB), con un módulo de
+inferencia que no necesita los datos de entrenamiento, un script que los regenera y el cuaderno que los usa
+(`notebooks/06_Uso_de_los_modelos.ipynb`, #261). Está comprobado que los descriptores calculados desde un
+SMILES coinciden bit a bit con los de entrenamiento (150 moléculas de cada fase) y que el modelo recargado
+reproduce al entrenado. Falta que el equipo los revise. El reajuste de la fase 2 con las filas de ajuste no
+reproduce exactamente la cifra de la prueba (0.7234 contra 0.7200). **Con qué filas se entrenan** lo decide la curva de aprendizaje y la decisión del 4 de noviembre: **los
 dos modelos se sirven con las filas de ajuste**. En la fase 1 la ganancia de usar el 100% sobre el 75% es
 +0.002 de AUROC (meseta); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y se renuncia a
 esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 
 | requisito | por qué | responsable |
 |:--|:--|:--|
-| script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | equipo, 9 a 15 nov |
-| cuaderno de uso con SMILES propios | es la forma de operación acordada | equipo |
+| script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | hecho (#261), por revisar |
+| cuaderno de uso con SMILES propios | es la forma de operación acordada | hecho (#261), por revisar |
 | **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | equipo |
 | reentrenar al llegar datos nuevos y **reevaluar con la escalera**, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
 | decidir si hay una evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella; puede solaparse con el entrenamiento | por asignar |
