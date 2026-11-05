@@ -57,7 +57,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Compuestos que dan positivo en casi cualquier ensayo por mecanismos inespecíficos, no porque actúen sobre la diana. **Por qué importa:** la curcumina es el caso clásico, con más de 120 ensayos clínicos sin un resultado positivo controlado. El modelo los va a rankear alto, así que hay que filtrarlos antes de reportar cualquier candidato.
 
 **HTS** (*High-Throughput Screening* / tamizaje de alto rendimiento)
-: Ensayos biológicos automatizados que prueban colecciones masivas de compuestos a concentraciones fijas estándar (frecuentemente 10 µM o 100 µM) para cribar actividad preliminar. **Por qué importa:** es el origen físico de la censura masiva en el dataset. Si una molécula no alcanza el 50% de inhibición al corte ensayado, el protocolo no mide diluciones completas y registra una cota superior («≤ 10 µM»); el 67.4% de las mediciones censuradas del archivo histórico proceden de este corte heredado.
+: Ensayos biológicos automatizados que prueban colecciones masivas de compuestos a concentraciones fijas estándar (frecuentemente 10 µM o 100 µM) para cribar actividad preliminar. **Por qué importa:** es el origen físico de la censura masiva en el dataset. Si una molécula no alcanza el 50% de inhibición al corte ensayado, el protocolo no mide diluciones completas y registra una **cota**, no un valor: en concentración es «> 10 µM», porque lo único que se sabe es que haría falta más; en la escala de pActividad, que invierte el signo, esa misma medición es una cota **superior** («≤ 5»). El 67.4% de las mediciones censuradas del archivo histórico proceden de este corte heredado.
 
 ---
 
