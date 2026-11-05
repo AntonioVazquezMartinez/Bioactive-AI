@@ -1,0 +1,20 @@
+{
+  "base_externa": "no disponible en esta maquina; el control si corre",
+  "control": {
+    "andamio_compuestos": 32,
+    "andamio_fraccion_compuestos": 0.0058,
+    "andamio_fraccion_pares": 0.005,
+    "con_las_columnas_guardadas": {
+      "andamio": 0,
+      "esqueleto": 0
+    },
+    "esqueleto_compuestos": 0,
+    "esqueleto_fraccion_compuestos": 0.0,
+    "esqueleto_fraccion_pares": 0.0,
+    "piso_andamio_recalculado": 0.005,
+    "similitud_mediana_al_entrenamiento": 0.6786,
+    "smiles_exacto_compuestos": 0,
+    "smiles_exacto_fraccion_compuestos": 0.0,
+    "smiles_exacto_fraccion_pares": 0.0
+  }
+}
