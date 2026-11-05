@@ -183,7 +183,7 @@ entrenamiento. Con el `aft` guardado, sin reentrenar, la concordancia en 8,134 p
 (IC95% remuestreando esqueletos: 0.787 a 0.797), mayor que el 0.720 de la prueba reservada; en `solo_chembl` 0.786, en `mixto`
 0.615 y en `solo_npass` 0.667 (249 pares, Spearman 0.309). **Esa base no es comparable con la prueba reservada:** se separó por compuesto y no por
 andamio, y el 64.9% de sus pares tiene un andamio que ya está en el ajuste (contra 0.5% en el control interno), con una similitud mediana al vecino
-más cercano de 0.787 (0.414 en la prueba reservada). Que salga mejor es lo que predice la tesis del artículo, no una prueba de mejor
+más cercano de 0.787 (0.679 en la validación de la misma fase). Que salga mejor es lo que predice la tesis del artículo, no una prueba de mejor
 generalización. Los naturales siguen siendo el estrato débil. Es una lectura única; el control reconstruye los 70,384 pares del
 entrenamiento sin diferencia.
 
