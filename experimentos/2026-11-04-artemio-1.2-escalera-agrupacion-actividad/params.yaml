@@ -1,0 +1,26 @@
+decision: '1.2'
+semillas:
+- 0
+- 1
+- 2
+params:
+  peldanos:
+  - par al azar
+  - por molécula
+  - grupo_cv
+  - similitud >= 0.6
+  - similitud >= 0.5
+  - similitud >= 0.4
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  modelo: aft
+  grupo_maximo: 0.2
+  referencia_control: 0.761
+  tolerancia: 0.003
+  caida_minima: 0.03
+  muestra_vecino: 1500
+  moleculas_unicas: 45662
+  toca_prueba: false

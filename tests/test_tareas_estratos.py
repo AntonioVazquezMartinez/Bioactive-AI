@@ -51,14 +51,14 @@ def test_actividad_solo_admite_estratos_de_procedencia():
 
 @procesados
 def test_conteos_de_origen_sobre_las_7805_filas():
-    t = cargar("permeabilidad", estratos="origen", incluir_prueba=True)
+    t = cargar("permeabilidad", estratos="origen", incluir_prueba=True, motivo="conteo de las 7805 filas, sin etiquetas de prueba")
     assert len(t.y) == 7805
     conteos = pd.Series(t.estratos).value_counts()
     assert conteos[NATURAL] == 3366
     assert conteos[ANALOGO] == 1003
     assert conteos[SIN] == 3436
     # Y por omisión, el comportamiento anterior: grupos A–D y sin columna `origen`.
-    g = cargar("permeabilidad", incluir_prueba=True)
+    g = cargar("permeabilidad", incluir_prueba=True, motivo="comprobar los estratos por omisión")
     assert set(g.estratos) <= {"A", "B", "C", "D"}
     assert "origen" not in g.meta
 
@@ -165,3 +165,18 @@ def test_los_tres_tramos_de_abajo_estan_acotados_y_solo_el_ultimo_es_abierto():
     etiquetas = etiquetas_por_tamano(np.array([1.0, 300.0, 400.0, 600.0, 1e6]))
     assert {e for e in etiquetas if e.startswith(">")} == {">500 Da"}
     assert all("–" in e or e.startswith("≤") for e in etiquetas if not e.startswith(">"))
+
+
+# --- la prueba reservada no se abre sin decir para qué (#200) -------------------------------------
+
+@pytest.mark.parametrize("tarea", ["permeabilidad", "actividad"])
+@pytest.mark.parametrize("motivo", ["", "   "])
+def test_incluir_prueba_sin_motivo_falla(tarea, motivo):
+    with pytest.raises(ValueError, match="exige `motivo`"):
+        cargar(tarea, incluir_prueba=True, motivo=motivo)
+
+
+def test_sin_pedir_la_prueba_no_hace_falta_motivo():
+    """Quien no abre la prueba no cambia en nada: el parámetro nuevo no le pide nada."""
+    with pytest.raises(ValueError, match="estratos"):      # llega al siguiente chequeo, no al del motivo
+        cargar("permeabilidad", estratos="no existe")
