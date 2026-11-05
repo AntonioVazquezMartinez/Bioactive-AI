@@ -1,0 +1,1 @@
+python3.12.12 scripts/experimento_contaminacion_externa.py /Users/artemiopadilla/Downloads/snc_activity_crudo_v3_final_2026-09-25_Testeo.csv

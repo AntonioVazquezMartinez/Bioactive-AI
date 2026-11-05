@@ -1,0 +1,76 @@
+{
+  "fase1_andamio": {
+    "prueba": {
+      "distintos": 1390,
+      "distintos_nuevos": 1390,
+      "filas": 1499,
+      "filas_nuevas": 1499,
+      "prop_filas": 1.0
+    },
+    "validacion": {
+      "distintos": 498,
+      "distintos_nuevos": 498,
+      "filas": 749,
+      "filas_nuevas": 749,
+      "prop_filas": 1.0
+    }
+  },
+  "fase1_esqueleto": {
+    "prueba": {
+      "distintos": 1392,
+      "distintos_nuevos": 1392,
+      "filas": 1499,
+      "filas_nuevas": 1499,
+      "prop_filas": 1.0
+    },
+    "validacion": {
+      "distintos": 427,
+      "distintos_nuevos": 427,
+      "filas": 749,
+      "filas_nuevas": 749,
+      "prop_filas": 1.0
+    }
+  },
+  "fase1_por_natural": {
+    "False": {
+      "filas": 1053,
+      "prop_andamio_nuevo": 1.0
+    },
+    "True": {
+      "filas": 446,
+      "prop_andamio_nuevo": 1.0
+    }
+  },
+  "fase2_andamio": {
+    "prueba": {
+      "distintos": 13973,
+      "distintos_nuevos": 13973,
+      "filas": 13973,
+      "filas_nuevas": 13973,
+      "prop_filas": 1.0
+    },
+    "validacion": {
+      "distintos": 3628,
+      "distintos_nuevos": 3628,
+      "filas": 6986,
+      "filas_nuevas": 6986,
+      "prop_filas": 1.0
+    }
+  },
+  "fase2_esqueleto": {
+    "prueba": {
+      "distintos": 13973,
+      "distintos_nuevos": 13973,
+      "filas": 13973,
+      "filas_nuevas": 13973,
+      "prop_filas": 1.0
+    },
+    "validacion": {
+      "distintos": 5512,
+      "distintos_nuevos": 5512,
+      "filas": 6986,
+      "filas_nuevas": 6986,
+      "prop_filas": 1.0
+    }
+  }
+}

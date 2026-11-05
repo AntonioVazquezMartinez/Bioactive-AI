@@ -46,8 +46,14 @@ from sklearn.model_selection import StratifiedGroupKFold
 MIN_MINORITARIA = 20
 
 
-def orientar_minoritaria(y: np.ndarray, p: np.ndarray) -> tuple[np.ndarray, np.ndarray, bool]:
+def orientar_minoritaria(y: np.ndarray, p: np.ndarray,
+                         minoritaria: int | None = None,
+                         ) -> tuple[np.ndarray, np.ndarray, bool]:
     """Devuelve `(y, puntaje)` vistos desde la clase menos frecuente, y si hubo que voltear.
+
+    `minoritaria` fija la clase (0 o 1); sin ella se decide con el `y` recibido.
+    Quien promedie varias llamadas —pliegues, estratos— tiene que fijarla, porque
+    si no cada subconjunto elige la suya (ver `clase_minoritaria`).
 
     Cuál es la minoritaria cambia entre fases —en permeabilidad es BBB−, en
     actividad es la inactiva— y entre estratos, así que se decide aquí sobre los
@@ -77,18 +83,37 @@ def orientar_minoritaria(y: np.ndarray, p: np.ndarray) -> tuple[np.ndarray, np.n
     umbralizar —la matriz de confusión, por ejemplo— tiene que usar `p` sin voltear:
     estas dos salidas son para ordenar.
     """
-    if y.mean() <= 0.5:
+    if minoritaria is None:
+        minoritaria = 1 if y.mean() <= 0.5 else 0
+    if minoritaria == 1:
         return y, p, False
     return 1 - y, -p, True
 
 
-def _auprc_minoritaria(y: np.ndarray, p: np.ndarray) -> float:
-    """AUPRC sobre la clase menos frecuente **de este subconjunto**.
+def clase_minoritaria(y: np.ndarray) -> int:
+    """La clase menos frecuente de `y` (1 si empatan), para fijarla de una vez.
+
+    **Se calcula sobre el conjunto completo que se evalúa, no sobre un pliegue.**
+    Decidirla en cada pliegue y en cada estrato hacía que el AUPRC «de la
+    minoritaria» promediara clases distintas: en el estrato `natural exacto`,
+    cuya prevalencia de BBB+ por pliegue va de 0.438 a 0.594, medía la BBB− en 12
+    de 15 evaluaciones y la BBB+ en las otras tres
+    ([#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187)).
+    """
+    return 1 if np.asarray(y).mean() <= 0.5 else 0
+
+
+def _auprc_minoritaria(y: np.ndarray, p: np.ndarray,
+                       minoritaria: int | None = None) -> float:
+    """AUPRC sobre la clase menos frecuente.
 
     Medida sobre la mayoritaria, la línea base es más alta y los valores
-    parecen mejores de lo que son.
+    parecen mejores de lo que son. **Sin `minoritaria` la decide este
+    subconjunto**, que es lo que hacía el arnés por pliegue y por estrato y
+    mezclaba clases al promediar; `evaluar` la fija ahora con la del conjunto
+    completo (o del estrato completo) y la pasa aquí.
     """
-    ym, pm, _ = orientar_minoritaria(y, p)
+    ym, pm, _ = orientar_minoritaria(y, p, minoritaria)
     return average_precision_score(ym, pm)
 
 
@@ -101,10 +126,13 @@ METRICAS: Mapping[str, Callable[[np.ndarray, np.ndarray], float]] = {
 }
 
 
-def _medir(y: np.ndarray, p: np.ndarray) -> dict[str, float]:
+def _medir(y: np.ndarray, p: np.ndarray,
+           minoritaria: int | None = None) -> dict[str, float]:
     if len(np.unique(y)) < 2:
         return {k: float("nan") for k in METRICAS}
-    return {k: float(f(y, p)) for k, f in METRICAS.items()}
+    out = {k: float(f(y, p)) for k, f in METRICAS.items() if k != "auprc_minoritaria"}
+    out["auprc_minoritaria"] = float(_auprc_minoritaria(y, p, minoritaria))
+    return {k: out[k] for k in METRICAS}
 
 
 def evaluar(
@@ -152,6 +180,13 @@ def evaluar(
     filas: list[dict] = []
     fuera_de_pliegue = {
         nombre: np.full((len(semillas), len(y)), np.nan) for nombre in canalizaciones}
+    # **La clase minoritaria se fija una vez, sobre todos los datos**, y la de cada
+    # estrato sobre todas sus filas: elegirla pliegue por pliegue hacía que el
+    # AUPRC promediado mezclara clases (#187).
+    minoritaria_todos = clase_minoritaria(y)
+    minoritaria_estrato = ({} if estratos is None else
+                           {str(e): clase_minoritaria(y[estratos == e])
+                            for e in pd.unique(estratos)})
 
     for s, semilla in enumerate(semillas):
         cv = StratifiedGroupKFold(n_splits=pliegues, shuffle=True, random_state=semilla)
@@ -192,7 +227,8 @@ def evaluar(
                         "activos": float(y[val].mean()),
                         "segundos_ajuste": segundos_ajuste,
                         "segundos_prediccion": segundos_prediccion,
-                        **_medir(y[val], p)}
+                        "clase_medida": minoritaria_todos,
+                        **_medir(y[val], p, minoritaria_todos)}
                 # Lo que la canalización haya elegido por dentro se guarda aquí y
                 # no en el objeto que se pasó: `clone` deja lo ajustado en la
                 # copia del pliegue, así que fuera de esta función se perdería.
@@ -213,7 +249,8 @@ def evaluar(
                     filas.append({"modelo": nombre, "semilla": semilla,
                                   "pliegue": pliegue, "estrato": str(e),
                                   "n": int(sel.sum()), "activos": float(ys.mean()),
-                                  **_medir(ys, p[sel])})
+                                  "clase_medida": minoritaria_estrato[str(e)],
+                                  **_medir(ys, p[sel], minoritaria_estrato[str(e)])})
             if verboso:
                 print(f"  semilla {semilla} · pliegue {pliegue} listo", flush=True)
 
