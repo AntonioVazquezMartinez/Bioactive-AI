@@ -30,7 +30,8 @@ la comparativa de la fase 1, que es de 4.2 puntos de MCC** —de 0.6692 el `knn`
 |:--|:--|--:|
 | el modelo, entre los once | 4.2 puntos | — |
 | añadir ensambles sobre el mejor individual | +0.9 puntos, **indistinguible** | 0.2× |
-| el criterio de partición ([1.2](../../decisiones.md#d1-2)) | **7.1 puntos** | **1.7×** |
+| el criterio de partición, con el `svm_rbf` entregado ([1.2](../../decisiones.md#d1-2)) | 1.9 puntos (7.1 con el bosque) | 0.45× |
+| cuánta semejanza se permite entre entrenamiento y validación (la escalera de E1) | **33.3 puntos**, de 0.752 a 0.419 | **7.9×** |
 | la representación, en la fase 2 ([1.3](../../decisiones.md#d1-3)) | las huellas **reemplazan** a los descriptores | no comparable |
 
 ### Lo que el problema impone
@@ -152,6 +153,20 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | fase 1, la brecha con huellas | se ensancha en 7 de 9 modelos | ídem |
 | atribución, lo que coinciden los dos métodos | `fr_lactam`, `NumHDonors`, `VSA_EState3`, `MolLogP` | `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres` |
 
+### Partición y tamaño
+
+Corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`, sin tocar la prueba reservada. El detalle y sus límites están en la [1.2](../../decisiones.md#d1-2).
+
+| cifra | valor |
+|:--|:--|
+| `svm_rbf`, AUROC según cómo se agrupa | 0.947 al azar → 0.919 actual → 0.835 con similitud ≥ 0.5 → 0.780 con similitud ≥ 0.4 |
+| prueba reservada, AUROC | 0.793, entre las filas de similitud ≥ 0.5 y ≥ 0.4 |
+| línea base de solo peso y TPSA, AUROC | 0.847, contra 0.919 de `svm_rbf` |
+| ventaja de `svm_rbf` sobre esa línea base | 0.032 en grupos de 2 a 4 filas, 0.076 en los de 5 o más |
+| lo que sube la cifra al agrupar solo por andamio | 1.3 de AUROC con `svm_rbf`, 1.0 con `logistica`; los 2.2 de la 1.2 son del bosque |
+
+**Qué aporta al relato.** La caída de 0.919 a 0.793 no es solo sobreajuste: la escalera de agrupamiento la reproduce, y la química rara pesa más que el modelo. Y la línea base muestra que, donde la química es rara, el modelo sabe poco más que tamaño y polaridad. **Falta** medir la similitud de la prueba con el entrenamiento para ubicarla en la escalera, repetir la línea base dentro de la prueba y poner un intervalo a la diferencia pareada entre `logistica` y `svm_rbf` en las filas estrictas.
+
 ## Las limitaciones que entran al relato
 
 La rúbrica pide que estén «integradas al relato, no omitidas», y da puntos por ello. Las que
@@ -186,7 +201,17 @@ el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la 
 - **La declaración de uso de IA** con herramienta, modelo y finalidad.
 - **La plantilla de LaTeX**, sin bajar.
 
-## Lo que depende de la reunión del 3 de noviembre
+## Lo que salió de la reunión del 3 de noviembre
+
+Notas del equipo, sin transcripción:
+
+- **Prueba reservada:** profundizar. Medir el desempeño entre compuestos parecidos y raros, caracterizar los grupos y probar con el conjunto de prueba de la profesora.
+- **Resumen ejecutivo:** supuestos, costo de pruebas y ROI de detectar un buen candidato.
+- **Operación:** no habrá endpoint productivo; se le deja a la profesora un notebook.
+
+La plantilla del curso numera «Implementación y operación» como sección 5, así que la incoherencia con la rúbrica que registra más abajo no existe. Sigue abierta la extensión: la plantilla dice 3 páginas sin anexos y la rúbrica 12 a 18. No se habló de la hipótesis de representaciones.
+
+## Lo que dependía de la reunión del 3 de noviembre
 
 El eje de este esqueleto supone que **un resultado negativo bien medido puntúa**. Si la
 dirección dice lo contrario, la escalera deja de ser la columna vertebral y hay que
