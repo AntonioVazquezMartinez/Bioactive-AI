@@ -1,0 +1,32 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  fracciones:
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1.0
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  modelos:
+    fase1: svm_rbf
+    fase2: aft
+  submuestreo: grupos
+  regla:
+    min_ganancia: 0.005
+    min_evaluaciones: 12
+    escalon: 75% a 100%
+  filas_registradas:
+    fase1:
+    - 6306
+    - 1499
+    fase2:
+    - 56241
+    - 13944
+  toca_prueba: false
