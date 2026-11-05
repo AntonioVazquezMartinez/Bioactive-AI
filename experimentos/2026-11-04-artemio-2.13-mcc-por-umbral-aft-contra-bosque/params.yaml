@@ -1,0 +1,25 @@
+decision: '2.13'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - aft
+  - bosque
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  cortes:
+  - fijo=5.0
+  - prevalencia del ajuste
+  - optimo en el pliegue (cota)
+  referencia_2_13:
+    aft: 0.4668
+    bosque: 0.3103
+  tolerancia_reproduccion: 0.01
+  regla_evaluaciones: 12
+  toca_prueba: false
+  nota_seg: tiempo de reloj con doce núcleos; no comparable con la 2.13
