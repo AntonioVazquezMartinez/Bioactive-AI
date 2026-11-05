@@ -1,0 +1,208 @@
+{
+  "auroc_solo_npass": {
+    "aft_filtrados": {
+      "dif_desv": 0.0417,
+      "dif_media": -0.0078,
+      "evaluaciones": 15,
+      "mejor_en": 9,
+      "peor_en": 6,
+      "veredicto": "empate dentro del ruido"
+    },
+    "aft_huellas": {
+      "dif_desv": 0.0307,
+      "dif_media": -0.0245,
+      "evaluaciones": 15,
+      "mejor_en": 4,
+      "peor_en": 11,
+      "veredicto": "empate dentro del ruido"
+    },
+    "aft_huellas_diana": {
+      "dif_desv": 0.0516,
+      "dif_media": -0.0562,
+      "evaluaciones": 15,
+      "mejor_en": 1,
+      "peor_en": 14,
+      "veredicto": "empeora al aft"
+    },
+    "medias": {
+      "aft": 0.6493,
+      "aft_filtrados": 0.6415,
+      "aft_huellas": 0.6248,
+      "aft_huellas_diana": 0.5932
+    }
+  },
+  "columnas_que_deja_el_filtro_con_todo_el_ajuste": 156,
+  "concordancia": {
+    "mixto": {
+      "aft_filtrados": {
+        "dif_desv": 0.0192,
+        "dif_media": 0.0073,
+        "evaluaciones": 15,
+        "mejor_en": 9,
+        "peor_en": 6,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas": {
+        "dif_desv": 0.0194,
+        "dif_media": 0.0059,
+        "evaluaciones": 15,
+        "mejor_en": 10,
+        "peor_en": 5,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas_diana": {
+        "dif_desv": 0.0258,
+        "dif_media": -0.0068,
+        "evaluaciones": 15,
+        "mejor_en": 6,
+        "peor_en": 9,
+        "veredicto": "empate dentro del ruido"
+      },
+      "medias": {
+        "aft": 0.6037,
+        "aft_filtrados": 0.611,
+        "aft_huellas": 0.6096,
+        "aft_huellas_diana": 0.5969
+      }
+    },
+    "solo_chembl": {
+      "aft_filtrados": {
+        "dif_desv": 0.0029,
+        "dif_media": 0.0015,
+        "evaluaciones": 15,
+        "mejor_en": 12,
+        "peor_en": 3,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas": {
+        "dif_desv": 0.0037,
+        "dif_media": 0.006,
+        "evaluaciones": 15,
+        "mejor_en": 15,
+        "peor_en": 0,
+        "veredicto": "supera al aft"
+      },
+      "aft_huellas_diana": {
+        "dif_desv": 0.0044,
+        "dif_media": 0.0039,
+        "evaluaciones": 15,
+        "mejor_en": 13,
+        "peor_en": 2,
+        "veredicto": "empate dentro del ruido"
+      },
+      "medias": {
+        "aft": 0.7528,
+        "aft_filtrados": 0.7544,
+        "aft_huellas": 0.7588,
+        "aft_huellas_diana": 0.7567
+      }
+    },
+    "solo_npass": {
+      "aft_filtrados": {
+        "dif_desv": 0.0213,
+        "dif_media": 0.0021,
+        "evaluaciones": 15,
+        "mejor_en": 11,
+        "peor_en": 4,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas": {
+        "dif_desv": 0.0186,
+        "dif_media": -0.0121,
+        "evaluaciones": 15,
+        "mejor_en": 5,
+        "peor_en": 10,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas_diana": {
+        "dif_desv": 0.0278,
+        "dif_media": -0.0413,
+        "evaluaciones": 15,
+        "mejor_en": 0,
+        "peor_en": 15,
+        "veredicto": "empeora al aft"
+      },
+      "medias": {
+        "aft": 0.6308,
+        "aft_filtrados": 0.6329,
+        "aft_huellas": 0.6187,
+        "aft_huellas_diana": 0.5895
+      }
+    },
+    "todos": {
+      "aft_filtrados": {
+        "dif_desv": 0.0027,
+        "dif_media": 0.0014,
+        "evaluaciones": 15,
+        "mejor_en": 12,
+        "peor_en": 3,
+        "veredicto": "empate dentro del ruido"
+      },
+      "aft_huellas": {
+        "dif_desv": 0.0035,
+        "dif_media": 0.0057,
+        "evaluaciones": 15,
+        "mejor_en": 15,
+        "peor_en": 0,
+        "veredicto": "supera al aft"
+      },
+      "aft_huellas_diana": {
+        "dif_desv": 0.0042,
+        "dif_media": 0.0029,
+        "evaluaciones": 15,
+        "mejor_en": 11,
+        "peor_en": 4,
+        "veredicto": "empate dentro del ruido"
+      },
+      "medias": {
+        "aft": 0.7609,
+        "aft_filtrados": 0.7623,
+        "aft_huellas": 0.7666,
+        "aft_huellas_diana": 0.7638
+      }
+    }
+  },
+  "control_dentro_de_tolerancia": {
+    "solo_npass": {
+      "aft": true,
+      "aft_huellas": false
+    },
+    "todos": {
+      "aft": true,
+      "aft_huellas": true
+    }
+  },
+  "descriptores": 201,
+  "spearman_solo_npass": {
+    "aft_filtrados": {
+      "dif_desv": 0.0706,
+      "dif_media": -0.0045,
+      "evaluaciones": 15,
+      "mejor_en": 8,
+      "peor_en": 7,
+      "veredicto": "empate dentro del ruido"
+    },
+    "aft_huellas": {
+      "dif_desv": 0.0537,
+      "dif_media": -0.0255,
+      "evaluaciones": 15,
+      "mejor_en": 3,
+      "peor_en": 12,
+      "veredicto": "empate dentro del ruido"
+    },
+    "aft_huellas_diana": {
+      "dif_desv": 0.101,
+      "dif_media": -0.0535,
+      "evaluaciones": 15,
+      "mejor_en": 4,
+      "peor_en": 11,
+      "veredicto": "empate dentro del ruido"
+    },
+    "medias": {
+      "aft": 0.2498,
+      "aft_filtrados": 0.2453,
+      "aft_huellas": 0.2243,
+      "aft_huellas_diana": 0.1963
+    }
+  }
+}
