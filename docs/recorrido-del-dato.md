@@ -47,7 +47,7 @@ De 206 quedan **151**: se van 24 casi constantes —un solo valor reúne el 99% 
 
 Dos moléculas van al mismo grupo si comparten **andamio** —el esqueleto de anillos— **o esqueleto de conectividad**. Salen 1,048 grupos de 7,805 compuestos.
 
-**Por qué se agrupa por las dos cosas y no solo por andamio.** Está medido: el andamio solo da 2,239 grupos e **infla el AUROC 2.2 puntos y el MCC 7.1** ([1.2](decisiones.md#d1-2)). Un mismo esqueleto puede aparecer bajo andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados.
+**Por qué se agrupa por las dos cosas y no solo por andamio.** Está medido: el andamio solo da 2,239 grupos e **infla el AUROC 2.2 puntos y el MCC 7.1 con el bosque, pero 1.3 y 1.9 respectivamente con el `svm_rbf` que se entrega**, así que no es un efecto general ([1.2](decisiones.md#d1-2)). Un mismo esqueleto puede aparecer bajo andamios distintos, y separarlos pone estereoisómeros del mismo compuesto a los dos lados.
 
 ## 5 · Se parte sin que un grupo cruce
 
