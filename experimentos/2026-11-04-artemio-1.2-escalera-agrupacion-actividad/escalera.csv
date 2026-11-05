@@ -1,0 +1,5 @@
+peldano,grupos,mayor_grupo_pct,concordancia_todos,concordancia_solo_npass,vecino_mas_cercano
+1 par al azar,56241,0.0,0.81,0.6697,0.8439
+2 por molécula,45662,0.0,0.8071,0.6408,0.7693
+3 grupo_cv (el del proyecto),10242,2.2,0.7609,0.6308,0.6447
+4 similitud ≥ 0.6,5286,16.1,0.6953,0.6233,0.439
