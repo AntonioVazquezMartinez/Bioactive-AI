@@ -15,9 +15,18 @@ recibiendo `label_lower_bound` y `label_upper_bound` en la interfaz nativa `xgb.
 **Distribución de pérdida (`aft_loss_distribution`):**
 XGBoost admite `"normal"`, `"logistic"` y `"extreme"`. La elección por omisión es
 `"normal"`, adoptada como supuesto vigente comparable a la hipótesis gaussiana del
-Tobit y a la dispersión experimental reportada en ChEMBL (σ ≈ 0.7 en pActividad).
-Cambiar esta distribución requiere contrastar en validación cruzada agrupada si las
-colas pesadas (`"logistic"`) o asimétricas (`"extreme"`) mejoran la concordancia.
+Tobit. Cambiar esta distribución requiere contrastar en validación cruzada agrupada
+si las colas pesadas (`"logistic"`) o asimétricas (`"extreme"`) mejoran la concordancia.
+
+**Escala (`escala`, el σ de la ecuación): está en ln(µM), no en pActividad.**
+El valor por omisión `escala=1.0` son 0.434 en pActividad (1 / ln 10), así que no
+equivale a los 0.7 de dispersión experimental que ChEMBL reporta: el equivalente de
+esos 0.7 sería 0.7 · ln 10 = 1.6118. **Todas las cifras publicadas de la 2.13 y del
+05b se produjeron con 1.0, es decir con 0.434 en pActividad.** El brazo con 1.6118
+está medido en `experimentos/2026-11-01-ingrid-2.13-sensibilidad-escala-aft`: +0.0192
+de concordancia en `solo_npass`, mejor en 13 de 15 evaluaciones, con una desviación
+pareada de 0.0190. Cambiar el valor por omisión obliga a reejecutar el 05b, así que
+es una decisión aparte.
 
 **Conversión de escala:**
 XGBoost devuelve predicciones en concentración (µM). Para interoperar con el arnés y
@@ -77,8 +86,17 @@ class RegresionAFT(BaseEstimator, RegressorMixin):
         """
         inf_um, sup_um = limites_en_micromolar(inferior, superior)
 
-        # Descartar lo que no informa o está mal definido:
-        # inf_um > 0 y finito elimina intervalos no informativos [0, +inf], ceros e infinitos;
+        # Descartar lo que no informa o está mal definido, y con ello 745 filas que sí
+        # informan:
+        # inf_um > 0 y finito elimina ceros e infinitos. Las cotas inferiores de
+        # exactamente 0 µM no son el intervalo vacío [0, +inf]: son censuras por la
+        # izquierda («más potente que c µM») que XGBoost admite de forma nativa con
+        # label_lower_bound = 0. Son 745 de las 56,241 filas de ajuste (740 de
+        # solo_chembl, 5 de mixto, 0 de solo_npass) y son las más potentes del conjunto:
+        # su cota tiene mediana pActividad 7.00 contra 6.28 de las exactas. Los conteos
+        # se reproducen con scripts/descartadas_aft.py, que imprime cada partición
+        # porque el número cambia con ella. `AftConCensuraIzquierda` es la vía que las
+        # conserva, medida en el #181;
         # sup_um >= inf_um asegura que sup_um no sea NaN (p. ej. cota inferior en pActividad NaN)
         # ni contradictorio (sup_um < inf_um).
         valida = (inf_um > 0) & np.isfinite(inf_um) & (sup_um >= inf_um)
