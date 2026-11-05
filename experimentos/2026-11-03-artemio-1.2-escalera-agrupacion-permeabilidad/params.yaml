@@ -1,0 +1,23 @@
+decision: '1.2'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - svm_rbf
+  - logistica
+  - base_peso_tpsa
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  umbrales_similitud:
+  - 0.6
+  - 0.5
+  - 0.4
+  grupo_maximo: 0.2
+  filas: 6306
+  toca_prueba: false
+  nota: 'similitud: componentes conexas de Tanimoto sobre Morgan radio 2, 2048 bits'

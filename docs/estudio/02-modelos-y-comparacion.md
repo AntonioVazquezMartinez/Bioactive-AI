@@ -85,14 +85,14 @@ las mismas filas, así que los quince valores no son quince réplicas independie
 | andamio ∪ esqueleto (el correcto) | 1,048 | 0.9363 | 0.6989 |
 | solo andamio | 2,239 | 0.9586 | 0.7694 |
 
-**Agrupar solo por andamio infla el AUROC en 2.2 puntos y el MCC en 7.1.**
+**Con el bosque, agrupar solo por andamio infla el AUROC en 2.2 puntos y el MCC en 7.1.** Con el `svm_rbf` que se entrega son 1.3 y 1.9, y con la logística 1.0 y 1.1: el efecto depende del modelo.
 
 > **P. ¿Eso es más o menos que elegir bien el modelo?**
-> **Depende del estimador, y el 03 lo advierte.** Con el mismo estimador en las dos
-> comparaciones, en MCC el agrupamiento mueve 7.1 contra 2.2 entre las tres canalizaciones:
-> algo más de tres veces. **En AUROC es lo mismo**: 0.0223 contra 0.0225. Con estimadores
-> distintos salía 4.6 veces y el resultado se invertía. Por eso la conclusión fuerte es solo la
-> de MCC, y la frase que sí se sostiene con cualquiera es: **una cifra que no diga cómo agrupó
+> **Depende del modelo y del estimador.** Con el bosque y el mismo estimador, en MCC el
+> agrupamiento mueve 7.1 contra 2.2 entre las tres canalizaciones del 03. Pero con el `svm_rbf`
+> que se entrega mueve 1.9, y elegir modelo entre los once mueve 4.2: ahí la proporción se
+> invierte. Lo que sí es general es la escalera de agrupamiento (de 0.752 a 0.419 de MCC en
+> 33.3 puntos) y la frase que se sostiene con cualquiera: **una cifra que no diga cómo agrupó
 > no se puede comparar.**
 
 ## 5 · ¿Sobreajusta? (`03` §2.3)
