@@ -1,0 +1,18 @@
+decision: '2.9'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - media
+  - ridge
+  - arbol
+  - knn
+  - svr
+  - mlp
+  pliegues: 5
+  entrena_con: solo exactas
+  objetivo: pActividad
+  corte_mcc: 5.0
+  estratos: procedencia

@@ -1,0 +1,1 @@
+python3.12.12 /Users/artemiopadilla/Documents/repos/GitHub/tec/Bioactive-AI/env312/lib/python3.12/site-packages/ipykernel_launcher.py -f /private/var/folders/x_/nd3msxln5hs639790c7jjqm80000gn/T/tmpqpxlk38v.json

@@ -121,3 +121,177 @@ def test_el_resumen_no_llama_error_estandar_a_la_desviacion(datos):
     r = resumen(res)
     assert isinstance(r, pd.DataFrame)
     assert ("mcc", "std") in r.columns
+
+
+def test_el_tiempo_de_ajuste_se_mide_y_no_se_repite_por_estrato(datos):
+    """La rúbrica de los Avances 4 y 5 pide los tiempos en la misma tabla.
+
+    Un ajuste ocurre una vez por (modelo, semilla, pliegue), no una vez por
+    subgrupo. Si los segundos se copiaran a las filas de estrato, cualquier
+    promedio sobre la tabla larga los contaría varias veces y el tiempo del
+    modelo saldría inflado por el número de estratos que tenga la corrida.
+    """
+    X, y, grupos, estratos = datos
+    # `min_minoritaria` baja para que los dos estratos del fixture se reporten;
+    # con el mínimo real de 20 ninguno llega y la prueba no comprobaría nada.
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos,
+                     estratos=estratos, semillas=(0,), pliegues=5,
+                     min_minoritaria=5, verboso=False)
+
+    todos = res[res.estrato.eq("todos")]
+    assert (todos.segundos_ajuste > 0).all()
+    assert (todos.segundos_prediccion > 0).all()
+    assert todos.segundos_ajuste.notna().all()
+
+    por_estrato = res[res.estrato.ne("todos")]
+    assert len(por_estrato) > 0, "la prueba no comprueba nada si no hay estratos"
+    assert por_estrato.segundos_ajuste.isna().all()
+
+
+def test_la_tabla_comparativa_ordena_por_la_metrica_que_se_le_pida(datos):
+    """Cuál métrica ordena es decisión del equipo, no una constante del código."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos, _ = datos
+    res, _ = evaluar(canalizaciones(), X, y, grupos, semillas=(0,), pliegues=3,
+                     verboso=False)
+
+    por_mcc = tabla_comparativa(res, principal="mcc")
+    assert list(por_mcc.index) == list(por_mcc.sort_values("mcc", ascending=False).index)
+    assert "segundos_ajuste" in por_mcc.columns
+    assert (por_mcc.pliegues == 3).all()
+
+    por_auroc = tabla_comparativa(res, principal="auroc", otras=("mcc",))
+    assert list(por_auroc.columns)[:2] == ["auroc", "desv"]
+    assert set(por_auroc.index) == set(CANALIZACIONES)
+
+
+def test_la_tabla_comparativa_avisa_si_el_estrato_no_existe(datos):
+    """Pedir un estrato que no se reportó debe fallar, no devolver nada en silencio."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos, _ = datos
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos, semillas=(0,),
+                     pliegues=3, verboso=False)
+    with pytest.raises(ValueError, match="estrato"):
+        tabla_comparativa(res, estrato="inexistente")
+
+
+def test_la_tabla_no_se_rompe_si_la_principal_esta_entre_las_otras(datos):
+    """Pasa con los valores por omisión al pedir AUROC: la columna salía dos veces."""
+    from src.evaluation.cv import tabla_comparativa
+
+    X, y, grupos = datos[0], datos[1], datos[2]
+    res, _ = evaluar({"lr": LogisticRegression()}, X, y, grupos, semillas=(0,),
+                     pliegues=3, verboso=False)
+    tabla = tabla_comparativa(res, principal="auroc")
+    assert list(tabla.columns).count("auroc") == 1
+    assert list(tabla.columns)[:2] == ["auroc", "desv"]
+
+
+def test_voltear_a_la_minoritaria_no_pierde_resolucion():
+    """`1 - p` aplastaba en empates las filas más confiadas de la clase minoritaria.
+
+    Un modelo que satura deja `p` tan cerca de 0 que `1 - p` redondea a 1.0 exacto, y
+    esas filas son las que el modelo da por minoritarias con más confianza: quedan
+    empatadas en la cima del orden, junto con filas de la mayoritaria igual de
+    pequeñas. En el 03c eso le quitaba 0.104 de AUPRC a `bayes`. Negar es exacto,
+    restar no.
+    """
+    from src.evaluation.cv import orientar_minoritaria
+
+    # Mayoritaria la clase 1, así que voltea. Las tres primeras filas son clase 0 con
+    # probabilidades distintas pero por debajo de la resolución de `1 - p`.
+    y = np.array([0, 0, 0, 1, 1, 1, 1])
+    p = np.array([1e-20, 1e-18, 1e-17, 0.9, 0.95, 1.0, 1.0])
+    ym, puntaje, volteada = orientar_minoritaria(y, p)
+
+    assert volteada
+    assert np.array_equal(ym, 1 - y)
+    assert len(np.unique(1 - p)) < len(np.unique(p))        # la resta sí colapsaba
+    assert len(np.unique(puntaje)) == len(np.unique(p))     # negar no
+
+
+def test_el_auroc_no_depende_de_la_orientacion():
+    """La identidad que `1 - p` rompía: el AUROC es el mismo visto desde cualquier clase.
+
+    Es la comprobación que delata la pérdida de resolución sin tener que saber de
+    punto flotante, porque tiene que cumplirse por definición.
+    """
+    from sklearn.metrics import roc_auc_score
+
+    from src.evaluation.cv import orientar_minoritaria
+
+    # Las dos filas de clase 0 y una de clase 1 tienen `p` por debajo de la resolución
+    # de la resta, así que `1 - p` las empata entre sí y mezcla las dos clases; el orden
+    # de `p` las separa bien. Con `-p` el AUROC sale 1.0, igual que sin voltear.
+    y = np.array([0, 0, 1, 1, 1, 1, 1])
+    p = np.array([1e-20, 1e-18, 1e-17, 0.9, 0.9, 0.9, 0.9])
+    ym, puntaje, _ = orientar_minoritaria(y, p)
+
+    assert roc_auc_score(ym, puntaje) == pytest.approx(roc_auc_score(y, p))
+    assert roc_auc_score(ym, 1 - p) < roc_auc_score(y, p)   # lo que hacía antes
+
+
+# --- la clase minoritaria se fija una vez, no por pliegue ni por estrato (#187) -----
+
+def test_la_clase_minoritaria_fijada_manda_sobre_la_del_subconjunto():
+    """Un pliegue con 44% de positivos ya no puede decidir que la minoritaria es la 1.
+
+    Si en todo el conjunto la clase 0 es la menos frecuente, el AUPRC «de la
+    minoritaria» tiene que medirla también en el pliegue donde por azar sea la 1.
+    Antes cada subconjunto elegía la suya y el promedio mezclaba las dos.
+    """
+    from sklearn.metrics import average_precision_score
+
+    from src.evaluation.cv import _medir, clase_minoritaria, orientar_minoritaria
+
+    y_todo = np.array([1] * 60 + [0] * 40)
+    assert clase_minoritaria(y_todo) == 0
+
+    y = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0])              # 44% de unos: la 1 «gana» sola
+    p = np.array([0.9, 0.8, 0.3, 0.2, 0.6, 0.5, 0.4, 0.1, 0.05])
+    assert orientar_minoritaria(y, p)[2] is False          # sola, mediría la clase 1
+
+    ym, pm, volteada = orientar_minoritaria(y, p, minoritaria=0)
+    assert volteada and np.array_equal(ym, 1 - y)
+
+    medido = _medir(y, p, minoritaria=0)["auprc_minoritaria"]
+    assert medido == pytest.approx(average_precision_score(1 - y, -p))
+    assert medido != pytest.approx(average_precision_score(y, p))
+
+
+def test_evaluar_fija_la_clase_minoritaria_de_todos_y_de_cada_estrato(monkeypatch):
+    """`evaluar` tiene que pasar la misma clase a todos los pliegues de un estrato."""
+    import src.evaluation.cv as cv
+
+    rng = np.random.default_rng(1)
+    n = 600
+    grupos = np.repeat(np.arange(n // 3), 3)
+    estratos = np.where(np.arange(n) % 2 == 0, "mayoria_uno", "mayoria_cero")
+    y = np.where(estratos == "mayoria_uno",
+                 rng.random(n) < 0.65, rng.random(n) < 0.35).astype(int)
+    X = rng.normal(size=(n, 4)) + y[:, None] * 0.8
+
+    vistas = []
+    real = cv._auprc_minoritaria
+
+    def espia(y_, p_, minoritaria=None):
+        vistas.append(minoritaria)
+        return real(y_, p_, minoritaria)
+
+    monkeypatch.setattr(cv, "_auprc_minoritaria", espia)
+    pipe = Pipeline([("e", StandardScaler()), ("m", LogisticRegression(max_iter=200))])
+    tabla, _ = cv.evaluar({"lr": pipe}, X, y, grupos, estratos=estratos,
+                          semillas=(0, 1), pliegues=5, min_minoritaria=5,
+                          verboso=False)
+
+    # Y la clase medida queda en la tabla: una sola por estrato, en todos los pliegues.
+    assert tabla.groupby("estrato")["clase_medida"].nunique().eq(1).all()
+    assert tabla.set_index("estrato")["clase_medida"].to_dict() == {
+        "todos": cv.clase_minoritaria(y),
+        "mayoria_uno": 0, "mayoria_cero": 1}
+    assert None not in vistas                              # nadie lo decide por su cuenta
+    esperado = {cv.clase_minoritaria(y)} | {
+        cv.clase_minoritaria(y[estratos == e]) for e in np.unique(estratos)}
+    assert set(vistas) == esperado == {0, 1}

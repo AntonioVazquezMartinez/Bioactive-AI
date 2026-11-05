@@ -19,6 +19,14 @@ project:
     - contenido/notebooks/02_Feature_Eng.ipynb
     - contenido/notebooks/02b_Feature_Eng_actividad.ipynb
     - contenido/notebooks/03_Baseline.ipynb
+    - contenido/notebooks/03b_Baseline_regresion_actividad.ipynb
+    - contenido/notebooks/03c_Permeabilidad_huellas.ipynb
+    - contenido/notebooks/04_Models.ipynb
+    - contenido/notebooks/04b_Regresion_actividad.ipynb
+    - contenido/notebooks/04c_Regresion_actividad_huellas.ipynb
+    - contenido/notebooks/05_Modelo_Final.ipynb
+    - contenido/notebooks/05b_Ensambles_actividad.ipynb
+    - contenido/notebooks/05c_Ensambles_permeabilidad_huellas.ipynb
 
 website:
   title: "Bioactive AI"
@@ -62,11 +70,8 @@ website:
           - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
             text: "3 · Modelado, explicabilidad y hueco"
           - text: "---"
-          - text: "Investigación"
-          - href: contenido/referencias/01-representaciones-moleculares.md
-            text: "01 · Representaciones moleculares"
-          - href: contenido/referencias/03-explicabilidad.md
-            text: "03 · Explicabilidad"
+          - href: contenido/referencias/index.qmd
+            text: "Los cinco documentos de investigación"
       - text: Datos
         menu:
           - href: contenido/datos.md
@@ -75,22 +80,21 @@ website:
             text: Contenido, defectos y linaje
           - href: contenido/diccionario-matriz.md
             text: Diccionario de la matriz
-          - text: "---"
-          - text: "Investigación de fuentes"
-          - href: contenido/referencias/02-datasets-bbb.md
-            text: "02 · Datasets de BBB"
-          - href: contenido/referencias/04-datos-neuroactividad.md
-            text: "04 · Datos de neuroactividad"
-          - href: contenido/referencias/05-fuentes-de-datos.md
-            text: "05 · Fuentes de datos abiertas"
       - text: Ruta
         menu:
+          - href: contenido/recorrido-del-dato.md
+            text: De un SMILES a una lista de candidatos
           - href: contenido/decisiones.md
             text: La ruta del proyecto
           - href: contenido/variable-objetivo-fase2.md
-            text: La variable objetivo de la fase 2
-          - href: consulta.qmd
-            text: Consulta a la patrocinadora
+            text: Las variables objetivo
+          # `consulta.qmd` se sigue construyendo y su URL sirve, pero sale del
+          # menú: de sus siete preguntas, cinco ya las contestó —la 1 y la 5 en
+          # la reunión del 15 de octubre, la 4 y la 7 en su correo del 25, y la
+          # 2 dejó de aplicar al decidir la 2.8—. Enlazarla ahí la invitaría a
+          # contestar lo que ya contestó. Vuelve al menú cuando se pode a las
+          # dos que siguen vivas, la brecha de los naturales (1.6) y la forma
+          # del modelo (2.2).
           - href: contenido/referencias/index.qmd
             text: Qué investigación sustenta cada una
       - text: Entregables
@@ -121,6 +125,26 @@ website:
           - text: "Avance 3 · Modelo de referencia"
           - href: contenido/notebooks/03_Baseline.ipynb
             text: Análisis · Modelo de referencia
+          - href: contenido/notebooks/03b_Baseline_regresion_actividad.ipynb
+            text: Análisis · Referencia de la regresión de actividad
+          - text: "---"
+          - text: "Avance 4 · Modelos alternativos"
+          - href: contenido/notebooks/04_Models.ipynb
+            text: Análisis · Seis familias y el modelo individual final
+          - href: contenido/notebooks/04b_Regresion_actividad.ipynb
+            text: Análisis · La comparativa de la fase 2
+          - href: contenido/notebooks/04c_Regresion_actividad_huellas.ipynb
+            text: Análisis · Qué añaden las huellas en la fase 2
+          - href: contenido/notebooks/03c_Permeabilidad_huellas.ipynb
+            text: Análisis · Qué añaden las huellas en la fase 1
+          - text: "---"
+          - text: "Avance 5 · Modelo final"
+          - href: contenido/notebooks/05_Modelo_Final.ipynb
+            text: Análisis · El modelo final de la fase 1
+          - href: contenido/notebooks/05b_Ensambles_actividad.ipynb
+            text: Análisis · El modelo final de la fase 2 y sus ensambles
+          - href: contenido/notebooks/05c_Ensambles_permeabilidad_huellas.ipynb
+            text: Análisis · Qué añaden las huellas a los ensambles de la fase 1
       - href: bibliografia.qmd
         text: Bibliografía
     right:

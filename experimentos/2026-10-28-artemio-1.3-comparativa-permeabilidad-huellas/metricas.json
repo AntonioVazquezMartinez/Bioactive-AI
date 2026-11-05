@@ -1,0 +1,1508 @@
+{
+  "análogo estereoquímico": {
+    "depurados/arbol": {
+      "auprc_minoritaria": 0.7467,
+      "auroc": 0.8391,
+      "desv_mcc": 0.1267,
+      "mcc": 0.5989,
+      "segundos_ajuste": NaN
+    },
+    "depurados/bayes": {
+      "auprc_minoritaria": 0.7825,
+      "auroc": 0.8758,
+      "desv_mcc": 0.0937,
+      "mcc": 0.6279,
+      "segundos_ajuste": NaN
+    },
+    "depurados/knn": {
+      "auprc_minoritaria": 0.8562,
+      "auroc": 0.9014,
+      "desv_mcc": 0.1007,
+      "mcc": 0.6255,
+      "segundos_ajuste": NaN
+    },
+    "depurados/logistica": {
+      "auprc_minoritaria": 0.8664,
+      "auroc": 0.9044,
+      "desv_mcc": 0.0909,
+      "mcc": 0.6902,
+      "segundos_ajuste": NaN
+    },
+    "depurados/mlp": {
+      "auprc_minoritaria": 0.8442,
+      "auroc": 0.8925,
+      "desv_mcc": 0.1019,
+      "mcc": 0.6752,
+      "segundos_ajuste": NaN
+    },
+    "depurados/svm_rbf": {
+      "auprc_minoritaria": 0.8594,
+      "auroc": 0.909,
+      "desv_mcc": 0.1075,
+      "mcc": 0.6941,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/arbol": {
+      "auprc_minoritaria": 0.7152,
+      "auroc": 0.8142,
+      "desv_mcc": 0.1433,
+      "mcc": 0.5458,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bayes": {
+      "auprc_minoritaria": 0.6307,
+      "auroc": 0.7414,
+      "desv_mcc": 0.1232,
+      "mcc": 0.5037,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8147,
+      "auroc": 0.8788,
+      "desv_mcc": 0.106,
+      "mcc": 0.5757,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8629,
+      "auroc": 0.8862,
+      "desv_mcc": 0.1103,
+      "mcc": 0.5991,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8239,
+      "auroc": 0.8606,
+      "desv_mcc": 0.1079,
+      "mcc": 0.5834,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.864,
+      "auroc": 0.899,
+      "desv_mcc": 0.1156,
+      "mcc": 0.6134,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/arbol": {
+      "auprc_minoritaria": 0.7323,
+      "auroc": 0.8343,
+      "desv_mcc": 0.1332,
+      "mcc": 0.5986,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bayes": {
+      "auprc_minoritaria": 0.7854,
+      "auroc": 0.8737,
+      "desv_mcc": 0.0864,
+      "mcc": 0.6391,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.8638,
+      "auroc": 0.903,
+      "desv_mcc": 0.0962,
+      "mcc": 0.6187,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.8673,
+      "auroc": 0.905,
+      "desv_mcc": 0.0914,
+      "mcc": 0.6916,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.8517,
+      "auroc": 0.899,
+      "desv_mcc": 0.1127,
+      "mcc": 0.6558,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.8603,
+      "auroc": 0.9099,
+      "desv_mcc": 0.0919,
+      "mcc": 0.6958,
+      "segundos_ajuste": NaN
+    },
+    "huellas/arbol": {
+      "auprc_minoritaria": 0.723,
+      "auroc": 0.8151,
+      "desv_mcc": 0.1502,
+      "mcc": 0.5613,
+      "segundos_ajuste": NaN
+    },
+    "huellas/bayes": {
+      "auprc_minoritaria": 0.6309,
+      "auroc": 0.7414,
+      "desv_mcc": 0.1237,
+      "mcc": 0.5046,
+      "segundos_ajuste": NaN
+    },
+    "huellas/knn": {
+      "auprc_minoritaria": 0.7958,
+      "auroc": 0.8643,
+      "desv_mcc": 0.1179,
+      "mcc": 0.5539,
+      "segundos_ajuste": NaN
+    },
+    "huellas/logistica": {
+      "auprc_minoritaria": 0.8459,
+      "auroc": 0.8726,
+      "desv_mcc": 0.1107,
+      "mcc": 0.558,
+      "segundos_ajuste": NaN
+    },
+    "huellas/mlp": {
+      "auprc_minoritaria": 0.8081,
+      "auroc": 0.8513,
+      "desv_mcc": 0.129,
+      "mcc": 0.5541,
+      "segundos_ajuste": NaN
+    },
+    "huellas/svm_rbf": {
+      "auprc_minoritaria": 0.8501,
+      "auroc": 0.8882,
+      "desv_mcc": 0.1024,
+      "mcc": 0.5853,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/arbol": {
+      "auprc_minoritaria": 0.7467,
+      "auroc": 0.8453,
+      "desv_mcc": 0.0828,
+      "mcc": 0.6079,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/bayes": {
+      "auprc_minoritaria": 0.809,
+      "auroc": 0.8877,
+      "desv_mcc": 0.1858,
+      "mcc": 0.4548,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/knn": {
+      "auprc_minoritaria": 0.8671,
+      "auroc": 0.9055,
+      "desv_mcc": 0.0904,
+      "mcc": 0.6451,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/logistica": {
+      "auprc_minoritaria": 0.8723,
+      "auroc": 0.9064,
+      "desv_mcc": 0.0879,
+      "mcc": 0.6692,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/mlp": {
+      "auprc_minoritaria": 0.8471,
+      "auroc": 0.9006,
+      "desv_mcc": 0.0899,
+      "mcc": 0.6779,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/svm_rbf": {
+      "auprc_minoritaria": 0.8775,
+      "auroc": 0.9131,
+      "desv_mcc": 0.103,
+      "mcc": 0.6864,
+      "segundos_ajuste": NaN
+    }
+  },
+  "brecha": {
+    "depurados/arbol": {
+      "auroc_entrenamiento": 0.9943534238809593,
+      "auroc_validacion": 0.8353829001124463,
+      "brecha": 0.15897052376851295
+    },
+    "depurados/bayes": {
+      "auroc_entrenamiento": 0.8761748694973159,
+      "auroc_validacion": 0.8526293567707922,
+      "brecha": 0.02354551272652372
+    },
+    "depurados/knn": {
+      "auroc_entrenamiento": 0.9677535450291087,
+      "auroc_validacion": 0.912137549256238,
+      "brecha": 0.055615995772870686
+    },
+    "depurados/logistica": {
+      "auroc_entrenamiento": 0.943060760205617,
+      "auroc_validacion": 0.9125069997426868,
+      "brecha": 0.030553760462930235
+    },
+    "depurados/mlp": {
+      "auroc_entrenamiento": 0.994663498215268,
+      "auroc_validacion": 0.9202189717937008,
+      "brecha": 0.07444452642156718
+    },
+    "depurados/svm_rbf": {
+      "auroc_entrenamiento": 0.9593084346398253,
+      "auroc_validacion": 0.9203722888750333,
+      "brecha": 0.038936145764791985
+    },
+    "descriptores+huellas/arbol": {
+      "auroc_entrenamiento": 0.9942711356765805,
+      "auroc_validacion": 0.8215744299277169,
+      "brecha": 0.17269670574886364
+    },
+    "descriptores+huellas/bayes": {
+      "auroc_entrenamiento": 0.8512320358897641,
+      "auroc_validacion": 0.7716544003704804,
+      "brecha": 0.07957763551928376
+    },
+    "descriptores+huellas/knn": {
+      "auroc_entrenamiento": 0.9707869701760083,
+      "auroc_validacion": 0.9149737879438217,
+      "brecha": 0.055813182232186676
+    },
+    "descriptores+huellas/logistica": {
+      "auroc_entrenamiento": 0.9921381241811806,
+      "auroc_validacion": 0.9118272927937664,
+      "brecha": 0.08031083138741424
+    },
+    "descriptores+huellas/mlp": {
+      "auroc_entrenamiento": 0.9988964703782017,
+      "auroc_validacion": 0.8952211866784096,
+      "brecha": 0.10367528369979218
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auroc_entrenamiento": 0.9847688792294929,
+      "auroc_validacion": 0.9167686484772222,
+      "brecha": 0.06800023075227069
+    },
+    "descriptores/arbol": {
+      "auroc_entrenamiento": 0.994489146887674,
+      "auroc_validacion": 0.8333261915333159,
+      "brecha": 0.1611629553543581
+    },
+    "descriptores/bayes": {
+      "auroc_entrenamiento": 0.8773589299405675,
+      "auroc_validacion": 0.8561982761533843,
+      "brecha": 0.021160653787183237
+    },
+    "descriptores/knn": {
+      "auroc_entrenamiento": 0.9685570542174483,
+      "auroc_validacion": 0.9160663252241003,
+      "brecha": 0.05249072899334806
+    },
+    "descriptores/logistica": {
+      "auroc_entrenamiento": 0.9426805333329934,
+      "auroc_validacion": 0.913396389096355,
+      "brecha": 0.029284144236638388
+    },
+    "descriptores/mlp": {
+      "auroc_entrenamiento": 0.9951886324750422,
+      "auroc_validacion": 0.9146266354736895,
+      "brecha": 0.08056199700135269
+    },
+    "descriptores/svm_rbf": {
+      "auroc_entrenamiento": 0.960086726277925,
+      "auroc_validacion": 0.9195414201611308,
+      "brecha": 0.04054530611679419
+    },
+    "huellas/arbol": {
+      "auroc_entrenamiento": 0.9887510037299994,
+      "auroc_validacion": 0.8367964872689383,
+      "brecha": 0.15195451646106106
+    },
+    "huellas/bayes": {
+      "auroc_entrenamiento": 0.8497436751686642,
+      "auroc_validacion": 0.768188470064153,
+      "brecha": 0.0815552051045112
+    },
+    "huellas/knn": {
+      "auroc_entrenamiento": 0.9687668752343374,
+      "auroc_validacion": 0.8999363156668909,
+      "brecha": 0.06883055956744644
+    },
+    "huellas/logistica": {
+      "auroc_entrenamiento": 0.9907137534551118,
+      "auroc_validacion": 0.899546567493049,
+      "brecha": 0.09116718596206286
+    },
+    "huellas/mlp": {
+      "auroc_entrenamiento": 0.9987032190417384,
+      "auroc_validacion": 0.8794642190399189,
+      "brecha": 0.11923900000181953
+    },
+    "huellas/svm_rbf": {
+      "auroc_entrenamiento": 0.9823728311664593,
+      "auroc_validacion": 0.9062131604216738,
+      "brecha": 0.07615967074478558
+    },
+    "seleccionados/arbol": {
+      "auroc_entrenamiento": 0.9936360707569942,
+      "auroc_validacion": 0.8367643022228993,
+      "brecha": 0.1568717685340949
+    },
+    "seleccionados/bayes": {
+      "auroc_entrenamiento": 0.909873723346141,
+      "auroc_validacion": 0.8759665588575561,
+      "brecha": 0.033907164488584884
+    },
+    "seleccionados/knn": {
+      "auroc_entrenamiento": 0.9692310367086403,
+      "auroc_validacion": 0.9124882918554633,
+      "brecha": 0.056742744853176985
+    },
+    "seleccionados/logistica": {
+      "auroc_entrenamiento": 0.9442669948272726,
+      "auroc_validacion": 0.9146860370164764,
+      "brecha": 0.02958095781079617
+    },
+    "seleccionados/mlp": {
+      "auroc_entrenamiento": 0.9929719144405189,
+      "auroc_validacion": 0.9080868421706668,
+      "brecha": 0.08488507226985209
+    },
+    "seleccionados/svm_rbf": {
+      "auroc_entrenamiento": 0.9574377006623938,
+      "auroc_validacion": 0.9198586561393196,
+      "brecha": 0.037579044523074145
+    }
+  },
+  "comparacion_todos": {
+    "depurados/arbol/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0221,
+      "dif_media": 0.0037,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "depurados/arbol/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0134,
+      "dif_media": 0.0022,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "depurados/arbol/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0359,
+      "dif_media": -0.0035,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "depurados/bayes/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0198,
+      "dif_media": 0.0004,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "depurados/bayes/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0136,
+      "dif_media": -0.0017,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "depurados/bayes/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0356,
+      "dif_media": -0.0141,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "depurados/knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0085,
+      "dif_media": -0.0025,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "depurados/knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0089,
+      "dif_media": -0.0045,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "depurados/knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0218,
+      "dif_media": 0.0102,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "depurados/logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0021,
+      "dif_media": -0.001,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "depurados/logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0021,
+      "dif_media": -0.0013,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "depurados/logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0066,
+      "dif_media": -0.0016,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "depurados/mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0168,
+      "dif_media": -0.0012,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "depurados/mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0114,
+      "dif_media": -0.0,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "depurados/mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0312,
+      "dif_media": -0.0003,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "depurados/svm_rbf/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.002,
+      "dif_media": 0.0019,
+      "evaluaciones": 15,
+      "mejor_en": 13
+    },
+    "depurados/svm_rbf/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0028,
+      "dif_media": 0.0005,
+      "evaluaciones": 15,
+      "mejor_en": 10
+    },
+    "depurados/svm_rbf/mcc": {
+      "cumple": false,
+      "dif_desv": 0.01,
+      "dif_media": -0.0003,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/arbol/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0376,
+      "dif_media": 0.0082,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/arbol/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0261,
+      "dif_media": 0.0042,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "descriptores+huellas/arbol/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0573,
+      "dif_media": 0.0144,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/bayes/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0434,
+      "dif_media": -0.2366,
+      "evaluaciones": 15,
+      "mejor_en": 0
+    },
+    "descriptores+huellas/bayes/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0427,
+      "dif_media": -0.0865,
+      "evaluaciones": 15,
+      "mejor_en": 1
+    },
+    "descriptores+huellas/bayes/mcc": {
+      "cumple": false,
+      "dif_desv": 0.146,
+      "dif_media": -0.0482,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "descriptores+huellas/knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0256,
+      "dif_media": -0.0064,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.023,
+      "dif_media": -0.0056,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0425,
+      "dif_media": -0.0187,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0235,
+      "dif_media": -0.0191,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "descriptores+huellas/logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0218,
+      "dif_media": -0.0043,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0562,
+      "dif_media": -0.0237,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0333,
+      "dif_media": -0.036,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "descriptores+huellas/mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0224,
+      "dif_media": -0.0146,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "descriptores+huellas/mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.049,
+      "dif_media": -0.0302,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "descriptores+huellas/svm_rbf/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0124,
+      "dif_media": -0.01,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "descriptores+huellas/svm_rbf/auroc": {
+      "cumple": false,
+      "dif_desv": 0.015,
+      "dif_media": -0.0016,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "descriptores+huellas/svm_rbf/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0347,
+      "dif_media": -0.0076,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "huellas/arbol/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0338,
+      "dif_media": 0.0345,
+      "evaluaciones": 15,
+      "mejor_en": 13
+    },
+    "huellas/arbol/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0259,
+      "dif_media": 0.0037,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "huellas/arbol/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0532,
+      "dif_media": 0.0133,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "huellas/bayes/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.046,
+      "dif_media": -0.2421,
+      "evaluaciones": 15,
+      "mejor_en": 0
+    },
+    "huellas/bayes/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0439,
+      "dif_media": -0.0904,
+      "evaluaciones": 15,
+      "mejor_en": 1
+    },
+    "huellas/bayes/mcc": {
+      "cumple": false,
+      "dif_desv": 0.1483,
+      "dif_media": -0.0557,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0337,
+      "dif_media": -0.0217,
+      "evaluaciones": 15,
+      "mejor_en": 4
+    },
+    "huellas/knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0285,
+      "dif_media": -0.0191,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0387,
+      "dif_media": -0.0365,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "huellas/logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0317,
+      "dif_media": -0.0267,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0246,
+      "dif_media": -0.0174,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0689,
+      "dif_media": -0.0629,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.038,
+      "dif_media": -0.0473,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "huellas/mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0276,
+      "dif_media": -0.0291,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0548,
+      "dif_media": -0.0586,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "huellas/svm_rbf/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0161,
+      "dif_media": -0.0156,
+      "evaluaciones": 15,
+      "mejor_en": 2
+    },
+    "huellas/svm_rbf/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0179,
+      "dif_media": -0.0128,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "huellas/svm_rbf/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0374,
+      "dif_media": -0.0388,
+      "evaluaciones": 15,
+      "mejor_en": 3
+    },
+    "seleccionados/arbol/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0361,
+      "dif_media": 0.0136,
+      "evaluaciones": 15,
+      "mejor_en": 10
+    },
+    "seleccionados/arbol/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0169,
+      "dif_media": 0.0019,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "seleccionados/arbol/mcc": {
+      "cumple": false,
+      "dif_desv": 0.052,
+      "dif_media": 0.0109,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/bayes/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0282,
+      "dif_media": -0.0016,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "seleccionados/bayes/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0207,
+      "dif_media": 0.0141,
+      "evaluaciones": 15,
+      "mejor_en": 11
+    },
+    "seleccionados/bayes/mcc": {
+      "cumple": false,
+      "dif_desv": 0.1088,
+      "dif_media": -0.1639,
+      "evaluaciones": 15,
+      "mejor_en": 0
+    },
+    "seleccionados/knn/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0196,
+      "dif_media": -0.0035,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/knn/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0146,
+      "dif_media": -0.0029,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/knn/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0306,
+      "dif_media": 0.0076,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "seleccionados/logistica/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0069,
+      "dif_media": 0.0019,
+      "evaluaciones": 15,
+      "mejor_en": 8
+    },
+    "seleccionados/logistica/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0041,
+      "dif_media": -0.0001,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "seleccionados/logistica/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0154,
+      "dif_media": -0.0035,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    },
+    "seleccionados/mlp/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0224,
+      "dif_media": -0.0037,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/mlp/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0167,
+      "dif_media": -0.003,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/mlp/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0299,
+      "dif_media": 0.01,
+      "evaluaciones": 15,
+      "mejor_en": 9
+    },
+    "seleccionados/svm_rbf/auprc_minoritaria": {
+      "cumple": false,
+      "dif_desv": 0.0078,
+      "dif_media": 0.0001,
+      "evaluaciones": 15,
+      "mejor_en": 6
+    },
+    "seleccionados/svm_rbf/auroc": {
+      "cumple": false,
+      "dif_desv": 0.0081,
+      "dif_media": 0.0004,
+      "evaluaciones": 15,
+      "mejor_en": 7
+    },
+    "seleccionados/svm_rbf/mcc": {
+      "cumple": false,
+      "dif_desv": 0.0163,
+      "dif_media": -0.0041,
+      "evaluaciones": 15,
+      "mejor_en": 5
+    }
+  },
+  "natural exacto": {
+    "depurados/arbol": {
+      "auprc_minoritaria": 0.7863,
+      "auroc": 0.8472,
+      "desv_mcc": 0.0738,
+      "mcc": 0.6002,
+      "segundos_ajuste": NaN
+    },
+    "depurados/bayes": {
+      "auprc_minoritaria": 0.8443,
+      "auroc": 0.8727,
+      "desv_mcc": 0.1,
+      "mcc": 0.5887,
+      "segundos_ajuste": NaN
+    },
+    "depurados/knn": {
+      "auprc_minoritaria": 0.9036,
+      "auroc": 0.9199,
+      "desv_mcc": 0.0903,
+      "mcc": 0.7013,
+      "segundos_ajuste": NaN
+    },
+    "depurados/logistica": {
+      "auprc_minoritaria": 0.9012,
+      "auroc": 0.9168,
+      "desv_mcc": 0.0674,
+      "mcc": 0.6885,
+      "segundos_ajuste": NaN
+    },
+    "depurados/mlp": {
+      "auprc_minoritaria": 0.9049,
+      "auroc": 0.9177,
+      "desv_mcc": 0.0793,
+      "mcc": 0.6832,
+      "segundos_ajuste": NaN
+    },
+    "depurados/svm_rbf": {
+      "auprc_minoritaria": 0.9185,
+      "auroc": 0.9249,
+      "desv_mcc": 0.082,
+      "mcc": 0.7135,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/arbol": {
+      "auprc_minoritaria": 0.7857,
+      "auroc": 0.8441,
+      "desv_mcc": 0.107,
+      "mcc": 0.6194,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bayes": {
+      "auprc_minoritaria": 0.6541,
+      "auroc": 0.7598,
+      "desv_mcc": 0.1109,
+      "mcc": 0.5326,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8983,
+      "auroc": 0.9155,
+      "desv_mcc": 0.1057,
+      "mcc": 0.6606,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8938,
+      "auroc": 0.9149,
+      "desv_mcc": 0.102,
+      "mcc": 0.6832,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8779,
+      "auroc": 0.9011,
+      "desv_mcc": 0.0892,
+      "mcc": 0.6596,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.9087,
+      "auroc": 0.9258,
+      "desv_mcc": 0.0812,
+      "mcc": 0.707,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/arbol": {
+      "auprc_minoritaria": 0.7861,
+      "auroc": 0.8446,
+      "desv_mcc": 0.0939,
+      "mcc": 0.5993,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bayes": {
+      "auprc_minoritaria": 0.8494,
+      "auroc": 0.8772,
+      "desv_mcc": 0.0974,
+      "mcc": 0.6127,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.9041,
+      "auroc": 0.9212,
+      "desv_mcc": 0.084,
+      "mcc": 0.6935,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.9021,
+      "auroc": 0.9177,
+      "desv_mcc": 0.0683,
+      "mcc": 0.6924,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.8966,
+      "auroc": 0.9124,
+      "desv_mcc": 0.0764,
+      "mcc": 0.6703,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.9177,
+      "auroc": 0.9242,
+      "desv_mcc": 0.0801,
+      "mcc": 0.7182,
+      "segundos_ajuste": NaN
+    },
+    "huellas/arbol": {
+      "auprc_minoritaria": 0.7965,
+      "auroc": 0.8473,
+      "desv_mcc": 0.0938,
+      "mcc": 0.6119,
+      "segundos_ajuste": NaN
+    },
+    "huellas/bayes": {
+      "auprc_minoritaria": 0.6491,
+      "auroc": 0.7557,
+      "desv_mcc": 0.1098,
+      "mcc": 0.5235,
+      "segundos_ajuste": NaN
+    },
+    "huellas/knn": {
+      "auprc_minoritaria": 0.889,
+      "auroc": 0.9051,
+      "desv_mcc": 0.0973,
+      "mcc": 0.6434,
+      "segundos_ajuste": NaN
+    },
+    "huellas/logistica": {
+      "auprc_minoritaria": 0.8913,
+      "auroc": 0.9012,
+      "desv_mcc": 0.099,
+      "mcc": 0.6345,
+      "segundos_ajuste": NaN
+    },
+    "huellas/mlp": {
+      "auprc_minoritaria": 0.8656,
+      "auroc": 0.884,
+      "desv_mcc": 0.0942,
+      "mcc": 0.6253,
+      "segundos_ajuste": NaN
+    },
+    "huellas/svm_rbf": {
+      "auprc_minoritaria": 0.9049,
+      "auroc": 0.9157,
+      "desv_mcc": 0.0895,
+      "mcc": 0.6717,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/arbol": {
+      "auprc_minoritaria": 0.7856,
+      "auroc": 0.844,
+      "desv_mcc": 0.0834,
+      "mcc": 0.5954,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/bayes": {
+      "auprc_minoritaria": 0.8563,
+      "auroc": 0.8879,
+      "desv_mcc": 0.1518,
+      "mcc": 0.4663,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/knn": {
+      "auprc_minoritaria": 0.8984,
+      "auroc": 0.9163,
+      "desv_mcc": 0.0803,
+      "mcc": 0.6987,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/logistica": {
+      "auprc_minoritaria": 0.9053,
+      "auroc": 0.92,
+      "desv_mcc": 0.0727,
+      "mcc": 0.6931,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/mlp": {
+      "auprc_minoritaria": 0.897,
+      "auroc": 0.9117,
+      "desv_mcc": 0.0624,
+      "mcc": 0.6932,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/svm_rbf": {
+      "auprc_minoritaria": 0.9129,
+      "auroc": 0.9235,
+      "desv_mcc": 0.0758,
+      "mcc": 0.709,
+      "segundos_ajuste": NaN
+    }
+  },
+  "sin equivalente natural": {
+    "depurados/arbol": {
+      "auprc_minoritaria": 0.38,
+      "auroc": 0.7532,
+      "desv_mcc": 0.0879,
+      "mcc": 0.3596,
+      "segundos_ajuste": NaN
+    },
+    "depurados/bayes": {
+      "auprc_minoritaria": 0.5021,
+      "auroc": 0.7525,
+      "desv_mcc": 0.1661,
+      "mcc": 0.3528,
+      "segundos_ajuste": NaN
+    },
+    "depurados/knn": {
+      "auprc_minoritaria": 0.6425,
+      "auroc": 0.8534,
+      "desv_mcc": 0.1159,
+      "mcc": 0.4951,
+      "segundos_ajuste": NaN
+    },
+    "depurados/logistica": {
+      "auprc_minoritaria": 0.6677,
+      "auroc": 0.8598,
+      "desv_mcc": 0.073,
+      "mcc": 0.5014,
+      "segundos_ajuste": NaN
+    },
+    "depurados/mlp": {
+      "auprc_minoritaria": 0.6624,
+      "auroc": 0.8545,
+      "desv_mcc": 0.081,
+      "mcc": 0.4928,
+      "segundos_ajuste": NaN
+    },
+    "depurados/svm_rbf": {
+      "auprc_minoritaria": 0.6874,
+      "auroc": 0.878,
+      "desv_mcc": 0.1008,
+      "mcc": 0.5139,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/arbol": {
+      "auprc_minoritaria": 0.4212,
+      "auroc": 0.7789,
+      "desv_mcc": 0.1522,
+      "mcc": 0.4166,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/bayes": {
+      "auprc_minoritaria": 0.3205,
+      "auroc": 0.7588,
+      "desv_mcc": 0.0807,
+      "mcc": 0.3939,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.6642,
+      "auroc": 0.8752,
+      "desv_mcc": 0.1228,
+      "mcc": 0.5102,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.6349,
+      "auroc": 0.8643,
+      "desv_mcc": 0.1367,
+      "mcc": 0.5083,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.6147,
+      "auroc": 0.8566,
+      "desv_mcc": 0.1289,
+      "mcc": 0.4941,
+      "segundos_ajuste": NaN
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.6738,
+      "auroc": 0.8622,
+      "desv_mcc": 0.1003,
+      "mcc": 0.5478,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/arbol": {
+      "auprc_minoritaria": 0.3745,
+      "auroc": 0.7511,
+      "desv_mcc": 0.0919,
+      "mcc": 0.3638,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/bayes": {
+      "auprc_minoritaria": 0.4946,
+      "auroc": 0.7516,
+      "desv_mcc": 0.1513,
+      "mcc": 0.3431,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.6537,
+      "auroc": 0.8641,
+      "desv_mcc": 0.1087,
+      "mcc": 0.4762,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.666,
+      "auroc": 0.8629,
+      "desv_mcc": 0.0735,
+      "mcc": 0.5001,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.6789,
+      "auroc": 0.8657,
+      "desv_mcc": 0.1064,
+      "mcc": 0.5406,
+      "segundos_ajuste": NaN
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.6795,
+      "auroc": 0.8748,
+      "desv_mcc": 0.0898,
+      "mcc": 0.4989,
+      "segundos_ajuste": NaN
+    },
+    "huellas/arbol": {
+      "auprc_minoritaria": 0.4613,
+      "auroc": 0.7713,
+      "desv_mcc": 0.1222,
+      "mcc": 0.389,
+      "segundos_ajuste": NaN
+    },
+    "huellas/bayes": {
+      "auprc_minoritaria": 0.315,
+      "auroc": 0.7546,
+      "desv_mcc": 0.0794,
+      "mcc": 0.3868,
+      "segundos_ajuste": NaN
+    },
+    "huellas/knn": {
+      "auprc_minoritaria": 0.6348,
+      "auroc": 0.8601,
+      "desv_mcc": 0.1204,
+      "mcc": 0.4919,
+      "segundos_ajuste": NaN
+    },
+    "huellas/logistica": {
+      "auprc_minoritaria": 0.6159,
+      "auroc": 0.855,
+      "desv_mcc": 0.1539,
+      "mcc": 0.4838,
+      "segundos_ajuste": NaN
+    },
+    "huellas/mlp": {
+      "auprc_minoritaria": 0.5851,
+      "auroc": 0.8446,
+      "desv_mcc": 0.1396,
+      "mcc": 0.4646,
+      "segundos_ajuste": NaN
+    },
+    "huellas/svm_rbf": {
+      "auprc_minoritaria": 0.6575,
+      "auroc": 0.8472,
+      "desv_mcc": 0.1093,
+      "mcc": 0.5113,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/arbol": {
+      "auprc_minoritaria": 0.4029,
+      "auroc": 0.7515,
+      "desv_mcc": 0.0929,
+      "mcc": 0.3922,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/bayes": {
+      "auprc_minoritaria": 0.4851,
+      "auroc": 0.7878,
+      "desv_mcc": 0.1285,
+      "mcc": 0.258,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/knn": {
+      "auprc_minoritaria": 0.6538,
+      "auroc": 0.8717,
+      "desv_mcc": 0.1025,
+      "mcc": 0.4978,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/logistica": {
+      "auprc_minoritaria": 0.6597,
+      "auroc": 0.8581,
+      "desv_mcc": 0.0698,
+      "mcc": 0.4932,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/mlp": {
+      "auprc_minoritaria": 0.6497,
+      "auroc": 0.861,
+      "desv_mcc": 0.0934,
+      "mcc": 0.5209,
+      "segundos_ajuste": NaN
+    },
+    "seleccionados/svm_rbf": {
+      "auprc_minoritaria": 0.6833,
+      "auroc": 0.8761,
+      "desv_mcc": 0.0972,
+      "mcc": 0.5147,
+      "segundos_ajuste": NaN
+    }
+  },
+  "todos": {
+    "depurados/arbol": {
+      "auprc_minoritaria": 0.7038,
+      "auroc": 0.8336,
+      "desv_mcc": 0.0795,
+      "mcc": 0.5669,
+      "segundos_ajuste": 0.2186
+    },
+    "depurados/bayes": {
+      "auprc_minoritaria": 0.8009,
+      "auroc": 0.8556,
+      "desv_mcc": 0.11,
+      "mcc": 0.5518,
+      "segundos_ajuste": 0.0614
+    },
+    "depurados/knn": {
+      "auprc_minoritaria": 0.8608,
+      "auroc": 0.9096,
+      "desv_mcc": 0.0853,
+      "mcc": 0.6794,
+      "segundos_ajuste": 0.059
+    },
+    "depurados/logistica": {
+      "auprc_minoritaria": 0.8714,
+      "auroc": 0.9121,
+      "desv_mcc": 0.066,
+      "mcc": 0.685,
+      "segundos_ajuste": 0.068
+    },
+    "depurados/mlp": {
+      "auprc_minoritaria": 0.8629,
+      "auroc": 0.911,
+      "desv_mcc": 0.0666,
+      "mcc": 0.6739,
+      "segundos_ajuste": 1.9573
+    },
+    "depurados/svm_rbf": {
+      "auprc_minoritaria": 0.886,
+      "auroc": 0.9195,
+      "desv_mcc": 0.077,
+      "mcc": 0.7014,
+      "segundos_ajuste": 1.4493
+    },
+    "descriptores+huellas/arbol": {
+      "auprc_minoritaria": 0.7083,
+      "auroc": 0.8356,
+      "desv_mcc": 0.0936,
+      "mcc": 0.5848,
+      "segundos_ajuste": 0.5252
+    },
+    "descriptores+huellas/bayes": {
+      "auprc_minoritaria": 0.5639,
+      "auroc": 0.7708,
+      "desv_mcc": 0.1048,
+      "mcc": 0.5177,
+      "segundos_ajuste": 0.0298
+    },
+    "descriptores+huellas/knn": {
+      "auprc_minoritaria": 0.8569,
+      "auroc": 0.9085,
+      "desv_mcc": 0.0916,
+      "mcc": 0.6505,
+      "segundos_ajuste": 0.016
+    },
+    "descriptores+huellas/logistica": {
+      "auprc_minoritaria": 0.8534,
+      "auroc": 0.9091,
+      "desv_mcc": 0.0915,
+      "mcc": 0.6629,
+      "segundos_ajuste": 0.0643
+    },
+    "descriptores+huellas/mlp": {
+      "auprc_minoritaria": 0.8281,
+      "auroc": 0.8964,
+      "desv_mcc": 0.0913,
+      "mcc": 0.6441,
+      "segundos_ajuste": 1.6443
+    },
+    "descriptores+huellas/svm_rbf": {
+      "auprc_minoritaria": 0.8742,
+      "auroc": 0.9174,
+      "desv_mcc": 0.0758,
+      "mcc": 0.694,
+      "segundos_ajuste": 19.721
+    },
+    "descriptores/arbol": {
+      "auprc_minoritaria": 0.7001,
+      "auroc": 0.8314,
+      "desv_mcc": 0.0842,
+      "mcc": 0.5704,
+      "segundos_ajuste": 0.1614
+    },
+    "descriptores/bayes": {
+      "auprc_minoritaria": 0.8005,
+      "auroc": 0.8573,
+      "desv_mcc": 0.0939,
+      "mcc": 0.566,
+      "segundos_ajuste": 0.0022
+    },
+    "descriptores/knn": {
+      "auprc_minoritaria": 0.8633,
+      "auroc": 0.9141,
+      "desv_mcc": 0.0812,
+      "mcc": 0.6692,
+      "segundos_ajuste": 0.0012
+    },
+    "descriptores/logistica": {
+      "auprc_minoritaria": 0.8724,
+      "auroc": 0.9133,
+      "desv_mcc": 0.0663,
+      "mcc": 0.6866,
+      "segundos_ajuste": 0.0084
+    },
+    "descriptores/mlp": {
+      "auprc_minoritaria": 0.864,
+      "auroc": 0.911,
+      "desv_mcc": 0.0638,
+      "mcc": 0.6743,
+      "segundos_ajuste": 1.9465
+    },
+    "descriptores/svm_rbf": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "desv_mcc": 0.0731,
+      "mcc": 0.7017,
+      "segundos_ajuste": 1.3789
+    },
+    "huellas/arbol": {
+      "auprc_minoritaria": 0.7346,
+      "auroc": 0.8351,
+      "desv_mcc": 0.0913,
+      "mcc": 0.5837,
+      "segundos_ajuste": 0.5069
+    },
+    "huellas/bayes": {
+      "auprc_minoritaria": 0.5584,
+      "auroc": 0.7669,
+      "desv_mcc": 0.1028,
+      "mcc": 0.5103,
+      "segundos_ajuste": 0.0257
+    },
+    "huellas/knn": {
+      "auprc_minoritaria": 0.8416,
+      "auroc": 0.895,
+      "desv_mcc": 0.0926,
+      "mcc": 0.6327,
+      "segundos_ajuste": 0.0127
+    },
+    "huellas/logistica": {
+      "auprc_minoritaria": 0.8458,
+      "auroc": 0.896,
+      "desv_mcc": 0.0981,
+      "mcc": 0.6237,
+      "segundos_ajuste": 0.0559
+    },
+    "huellas/mlp": {
+      "auprc_minoritaria": 0.8168,
+      "auroc": 0.8819,
+      "desv_mcc": 0.0975,
+      "mcc": 0.6157,
+      "segundos_ajuste": 1.5176
+    },
+    "huellas/svm_rbf": {
+      "auprc_minoritaria": 0.8686,
+      "auroc": 0.9063,
+      "desv_mcc": 0.0806,
+      "mcc": 0.6629,
+      "segundos_ajuste": 19.567
+    },
+    "seleccionados/arbol": {
+      "auprc_minoritaria": 0.7137,
+      "auroc": 0.8333,
+      "desv_mcc": 0.077,
+      "mcc": 0.5813,
+      "segundos_ajuste": 0.084
+    },
+    "seleccionados/bayes": {
+      "auprc_minoritaria": 0.7989,
+      "auroc": 0.8715,
+      "desv_mcc": 0.1505,
+      "mcc": 0.4021,
+      "segundos_ajuste": 0.0222
+    },
+    "seleccionados/knn": {
+      "auprc_minoritaria": 0.8598,
+      "auroc": 0.9112,
+      "desv_mcc": 0.0775,
+      "mcc": 0.6768,
+      "segundos_ajuste": 0.0218
+    },
+    "seleccionados/logistica": {
+      "auprc_minoritaria": 0.8743,
+      "auroc": 0.9132,
+      "desv_mcc": 0.067,
+      "mcc": 0.6832,
+      "segundos_ajuste": 0.0264
+    },
+    "seleccionados/mlp": {
+      "auprc_minoritaria": 0.8603,
+      "auroc": 0.908,
+      "desv_mcc": 0.0571,
+      "mcc": 0.6842,
+      "segundos_ajuste": 2.1662
+    },
+    "seleccionados/svm_rbf": {
+      "auprc_minoritaria": 0.8843,
+      "auroc": 0.9194,
+      "desv_mcc": 0.0723,
+      "mcc": 0.6976,
+      "segundos_ajuste": 1.0275
+    }
+  }
+}

@@ -23,6 +23,7 @@ rdkit>=2026.3.6
 pandas>=2.2
 numpy>=2.0
 pyarrow>=16.0          # parquet para los intermedios de data/processed/
+requests>=2.31         # scripts/descargar_tipos_ensayo.py: el tipo de ensayo, de la API de ChEMBL
 
 # --- Modelado ---
 scikit-learn>=1.5
@@ -48,8 +49,10 @@ ipywidgets>=8.1
 #   np.float, y aquí usamos numpy 2.x. Solo agregarlo si hacen falta descriptores
 #   3D específicos, y entonces usar el fork comunitario.
 #
-# chembl_webresource_client: envuelve la API REST de ChEMBL, que devolvía HTTP 500
-#   el 2026-09-22. Para la etapa 2 preferir el dump SQLite del release 37.
+# chembl_webresource_client: envuelve la API REST de ChEMBL. Esa API devolvía HTTP 500
+#   el 2026-09-22, pero respondió bien el 24 de octubre, así que el tipo de ensayo se
+#   pide con `requests` directo (scripts/descargar_tipos_ensayo.py); el cliente no hace
+#   falta. Para bajar la fase 2 completa sigue siendo preferible el dump SQLite del release 37.
 #
 # bit-collision-free-MF: paquete en estado alfa, validado solo con splits
 #   aleatorios. Para fingerprints libres de colisión preferir Sort & Slice.

@@ -78,9 +78,9 @@ Un archivo por etapa, y uno que dice qué se mide en la segunda. **Cada tramo qu
 %%{init: {"themeVariables": {"fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "16px"}}}%%
 flowchart LR
     A["SMILES"] --> B["Descriptores RDKit<br/>203 utilizables"]
-    A --> C["Fingerprint ECFP4<br/>2,048 bits"]
+    A -.-> C["Fingerprint ECFP4<br/>2,048 bits<br/>(no en los entregados)"]
     B --> D["Tabla de<br/>características"]
-    C --> D
+    C -.-> D
     D --> E["Etapa 1<br/>permeabilidad"]
     D --> F["Etapa 2<br/>actividad"]
     E --> G["Priorización con<br/>atribución a fragmentos"]
@@ -209,7 +209,9 @@ El que casi rompe todo: `Ipc` llega a **10⁴¹**. Es finito en float64, pero no
 
 Cuidado con el nombre: se genera con `radius=2` porque el número del nombre es el **diámetro**, no el radio.
 
-Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. Se usan juntos.
+Los descriptores resumen la molécula entera; el fingerprint dice **qué fragmentos tiene**. La decisión es usarlos juntos, y conviene separarla de lo que ha corrido: **los modelos entregados hasta ahora usan solo descriptores**.
+
+La comparación de las dos representaciones ya está medida, con el vocabulario de fragmentos aprendido dentro de cada pliegue, y **da resultados opuestos en las dos fases**: en la actividad los fragmentos mejoran a cinco de los seis modelos que los reciben, y en la permeabilidad no mejoran a ninguno. Tiene sentido: la permeabilidad depende de propiedades de la molécula entera —TPSA y los donadores de hidrógeno dominan—, y la actividad, de qué fragmento se une a qué diana.
 :::
 :::
 
@@ -335,7 +337,7 @@ La regla de censura del diccionario ata el corte de los inactivos al de los acti
 :::
 
 ::: {.callout-note}
-Los porcentajes de la gráfica son **por registro** e incluyen fenotípicos. Sobre el par compuesto-diana, que es la unidad del modelo, salen **72.8%** de activos con 10 µM y **50.2%** con 1 µM.
+Los porcentajes de la gráfica son **por registro** e incluyen las filas sin diana de la lista. Sobre el par compuesto-diana, que es la unidad del modelo, salen **72.8%** de activos con 10 µM y **50.2%** con 1 µM.
 :::
 
 ::: {.callout-important}
@@ -521,7 +523,7 @@ Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
 
 ## Todo queda registrado, y algunas decisiones se revirtieron {.smaller}
 
-**Veintiséis entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
+**Veintiocho entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
 
 **Dos se revirtieron al medir:**
 
@@ -579,7 +581,7 @@ Ninguna de las cinco se declara ratificada y **cada una dice qué la haría camb
 
 **Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.
 
-**Veintiséis entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 14 vigentes, 9 propuestas y 1 abierta. Ocho de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
+**Veintiocho entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 17 vigentes, 8 propuestas y 1 abierta. Nueve de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
 
 ## Lo que falta antes de reportar candidatos
 

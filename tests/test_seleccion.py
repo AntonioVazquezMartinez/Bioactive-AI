@@ -50,3 +50,52 @@ def test_las_protegidas_ganan_el_par_aunque_separen_menos():
     poder = np.array([0.1, 0.4])
     assert list(filtro_correlacion(X, poder)) == [False, True]
     assert list(filtro_correlacion(X, poder, protegidas=(0,))) == [True, False]
+
+
+def test_depuracion_aprende_con_el_ajuste_y_deja_pasar_la_diana():
+    from src.features.seleccion import DepuracionDescriptores
+
+    rng = np.random.default_rng(0)
+    n = 2000
+    y = rng.normal(size=n)
+    util = y + rng.normal(size=n)
+    X = np.column_stack([
+        util,                                   # 0: informativa
+        util + 0.01 * rng.normal(size=n),       # 1: casi duplicada de la 0
+        np.r_[np.ones(n - 5), np.zeros(5)],     # 2: casi constante (99.75%)
+        rng.normal(size=n),                     # 3: ruido, pero distinta
+        (rng.random(n) > .5).astype(float),     # 4: diana en 0/1
+    ])
+    t = DepuracionDescriptores(n_descriptores=4).fit(X, y)
+    assert list(t.columnas_) in ([0, 3, 4], [1, 3, 4])    # una de las dos duplicadas
+    assert list(t.quitadas_constantes_) == [2] and len(t.quitadas_redundantes_) == 1
+    assert t.transform(X).shape == (n, 3)
+
+
+def test_depuracion_protege_las_columnas_indicadas():
+    from src.features.seleccion import DepuracionDescriptores
+
+    rng = np.random.default_rng(1)
+    n = 2000
+    y = rng.normal(size=n)
+    a = y + rng.normal(size=n)
+    X = np.column_stack([a + 0.01 * rng.normal(size=n), a])   # la 0 es peor que la 1
+    sin = DepuracionDescriptores(n_descriptores=2).fit(X, y)
+    con = DepuracionDescriptores(n_descriptores=2, protegidas=(0,)).fit(X, y)
+    assert len(sin.columnas_) == 1 and list(con.columnas_) == [0]
+
+
+def test_seleccion_l1_conserva_lo_que_explica_el_objetivo_y_protege_lo_pedido():
+    from src.features.seleccion import SeleccionL1
+
+    rng = np.random.default_rng(2)
+    n = 3000
+    X = rng.normal(size=(n, 6))
+    y = 2 * X[:, 0] - 1.5 * X[:, 1] + 0.1 * rng.normal(size=n)       # solo la 0 y la 1 importan
+    diana = (rng.random((n, 2)) > .5).astype(float)
+    Xm = np.hstack([X, diana])
+    t = SeleccionL1(n_descriptores=6, alpha=0.05).fit(Xm, y)
+    assert list(t.descriptores_) == [0, 1] and list(t.quitadas_) == [2, 3, 4, 5]
+    assert t.transform(Xm).shape == (n, 4)                                # 2 descriptores + diana
+    con = SeleccionL1(n_descriptores=6, alpha=0.05, protegidas=(4,)).fit(Xm, y)
+    assert list(con.descriptores_) == [0, 1, 4]

@@ -45,6 +45,9 @@ jobs:
       - name: Verificar el registro de decisiones
         run: python3 scripts/verificar_decisiones.py
 
+      - name: Verificar la declaración de uso de IA
+        run: python3 scripts/verificar_declaracion.py
+
       # Los hex vivían duplicados en cuatro archivos y tres se habían desviado
       # entre sí sin que nadie lo notara. Con una fuente y un reparto, editar un
       # destino a mano deja de pasar inadvertido.

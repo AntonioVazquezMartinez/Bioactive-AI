@@ -1,0 +1,78 @@
+{
+  "ajuste_fino": {
+    "knn afinado": {
+      "auprc_minoritaria": 0.874,
+      "auroc": 0.916,
+      "desv_mcc": 0.079,
+      "mcc": 0.675,
+      "seg": 1.374
+    },
+    "svm_rbf afinado": {
+      "auprc_minoritaria": 0.876,
+      "auroc": 0.916,
+      "desv_mcc": 0.073,
+      "mcc": 0.699,
+      "seg": 10.79
+    }
+  },
+  "referencia_A3": {
+    "boosting (A3)": {
+      "auprc_minoritaria": 0.884,
+      "auroc": 0.93,
+      "desv_mcc": 0.063,
+      "mcc": 0.702,
+      "seg": 1.133
+    },
+    "bosque (A3)": {
+      "auprc_minoritaria": 0.895,
+      "auroc": 0.933,
+      "desv_mcc": 0.072,
+      "mcc": 0.698,
+      "seg": 3.741
+    }
+  },
+  "seis": {
+    "arbol": {
+      "auprc_minoritaria": 0.706,
+      "auroc": 0.836,
+      "desv_mcc": 0.081,
+      "mcc": 0.568,
+      "seg": 0.247
+    },
+    "bayes": {
+      "auprc_minoritaria": 0.801,
+      "auroc": 0.857,
+      "desv_mcc": 0.094,
+      "mcc": 0.566,
+      "seg": 0.007
+    },
+    "knn": {
+      "auprc_minoritaria": 0.863,
+      "auroc": 0.914,
+      "desv_mcc": 0.081,
+      "mcc": 0.669,
+      "seg": 0.004
+    },
+    "logistica": {
+      "auprc_minoritaria": 0.872,
+      "auroc": 0.913,
+      "desv_mcc": 0.065,
+      "mcc": 0.688,
+      "seg": 0.028
+    },
+    "mlp": {
+      "auprc_minoritaria": 0.865,
+      "auroc": 0.913,
+      "desv_mcc": 0.07,
+      "mcc": 0.674,
+      "seg": 5.682
+    },
+    "svm_rbf": {
+      "auprc_minoritaria": 0.884,
+      "auroc": 0.919,
+      "desv_mcc": 0.077,
+      "mcc": 0.703,
+      "seg": 0.54
+    }
+  }
+}

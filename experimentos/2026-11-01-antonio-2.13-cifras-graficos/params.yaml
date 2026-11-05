@@ -1,0 +1,10 @@
+decision: '2.13'
+semillas:
+- 0
+params:
+  modelo: aft
+  fracciones:
+  - 0.01
+  - 0.05
+  - 0.1
+  min_para_franja: 100

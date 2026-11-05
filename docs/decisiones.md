@@ -2,56 +2,55 @@
 
 Bitácora de lo que se decide en cada fase y de las posibilidades que siguen abiertas. Se alimenta **por fase, no por avance**: la fase 1 es la permeabilidad de la barrera hematoencefálica (BBB+/BBB−) y la fase 2, la actividad neuroprotectora por diana. Ambas parten de los archivos que entregó la patrocinadora el 25 de septiembre. Cada fase tiene sus **decisiones** (lo que se resolvió o se propone), sus **supuestos** (lo que se dio por cierto para avanzar y puede ser falso) y, en cada entrada, la pregunta que queda por resolver.
 
-Nada es *ratificado* hasta que la patrocinadora lo revise; lo que el equipo adopta sigue siendo reversible, y dos decisiones ya se revirtieron al medir. Cuando algo cambia se deja la versión anterior visible. Los términos están en el [glosario](glosario.md).
-
-**Cómo se cierra una entrada.** Pasa a *ratificada* con la minuta de la reunión con la patrocinadora: de ahí se toman las respuestas y se registran aquí, en sus términos y con la fecha. Lo que el equipo adopta por su cuenta se queda en *vigente*, que es reversible y obliga a declararlo como no ratificado en el reporte donde se use.
-
-**El 17 de octubre de 2026 el registro dejó de tener entradas bloqueadas esperando su criterio.** Había siete, y durante semanas fueron el cuello de botella: dos las ratificó ella el 15 de octubre, y las otras cinco —[C.5](#dc-5), [1.6](#d1-6), [2.2](#d2-2), [2.3](#d2-3) y [2.8](#d2-8)— las decidió el equipo. El motivo no es impaciencia: en cada una, esperar costaba más que equivocarse. Tres de ellas resultaron contestables con una medición que nadie había hecho, y en las otras dos la respuesta no cambiaba lo que había que construir. **Cada una dice ahora qué la haría cambiar**, que es la forma de dejarlas abiertas sin dejarlas detenidas, y ninguna se declara ratificada. La [consulta a la patrocinadora](../consulta.qmd) sigue en pie, pero ya no pide definiciones: muestra lo decidido y lo que costó, para que ella corrija lo que quiera corregir.
+Los términos están en el [glosario](glosario.md). Cuando una decisión cambia se deja visible la versión anterior.
 
 ## Estado de un vistazo
 
 **Marco común** (aplica a las dos fases)
 
-| # | Decisión | Estado |
-|:--|:--|:--|
-| [C.1](#dc-1) | MCC y AUPRC sobre la clase minoritaria | Vigente |
-| [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente |
-| [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta |
-| [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta |
-| [C.5](#dc-5) | El entregable es una lista priorizada, y el punto de operación va como curva | Vigente |
-| [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta |
-| [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta |
-| [C.8](#dc-8) | Tres colores categóricos, validados contra daltonismo | Vigente |
+| # | Decisión | Estado | Consulta |
+|:--|:--|:--|:--|
+| [C.1](#dc-1) | Métricas: MCC y AUPRC en clasificación; Spearman y concordancia en regresión | Vigente · revisada | |
+| [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente | |
+| [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta | |
+| [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta | |
+| [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente | 17 oct · 24 oct |
+| [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta | |
+| [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta | |
+| [C.8](#dc-8) | Tres colores categóricos, validados contra daltonismo | Vigente | |
 
 **Fase 1 · Permeabilidad**
 
-| # | Decisión | Estado |
-|:--|:--|:--|
-| [1.1](#d1-1) | No filtrar por la columna de grupo A–D | Vigente · revisada |
-| [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente |
-| [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente |
-| [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta |
-| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Propuesta |
-| [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente |
-| [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta |
-| [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta |
+| # | Decisión | Estado | Consulta |
+|:--|:--|:--|:--|
+| [1.1](#d1-1) | No filtrar por la columna de grupo A–D | Vigente · revisada | |
+| [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente | |
+| [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente | |
+| [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta | |
+| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Revisada | |
+| [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
+| [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
+| [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 
 **Fase 2 · Actividad**
 
-| # | Decisión | Estado |
-|:--|:--|:--|
-| [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada |
-| [2.2](#d2-2) | Por diana, con multitarea como comparación | Vigente · revisada |
-| [2.3](#d2-3) | Etiquetado por tres vías y criterio de «activo» | Vigente · revisada |
-| [2.4](#d2-4) | Los 88,098 registros fenotípicos | Propuesta |
-| [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida |
-| [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada |
-| [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada |
-| [2.8](#d2-8) | El cruce con COCONUT lo calcula el equipo | Vigente · revisada |
-| [2.9](#d2-9) | Clasificar con un corte o predecir la potencia | Propuesta |
-| [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente |
+| # | Decisión | Estado | Consulta |
+|:--|:--|:--|:--|
+| [2.1](#d2-1) | El alcance: cinco categorías de enfermedad | **Ratificada** · revisada | 17 oct |
+| [2.2](#d2-2) | Por diana, con multitarea como comparación | Vigente · revisada | 17 oct |
+| [2.3](#d2-3) | De dónde sale la potencia y dónde se corta «activo» | Vigente · revisada | 17 oct · 24 oct |
+| [2.4](#d2-4) | Los 88,098 registros sin diana de la lista | Propuesta | 24 oct |
+| [2.5](#d2-5) | La fuente confundida con el etiquetado | Vigente · medida | 24 oct |
+| [2.6](#d2-6) | La partición de prueba que sí se había reservado | **Ratificada** · revisada | 17 oct · 24 oct |
+| [2.7](#d2-7) | Partición de la fase 2 | Vigente · revisada | |
+| [2.8](#d2-8) | El cruce con COCONUT lo calcula el equipo | Vigente · revisada | 17 oct |
+| [2.9](#d2-9) | Regresión de la potencia; la clasificación se deriva de ella | Vigente | 24 oct |
+| [2.10](#d2-10) | El objetivo se guarda como intervalo, no como etiqueta | Vigente | 24 oct |
+| [2.11](#d2-11) | Dirección del efecto: la afinidad cuenta | Vigente | 24 oct |
+| [2.12](#d2-12) | Los inactivos de DrugMatrix | Propuesta | 24 oct |
+| [2.13](#d2-13) | Ensambles para la regresión de potencia | Vigente | |
 
-Estados: **vigente** (se trabaja sobre ella, y es reversible), **revisada** (se decidió, se midió y cambió; conserva visible la versión superada), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió; son la 2.1 y la 2.6, del 15 de octubre de 2026). **Ninguna entrada espera ya su definición para avanzar**, y cada una declara qué la haría cambiar.
+Estados: **vigente** (se trabaja sobre ella, y es reversible), **revisada** (se decidió, se midió y cambió; conserva visible la versión superada), **propuesta** (hay recomendación del equipo, aún sin adoptar), **abierta** (sin recomendación) y **ratificada** (la patrocinadora la revisó y la decidió: la 2.1 y la 2.6, el 15 de octubre de 2026). *Consulta* es la fecha en que la patrocinadora recibió la entrada: el 17 de octubre la [consulta](../consulta.qmd) con lo decidido por el equipo y el 24 el correo con las dudas, cuya respuesta está [en la fase 2](#respuesta-correo-24-oct).
 
 ---
 
@@ -61,15 +60,15 @@ Lo que vale para las dos fases.
 
 ### Decisiones
 
-#### C.1 · MCC y AUPRC sobre la clase minoritaria {#dc-1 .vigente}
+#### C.1 · Métricas: MCC y AUPRC en clasificación; Spearman y concordancia en regresión {#dc-1 .vigente .revisada}
 
-**Estado:** vigente
+**Estado:** vigente · revisada el 25 de octubre: la fase 2 pasa a regresión ([2.9](#d2-9))
 
 > **Pregunta:** ¿Qué punto de operación corresponde? Ver [C.5](#dc-5).
 
 **Qué pasó.** Hay 1.74 positivos por negativo: un modelo que prediga siempre BBB+ acierta el 63.5% sin aprender nada. El Avance 2 reportó AUPRC sobre la clase positiva, que es la mayoritaria, con línea base 0.573; los valores de 0.70–0.86 parecían buenos y eran poco informativos. Quedó documentado en el notebook.
 
-**Se decidió.** Métricas principales: MCC y AUPRC sobre la clase minoritaria. Exactitud y AUROC no se reportan solos.
+**Se decidió.** En la **fase 1**, que clasifica, las métricas principales son MCC y AUPRC sobre la clase minoritaria; exactitud y AUROC no se reportan solos. En la **fase 2**, que hace regresión, son el índice de concordancia de Harrell y Spearman, que toleran la censura, y RMSE solo sobre las mediciones no censuradas. Las de clasificación se calculan además sobre la clase derivada del corte, y las de ranking están en la [C.5](#dc-5).
 
 **Una excepción declarada: comparar estratos de prevalencia distinta.** El MCC depende de la prevalencia, así que entre estratos que van de 12% a 90% de positivos no mide lo mismo y leer su columna de arriba abajo lleva a la conclusión contraria. Cuando lo que se compara son **estratos**, la medida primaria es el **AUROC** y el MCC va al lado, nunca en su lugar, y **cada estrato se reporta con su prevalencia**. Es el caso de la evaluación por origen de la [1.6](#d1-6): los compuestos naturales exactos tienen 53.7% de positivos y los que no tienen equivalente natural 83.6%, y sus MCC —0.719 y 0.521— sugieren una diferencia de desempeño que el AUROC —0.935 y 0.886— no sostiene en esa magnitud.
 
@@ -93,8 +92,8 @@ La excepción vivía dentro de la 1.6 y queda aquí porque es una **decisión de
 
 **Se propone.** Condicionada a que la patrocinadora considere que vale la pena. Cada fase se entrena y evalúa con su protocolo ([1.2](#d1-2), [2.7](#d2-7)), sin reservar nada. Si la patrocinadora lo aprueba, el experimento va en dos pasos:
 
-1. **Con datos solamente, sin modelos.** Cruzar las mediciones reales de los 1,033: permeabilidad medida (BBB+ o BBB−) contra actividad medida, por diana. Se plantea sin umbral: comparar la distribución de la potencia medida entre los BBB+ y los BBB−. Si los BBB− son tan potentes como los BBB+, la permeabilidad cambiaría el orden del ranking; si no, aporta poco. No hay que decidir qué es «activo», porque ese corte depende de la decisión [2.3](#d2-3), abierta, y con ≥ 5 queda 61.7% de activos y con ≥ 6, 44.4%: una lectura del tipo «casi todos los activos son BBB+» podría salir verdadera con un corte y falsa con el otro. Así se puede hacer en cuanto se apruebe, sin esperar a la 2.3 ni a ningún modelo.
-2. **Con los modelos ya entrenados.** Medir si la combinación acierta más que cada predicción sola. Como el modelo de la fase 1 habrá visto parte de esos compuestos, se usan predicciones fuera de muestra (validación cruzada agrupada por andamio). Necesita el modelo de actividad, que depende de las etiquetas pendientes de la decisión [2.3](#d2-3), y los modelos afinados de los Avances 3 a 5. Cuántos de los 1,033 caen en la prueba de ambas fases no está medido.
+1. **Con datos solamente, sin modelos.** Cruzar las mediciones reales de los 1,033: permeabilidad medida (BBB+ o BBB−) contra actividad medida, por diana. Se plantea sin umbral: comparar la distribución de la potencia medida entre los BBB+ y los BBB−. Si los BBB− son tan potentes como los BBB+, la permeabilidad cambiaría el orden del ranking; si no, aporta poco. No hay que decidir qué es «activo», porque el corte se aplica al final y cambia el resultado (con ≥ 5 queda 61.7% de activos por registro y con ≥ 6, 44.4%, [2.3](#d2-3)): una lectura del tipo «casi todos los activos son BBB+» podría salir verdadera con un corte y falsa con el otro. Así se puede hacer en cuanto se apruebe, sin esperar a la 2.3 ni a ningún modelo.
+2. **Con los modelos ya entrenados.** Medir si la combinación acierta más que cada predicción sola. Como el modelo de la fase 1 habrá visto parte de esos compuestos, se usan predicciones fuera de muestra (validación cruzada agrupada por andamio). Necesita el modelo de actividad ([2.9](#d2-9)) y los modelos afinados de los Avances 3 a 5. Cuántos de los 1,033 caen en la prueba de ambas fases no está medido.
 
 Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos con las dos mediciones, probablemente los más estudiados), así que un buen resultado ahí no se generaliza sin más.
 
@@ -118,7 +117,27 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 **Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística: un falso activo manda al laboratorio a ensayar algo que no funciona, y un falso inactivo descarta un candidato real sin que nadie se entere. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación era lo que faltaba.
 
-**Por qué se decide y no se pregunta.** Era la única entrada que el equipo no podía ni medir ni aproximar, y por eso se planteó como una elección entre dos listas concretas. Pero preguntarla tenía un supuesto escondido: que hay que elegir **un** punto de operación. No hay que elegirlo. Entregando la curva, mover el corte no cuesta reentrenar nada: es leer otra fila de la misma tabla. Así la pregunta deja de bloquear y se convierte en algo que ella puede ajustar cuando vea los resultados, que es cuando de verdad se puede contestar.
+**Por qué una curva.** No hay que elegir **un** punto de operación: entregando la curva, mover el corte no cuesta reentrenar nada, es leer otra fila de la misma tabla. Ejemplo: de una lista de veinte donde acierte cuatro de cada cinco se pasa a una de cien donde acierte una de cada dos, sin tocar el modelo.
+
+**Métricas del ranking (propuesta; la principal se declara antes de ver resultados; se implementan en el Avance 5).** Cuántos compuestos se pueden ensayar no se sabe, así que se resuelve como análisis de escenarios y se dice cuál gobierna bajo cada supuesto. Ejemplo: si el laboratorio ensaya 20 compuestos, importa que los primeros 20 funcionen; si ensaya 1,000, importa no dejar fuera candidatos reales.
+
+| Escenario | Qué manda | Métricas |
+|:--|:--|:--|
+| Pocos compuestos (el realista) | ordenar bien; el falso positivo es el caro porque gasta presupuesto de ensayo | **enriquecimiento al 1%** (principal), enriquecimiento al 5%, precisión en los primeros 100, BEDROC, área bajo la curva de precisión-recall |
+| Cribado amplio | la sensibilidad: no perder candidatos reales | recall a precisión fija, enriquecimiento al 5% |
+
+**Primera medición de estas métricas, fase 2 (4 de noviembre).** Corrida `2026-11-03-artemio-C.5-ranking-fase2-aft`: `aft` con predicciones fuera de pliegue (una semilla, 5 pliegues, sin tocar la prueba), α de BEDROC = 20 declarado antes, ordenando los pares por potencia predicha. Dos controles: azar y ordenar solo por la potencia media de la diana. Enriquecimiento, activos recuperados y tasa base:
+
+| estrato | tasa base | EF 1% (activos / k) | EF 5% | precisión en 100 | BEDROC | `solo_diana`, EF 1% |
+|:--|--:|:--|--:|--:|--:|--:|
+| todos | 71.4% | 1.40 (544/544) | 1.39 | 1.00 | 0.99 | 1.36 |
+| solo ChEMBL | 74.8% | 1.34 (507/507) | 1.33 | 1.00 | 0.99 | 1.30 |
+| mixto | 40.3% | 1.55 (10/16), IC 0.86–2.24 | 1.51 | 0.59 | 0.59 | 1.40 |
+| solo NPASS | 12.3% | 3.09 (8/21), IC 1.59–5.16 | 2.40 | 0.31 | 0.29 | 1.16 |
+
+- **El enriquecimiento tiene un techo de 1/tasa base**, 1.40 con 71.4% de activos: en `todos` y `solo_chembl` el `aft` ya está en el techo (544 de 544) y el número no discrimina. Ahí se lee mejor la precisión en 100 y el control: **saber la diana ya da casi todo** (1.36 contra 1.40), así que el ranking global mide sobre todo qué diana, no qué molécula.
+- **En `solo_npass`, el único estrato donde el techo no estorba, el `aft` pone 8 activos entre los 21 primeros del 1% (3.1×) y 31 de 105 en el 5% (2.4×)**, contra 1.2× y 0.6× de ordenar por diana. El intervalo del 1% es ancho (1.6–5.2) porque son 21 pares y 8 aciertos: es la forma de cuidar de no repetir el 1.92× que era un compuesto. Con el azar el 1% dio 4 de 21 (1.5×), lo que muestra el ruido de esa celda.
+- Una semilla, ranking sobre pares y no sobre compuestos. La curva por diana de la C.5 sigue sin calcular.
 
 **Qué arrastra.** La forma del entregable define buena parte de la [C.6](#dc-6) y qué tan agregado conviene que sea el modelo de la [2.2](#d2-2).
 
@@ -230,15 +249,55 @@ El conjunto tiene 7,811 filas, 7,805 con clase, que son 4,018 esqueletos de cone
 
 Las dos filas son del bosque aleatorio con una semilla, celda 10 del [notebook 03](../notebooks/03_Baseline.ipynb), sobre la matriz de 151 columnas. (Con la matriz anterior, de 171, daban 0.937 / 0.705 y 0.959 / 0.767: la diferencia entre agrupamientos no se mueve.)
 
-**2.2 puntos de AUROC y 7.1 de MCC.** Lo que sigue compara, en cada métrica, **el par de modelos más lejano de esa métrica**, que no es el mismo par: en MCC son el boosting y la logística (0.0223; el bosque contra la logística da 0.0178) y en AUROC el bosque y la logística. Comparar siempre el mismo par subestimaría la distancia entre familias en una de las dos. Las dos cifras son de una semilla y media de pliegues, igual que las del agrupamiento: el paréntesis citó durante un tiempo el 0.0153 del promedio de las quince, que es el estimador de la otra tabla.
+**2.2 puntos de AUROC y 7.1 de MCC.** Lo que sigue compara, en cada métrica, **el par de modelos más lejano de esa métrica**, que no es el mismo par: en MCC son el boosting y la logística (0.0222; el bosque contra la logística da 0.0178) y en AUROC el bosque y la logística. Las dos cifras de MCC son de una semilla y media de pliegues, **la misma medida que el 7.1**. Comparar siempre el mismo par subestimaría la distancia entre familias en una de las dos. *Versión superada:* esta línea daba 0.0153 y 0.0130, que son las mismas dos distancias sobre las medias de 15 evaluaciones — el estimador que el párrafo siguiente descarta, y de donde salía el «1.5 puntos».
 
-En MCC la elección de modelo mueve **2.2 puntos** entre la logística y el boosting, así que el criterio de agrupamiento pesa **algo más de tres veces**. Esa razón salía antes de 4.6, y era otra mezcla de estimadores: los 7.1 puntos del agrupamiento son de una semilla y el 1.5 que se les comparaba, del promedio de las 15 evaluaciones. Con la misma medida en los dos lados —una semilla, media de pliegues— son 7.1 contra 2.2. **En AUROC no**, y la versión anterior de esta entrada decía que sí: con el mismo estimador —una semilla, predicciones fuera de pliegue, bootstrap de grupos— el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0215 (0.9349 contra 0.9134): ocho diezmilésimas de diferencia, que no distinguen nada. La afirmación salía de comparar los 2.2 puntos de ese estimador contra el «menos de 2» del promedio de 15 pliegues, que es otro. Con cualquiera de los dos se sostiene lo que de verdad importa: **una cifra que no diga cómo agrupó no se puede comparar** con las de este registro. El criterio vive en `grupos_cv`, en `src/data_prep/splits.py`, y lo usan las dos fases.
+En MCC, con la misma medida en las dos comparaciones —una semilla, media de pliegues—, el agrupamiento mueve 7.1 puntos y la elección de modelo 2.2 entre la logística y el boosting: algo más de tres veces. **Una versión anterior de esta entrada decía 1.5 puntos y casi cinco veces, y comparaba dos estimadores**: el 1.5 es la diferencia entre las medias de 15 evaluaciones (0.7019 contra 0.6866) y el 7.1 sale de una sola semilla. Y cuánto separa a los modelos depende de cuántos se comparen: 2.2 con las tres canalizaciones del 03, 4.2 con los once del Avance 5; un múltiplo tiene que decir entre cuál de ellos divide. **En AUROC no**, y la versión anterior de esta entrada decía que sí: con el mismo estimador —una semilla, predicciones fuera de pliegue, bootstrap de grupos— el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225. La afirmación salía de comparar los 2.2 puntos de ese estimador contra el «menos de 2» del promedio de 15 pliegues, que es otro. Con cualquiera de los dos se sostiene lo que de verdad importa: **una cifra que no diga cómo agrupó no se puede comparar** con las de este registro. El criterio vive en `grupos_cv`, en `src/data_prep/splits.py`, y lo usan las dos fases.
+
+**Corrección del 4 de noviembre.** El «2.2 puntos de AUROC y 7.1 de MCC» de esta entrada y de todo lo que la cita es **del bosque**. Con el `svm_rbf` que se entrega son 1.3 y 1.9, así que «el agrupamiento mueve más que la elección de modelo» no se sostiene para el modelo final (1.9 contra 4.2 entre los once). Lo que sí se sostiene es la escalera de abajo: 33.3 puntos de MCC sobre el modelo entregado, en una corrida registrada. Las copias en otros documentos se corrigieron en el mismo cambio.
+
+**La escalera de agrupación, medida con otros dos modelos (3 de noviembre).** Las dos filas de arriba son del bosque. La corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad` repite la comparación con `svm_rbf` y `logistica`, sobre las 6,306 filas de entrenamiento y validación y la matriz de 151 columnas, con 3 semillas y 5 pliegues, **sin tocar la prueba reservada**, y agrega agrupamientos más estrictos que el actual: componentes conexas de similitud de Tanimoto (Morgan radio 2, 2048 bits) con umbral 0.6, 0.5 y 0.4, fijados antes de correr.
+
+| Agrupamiento | Grupos | `svm_rbf` AUROC / MCC | `logistica` AUROC / MCC | Similitud al vecino más cercano |
+|:--|--:|:--|:--|--:|
+| Al azar | 6,306 | 0.947 / 0.752 | 0.934 / 0.720 | 0.90 |
+| Por esqueleto | 2,626 | 0.934 / 0.725 | 0.927 / 0.714 | 0.62 |
+| Por andamio | 2,239 | 0.932 / 0.721 | 0.923 / 0.698 | 0.75 |
+| **Andamio ∪ esqueleto (actual)** | 1,048 | **0.919 / 0.702** | **0.913 / 0.687** | 0.50 |
+| Similitud ≥ 0.6 | 1,413 | 0.913 / 0.688 | 0.897 / 0.659 | 0.42 |
+| Similitud ≥ 0.5 | 1,017 | 0.835 / 0.486 | 0.848 / 0.573 | 0.33 |
+| Similitud ≥ 0.4 | 631 | 0.780 / 0.419 | 0.816 / 0.513 | 0.28 |
+| *Prueba reservada, `svm_rbf`, ya registrada* | | *0.793 / 0.339* | | |
+
+Lo que se lee, con sus límites:
+
+- **Cuánto ayuda a la cifra agrupar mal depende del modelo.** Con «solo andamio» el resultado sube 1.3 puntos de AUROC y 1.9 de MCC con `svm_rbf`, y 1.0 y 1.1 con `logistica`, contra los 2.2 y 7.1 del bosque. Es coherente con que un modelo con más capacidad para memorizar aproveche más a los estereoisómeros a los dos lados del pliegue, pero **eso no se midió aquí**: es una lectura. Los 2.2 y 7.1 de esta entrada son del bosque y no deben citarse como un efecto general del agrupamiento.
+- **La escalera baja de forma ordenada en la cadena azar → actual → similitud**, tanto en desempeño como en la similitud al vecino más cercano. Entre «por esqueleto» y «por andamio» no hay orden porque ninguno contiene al otro: «por andamio» separa estereoisómeros del mismo compuesto, y por eso su vecino más cercano es más parecido (0.75 contra 0.62), que es la razón de unirlos.
+- **La caída de la prueba reservada (AUROC 0.793) cae entre las filas de similitud ≥ 0.5 (0.835) y ≥ 0.4 (0.780)**, lo que apunta a que buena parte de la caída respecto a la validación cruzada es química nueva. El MCC de esas dos filas (0.486 y 0.419) queda por encima del de la prueba (0.339), y el MCC depende de la prevalencia, que no es la misma. **Falta medir la similitud de la propia prueba con el entrenamiento**, que no necesita etiquetas, para ubicarla en la escalera.
+- **Con agrupamiento estricto el modelo simple se degrada menos.** En similitud ≥ 0.5 y ≥ 0.4 la `logistica` supera en AUROC a `svm_rbf` (0.848 contra 0.835 y 0.816 contra 0.780). Es una sola corrida con tres semillas y no hay intervalo de la diferencia pareada: hay que verlo antes de apoyarse en ello.
+- **Límites:** los grupos por similitud son desiguales (el mayor reúne entre 12% y 16% de las filas), la similitud al vecino más cercano es solo de la semilla 0, y el estrato de grupos de una sola fila no se reporta porque no llega al mínimo de 20 casos minoritarios por pliegue.
+
+**Una línea base de peso molecular y TPSA, en la misma corrida.** Una regresión logística que solo ve esas dos columnas da AUROC 0.847 y MCC 0.579, contra 0.919 y 0.702 de `svm_rbf` y 0.913 y 0.687 de `logistica`. Por tamaño del grupo de la fila, la ventaja de `svm_rbf` sobre esa línea base es de 0.032 de AUROC en los grupos de 2 a 4 filas y de 0.076 en los de 5 o más: en la química más rara, el modelo sabe poco más que tamaño y polaridad. Por tramo de peso (cortes de #216), la ventaja es de 0.077 en ≤ 250 Da, 0.072 en 250–350, 0.10 en 350–500 y 0.059 en > 500. El número de grupos de una sola fila y el de los estratos por tamaño de grupo son propiedades de las 6,306 filas, no de la prueba.
+
+**Los andamios grandes son más raros y más pesados.** En un análisis aparte sobre el archivo de la profesora, con un compuesto por esqueleto (4,018) y el andamio de Murcko, el número de moléculas por andamio cae con su tamaño: 9.3 en los de 6 átomos pesados o menos y 1.12 en los de más de 24, donde el 92% de los andamios son solitarios; el tamaño del andamio y el peso molecular correlacionan 0.75 en Spearman, y el % BBB+ baja de 64–71% a 48% en los de más de 24 átomos. Como `scaffold_split` manda los grupos grandes a entrenamiento y deja los pequeños a la prueba, **rareza y tamaño van mezclados en la prueba**. Ese análisis es de un script sin corrida registrada y cuenta esqueletos, no las 6,306 filas ni los 1,048 grupos: no se cita hasta que se registre.
 
 **Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura reporta que así se infla el resultado entre 7 y 13 puntos.
 
 **Se decidió.** Bemis-Murcko, agrupando también por esqueleto de conectividad para que los estereoisómeros no se separen. Los andamios frecuentes van a entrenamiento y los raros a prueba (convención de DeepChem): 5,557 / 749 / 1,499, sin andamio ni esqueleto compartido. **Los 312 compuestos acíclicos** (cadenas sin anillos, que no tienen andamio) **van todos a entrenamiento**: no comparten estructura de anillo con nada, así que no filtran información a la prueba, pero tampoco ayudan a medir generalización estructural.
 
 **Consecuencias.** La prueba tiene 1,390 andamios en 1,499 compuestos y 57.3% BBB+ contra 64.0% del entrenamiento: se evalúa sobre una distribución distinta de la que aprendió, que es lo realista. Construida al revés, con los frecuentes en prueba, daba 45 andamios con el benceno ocupando el 26%; la dirección de la asignación es el detalle crítico.
+
+**¿La escalera de semejanza existe también en la fase 2? Sí, y a partir de 0.5 de similitud no se puede ni partir (4 de noviembre).** Corrida `2026-11-04-artemio-1.2-escalera-agrupacion-actividad` (`scripts/experimento_escalera_fase2.py`), sin tocar la prueba reservada. El `aft`, con los mismos peldaños que la fase 1 y una sola familia de modelos: por par al azar, por molécula, `grupo_cv` (el del proyecto) y por similitud (componentes conexas de Tanimoto sobre Morgan radio 2, 45,662 moléculas únicas). La regla se declaró antes: la escalera existe si el peldaño evaluable más estricto cae al menos 0.030 (el doble de la dispersión de 0.015 entre los siete modelos competitivos de la 2.13) por debajo de «por molécula».
+
+| peldaño | grupos | mayor grupo | concordancia `todos` | `solo_npass` | similitud media al vecino más cercano |
+|:--|--:|--:|--:|--:|--:|
+| por par al azar | 56,241 | 0.0% | 0.8100 | 0.6697 | 0.844 |
+| por molécula | 45,662 | 0.0% | 0.8071 | 0.6408 | 0.769 |
+| `grupo_cv` (el del proyecto) | 10,242 | 2.2% | 0.7609 | 0.6308 | 0.645 |
+| similitud ≥ 0.6 | 5,286 | 16.1% | 0.6953 | 0.6233 | 0.439 |
+| similitud ≥ 0.5 | 2,512 | **69.1%** | no evaluable | | |
+| similitud ≥ 0.4 | 1,028 | **90.5%** | no evaluable | | |
+
+**El control pasa** (0.7609 contra 0.761 de la 2.13) y la caída del peldaño de «por molécula» al evaluable más estricto es de **0.112, siete veces el umbral declarado**: la escalera existe en la fase 2. **Dos hallazgos que la fase 1 no tenía.** (1) A 0.5 y 0.4 de similitud casi todo el espacio químico queda en una sola componente conexa (69.1% y 90.5% de las filas), así que **no hay forma de evaluar la fase 2 con química realmente nueva a esos niveles**: el `grupo_cv`, con similitud al vecino de 0.645, es mucho más laxo que lo que la fase 1 pudo medir (0.277 en su peldaño más estricto). Es una limitación del conjunto, no de la escalera. (2) En `solo_npass` la caída es mucho menor (de 0.670 a 0.623, contra 0.810 a 0.695 en `todos`); no se puede distinguir si es robustez o un suelo cercano al azar, porque ese estrato ronda 0.63 aun con partición laxa. **Verificado de forma independiente:** los vecinos ≥ 0.4 de la matriz dispersa coinciden con la similitud exacta de RDKit en 150 de 150 moléculas al azar; el vecino más cercano matricial difiere de `BulkTanimoto` en menos de 3×10⁻⁸; y los 5,286 grupos y el 16.1% del mayor se reproducen con una unión-búsqueda propia. **Límites:** una sola familia de modelos (el `aft`) y una métrica distinta (concordancia, no AUROC), así que las magnitudes **no son comparables** con las de la fase 1; solo el patrón. El vecino más cercano se mide sobre 1,500 filas de validación por pliegue de la semilla 0. Primera versión de la medición, con `BulkTanimoto` sobre una lista de 36,000 huellas, no terminó un peldaño en 30 minutos y se detuvo; se reemplazó por un producto de matrices exacto (`src/features/similitud.py`).
 
 #### 1.3 · Descriptores RDKit más Morgan/ECFP4 {#d1-3 .vigente}
 
@@ -249,6 +308,39 @@ En MCC la elección de modelo mueve **2.2 puntos** entre la logística y el boos
 **Se decidió.** 217 descriptores 2D de RDKit (203 utilizables) más Morgan/ECFP4 de 2,048 bits con `rdFingerprintGenerator`. Con `radius=2` se obtiene ECFP4, porque el número del nombre es el diámetro. Se descartaron los *embeddings* congelados de transformers, que no superan a esta combinación bajo partición por andamio.
 
 **Qué pasó.** `Ipc` alcanza ~1e41, finito en float64 pero fuera de float32, y sklearn convierte internamente; `isfinite` no lo detecta y costó una ejecución fallida, así que se descarta. El fingerprint plegado además mezcla subestructuras en un mismo bit; por eso se evalúa **Sort & Slice**, sin colisiones y con el vocabulario aprendido solo del entrenamiento. Con 2048 columnas cubre el 84.8% de las subestructuras del entrenamiento y el 68.0% de las del conjunto de prueba (el vocabulario se aprende solo con el entrenamiento, y la prueba trae los andamios raros). Esa brecha de 16.8 puntos crece con el vocabulario: 13.6 con 512 columnas y 17.8 con 4096. No es la cobertura en validación de la tabla de más abajo (71.0% con 2048), que se mide dentro de la validación cruzada.
+
+**Lo que se midió.** Los modelos de los Avances 3, 4 y 4b se entrenaron solo con los descriptores: el cargador (`src/models/tareas.py`) usa `descriptores` por defecto y nadie lo cambió, no fue una decisión. Los cuadernos `04c_Regresion_actividad_huellas` (fase 2) y `03c_Permeabilidad_huellas` (fase 1) lo midieron con cinco brazos —descriptores, depurados, seleccionados por Lasso, descriptores+huellas y huellas solas—, el vocabulario de Sort & Slice reaprendido dentro de cada pliegue y los modelos individuales del Avance 4. El orden se invirtió respecto a lo planeado porque la fase 2 tenía ya el cuaderno armado. Corridas `2026-10-28-artemio-1.3-comparativa-regresion-huellas` y `2026-10-28-artemio-1.3-comparativa-permeabilidad-huellas`.
+
+**El resultado es distinto en cada fase, y por eso la decisión se parte en dos.**
+
+- **Fase 2, la potencia contra una diana: las huellas mejoran.** A cinco de los seis modelos que entran a los brazos anchos, en las 15 evaluaciones de cada uno, con diferencias de 1.9 a 6.5 veces el umbral: `knn` de 0.739 a 0.756 de concordancia, `bayesian_ridge` de 0.692 a 0.728, `ridge` de 0.691 a 0.724, `linear_svr` de 0.690 a 0.722, `arbol` de 0.670 a 0.716 con huellas solas. El `mlp` es la excepción y empeora (−0.027), con la mayor brecha entre entrenamiento y validación del cuaderno (0.255). El `svr` con núcleo quedó fuera de los brazos anchos por costo, así que 0.756 es la mejor cifra de lo que se midió y no de todo lo posible.
+- **Fase 1, la permeabilidad: no mejoran a ningún modelo.** El brazo `huellas` baja el MCC de cinco de los seis modelos y solo el árbol sube (+0.013). El caso más cercano a la regla es el árbol en AUPRC (+0.035, mejor en 13 de 15), que cumple el mínimo de evaluaciones y no el umbral. Es coherente con que la permeabilidad dependa de propiedades de la molécula entera —TPSA y los donadores de hidrógeno dominan empíricamente— y no de qué fragmentos tiene.
+- **Los fragmentos reemplazan a los descriptores en la fase 2 y no en la fase 1.** Allá el brazo `huellas` queda a 0.002 o menos del brazo ancho en cuatro modelos y lo supera en dos; aquí `descriptores+huellas` supera a `huellas` en los seis.
+- **La ganancia no está donde el proyecto la necesita.** En la fase 2 la mejora amplia está en los pares que solo tiene ChEMBL; en los que solo tiene NPASS mejora un solo modelo (`knn`, +0.085 en 15 de 15) y lo deja apenas por encima del azar. En la fase 1 las huellas ayudan en los compuestos sin equivalente natural y no en los naturales exactos ni en los análogos. Dos cuadernos independientes, el mismo sesgo.
+- **Depurar o seleccionar descriptores no cambia nada en ninguna fase.** La depuración quita entre el 23% y el 26% de las columnas y el Lasso más de la mitad (95 de 201 en la fase 2, 90 de 203 en la fase 1), y ninguno de los dos pierde nada medible, salvo `bayes` en la fase 1. Así que se puede prescindir de **la mitad** de los descriptores sin perder nada, y tampoco se gana por hacerlo.
+
+**Se decide, entonces:** la fase 2 entra con huellas al Avance 5 (#155) y la fase 1 no, **por desempeño**. En la fase 1 el argumento que queda en pie es la explicabilidad, porque una columna Sort & Slice es una subestructura concreta y permite la atribución a nivel de fragmento que pide la [C.2](#dc-2), y los descriptores no; si se usan para eso se dice así —para explicar, no porque midan mejor— y se reportan los dos brazos.
+
+**La regla con la que se leyó, y lo que no es.** Un brazo mejora a un modelo si la diferencia media contra el brazo de control supera un umbral **y** es positiva en al menos 12 de las 15 evaluaciones (3 semillas × 5 pliegues), comparando siempre la misma evaluación contra la misma. El umbral es **la mayor dispersión de la métrica entre las evaluaciones del propio control**: una diferencia menor que lo que varía el mismo modelo al cambiar de pliegue no se distingue del reparto. En la fase 2 salió 0.007 de concordancia, tomado del 04b, y el control del 04c lo confirmó (0.0072); en la fase 1 salió 0.094 de MCC y 0.058 de AUPRC, porque el MCC de esa fase varía mucho más entre pliegues. El Avance 5 llama a la suya la misma regla y aplica una variante más laxa: solo la desviación del mejor individual, 0.073 y 0.041 ([1.5](#d1-5)). Tres advertencias que acompañan a la regla:
+
+- **No está pre-registrada.** Se fijó después de explorar un pliegue del 04b, y así lo dicen los `params` de las dos corridas. Lo que sí se cumple es que quedó escrita antes de ejecutar y no se ajustó al ver los resultados.
+- **Los 12 de 15 no son una probabilidad.** Las semillas comparten filas y los pliegues parten los mismos datos, así que las 15 evaluaciones no son independientes: es una prueba de signos con esa limitación.
+- **En la fase 1 resultó conservadora, y se reportó así.** El umbral se compara contra una diferencia pareada, que fluctúa bastante menos que el MCC absoluto del que sale. Por eso ahí «sin mejora medible» dice tanto de la regla como de las huellas, y la lectura del 03c publica la diferencia pareada y la cuenta de evaluaciones junto al veredicto. El umbral no se bajó al ver que nadie lo pasaba.
+
+
+**Las huellas por tramo de peso, fase 1 (4 de noviembre).** Corrida `2026-11-03-artemio-1.3-tamano-huellas-permeabilidad` (`scripts/experimento_tamano_fase1.py`): los seis modelos del Avance 4 sin afinar, `descriptores` contra `descriptores+huellas` (2,048 bits, vocabulario relearned dentro de cada pliegue), 3 semillas × 5 pliegues, sin tocar la prueba. La lectura se declaró antes: la hipótesis de tamaño se sostendría si la ganancia fuera mayor en los tramos pesados que en los ligeros en la mayoría de los modelos.
+
+| tramo | n medio | diferencia media de AUROC (huellas − descriptores), 6 modelos |
+|:--|--:|--:|
+| ≤ 250 Da | 238 | −0.032 |
+| 250–350 Da | 349 | −0.015 |
+| 350–500 Da | 480 | −0.009 |
+| > 500 Da | 205 | −0.019 |
+| todos | 1,261 | −0.021 |
+
+- **Las huellas no ayudan en ningún tramo de la fase 1, y no hay tendencia con el peso.** La media es negativa en los cuatro. Comparando el tramo ligero con el pesado, la ganancia sube en 3 modelos (`arbol`, `bayes`, `mlp`) y baja en 3 (`knn`, `logistica`, `svm_rbf`): no cumple la regla declarada. El `svm_rbf`, el modelo final, empeora más en el tramo pesado (−0.027) que en el ligero (−0.013).
+- **La media la arrastra `bayes`** (−0.12 a −0.05 por tramo; las huellas violan su supuesto de independencia). Sin él las medias son −0.015, −0.003, −0.003 y −0.011 por tramo de menor a mayor peso: cerca de cero y sin subir con el peso.
+- **Es la mitad de la pregunta.** Falta la fase 2 con el mismo diseño: la hipótesis se contrasta con el cruce de las dos. Esta pasada no iguala los tramos por submuestreo (el ligero y el pesado tienen ~200 filas y más ruido, y el ligero solo se reporta en 13 de las 15 evaluaciones), así que **no distingue tamaño de densidad de datos**. Como en la fase 1 no hay efecto que separar, la igualación importa sobre todo en la fase 2.
 
 ### Propuestas
 
@@ -262,9 +354,9 @@ En MCC la elección de modelo mueve **2.2 puntos** entre la logística y el boos
 
 **Se propone.** Excluirlas de la clasificación y no imputar una etiqueta desde la conectividad, porque la estereoquímica puede cambiar la clase.
 
-#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .propuesta .revisada}
+#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .revisada}
 
-**Estado:** propuesta · revisada el 12 de octubre
+**Estado:** revisada · el 12 de octubre y el 2 de noviembre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 151 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
@@ -290,7 +382,23 @@ Con una sola configuración por familia **no se declara ganador**, que es el err
 
 Y la curva de aprendizaje —submuestreando **por grupo**, no por fila, porque tomar filas al azar partiría andamios y mediría cuánto ayuda ver más análogos en vez de más estructuras— separa los dos diagnósticos: en los árboles la línea de ajuste es plana desde 168 estructuras; en la logística baja de 0.81 a 0.74 y se acerca a la de validación. **La brecha de los árboles sí se cierra** —de 0.327 a 0.270 en boosting y de 0.299 a 0.256 en el bosque, más que la brecha entera de la logística, que es 0.052— pero por el lado equivocado: no porque el ajuste baje, que es plano, sino porque la validación sube. Quintuplicar las estructuras quitó una quinta parte de la brecha, así que cerrarla por este camino pediría órdenes de magnitud más compuestos. Las tres líneas de validación suben cada vez menos, y el último 20% de estructuras aporta menos de 0.01 de MCC en los tres. **Más compuestos del mismo tipo ayudarían poco**: lo que falta es regularizar los árboles.
 
-**El piso es 0.000 de MCC, 0.500 de AUROC y 0.350 de AUPRC sobre la minoritaria.** El tercero importa justamente porque no es cero: el 0.88 del baseline se lee contra 0.350, no contra 0. No hay desempeño histórico con el que comparar —la patrocinadora no tenía modelo previo— así que el piso lo ponen los clasificadores triviales con la misma partición agrupada. Importa decirlo porque con 65.0% de BBB+ un clasificador que diga siempre «permeable» acierta dos de cada tres veces, y esa exactitud del 65% parecería un resultado. **El desempeño mínimo que el Avance 4 tiene que superar queda fijado en el 0.70 de MCC y el 0.93 de AUROC de este baseline**, medido con esta partición y estas semillas.
+**El piso es 0.000 de MCC, 0.500 de AUROC y 0.350 de AUPRC sobre la minoritaria.** El tercero importa justamente porque no es cero: el 0.88 del baseline se lee contra 0.350, no contra 0. No hay desempeño histórico con el que comparar —la patrocinadora no tenía modelo previo— así que el piso lo ponen los clasificadores triviales con la misma partición agrupada. Importa decirlo porque con 65.0% de BBB+ un clasificador que diga siempre «permeable» acierta dos de cada tres veces, y esa exactitud del 65% parecería un resultado. **El desempeño mínimo que el Avance 4 tenía que superar quedó fijado en el 0.70 de MCC y el 0.93 de AUROC de este baseline**, medido con esta partición y estas semillas. Es una vara de **validación cruzada**, y por eso no es comparable con la cifra de la prueba reservada del apartado siguiente. *Versión superada (2 de noviembre):* esta entrada dejaba la frase sola, sin el resultado del Avance 5, así que quien entrara por el registro —que es el documento canónico— se llevaba 0.70 donde la cifra sobre datos no vistos es 0.3385, el doble de lo que el modelo hace (#190).
+
+**El modelo final de la fase 1 es `svm_rbf`, y lo eligió el Avance 5 por descarte.** Ninguna de las treinta comparaciones —los otros diez modelos por tres métricas: los cinco ensambles (15), sus dos versiones afinadas (6) y los otros tres individuales (9)— contra el mejor individual pasó la regla de mejora, que se escribió antes de correr la comparación y no se bajó después, aunque no está pre-registrada: se fijó después de ver el control de los cuadernos anteriores, y el valor de su umbral sale de la propia corrida que juzga, así que el final es el mejor individual del Avance 4. La estabilidad y los intervalos solapados de AUROC apuntan al mismo modelo. Reajustado con entrenamiento y validación, y evaluado **una sola vez** sobre los 1,499 compuestos reservados (`notebooks/05_Modelo_Final.ipynb` celda 30, corrida `experimentos/2026-11-01-artemio-1.5-modelo-final-permeabilidad/`):
+
+| | MCC | AUROC | AUPRC min. | exactitud bal. |
+|:--|--:|--:|--:|--:|
+| validación cruzada | 0.7017 | 0.9190 | 0.8842 | |
+| **prueba reservada** | **0.3385** | **0.7928** | 0.7198 | 0.6386 |
+| · natural exacto | 0.2567 | 0.7802 | 0.7613 | 0.5960 |
+| · análogo estereoquímico | 0.2788 | 0.7304 | 0.5652 | 0.6537 |
+| · sin equivalente natural | 0.3173 | 0.7934 | 0.5997 | 0.6249 |
+
+Se esperaba que bajaran: la prueba tiene los andamios raros a propósito y otra prevalencia (57.3% de BBB+ contra 65.0% de las 6,306 filas con las que se reajustó). Bajan más de lo que esa advertencia prepara. El MCC se parte por la mitad, y el AUROC pierde 0.126 sin depender del umbral, así que la prevalencia no lo explica: **sobre esqueletos que no se parecen a los de entrenamiento el modelo ordena peor**. El estrato más flojo en exactitud balanceada es `natural exacto` (0.596), que es justo el que el proyecto quiere priorizar. La distancia entre las dos primeras filas **es** el resultado del Avance 5: mide cuánto de lo que promete la validación cruzada sobrevive a un esqueleto nuevo, y que sobreviva poco es un resultado válido, que es el que va al artículo. Parte de la caída del MCC es de colocación del umbral y no de orden, y recuperarla pide reportarlo a un umbral elegido en validación, que es lo que queda abierto en el #191.
+
+**El umbral de esa regla está mal definido y mal escalado, y el veredicto no depende de él** ([#188](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/188)). Son dos defectos distintos. La celda 12 del cuaderno definía el umbral como «la mayor desviación» mientras el código usa la desviación estándar: 0.073 de MCC y 0.041 de AUPRC, contra los 0.1298 y 0.0811 que produce el texto, y ninguno de los dos es el de la [1.3](#d1-3), que toma la mayor de las desviaciones entre los modelos del control (0.094 y 0.058). Y el umbral mide dispersión entre pliegues mientras el estadístico que juzga es una diferencia pareada, donde la dificultad del pliegue se cancela: la desviación pareada va de 0.0096 a 0.0188 de MCC, así que el umbral está entre casi cuatro y casi ocho veces inflado en las unidades de lo que mide —3.9 contra la mayor desviación pareada y 7.6 contra la menor—, y pedía más ganancia que los 0.0417 que separan al mejor de los once modelos del peor. Con cualquiera de las cuatro lecturas el veredicto es el mismo, porque la mayor ganancia observada es de 0.0093. **Se sostiene además por dos caminos que no usan el umbral:** ninguno de los dos candidatos llega a 12 de 15 evaluaciones en las dos métricas a la vez —el `stacking` 12 en MCC y 11 en AUPRC, la `votacion` 9 y 14— y los cuatro intervalos corregidos por Nadeau y Bengio como en la [1.7](#d1-7) incluyen el cero: en MCC `stacking` +0.0093 [−0.0101, +0.0287] y `votacion` +0.0075 [−0.0113, +0.0263]; en AUPRC de la minoritaria `votacion` +0.0108 [−0.0009, +0.0224] y `stacking` +0.0093 [−0.0034, +0.0221]. **Esos dos caminos alcanzan a las dos métricas principales y a nada más:** el AUROC no entra en la regla —la celda 11 del cuaderno lo llama tercera lectura— y su diferencia pareada se mide aparte, así que de aquí no se sigue nada sobre él. Lo que queda abierto en el #188 es reescribir el argumento del cuaderno para que apoye en esos dos caminos y no en el umbral, que es criterio de equipo, y mostrar la columna `dif_desv` en la tabla, que pide reejecutar la comparativa.
+
+**Qué cambiaría la elección del modelo final:** que el umbral elegido en validación recupere buena parte del MCC de la prueba, lo que cambiaría la lectura de la caída pero no la del AUROC; o que la matriz canónica de la fase 1 quede decidida (#166) y mueva el orden de los once modelos, aunque el `svm_rbf` es uno de los cinco que salen idénticos al cuarto decimal entre las dos máquinas.
 
 **Dos métodos de atribución coinciden en 11 de sus 15 primeras características**, que es lo que la [C.2](#dc-2) exige antes de afirmar nada estructural: la impureza del bosque pone a TPSA arriba, la permutación sobre el pliegue de evaluación pone a `fr_lactam` y `fr_COO`. En la intersección están TPSA, donadores de hidrógeno y `MolLogP`, y los coeficientes de la logística les dan el signo esperado —TPSA −1.42, donadores −2.43—, de modo que la regla de los dos parámetros sale de tres caminos independientes en vez de citarse. **24 de las 151 columnas no dañan al modelo al permutarlas**, y la cuenta lleva su ruido: en solo 4 de esas 24 la media supera en magnitud a su propia desviación entre repeticiones, y en toda la matriz solo 75 de 151. El orden de la cola no está medido; el de la cabeza sí —`fr_lactam` da 0.0058 ± 0.0012— y es de donde sale la intersección. Retirarlas es candidato de poda para el Avance 4, no una decisión que una sola configuración pueda tomar.
 
@@ -342,6 +450,25 @@ El error estándar se corrige como en la [1.7](#d1-7), por Nadeau y Bengio, y la
 | **Gradient boosting** (XGBoost o LightGBM) | Suele ser el más fuerte con descriptores tabulares | No |
 
 Solo la logística necesita escalar, así que cada modelo lleva su canalización y los árboles reciben la matriz sin transformar. Para la logística **se propone escalar**, porque sin escalar no converge con el `C` que se usa, y **min–max como opción de partida**, no como conclusión: entre las tres formas de escalar la medición no da base para elegir, y la alternativa de no escalar deja un modelo que agotó sus iteraciones. Ya no hay un motivo medido para evitar Yeo-Johnson: lo había mientras el `C` era el mismo para todas, y con el suyo la diferencia desaparece. **Cuál de las tres se adopta lo cierra el equipo**, no la patrocinadora: la medición no las distingue en desempeño y la razón para escalar resultó ser la convergencia, así que no queda un criterio que dependa de su conocimiento del dominio. Lo que sí depende de ella es la pregunta de arriba, entre explicabilidad y reducción de dimensión, porque eso se decide por lo que quiere poder leer en el resultado y no por una cifra. Se resuelve en el Avance 3, con los modelos afinados y suficientes evaluaciones para cerrar los intervalos. El Avance 2 guarda la matriz filtrada en dos versiones, transformada con Yeo-Johnson y sin transformar, con las mismas columnas; y **cambiar la transformación de trabajo ya no obliga a repetir la selección**: la §9 filtra por valor modal y por correlación de Spearman sobre los valores crudos, y el notebook comprueba que las 151 columnas son las mismas con estandarización, con min–max y con Yeo-Johnson. El PCA no se adopta, por explicabilidad, y **tampoco se guarda**: el notebook lo conserva solo como vista del espacio químico. Lo que ejecutó el Avance 2 es una propuesta: la alternativa (no escalar, no reducir dimensión) sigue en pie hasta que se acuerde. SHAP con `TreeExplainer` sirve a los árboles y Chemprop queda como comparación opcional del Avance 4.
+
+**Medición · andamios de la prueba reservada** (4 nov, corrida `2026-11-04-artemio-1.6-andamios-de-la-prueba`). Pregunta del comentario de Grettel del 3 de noviembre: qué proporción de la prueba tiene andamio o esqueleto que el entrenamiento no vio. Regla escrita y commiteada antes de correr; solo columnas estructurales, sin etiquetas.
+
+- **Resultado:** la proporción es **1.000** en las dos fases, por andamio y por esqueleto, también en validación y en naturales y no naturales. Es consecuencia del agrupamiento (el reparto separa por andamio y esqueleto a la vez), no una propiedad medida del modelo: confirma que el reparto se cumple, pero **no dice qué tan lejos queda la prueba del entrenamiento**, que es lo que miden la escalera de similitud y el vecino más cercano.
+- **Lo que sí aporta:** la prueba es de estructuras sueltas. Fase 1: 1,499 filas en 1,390 andamios (1,392 esqueletos). Fase 2: 13,973 filas con 13,973 esqueletos y 13,973 andamios distintos, es decir, ninguno se repite, frente a 49,425 filas con 40,047 esqueletos y 6,344 andamios en entrenamiento. En la fase 2 las filas de la prueba son independientes entre sí por andamio; en entrenamiento hay andamios con muchos pares.
+- **Las 29 filas de diferencia, resueltas:** el parquet tiene 13,973 pares de prueba y el 05b cita 13,944 porque el 05b descarta los pares sin información en el intervalo (límite inferior −∞ y superior +∞) o con el intervalo invertido. Aplicado el mismo filtro del 05b al parquet salen 29 pares de prueba, 170 de ajuste (145 de entrenamiento y 25 de validación) y quedan 13,944, 56,241 y 70,185 en total, que son exactamente las cifras del 05b. Las cifras de estructuras sueltas de arriba (13,973) son del parquet sin ese filtro.
+- **Registro:** dos líneas nuevas en `experimentos/prueba.csv` (una por fase), sin etiquetas.
+
+**¿Faltan datos? La curva de aprendizaje de los dos modelos finales (4 de noviembre).** Corrida `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales` (`scripts/experimento_curva_aprendizaje.py`), sin tocar la prueba reservada. Para cada pliegue agrupado (3 semillas × 5) el modelo final de cada fase se ajusta con el 25, 50, 75 y 100% de los **grupos** del pliegue de ajuste y se mide siempre sobre el mismo pliegue de validación. La regla se declaró antes: *faltan datos* si la ganancia del último escalón (75% → 100%) es positiva en al menos 12 de 15 evaluaciones y supera 0.005. Sirve para decidir con qué filas se entrena el modelo que se entrega a la patrocinadora, sin que cuente el deseo de subir una cifra.
+
+| fase y métrica | 25% | 50% | 75% | 100% | ganancia 75 → 100% | positiva en | proyección con las filas de prueba | ¿faltan datos? |
+|:--|--:|--:|--:|--:|--:|--:|--:|:--|
+| fase 1, AUROC (`svm_rbf`) | 0.894 | 0.910 | 0.917 | 0.919 | +0.002 | 8 de 15 | +0.004 | **no** |
+| fase 1, MCC | 0.641 | 0.684 | 0.696 | 0.702 | +0.005 | 10 de 15 | +0.010 | **no** |
+| fase 2, concordancia (`aft`) | 0.719 | 0.742 | 0.753 | 0.761 | +0.0076 | 15 de 15 | +0.007 | **sí** |
+
+- **La fase 1 está en meseta:** del 75% al 100% el AUROC apenas se mueve y no de forma consistente. La proyección de añadir las 1,499 filas de la prueba es de +0.004 de AUROC, menos que el ruido (desviación de la ganancia: 0.007). **No hay evidencia de que más filas mejoren el modelo de la fase 1**, así que el modelo servido se entrena con las filas de ajuste, el que se evaluó.
+- **La fase 2 sigue subiendo:** la ganancia del último escalón es positiva en las 15 evaluaciones (+0.0076, con desviación de 0.0026). La proyección de añadir los 13,944 pares de prueba es de +0.007 de concordancia. Aquí sí hay un argumento para entrenar el servido con todas las filas, **a cambio de que ese modelo ya no se pueda evaluar**: sus cifras serían las del modelo de ajuste, rotuladas, y no se cita ninguna métrica del servido.
+- **La proyección es un ajuste `a + b·ln(n)` sobre cuatro puntos, no una medición.** Además la prueba contiene los andamios raros a propósito, así que sus filas pueden aportar más o menos que filas parecidas a las de ajuste; la curva no lo mide. La decisión final sobre la fase 2 queda en manos del equipo, con esta evidencia a la vista.
 
 #### 1.6 · Naturales en la fase 1: evaluar por origen, no entrenar por separado {#d1-6 .vigente}
 
@@ -408,7 +535,7 @@ Dos observaciones sobre por qué los BBB− de A son difíciles, ambas descripti
 
 Y una advertencia: los descriptores predicen la pertenencia al grupo A con AUROC 0.844 (el grupo A es el 11.9% de las filas) y al origen natural exacto con 0.773 (46.3%). Eso indica que la información del grupo está disponible y que el modelo *podría* estar aprendiendo el prior de BBB+ del grupo en vez de la química; no lo demuestra, porque probarlo exigiría quitar esa información y medir qué cambia. No se hizo.
 
-**4. El corte de 0.5 mezcla discriminación, calibración y prevalencia.** Por eso, para comparar estratos con prevalencias de 0.12 a 0.90, la medida primaria es el AUROC y el MCC va al lado, no en su lugar. Aquí el AUROC se usa como medida primaria porque no depende de la prevalencia; la regla general del proyecto ([C.1](#dc-1)) sigue siendo MCC y AUPRC de la clase minoritaria, que son las que miden el desempeño sobre BBB− en cada estrato.
+**4. El corte de 0.5 mezcla discriminación, calibración y prevalencia.** Por eso, para comparar estratos con prevalencias de 0.12 a 0.90, la medida primaria es el AUROC y el MCC va al lado, no en su lugar. Aquí el AUROC se usa como medida primaria porque no depende de la prevalencia; la regla general del proyecto ([C.1](#dc-1)) sigue siendo MCC y AUPRC de la clase minoritaria, que miden el desempeño sobre la clase minoritaria. **Esa clase no es siempre BBB− dentro de un estrato** ([#187](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/187)): el arnés la decidía por pliegue, y en natural exacto las cifras por estrato publicadas promedian las dos clases (BBB− en 12 de 15 evaluaciones, BBB+ en 3), en análogo estereoquímico igual (BBB+ en 12 de 15). Desde el arreglo la clase se fija con todo el estrato y la tabla trae la columna `clase_medida`; las cifras de AUPRC por estrato anteriores quedan **superadas, no recalculadas**. Las comparaciones pareadas entre modelos no cambian, porque ambos brazos volteaban juntos.
 
 **Límites.** Los intervalos remuestrean grupos y cubren la variación entre grupos, no la de reentrenar (las tres semillas comparten filas). El script calcula también el AUPRC de BBB− menos su línea base, y esa medida va en contra de los naturales en el grupo C (boosting −0.229 [−0.314, −0.134], igual con los tres modelos). No se usa porque no es comparable entre estratos de prevalencia distinta: su máximo es 1 − π, y los naturales tienen más BBB− (55.6% frente a 18.9% en C), así que la resta los penaliza por construcción. Los contrastes (cuatro entre orígenes y dos entre grupos, por tres modelos y cuatro medidas (AUROC, dos variantes de MCC y AUPRC menos línea base)) no están corregidos por comparaciones múltiples: se lee el patrón entre modelos y no un intervalo suelto. Los números salen de `experimentos/2026-10-21-antonio-1.6-baseline-permeabilidad-descriptores-origen/`, `…-origen_grupo/` y `…-analisis-origen/` (`metricas.json`), y de `notebooks/datos/analisis_origen_fase1.csv`.
 
@@ -503,33 +630,42 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 
 ## Fase 2 · Actividad {#fase2}
 
-202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es una medición: un compuesto contra una proteína, con tipo (IC50, Ki, EC50), relación (`=`, `>`, `<`), valor y unidad. El pChEMBL es −log₁₀ de la concentración molar: 5 equivale a 10 µM y 6 a 1 µM. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. **La matriz de pares ya está construida** —70,384 pares compuesto-diana sobre 59,532 esqueletos de conectividad, con 201 descriptores por compuesto— **y la partición con la prueba reservada también** ([2.7](#d2-7)); el modelo de referencia del Avance 3 corre sobre ellas ([2.9](#d2-9)). Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) (los datos), [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb) (la matriz y la partición), [notebook 03](../notebooks/03_Baseline.ipynb) (el modelo de referencia) y [datos del proyecto](datos-contenido.md).
+202,647 mediciones (ChEMBL 187,354, NPASS 11,992, CMAUP 3,301) sobre 99,585 esqueletos. Cada fila es un compuesto contra una proteína, con tipo (IC50, Ki, EC50…), relación (`=`, `>`, `<`), valor y unidad. Solo 1,033 esqueletos están también en el conjunto de permeabilidad, por eso las dos fases casi no se tocan. La matriz de pares ya está construida —70,384 pares compuesto-diana sobre 59,532 compuestos, con 201 descriptores por compuesto— y la partición con la prueba reservada también ([2.7](#d2-7)). **El objetivo principal es la regresión de la potencia ([2.9](#d2-9)); la clasificación se deriva de ella.** Evidencia: [notebook 01b](../notebooks/01b_EDA_actividad_snc.ipynb) (los datos), [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb) (la matriz y la partición), [notebook 03](../notebooks/03_Baseline.ipynb) (el baseline) y [datos del proyecto](datos-contenido.md).
+
+### Respuesta de la patrocinadora al correo del 24 de octubre {#respuesta-correo-24-oct}
+
+El 24 de octubre se envió a la Dra. Martínez Ávila, con copia a Jorge Uribe, un correo con las dudas de la fase 2: el alcance de «no hacer inferencia», la dirección del efecto, la regresión frente al corte, el tejido y tres preguntas más. Esto contestó (correo, documento interno). Pidió a Jorge Uribe que diera su visto bueno.
+
+| Tema | Lo que respondió |
+|:--|:--|
+| **Alcance de «no inferir»** | Su punto era la lectura (a): descartó que el equipo dedujera una etiqueta de actividad donde la fuente no la trae. No descartó las columnas `_used` que Jorge armó y documentó. |
+| **Relaciones «inferida»** (2,001) | Pidió incluirlas, marcadas, y reportar en una línea una sensibilidad sin ellas. |
+| **Fuente** | No entra como variable de entrada. Pidió estratificar la validación por fuente y reportar el desempeño por fuente. |
+| **Dirección del efecto** | Eligió la opción 1: la afinidad cuenta y la etiqueta no se invierte. Pidió una variable objetivo agnóstica a la dirección y una columna `direccion_consistente` con los valores consistente, ambigua y contradictoria, derivada del tipo de actividad, el tipo de ensayo y el efecto buscado. El modelo principal usa todo; la sensibilidad, el subconjunto consistente. |
+| **`Potency` y `AC50`** | Etiquetas genéricas de cribado: pidió tratarlas como potencia agnóstica a la dirección. |
+| **IC50** | Un IC50 en ensayo de unión es afinidad. Solo un IC50 funcional sobre una diana de activación es contradictorio: se marca y se excluye de la sensibilidad, sin invertirlo. |
+| **DRD2** | Fuera del alcance de la fase 2. Distinguir agonista de antagonista es una segunda tarea, con su propio conjunto de registros funcionales; pidió dejarla planteada como trabajo futuro. |
+| **API de ChEMBL** | De acuerdo con consultarla. Indicó tipo de ensayo, formato BAO, puntaje de confianza, organismo y `action_type`. Pidió guardar las respuestas y anotar la fecha de descarga. Estos campos no entran como variables de entrada; sirven como filtro de sensibilidad y como descriptor del reporte. |
+| **Potencia** | Pidió la potencia como variable principal y la clasificación derivada de aplicar el corte a las predicciones continuas al final. |
+| **Censura** | Indicó que en escala `pActividad` «> 10 µM» es censura por la izquierda y que `survival:aft` de XGBoost está pensado para la derecha. Sugirió ajustar en µM, donde «> 10» es censura por la derecha, convertir a `pActividad` al final y verificar el signo antes de procesar todo el conjunto. |
+| **Evaluación de la regresión** | Índice de concordancia de Harrell y Spearman; RMSE solo sobre las mediciones no censuradas, declarado como tal. Pidió buscar y citar la reproducibilidad experimental documentada (alrededor de 0.7 unidades logarítmicas para IC50 y 0.5 para Ki) y dejar ese techo escrito en el informe. |
+| **Agregación por par** | Mediana de `pActividad`, con el número de mediciones y el rango, marcando los pares con dispersión mayor a cien veces. El filtro de dirección se aplica antes de agregar. |
+| **Tejido** | No como variable de entrada. Pidió usarlo solo para auditar los pares en conflicto y como métrica de diagnóstico del sesgo. |
+| **Partición del 10% apartado** | Pidió a Jorge Uribe compartir cómo se separó. Si fue aleatoria, pidió reportar en paralelo una partición por esqueleto molecular y deduplicar por esqueleto antes de partir. |
+
+Tres puntos los dejó al criterio del equipo, con estas indicaciones:
+
+- **Dianas fuera de la lista** (88,098 mediciones). Su posición es que no entren en la variable objetivo; el equipo decide si las aprovecha como tareas auxiliares o como descriptor de selectividad. Sobre los ensayos celulares, indicó que no son evidencia de neuroprotección por sí mismos (BV-2 es microglía, SH-SY5Y un modelo neuronal, U-251 un glioma) y pidió tratarlos como anotación de citotoxicidad, separada, para la etapa de priorización.
+- **Inactivos de DrugMatrix** (29,730 filas). El equipo decide. Pidió considerar el argumento de que «Inhibition < 50% @ 10 uM» es un experimento real con protocolo uniforme. Si se incluyen, que sea como negativos censurados, con la columna de documento y agrupando por documento en la validación cruzada. En cualquier caso, pidió ver el desempeño con y sin ellos, y verificar con un análisis de esqueletos si los 772 compuestos, que describió como mayormente fármacos conocidos, sesgan el espacio químico.
+- **Qué error pesa más.** El equipo lo resuelve como análisis de escenarios, dejándolos explícitos. Su expectativa es que el escenario realista sea el de pocos compuestos, con el falso positivo como el error caro. Pidió para ese escenario enriquecimiento al 1% y 5%, BEDROC, precisión en los primeros 100 y área bajo la curva de precisión-recall; y, para el cribado amplio, las métricas de sensibilidad, explicando cuál gobierna bajo cada supuesto. Pidió que la métrica principal quede declarada antes de ver resultados.
 
 ### Decisiones
-
-#### 2.5 · La fuente confundida con el etiquetado {#d2-5 .vigente}
-
-**Estado:** vigente · medida el 7 de octubre
-
-> **Pregunta:** ¿Se conocen sesgos de curación entre ChEMBL, NPASS y CMAUP?
-
-**Qué pasó.** NPASS y CMAUP no traen pChEMBL; ChEMBL sí. Si la vía de etiquetado cambia con la fuente, el modelo podría aprender la fuente en vez de la actividad. Medido: el confundido es perfecto por registro (los 15,293 de NPASS y CMAUP tienen cero pChEMBL) pero no por compuesto:
-
-| | Esqueletos |
-|:--|--:|
-| Solo en ChEMBL | 95,413 |
-| **Solo en NPASS/CMAUP** | **1,445** |
-| En ambas fuentes | 2,727 |
-
-**Medido el 18 de octubre: el riesgo era real.** El control del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) muestra que un modelo que solo ve la procedencia alcanza 0.280 de MCC —el 65% de lo que consigue la química— y que dentro de los pares que solo tiene NPASS el AUROC de la química baja a **0.574 [0.534, 0.609]**, contra 0.831 dentro de ChEMBL. El confundido por compuesto no era tan benigno como el reparto de esqueletos sugería. Cuánto de esa caída es origen y cuánto es composición de dianas se desarrolla en la [2.3](#d2-3), con la comparación a igual diana.
-
-El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concentra en 1,445 compuestos. Los 2,727 solapados sirven de calibración: donde hay pChEMBL y concentración exacta se puede ajustar el corte de concentración y medir cuánto discrepan. **Pendiente:** hacer esa calibración antes de fijar la [2.3](#d2-3).
 
 #### 2.1 · El alcance: cinco categorías de enfermedad {#d2-1 .ratificada .revisada}
 
 **Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes preguntaba por cuatro dianas sueltas
 
-**Qué se decidió.** El alcance de la fase 2 son **cinco categorías**: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás se remueven. La patrocinadora lo cerró en la reunión del 15 de octubre: «sí se pueden resumir a esas… y si los demás adelante los pueden remover» (acta de la reunión, documento interno).
+**Qué se decidió.** Cinco categorías: Alzheimer, Parkinson, neuroinflamación, depresión y estrés oxidativo. Las demás salen (acta de la reunión, documento interno).
 
 | Categoría | Registros | |
 |:--|--:|:--|
@@ -537,242 +673,125 @@ El 65.4% de los naturales también está en ChEMBL, así que el riesgo se concen
 | Parkinson | 32,372 | queda |
 | Neuroinflamación | 12,331 | queda |
 | Depresión | 10,888 | queda |
-| **Estrés oxidativo** | **2,456** | **queda, por decisión suya** |
+| **Estrés oxidativo** | **2,456** | **queda, por decisión de la patrocinadora** |
 | Epilepsia · Neurodegeneración · Deterioro cognitivo · Ansiedad · Huntington · ELA | 3,826 en total | fuera |
 
-Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana: el recorte cuesta 3,826 filas.
+Son 110,723 registros, el 96.7% de los 114,549 que tienen categoría de diana.
 
-**El criterio, que es lo que ella pidió dos veces.** Preguntó «¿cuál es el criterio para eliminar el resto, solo porque tienen pocas entradas?» y «¿cómo debería ser esa distribución para que no haga ruido?», con una cota propia: menos del 10% no le parece confiable. La regla que queda es **≥ 50 registros por categoría**, ofrecida como conservadora. No es una cota derivada: por debajo de unas decenas de pares un modelo propio no se sostiene, y ELA tiene 53 registros y Huntington 153. Se escribe como regla y no como lista para que el día que lleguen datos nuevos no haya que volver a preguntar.
+**Criterio.** Al menos 50 registros por categoría. No es una cota derivada: por debajo de unas decenas de pares un modelo propio no se sostiene (ELA tiene 53 registros, Huntington 153). Se escribe como regla para que datos nuevos no obliguen a decidir de nuevo. Estrés oxidativo, la más pequeña, se conserva por criterio de la patrocinadora: es el extremo general de la escala (casi toda enfermedad lo implica). Queda revisable si el análisis la muestra anómala.
 
-**Estrés oxidativo entra por decisión suya, y su razonamiento es el criterio biológico que el equipo no podía deducir:** la escala va de lo general a lo específico, «es solo un dolor de cabeza o te está tratando Alzheimer», y el estrés oxidativo es el extremo general —«toda enfermedad, desde la gripa, desde hacer ejercicio, el acné»—. Con 2,456 registros es la categoría más chica que queda, y ella misma la dejó revisable: si el análisis la muestra anómala, se reconsidera.
-
-**Las cuatro dianas sin datos quedan resueltas sin preguntarle.** Era la pregunta anterior de esta entrada, y el alcance la contesta: `GABRB2` y `GABRG2` son de Epilepsia y `TARDBP` de ELA, categorías que salen. Solo `AIF1` está en una categoría que queda, y se excluye por sí sola: tiene 0 filas y la etiqueta de la propia patrocinadora dice «marcador de microglía activada; **no es diana farmacológica**».
-
-**Lo que hay que mostrarle, porque sus dos decisiones se restan entre sí.** Estrés oxidativo es **47.7% NPASS y CMAUP**. Si además se descartara el etiquetado de esas dos fuentes (su correo del 16, [2.3](#d2-3)), la categoría que defendió pasaría de 2,456 filas a 1,285. No lo vio, y conviene decírselo antes de que decida otra cosa sobre la 2.3.
-
-#### 2.6 · La partición de prueba que sí se había reservado {#d2-6 .ratificada .revisada}
-
-**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes era una pregunta abierta
-
-**Qué se decidió.** Sí había una partición reservada, **se hizo al azar y sin criterio**, y la patrocinadora entrega el archivo completo para que el equipo la rehaga. «Partamos de la base de datos completa que se las podemos pasar… ustedes que son los expertos tengan la base completa y hagan bien esas separaciones» (acta de la reunión, documento interno).
-
-**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647, el 89.9%. La sospecha era correcta. Al explicarle por qué el azar no sirve —si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada— lo aceptó sin reservas: «lo hicimos muy a la ligera… si hay una forma de hacerlo con mejores criterios, adelante».
-
-**Su condición, que repitió cuatro veces:** que se reserve una prueba que el modelo nunca vea. Su razón no es metodológica sino práctica: no espera que aparezca otra base de datos con la que validar después. Eso se respeta en la [2.7](#d2-7), que reserva el 20% y lo deja fuera de la validación cruzada.
-
-**La limitación que hay que declarar en el reporte.** Un 10% extraído al azar del mismo archivo comparte andamios, ensayos y artículos con el 90%: es una partición interna con otro nombre. Prueba filas nuevas, no química nueva ni protocolos nuevos. Si el reporte final la llama «validación externa», sobrevende lo que compra. Con el archivo completo en mano el punto es casi histórico, pero queda escrito porque ella descansa mucho en ese conjunto.
-
-**Dónde se nota en la fase 1.** La prueba de humo del notebook 02 (§11) evaluaba sobre la prueba reservada; ahora evalúa sobre validación, que es lo que esta condición exige. **Las cifras subieron, no bajaron**, y por eso conviene no compararlas: la prueba se quedó con los andamios raros (57.3% BBB+ contra 72.0% de la validación), así que es el conjunto difícil. Descriptores con Random Forest pasan de 0.346 de MCC sobre la prueba a 0.558 sobre validación, y la línea base del AUPRC sobre BBB− pasa de 0.427 a 0.280, de modo que tampoco las columnas de AUPRC son comparables entre las dos versiones.
-
-**Pendiente de Jorge Uribe:** el método con que separó el 10%, y verificar con el equipo si introduce sesgo (ofrecido en el correo del 16 de octubre).
-
-#### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
-
-**Estado:** vigente · decisión del equipo, no necesita a la patrocinadora
-
-*No hay nada que preguntarle.* Se registra porque fija el formato del artefacto que todo el modelado de la fase 2 va a leer, y porque tres de sus reglas de agregación difieren de lo que dice la [propuesta de variable objetivo](variable-objetivo-fase2.md).
-
-**Qué pasó.** La matriz de la fase 2 (`src/data_prep/pares_fase2.py`, construida con `scripts/construir_pares_fase2.py`) deja 70,384 pares sobre 59,532 compuestos y 26 dianas. La decisión no es cómo agregarla sino **qué se guarda**: no una etiqueta, sino el intervalo donde cae la potencia, con la binaria derivada de él.
-
-| Columna | Qué es |
-|:--|:--|
-| `pActividad` | la potencia como número, 6 − log10 µM; `NaN` si el par solo tiene cotas |
-| `limite_inferior`, `limite_superior` | el intervalo, con ±∞ donde no hay cota |
-| `activo_10um`, `activo_1um` | la etiqueta binaria, **derivada** del intervalo |
-
-**Por qué.** Es la lección de la fase 1 aplicada al revés. El Avance 2 seleccionó sus 171 columnas sobre la matriz transformada con Yeo-Johnson y congeló ese artefacto, así que cambiar la transformación obliga a repetir la selección y a reejecutar el notebook ([1.5](#d1-5)). Guardar solo `activo_10um` tendría el mismo defecto: adoptar la regresión de la [2.9](#d2-9) obligaría a reconstruir todo. Con el intervalo guardado, la clasificación, la regresión sobre exactas y la censurada leen el mismo archivo, y **el umbral pasa a ser una decisión de lectura**.
-
-**Y el intervalo reproduce la regla del diccionario sin programarla aparte.** En escala de potencia un `> L µM` es cota superior, así que «inactivo con umbral T» es `limite_superior ≤ 6 − log10 T`. Un `> 1 µM` da cota superior 6, que no alcanza para declarar inactivo con T = 10 µM y sí con T = 1 µM: es la sección 7 del diccionario como consecuencia, y no como caso especial.
-
-**Tres reglas de agregación que difieren de la propuesta**, y conviene que se vean porque mueven cifras:
-
-1. **Mediana de las mediciones exactas, no el valor más potente.** El máximo sesga hacia la clase positiva, que es el primer problema que la propuesta declara de su propia regla. La dispersión no se pierde: queda en `rango_exactas`, así que un análisis de robustez puede excluir los pares dispersos sin volver a leer el archivo.
-2. **Conflicto es evidencia incompatible, no dispersión.** Con la mediana, dos mediciones a los lados del corte son ruido de medición y no contradicción. Un par se marca en conflicto cuando su mediana cae fuera de lo que permiten sus cotas, o cuando las cotas se cruzan. Así bajan de **1,784 a 1,126**, y solo 15 dan un intervalo vacío. Eso alivia el segundo problema de la propuesta: quitar los conflictos pesaba más en NPASS y CMAUP (32% y 39% de sus pares con varias mediciones).
-3. **El empate en el umbral se resuelve a favor de activo.** Una medición exacta justo en el umbral es activa por la convención de «concentración igual o menor»; un censurado `> 10 µM` con el mismo umbral es inactivo por la regla del diccionario. Tienen la misma relación numérica con el corte y significan lo contrario, y lo que los distingue es que el censurado no tiene cota inferior. Resolverlo así mueve **409 pares** con el corte de 10 µM, porque los valores redondos son frecuentes. Lo encontró una prueba, no una lectura.
-
-**Dos recortes declarados.** La potencia se recorta a **[2, 12]**, que no es un percentil elegido a mano: es el rango del pChEMBL observado en este archivo (2.35 a 12.00), y ChEMBL no asignó pChEMBL a ninguna de las 319 filas que caen fuera —su propia tubería ya las marcó—. Y las filas en unidades de masa quedan fuera, porque sin peso molecular no hay conversión a molar: son 181 de las que podrían formar par, y por eso el conteo da 70,384 y no 70,497.
-
-**Cifras del artefacto.** 57,832 pares con potencia y 12,552 solo con cotas; 67,736 con etiqueta a 10 µM (72.8% activos, 2,648 sin decidir) y 69,632 a 1 µM (50.2%, 752 sin decidir); 24,230 grupos para la partición. Los descriptores quedan **201 de 217** utilizables, dos menos que los 203 de la fase 1, porque el conjunto de compuestos es otro y cambia qué columnas salen constantes o no finitas. Esa cifra pertenece al diccionario de la matriz y se mueve ahí cuando el #83 se fusione.
-
-### Propuestas
+**Dianas sin datos.** `GABRB2` y `GABRG2` (epilepsia) y `TARDBP` (ELA) salen con sus categorías. `AIF1` tiene 0 filas y su etiqueta dice «marcador de microglía activada; no es diana farmacológica». `SIRT1` tiene 1,110 mediciones pero su categoría, «Neurodegeneración (general)», no está entre las cinco: aporta 0 pares.
 
 #### 2.2 · Por diana, con multitarea como comparación {#d2-2 .vigente .revisada}
 
 **Estado:** vigente · revisada el 17 de octubre: antes era abierta, y la [2.1](#d2-1) la desbloqueó
 
-**Qué se decidió.** Un modelo por diana para **once** dianas, el multitarea para las quince restantes, y el orden lo decide el **volumen**: de más pares a menos, empezando por `BACE1`, `DRD2`, `ACHE`, `MAOB` y `MAOA`. No se espera una lista de prioridades suya.
+**Qué se decidió.** Un modelo por diana donde hay datos suficientes (hoy once) y un multitarea sobre las 26, que además se queda con las dianas que no alcanzan. Orden por volumen: `BACE1`, `DRD2`, `ACHE`, `MAOB`, `MAOA`. **Por categoría no:** Alzheimer reúne a `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear), tres farmacologías distintas, y un modelo sobre la mezcla aprende el promedio. La categoría se usa para reportar.
 
-**Once y no catorce, y la diferencia la encontró una comprobación que faltaba.** El 18 de octubre, al reservar la prueba del 20% y mirar los pliegues diana por diana —lo pidió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86)—, el conteo de «1,000 pares o más» bajó de 14 a **13** sobre lo que queda para ajustar. Y de esas 13, dos no sostienen un modelo propio aunque tengan volumen: `LRRK2` (96.8% de activos) deja un pliegue con **13** negativos y `GRIN2B` (96.9%, y solo 172 grupos para 1,592 pares) deja uno con **5**. Con esa clase minoritaria no hay métrica por pliegue con error estándar interpretable ni punto de operación elegible, así que las dos pasan al multitarea y se reportan como subgrupo. El criterio queda escrito como condición y no como número: **mil pares o más y cincuenta casos de la clase minoritaria en todos los pliegues.**
-
-**Qué pasó.** Con el alcance fijo y la matriz de pares construida, los volúmenes ya no se cuentan en registros sino en pares, que es la unidad del modelo:
+**Por qué.** El 85.0% de los compuestos se midió contra una sola diana; solo 8,934 (15.0%) tienen dos o más y aportan el 28.1% de los pares. Compartir información entre dianas llega a pocos compuestos, aunque el multitarea sigue compartiendo la representación química.
 
 | Dianas | Pares que cubren |
 |:--|--:|
-| Las 14 con 1,000 pares o más, sobre los 70,384 pares | **94.3%** |
-| Las 13 con 1,000 o más, sobre los 54,369 que quedan al reservar la prueba | 93.5% |
-| **Las 11 que además tienen clase minoritaria en todos los pliegues** | **85.6%** (46,534 de 54,369) |
-| Las 21 con 200 o más | 99.3% |
-| Las 5 restantes | 466 pares en total |
+| Las 14 con 1,000 pares o más, sobre los 70,384 pares | 94.3% |
+| Las 13 con 1,000 o más, sobre los 54,369 de entrenamiento y validación | 93.5% |
+| **Las 11 con clase minoritaria suficiente en todos los pliegues** | **85.6%** (46,534 de 54,369) |
 
-Y el dato que decide entre las tres formas: **el 85.0% de los compuestos se midió contra una sola diana.** Solo 8,934 compuestos (15.0%) tienen dos dianas o más, y aportan el 28.1% de los pares.
+**Cómo se eligieron las once, y qué cambia con la regresión.** El criterio era de clasificación: mil pares y cincuenta casos de la clase minoritaria en cada pliegue. Dejó fuera a `LRRK2` (96.8% de activos, 13 negativos en un pliegue) y a `GRIN2B` (96.9%, 5 negativos). Ese problema lo crea el corte: con 10 µM, `LRRK2` queda casi constante porque su potencia mediana es 7.40 y la de `NFE2L2` 5.02 (241 veces). **Con regresión la clase minoritaria deja de ser el criterio**; lo que importa es cuántas mediciones exactas tiene la diana y cuánto varía su pActividad. Eso no está medido: hasta medirlo se conserva la lista de once y se revisa si `LRRK2` y `GRIN2B` merecen modelo propio.
 
-**Se propone.** **Un modelo por diana para las que pasan el criterio** —once, el 85.6% de los pares ajustables— y **un multitarea** sobre las 26, que deja de ser solo un brazo de comparación: es donde viven `LRRK2` y `GRIN2B`, que tienen volumen pero no clase minoritaria. El multitarea no se descarta: es la única forma de incluir las cinco chicas, y aunque su palanca directa —compuestos medidos contra varias dianas, donde el reparto es inmediato— alcanza solo al 15% de los compuestos, sigue compartiendo la representación química, que es lo que podría sostener a las dianas pequeñas.
+**Qué lo cambiaría.** Que la regresión por diana no supere al multitarea en alguna diana, y entonces esa se queda en el multitarea. `GRIN1` (88 pares) es el caso extremo: no se le entrena modelo, se reporta como subgrupo del multitarea. La curva de la [C.5](#dc-5) se entrega por diana.
 
-**Por categoría de enfermedad, no.** La categoría agrupa genes que no comparten mecanismo: en Alzheimer conviven `BACE1` (una proteasa), `ACHE` (una esterasa) y `PPARG` (un receptor nuclear). Un modelo sobre esa mezcla aprende el promedio de tres farmacologías. Y como cada gen pertenece a exactamente una categoría, «por categoría» es solo una agrupación más gruesa de los mismos genes, sin nada que la haga preferible. **La categoría se usa para reportar**, que es donde sí aporta: permite decir «el modelo acierta mejor en Alzheimer que en neuroinflamación», que es la lectura que importa para priorizar candidatos.
+#### 2.3 · De dónde sale la potencia y dónde se corta «activo» {#d2-3 .vigente .revisada}
 
-**Qué lo cambiaría.** Que ella señale dianas prioritarias, y entonces cambia solo el **orden** en que se entrenan, no la forma ni el resultado: son modelos independientes, así que reordenarlos no cuesta rehacer nada. Por eso no vale la pena esperar esa respuesta. Lo que sí cambiaría la forma es que pida una diana que no pasa el criterio —`GRIN1`, con 88 pares y un pliegue sin negativos, es el caso extremo—: ahí la respuesta no es entrenarle un modelo, es decirle con la cifra por qué no se puede y ofrecerle el subgrupo del multitarea.
+**Estado:** vigente · revisada el 7, el 17 y el 24 de octubre
 
-**Lo que esto arrastra.** Once modelos son once conjuntos de hiperparámetros sobre la misma partición, así que el arnés de validación cruzada agrupada (MLOps 0.3) deja de ser cómodo y pasa a ser necesario. Y la tasa de activos por diana va de 34.8% en `MAOA` a 96.9% en `GRIN2B`, así que el punto de operación no puede ser el mismo para todas: la curva de la [C.5](#dc-5) se entrega por diana.
+**Qué se decidió.**
 
-La tabla por diana con pares, grupos y el mínimo de cada clase en los pliegues está en la sección 6.3 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb), que es de donde salen estas cifras.
+1. **Las tres fuentes entran**, con las columnas `_used` de la sección 5 del diccionario (informadas y homogéneas para las tres). Ninguna etiqueta se traslada de una fuente a otra: cada fila se convierte con su propio valor.
+2. **La potencia es `pActividad` = 6 − log₁₀(µM)**, recortada a [2, 12]. Reproduce el pChEMBL: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. Es la misma aritmética, no una inferencia.
+3. **Las 2,001 relaciones «inferida»** entran marcadas (el diccionario les da 98.4% de acierto). Se reporta una sensibilidad sin ellas.
+4. **Los inactivos declarados por texto** quedan fuera del principal ([2.12](#d2-12)); **la dirección del efecto** está en la [2.11](#d2-11); **el tejido** no entra (abajo).
+5. **El corte de «activo» se aplica al final**, sobre la predicción continua ([2.9](#d2-9)): 10 µM principal y 1 µM sensibilidad, siempre juntos.
 
-#### 2.3 · Etiquetado por tres vías y criterio de «activo» {#d2-3 .vigente .revisada}
+**Por qué las tres fuentes y no solo ChEMBL.** Dentro de ChEMBL hay 8,984 ensayos distintos, y el desacuerdo entre mediciones del mismo par es ligeramente peor ahí (28.0% de los pares con dos o más exactas discrepan más de 10 veces) que con las tres fuentes (25.5%; recalculado sobre `fase2_pares.parquet`). La heterogeneidad está entre ensayos, no entre fuentes. Y quedarse con ChEMBL cuesta los 15,293 registros de naturales: estrés oxidativo, por ejemplo, es 47.7% NPASS y CMAUP, y pasaría de 2,456 a 1,285 filas.
 
-**Estado:** vigente · revisada el 7 y el 17 de octubre · decidida por el equipo
+**Tejido y tipo de experimento: existen, pero no donde se modela.** 72,003 filas (35.5%) traen tejido, y casi todas (71,691) están en la ruta `neuronal_assay`, cuyas dianas son sobre todo de fuera de la lista ([2.4](#d2-4)). La ruta `cns_target`, por la que entran las dianas de la lista, tiene 0 de 108,640. Por eso solo 312 filas con tejido llegan a los pares: **286 pares de 70,384 (0.4%)**, y quince de las 26 dianas no tienen ninguno. Esos pares son 96.1% activos contra 72.7% de los demás, así que como entrada darían una pista sobre cómo se armó el archivo, no sobre la química. Decisión: el tejido **no entra al modelo**; sirve para auditar los pares en conflicto (donde la cobertura sube a 3.8%) y como diagnóstico. Tampoco permite aislar su efecto del de la diana: solo `APP` tiene dos formatos con diez o más mediciones exactas cada uno, y ahí la mediana difiere en 1.26 unidades. Lo calcula `scripts/cifras_contexto_ensayo.py`; corrida `experimentos/2026-10-24-ingrid-2.3-contexto-ensayo/`. Los campos que la API de ChEMBL da por ensayo (tejido, formato, organismo, confianza) cubrirían solo a ChEMBL; si entraran como variable, su ausencia delataría la fuente ([2.5](#d2-5)), así que se usan como filtro de sensibilidad y descriptor del reporte.
 
-**Qué se decidió.** Las **tres fuentes** se etiquetan con las columnas de la sección 5 del diccionario, que vienen informadas y homogéneas para las tres. Corte **10 µM** como principal y **1 µM** como análisis de sensibilidad, reportado siempre al lado. Sin los inactivos declarados por texto, y con los pares en conflicto marcados ([2.10](#d2-10)).
+**Dónde se corta.** Con regresión el corte solo define la clase derivada. Lo que cuesta cada uno, por registro:
 
-**Por qué se decide y no se espera su respuesta.** En su correo del 16 de octubre descartó «hacer la inferencia, al menos no de forma directa», contestando a lo que se le preguntó en la reunión: construir el valor en las otras dos bases. Su preocupación es legítima —el umbral no significa lo mismo en todos los ensayos— pero el remedio que propuso no se puede ejecutar y el que implica tampoco alcanza:
+| «Activo» se corta en | Censurados que sirven como negativo | Activos | Razón de clases |
+|:--|--:|--:|--:|
+| **10 µM** (pChEMBL ≥ 5) | 48,480 (89%) | 61.7% | 1.6:1 |
+| **1 µM** (pChEMBL ≥ 6) | 53,359 (98%) | 44.4% | 0.8:1 |
 
-- **Revisar por tejido y tipo de experimento no es posible** sobre la población que se modela: el tejido está vacío en las 108,640 filas de la ruta `cns_target` y el tipo de célula en 100,401 (92.4%), y en el 99.6% de los pares en conflicto el tejido no está ni anotado.
-- **Quedarse solo con ChEMBL no compra comparabilidad.** Dentro de ChEMBL hay 8,984 ensayos distintos, y el desacuerdo entre mediciones del mismo par es ligeramente **peor** ahí solo (28.0% de los pares con dos o más mediciones exactas discrepan más de 10×) que juntando las tres fuentes (25.5%, la cifra que imprime el notebook 02b). Una versión anterior daba 28.7% y 26.0%, de un conteo previo a la matriz de pares actual; se recalcularon sobre `fase2_pares.parquet` el 22 de octubre.
-- **Y cuesta la mitad de la categoría que ella defendió:** estrés oxidativo es 47.7% NPASS y CMAUP.
+Un censurado `> L` solo sirve como negativo si su límite es igual o mayor que el corte (sección 7 del diccionario); por eso el «10 µM» aparece como dos cosas distintas, el corte y el límite de las filas censuradas. **De dónde sale el 10 µM:** el 67.4% de las 54,377 censuradas lo están exactamente en 10 µM, y el comentario de ChEMBL de las 29,730 filas con texto dice «Inhibition < 50% @ 10 uM». Es la concentración a la que estos ensayos dejaron de mirar. No hay un argumento farmacológico a favor ni en contra: una versión anterior lo justificaba como concentración libre alcanzable con una dosis oral, sin fuente, y se retiró; los datos que se encontraron sobre concentración libre cerebral apuntan a que es menor que 10 µM, pero no bastan para apoyar 1 µM. Lo medible favorece 1 µM (más negativos, clases balanceadas, 67,266 pares etiquetados contra 66,121); 10 µM es el principal por ser el corte del diccionario. Cambiar de uno a otro es leer otra columna ([2.10](#d2-10)).
 
-Lo que sí se midió es que la regla de concentración **reproduce el pChEMBL hasta el redondeo**: sobre las 72,955 filas que traen los dos, la diferencia tiene mediana 0.0021 y máximo 0.005. Etiquetar por concentración no es una inferencia entre bases, es la misma aritmética aplicada fila por fila: ninguna etiqueta se traslada de una base a otra, cada fila se etiqueta con su propio valor.
+**El mismo corte no exige lo mismo a cada diana.** Con 10 µM, `LRRK2` tiene 98.1% de activos y `NFE2L2` 50.7%. Mientras se clasifique, la tasa de activos se publica por diana junto con cualquier cifra agregada; la regresión elimina el problema ([2.9](#d2-9)).
 
-**Lo que sí se solapa, y con la llave que importa.** Una versión anterior de este párrafo añadía que «los compuestos casi no se solapan: 283 SMILES entre ChEMBL y NPASS». La cifra es correcta por SMILES exacto y engañosa aquí, porque la llave del par es el **esqueleto de conectividad**, no el SMILES: con ella hay 1,592 pares mixtos y el 42.4% de los pares con evidencia de NPASS comparte par con otra fuente. El solapamiento es sustancial, y por eso el desempeño se reporta en estratos disjuntos y no «por fuente».
+El desarrollo por medición y por par está en [la página de variables objetivo](variable-objetivo-fase2.md); las cifras se recalculan con `scripts/cifras_fase2.py` y `scripts/cifras_etiqueta_fase2.py`.
 
-**El riesgo se vigila en lugar de evitarse.** «Solo ChEMBL» queda como análisis de sensibilidad, el desempeño se reporta por estrato de procedencia ([2.10](#d2-10)), y el control de atajo del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) decide.
+#### 2.4 · Los 88,098 registros sin diana de la lista {#d2-4 .propuesta}
 
-**El control ya se corrió, y el resultado no es el que esperábamos.** `scripts/experimento_atajo.py`, Random Forest sobre los 54,369 pares de entrenamiento y validación, cinco pliegues agrupados y tres semillas, con tres conjuntos de características:
+**Estado:** propuesta
+
+**Qué pasó.** El 43.5% de los registros (88,098) no corresponde a ninguna de las 39 dianas curadas; entraron por la ruta `neuronal_assay`. Por tipo de ensayo: 67,347 (76.4%) son de unión sobre proteínas, 15,746 (17.9%) funcionales, 789 de farmacocinética, 482 de toxicidad y 3,734 (las de NPASS) sin tipo (`scripts/cifras_fase2.py`). Entre las proteínas hay receptores que no son de la lista, como sigma-1, serotonina 1A y mu-opioide; ChEMBL no asigna diana a 30,511 filas (`Unchecked`) y marca 3,113 como `NON-PROTEIN TARGET`. Los ensayos sobre células son una minoría, y no todos miden protección: **BV-2 es microglía, SH-SY5Y un modelo neuronal y U-251 un glioma, y un ensayo de crecimiento (GI50, TGI: 859 filas) en U-251 mide sobre todo citotoxicidad.** Premiarlo como actividad favorable premiaría compuestos tóxicos.
+
+**Se propone.**
+
+1. No entran a la variable objetivo; se conservan aparte.
+2. Los ensayos celulares se tratan como **anotación de citotoxicidad**, separada, para la priorización ([C.7](#dc-7)). Separar los que sí miden protección exige la descripción del ensayo, que el archivo no trae.
+3. Los de unión sobre otras proteínas no entran como tarea auxiliar en la fase 2. Quedan como opción para después: sigma-1 y 5-HT1A comparten quimiotipos con `DRD2`, así que podrían servir de descriptor de selectividad.
+
+#### 2.5 · La fuente confundida con el etiquetado {#d2-5 .vigente}
+
+**Estado:** vigente · medida el 7 y el 18 de octubre
+
+**Qué pasó.** NPASS y CMAUP no traen pChEMBL, así que etiquetar solo por él habría vuelto la fuente una variable perfectamente predictora de la vía de etiquetado. Con las columnas `_used` ([2.3](#d2-3)) ese vínculo ya no existe por registro, pero la fuente sigue llevando señal por la química: los esqueletos se reparten en 95,413 solo en ChEMBL, 1,445 solo en NPASS o CMAUP y 2,727 en ambas.
+
+**Control del atajo** (#32; `scripts/experimento_atajo.py`; Random Forest, 54,369 pares de entrenamiento y validación, cinco pliegues agrupados, tres semillas; clasificación a 10 µM):
 
 | Lo que el modelo ve | MCC | AUROC |
 |:--|--:|--:|
-| Solo la procedencia (el estrato, sin mirar la molécula) | 0.280 | 0.579 |
-| Solo química (los 201 descriptores) | 0.428 | 0.837 |
+| Solo la procedencia (sin mirar la molécula) | 0.280 | 0.579 |
+| Solo química (201 descriptores) | 0.428 | 0.837 |
 | Las dos | **0.451** | 0.843 |
 
-**El criterio que la entrada se había fijado no dispara:** la química supera a la procedencia por 0.148 de MCC, así que no basta con saber de qué base viene el compuesto. Pero la procedencia sola llega al 65% del MCC de la química, que es más de lo que debería poder una columna de tres valores, y añadirla a la química todavía suma 0.023. La fuente **sí** lleva señal de la etiqueta.
+La química supera a la procedencia por 0.148 de MCC, pero la procedencia sola llega al 65% del MCC de la química (más de lo que debería poder una columna de tres valores) y añadirla suma 0.023. La fuente lleva señal de la etiqueta.
 
-**Y la segunda medición es la que importa, porque es la pregunta del proyecto.** Un modelo con química puede inferir la procedencia —los productos naturales tienen esqueletos distintos— y usarla de atajo sin que la columna exista. Eso se ve midiendo **dentro de cada estrato**, donde ya no hay fuente que distinguir. En AUROC, que no depende del umbral y por tanto compara entre estratos con tasas base muy distintas, con intervalo del 95% por bootstrap **de grupos**:
+**Y dentro de cada estrato**, donde ya no hay fuente que distinguir (AUROC, intervalo del 95% por bootstrap de grupos):
 
 | Lo que el modelo ve | Estrato | Pares | Activos | AUROC |
 |:--|:--|--:|--:|--:|
 | Química | Solo ChEMBL | 50,671 | 74.8% | 0.831 [0.821, 0.841] |
 | Química | Mixtos | 1,588 | 40.3% | 0.610 [0.570, 0.658] |
 | Química | **Solo NPASS** | **2,109** | **12.3%** | **0.574 [0.534, 0.609]** |
-| Química **y diana** | Solo NPASS | 2,109 | 12.3% | 0.613 [0.574, 0.648] |
+| Química y diana | Solo NPASS | 2,109 | 12.3% | 0.613 [0.574, 0.648] |
 
-**El modelo separa mucho peor los pares de NPASS que los de ChEMBL**, y eso no se puede reportar en un agregado. Pero hay dos cosas que una primera versión de esta entrada afirmó de más, y las dos las corrigió Pame al revisar el [#90](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/90):
+El intervalo de 0.574 no toca 0.5: discrimina poco, y discrimina. Parte del déficit es de la diana y no del origen (dentro de `solo_npass` las tasas base van de 1.2% a 29.7%; dándole la diana sube a 0.613). **A igual diana, solo tres se pueden comparar** (veinte casos de cada clase en cada fuente): `NFE2L2` casi sin brecha (0.639 NPASS contra 0.672 ChEMBL), `MAPT` con brecha clara (0.540 contra 0.884, intervalos que no se tocan) y `PTGS2` indecidible (0.515 [0.397, 0.709] contra 0.705). Con esto no se puede afirmar que el modelo no sirva para naturales, ni lo contrario. Corrida `experimentos/2026-10-18-artemio-2.3-atajo-procedencia/`; tablas `notebooks/datos/resultados_atajo.csv` y `atajo_por_diana.csv`.
 
-- **Decía «casi no funciona» y «indistinguible del azar».** No lo es: el intervalo de 0.574 es [0.534, 0.609] y **no toca 0.5**. Discrimina poco, y discrimina.
-- **Y atribuía todo el déficit al origen, cuando parte es de la diana.** El modelo del control no recibe la diana, y dentro de `solo_npass` conviven dianas con tasas base de 1.2% a 29.7%; dándosela, el AUROC sube a 0.613. Parte de lo que parecía «no separa naturales» era «no sabe de qué diana se trata».
+**Se decidió.**
 
-**A igual diana, solo tres dianas se pueden comparar, y el resultado es heterogéneo.** El criterio no puede ser el número de pares sino **el tamaño de la clase minoritaria**: `ACHE` tiene 221 pares de NPASS y **3 activos**, así que su AUROC es ruido. Exigiendo veinte casos de cada clase en cada fuente quedan tres dianas (con química y diana, el bootstrap sobre grupos):
+- La fuente **nunca** entra como variable.
+- La validación se estratifica por procedencia y todo desempeño se reporta por estrato. La fuente no es un atributo del par (827 de los 828 pares de CMAUP comparten par con otra fuente, y el 42.4% de los de NPASS), así que los estratos son **disjuntos**: solo ChEMBL 66,324 pares, mixtos 1,828, solo NPASS 2,231 y solo CMAUP 1.
+- «Solo ChEMBL» queda como análisis de sensibilidad.
+- La cifra que contesta la pregunta del proyecto es la de `solo_npass` **por diana**, con su intervalo.
 
-| Diana | NPASS: pares · minoritaria | AUROC NPASS | AUROC ChEMBL |
-|:--|:--|:--|:--|
-| `NFE2L2` | 579 · 126 | 0.639 [0.571, 0.691] | 0.672 [0.550, 0.785] |
-| `PTGS2` | 262 · 20 | 0.515 [0.397, 0.709] | 0.705 [0.665, 0.744] |
-| `MAPT` | 118 · 35 | 0.540 [0.425, 0.652] | **0.884 [0.817, 0.937]** |
+**Pendiente.** Repetir el control con la regresión (Spearman o índice de concordancia en lugar de MCC y AUROC). **Qué lo cambiaría:** que el patrón de `MAPT` se repita en la mayoría de las dianas comparables; entonces no cambia el etiquetado, se reporta que el modelo no sirve para productos naturales, que es un resultado válido.
 
-**En `NFE2L2` la brecha prácticamente desaparece; en `MAPT` es clara y los intervalos no se tocan; en `PTGS2` no se decide.** Una versión anterior de esta tabla traía siete dianas, incluidas `ACHE`, `MAOA` y `DRD2` con tres, cinco y catorce activos entre sus 221, 411 y 260 pares de NPASS, cuyos AUROC altos hacían parecer que la brecha se cerraba. Lo señaló Pame al revisar el [#90](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/90), que corrió la medición por su cuenta y llegó a las mismas tres dianas.
+#### 2.6 · La partición de prueba que sí se había reservado {#d2-6 .ratificada .revisada}
 
-**Lo que sostiene la evidencia, y nada más:** el agregado de `solo_npass` está deprimido en parte por la composición de dianas; a igual diana hay **señal débil y heterogénea** —una diana sin brecha, una con brecha clara, una indecidible—; y solo hay tres dianas con datos para medirlo. **No se puede afirmar todavía que el modelo no sirva para productos naturales, ni lo contrario.** Lo que sí está establecido es que un desempeño agregado no los describe.
+**Estado:** ratificada · el 15 de octubre de 2026 · revisada: antes era una pregunta abierta
 
-**Nota sobre las cifras.** Las de aquí salen de agrupar las predicciones fuera de pliegue y calcular un AUROC; promediar el AUROC de cada pliegue, que es la otra forma razonable, da 0.569 y 0.607 donde aquí sale 0.574 y 0.613. La diferencia es el estimador, no los datos; se agrupan las predicciones porque es lo que permite el bootstrap por grupos, con cada par contado una sola vez.
+**Qué se decidió.** La partición reservada sí existía, se hizo al azar, y la patrocinadora entrega el archivo completo para que el equipo la rehaga con criterio. Su condición, repetida cuatro veces: que se reserve una prueba que el modelo nunca vea ([2.7](#d2-7)).
 
-**Qué cambia en cómo se reporta.** No invalida etiquetar las tres fuentes: la alternativa —«solo ChEMBL»— no tendría productos naturales en absoluto. Invalida **reportar un desempeño agregado como si describiera a los naturales**: toda métrica va con su desglose por estrato, y la cifra que contesta la pregunta del proyecto es la de `solo_npass` **por diana**, con su intervalo. La corrida está en `experimentos/2026-10-18-artemio-2.3-atajo-procedencia/` y las tablas en `notebooks/datos/resultados_atajo.csv` y `atajo_por_diana.csv`.
+**Qué pasó.** El archivo se llama `..._Entrenamiento.csv`: el diccionario describe 225,513 filas y el recibido tiene 202,647 (89.9%). Un 10% extraído al azar comparte andamios, ensayos y artículos con el 90%: prueba filas nuevas, no química nueva. Ejemplo: si hay cincuenta análogos de la morfina y el 10% se llevó cinco, el modelo memoriza el andamiaje y la evaluación sale inflada. Si el reporte final la llama «validación externa», sobrevende lo que compra. En la fase 1 la prueba reservada resultó la parte difícil (57.3% BBB+ contra 72.0% en validación), así que sus cifras se reportan sobre validación y no son comparables con las anteriores.
 
-**Qué lo cambiaría.** Que con los modelos afinados el patrón de `MAPT` —brecha clara, intervalos que no se tocan— se repita en la mayoría de las dianas comparables en vez de en una de tres, y entonces la conclusión no es cambiar el etiquetado sino **decir que el modelo no sirve para productos naturales**, que es un resultado válido y así hay que reportarlo; que el desempeño con 1 µM sea mejor en el Avance 3, que cuesta una columna por el intervalo de la [2.10](#d2-10); que aparezca un **desenlace** —qué compuestos rescataron neuronas y a qué concentración—, que es lo único que haría estimable el umbral en vez de elegible; o que ella lo ratifique de otro modo al ver estas cifras.
-
-**El desarrollo completo está en [la propuesta de variable objetivo](variable-objetivo-fase2.md)**, que detalla las reglas por medición y por par, los problemas declarados y el protocolo de robustez. Esta entrada guarda la decisión y lo que está en juego.
-
-**Qué pasó.** Primero se planteó «pChEMBL ≥ 5 primario, ≥ 6 como robustez», sin decir cómo etiquetar lo que no tiene pChEMBL. El EDA mostró que el pChEMBL solo existe para ChEMBL: etiquetar solo por él descarta 15,293 registros de NPASS y CMAUP (los naturales) y 54,498 mediciones censuradas (`> X nM`), de las cuales 29,730 traen además un texto que las declara inactivas. **Los dos últimos grupos no se suman:** los 29,730 están dentro de los 54,498, así que para esas filas la segunda y la tercera vía son la misma fila vista de dos maneras.
-
-**Se propone.** Tres vías: pChEMBL donde exista; **concentración exacta** para el resto, que recupera 12,809 de los 15,293 naturales —los que traen relación `=`, contra 2,484 censurados o aproximados—; e **[inactivo declarado](glosario.md)** para los textos y para las **[mediciones censuradas](glosario.md)** cuyo límite llegue al umbral. Las cifras de esta entrada se recalculan con `scripts/cifras_fase2.py`.
-
-**Cuidado con el «10 µM», que aparece como dos cosas distintas.** Una es el **umbral de «activo»**: 10 µM equivale a pChEMBL ≥ 5 y 1 µM a pChEMBL ≥ 6. La otra es el **límite de un censurado**, el número que viene después del `>` en cada fila. La regla del diccionario de la patrocinadora (sección 7) las ata: un `>` solo sirve como negativo si su límite es igual o mayor que el umbral de «activo». Por eso no se pueden contestar por separado.
-
-**Qué cuesta cada corte.** Las dos primeras columnas salen del archivo y se recalculan con el script; las dos últimas vienen del notebook 01b y se tendrán que rederivar cuando el etiquetado se implemente, porque dependen de esta misma regla:
-
-| Si «activo» se corta en | Censurados que sirven como negativo | Ambiguos | Activos por registro | Razón de clases |
-|:--|--:|--:|--:|--:|
-| **10 µM** = pChEMBL ≥ 5 | 48,480 (89%) | 6,018 | 61.7% | 1.6:1 |
-| **1 µM** = pChEMBL ≥ 6 | 53,359 (98%) | 1,139 | 44.4% | 0.8:1 |
-| 100 µM, como referencia | 6,737 (12%) | 47,761 | — | — |
-
-Cortar en 1 µM es más exigente con los activos y, por la misma regla, más generoso con los negativos: recupera 4,879 censurados más y deja el conjunto casi balanceado. Cortar en 10 µM conserva más activos y desperdicia seis mil censurados. El 10 µM del equipo se había propuesto por ser el valor modal de los límites, que no es una razón farmacológica.
-
-**Un solo experimento pesaba demasiado, y resultó que no tanto: la cifra era por registro y el modelo entrena por par.** Las 29,730 filas con texto de inactividad son exactamente el mismo conjunto: todas censuradas con `>`, todas con límite de 10 µM, todas con el texto «Not active» y **todas de la misma referencia, `CHEMBL1909046`**, que es el panel de toxicogenómica DrugMatrix. Son 36,653 los censurados con límite en 10 µM, así que esa referencia sola aporta el 81% de ellos.
-
-| Unidad, con el corte en 10 µM | Negativos | De `CHEMBL1909046` |
-|:--|--:|--:|
-| Registro etiquetado | 48,480 | 29,730 · **61%** |
-| **Par compuesto-diana** | 20,281 | 2,187 · **10.8%** |
-| Par, sin los inactivos por texto *(definición vigente)* | 18,107 | 13 · **0.1%** |
-
-Las dos últimas filas las imprime `scripts/cifras_etiqueta_fase2.py` en sus dos variantes. La fila del medio decía antes 19,488 y 2,756 · 14.1%, de una versión del conteo anterior a que la llave del par y los filtros quedaran fijos; es la cifra que Pame no pudo reproducir al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
-
-Las 29,730 filas son **772 compuestos**, así que al agrupar por par su peso cae casi a una sexta parte (61% a 10.8%). Y la definición vigente los deja fuera, con lo que baja al 0.1%: **el riesgo se quita al excluirlos, no se demostró que no existiera**, y se vigila con la sensibilidad «con los inactivos por texto», que el script imprime al lado de la principal.
-
-**La razón para excluirlos no es que el límite sea inventado.** Una versión anterior de esta entrada decía que el `>` de 10 µM «lo asignó el equipo que armó el archivo, no el ensayo original». El comentario de ChEMBL de esas 29,730 filas dice literalmente «Inhibition < 50% @ 10 uM and thus dose-reponse curve not measured», así que el límite viene del ensayo y la codificación como `> 10 µM` es una traducción fiel. Lo que sostiene la exclusión es la **concentración en un solo documento**: las 29,730 filas son una sola campaña de tamizaje (`CHEMBL1909046`, el panel DrugMatrix) con 772 compuestos y sin curva dosis-respuesta, así que dejarlas dentro hace que un protocolo defina el 61% de la clase negativa por registro. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
-
-Esto se escribe así porque la versión anterior de esta entrada llamaba al 61% «el argumento más fuerte contra el corte en 10 µM», y lo era solo mientras la unidad fuera el registro. Deja de ser una razón para preferir 1 µM.
-
-Las cifras son las del archivo recibido (202,647 registros, el 89.9% del completo de 225,513, [2.6](#d2-6)), que es el que verá el modelo. Los porcentajes coinciden con los del diccionario de la patrocinadora (98%, 89%, 12%).
-
-**Denominadores.** Las proporciones dependen de la unidad. «Registro etiquetado» es todo el archivo, fenotípicos incluidos; «par esqueleto × gen» es un esqueleto de conectividad contra un gen (`target_gene`):
-
-| Unidad | Umbral | Denominador | Activos | Inactivos | % activos | Razón |
-|:---|:--|--:|--:|--:|--:|--:|
-| Registro etiquetado | ≥ 5 | 194,086 | 119,835 | 74,251 | 61.7% | 1.6:1 |
-| Registro etiquetado | ≥ 6 | 194,086 | 86,238 | 107,848 | 44.4% | 0.8:1 |
-| Par esqueleto × gen | ≥ 5 | 71,145 | 50,177 | 20,968 | 70.5% | 2.4:1 |
-| Par esqueleto × gen | ≥ 6 | 71,145 | 35,966 | 35,179 | 50.6% | 1.0:1 |
-
-El conteo por par no es todavía el conjunto de entrenamiento: de 114,549 registros con categoría de diana, 109,264 reciben etiqueta; se excluyen 4,810 sin gen y 327 sin esqueleto calculable, y quedan 104,127 agrupables en 71,145 pares. El recuento marca un par como activo si alguna observación lo es, y con esa regla hay 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6. El máximo de etiquetas no selecciona la medición más potente.
-
-**Umbral.** Con pChEMBL, ≥ 5 daba 87.1% de activos (6.7:1) y llevó a proponer ≥ 6; con las tres vías la razón baja a 1.6:1 por registro. El sesgo de los registros con pChEMBL es una explicación posible, no demostrada. Se conserva ≥ 5 como primario y ≥ 6 como robustez: el balance de clases no determina el umbral biológico.
-
-**La llave del par es el esqueleto × gen, y no el identificador del compuesto.** `source_compound_id` usa prefijos distintos por fuente —`CHEMBL…` contra `NPC…`— y **no comparte ni un valor** entre ellas, así que con esa llave un compuesto medido en dos fuentes entra como dos pares independientes y sus contradicciones quedan invisibles: son **164 pares** en conflicto entre ChEMBL y las fuentes naturales que así no se verían. Se usa el [esqueleto de conectividad](glosario.md) × `target_gene`, que además es la misma llave que `grupos_cv` usa en `src/data_prep/splits.py` para la validación cruzada agrupada, de modo que la unidad de etiquetado y la de partición coinciden.
-
-**Y «por fuente» no se puede reportar sobre el par, porque la fuente no es un atributo del par.** Con la llave por esqueleto, 827 de los 828 pares de CMAUP comparten par con otra fuente, y 42.4% de los de NPASS: **CMAUP tiene exactamente un par propio**. Así que el desempeño se reporta en **estratos disjuntos por procedencia de la evidencia**, que sí son aditivos:
-
-| Estrato | Pares | Activos |
-|:--|--:|--:|
-| Solo ChEMBL | 62,414 | 75.6% |
-| Solo NPASS | 2,114 | 12.1% |
-| Solo CMAUP | 1 | — |
-| Mixtos | 1,592 | 37.5% |
-
-La brecha real entre ChEMBL y los naturales es de **63 puntos**, no los 52 que sugería contar cada par en todas sus fuentes. Es el riesgo de la [2.5](#d2-5) cuantificado sobre la unidad correcta, y lo que vigila el control de atajo del [issue #32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32).
-
-**El corte es una convención del protocolo de tamizaje, heredada del archivo.** El archivo **no tiene columna de desenlace**: nada registra si un compuesto funcionó, así que no hay nada contra lo que calibrar y un umbral no es estimable. Todo candidato que se puede construir falla por eso: un percentil de la distribución de la diana es circular, y la moda del límite de censura está condicionada al fracaso —se midió, y deja seis dianas con 93–96% de activos, peor que el corte global—. Lo que sí está medido es de dónde sale el 10 µM. De las 54,377 mediciones censuradas del archivo, el **67.4% está censurada exactamente en 10 µM**, y el comentario de ChEMBL de las 29,730 filas con texto lo dice literalmente, «Inhibition < 50% @ 10 uM». Eso sostiene una sola afirmación: **es la concentración a la que estos ensayos dejaron de mirar**. Llamarla «la concentración estándar de tamizaje de bibliotecas» sería generalizar una medición de este archivo a una práctica de la industria que nadie verificó —el mismo error del párrafo siguiente en pequeño—, así que no se dice.
-
-**Una versión anterior de este párrafo decía otra cosa, y estaba mal.** Afirmaba que 10 µM es «aproximadamente la concentración libre máxima alcanzable con una dosis oral convencional sin toxicidad». No tenía fuente y se retira. Lo señaló Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86), con el argumento de que las concentraciones libres cerebrales de los fármacos del SNC quedan en general por debajo de 1 µM, así que el razonamiento favorecería 1 µM.
-
-Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en vez de cambiar una afirmación sin respaldo por otra. Lo que se encontró al buscarla es indirecto y apunta en su dirección: la concentración libre cerebral es la que gobierna la unión a la diana, y en 18 inhibidores de los transportadores de serotonina y dopamina la concentración libre quedó a 3.3 ± 2.1 y 4.1 ± 4.0 veces de la Ki, mientras que la concentración **total** quedaba 408 ± 368 y 410 ± 395 veces por encima («Unbound Brain Concentration Determines Receptor Occupancy…», *Drug Metabolism and Disposition*, 2009; leído del resumen, no del texto completo, y medido en rata). Como las Ki de las dianas del SNC son nanomolares, eso sitúa las concentraciones libres muy por debajo de 10 µM. Es suficiente para no apoyar el corte en farmacología; no es suficiente para apoyarlo en la dirección contraria. **De modo que la entrada no se apoya en ningún argumento farmacológico**, ni a favor ni en contra.
-
-**Y lo medible favorece 1 µM, así que 10 µM queda como principal solo por convención.** Tres criterios van en contra del 10 µM: con 1 µM sirven 4,879 censurados más (53,359 contra 48,480), el conjunto queda casi balanceado (0.8:1 contra 1.6:1) y se etiquetan más pares (67,266 contra 66,121). Uno va a favor: con 10 µM cae a ±0.5 unidades logarítmicas del corte el 20.7% de las mediciones exactas, contra el 24.3% con 1 µM (sección 7 de [la propuesta](variable-objetivo-fase2.md)). Se conserva 10 µM como principal porque es el corte de la sección 7 del diccionario y mantiene la comparabilidad con lo que la patrocinadora revisó, **y porque la [2.10](#d2-10) guarda el objetivo como intervalo: cambiar de principal es cambiar qué columna se lee, no reconstruir la matriz**. Los dos se reportan siempre al lado.
-
-**Pero el mismo corte no significa lo mismo en cada diana, y eso se reporta.** La mediana de potencia va de 7.40 en `LRRK2` a 5.02 en `NFE2L2`, **241 veces**, así que con 10 µM `LRRK2` queda en 98.1% de activos —casi constante, inútil como objetivo— y `NFE2L2` en 50.7%. Mientras el corte siga siendo global, **se publica la tasa de activos por diana** junto con cualquier cifra agregada, para que se vea que la etiqueta no mide lo mismo en todas. La salida de fondo es no cortar, y está en la [2.9](#d2-9).
-
-#### 2.4 · Los 88,098 registros fenotípicos {#d2-4 .propuesta}
-
-**Estado:** propuesta
-
-> **Pregunta:** ¿Van dentro de un modelo específico, aparte o fuera del alcance?
-
-**Qué pasó.** El 43.5% de los registros no corresponde a ninguna diana de la lista; entraron por la ruta `neuronal_assay`: sistemas celulares neuronales donde se midió un efecto sin identificar la proteína responsable. Responden «¿hace algo en un sistema neuronal?», no «¿actúa sobre esta diana?».
-
-**Se propone.** Los 114,549 con categoría de diana alimentan el modelo (el conteo agrupable, 104,127 en 71,145 pares, no es el tamaño final). Los 88,098 fenotípicos se conservan aparte para otra pregunta; no se descartan.
+**Pendiente.** Jorge Uribe debe compartir el método con que se separó ese 10%. Si fue aleatorio, se reporta en paralelo una partición por esqueleto molecular, deduplicando por esqueleto antes de partir.
 
 #### 2.7 · Partición de la fase 2 {#d2-7 .vigente .revisada}
 
 **Estado:** vigente · construida el 18 de octubre de 2026 · revisada: antes proponía además disjuntar por fuente
 
-**Qué se decidió, y ya está construido.** El criterio de la fase 1 —andamio de Bemis-Murcko agrupado con el esqueleto de conectividad, con verificación de fuga— con las mismas fracciones: 70% entrenamiento, 10% validación, 20% **prueba reservada**, que es la condición que la patrocinadora repitió cuatro veces ([2.6](#d2-6), ratificada). La calcula `particion_de_pares` en `src/data_prep/pares_fase2.py` y viaja en `fase2_pares.parquet`, no en una celda del notebook: si viviera ahí, cada reejecución podría moverla.
+**Qué se decidió.** El criterio de la fase 1 (andamio de Bemis-Murcko agrupado con el esqueleto de conectividad, con verificación de fuga), con 70% entrenamiento, 10% validación y 20% **prueba reservada** ([2.6](#d2-6)). La calcula `particion_de_pares` en `src/data_prep/pares_fase2.py` y viaja en `fase2_pares.parquet`, no en una celda del notebook. Cero andamios y cero esqueletos cruzan. La validación cruzada de cinco pliegues corre sobre los 54,369 pares de entrenamiento y validación y no toca la prueba.
 
 | Partición | Pares | Grupos | Activos a 10 µM |
 |:--|--:|--:|--:|
@@ -780,47 +799,39 @@ Esa objeción **tampoco se pudo cerrar con una fuente**, y conviene decirlo en v
 | Validación | 6,986 | 3,617 | 69.6% |
 | **Prueba** | **13,973** | 13,973 | 78.7% |
 
-Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegues corre sobre los 54,369 pares etiquetados de entrenamiento y validación, y no toca la prueba.
+**Lo que cuesta** (sección 6.1 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb)):
 
-**Lo que cuesta, medido y no escondido.** Tres cosas, todas en la sección 6.1 del [notebook 02b](../notebooks/02b_Feature_Eng_actividad.ipynb):
+- La prueba son 13,973 pares en 13,973 grupos: los andamios frecuentes alimentan el modelo y los raros evalúan química nueva. Mide generalización, no representatividad.
+- Tiene 7 puntos más de activos que el entrenamiento: es otra población, no una prueba más difícil. Cada métrica se reporta con la tasa base de su partición al lado; en regresión, con la distribución de pActividad (por calcular).
+- Los naturales se concentran en entrenamiento: solo 117 de los 2,231 pares de solo NPASS (5.2%) caen en la prueba, y 346 de 4,059 con los mixtos (8.5%). Alcanza para una señal gruesa, no para comparar con intervalos.
+- **El «cero andamios cruzan» vale para la columna con la que se partió, no para el andamio recalculado.** `tabla_de_pares` guarda `andamio=("andamio", "first")` y `smiles=("smiles_raw", mode)`, así que el andamio es el de la primera medición del par y el SMILES el de la más frecuente; como el par agrupa por esqueleto de conectividad, pueden ser tautómeros distintos. Difieren en 418 de las 56,411 filas de ajuste (0.74%), y recalculando el andamio a los dos lados la validación comparte andamio con el entrenamiento en el 0.5% de sus pares. **No es fuga:** con las columnas guardadas el cruce es cero, y el esqueleto —que sí es reproducible desde el SMILES— da cero recalculado también, así que ningún compuesto está en los dos lados. Lo que impide es comparar este conjunto con uno externo sin recalcular el andamio en los dos, porque entonces la cifra mide la discrepancia de definición. Medido en `2026-11-04-ingrid-2.13-contaminacion-externa`, que también sitúa el piso: la similitud de Tanimoto mediana de la validación a su vecino más cercano del entrenamiento es 0.679.
+- **Resultado de la parte externa** (4 de noviembre, corrida `2026-11-04-artemio-2.13-contaminacion-externa`, con la regla de Pame sin cambios): **el 64.9% de los 8,151 pares de la base externa tiene un andamio de Bemis-Murcko que ya está en el ajuste**, contra el 0.5% del control; el 6.7% comparte además el esqueleto de conectividad (estereoisómeros), la similitud mediana al vecino más cercano es 0.787 (la de la prueba reservada es 0.414) y el 87% de los pares pasa de 0.6. Según su regla, **la base externa no es comparable con la prueba reservada sin decirlo**: está más cerca del ajuste y el 0.792 de concordancia no se pone al lado del 0.720 como si midieran lo mismo. Eso es lo que la tesis del artículo predice, pero ahora está medido. Comprobación independiente: recalculando el andamio con RDKit sobre los SMILES únicos del ajuste sale 66.7%, la misma conclusión (la diferencia de dos puntos es de definición: ese cálculo usa los SMILES únicos del ajuste y no los del par). Para correrla hizo falta un cambio mínimo en el script: `Corrida` solo acepta rutas dentro del repositorio, así que la huella del archivo externo va en los parámetros.
 
-- **La prueba son 13,973 pares en 13,973 grupos**, un andamio por par: es la semántica de `scaffold_split` —los andamios frecuentes alimentan el modelo y los raros evalúan química nueva— llevada al límite por la cola larga de la fase 2, donde el 59.8% de los grupos tiene un solo par. Mide generalización, no representatividad.
-- **Tiene 7 puntos más de activos que el entrenamiento**, así que no es una prueba más difícil sino otra población. La fase 1 tiene la misma propiedad y mayor (57.3% contra 64.0%), porque agrupar por estructura no estratifica por clase. Cada métrica se reporta con la tasa base de su partición al lado.
-- **Y los naturales se concentran en entrenamiento:** solo el 5.2% de los pares que solo tiene NPASS cae en la prueba (117 de 2,231), porque comparten andamios en familias grandes; con los mixtos, que también traen evidencia de NPASS, son 346 de 4,059 (8.5%). La evaluación por origen sobre la prueba descansa en esos 346 pares, suficiente para una señal gruesa y no para comparar con intervalos.
+**Lo que se descartó.** Disjuntar por fuente: la fuente no es un atributo del par ([2.5](#d2-5)); lo que hace ese trabajo es el control del atajo más el reporte por estrato. Disjuntar por artículo: un solo componente conectado reúne 39,362 pares (55.9%); se reporta el desempeño por referencia dentro de la validación cruzada.
 
-**Disjuntar por fuente se descarta, y por qué.** La versión anterior lo proponía como mitigación de la [2.5](#d2-5). No se puede: la fuente no es un atributo del par, y 827 de los 828 pares de CMAUP comparten par con otra fuente ([2.3](#d2-3)). Lo que hace ese trabajo es el **control de atajo** del [#32](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/32) más el reporte por estrato disjunto de procedencia.
+**Cómo se protege la prueba.** `cargar` (`src/models/tareas.py`) la deja fuera por omisión y exige `incluir_prueba=True`, pero es una convención: pedirla no falla ni deja registro. La guarda está abierta en el [#54](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/54) y conviene tenerla antes de afinar modelos.
 
-**Y disjuntar por artículo tampoco, en su versión estricta.** Con las referencias que el artefacto ya guarda, conectando dos pares que comparten al menos una: **un solo componente reúne 39,362 pares, el 55.9%**, y el siguiente tiene 601. El 93.8% de los pares tiene una sola referencia, lo que lo hace parecer fácil, pero los compuestos medidos en varios artículos enlazan las referencias entre sí. Queda en su lugar reportar el desempeño **por referencia** dentro de la validación cruzada. Lo midió Pame al revisar el [#86](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/86).
-
-**Cómo se protege hoy la prueba, y lo que falta.** `cargar` (`src/models/tareas.py`) la deja fuera por omisión y exige `incluir_prueba=True` para devolverla, y el modelo de referencia no la pide. Pero eso es una convención: pedirla no falla ni deja registro. La guarda que lo exigiría —evaluar sobre la prueba sin declararlo falla con un mensaje claro y queda anotado— sigue abierta en el [#54](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/54), y conviene tenerla antes de afinar modelos, que es cuando más tienta mirarla.
-
-**Qué lo cambiaría.** Que haga falta evaluar los naturales sobre la prueba con intervalos, y entonces la partición se estratifica por origen —cuesta reconstruir el artefacto y reejecutar el notebook, no rehacer el modelado—; o que ella señale una agrupación por familia química o laboratorio que el andamio no capture.
+**Qué lo cambiaría.** Que haga falta evaluar los naturales sobre la prueba con intervalos: la partición se estratifica por origen (reconstruir el artefacto, no rehacer el modelado).
 
 #### 2.8 · El cruce con COCONUT lo calcula el equipo {#d2-8 .vigente .revisada}
 
 **Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada: antes se le pedía a ella
 
-**Qué se decidió.** El equipo **calcula el cruce con COCONUT por su cuenta**, desde `smiles_raw`, en lugar de esperarlo. Hasta que esté, la **fuente** es la definición provisional de «natural» y se declara como tal en todo lo que se reporte. Un solo modelo, con el desempeño reportado por origen; la fuente nunca entra como característica.
+**Qué se decidió.** El equipo calcula el cruce con COCONUT desde `smiles_raw`. Hasta que esté, la **fuente** es la definición provisional de «natural» y se declara así en todo lo que se reporte. Un solo modelo, con el desempeño por origen.
 
-**Por qué se decide y no se pide.** La versión anterior de esta entrada argumentaba que pedírselo «cuesta una pregunta» y rehacerlo «cuesta una fuente de discrepancia permanente». Que los dos cruces no serán idénticos sigue siendo cierto, pero la comparación estaba mal planteada: con la fuente como proxy, **el 65.4% de los esqueletos naturales también está en ChEMBL**, así que la definición provisional se equivoca en dos de cada tres. Una discrepancia declarada entre dos versiones de COCONUT es un error mucho menor, y sobre todo **medible**: se puede reportar cuántos compuestos cambian de clase entre las dos definiciones. Esperar deja sin forma de contestarse la pregunta central del proyecto, que es si el modelo sirve para productos naturales.
+**Por qué.** El archivo de actividad no trae marca de «natural» (el de permeabilidad sí, cruzado contra COCONUT). La fuente es una definición imperfecta: el 65.4% de los esqueletos naturales (2,727 de 4,172) también está en ChEMBL, y solo 1,445 existen únicamente en NPASS y CMAUP. Un cruce propio no será idéntico al de la patrocinadora, pero la discrepancia es medible (cuántos compuestos cambian de clase) y esperar dejaría sin contestar la pregunta central del proyecto. `inchikey_source` viene vacío en los 187,354 registros de ChEMBL, así que el solapamiento se calcula desde `smiles_raw`.
 
-**Qué lo cambiaría.** Que ella aporte el cruce, y entonces pasa a ser la definición y el nuestro queda como comprobación. Eso no obliga a rehacer nada: la definición de origen es una columna de metadatos, no una característica del modelo.
+**Qué lo cambiaría.** Que la patrocinadora aporte su cruce: pasa a ser la definición y el nuestro queda como comprobación. No obliga a rehacer nada, porque el origen es una columna de metadatos, no una característica.
 
-**Qué pasó.** Priorizar productos naturales con actividad neuroprotectora es el objetivo del proyecto, y es esta fase la que lo cumple. Pero el archivo de actividad no trae una marca de «natural»: lo más cercano es la **fuente**, porque NPASS y CMAUP son bases de naturales y ChEMBL es sobre todo sintético. Esa fuente está confundida con la vía de etiquetado ([2.5](#d2-5)): los 15,293 registros de NPASS y CMAUP no traen pChEMBL. Además, el 65.4% de los esqueletos naturales (2,727 de 4,172) también aparece en ChEMBL, así que la fuente no separa limpiamente el origen, y solo 1,445 esqueletos existen únicamente en NPASS y CMAUP. Ojo con el método: `inchikey_source` viene vacío en los 187,354 registros de ChEMBL, así que el solapamiento se calcula desde `smiles_raw`. A diferencia de la fase 1, aquí hay un desplazamiento de dominio real: casi todo el entrenamiento es ChEMBL y el uso final son naturales.
+#### 2.9 · Regresión de la potencia; la clasificación se deriva de ella {#d2-9 .vigente}
 
-**Por qué se le pregunta a ella y no lo resuelve el equipo.** El archivo de permeabilidad llegó ya cruzado contra COCONUT, con tres columnas (`coconut_id_exact_match`, `coconut_ids_key14_match`, `coconut_matches_key14`), y ese cruce es el que sostiene el hallazgo central del Avance 1. El de actividad no trae ninguna: las únicas columnas de procedencia son `source` y `inchikey_source`, y el diccionario no menciona COCONUT. El equipo podría intentarlo por su cuenta desde `smiles_raw`, que está en los 202,647 registros, pero sería un cruce distinto del suyo —otra versión del catálogo, otra regla de estandarización— y los dos no serían comparables entre fases, que es justamente lo que el proyecto necesita. Pedírselo cuesta una pregunta; rehacerlo cuesta una fuente de discrepancia permanente.
+**Estado:** vigente · el 24 de octubre la patrocinadora pidió la potencia como variable principal
 
-**Se propone, mientras tanto.** Usar la **fuente como definición provisional** de «natural», declarándola como tal en todo lo que se reporte. Entrenar un solo modelo y reportar el desempeño por origen, con la partición disjunta por fuente de la [2.7](#d2-7) para ver si falla al pasar de ChEMBL a naturales. Un modelo aparte, o ponderar a los naturales, solo si esa evaluación lo muestra. Si llega el cruce, la definición pasa a ser ese cruce y la fuente queda como comprobación.
+**Qué se decidió.** Un solo modelo que predice **`pActividad`**, con los censurados como cotas y no como datos faltantes. La clase (activo o inactivo a 10 µM o 1 µM) sale de aplicar el corte a la predicción continua, al final: se entrena una vez y el corte deja de ser una decisión de modelado.
 
-#### 2.9 · Clasificar con un corte o predecir la potencia {#d2-9 .propuesta}
+**Ejemplo de por qué.** Con el corte en 10 µM, un compuesto de 0.05 µM y otro de 9 µM reciben la misma etiqueta «activo», y el ranking los empata. Con 10 µM, `LRRK2` queda en 98.1% de activos y la etiqueta no informa. La regresión conserva el orden dentro de cada clase, que es lo que se entrega ([C.5](#dc-5)).
 
-**Estado:** propuesta · se decide en el Avance 4, no bloquea el Avance 3
-
-> **Pregunta:** ninguna para la patrocinadora. Es decisión del equipo, y de hecho **resuelve** una de las suyas: con regresión, el corte pasa a ser una decisión de lectura y la [2.3](#d2-3) deja de necesitar su ratificación.
-
-**Qué pasó.** La [2.3](#d2-3) construye una etiqueta binaria con un corte global, y hay tres razones medidas para dudar de ese formato: el corte no es estimable sin desenlace, el mismo corte deja `LRRK2` en 98.1% de activos y `NFE2L2` en 50.7%, y la clasificación tira el orden dentro de cada clase —un compuesto a 0.05 µM y otro a 9 µM reciben la misma etiqueta— cuando lo que se entrega es un **ranking**.
-
-**Qué cuesta cada forma:**
+**Por qué censurada y no solo exactas.** El 98.0% de los pares activos tiene una medición exacta, pero solo el 50.6% de los negativos: la mitad de la evidencia de inactividad existe solo como censurada. Entrenar solo con exactas pierde 8,938 negativos y da un ranking optimista.
 
 | Forma | Pares | Negativos | Qué pierde |
 |:--|--:|--:|:--|
@@ -828,13 +839,17 @@ Cero andamios y cero esqueletos cruzados. La validación cruzada de cinco pliegu
 | Regresión sobre exactas | 56,229 | 9,169 · 16.3% | **8,938 negativos**, el 49.4% de la clase |
 | **Regresión censurada** | **66,121** | — | nada de la población |
 
-La regresión sobre mediciones exactas no pierde al azar: el 98.0% de los pares activos tiene medición exacta y solo el 50.6% de los negativos, porque la mitad de la evidencia de inactividad **existe solo como censurada**. Un segundo modelo entrenado así tendría un ranking optimista de un modo difícil de auditar.
+**Cómo se trata la censura.** Un `> 10 µM` es censura **por la derecha** si se mide en µM (la concentración real es mayor que 10) y **por la izquierda** en `pActividad` (menor que 5). Un modelo que acepte intervalos lo usa tal cual en la escala que tenga, y lo que importa es que el intervalo quede del lado correcto. **Avance 4 (modelos individuales, sin ensambles):** `RegresionTobit` (`src/models/tobit.py`), una regresión lineal con censura por intervalos, ajustada en `pActividad`; las otras familias sencillas se entrenan sobre las exactas. **Avance 5:** `survival:aft` de XGBoost, que pide la escala de µM (cota inferior 10, superior infinita) y convierte a `pActividad` al final. El diccionario pide lo mismo: los censurados «se excluyen o se usa un método para valores censurados».
 
-**Se propone.** Un solo modelo: **regresión sobre [pActividad](glosario.md) con los censurados como observaciones censuradas por la izquierda**, no borrados. Un `>` de 10 µM no es dato faltante, es la información «pActividad < 5», y el propio diccionario de la patrocinadora lo pide así: «en regresión no deben usarse como si el valor fuera exacto: se excluyen o **se usa un método para valores censurados**». No es maquinaria nueva: XGBoost lo trae como objetivo `survival:aft` con límite inferior y superior por observación, y XGBoost ya es candidato en la [1.5](#d1-5).
+**El signo se verificó sobre los pares reales** con el Tobit (#139, `experimentos/2026-10-25-ingrid-2.9-signo-censura-tobit/`; validación de 6,961 pares, una semilla, sin afinar). Con el signo bueno, el 17.5% de los `> L µM` queda predicho del lado de la cota; con el invertido a propósito, el 2.1%; la pActividad media predicha de esos pares es 5.54 contra 6.24, para una cota media de 4.75. **La dirección es clara, pero por el criterio fijado de antemano (más de 20 puntos de diferencia) la comprobación no pasa: la diferencia es de 15.** Contra una `Ridge` entrenada solo con las exactas, el Tobit sube la concordancia (0.694 contra 0.681) y coloca mejor los censurados (17.5% contra 3.4%), pero no mejora las exactas (Spearman 0.496 contra 0.507, RMSE 1.210 contra 1.177). Un modelo lineal predice mucho peor que uno de árboles. Falta repetirlo con varias semillas, intervalos y los modelos afinados.
 
-Con eso la clasificación sale gratis umbralando la predicción, así que el MCC y el AUPRC de la [C.1](#dc-1) siguen reportándose y comparándose contra el baseline. **La clasificación a 10 µM se conserva como baseline del Avance 3**, que es el papel que le toca: ser el piso que la censurada tiene que superar. Dos modelos principales no, porque producirían dos rankings y nada diría cuál obedecer.
+**Cómo se evalúa.**
 
-**Ese baseline ya existe, y dice dos cosas.** Las tres canalizaciones de la [1.5](#d1-5), sin afinar, sobre los 54,369 pares de entrenamiento y validación (10,071 grupos, 71.4% de activos), con la diana como característica y la misma validación cruzada agrupada de la fase 1; la prueba no se toca (`scripts/experimento_baseline.py --tarea actividad`, corrida `experimentos/2026-10-18-artemio-2.3-baseline-actividad-descriptores-diana-10um/`):
+- **Índice de concordancia de Harrell y Spearman**, que toleran la censura. **RMSE solo sobre las mediciones no censuradas**, declarado como tal.
+- **Techo de reproducibilidad.** La patrocinadora indicó que la reproducibilidad experimental del IC50 en ChEMBL ronda 0.7 unidades logarítmicas (0.5 en Ki). Las fuentes: Kalliokoski et al. (2013, `kalliokoski2013ic50`), con desviaciones de 0.68 en pIC50 y 0.47 en Ki, y Kramer et al. (2012, `kramer2012ki`). **No es un número de consenso:** Landrum y Riniker (2024, `landrum2024ruido`) encuentran, con curación mínima, más ruido, y que exigir que coincidan los metadatos del ensayo mejora el acuerdo a costa de tamaño, que es el razonamiento de la [2.11](#d2-11). Como el 25–28% de los pares discrepa más de diez veces (una unidad logarítmica), un RMSE muy por debajo de ese orden no sería un buen resultado sino una señal de fuga de datos. El techo se escribe en el informe desde ahora.
+- Las métricas de clasificación (MCC, AUPRC, [C.1](#dc-1)) se calculan sobre la clase derivada. Las de ranking están en la [C.5](#dc-5).
+
+**El baseline de clasificación se conserva como piso.** Tres canalizaciones sin afinar, sobre los 54,369 pares de entrenamiento y validación (10,071 grupos, 71.4% de activos), con la diana como característica y la validación cruzada agrupada (`scripts/experimento_baseline.py --tarea actividad`; corrida `experimentos/2026-10-18-artemio-2.3-baseline-actividad-descriptores-diana-10um/`):
 
 | Canalización | AUROC | IC 95% | MCC |
 |:--|--:|:--|--:|
@@ -842,27 +857,228 @@ Con eso la clasificación sale gratis umbralando la predicción, así que el MCC
 | Boosting por histogramas | 0.857 | [0.848, 0.865] | 0.486 |
 | Regresión logística | 0.796 | [0.786, 0.806] | 0.387 |
 
-El AUROC es el de las predicciones fuera de pliegue agrupadas, con bootstrap de grupos, igual que en la fase 1; el notebook 03 imprime además el promedio de los pliegues, que es otro estimador (0.863 en el bosque contra 0.866). Aquí sí se distingue la logística, por 6 a 7 puntos de AUROC y con intervalos que no se tocan, al revés que en la fase 1. Entre el bosque y el boosting no se distingue. **Y el agregado no describe a los naturales:** por procedencia, el AUROC del bosque es 0.858 sobre los pares que solo tiene ChEMBL, 0.637 sobre los mixtos y **0.611 [0.572, 0.647]** sobre los que solo tiene NPASS (boosting 0.629 y logística 0.585), que coincide con la medición de la [2.3](#d2-3), hecha con otra configuración del bosque (0.613). Es un solo modelo con la diana como característica, no uno por diana como propone la [2.2](#d2-2); afinar y separar por diana es del Avance 4.
+La logística queda 6–7 puntos abajo, con intervalos que no se tocan; entre el bosque y el boosting no se distingue. **El agregado no describe a los naturales:** el AUROC del bosque es 0.858 sobre los pares solo ChEMBL, 0.637 sobre los mixtos y **0.611 [0.572, 0.647]** sobre los de solo NPASS ([2.5](#d2-5)). La regresión tiene que superar este piso en la clase derivada.
 
-**Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. SHAP corre sobre `survival:aft`, pero atribuye sobre log-potencia, que es más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo»; la [C.2](#dc-2) pide dos métodos que concuerden y sigue siendo viable, pero el relato cambia. Y las métricas de clasificación saldrían de un modelo que no las optimizó directamente.
+**Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. En un modelo de árboles con `survival:aft`, SHAP atribuye sobre log-potencia, más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo». La [C.2](#dc-2) sigue siendo viable, pero el relato cambia.
 
-**Por qué conviene aunque cueste.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es una clase y no un número, la combinación pierde resolución; y la forma principista de combinarlas no es sumar dos puntajes, es **comparar la potencia predicha contra la exposición alcanzable**, que es lo que la fase 1 predice. Un compuesto BBB− alcanza menos concentración en cerebro, así que necesita más potencia para servir.
+**Por qué conviene.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es un número y no una clase, se puede comparar la potencia predicha contra la exposición alcanzable: un compuesto BBB− llega a menos concentración en el cerebro y necesita más potencia para servir.
 
-**Y es la respuesta a lo que la patrocinadora pidió** —«a partir de qué valor ya se vuelve algo significativo»— hasta donde se puede contestar sin desenlace: el modelo dice qué potencia espera, y el desempeño en función de la potencia dice desde dónde el modelo separa bien.
+#### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
+
+**Estado:** vigente · decisión del equipo
+
+**Qué se decidió.** La matriz (`src/data_prep/pares_fase2.py`, construida con `scripts/construir_pares_fase2.py`) tiene 70,384 pares sobre 59,532 compuestos y 26 dianas. De cada par se guarda **el intervalo donde cae la potencia**, no una etiqueta; la binaria se deriva de él.
+
+| Columna | Qué es |
+|:--|:--|
+| `pActividad` | la potencia como número, 6 − log₁₀ µM; `NaN` si el par solo tiene cotas |
+| `limite_inferior`, `limite_superior` | el intervalo, con ±∞ donde no hay cota |
+| `n_mediciones`, `n_exactas`, `rango_exactas` | cuántas mediciones y cuánto se separan |
+| `activo_10um`, `activo_1um` | la etiqueta binaria, **derivada** del intervalo |
+
+**Por qué.** Cambiar el corte o pasar a regresión ([2.9](#d2-9)) no reconstruye nada: la clasificación, la regresión sobre exactas y la censurada leen el mismo archivo. Guardar solo `activo_10um` tendría el defecto que tuvo la fase 1, donde la selección de columnas se congeló sobre una matriz ya transformada ([1.5](#d1-5)). El intervalo también reproduce la regla del diccionario sin programarla aparte: un `> 1 µM` da cota superior 6, que no alcanza para declarar inactivo con T = 10 µM y sí con T = 1 µM.
+
+**La llave del par es esqueleto de conectividad × `target_gene`**, no el identificador del compuesto. `source_compound_id` usa prefijos distintos por fuente (`CHEMBL…` contra `NPC…`) y no comparte ni un valor: con esa llave, un compuesto medido en dos fuentes entraría como dos pares y sus contradicciones, 164 entre ChEMBL y las fuentes naturales, quedarían invisibles. Es la misma llave que usa `grupos_cv` para la partición.
+
+**Cómo se agrega un par.**
+
+1. **Mediana de las exactas, no el valor más potente.** El máximo sesga hacia la clase positiva. La dispersión queda en `rango_exactas`.
+2. **Conflicto es evidencia incompatible, no dispersión.** Un par se marca en conflicto cuando su mediana cae fuera de lo que permiten sus cotas, o cuando las cotas se cruzan: bajan de 1,784 a **1,126**, y solo 15 dan un intervalo vacío.
+3. **El empate en el umbral se resuelve a favor de activo.** Una exacta justo en 10 µM es activa («igual o menor») y un censurado `> 10 µM` es inactivo; tienen la misma relación numérica con el corte y significan lo contrario. Mueve 409 pares.
+4. **El filtro de dirección ([2.11](#d2-11)) se aplica antes de agregar**, en ambas variantes.
+5. **Falta:** una bandera para los pares con dispersión mayor a cien veces (`rango_exactas` mayor que 2).
+
+**Recortes.** La potencia se recorta a [2, 12], que es el rango del pChEMBL observado (2.35 a 12.00); ChEMBL no asignó pChEMBL a ninguna de las 319 filas fuera. Las filas en unidades de masa quedan fuera porque sin peso molecular no hay conversión a molar: son 181, y por eso el conteo es 70,384 y no 70,497.
+
+**Cifras.** 57,832 pares con potencia y 12,552 solo con cotas; 67,736 con etiqueta a 10 µM (72.8% activos, 2,648 sin decidir) y 69,632 a 1 µM (50.2%, 752 sin decidir); 24,230 grupos para la partición; 201 de 217 descriptores utilizables.
+
+#### 2.11 · Dirección del efecto: la afinidad cuenta {#d2-11 .vigente}
+
+**Estado:** vigente · el 24 de octubre la patrocinadora eligió esta opción
+
+**Qué se decidió.** La afinidad (`Ki`, `Kd`, IC50 de unión) cuenta como evidencia de actividad y ninguna medición se invierte. La variable objetivo es agnóstica a la dirección. Se agrega una columna **`direccion_consistente`** ∈ {consistente, ambigua, contradictoria}, derivada del tipo de actividad, el tipo de ensayo y `diana_efecto_buscado`. El modelo principal usa todo; la sensibilidad, solo el subconjunto consistente. `Potency` y `AC50` son etiquetas genéricas de cribado y se tratan como potencia agnóstica. `DRD2` no se resuelve con Ki: distinguir agonista de antagonista es una segunda tarea, con registros funcionales, fuera de la fase 2.
+
+**El problema, con un ejemplo.** `PPARG` es una diana donde se busca **activar**. Un IC50 sobre ella puede venir de un ensayo de **unión**: `CHEMBL2342574` mide el desplazamiento de [3H]-rosiglitazona, un agonista, y mide cuánto se une, no si activa (afinidad). Otro IC50 viene de un ensayo funcional, como `CHEMBL1116169` («Inhibition of PPARgamma assessed as transcriptional activity»): ahí sí mide inhibición, lo contrario de lo buscado. El nombre «IC50» no distingue las dos cosas; el ensayo sí. Por eso solo un **IC50 funcional sobre una diana de activación es contradictorio**: se marca y sale de la sensibilidad, sin invertirlo.
+
+**Cómo se lee el ensayo.** El archivo trae `assay_type` solo en la ruta `neuronal_assay`, y está vacío en las 2,015 mediciones IC50 de las tres dianas de activación que aportan pares (`PPARG`, `NFE2L2`, `TSPO`). Se piden a ChEMBL por `assay_chembl_id` el tipo y la descripción (`scripts/descargar_tipos_ensayo.py`; `notebooks/datos/tipos_ensayo_chembl.csv`; 9,894 ensayos). El tipo `B` (unión) es grueso: hay ensayos `B` cuya descripción es funcional, así que además se lee la descripción con una regla de palabras (inhibir o antagonizar sin hablar de unión → inhibición funcional), estrecha y sin validar fila por fila. Resultado: **1,429 mediciones (71%) afinidad, 399 (20%) inhibición funcional, 187 (9%) sin tipo** (NPASS y CMAUP no traen identificador de ensayo, o el ensayo es de farmacocinética o toxicidad). Una lectura manual de las descripciones dio 17% de funcionales entre los IC50 de ChEMBL. Consultar la API no es inferir, es recuperar un dato registrado; el tipo, el formato BAO, la confianza, el organismo y `action_type` se piden con la fecha de descarga anotada.
+
+**Cuánto está en juego** (`scripts/medicion_dianas_activacion.py`; corrida `experimentos/2026-10-24-ingrid-2.3-dianas-activacion-descripcion/`). De los 6,140 pares de las dianas de activación:
+
+| Pares | Cuántos |
+|:--|--:|
+| Con una medición de activación | 4,093 |
+| Solo afinidad | 1,011 |
+| Solo de tipo ambiguo | 822 |
+| Solo inhibición funcional | 155 |
+| Mezclas | 59 |
+
+Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pares sin ninguna medición**; quitar solo la inhibición funcional cambia 2 y deja 155. Es un problema de cobertura, no de etiquetado, y por eso la afinidad cuenta. Ejemplo: `TSPO` es un marcador de PET que se caracteriza por desplazamiento de radioligando, no por EC50; con el criterio estricto pasaría de 260 pares a 5.
+
+**Los pares que dependen de `AC50`.** Existe solo en NPASS: 1,374 mediciones, 1,246 censuradas. 1,208 pares dependen solo de `AC50` (todos de solo NPASS, 1,161 inactivos): son el 61% de los 1,914 negativos de ese estrato. Quitarlo dejaría a los naturales casi sin clase negativa. Se conserva y se reporta con y sin esos pares.
+
+**`DRD2`** tiene 9,618 pares y `diana_efecto_buscado` «agonismo o antagonismo (según enfermedad)»: agonistas en Parkinson, antagonistas en esquizofrenia. En 14,732 mediciones, 11,230 son Ki (conteo manual, sin script). Queda como trabajo futuro.
+
+**Pendiente, para el Avance 5.** Definir `direccion_consistente` para las 26 dianas (la tabla de tipos hoy solo cubre las tres de activación; por ejemplo, un EC50 sobre `GSK3B`, de inhibición) y su sensibilidad, declarada en la [página de variables objetivo](variable-objetivo-fase2.md). Medir cuánto cubre la API de los campos pedidos en nuestros compuestos: en todo ChEMBL, `action_type` está en 582,238 de unos 24.5 millones de actividades (2.4%).
+
+#### 2.12 · Los inactivos de DrugMatrix {#d2-12 .propuesta}
+
+**Estado:** propuesta
+
+**Qué pasó.** 29,730 filas traen texto de inactividad («Not active»; ChEMBL: «Inhibition < 50% @ 10 uM and thus dose-response curve not measured»). Son una sola campaña de tamizaje (`CHEMBL1909046`, el panel DrugMatrix), 772 compuestos, todas `> 10 µM`. Se excluyen del principal. De ellas, 5,658 filas caen en dianas de la lista y sumarían **2,169 pares** (70,384 → 72,553) en solo cuatro dianas (`MAOA`, `PTGS2`, `ACHE`, `DRD2`), sobre 729 esqueletos.
+
+**Con regresión aportan poco.** Las 5,658 filas dicen lo mismo: `pActividad` < 5, sin cuánto menos. Como clasificación pesaban mucho (61% de los negativos por registro, 10.8% por par); como cota de regresión son una sola cota repetida, concentrada en una campaña, cuatro dianas y fármacos conocidos (espacio químico sesgado).
+
+**Se propone.** Fuera del modelo principal. **La medición del desempeño con y sin ellas queda para el Avance 5.** Una sensibilidad con ellas como negativos censurados y sin ellas, reportada al lado, con un análisis de esqueletos de los 772 compuestos. Como todas son de un solo documento, agrupar por documento en la validación cruzada las deja juntas en un pliegue, y eso hay que declararlo. El valor que podrían tener es el déficit de negativos verdaderos de cualquier conjunto derivado de la literatura, donde se publica lo que funciona.
+
+#### 2.13 · Ensambles para la regresión de potencia {#d2-13 .vigente}
+
+**Estado:** vigente
+
+**Qué se decidió.** Se definen e implementan cinco familias de ensamble para la predicción continua de potencia (`pActividad`), cubriendo tanto estrategias homogéneas como heterogéneas, además de un modelo acelerado de tiempo de falla (AFT) con manejo nativo de censura:
+
+1. **Ensambles homogéneos (tres familias):**
+   - `bosque` (`RandomForestRegressor`): ensamble paralelo por embolsado (bagging) sobre árboles de decisión, reduciendo la varianza mediante el promediado de estimadores independientes.
+   - `boosting` (`HistGradientBoostingRegressor`): ensamble secuencial por potenciación de gradiente sobre árboles discretizados por histogramas, reduciendo el sesgo de forma computacionalmente eficiente.
+   - `bagging_knn` (`BaggingRegressor` sobre `KNeighborsRegressor`): ensamble homogéneo no basado en árboles, aplicando bagging sobre un regresor local por vecinos cercanos para estabilizar estimaciones basadas en distancias químicas.
+2. **Ensambles heterogéneos (dos familias):**
+   - `votacion` (`VotingRegressor`): combinación lineal directa por promedio simple de estimadores de distinta naturaleza inductiva (`Ridge` como control lineal regularizado global y `kNN` como modelo local no paramétrico). No introduce meta-parámetros ni requiere particiones internas.
+   - `apilado` (`ApiladoAgrupado`): ensamble de apilamiento (stacking) que entrena un meta-estimador (`Ridge`) sobre las predicciones fuera de pliegue generadas por los estimadores base.
+
+La selección de las bases heterogéneas (`Ridge` y `kNN`) responde a los hallazgos de la [1.3](#d1-3) / #164, donde ambas familias obtuvieron la mayor concordancia al incorporar huellas estructurales (kNN alcanzó 0.756 con descriptores y huellas; 0.739 con descriptores solos; Ridge 0.724), mientras que el perceptrón multicapa (MLP) quedó descartado por degradar el desempeño (−0.027) y mostrar sobreajuste severo.
+
+**El apilado agrupa su partición interna.** Para que el apilamiento (`ApiladoAgrupado`) estime honestamente los coeficientes del meta-regresor sin sesgo optimista, las predicciones fuera de pliegue deben generarse respetando estrictamente los grupos de andamio (`GroupKFold`). Como se demostró empíricamente en la [1.2](#d1-2), no respetar el agrupamiento estructural infla las métricas del bosque en **2.2 puntos de AUROC y 7.1 puntos de MCC** (con el `svm_rbf`, 1.3 y 1.9) por fuga de información entre análogos moleculares de los pliegues. En regresión, una partición aleatoria interna asignaría análogos del mismo andamio a entrenamiento y validación de las bases, produciendo predicciones artificialmente precisas y distorsionando las ponderaciones asignadas por el meta-modelo.
+
+**El AFT entra sin envoltorio sobre la matriz densa.** `RegresionAFT` (`survival:aft` con XGBoost) utiliza directamente las observaciones censuradas por intervalos convirtiendo los límites de potencia a escala micromolar (cota inferior y superior), según lo resuelto en la [2.9](#d2-9) y [2.10](#d2-10). A diferencia de los regresores clásicos, que requieren el envoltorio `SoloExactas` para omitir los registros censurados durante el ajuste, el AFT entra sin envoltorio porque modela la verosimilitud de supervivencia con censura de forma nativa. Entró sobre la matriz densa (227 columnas: descriptores fisicoquímicos 2D de RDKit más variables indicadoras de diana, sin las huellas dispersas de Morgan / Sort & Slice). La razón **era** mecánica —`RegresionAFT.fit(X, inferior, superior)` recibe tres argumentos posicionales y no cabe en un `Pipeline`, que solo pasa una `y`— y ya no lo es: `ConHuellasCensurado` resuelve eso en doce líneas y el brazo con huellas está medido más abajo. **Ahora la razón es medida, y es otra.** Esto genera una consecuencia directa y transparente en la columna de tiempos de ejecución (`seg`), que contrasta con la de los ensambles evaluados sobre la matriz mixta.
+
+**El afinado corre con una semilla y su métrica interna no es la principal.** La búsqueda de hiperparámetros (`AfinadoAgrupado` sobre kNN, con la rejilla tomada del `params.yaml` de la corrida `2026-10-26-antonio-2.9-baseline-regresion-sencilla-exactas`) se evalúa con una sola semilla (`SEMILLAS[0]`), preservando el protocolo del notebook 04b para no multiplicar el costo computacional. Su métrica interna de optimización (`neg_root_mean_squared_error`) no es la métrica principal del proyecto: el afinado corre envuelto en `SoloExactas`, por lo que la búsqueda interna nunca ve las mediciones censuradas. La evaluación externa del modelo final se rige por la concordancia de Harrell y la correlación de Spearman ([C.1](#dc-1), [2.9](#d2-9)), calculadas sobre la totalidad de los datos (exactos e intervalos censurados).
+
+**Las tres semillas mueven el reparto y no el azar del modelo.** Para la evaluación final con tres semillas (`SEMILLAS = (0, 1, 2)`), el cambio de semilla controla la asignación de pliegues en la validación cruzada agrupada por andamio (`GroupKFold(shuffle=True, random_state=semilla)`), modificando el reparto de compuestos y análogos entre pliegues. A diferencia del notebook 04c, donde cada semilla movía simultáneamente el reparto en `StratifiedGroupKFold` y el azar interno del estimador (`random_state`), en el 05b las semillas mueven exclusivamente el reparto entre pliegues al mantener fijas las semillas de los estimadores base. Esto evalúa la estabilidad de los ensambles frente a distintas distribuciones de familias químicas en entrenamiento y validación.
+
+**Resultado.** La corrida `2026-10-31-antonio-2.13-comparativa-regresion-ensambles` evaluó los nueve modelos sobre la misma partición agrupada, con tres semillas y cinco pliegues (una sola semilla para el afinado), de modo que los tiempos y las métricas son comparables entre sí. La corrida completa tardó **7 h 16 min** en un contenedor con dieciséis núcleos, de las cuales 5 h 56 min son el bucle de los nueve modelos y los 80 minutos restantes se reparten entre la lectura de datos, el armado de las huellas, la evaluación sobre la prueba reservada y las figuras.
+
+| modelo | concordancia | NPASS | AUROC | MCC | ajuste s/pliegue | reloj total |
+|:--|--:|--:|--:|--:|--:|--:|
+| `bosque` | **0.765 ± 0.006** | 0.511 | 0.833 | 0.310 | 163.6 | 2,486 |
+| `aft` | 0.761 ± 0.005 | **0.632** | **0.846** | **0.467** | **3.9** | **74** |
+| `apilado` | 0.761 ± 0.006 | 0.527 | 0.832 | 0.298 | 44.7 | 3,512 |
+| `knn_afinado` | 0.761 ± 0.006 | 0.554 | 0.828 | 0.376 | 88.2 | 1,362 |
+| `votacion` | 0.757 ± 0.006 | 0.514 | 0.829 | 0.339 | 4.1 | 2,875 |
+| `knn_referencia` | 0.756 ± 0.005 | 0.547 | 0.823 | 0.369 | 0.8 | 2,772 |
+| `boosting` | 0.750 ± 0.006 | 0.511 | 0.825 | 0.291 | 49.0 | 781 |
+| `bagging_knn` | 0.673 ± 0.006 | 0.518 | 0.711 | 0.221 | 19.8 | 7,467 |
+| `media_por_diana` | 0.642 ± 0.006 | 0.403 | 0.720 | 0.000 | 0.8 | 37 |
+
+**El modelo final de la fase 2 es el `aft`, y no el que gana el agregado.** El `bosque` queda por encima en concordancia global y lo hace de forma consistente, en catorce de los quince pliegues, así que no es un empate. Pero el `aft` gana en AUROC, en MCC y, sobre todo, en la concordancia de los compuestos que solo aparecen en NPASS, que son los que este proyecto existe para priorizar. Ahí le gana a los ocho modelos restantes en todas las evaluaciones de cada uno: quince de quince contra siete de ellos, y cinco de cinco contra el `knn_afinado`, que corrió con una sola semilla (`semillas_afinado: [0]`) y por eso tiene cinco evaluaciones y no quince. El segundo mejor es precisamente ese `knn_afinado`, con 0.554. Los conteos por pliegue se pueden recomputar desde `pliegues.csv` en la carpeta de la corrida, que trae una fila por modelo, semilla, pliegue y estrato.
+
+**El mecanismo está medido y no supuesto.** En el conjunto de ajuste, el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL. Como los ensambles corren envueltos en `SoloExactas`, que descarta las censuradas, reciben 982 de las 2,114 filas de NPASS, mientras el `aft` las recibe todas. La ventaja no viene de una química mejor sino de ver datos que a los demás se les quitan.
+
+**La razón «gana en MCC, 0.467 contra 0.310» es sobre todo colocación, no discriminación (4 de noviembre, [#185](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/185)).** El mismo par ordena peor (concordancia −0.004) y yerra más (RMSE), con un AUROC casi empatado, y el MCC corta la potencia predicha en pActividad 5, donde cae la distribución de cada modelo. Corrida `2026-11-04-artemio-2.13-mcc-por-umbral-aft-contra-bosque` (`scripts/experimento_mcc_por_umbral.py`), las mismas 15 evaluaciones, un ajuste por pliegue y tres lecturas del MCC con las mismas predicciones. La regla se declaró antes: el corte fijo debía reproducir la comparativa (0.466 y 0.3106 contra 0.4668 y 0.3103: lo hace) y la ventaja se sostiene si, con el corte que declara activa la misma fracción que tiene el ajuste, la diferencia pareada es positiva, mayor que su desviación y en 12 de 15.
+
+| estrato `todos` | `aft` | `bosque` | diferencia pareada (desviación) | `aft` mejor en |
+|:--|--:|--:|:--|--:|
+| MCC, corte fijo en 5 (la comparativa) | 0.466 | 0.311 | **+0.155** (0.015) | 15 de 15 |
+| MCC, corte de igual prevalencia | 0.495 | 0.467 | **+0.028** (0.013) | 15 de 15 |
+| MCC, mejor corte del pliegue (cota optimista) | 0.498 | 0.471 | +0.027 (0.011) | 15 de 15 |
+| AUROC | 0.845 | 0.833 | +0.012 (0.004) | 15 de 15 |
+| fracción que declara activa a 5 | 0.816 | 0.936 | −0.120 | 0 de 15 |
+
+**Cinco sextas partes de la ventaja eran dónde cae la distribución**: el `bosque`, que se ajusta solo con las exactas, declara activo el 93.6% de los pares a 5 contra 81.6% del `aft`. Al quitar eso la ventaja baja de +0.155 a +0.028, que sigue siendo positiva en las 15 evaluaciones y 2.1 veces su desviación, y coincide en tamaño con el AUROC (+0.012). Por la regla declarada **la razón se sostiene, pero con otra magnitud**, y tiene que citar el AUROC y el MCC de igual prevalencia, no el corte fijo. En `solo_npass`, el estrato por el que se eligió el modelo, la lectura de igual prevalencia da +0.072 (desviación 0.042, 13 de 15) contra +0.055 con corte fijo (14 de 15), el AUROC +0.111 y la concordancia +0.121 (15 de 15 las dos): ahí no hay encogimiento, y la diferencia de colocación va en el mismo sentido (0.325 contra 0.701 declarado activo). **La elección del `aft` no cambia**; cambia cuánto pesa su primera razón, y el argumento de NPASS no dependía de ella. Límites: el corte de igual prevalencia usa la tasa del ajuste y no un umbral elegido con validación interna, que el issue sugería y que con el bosque cuesta horas; la cota optimista usa las etiquetas del pliegue y no es un resultado. Queda por reescribir la celda 14 del 05b (§5.1), que no toco aquí porque el #229 edita ese cuaderno.
+
+**La limitación que esta corrida dejaba abierta ya está medida, y está abajo.** El `aft` difiere de los ensambles en más de una cosa a la vez, así que el apartado «Los tres confundidos del `aft`, separados» es el que cierra esta advertencia. *Versión superada (2 de noviembre):* esta entrada decía que «esta corrida no permite atribuir la ganancia en NPASS solo a la censura, y separarlas exige una corrida adicional con los ensambles sobre la matriz densa». Esa corrida adicional existe desde el #181 y está once líneas más abajo, de modo que la entrada se contradecía consigo misma (#211).
+
+**Sobre la partición reservada.** Primera toma de la prueba en el proyecto, registrada en `experimentos/prueba.csv`. El `aft` da 0.720 de concordancia global sobre los 13,944 pares, con AUROC de 0.793 y MCC de 0.277. En los 117 pares que solo tiene NPASS baja a 0.530 con un Spearman de 0.083, que es ruido alrededor del azar. Eso no respalda el argumento de NPASS ni lo contradice, porque la prevalencia de activos pasa del 12.3% en ajuste al 44.4% en prueba sobre esos 117 pares. El argumento se sostiene en los quince pliegues de la validación cruzada. El punto 6 de la lectura del [05b](../notebooks/05b_Ensambles_actividad.ipynb) resuelve ahí la condición de refutación que el punto 5 había declarado y dejado anotada (#186): trae el desglose de la prueba por procedencia, y concluye que el estrato de naturales no refuta el 0.632 ni lo confirma, así que la ventaja del AFT en productos naturales está medida en validación cruzada y no verificada sobre esqueletos nuevos.
+
+**Tres advertencias para leer la tabla.**
+
+*Las dos columnas de tiempo no miden lo mismo, y hacen falta las dos.* `ajuste s/pliegue` es la que registra `metricas.json`: solo la llamada a `fit`, promediada entre pliegues. `reloj total` es el tiempo de pared de evaluar ese modelo entero —quince pliegues, cinco en el `knn_afinado`— e incluye las **dos** predicciones que el arnés hace en cada pliegue, sobre validación y sobre el conjunto de ajuste completo para calcular el `rmse_entrenamiento`. De ahí que el `knn_referencia` ajuste en 0.8 s y gaste 2,772 s: en los modelos por vecinos el costo está en predecir, no en ajustar, y con una sola columna la lectura sale al revés. Las dos se tomaron con dieciséis núcleos (`n_jobs=-1`), así que ninguna es comparable con las mono-hilo del 04b ni del 04c. El `nota_seg` que quedó registrado en el `params.yaml` de la corrida describe la columna `seg` como tiempo de reloj, y eso es lo que aquí se corrige; el archivo no se reescribe porque es el registro de la corrida.
+
+**Los tres confundidos del `aft`, separados.** La elección se apoyaba en un modelo que difiere
+de los demás en **tres** cosas a la vez: la librería (XGBoost contra el `HistGradientBoosting` de
+sklearn, que es lo que el `boosting` de esta corrida usa), la pérdida censurada, y las 227 columnas
+densas. Corrida `2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura`: cuatro brazos sobre los
+mismos pliegues y semillas, con la métrica principal —la concordancia en `solo_npass`— declarada en
+el script antes de ejecutarlo. Diferencia pareada contra el `aft` y evaluaciones ganadas:
+
+| Brazo | todos | solo_chembl | mixto | solo_npass |
+|:--|--:|--:|--:|--:|
+| `xgb_sin_censura` | −0.0154 · 0/15 | −0.0133 · 0/15 | −0.0548 · 0/15 | −0.1248 · 0/15 |
+| `aft_huellas` | +0.0048 · 14/15 | +0.0051 · 14/15 | −0.0120 · 6/15 | −0.0076 · 4/15 |
+| `aft_filtro` | +0.0007 · 10/15 | +0.0010 · 10/15 | −0.0047 · 6/15 | +0.0021 · 8/15 |
+
+**La ventaja es de la censura, no de la librería.** `xgb_sin_censura` es XGBoost con
+`reg:squarederror` sobre las mismas 227 columnas, los mismos 100 árboles y la misma profundidad 6,
+ajustando solo con las exactas: **pierde las sesenta evaluaciones pareadas**. En `solo_npass` cae a
+0.5073, que es donde quedan todos los modelos que descartan las censuradas —`bosque` 0.5107,
+`boosting` 0.5108, `votacion` 0.5143— independientemente de su familia. En MCC, 0.4668 contra
+0.3485. Eso es lo que cerraba el confundido de la librería, y lo cierra en la dirección que el
+argumento necesitaba.
+
+**Las huellas ganan donde hay ChEMBL y no cuestan nada distinguible.** En `todos` y en `solo_chembl`
+mejoran la concordancia (+0.005 con dispersión propia de 0.003), el RMSE (−0.017, 15 de 15) y el
+AUROC (+0.005). En `mixto` y en `solo_npass` todas las diferencias quedan **entre 0.1 y 0.9 de su
+propia dispersión**: la pérdida apunta a la baja en los cinco indicadores de los dos estratos, y
+esta corrida sola **no la establece**. Lo que sí es consistente es la dirección, y es la tercera vez
+que aparece: el 04c y el 03c ya la midieron ([1.3](#d1-3)), siempre con la ganancia del lado de
+ChEMBL. Y una advertencia de lectura: con huellas la concordancia agregada sube a 0.7659 y supera al
+`bosque` (0.7650), así que **el brazo que gana el agregado es el que va peor en los dos estratos con
+naturales** — el mismo reparto por volumen que ya tenía el agregado, con el 93% de las filas de
+ChEMBL.
+
+**Las huellas entran en la fase 2 para explicar, no porque midan mejor**, igual que la
+[1.3](#d1-3) lo resolvió para la fase 1. El modelo entregado es el `aft` sin ellas, porque es el que
+corrió, el que tomó la partición reservada y el que este cuaderno sostiene. El brazo `aft_huellas`
+queda como **modelo de explicación**: es el mismo XGBoost con la misma pérdida, los mismos datos y
+los mismos pliegues, y lo único que cambia es la representación, con la medición de arriba diciendo
+que esa diferencia no se distingue del ruido en ninguno de los cuatro estratos. Una columna
+Sort & Slice es una subestructura concreta, así que es lo que permite la atribución a nivel de
+fragmento que pide la [C.2](#dc-2), y los descriptores no. Se reportan los dos brazos. **Si el
+ranking final sale peor en los naturales, esto es lo primero que hay que revisar**, porque la
+dirección de la pérdida ya apareció en tres cuadernos independientes.
+
+**Las 745 filas que el filtro descarta no costaban nada medible.** `aft_filtro` da +0.0021 en
+`solo_npass` con 8 de 15. El defecto es real —el filtro conserva las 9,396 censuradas por la derecha
+y 0 de las 745 por la izquierda, que son las potentes: cota inferior mediana de pActividad 7.00 y 726
+de 745 activas al corte de 10 µM— y queda **acotado**: las cifras agregadas del `aft` eran un piso de
+dos milésimas, no de más. Arreglarlo es una línea, y lo único que rechaza el cero es el `inf_um > 0`
+del propio filtro, porque `limites_en_micromolar` devuelve `0.0` y XGBoost admite
+`label_lower_bound = 0`. No hace falta reejecutar las 7 h 16.
+
+**Y una regularidad que ordena las tres lecturas:** el RMSE y el Spearman los gana siempre quien
+ajusta solo con exactas —`xgb_sin_censura` saca el mejor RMSE agregado de la corrida, 0.9967, y el
+mejor Spearman de `solo_npass`, 0.2586—, porque son las métricas que se calculan sobre ese mismo
+subconjunto ([C.1](#dc-1)). La censura compra concordancia y MCC, que es donde vive el umbral, y el
+entregable es una lista priorizada con un corte ([C.5](#dc-5)).
+
+*La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
+
+**Los cuatro brazos del `aft`, completos: ni filtrar los descriptores ni quitarlos mejora en NPASS (4 de noviembre).** Corrida `2026-11-04-artemio-2.13-brazos-aft-filtrados-y-huellas-solas` (`scripts/experimento_aft_brazos.py`), sin tocar la prueba reservada. La corrida de Ingrid midió `aft` y `aft_huellas`; faltaban dos de los cuatro brazos del plan (E3): los **descriptores filtrados** (el filtro de la 03c y la 04c, aprendido dentro de cada pliegue, con TPSA y HBD protegidos) y las **huellas solas** con la diana, sin ningún descriptor. Los cuatro con los mismos pliegues y semillas. La regla se declaró antes: la métrica principal es la concordancia en `solo_npass`; un brazo supera al `aft` si su diferencia pareada es positiva, mayor que su desviación y en 12 de 15 evaluaciones.
+
+| brazo | `solo_npass`: concordancia | diferencia con `aft` (desviación) | mejor / peor en | veredicto | `todos`: diferencia (desviación) |
+|:--|--:|:--|:--|:--|:--|
+| `aft` (201 descriptores y diana) | 0.6308 | — | — | el control | — |
+| `aft_filtrados` (≈150–156 de 201) | 0.6329 | +0.0021 (0.0213) | 11 / 4 | empate dentro del ruido | +0.0014 (0.0027), 12 / 3: empate |
+| `aft_huellas_diana` (huellas y diana) | 0.5895 | **−0.0413** (0.0278) | 0 / **15** | **empeora al `aft`** | +0.0029 (0.0042), 11 / 4: empate |
+| `aft_huellas` (descriptores, huellas y diana) | 0.6187 | −0.0121 (0.0186) | 5 / 10 | empate dentro del ruido | +0.0057 (0.0035), 15 / 0: supera |
+
+**Lectura.** (1) **Filtrar los descriptores no cambia nada que se distinga del ruido** (+0.002 en NPASS con una desviación de 0.021), y el filtro deja 156 de 201 con todo el ajuste. Es coherente con lo que ya se medía en la fase 1 (el 03c, #195): la depuración no mueve el resultado. (2) **Quitar los descriptores cuesta en NPASS**: las huellas solas pierden 0.041 de concordancia y **empeoran al `aft` en las 15 evaluaciones**, aunque en `todos` empatan. Esto matiza la lectura de la fase 2 de que los descriptores se pueden tirar (las huellas solas casi igualaban al brazo ancho): en el estrato por el que se eligió el modelo **no se pueden**. (3) Las huellas con descriptores ayudan en `todos` y no en NPASS, como ya medía Ingrid. **El modelo final no cambia**: ningún brazo supera al `aft` donde se eligió.
+
+**Un control declarado no pasó, y se dice.** Los tres controles `aft` en `todos` (0.7609 contra 0.7610), `aft` en `solo_npass` (0.6308 contra 0.6322) y `aft_huellas` en `todos` (0.7666 contra 0.7659) pasan; **`aft_huellas` en `solo_npass` da 0.6187 contra 0.6246 de Ingrid, diferencia de 0.0059 con una tolerancia de 0.003**. La regla decía que entonces hay un error y el resto no se lee; se investigó en vez de omitirla. Los paquetes son idénticos (xgboost 3.4.1, scikit-learn 1.9.1, numpy 2.5.4) y el sistema no: la de Ingrid corrió en Linux WSL2 x86 y esta en macOS arm64, y `CLAUDE.md` ya documenta que las corridas no son idénticas entre sistemas. Dos pruebas de que es del entorno y no del código: la corrida E9 (otro código, esta máquina) da exactamente 0.6187 para ese brazo, y las diferencias que ven los demás brazos son de otro orden (0.04). La diferencia es 0.2 veces la desviación pareada del brazo (0.027). **Por eso la lectura anterior vale con esa salvedad**: la comparación de `aft_huellas` en `solo_npass` (−0.012) está dentro del ruido en cualquiera de las dos cifras. **Verificado de forma independiente:** recalculé el brazo `aft_filtrados` de la semilla 0 con un ciclo de pliegues escrito aparte y la concordancia coincide en los cinco pliegues (diferencia máxima 0.0); y las huellas solas ven 2,074 columnas (26 de diana y 2,048 huellas, ningún descriptor). **Límites:** una sola σ (1.0), una sola semilla del modelo, 15 evaluaciones; el `aft_filtro` (las 745 filas censuradas por la izquierda) y la sensibilidad de σ están en las corridas de Ingrid y no se repiten; y falta el SHAP con un segundo método de atribución (#146), que pide elegir el brazo.
+
+*El `knn_afinado` sale con un RMSE de entrenamiento de 0.000* porque cada punto de entrenamiento se predice a sí mismo, lo que solo ocurre con `weights="distance"`. La corrida no dejó registrado qué punto de la rejilla eligió —es lo primero que habría que añadir a la siguiente—, pero de las dos opciones de la rejilla (`uniform` y `distance`) esa es la única que da exactamente 0. Su brecha entre entrenamiento y validación no es comparable con la de los demás.
 
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |
 |:--|:--|:--|:--|:--|
 | S2.1 | «Activo» sobre una proteína es señal de neuroprotección | Sin comprobar | Es una inferencia, casi siempre medida fuera de un organismo; no implica que llegue al cerebro ni que sea selectivo | El modelo solo afirma actividad sobre dianas |
-| S2.2 | Una etiqueta describe una clase bajo un umbral y un ensayo, no una propiedad del compuesto | Asumido | El mismo compuesto cambia de clase según la concentración | Se declara el umbral en cada reporte |
-| S2.3 | El pChEMBL basta para etiquetar | Desmentido | Solo existe para ChEMBL ([2.3](#d2-3)) | Tres vías |
-| S2.4 | Un censurado «> 10 µM» sirve como negativo | Acotado | Solo si el límite es ≥ al umbral de «activo»; concentrado en DrugMatrix | Reportar el desempeño por vía |
-| S2.5 | «Activo» tiene una dirección clara | Sin comprobar | Falta verificar si el archivo distingue inhibir de activar | Aclararlo en la [2.3](#d2-3) antes de etiquetar |
-| S2.6 | Hay datos para las 39 dianas | Desmentido | Cuatro sin datos suficientes; Alzheimer 52,676 y ELA 53 | Excluir; modelo por categoría o multitarea |
-| S2.7 | Un mismo esqueleto y gen tienen etiquetas consistentes | Desmentido en parte | 1,810 pares discordantes con ≥ 5 y 2,426 con ≥ 6 | Regla de resolución reproducible y análisis de sensibilidad |
+| S2.2 | Una potencia describe un compuesto bajo un ensayo, no una propiedad del compuesto | Asumido | El mismo compuesto cambia de clase según la concentración y el ensayo; 25.5% de los pares discrepan más de diez veces | Se declara el ensayo y el corte en cada reporte |
+| S2.3 | El pChEMBL basta para etiquetar | Desmentido | Solo existe para ChEMBL ([2.3](#d2-3)) | Columnas `_used` y potencia en `pActividad` |
+| S2.4 | Un censurado «> 10 µM» sirve como negativo | Acotado | Solo si el límite es ≥ al corte; 29,730 están en un documento ([2.12](#d2-12)) | Reportar con y sin ellos |
+| S2.5 | «Activo» tiene una dirección clara | Desmentido en parte | `diana_efecto_buscado` existe y el tipo de medida no basta para cruzarlo: un IC50 mide inhibición solo si el ensayo es funcional ([2.11](#d2-11)). Declara el efecto buscado como tratamiento, no lo que hizo el compuesto | `direccion_consistente` y sensibilidad sobre el subconjunto consistente |
+| S2.6 | Hay datos para las 39 dianas | Desmentido | Cuatro sin datos; Alzheimer 52,676 y ELA 53 ([2.1](#d2-1)) | Excluir; multitarea |
+| S2.7 | Un mismo esqueleto y gen tienen mediciones consistentes | Desmentido en parte | 1,126 pares en conflicto ([2.10](#d2-10)) | Regla de resolución reproducible y sensibilidad |
 | S2.8 | El archivo recibido es el conjunto completo | Acotado | 89.9% de lo descrito en el diccionario ([2.6](#d2-6)) | Pedir la partición reservada |
-| S2.9 | La fuente no explica la etiqueta | Acotado | Perfecta por registro, rota para el 65.4% de los naturales ([2.5](#d2-5)) | Calibrar con los 2,727 solapados; partición disjunta por fuente |
-| S2.10 | La matriz de características sirve para la fase 2 | Acotado | Ya existe y se usa: 70,384 pares sobre 59,532 esqueletos, 201 descriptores más 26 indicadores de diana (227 columnas), y con ella el modelo de referencia da AUROC 0.866 sobre entrenamiento y validación ([2.9](#d2-9)). Pero **no describe a los naturales**: sobre los pares que solo tiene NPASS baja a 0.611 [0.572, 0.647] ([2.9](#d2-9); la [2.3](#d2-3) lo mide con otro bosque y da 0.613) | Reportar siempre por procedencia; si con los modelos afinados sigue cerca del azar, decir que el modelo no sirve para naturales |
-| S2.11 | La fuente (NPASS y CMAUP) identifica a los productos naturales | Sin comprobar | El 65.4% de los naturales también está en ChEMBL y solo 1,445 esqueletos son exclusivos de NPASS y CMAUP ([2.8](#d2-8)) | Definir «natural» por cruce con COCONUT si se puede |
-
+| S2.9 | La fuente no explica la etiqueta | Acotado | La procedencia sola llega al 65% del MCC de la química ([2.5](#d2-5)) | Estratificar y reportar por procedencia |
+| S2.10 | La matriz de características sirve para la fase 2 | Acotado | 70,384 pares, 201 descriptores más 26 indicadores de diana; AUROC 0.866 en el baseline, pero 0.611 sobre solo NPASS ([2.9](#d2-9)) | Reportar por procedencia; si sigue cerca del azar, decir que no sirve para naturales |
+| S2.11 | La fuente identifica a los productos naturales | Sin comprobar | El 65.4% de los naturales también está en ChEMBL ([2.8](#d2-8)) | Cruce con COCONUT |
+| S2.12 | La regresión con censura aporta algo sobre usar solo las exactas | Acotado | El signo está comprobado en datos reales con el Tobit (#139), pero la comprobación no pasa su propio criterio y la censura no mejora las exactas ([2.9](#d2-9)) | Regresión sobre las exactas más un clasificador de censura, o clasificación como piso |

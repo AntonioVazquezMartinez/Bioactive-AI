@@ -26,6 +26,7 @@ scripts ponen `src/` en el path) o como `src.tracking`.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import os
@@ -44,6 +45,45 @@ import yaml
 RAIZ = Path(__file__).resolve().parents[1]
 DECISION = re.compile(r"^(C|1|2)\.\d+[a-z]?$")
 PAQUETES = ("numpy", "pandas", "scipy", "scikit-learn", "xgboost", "rdkit", "imbalanced-learn")
+BITACORA = "prueba.csv"
+
+
+def tomar_prueba(pares, *, final: bool = False, motivo: str = "", raiz: Path = RAIZ,
+                 col: str = "particion", col_estrato: str = "estrato", valor: str = "prueba"):
+    """Filtra y devuelve las filas del conjunto de prueba dejando registro en la bitácora.
+    La guarda vive en la lectura y no en las métricas porque es el único punto de salida
+    de los datos: evita que filtros exploratorios en el cuaderno miren la prueba sin aviso.
+    No bloquea una segunda corrida para permitir correcciones legítimas, pero deja registro
+    en git para que cualquier uso repetido sea visible en el diff durante la revisión.
+    """
+    if not final:
+        raise ValueError(
+            "La partición de prueba solo debe evaluarse al final con el modelo definitivo. "
+            f"Para desarrollo o validación usa: pares[pares[{col!r}] != {valor!r}]"
+        )
+    if not motivo or not motivo.strip():
+        raise ValueError("Debes especificar un 'motivo' para evaluar el conjunto de prueba.")
+    prueba = pares[pares[col] == valor]
+    if col_estrato in prueba:
+        conteo = prueba[col_estrato].value_counts()
+        print(f"Evaluando partición de prueba ({len(prueba):,} filas):")
+        for estrato, n in conteo.items():
+            print(f"  - {estrato}: {n:,}")
+    bitacora = Path(raiz) / "experimentos" / BITACORA
+    bitacora.parent.mkdir(parents=True, exist_ok=True)
+    existe = bitacora.exists()
+    with open(bitacora, mode="a", encoding="utf-8", newline="") as f:
+        escritor = csv.writer(f)
+        if not existe:
+            escritor.writerow(["fecha", "autor", "commit", "filas", "motivo"])
+        escritor.writerow([
+            date.today().isoformat(),
+            _autor(Path(raiz)),
+            _git("rev-parse", "--short", "HEAD", raiz=Path(raiz)) or "",
+            len(prueba),
+            motivo.strip(),
+        ])
+    return prueba
 
 
 def sha256(ruta: Path) -> str:
@@ -78,12 +118,24 @@ def _version(paquete: str) -> str | None:
 
 
 def entorno(raiz: Path = RAIZ, datos: list[Path] | None = None) -> dict:
-    """Todo lo que cambia una cifra sin cambiar el código: commit, sistema, versiones, datos."""
-    estado = _git("status", "--porcelain", raiz=raiz)
+    """Todo lo que cambia una cifra sin cambiar el código: commit, sistema, versiones, datos.
+
+    `arbol_sucio` cuenta **solo los archivos seguidos**, porque es lo único que responde a la
+    pregunta que la bandera existe para responder: si el código que corrió es el del `commit`
+    de al lado. Un archivo sin seguimiento no cambia ninguna cifra, y contarlo hacía que una
+    carpeta de `experimentos/` recién creada ensuciara la corrida siguiente —`experimentos/
+    README.md` documentaba el efecto y pedía intercalar un commit para esquivarlo—. Los
+    sueltos se cuentan aparte, en `sin_seguimiento`, que informa y no acusa.
+    """
+    estado = _git("status", "--porcelain", "--untracked-files=all", raiz=raiz)
+    lineas = estado.splitlines() if estado else []
     lock = raiz / "requirements.lock"
     return {
         "commit": _git("rev-parse", "HEAD", raiz=raiz),
-        "arbol_sucio": None if estado is None else bool(estado),
+        "arbol_sucio": None if estado is None else any(
+            not ln.startswith("??") for ln in lineas),
+        "sin_seguimiento": None if estado is None else sum(
+            1 for ln in lineas if ln.startswith("??")),
         "sistema": platform.platform(),
         "python": platform.python_version(),
         "paquetes": {p: _version(p) for p in PAQUETES},

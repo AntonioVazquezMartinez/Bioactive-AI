@@ -1,0 +1,82 @@
+{
+  "ac50_pares_que_cambian_de_etiqueta": 4,
+  "ac50_pares_que_dependen_solo_de_ac50": 1208,
+  "activacion": {
+    "base": {
+      "activos": 4184,
+      "inactivos": 1738,
+      "mediciones": 10818,
+      "pares": 6140,
+      "sin_decidir": 218
+    },
+    "sin_contrarias": {
+      "activos": 4087,
+      "inactivos": 1680,
+      "mediciones": 9477,
+      "pares": 5985,
+      "sin_decidir": 218
+    },
+    "solo_activacion": {
+      "activos": 3072,
+      "inactivos": 870,
+      "mediciones": 5377,
+      "pares": 4093,
+      "sin_decidir": 151
+    },
+    "solo_inhibicion": {
+      "activos": 262,
+      "inactivos": 92,
+      "mediciones": 1341,
+      "pares": 360,
+      "sin_decidir": 6
+    }
+  },
+  "activos_totales": 49332,
+  "dianas_de_activacion": 4,
+  "ic50_aparte": {
+    "pares_con_las_dos_direcciones": 170,
+    "pares_donde_discrepan": 19,
+    "pares_donde_las_dos_deciden": 162
+  },
+  "ic_de_activacion_con_pares_por_direccion": {
+    "afinidad": 1429,
+    "ambigua": 187,
+    "inhibicion": 399
+  },
+  "ic_de_activacion_por_direccion": {
+    "afinidad": 1443,
+    "ambigua": 240,
+    "inhibicion": 1341
+  },
+  "negativos_de_pares_solo_npass": 1914,
+  "negativos_solo_npass_que_dependen_de_ac50": 1161,
+  "negativos_totales": 18404,
+  "pares_de_activacion_por_evidencia": {
+    "con activación": 4093,
+    "mezcla sin activación": 59,
+    "solo afinidad": 1011,
+    "solo inhibición funcional": 155,
+    "solo tipo ambiguo": 822
+  },
+  "pares_sin_evidencia": {
+    "sin_contrarias": {
+      "con_dos_o_mas": 3,
+      "con_una_sola_medicion": 152,
+      "hoy_activos": 97,
+      "pares": 155
+    },
+    "solo_activacion": {
+      "con_dos_o_mas": 495,
+      "con_una_sola_medicion": 1552,
+      "hoy_activos": 1071,
+      "pares": 2047
+    },
+    "solo_inhibicion": {
+      "con_dos_o_mas": 1517,
+      "con_una_sola_medicion": 4263,
+      "hoy_activos": 3904,
+      "pares": 5780
+    }
+  },
+  "pares_totales": 70384
+}

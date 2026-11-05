@@ -1,0 +1,13 @@
+decision: '2.9'
+semillas:
+- 0
+params:
+  modelo: RegresionTobit (lineal, individual) y Ridge
+  alfa_ridge: 100.0
+  escala_de_ajuste: pActividad
+  entrena_con: entrenamiento
+  evalua_en: validación
+  variantes:
+  - tobit_signo_correcto
+  - tobit_signo_invertido
+  - ridge_solo_exactas

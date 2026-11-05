@@ -1,0 +1,50 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - logistica
+  - arbol
+  - knn
+  - bayes
+  - svm_rbf
+  - mlp
+  brazos:
+  - descriptores
+  - depurados
+  - seleccionados
+  - descriptores+huellas
+  - huellas
+  pliegues: 5
+  metricas_principales:
+  - mcc
+  - auprc_minoritaria
+  metrica_tercera_lectura: auroc
+  n_bits_sortslice: 2048
+  radio_morgan: 2
+  vocabulario: se aprende en cada ajuste
+  depuracion:
+    frecuencia_modal: 0.99
+    umbral_spearman: 0.95
+    protegidas:
+    - TPSA
+    - NumHDonors
+  seleccion_l1:
+    alpha: 0.003
+    protegidas:
+    - TPSA
+    - NumHDonors
+  regla_mejora:
+    umbral_por_metrica:
+      mcc: 0.094
+      auprc_minoritaria: 0.058
+    minimo_evaluaciones: 12
+    de: 15
+    criterio: las dos metricas principales a la vez
+    umbral: mayor desviacion del control entre sus 15 evaluaciones
+    comparacion_decisiva: agregado contra descriptores
+    estratos: exploratorios
+    estado: provisional; fijada despues de ver el control en un pliegue; no pre-registrada
+  control_registrado: 2026-10-24-antonio-1.5-comparativa-6-modelos-fase-1

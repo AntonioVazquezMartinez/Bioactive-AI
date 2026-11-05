@@ -57,6 +57,10 @@ La segunda mitad del proyecto busca compuestos que protejan al cerebro de enferm
 
 Una **diana** (*target*) es la proteína específica sobre la que un compuesto actúa para producir su efecto. El proyecto trabaja con 39 dianas curadas a mano por la patrocinadora; cómo están organizadas, en [los datos del proyecto](datos-contenido.md).
 
+**Lo que una medición sobre una diana dice, y lo que no.** El archivo no registra si un compuesto curó algo: registra **a qué concentración se le vio hacer efecto** sobre una proteína. Cuanta menos concentración haga falta, más potente es el compuesto, y eso es lo que el modelo aprende a predecir. Pero potencia no es dirección. Una proteína puede necesitar que la frenemos —la acetilcolinesterasa destruye acetilcolina, que escasea en el alzhéimer— o que la encendamos, como las defensas antioxidantes de Nrf2. Y muchas mediciones solo dicen **cuánto se pega** el compuesto a la proteína, no qué le hace una vez pegado.
+
+Sirve pensarlo como una cerradura. Meter algo en el ojo de la llave suele bloquearla: ahí unirse con fuerza impide que funcione. Pero apretar un tornillo del costado puede dejar la cerradura más dura o más suave, y saber que lo apretaste no te dice cuál. Muchas mediciones del archivo son de ese segundo tipo, así que dicen *cuánto* y no *hacia dónde*. De ahí que la etiqueta se llame potencia contra la diana y la dirección viaje aparte, como una marca. Los términos están en el [glosario](glosario.md) y el detalle en el [marco teórico, parte 1](planteamiento/marco-teorico/01-biologia.md).
+
 **«Neuroprotector» es una palabra peligrosa.** Casi nada de lo que funciona en un experimento de laboratorio llega a funcionar como medicamento en personas; es la norma histórica del campo. Por eso el lenguaje correcto es siempre **«actividad neuroprotectora predicha según su mecanismo molecular»**, nunca llamar a un compuesto «neuroprotector» sin esa salvedad. Las cifras y los casos: [marco teórico, parte 1](planteamiento/marco-teorico/01-biologia.md), §2.
 
 ## 5. Productos naturales como fuente de medicamentos

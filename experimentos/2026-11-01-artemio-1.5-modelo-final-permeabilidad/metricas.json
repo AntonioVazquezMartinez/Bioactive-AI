@@ -1,0 +1,36 @@
+{
+  "prueba": {
+    "análogo estereoquímico": {
+      "auprc_minoritaria": 0.5652018653740898,
+      "auroc": 0.7304068333920395,
+      "exactitud_balanceada": 0.6537072912997535,
+      "mcc": 0.27880671045457434
+    },
+    "natural exacto": {
+      "auprc_minoritaria": 0.7612601935828598,
+      "auroc": 0.7802235772357724,
+      "exactitud_balanceada": 0.5960162601626016,
+      "mcc": 0.2567260882072399
+    },
+    "sin equivalente natural": {
+      "auprc_minoritaria": 0.599740010362014,
+      "auroc": 0.7933726902062509,
+      "exactitud_balanceada": 0.6249245287238087,
+      "mcc": 0.317301639332151
+    },
+    "todos": {
+      "auprc_minoritaria": 0.719849234269026,
+      "auroc": 0.7928405122235158,
+      "exactitud_balanceada": 0.6385750145518044,
+      "mcc": 0.33847743654777934
+    }
+  },
+  "validacion_cruzada": {
+    "auprc_minoritaria": 0.8842,
+    "auroc": 0.919,
+    "desv": 0.0731,
+    "mcc": 0.7017,
+    "pliegues": 15.0,
+    "segundos_ajuste": 1.5847
+  }
+}

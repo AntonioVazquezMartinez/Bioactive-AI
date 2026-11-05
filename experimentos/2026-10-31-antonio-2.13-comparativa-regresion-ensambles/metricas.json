@@ -1,0 +1,475 @@
+{
+  "comparativa": {
+    "aft": {
+      "concordancia": 0.761,
+      "dif_vs_knn": 0.005,
+      "dif_vs_piso": 0.119,
+      "pliegues_supera_knn": "12/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "apilado": {
+      "concordancia": 0.761,
+      "dif_vs_knn": 0.005,
+      "dif_vs_piso": 0.119,
+      "pliegues_supera_knn": "15/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "bagging_knn": {
+      "concordancia": 0.673,
+      "dif_vs_knn": -0.083,
+      "dif_vs_piso": 0.031,
+      "pliegues_supera_knn": "0/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "boosting": {
+      "concordancia": 0.75,
+      "dif_vs_knn": -0.005,
+      "dif_vs_piso": 0.108,
+      "pliegues_supera_knn": "2/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "bosque": {
+      "concordancia": 0.765,
+      "dif_vs_knn": 0.009,
+      "dif_vs_piso": 0.123,
+      "pliegues_supera_knn": "15/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "knn_afinado": {
+      "concordancia": 0.761,
+      "dif_vs_knn": 0.004,
+      "dif_vs_piso": 0.12,
+      "pliegues_supera_knn": "5/5",
+      "pliegues_supera_piso": "5/5"
+    },
+    "knn_referencia": {
+      "concordancia": 0.756,
+      "dif_vs_knn": 0.0,
+      "dif_vs_piso": 0.114,
+      "pliegues_supera_knn": "0/15",
+      "pliegues_supera_piso": "15/15"
+    },
+    "media_por_diana": {
+      "concordancia": 0.642,
+      "dif_vs_knn": -0.114,
+      "dif_vs_piso": 0.0,
+      "pliegues_supera_knn": "0/15",
+      "pliegues_supera_piso": "0/15"
+    },
+    "votacion": {
+      "concordancia": 0.757,
+      "dif_vs_knn": 0.001,
+      "dif_vs_piso": 0.115,
+      "pliegues_supera_knn": "12/15",
+      "pliegues_supera_piso": "15/15"
+    }
+  },
+  "mixto": {
+    "aft": {
+      "auroc": 0.637,
+      "concordancia": 0.618,
+      "desv_concordancia": 0.03,
+      "mcc": 0.182,
+      "rmse": 1.025,
+      "rmse_entrenamiento": 0.683,
+      "seg": 3.894,
+      "spearman": 0.205
+    },
+    "apilado": {
+      "auroc": 0.583,
+      "concordancia": 0.563,
+      "desv_concordancia": 0.025,
+      "mcc": 0.089,
+      "rmse": 0.945,
+      "rmse_entrenamiento": 0.783,
+      "seg": 44.749,
+      "spearman": 0.207
+    },
+    "bagging_knn": {
+      "auroc": 0.547,
+      "concordancia": 0.536,
+      "desv_concordancia": 0.028,
+      "mcc": 0.058,
+      "rmse": 1.163,
+      "rmse_entrenamiento": 0.788,
+      "seg": 19.825,
+      "spearman": 0.125
+    },
+    "boosting": {
+      "auroc": 0.577,
+      "concordancia": 0.561,
+      "desv_concordancia": 0.024,
+      "mcc": 0.085,
+      "rmse": 0.976,
+      "rmse_entrenamiento": 0.828,
+      "seg": 49.045,
+      "spearman": 0.15
+    },
+    "bosque": {
+      "auroc": 0.603,
+      "concordancia": 0.579,
+      "desv_concordancia": 0.027,
+      "mcc": 0.133,
+      "rmse": 0.935,
+      "rmse_entrenamiento": 0.273,
+      "seg": 163.605,
+      "spearman": 0.239
+    },
+    "knn_afinado": {
+      "auroc": 0.58,
+      "concordancia": 0.561,
+      "desv_concordancia": 0.027,
+      "mcc": 0.101,
+      "rmse": 0.935,
+      "rmse_entrenamiento": 0.0,
+      "seg": 88.201,
+      "spearman": 0.207
+    },
+    "knn_referencia": {
+      "auroc": 0.57,
+      "concordancia": 0.554,
+      "desv_concordancia": 0.031,
+      "mcc": 0.09,
+      "rmse": 0.943,
+      "rmse_entrenamiento": 0.769,
+      "seg": 0.808,
+      "spearman": 0.195
+    },
+    "media_por_diana": {
+      "auroc": 0.538,
+      "concordancia": 0.517,
+      "desv_concordancia": 0.04,
+      "mcc": 0.0,
+      "rmse": 1.358,
+      "rmse_entrenamiento": 1.232,
+      "seg": 0.75,
+      "spearman": 0.062
+    },
+    "votacion": {
+      "auroc": 0.581,
+      "concordancia": 0.561,
+      "desv_concordancia": 0.024,
+      "mcc": 0.087,
+      "rmse": 0.947,
+      "rmse_entrenamiento": 0.787,
+      "seg": 4.137,
+      "spearman": 0.194
+    }
+  },
+  "prueba": {
+    "aft": {
+      "auroc": 0.7933934431702472,
+      "concordancia": 0.7196830161184108,
+      "mcc": 0.2770754263959537,
+      "n_exactas": 11744,
+      "n_total": 13944,
+      "rmse": 1.0179195379982549,
+      "spearman": 0.5999466218895972
+    }
+  },
+  "prueba_por_origen": {
+    "mixto": {
+      "auroc": 0.6160757649344343,
+      "concordancia": 0.5734277742004722,
+      "mcc": 0.14923499927599584,
+      "n_exactas": 175,
+      "n_total": 229,
+      "rmse": 0.9533354822063939,
+      "spearman": 0.2216795951413127
+    },
+    "solo_chembl": {
+      "auroc": 0.7888101527904234,
+      "concordancia": 0.7170741588117978,
+      "mcc": 0.259605324258969,
+      "n_exactas": 11455,
+      "n_total": 13598,
+      "rmse": 1.0144352329147313,
+      "spearman": 0.591261574038969
+    },
+    "solo_npass": {
+      "auroc": 0.5360946745562131,
+      "concordancia": 0.5302105584375953,
+      "mcc": 0.06538461538461539,
+      "n_exactas": 114,
+      "n_total": 117,
+      "rmse": 1.3939675646464254,
+      "spearman": 0.08278228238079068
+    }
+  },
+  "solo_chembl": {
+    "aft": {
+      "auroc": 0.838,
+      "concordancia": 0.753,
+      "desv_concordancia": 0.005,
+      "mcc": 0.441,
+      "rmse": 1.036,
+      "rmse_entrenamiento": 0.683,
+      "seg": 3.894,
+      "spearman": 0.644
+    },
+    "apilado": {
+      "auroc": 0.822,
+      "concordancia": 0.754,
+      "desv_concordancia": 0.005,
+      "mcc": 0.28,
+      "rmse": 0.968,
+      "rmse_entrenamiento": 0.783,
+      "seg": 44.749,
+      "spearman": 0.679
+    },
+    "bagging_knn": {
+      "auroc": 0.698,
+      "concordancia": 0.666,
+      "desv_concordancia": 0.005,
+      "mcc": 0.191,
+      "rmse": 1.179,
+      "rmse_entrenamiento": 0.788,
+      "seg": 19.825,
+      "spearman": 0.486
+    },
+    "boosting": {
+      "auroc": 0.816,
+      "concordancia": 0.743,
+      "desv_concordancia": 0.007,
+      "mcc": 0.262,
+      "rmse": 0.994,
+      "rmse_entrenamiento": 0.828,
+      "seg": 49.045,
+      "spearman": 0.66
+    },
+    "bosque": {
+      "auroc": 0.828,
+      "concordancia": 0.761,
+      "desv_concordancia": 0.007,
+      "mcc": 0.293,
+      "rmse": 0.941,
+      "rmse_entrenamiento": 0.273,
+      "seg": 163.605,
+      "spearman": 0.704
+    },
+    "knn_afinado": {
+      "auroc": 0.818,
+      "concordancia": 0.754,
+      "desv_concordancia": 0.005,
+      "mcc": 0.352,
+      "rmse": 0.972,
+      "rmse_entrenamiento": 0.0,
+      "seg": 88.201,
+      "spearman": 0.679
+    },
+    "knn_referencia": {
+      "auroc": 0.813,
+      "concordancia": 0.749,
+      "desv_concordancia": 0.005,
+      "mcc": 0.341,
+      "rmse": 0.99,
+      "rmse_entrenamiento": 0.769,
+      "seg": 0.808,
+      "spearman": 0.667
+    },
+    "media_por_diana": {
+      "auroc": 0.721,
+      "concordancia": 0.637,
+      "desv_concordancia": 0.006,
+      "mcc": 0.0,
+      "rmse": 1.236,
+      "rmse_entrenamiento": 1.232,
+      "seg": 0.75,
+      "spearman": 0.365
+    },
+    "votacion": {
+      "auroc": 0.82,
+      "concordancia": 0.75,
+      "desv_concordancia": 0.005,
+      "mcc": 0.314,
+      "rmse": 0.979,
+      "rmse_entrenamiento": 0.787,
+      "seg": 4.137,
+      "spearman": 0.673
+    }
+  },
+  "solo_npass": {
+    "aft": {
+      "auroc": 0.648,
+      "concordancia": 0.632,
+      "desv_concordancia": 0.031,
+      "mcc": 0.125,
+      "rmse": 0.832,
+      "rmse_entrenamiento": 0.683,
+      "seg": 3.894,
+      "spearman": 0.246
+    },
+    "apilado": {
+      "auroc": 0.547,
+      "concordancia": 0.527,
+      "desv_concordancia": 0.029,
+      "mcc": 0.053,
+      "rmse": 0.808,
+      "rmse_entrenamiento": 0.783,
+      "seg": 44.749,
+      "spearman": 0.29
+    },
+    "bagging_knn": {
+      "auroc": 0.547,
+      "concordancia": 0.518,
+      "desv_concordancia": 0.019,
+      "mcc": 0.065,
+      "rmse": 1.158,
+      "rmse_entrenamiento": 0.788,
+      "seg": 19.825,
+      "spearman": 0.251
+    },
+    "boosting": {
+      "auroc": 0.528,
+      "concordancia": 0.511,
+      "desv_concordancia": 0.028,
+      "mcc": 0.047,
+      "rmse": 0.819,
+      "rmse_entrenamiento": 0.828,
+      "seg": 49.045,
+      "spearman": 0.319
+    },
+    "bosque": {
+      "auroc": 0.539,
+      "concordancia": 0.511,
+      "desv_concordancia": 0.029,
+      "mcc": 0.069,
+      "rmse": 0.83,
+      "rmse_entrenamiento": 0.273,
+      "seg": 163.605,
+      "spearman": 0.356
+    },
+    "knn_afinado": {
+      "auroc": 0.576,
+      "concordancia": 0.554,
+      "desv_concordancia": 0.019,
+      "mcc": 0.059,
+      "rmse": 0.782,
+      "rmse_entrenamiento": 0.0,
+      "seg": 88.201,
+      "spearman": 0.291
+    },
+    "knn_referencia": {
+      "auroc": 0.569,
+      "concordancia": 0.547,
+      "desv_concordancia": 0.023,
+      "mcc": 0.063,
+      "rmse": 0.785,
+      "rmse_entrenamiento": 0.769,
+      "seg": 0.808,
+      "spearman": 0.278
+    },
+    "media_por_diana": {
+      "auroc": 0.419,
+      "concordancia": 0.403,
+      "desv_concordancia": 0.034,
+      "mcc": 0.0,
+      "rmse": 1.112,
+      "rmse_entrenamiento": 1.232,
+      "seg": 0.75,
+      "spearman": 0.176
+    },
+    "votacion": {
+      "auroc": 0.532,
+      "concordancia": 0.514,
+      "desv_concordancia": 0.032,
+      "mcc": 0.023,
+      "rmse": 0.792,
+      "rmse_entrenamiento": 0.787,
+      "seg": 4.137,
+      "spearman": 0.269
+    }
+  },
+  "todos": {
+    "aft": {
+      "auroc": 0.846,
+      "concordancia": 0.761,
+      "desv_concordancia": 0.005,
+      "mcc": 0.467,
+      "rmse": 1.032,
+      "rmse_entrenamiento": 0.683,
+      "seg": 3.894,
+      "spearman": 0.659
+    },
+    "apilado": {
+      "auroc": 0.832,
+      "concordancia": 0.761,
+      "desv_concordancia": 0.006,
+      "mcc": 0.298,
+      "rmse": 0.965,
+      "rmse_entrenamiento": 0.783,
+      "seg": 44.749,
+      "spearman": 0.694
+    },
+    "bagging_knn": {
+      "auroc": 0.711,
+      "concordancia": 0.673,
+      "desv_concordancia": 0.006,
+      "mcc": 0.221,
+      "rmse": 1.178,
+      "rmse_entrenamiento": 0.788,
+      "seg": 19.825,
+      "spearman": 0.503
+    },
+    "boosting": {
+      "auroc": 0.825,
+      "concordancia": 0.75,
+      "desv_concordancia": 0.006,
+      "mcc": 0.291,
+      "rmse": 0.99,
+      "rmse_entrenamiento": 0.828,
+      "seg": 49.045,
+      "spearman": 0.675
+    },
+    "bosque": {
+      "auroc": 0.833,
+      "concordancia": 0.765,
+      "desv_concordancia": 0.006,
+      "mcc": 0.31,
+      "rmse": 0.939,
+      "rmse_entrenamiento": 0.273,
+      "seg": 163.605,
+      "spearman": 0.716
+    },
+    "knn_afinado": {
+      "auroc": 0.828,
+      "concordancia": 0.761,
+      "desv_concordancia": 0.006,
+      "mcc": 0.376,
+      "rmse": 0.968,
+      "rmse_entrenamiento": 0.0,
+      "seg": 88.201,
+      "spearman": 0.693
+    },
+    "knn_referencia": {
+      "auroc": 0.823,
+      "concordancia": 0.756,
+      "desv_concordancia": 0.005,
+      "mcc": 0.369,
+      "rmse": 0.985,
+      "rmse_entrenamiento": 0.769,
+      "seg": 0.808,
+      "spearman": 0.681
+    },
+    "media_por_diana": {
+      "auroc": 0.72,
+      "concordancia": 0.642,
+      "desv_concordancia": 0.006,
+      "mcc": 0.0,
+      "rmse": 1.238,
+      "rmse_entrenamiento": 1.232,
+      "seg": 0.75,
+      "spearman": 0.384
+    },
+    "votacion": {
+      "auroc": 0.829,
+      "concordancia": 0.757,
+      "desv_concordancia": 0.006,
+      "mcc": 0.339,
+      "rmse": 0.974,
+      "rmse_entrenamiento": 0.787,
+      "seg": 4.137,
+      "spearman": 0.687
+    }
+  }
+}

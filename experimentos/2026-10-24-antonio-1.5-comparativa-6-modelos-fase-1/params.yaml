@@ -1,0 +1,22 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - logistica
+  - arbol
+  - knn
+  - bayes
+  - svm_rbf
+  - mlp
+  pliegues: 5
+  metrica_principal: mcc
+  dos_mejores:
+  - svm_rbf
+  - knn
+  regla_dos_mejores: mayor AUROC en la fase 1
+  rejillas: '{''svm_rbf afinado'': {''svc__C'': [0.1, 1, 10, 100], ''svc__gamma'':
+    [''scale'', ''auto'']}, ''knn afinado'': {''kneighborsclassifier__n_neighbors'':
+    [5, 15, 30, 50], ''kneighborsclassifier__weights'': [''uniform'', ''distance'']}}'

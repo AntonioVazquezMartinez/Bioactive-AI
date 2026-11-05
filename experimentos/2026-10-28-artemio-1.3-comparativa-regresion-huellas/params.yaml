@@ -1,0 +1,53 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - ridge
+  - arbol
+  - knn
+  - bayesian_ridge
+  - svr
+  - linear_svr
+  - mlp
+  referencia:
+  - media
+  - media_por_diana
+  brazos:
+  - descriptores
+  - depurados
+  - seleccionados
+  - descriptores+huellas
+  - huellas
+  pliegues: 5
+  entrena_con: solo exactas
+  objetivo: pActividad
+  metrica_principal: concordancia
+  corte_mcc: 5.0
+  n_bits_sortslice: 2048
+  radio_morgan: 2
+  vocabulario: se aprende en cada ajuste
+  depuracion:
+    frecuencia_modal: 0.99
+    umbral_spearman: 0.95
+    protegidas:
+    - TPSA
+    - NumHDonors
+  seleccion_l1:
+    alpha: 0.01
+    protegidas:
+    - TPSA
+    - NumHDonors
+  regla_mejora:
+    umbral_concordancia: 0.007
+    minimo_evaluaciones: 12
+    de: 15
+    comparacion_decisiva: agregado contra descriptores
+    estratos: exploratorios
+    estado: fijada despues de explorar un pliegue; no pre-registrada
+  svr_excluido_de:
+  - descriptores+huellas
+  - huellas
+  estratos: procedencia

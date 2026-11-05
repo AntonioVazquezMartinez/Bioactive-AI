@@ -41,14 +41,40 @@ Entregado el 18 de octubre: [`notebooks/03_Baseline.ipynb`](../../notebooks/03_B
 Tres cosas que deja establecidas, y que condicionan cómo se leen las cifras siguientes:
 
 - **Ninguna canalización gana.** Los intervalos del 95% se solapan; con una configuración por familia, declarar un ganador sería prematuro. Afinar es del Avance 4.
-- **El criterio de agrupamiento pesa más que la elección de modelo.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 6.2 — más de lo que separa a las tres familias entre sí.
+- **Cuánta semejanza se permite entre entrenamiento y validación mueve más que elegir modelo.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 7.1 con el bosque, pero solo 1.3 y 1.9 respectivamente con el `svm_rbf` que se entrega: ese efecto depende del modelo. Lo que sí es general es la escalera (`2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`): el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.419 cuando ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación, 33.3 puntos.
 - **El desempeño de la fase 2 no es un número.** Por estrato de procedencia: 0.855 de AUROC donde solo hay ChEMBL y 0.607 donde solo hay NPASS, que son los productos naturales que el proyecto existe para priorizar.
 
 La prueba reservada no se ha mirado.
+
+## Avance 4 · Modelos alternativos
+
+Entregado el 25 de octubre: [`notebooks/04_Models.ipynb`](../../notebooks/04_Models.ipynb). Seis familias **sin ensamble** en las dos fases, ordenadas por la métrica principal, con los tiempos de ajuste y el ajuste fino de las dos mejores.
+
+- **El modelo individual final de la fase 1 es el SVM con núcleo RBF, sin afinar**, con 0.703 de MCC. No gana por distinguirse: entre los dos afinados la diferencia es menor que la dispersión entre evaluaciones, así que gana por consistencia. Afinarlo no mejoró nada, y eso es un resultado: su `C` no tiene un óptimo estable, se acomoda a cada partición.
+- **En la fase 2 el objetivo es la potencia, no una clase.** El corte de 10 µM no significa lo mismo en cada diana —deja a `LRRK2` en 98.1% de activos y a `NFE2L2` en 50.7%— y clasificar tira el orden dentro de cada clase, así que la fase 2 es una regresión con censura ([2.9](../decisiones.md#d2-9)) y la tabla de clasificación queda solo como referencia. Mejor concordancia de Harrell: kNN con 0.739.
+- **La misma comparativa en dos máquinas da las mismas cifras a tres decimales, pero no los mismos tiempos** (el SVR, 247 s en una y 51 s en otra). La columna de tiempos solo se compara dentro de una misma corrida.
+
+Dos análisis acompañantes miden qué añaden las huellas moleculares Sort & Slice, y la respuesta **depende de la fase** ([1.3](../decisiones.md#d1-3)): en la [fase 2](../../notebooks/04c_Regresion_actividad_huellas.ipynb) mejoran a cinco de los seis modelos en las 15 evaluaciones y en buena medida *sustituyen* a los descriptores; en la [fase 1](../../notebooks/03c_Permeabilidad_huellas.ipynb) no mejoran a nadie y ensanchan la brecha entre entrenamiento y validación. En las dos fases la ganancia se concentra donde el proyecto no la necesita: en los pares que solo tiene ChEMBL y en los compuestos sin equivalente natural.
+
+Hasta aquí la prueba reservada no se había mirado: se toca una vez por fase, en el Avance 5.
+
+## Avance 5 · Modelo final
+
+Entregado el 1 de noviembre, en tres cuadernos: [`05_Modelo_Final`](../../notebooks/05_Modelo_Final.ipynb) (fase 1, permeabilidad), [`05b_Ensambles_actividad`](../../notebooks/05b_Ensambles_actividad.ipynb) (fase 2, potencia) y [`05c_Ensambles_permeabilidad_huellas`](../../notebooks/05c_Ensambles_permeabilidad_huellas.ipynb) (las huellas sobre los ensambles de la fase 1). El 05b lleva el modelo final de la fase 2 aunque su letra lo haga parecer un acompañante.
+
+- **El modelo final de la fase 1 es el `svm_rbf`, y lo decide la regla, no la tabla.** La regla de mejora se escribió antes de correr la comparación, no está pre-registrada, y **ninguna de las 30 comparaciones la pasa**, así que el final es el mejor individual. No es la primera fila: el `stacking` y la `votacion` quedan por encima en la media, con intervalos de AUROC que se solapan por completo. Desglosada por origen, la ventaja de los ensambles vive casi entera en los compuestos sin equivalente natural, que son los que el proyecto no prioriza.
+- **La cifra que se defiende es la de la prueba reservada.** En validación cruzada el `svm_rbf` da 0.9190 de AUROC y 0.7017 de MCC; sobre los 1,499 compuestos reservados, **0.7928 y 0.3385**. La partición de prueba trae los andamios raros a propósito, así que la distancia mide cuánto de lo que promete la validación cruzada sobrevive a un esqueleto que el modelo no vio.
+- **El modelo final de la fase 2 es el `aft` censurado, y no el que gana el promedio.** El `bosque` gana la concordancia agregada (0.7650 contra 0.7610), pero ese agregado es 93% ChEMBL. En los pares que solo tiene NPASS el `bosque` queda en 0.5107 y el `aft` en 0.6322 en validación cruzada; sobre la prueba reservada esos pares dan 0.530 con 117 compuestos, que ni refuta ni confirma ese 0.6322. Un control con la misma librería y sin pérdida censurada da 0.5073 y pierde las 60 evaluaciones pareadas: la ventaja es de la censura y no de XGBoost.
+- **Las huellas, sobre los ensambles de la fase 1, no pasan la regla en ninguna de las 27 comparaciones**, y cambian qué familia de ensamble parece la mejor: sin ellas mandan los heterogéneos, con ellas los de árboles ([1.3](../decisiones.md#d1-3)).
+- **La misma comparativa en dos máquinas no da lo mismo.** Con el mismo commit, el mismo archivo de versiones fijadas y los mismos metadatos, cambia solo la huella de la matriz de descriptores ([#166](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/166)), y con ella se mueven seis de los once modelos. El `svm_rbf` es uno de los cinco que salen idénticos.
+
+La prueba reservada se tomó una vez en la fase 1 y quedó registrada con su motivo en `experimentos/prueba.csv`, igual que cada acceso de la fase 2, incluido el recálculo de las cifras de los gráficos. Una auditoría posterior abrió como issues, etiquetados `deuda`, las correcciones de prosa y de método que encontró.
 
 ## Próximas entregas
 
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
-| Avance 4 · Modelos alternativos | 25 de octubre | Ingeniería del modelo (b) |
-| Avance 5 · Ensambles | 1 de noviembre | Ingeniería del modelo (c) |
+| Producto de difusión · artículo de 12–18 páginas | 8 de noviembre | Evaluación y despliegue |
+| Resumen ejecutivo · tres páginas para la dirección | 15 de noviembre | Evaluación y despliegue |
+
+Las dos últimas no son libretas sino documentos en PDF, y entre las dos piden lo que el proyecto todavía no tiene escrito: una arquitectura de despliegue con su monitoreo, y una evaluación económica con beneficios mensuales, costo total de propiedad a doce meses y riesgos con su mitigación.
