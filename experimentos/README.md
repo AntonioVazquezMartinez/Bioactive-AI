@@ -107,3 +107,46 @@ mismos pliegues, no reejecutando las dos comparativas de seis modelos: la pregun
 cómo se distribuye su `p`, y los otros cinco modelos no pasan por el camino afectado. Se midió en
 macOS con la matriz de esta máquina, que es la salvedad del #166; que el 0.399 registrado coincida
 con las dos formas de medir aquí es la razón para no pedir una reejecución en la máquina original.
+
+## Cómo repetir las corridas del 3 de noviembre
+
+Todas se lanzan desde la raíz con el intérprete del lock (`env312/bin/python`, Python 3.12) y
+registran su carpeta solas. **Commitea el script antes de lanzarlo**: `entorno.json` anota si el
+árbol estaba sucio. Los tiempos son de macOS arm64 con 16 núcleos y salen de `duracion_s` de cada
+`entorno.json`; en otro sistema las cifras pueden cambiar en el tercer decimal (#166).
+
+| corrida | script | tiempo | datos que necesita |
+|:--|:--|--:|:--|
+| `…-1.2-escalera-agrupacion-permeabilidad` | `scripts/experimento_agrupacion.py` | 227 s | fase 1 |
+| `…-1.2-escalera-ampliada-permeabilidad` | `scripts/experimento_escalera_ampliada.py` | 480 s | fase 1; **una lectura estructural de la prueba** (solo SMILES) |
+| `…-C.5-ranking-fase2-aft` | `scripts/experimento_ranking_fase2.py` | 25 s | fase 2 |
+| `…-1.3-tamano-huellas-permeabilidad` | `scripts/experimento_tamano_fase1.py` | 431 s | fase 1 |
+| `…-1.3-tamano-huellas-actividad` | `scripts/experimento_tamano_fase2.py` | 159 s | fase 2 |
+| `…-1.5-curva-aprendizaje-modelos-finales` | `scripts/experimento_curva_aprendizaje.py` | 217 s | fases 1 y 2 |
+| `…-1.5-prueba-por-rareza` | `scripts/experimento_prueba_rareza.py` | 118 s | fases 1 y 2; **dos lecturas de la prueba** |
+
+Todas son `2026-11-03-artemio-…`. Cada script trae en su encabezado el diseño, **la regla de
+lectura declarada antes de correr** y el comando, y cada resultado tiene su entrada en
+[`docs/decisiones.md`](../docs/decisiones.md).
+
+**Los datos de `data/processed/` no están en git y hay que generarlos con el mismo intérprete.**
+Para la fase 1 salen del cuaderno 02; para la fase 2, del 02b
+(`fase2_pares.parquet` y `fase2_descriptores_limpios.parquet`). Una corrida que use un archivo
+distinto lo delata: `entorno.json` guarda el `sha256` de cada uno. Los de estas siete corridas
+son:
+
+| archivo | `sha256` |
+|:--|:--|
+| `bbb_meta.parquet` | `d4e96e57520cf0b8984ff80f4df568427c1f89bc4545abc5d728f7f3afe56727` |
+| `bbb_descriptores_filtrados_sin_normalizar.parquet` | `7907c916d3bb6e90f61283e1097b9e1e9a408a0df65e53e90ea3d866bebc4a1a` |
+| `fase2_pares.parquet` | `177773855b1c16be6c4ad2d4358dbb9d879eea2584412152b98b17eccf90bc5a` |
+| `fase2_descriptores_limpios.parquet` | `7491515858cad9a3d30b321c04d07906065aca21b820b78411674d850d499d1f` |
+
+**Qué se puede comprobar al repetir.** El reajuste de la fase 1 en `…-prueba-por-rareza`
+reproduce el AUROC registrado de la prueba (0.7928). El de la fase 2 da 0.7234 de concordancia
+contra 0.7200 registrada, y 0.511 contra 0.530 en `solo_npass`: la diferencia es del orden del
+ruido de un modelo de árboles y se reporta en la [1.5](../docs/decisiones.md#d1-5), no se
+oculta. Quien repita y obtenga algo distinto de esto debe decirlo en el PR antes de interpretar.
+
+**Lectura de la prueba reservada.** Cada corrida que la toca llama a `tomar_prueba` con su
+motivo, y `prueba.csv` lo acumula. No se escriben predicciones a git.
