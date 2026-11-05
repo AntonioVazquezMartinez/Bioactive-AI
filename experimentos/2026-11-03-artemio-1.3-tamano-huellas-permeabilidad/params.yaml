@@ -1,0 +1,27 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - logistica
+  - arbol
+  - knn
+  - bayes
+  - svm_rbf
+  - mlp
+  brazos:
+  - descriptores
+  - descriptores+huellas
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  n_bits: 2048
+  estratos: tamano
+  filas: 6306
+  toca_prueba: false
+  metrica_principal: diferencia pareada de AUROC por tramo de peso
+  iguala_tramos: false
