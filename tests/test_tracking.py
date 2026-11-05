@@ -79,6 +79,34 @@ def test_arbol_sucio_si_ya_lo_estaba_al_empezar(tmp_path):
     assert json.loads((c.carpeta / "entorno.json").read_text())["arbol_sucio"] is True
 
 
+def test_un_archivo_sin_seguimiento_no_ensucia_el_arbol(tmp_path):
+    """Lo que la bandera responde es si corrió el código del commit, y un archivo suelto no.
+
+    Contándolos, una carpeta de `experimentos/` recién creada ensuciaba la corrida siguiente,
+    así que 9 de las 46 corridas de `main` llevan `arbol_sucio: true` sin que se sepa si
+    alguna corrió código modificado. Se cuentan aparte.
+    """
+    _repo(tmp_path)
+    (tmp_path / "corrida-de-antes").mkdir()
+    (tmp_path / "corrida-de-antes" / "metricas.json").write_text("{}\n")
+    with _corrida(tmp_path, datos=[]) as c:
+        c.metricas({"x": 1})
+    entorno = json.loads((c.carpeta / "entorno.json").read_text())
+    assert entorno["arbol_sucio"] is False
+    assert entorno["sin_seguimiento"] == 1
+
+
+def test_un_archivo_seguido_modificado_si_ensucia_y_se_cuenta_aparte(tmp_path):
+    _repo(tmp_path)
+    (tmp_path / "salida.csv").write_text("editado a mano\n")
+    (tmp_path / "suelto.txt").write_text("basura\n")
+    with _corrida(tmp_path, datos=[]) as c:
+        c.metricas({"x": 1})
+    entorno = json.loads((c.carpeta / "entorno.json").read_text())
+    assert entorno["arbol_sucio"] is True
+    assert entorno["sin_seguimiento"] == 1
+
+
 def test_comando_sin_rutas_absolutas(tmp_path, monkeypatch):
     monkeypatch.setattr("sys.argv", [str(tmp_path / "scripts" / "exp.py"), "--rapido"])
     with _corrida(tmp_path) as c:
