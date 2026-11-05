@@ -4,3 +4,5 @@ fecha,autor,commit,filas,motivo
 2026-11-01,artemio,a19158a,1499,"Ninguna comparación pasó la regla de mejora, así que el final es el mejor individual; la estabilidad y los intervalos solapados de AUROC apuntan al mismo modelo."
 2026-11-03,artemio,7362f3f,1499,E2 fase 1: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso y TPSA; modelos reajustados con las filas de ajuste
 2026-11-03,artemio,7362f3f,13944,"E2 fase 2: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso, TPSA y diana; modelos reajustados con las filas de ajuste"
+2026-11-04,artemio,a2ee541,1499,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 1"
+2026-11-04,artemio,a2ee541,13973,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 2"

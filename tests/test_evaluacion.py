@@ -231,3 +231,67 @@ def test_el_auroc_no_depende_de_la_orientacion():
 
     assert roc_auc_score(ym, puntaje) == pytest.approx(roc_auc_score(y, p))
     assert roc_auc_score(ym, 1 - p) < roc_auc_score(y, p)   # lo que hacía antes
+
+
+# --- la clase minoritaria se fija una vez, no por pliegue ni por estrato (#187) -----
+
+def test_la_clase_minoritaria_fijada_manda_sobre_la_del_subconjunto():
+    """Un pliegue con 44% de positivos ya no puede decidir que la minoritaria es la 1.
+
+    Si en todo el conjunto la clase 0 es la menos frecuente, el AUPRC «de la
+    minoritaria» tiene que medirla también en el pliegue donde por azar sea la 1.
+    Antes cada subconjunto elegía la suya y el promedio mezclaba las dos.
+    """
+    from sklearn.metrics import average_precision_score
+
+    from src.evaluation.cv import _medir, clase_minoritaria, orientar_minoritaria
+
+    y_todo = np.array([1] * 60 + [0] * 40)
+    assert clase_minoritaria(y_todo) == 0
+
+    y = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0])              # 44% de unos: la 1 «gana» sola
+    p = np.array([0.9, 0.8, 0.3, 0.2, 0.6, 0.5, 0.4, 0.1, 0.05])
+    assert orientar_minoritaria(y, p)[2] is False          # sola, mediría la clase 1
+
+    ym, pm, volteada = orientar_minoritaria(y, p, minoritaria=0)
+    assert volteada and np.array_equal(ym, 1 - y)
+
+    medido = _medir(y, p, minoritaria=0)["auprc_minoritaria"]
+    assert medido == pytest.approx(average_precision_score(1 - y, -p))
+    assert medido != pytest.approx(average_precision_score(y, p))
+
+
+def test_evaluar_fija_la_clase_minoritaria_de_todos_y_de_cada_estrato(monkeypatch):
+    """`evaluar` tiene que pasar la misma clase a todos los pliegues de un estrato."""
+    import src.evaluation.cv as cv
+
+    rng = np.random.default_rng(1)
+    n = 600
+    grupos = np.repeat(np.arange(n // 3), 3)
+    estratos = np.where(np.arange(n) % 2 == 0, "mayoria_uno", "mayoria_cero")
+    y = np.where(estratos == "mayoria_uno",
+                 rng.random(n) < 0.65, rng.random(n) < 0.35).astype(int)
+    X = rng.normal(size=(n, 4)) + y[:, None] * 0.8
+
+    vistas = []
+    real = cv._auprc_minoritaria
+
+    def espia(y_, p_, minoritaria=None):
+        vistas.append(minoritaria)
+        return real(y_, p_, minoritaria)
+
+    monkeypatch.setattr(cv, "_auprc_minoritaria", espia)
+    pipe = Pipeline([("e", StandardScaler()), ("m", LogisticRegression(max_iter=200))])
+    tabla, _ = cv.evaluar({"lr": pipe}, X, y, grupos, estratos=estratos,
+                          semillas=(0, 1), pliegues=5, min_minoritaria=5,
+                          verboso=False)
+
+    # Y la clase medida queda en la tabla: una sola por estrato, en todos los pliegues.
+    assert tabla.groupby("estrato")["clase_medida"].nunique().eq(1).all()
+    assert tabla.set_index("estrato")["clase_medida"].to_dict() == {
+        "todos": cv.clase_minoritaria(y),
+        "mayoria_uno": 0, "mayoria_cero": 1}
+    assert None not in vistas                              # nadie lo decide por su cuenta
+    esperado = {cv.clase_minoritaria(y)} | {
+        cv.clase_minoritaria(y[estratos == e]) for e in np.unique(estratos)}
+    assert set(vistas) == esperado == {0, 1}

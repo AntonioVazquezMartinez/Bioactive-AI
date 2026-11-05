@@ -118,12 +118,24 @@ def _version(paquete: str) -> str | None:
 
 
 def entorno(raiz: Path = RAIZ, datos: list[Path] | None = None) -> dict:
-    """Todo lo que cambia una cifra sin cambiar el código: commit, sistema, versiones, datos."""
-    estado = _git("status", "--porcelain", raiz=raiz)
+    """Todo lo que cambia una cifra sin cambiar el código: commit, sistema, versiones, datos.
+
+    `arbol_sucio` cuenta **solo los archivos seguidos**, porque es lo único que responde a la
+    pregunta que la bandera existe para responder: si el código que corrió es el del `commit`
+    de al lado. Un archivo sin seguimiento no cambia ninguna cifra, y contarlo hacía que una
+    carpeta de `experimentos/` recién creada ensuciara la corrida siguiente —`experimentos/
+    README.md` documentaba el efecto y pedía intercalar un commit para esquivarlo—. Los
+    sueltos se cuentan aparte, en `sin_seguimiento`, que informa y no acusa.
+    """
+    estado = _git("status", "--porcelain", "--untracked-files=all", raiz=raiz)
+    lineas = estado.splitlines() if estado else []
     lock = raiz / "requirements.lock"
     return {
         "commit": _git("rev-parse", "HEAD", raiz=raiz),
-        "arbol_sucio": None if estado is None else bool(estado),
+        "arbol_sucio": None if estado is None else any(
+            not ln.startswith("??") for ln in lineas),
+        "sin_seguimiento": None if estado is None else sum(
+            1 for ln in lineas if ln.startswith("??")),
         "sistema": platform.platform(),
         "python": platform.python_version(),
         "paquetes": {p: _version(p) for p in PAQUETES},
