@@ -75,6 +75,12 @@ Lo que vale para las dos fases.
 
 **Se decidió.** Al menos dos métodos de atribución independientes; solo se reportan como confirmadas las subestructuras en que coinciden. Un modelo interpretable simple se entrena en paralelo como control. Toda afirmación estructural se contrasta primero contra TPSA (<67 Å²) y HBD (≤1), que dominan empíricamente. Aplica a las dos fases.
 
+**Qué par es cada fase, porque no es el mismo.** En la fase 1 son la ganancia interna de los árboles y la importancia por permutación (`scripts/importancias_fase1.py`, corrida `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres`). En la fase 2 el primer método es **TreeSHAP** sobre el booster del `aft` con huellas, porque la ganancia interna no da dirección y aquí hace falta decir hacia qué lado empuja una subestructura (`scripts/atribucion_fase2.py`). El segundo sigue siendo la permutación, medida sobre la caída de concordancia de Harrell en el pliegue de evaluación. **La columna del primer método se nombra en cada corrida** (`columna_metodo_1` en sus `params`): llamarla `impureza` en las dos fases fue un defecto real, porque dos corridas hermanas traían el mismo nombre con métodos distintos dentro.
+
+**Y TreeSHAP en el `aft` trae una trampa de signo.** Explica el **margen**, que con `survival:aft` está en ln(µM), donde más alto es **menos** potente; verificado numéricamente, el margen reproduce `log` de lo que el booster predice y SHAP reproduce el margen. Para leerlo en [pActividad](glosario.md) hay que invertirlo y reescalarlo (−SHAP / ln 10). Sin eso, toda afirmación estructural sale al revés, y saldría al revés de forma plausible, que es lo peligroso.
+
+**La intersección se calcula solo sobre las características presentes en todos los pliegues.** El vocabulario Sort & Slice se reaprende en cada pliegue —y así debe ser, o la validación decidiría qué columnas existen—, así que una huella puede faltar en alguno. Promediar una media de un pliegue junto a una de cinco premia a las huellas raras justo en el top que esta decisión reporta; las incompletas quedan en el CSV de la corrida, pero no entran en la afirmación. Cuántas quedaron fuera se registra en `metricas.json`.
+
 ### Propuestas
 
 #### C.3 · Comprobar si combinar las dos predicciones mejora la selección {#dc-3 .propuesta}
