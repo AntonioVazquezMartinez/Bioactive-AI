@@ -237,10 +237,12 @@ def main() -> None:
             # El tamaño del punto ciego de dividir entre PLIEGUES siempre: una columna que no está en el
             # vocabulario de un pliegue cuenta 0 en él, así que lo específico (lo que vive en pocos
             # pliegues) no puede llegar arriba. Sin este conteo el lector no separa la química de la regla.
-            "columnas_con_menos_de_todos_los_pliegues": int((en_pliegue < PLIEGUES).sum()),
-            "huellas_con_menos_de_todos_los_pliegues": int((en_pliegue[n_dens:] < PLIEGUES).sum()),
-            "columnas_totales": int(n_total),
-            "huellas_totales": int(n_total - n_dens)}
+            # Solo las que existen en algún pliegue: `nombres_todos` lleva todos los identificadores
+            # del conjunto (43,428), y la gran mayoría nunca entra en el vocabulario de ninguno.
+            "columnas_en_algun_pliegue": int((en_pliegue > 0).sum()),
+            "columnas_en_todos_los_pliegues": int((en_pliegue == PLIEGUES).sum()),
+            "columnas_con_menos_de_todos_los_pliegues": int(((en_pliegue > 0) & (en_pliegue < PLIEGUES)).sum()),
+            "huellas_con_menos_de_todos_los_pliegues": int(((en_pliegue[n_dens:] > 0) & (en_pliegue[n_dens:] < PLIEGUES)).sum())}
         pd.DataFrame({"columna": nombres, "shap": imp_shap, "perdida_de_concordancia": imp_perm,
                       "rango_shap": rango_s, "rango_permutacion": rango_p,
                       "en_pliegues": en_pliegue.astype(int)}).sort_values("rango_shap").head(300).to_csv(
