@@ -1,0 +1,7 @@
+decision: '2.13'
+semillas:
+- 0
+params:
+  replicas: 200
+  semilla: 0
+  testeo_sha256: 5ff4a5c8a9a88ee45e537843a178396266dfa2f4dcb63d6c4195c4fbe9ceda15
