@@ -166,12 +166,16 @@
       "tipo": "descriptor"
     }
   ],
+  "columnas_con_menos_de_todos_los_pliegues": 618,
+  "columnas_en_algun_pliegue": 2534,
+  "columnas_en_todos_los_pliegues": 1916,
   "compartidas_top15": 11,
   "concuerdan": false,
   "control_aditividad_max": 1.430511474609375e-06,
   "control_contra_shap_explainer_max": 0.0,
   "control_tratamiento_pasa": true,
   "fraccion_shap_en_huellas": 0.4236,
+  "huellas_con_menos_de_todos_los_pliegues": 618,
   "identificadores_con_otra_api_discrepancias_de_20": 0,
   "solo_un_metodo_no_se_afirman": [
     {
