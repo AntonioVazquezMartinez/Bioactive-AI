@@ -75,3 +75,22 @@ def test_la_guarda_encuentra_las_citas_que_vigila(corpus):
     assert not muertos, (
         f"estos patrones ya no encuentran ninguna cita: {muertos}. La redacción cambió y la "
         "guarda quedó muerta: ajusta el patrón o quítalo con su cifra.")
+
+
+def test_el_7_1_y_el_2_2_se_atribuyen_al_bosque(corpus):
+    """El 2.2 de AUROC y el 7.1 de MCC son del bosque; con el `svm_rbf` entregado son 1.3 y 1.9.
+
+    Una copia que los cite sin decir de qué modelo son los presenta como un efecto general,
+    que es lo que la corrida 2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad desmintió.
+    """
+    sueltas = []
+    for ruta, texto in corpus.items():
+        for patron, valor in ((CIFRAS[0][1], "7.1"), (CIFRAS[1][1], "2.2")):
+            for m in re.finditer(patron, texto):
+                if valor not in next(g for g in m.groups() if g):
+                    continue
+                contexto = texto[max(0, m.start() - 220):m.end() + 260]
+                if re.search(r"bosque|forest|svm_rbf|superad|dec[ií]a", contexto, re.I):
+                    continue
+                sueltas.append(f"{ruta} cita {valor} sin decir que es del bosque")
+    assert not sueltas, "; ".join(sueltas)

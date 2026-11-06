@@ -1,0 +1,10 @@
+decision: '1.5'
+semillas:
+- 0
+params:
+  fase1: svm_rbf, 6,306 filas de ajuste, 151 descriptores
+  fase2: aft, 56,241 filas de ajuste, 201 + 26
+  filas: solo ajuste (decisión del 4 de noviembre)
+  semilla: 0
+  toca_prueba: false
+  destino: models/finales
