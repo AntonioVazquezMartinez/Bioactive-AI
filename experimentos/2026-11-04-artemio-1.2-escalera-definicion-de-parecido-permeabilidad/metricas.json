@@ -1,0 +1,140 @@
+{
+  "control_auroc_ecfp4": {
+    "4": true,
+    "5": true,
+    "6": true
+  },
+  "control_grupos_ecfp4": {
+    "4": true,
+    "5": true,
+    "6": true
+  },
+  "diferencia_de_auroc_contra_ecfp4": {
+    "ECFP6|4": 0.029,
+    "ECFP6|5": 0.034,
+    "ECFP6|6": 0.003,
+    "atom-pair|4": null,
+    "atom-pair|5": null,
+    "atom-pair|6": -0.0188
+  },
+  "escalera": [
+    {
+      "auroc_logistica": 0.8974,
+      "auroc_svm_rbf": 0.9127,
+      "clave": "6",
+      "grupos": 1413,
+      "huella": "ECFP4",
+      "mayor_grupo_pct": 12.1,
+      "mcc_logistica": 0.6593,
+      "mcc_svm_rbf": 0.6876,
+      "nota": NaN,
+      "peldano": "≈1413 grupos",
+      "umbral": 0.6
+    },
+    {
+      "auroc_logistica": 0.8477,
+      "auroc_svm_rbf": 0.8348,
+      "clave": "5",
+      "grupos": 1017,
+      "huella": "ECFP4",
+      "mayor_grupo_pct": 14.4,
+      "mcc_logistica": 0.5732,
+      "mcc_svm_rbf": 0.4859,
+      "nota": NaN,
+      "peldano": "≈1017 grupos",
+      "umbral": 0.5
+    },
+    {
+      "auroc_logistica": 0.8161,
+      "auroc_svm_rbf": 0.7798,
+      "clave": "4",
+      "grupos": 631,
+      "huella": "ECFP4",
+      "mayor_grupo_pct": 15.9,
+      "mcc_logistica": 0.5132,
+      "mcc_svm_rbf": 0.419,
+      "nota": NaN,
+      "peldano": "≈631 grupos",
+      "umbral": 0.4
+    },
+    {
+      "auroc_logistica": 0.9002,
+      "auroc_svm_rbf": 0.9157,
+      "clave": "6",
+      "grupos": 1422,
+      "huella": "ECFP6",
+      "mayor_grupo_pct": 11.8,
+      "mcc_logistica": 0.6735,
+      "mcc_svm_rbf": 0.6763,
+      "nota": NaN,
+      "peldano": "≈1413 grupos",
+      "umbral": 0.52
+    },
+    {
+      "auroc_logistica": 0.859,
+      "auroc_svm_rbf": 0.8688,
+      "clave": "5",
+      "grupos": 1043,
+      "huella": "ECFP6",
+      "mayor_grupo_pct": 13.2,
+      "mcc_logistica": 0.5968,
+      "mcc_svm_rbf": 0.6356,
+      "nota": NaN,
+      "peldano": "≈1017 grupos",
+      "umbral": 0.42
+    },
+    {
+      "auroc_logistica": 0.8149,
+      "auroc_svm_rbf": 0.8088,
+      "clave": "4",
+      "grupos": 608,
+      "huella": "ECFP6",
+      "mayor_grupo_pct": 14.9,
+      "mcc_logistica": 0.481,
+      "mcc_svm_rbf": 0.4338,
+      "nota": NaN,
+      "peldano": "≈631 grupos",
+      "umbral": 0.32
+    },
+    {
+      "auroc_logistica": 0.8807,
+      "auroc_svm_rbf": 0.8939,
+      "clave": "6",
+      "grupos": 1407,
+      "huella": "atom-pair",
+      "mayor_grupo_pct": 13.7,
+      "mcc_logistica": 0.6362,
+      "mcc_svm_rbf": 0.663,
+      "nota": NaN,
+      "peldano": "≈1413 grupos",
+      "umbral": 0.65
+    },
+    {
+      "auroc_logistica": NaN,
+      "auroc_svm_rbf": NaN,
+      "clave": "5",
+      "grupos": 1010,
+      "huella": "atom-pair",
+      "mayor_grupo_pct": 32.7,
+      "mcc_logistica": NaN,
+      "mcc_svm_rbf": NaN,
+      "nota": "no evaluable: un grupo pasa del 20% de las filas",
+      "peldano": "≈1017 grupos",
+      "umbral": 0.56
+    },
+    {
+      "auroc_logistica": NaN,
+      "auroc_svm_rbf": NaN,
+      "clave": "4",
+      "grupos": 645,
+      "huella": "atom-pair",
+      "mayor_grupo_pct": 62.4,
+      "mcc_logistica": NaN,
+      "mcc_svm_rbf": NaN,
+      "nota": "no evaluable: un grupo pasa del 20% de las filas",
+      "peldano": "≈631 grupos",
+      "umbral": 0.48
+    }
+  ],
+  "la_escalera_es_robusta": false
+}
