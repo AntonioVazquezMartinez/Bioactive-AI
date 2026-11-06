@@ -1,0 +1,49 @@
+{
+  "por_tramo": [
+    {
+      "aft": 0.7233,
+      "aft_huellas": 0.7256,
+      "dif": 0.0023,
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "n_medio": 2941.2,
+      "tramo": "250–350 Da"
+    },
+    {
+      "aft": 0.7605,
+      "aft_huellas": 0.769,
+      "dif": 0.0085,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "n_medio": 5830.2,
+      "tramo": "350–500 Da"
+    },
+    {
+      "aft": 0.7567,
+      "aft_huellas": 0.7655,
+      "dif": 0.0089,
+      "evaluaciones": 15,
+      "mejora_en": 12,
+      "n_medio": 1688.8,
+      "tramo": ">500 Da"
+    },
+    {
+      "aft": 0.7609,
+      "aft_huellas": 0.7666,
+      "dif": 0.0057,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "n_medio": 11248.2,
+      "tramo": "todos"
+    },
+    {
+      "aft": 0.6609,
+      "aft_huellas": 0.6575,
+      "dif": -0.0035,
+      "evaluaciones": 3,
+      "mejora_en": 1,
+      "n_medio": 1048.6667,
+      "tramo": "≤250 Da"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+decision: '1.2'
+semillas:
+- 0
+- 1
+- 2
+params:
+  huellas:
+  - ECFP4
+  - ECFP6
+  - atom-pair
+  modelos:
+  - svm_rbf
+  - logistica
+  semillas:
+  - 0
+  - 1
+  - 2
+  grupos_objetivo:
+    '6': 1413
+    '5': 1017
+    '4': 631
+  diferencia_maxima: 0.02
+  tolerancia_control: 0.003
+  paso_umbral: 0.01
+  filas: 6306
+  toca_prueba: false
