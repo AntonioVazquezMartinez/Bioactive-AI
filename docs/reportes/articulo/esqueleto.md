@@ -151,7 +151,8 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | fase 1, huellas mejoran a | ninguno | `2026-10-28-artemio-1.3-comparativa-permeabilidad-huellas` |
 | fase 1, ensambles con huellas | **0 de 27** comparaciones | `2026-10-31-artemio-1.3-ensambles-permeabilidad-huellas` |
 | fase 1, la brecha con huellas | se ensancha en 7 de 9 modelos | ídem |
-| atribución, lo que coinciden los dos métodos | `fr_lactam`, `NumHDonors`, `VSA_EState3`, `MolLogP` | `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres` |
+| atribución fase 1 (`svm_rbf` entregado), lo que coinciden los dos métodos | `fr_lactam`, `NumHDonors`, `NumAliphaticCarbocycles`, `VSA_EState3`, `fr_Ar_OH`, `fr_ether` (Spearman entre métodos 0.37; `MolLogP` sale de la intersección) | `2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` |
+| atribución fase 1, con el bosque (superada) | `fr_lactam`, `NumHDonors`, `VSA_EState3`, `MolLogP` | `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres` |
 
 ### Partición y tamaño
 
