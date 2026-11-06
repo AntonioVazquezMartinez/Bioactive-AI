@@ -25,16 +25,23 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from .molecular import a_mol
 
 
-def identificadores_morgan(smiles, radio: int = 2) -> tuple[sparse.csr_matrix, np.ndarray]:
+def identificadores_morgan(smiles, radio: int = 2, quiralidad: bool = False
+                           ) -> tuple[sparse.csr_matrix, np.ndarray]:
     """Matriz binaria dispersa (filas × subestructuras distintas) y los identificadores.
 
     Una columna por subestructura, sin plegar, ordenadas por identificador. Cada SMILES se lee
     una vez aunque aparezca en varias filas. Falla si alguno no se puede leer: quitarlo en
     silencio desalinearía la matriz con la de descriptores.
+
+    `quiralidad` pasa a `includeChirality` del generador. **El valor por omisión es `False`, que
+    es el de RDKit y el de todas las cifras publicadas del proyecto**, así que activarlo es
+    explícito y no mueve ninguna corrida anterior. Con `False` dos enantiómeros dan la misma
+    huella; adoptar `True` como valor por omisión del proyecto es la
+    [1.9](../../docs/decisiones.md#d1-9), que está propuesta y no adoptada.
     """
     smiles = np.asarray(smiles, dtype=object)
     unicos, inverso = np.unique(smiles, return_inverse=True)
-    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radio)
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radio, includeChirality=quiralidad)
     ids_por_molecula = []
     ilegibles = []
     for s in unicos:
