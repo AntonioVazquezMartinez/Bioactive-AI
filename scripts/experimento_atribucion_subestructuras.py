@@ -233,9 +233,17 @@ def main() -> None:
             "subestructuras_entre_las_afirmadas": int(sum(nombres[j].startswith("id:") for j in afirmadas)),
             "tpsa_y_hbd": {n: {"rango_shap": int(rango_s[nombres_todos[n]]), "rango_permutacion": int(rango_p[nombres_todos[n]])}
                            for n in ("TPSA", "NumHDonors")},
-            "fraccion_shap_en_huellas": round(float(imp_shap[n_dens:].sum() / imp_shap.sum()), 4)}
+            "fraccion_shap_en_huellas": round(float(imp_shap[n_dens:].sum() / imp_shap.sum()), 4),
+            # El tamaño del punto ciego de dividir entre PLIEGUES siempre: una columna que no está en el
+            # vocabulario de un pliegue cuenta 0 en él, así que lo específico (lo que vive en pocos
+            # pliegues) no puede llegar arriba. Sin este conteo el lector no separa la química de la regla.
+            "columnas_con_menos_de_todos_los_pliegues": int((en_pliegue < PLIEGUES).sum()),
+            "huellas_con_menos_de_todos_los_pliegues": int((en_pliegue[n_dens:] < PLIEGUES).sum()),
+            "columnas_totales": int(n_total),
+            "huellas_totales": int(n_total - n_dens)}
         pd.DataFrame({"columna": nombres, "shap": imp_shap, "perdida_de_concordancia": imp_perm,
-                      "rango_shap": rango_s, "rango_permutacion": rango_p}).sort_values("rango_shap").head(300).to_csv(
+                      "rango_shap": rango_s, "rango_permutacion": rango_p,
+                      "en_pliegues": en_pliegue.astype(int)}).sort_values("rango_shap").head(300).to_csv(
             c.carpeta / "importancias_top300.csv", index=False)
         c.metricas(resultado)
         for kk, v in resultado.items():
