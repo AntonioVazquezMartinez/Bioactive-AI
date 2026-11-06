@@ -30,6 +30,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
+| [1.9](#d1-9) | `includeChirality` en las huellas: parametrizado, con `False` por omisión | Propuesta | |
 
 **Fase 2 · Actividad**
 
@@ -349,6 +350,23 @@ Para el modelo que se entrega, `svm_rbf`: −0.0003 de MCC (desviación pareada 
 - **La media la arrastra `bayes`** (−0.12 a −0.05 por tramo; las huellas violan su supuesto de independencia). Sin él las medias son −0.015, −0.003, −0.003 y −0.011 por tramo de menor a mayor peso: cerca de cero y sin subir con el peso.
 - **Es la mitad de la pregunta.** Falta la fase 2 con el mismo diseño: la hipótesis se contrasta con el cruce de las dos. Esta pasada no iguala los tramos por submuestreo (el ligero y el pesado tienen ~200 filas y más ruido, y el ligero solo se reporta en 13 de las 15 evaluaciones), así que **no distingue tamaño de densidad de datos**. Como en la fase 1 no hay efecto que separar, la igualación importa sobre todo en la fase 2.
 
+**Las huellas son ciegas a la quiralidad, y cuánto cuesta eso ya está medido (6 de noviembre).** Corrida `2026-11-06-ingrid-1.3-quiralidad-huellas` (`scripts/experimento_quiralidad_huellas.py`), sobre las 6,306 filas de ajuste, sin ajustar ningún modelo y sin tocar la prueba. Es el diseño que declaró el [#183](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/183): las huellas **contra sí mismas**, con `includeChirality` en `False` y en `True`, contando las filas que comparten huella exacta con otra de clase contraria, que es lo que ninguna canalización puede separar. No entra ninguna otra representación, y es a propósito: los descriptores llevan `NumUnspecifiedAtomStereoCenters`, un sensor específico de registro incompleto que las huellas no tienen, así que compararlas entre sí no aislaría la quiralidad.
+
+| subconjunto de las filas de ajuste | n | sin quiralidad | con quiralidad | plegado a 2,048, sin → con |
+|:--|--:|--:|--:|--:|
+| natural exacto | 2,920 | 260 (8.9%) | 8 (0.3%) | 260 → 76 |
+| **análogo estereoquímico** | 768 | **88 (11.5%)** | **0 (0.0%)** | 88 → 15 |
+| sin equivalente natural | 2,618 | 55 (2.1%) | 2 (0.1%) | 55 → 23 |
+| análogo · estereoquímica declarada | 350 | 47 (13.4%) | 0 (0.0%) | 47 → 10 |
+| análogo · estereoquímica sin declarar | 418 | 41 (9.8%) | 0 (0.0%) | 41 → 5 |
+
+- **El brazo sin quiralidad reproduce las cifras que el #183 midió por otra vía** —88 de 768 en el estrato, 47 y 41 en sus dos mitades—, que es el control de que las dos mediciones hablan de lo mismo.
+- **En la mitad con estereoquímica declarada el mecanismo es la quiralidad, y se comporta como la explicación 1 predice:** las 47 filas dejan de ser inseparables, y **las 47 cambiaron su propia huella**.
+- **En la mitad sin declarar la caída es otra cosa.** También llega a cero, pero **26 de las 41 no cambiaron su propia huella**: dejaron de chocar porque se movió la fila que chocaba *con* ellas. Es lo que cabía esperar si el interruptor es inerte donde no hay nada declarado, y es la razón de medir por fila y no solo el conteo del estrato: sin separarlo, esa caída se leería como quiralidad.
+- **Qué establece y qué no.** Establece que la ceguera a la quiralidad es real, que explica todos los casos inseparables de la mitad declarada y que **plegar a 2,048 bits conserva la mayor parte de la resolución, no toda** (11.5% → 2.0% en el estrato). **No** establece que sea lo que daña el MCC de los nueve modelos: eso exige reajustar con el interruptor activado y leer el estrato, que es la [1.9](#d1-9). La lectura con respaldo del daño sigue siendo la brecha entre entrenamiento y validación, que se ensancha en los siete modelos que pierden.
+- **Lo que hace el interruptor, para no atribuirle lo que no hace.** Cambia la huella de 3,976 de las 6,306 filas (63.1%). De las 982 sin ningún estereocentro de átomo declarado, cambian 122, y esas 122 son exactamente las que traen estereoquímica de doble enlace declarada, sin una sola excepción en ninguno de los dos sentidos: el interruptor también codifica E/Z, no solo centros quirales.
+- **Ninguna parte del conteo es duplicación irreducible:** no hay una sola fila que comparta su SMILES con otra de clase contraria. Con la quiralidad activada quedan 10 filas inseparables en todo el conjunto de ajuste.
+
 ### Propuestas
 
 #### 1.4 · Las 6 filas con logBB sin clase BBB {#d1-4 .propuesta}
@@ -615,6 +633,25 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 **Cuánto pesa, y en qué métrica.** En **exactitud** ya está medido y no aprieta: son **151 errores inevitables sobre 7,805**, un techo del **98.1%** que ningún modelo realista alcanza, así que no explica nada de lo que falte ([los datos del proyecto](datos-contenido.md)). En **MCC y AUPRC sobre la clase minoritaria**, que son las métricas del proyecto por la [C.1](#dc-1), no está medido, y ahí sí podría apretar: los 429 compuestos no se reparten por igual entre las dos clases. Eso es lo que falta del [issue #28](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/28), cuyo enunciado pide calcular un techo que en exactitud ya existe.
 
 **Por qué se pregunta.** Es una de las dos lecturas y no se distinguen desde los datos. Si la estereoquímica cambia de verdad el paso por la barrera —cosa plausible, porque los transportadores son estereoselectivos—, entonces la representación actual pierde información y hay que decir en el reporte que el techo está acotado por diseño. Si en cambio los pares vienen de ensayos distintos que se compararon mal, entonces son ruido de curación y la cota es menor de lo que parece. Su criterio farmacológico es lo que decide cuál de las dos pesa más.
+
+#### 1.9 · `includeChirality` en las huellas: parametrizado, con `False` todavía por omisión {#d1-9 .propuesta}
+
+**Estado:** propuesta
+
+> **Pregunta:** ¿Se adopta `includeChirality=True` como valor por omisión del proyecto, o se declara por qué no? Es decisión de equipo: la medición dice lo que el interruptor resuelve, no si vale su costo.
+
+**Qué pasó.** Las huellas del proyecto se generaban sin pasar `includeChirality`, cuyo valor por omisión en RDKit es `False`, así que dos enantiómeros daban la misma huella. Eso está medido en la [1.3](#d1-3): en el estrato `análogo estereoquímico` hay 88 de 768 filas de ajuste que comparten huella exacta con otra de clase contraria, y al activar el interruptor bajan a 0 —las 47 de la mitad con estereoquímica declarada por cambio de su propia huella, que es el mecanismo de la explicación 1—. Plegado a 2,048 bits, que es lo que ve el modelo, el estrato pasa de 11.5% a 2.0%.
+
+**Se propone.** Dejarlo como **parámetro** y no cambiar el valor por omisión todavía. `identificadores_morgan` recibe `quiralidad`, con `False` por omisión, así que el interruptor existe y ninguna cifra publicada se mueve. Dos razones para no adoptarlo ya:
+
+1. **Adoptarlo mueve toda la línea de huellas de las dos fases.** Las comparativas del 03c y el 04c, la [1.3](#d1-3) y la [1.7](#d1-7) están medidas con `False`; cambiar el valor por omisión obliga a reejecutarlas, y las entregas son el 8 y el 15 de noviembre.
+2. **Lo que falta medir no es el conteo de inseparables, es el desempeño.** Que la representación pueda separar esas filas no dice que separarlas mejore el estrato. Eso lo dice un reajuste: la comparativa de la fase 1 por origen, con el interruptor activado, leyendo `análogo estereoquímico`. Es la corrida que cierra el [#183](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/183), y ahora es un diseño legítimo porque la medición de la [1.3](#d1-3) acotó dónde el interruptor actúa: en la mitad con estereoquímica declarada, 350 filas.
+
+**Qué lo cambiaría.** Si ese reajuste recupera el estrato, se adopta `True` como valor por omisión y se reejecuta lo que dependa de las huellas. Si no lo recupera, la ceguera es real y sin costo medible, y lo que queda en pie es la lectura de la brecha de la [1.3](#d1-3): en los siete modelos que pierden, las huellas son capacidad y no señal.
+
+**Qué cuesta si se decide mal.** Adoptarlo tarde cuesta reejecutar las comparativas de huellas de las dos fases. Adoptarlo ahora cuesta lo mismo, pero contra el calendario de las entregas.
+
+**Lo que esta entrada no resuelve.** La otra mitad del #183: `asignar_origen` mete en `análogo estereoquímico` tanto una diferencia estereoquímica real como un registro que no la declara, y el 54.4% del estrato tiene al menos un centro sin declarar, así que el estrato mide dos cosas a la vez y eso afecta a cualquier lectura por origen. Eso vive en el [#203](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/203). Y la [1.8](#d1-8), que pregunta si vale la pena conservar la estereoquímica en la representación, recibe de aquí la mitad de su respuesta: para las huellas, conservarla cuesta un parámetro.
 
 ### Supuestos
 
