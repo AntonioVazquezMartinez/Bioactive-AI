@@ -1,0 +1,85 @@
+{
+  "control_dentro_de_tolerancia": {
+    "aft": true,
+    "aft_huellas": true
+  },
+  "por_tamano": {
+    "10000": {
+      "solo_npass": {
+        "aft": 0.5978,
+        "aft_huellas": 0.5918,
+        "dif_desv": 0.0274,
+        "dif_media": -0.006,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 7
+      },
+      "todos": {
+        "aft": 0.7164,
+        "aft_huellas": 0.7278,
+        "dif_desv": 0.0037,
+        "dif_media": 0.0114,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 15
+      }
+    },
+    "20000": {
+      "solo_npass": {
+        "aft": 0.6183,
+        "aft_huellas": 0.6045,
+        "dif_desv": 0.0257,
+        "dif_media": -0.0138,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 4
+      },
+      "todos": {
+        "aft": 0.7392,
+        "aft_huellas": 0.747,
+        "dif_desv": 0.0034,
+        "dif_media": 0.0078,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 15
+      }
+    },
+    "5000": {
+      "solo_npass": {
+        "aft": 0.5838,
+        "aft_huellas": 0.5827,
+        "dif_desv": 0.0268,
+        "dif_media": -0.0011,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 8
+      },
+      "todos": {
+        "aft": 0.6917,
+        "aft_huellas": 0.7022,
+        "dif_desv": 0.006,
+        "dif_media": 0.0105,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 14
+      }
+    },
+    "completo": {
+      "solo_npass": {
+        "aft": 0.6308,
+        "aft_huellas": 0.6187,
+        "dif_desv": 0.0186,
+        "dif_media": -0.0121,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 5
+      },
+      "todos": {
+        "aft": 0.7609,
+        "aft_huellas": 0.7666,
+        "dif_desv": 0.0035,
+        "dif_media": 0.0057,
+        "evaluaciones": 15,
+        "huellas_mejor_en": 15
+      }
+    }
+  },
+  "referencia_control": {
+    "aft": 0.761,
+    "aft_huellas": 0.7659
+  },
+  "veredicto_declarado": "el tamaño no la explica"
+}

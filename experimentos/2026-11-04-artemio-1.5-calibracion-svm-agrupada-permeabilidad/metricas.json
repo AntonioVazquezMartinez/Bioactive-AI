@@ -1,0 +1,49 @@
+{
+  "comprobaciones": {
+    "max_abs_dauprc": 0.0,
+    "max_abs_dauroc": 0.0,
+    "max_abs_dmcc_catalogo_vs_actual": 0.0
+  },
+  "efecto_agrupada_menos_actual": {
+    "exactitud_balanceada": {
+      "desviacion_pareada": 0.0029,
+      "diferencia_media": -0.002,
+      "evaluaciones": 15,
+      "mejor_en": 5,
+      "peor_en": 9
+    },
+    "mcc": {
+      "desviacion_pareada": 0.0054,
+      "diferencia_media": -0.0012,
+      "evaluaciones": 15,
+      "mejor_en": 6,
+      "peor_en": 8
+    }
+  },
+  "efecto_distinto_de_ruido": false,
+  "fraccion_positiva_a_0.5": {
+    "actual": 0.7085,
+    "agrupada": 0.7126
+  },
+  "medias": {
+    "actual": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "exactitud_balanceada": 0.8344,
+      "mcc": 0.7017
+    },
+    "agrupada": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "exactitud_balanceada": 0.8324,
+      "mcc": 0.7004
+    },
+    "catalogo": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "exactitud_balanceada": 0.8344,
+      "mcc": 0.7017
+    }
+  },
+  "prevalencia_real": 0.6497
+}
