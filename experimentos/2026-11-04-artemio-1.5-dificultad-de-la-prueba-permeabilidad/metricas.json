@@ -1,0 +1,29 @@
+{
+  "auroc_prueba_registrado": 0.7928,
+  "auroc_reponderado_vecino_1": 0.8895,
+  "auroc_reponderado_vecino_k5": 0.8822,
+  "auroc_sin_ponderar": 0.8786,
+  "control_en_rango": true,
+  "cuantiles_prueba_vecino_1": [
+    0.2272,
+    0.2857,
+    0.3721,
+    0.5208,
+    0.7167
+  ],
+  "cuantiles_validacion_vecino_1": [
+    0.2088,
+    0.2759,
+    0.3529,
+    0.4627,
+    0.6667
+  ],
+  "diferencia_vecino_1": 0.0967,
+  "diferencia_vecino_k5": 0.0894,
+  "la_conclusion_con_k5_es_la_misma": true,
+  "la_similitud_explica_el_nivel": false,
+  "n_predicciones": 75672,
+  "n_prueba": 1499,
+  "similitud_prueba_media": 0.4139,
+  "similitud_validacion_media": 0.3835
+}
