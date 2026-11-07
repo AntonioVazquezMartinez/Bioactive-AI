@@ -43,6 +43,8 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
   <section class="vm-panel vm-ancho">
     <h3>Descriptores</h3>
     <div id="vm-desc"></div>
+    <!-- El puente estructura ↔ columna. Sale poblado sin tocar nada. -->
+    <div id="vm-columnas"></div>
   </section>
 
   <section class="vm-panel vm-ancho">
@@ -122,6 +124,7 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
             font-size: .88rem; background: rgba(128,128,128,.08); border-radius: 0 .3rem .3rem 0; }
 </style>
 
+<script src="recursos/columnas.js"></script>
 <script src="https://unpkg.com/@rdkit/rdkit@2026.9.1/dist/RDKit_minimal.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
 <script>
@@ -280,6 +283,11 @@ Si no sabes qué es un SMILES o qué significa alguno de los descriptores, el [g
     $("vm-2d").innerHTML = mol.get_svg(420, 340);
     tabla(JSON.parse(mol.get_descriptors()));
     representaciones(smiles);
+    // El puente se pinta aparte y no bloquea: si falla, la página sigue sirviendo.
+    if (window.puenteColumnas) {
+      window.puenteColumnas(RDKit, smiles, $("vm-columnas"), $("vm-2d"))
+        .catch(() => { $("vm-columnas").innerHTML = ""; });
+    }
     const atomos = mol.get_num_atoms();
     mol.delete();
 

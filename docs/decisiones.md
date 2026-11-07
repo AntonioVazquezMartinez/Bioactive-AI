@@ -17,6 +17,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente | 17 oct · 24 oct |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta | |
 | [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta | |
+| [C.8](#dc-8) | Tres colores categóricos, validados contra daltonismo | Vigente | |
 
 **Fase 1 · Permeabilidad**
 
@@ -68,6 +69,10 @@ Lo que vale para las dos fases.
 **Qué pasó.** Hay 1.74 positivos por negativo: un modelo que prediga siempre BBB+ acierta el 63.5% sin aprender nada. El Avance 2 reportó AUPRC sobre la clase positiva, que es la mayoritaria, con línea base 0.573; los valores de 0.70–0.86 parecían buenos y eran poco informativos. Quedó documentado en el notebook.
 
 **Se decidió.** En la **fase 1**, que clasifica, las métricas principales son MCC y AUPRC sobre la clase minoritaria; exactitud y AUROC no se reportan solos. En la **fase 2**, que hace regresión, son el índice de concordancia de Harrell y Spearman, que toleran la censura, y RMSE solo sobre las mediciones no censuradas. Las de clasificación se calculan además sobre la clase derivada del corte, y las de ranking están en la [C.5](#dc-5).
+
+**Una excepción declarada: comparar estratos de prevalencia distinta.** El MCC depende de la prevalencia, así que entre estratos que van de 12% a 90% de positivos no mide lo mismo y leer su columna de arriba abajo lleva a la conclusión contraria. Cuando lo que se compara son **estratos**, la medida primaria es el **AUROC** y el MCC va al lado, nunca en su lugar, y **cada estrato se reporta con su prevalencia**. Es el caso de la evaluación por origen de la [1.6](#d1-6): los compuestos naturales exactos tienen 53.7% de positivos y los que no tienen equivalente natural 83.6%, y sus MCC —0.719 y 0.521— sugieren una diferencia de desempeño que el AUROC —0.935 y 0.886— no sostiene en esa magnitud.
+
+La excepción vivía dentro de la 1.6 y queda aquí porque es una **decisión de métrica** y no un detalle de esa entrada ([#115](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/115)). Fuera de ese caso, la C.1 no cambia: una cifra agregada sigue reportándose con MCC y AUPRC de la minoritaria.
 
 #### C.2 · Dos métodos de atribución independientes {#dc-2 .vigente}
 
@@ -152,6 +157,14 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 
 > **Pregunta:** ¿Se autoriza publicar los resultados, y qué datos derivados, bajo uso académico no comercial? ¿Hay aspiraciones comerciales? NPASS (CC BY-NC) lo impediría.
 
+**Dónde vive el video de divulgación, y por qué todavía no se publica.** Las animaciones de `animaciones/` producen un video de diecinueve minutos que explica el proyecto. **El `.mp4` no se versiona** —es un artefacto generado, como los PDF de los reportes— así que publicarlo exige alojarlo en algún sitio, y eso es lo que falta decidir. Lo que ya está resuelto: el uso académico cumple con todas las licencias de los datos, incluida la de NPASS; lo que no se puede es darle un uso comercial, y el video tiene que llevar la atribución de las fuentes como la lleva el sitio. **Qué lo cierra:** elegir alojamiento —el repositorio de publicaciones del Tec, un enlace no listado, o renderizarlo en cada despliegue del sitio— y escribirlo aquí. Mientras tanto se reconstruye con `animaciones/ensamblar.py`, que es reproducible porque los guiones, las escenas y los tiempos de la voz sí están versionados.
+
+**Y una opción que ya no está sobre la mesa.** Con el video de diez minutos cabía un encode de 720p en 8.6 MB, por debajo del límite de 10 MB que GitHub pone a los adjuntos de una cuenta gratuita, así que se podía incrustar en el README con una URL de `user-attachments`. **El video dura ahora diecinueve minutos** —entraron los resultados del Avance 3, cómo se construye el objetivo y la dirección del ensayo— y ya no cabe. Medido sobre el montaje de 1080p, que pesa 51.4 MB: a 720p y 30 fotogramas con CRF 32 salen **15.3 MB**, y apretando a 24 fotogramas y CRF 36 salen **11.0 MB**, todavía legibles pero por encima del límite. Bajar de 10 MB exige 480p, y a 480p los subtítulos de 19 puntos dejan de leerse, que es la mitad de lo que el video dice. Las tres salidas que quedan son las de arriba.
+
+**Decidido el 23 de octubre: por ahora el video es interno y no se enlaza desde el README ni desde el sitio.** No es una decisión de alojamiento, es aplazarla: el video se comparte dentro del equipo y con quien el equipo elija, y la pregunta de dónde vive públicamente sigue abierta. El motivo es que publicarlo arrastra lo que todavía no está resuelto —la atribución de las fuentes en pantalla, el orden de autoría, el foro— y nada de eso bloquea que el equipo lo use para estudiar y para enseñarlo en una revisión.
+
+**Qué lo cambiaría:** que haga falta enseñarlo fuera del equipo, por ejemplo en la entrega final o en la presentación. Entonces hay que elegir entre las tres salidas de arriba y escribir aquí cuál, con la atribución resuelta antes.
+
 **Esta entrada va aparte de las demás.** No es un criterio técnico sino administrativo, y la mitad de lo que falta no depende de ella sino del departamento y del Tec: propiedad intelectual, orden de autoría, foro. Tratarla en la misma sesión que el criterio de «activo» hace que ninguna de las dos se cierre. Se plantea por escrito y con tiempo, no en la reunión donde se discuten los criterios técnicos.
 
 **Se propone.** Los archivos de la patrocinadora son la fuente y el producto puede ser un texto académico de investigación. Qué hace falta:
@@ -189,6 +202,20 @@ Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `
 **De dónde saldría el dato, en orden de costo.** Primero el volcado de ChEMBL 37, que ya es la alternativa declarada de la fase 2: la citotoxicidad de estos mismos compuestos está ahí y el recorte que recibimos la filtró, así que es el mejor solapamiento posible y una sola procedencia. Después **Tox21**, público y de dominio público vía PubChem BioAssay, que incluye contra-tamices de viabilidad y ensayos de la vía Nrf2/ARE —la diana de estrés oxidativo—, con la duda de cuánto solapa su biblioteca de químicos ambientales con nuestros naturales, que se mide antes de invertir. **ToxCast** al final, por volumen.
 
 **Si no se resuelve:** el ranking se entrega declarando que ordena por potencia y permeabilidad, y que no distingue un compuesto selectivo de uno citotóxico. Eso cambia qué significa el entregable, así que toca la [C.3](#dc-3) y la [C.5](#dc-5).
+
+#### C.8 · Tres colores categóricos, validados contra daltonismo {#dc-8 .vigente}
+
+**Estado:** vigente
+
+**Qué pasó.** Los hex vivían copiados en cuatro archivos —el video, las gráficas del mazo, los estilos del sitio y los del mazo— y **tres se habían desviado entre sí**: el azul, el verde y el naranja, lo bastante parecidos para que nadie lo notara leyendo. Al validarla contra simulación de daltonismo, la paleta fallaba tres de cinco comprobaciones sobre fondo oscuro, y la peor era entre el verde y el naranja —«producto natural» y «BBB−»—, que con protanopía quedaban a ΔE 5.9 en OKLab: indistinguibles. Son las dos categorías de las que trata el proyecto.
+
+Había además un error de categoría: `alerta` es un **estado** y no una serie, y `resto` es una tinta de apoyo. Contándolos como colores de serie, la paleta parecía tener cinco categorías cuando tiene tres.
+
+**Se decidió.** **Tres roles categóricos y no más** —`positivo` (BBB+, entrenamiento), `negativo` (BBB−, lo que se reserva) y `natural` (producto natural)—, asignados en ese orden fijo y nunca ciclados: una cuarta categoría se pliega en «otros» o se separa en gráficas pequeñas, no recibe un tono generado. `estado.alerta` queda reservado para estados y las `tintas` para lo que no es una serie: fondo, texto, rejilla, contenedor. Con los pasos corregidos, la paleta pasa las cinco comprobaciones en los dos modos y con todas las parejas.
+
+**Y vive en un solo sitio.** `recursos/paleta.json` es la fuente; `scripts/paleta.py` la reparte a `recursos/paleta.js` y `_paleta.scss`, y el CI lo corre con `--revisar`, que falla si alguien editó un destino a mano. El video la lee del JSON directamente.
+
+**Qué la cambiaría.** Que haga falta una cuarta categoría de verdad —no un cuarto elemento de una lista, que se pliega—. Entonces no se añade un tono: se parte la gráfica, porque cuatro tonos no se separan bajo daltonismo sobre este fondo. Y si el sitio cambiara de fondo, hay que volver a validar: los pasos están elegidos contra **este** fondo, no en abstracto.
 
 ### Supuestos
 

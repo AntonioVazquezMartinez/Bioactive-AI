@@ -1,0 +1,430 @@
+{
+ "_comentario": "Generado por scripts/patrones_fr.py. Cada entrada es un descriptor `fr_*` de RDKit con el SMARTS que cuenta, para poder resaltar en la molécula los átomos que lo producen. `en_matriz` dice si la columna sobrevive a la selección de la fase 1.",
+ "patrones": {
+  "fr_Al_COO": {
+   "smarts": "C-C(=O)[O;H1,-]",
+   "describe": "Number of aliphatic carboxylic acids",
+   "en_matriz": false
+  },
+  "fr_Al_OH": {
+   "smarts": "[C&!$(C=O)]-[O&H1]",
+   "describe": "Number of aliphatic hydroxyl groups",
+   "en_matriz": true
+  },
+  "fr_Al_OH_noTert": {
+   "smarts": "[$(C-[O&X2&H1])&!$([C&X3](-[O&X2&H1])=[O&X1])&!$([C&D4]-[O&X2&H1])]",
+   "describe": "Number of aliphatic hydroxyl groups excluding tert-OH",
+   "en_matriz": true
+  },
+  "fr_ArN": {
+   "smarts": "[$(a-[N&X3&H2]),$(a-[N&H1][N&H2]),$(a-C(=[O&X1])[N&H1][N&H2]),$(a-C(=[N&H1])[N&H2])]",
+   "describe": "Number of N functional groups attached to aromatics",
+   "en_matriz": true
+  },
+  "fr_Ar_COO": {
+   "smarts": "c-C(=O)[O;H1,-]",
+   "describe": "Number of aromatic carboxylic acids",
+   "en_matriz": false
+  },
+  "fr_Ar_N": {
+   "smarts": "n",
+   "describe": "Number of aromatic nitrogens",
+   "en_matriz": true
+  },
+  "fr_Ar_NH": {
+   "smarts": "[n&H1]",
+   "describe": "Number of aromatic amines",
+   "en_matriz": true
+  },
+  "fr_Ar_OH": {
+   "smarts": "c[O&H1]",
+   "describe": "Number of aromatic hydroxyl groups",
+   "en_matriz": true
+  },
+  "fr_COO": {
+   "smarts": "[#6]C(=O)[O;H1,-]",
+   "describe": "Number of carboxylic acids",
+   "en_matriz": true
+  },
+  "fr_COO2": {
+   "smarts": "[C&X3](=O)[O&X1&H0&-,O&X2&H1]",
+   "describe": "Number of carboxylic acids",
+   "en_matriz": false
+  },
+  "fr_C_O": {
+   "smarts": "[C&X3]=[O&X1]",
+   "describe": "Number of carbonyl O",
+   "en_matriz": true
+  },
+  "fr_C_O_noCOO": {
+   "smarts": "[C&!$(C-[O&H1])]=O",
+   "describe": "Number of carbonyl O, excluding COOH",
+   "en_matriz": false
+  },
+  "fr_C_S": {
+   "smarts": "C=[S&X1]",
+   "describe": "Number of thiocarbonyl",
+   "en_matriz": false
+  },
+  "fr_HOCCN": {
+   "smarts": "[$([O&X2&H1][C&X4][C&X4&H2][N&X3&R1]),$([O&H1][C&X4][C&X4&H2][N&X3][C&X4](C)(C)C)]",
+   "describe": "Number of C(OH)CCN-Ctert-alkyl or  C(OH)CCNcyclic",
+   "en_matriz": true
+  },
+  "fr_Imine": {
+   "smarts": "[N&v3](=C)-[#6]",
+   "describe": "Number of Imines",
+   "en_matriz": true
+  },
+  "fr_NH0": {
+   "smarts": "[N&H0,n&H0]",
+   "describe": "Number of Tertiary amines",
+   "en_matriz": true
+  },
+  "fr_NH1": {
+   "smarts": "[N&H1,n&H1]",
+   "describe": "Number of Secondary amines",
+   "en_matriz": true
+  },
+  "fr_NH2": {
+   "smarts": "[N&H2,n&H2]",
+   "describe": "Number of Primary amines",
+   "en_matriz": true
+  },
+  "fr_N_O": {
+   "smarts": "[N&!$(N=O)](-O)-C",
+   "describe": "Number of hydroxylamine groups",
+   "en_matriz": false
+  },
+  "fr_Ndealkylation1": {
+   "smarts": "[$(N(-[C&H3])-C-[$(C~O),$(C-a),$(C-N),$(C=C)]),$(N(-[C&H2][C&H3])-C-[$(C~O),$(C-a),$(C-N),$(C=C)])]",
+   "describe": "Number of XCCNR groups",
+   "en_matriz": true
+  },
+  "fr_Ndealkylation2": {
+   "smarts": "[$([N&R1]1(-C)CCC1),$([N&R1]1(-C)CCCC1),$([N&R1]1(-C)CCCCC1),$([N&R1]1(-C)CCCCCC1),$([N&R1]1(-C)CCCCCCC1)]",
+   "describe": "Number of tert-alicyclic amines (no heteroatoms, not quinine-like bridged N)",
+   "en_matriz": true
+  },
+  "fr_Nhpyrrole": {
+   "smarts": "[n&H1]",
+   "describe": "Number of H-pyrrole nitrogens",
+   "en_matriz": false
+  },
+  "fr_SH": {
+   "smarts": "[S&H1]",
+   "describe": "Number of thiol groups",
+   "en_matriz": false
+  },
+  "fr_aldehyde": {
+   "smarts": "[C&X3&H1](=O)[#6]",
+   "describe": "Number of aldehydes",
+   "en_matriz": true
+  },
+  "fr_alkyl_carbamate": {
+   "smarts": "C[N&H1]C(=O)OC",
+   "describe": "Number of alkyl carbamates (subject to hydrolysis)",
+   "en_matriz": false
+  },
+  "fr_alkyl_halide": {
+   "smarts": "[C&X4]-[Cl,Br,I,F]",
+   "describe": "Number of alkyl halides",
+   "en_matriz": true
+  },
+  "fr_allylic_oxid": {
+   "smarts": "[$(C=C-C)&!$(C=C-C-[N,O,S])&!$(C=C-C-C-[N,O])&!$(C12=CC(=O)CCC1C1C(C3C(CCC3)CC1)CC2)]",
+   "describe": "Number of allylic oxidation sites excluding steroid dienone",
+   "en_matriz": true
+  },
+  "fr_amide": {
+   "smarts": "C(=O)-N",
+   "describe": "Number of amides",
+   "en_matriz": false
+  },
+  "fr_amidine": {
+   "smarts": "C(=N)(-N)-[!#7]",
+   "describe": "Number of amidine groups",
+   "en_matriz": false
+  },
+  "fr_aniline": {
+   "smarts": "c-[N&X3&!$(N=*)]",
+   "describe": "Number of anilines",
+   "en_matriz": true
+  },
+  "fr_aryl_methyl": {
+   "smarts": "[$(a-[C&H3]),$(a-[C&H2]-[C&H3]),$(a-[C&H2]-[C&H2]~[!N&!O]);!$(a(:a!:*):a!:*)]",
+   "describe": "Number of aryl methyl sites for hydroxylation",
+   "en_matriz": true
+  },
+  "fr_azide": {
+   "smarts": "[$(*-[N&X2&-]-[N&X2&+]#[N&X1]),$(*-[N&X2]=[N&X2&+]=[N&X1&-])]",
+   "describe": "Number of azide groups",
+   "en_matriz": false
+  },
+  "fr_azo": {
+   "smarts": "[#6]-N=N-[#6]",
+   "describe": "Number of azo groups",
+   "en_matriz": false
+  },
+  "fr_barbitur": {
+   "smarts": "C1C(=O)NC(=O)NC1=O",
+   "describe": "Number of barbiturate groups",
+   "en_matriz": true
+  },
+  "fr_benzene": {
+   "smarts": "c1ccccc1",
+   "describe": "Number of benzene rings",
+   "en_matriz": false
+  },
+  "fr_benzodiazepine": {
+   "smarts": "[c&R2]12[c&R1][c&R1][c&R1][c&R1][c&R2]1[N&R1][C&R1][C&R1][N&R1]=[C&R1]2",
+   "describe": "Number of benzodiazepines with no additional fused rings",
+   "en_matriz": true
+  },
+  "fr_bicyclic": {
+   "smarts": "[R2][R2]",
+   "describe": "Bicyclic",
+   "en_matriz": true
+  },
+  "fr_diazo": {
+   "smarts": "[N&+]#N",
+   "describe": "Number of diazo groups",
+   "en_matriz": false
+  },
+  "fr_dihydropyridine": {
+   "smarts": "[$([N&X3&H1]1-C=C-C-C=C1),$([N&v3]1=C-C-C=C-C1),$([N&v3]1=C-C=C-C-C1),$([N&X3&H1]1-C-C=C-C=C1)]",
+   "describe": "Number of dihydropyridines",
+   "en_matriz": false
+  },
+  "fr_epoxide": {
+   "smarts": "O1CC1",
+   "describe": "Number of epoxide rings",
+   "en_matriz": false
+  },
+  "fr_ester": {
+   "smarts": "[#6][C&X3](=O)[O&X2&H0][#6]",
+   "describe": "Number of esters",
+   "en_matriz": true
+  },
+  "fr_ether": {
+   "smarts": "[O&D2]([#6])[#6]",
+   "describe": "Number of ether oxygens (including phenoxy)",
+   "en_matriz": true
+  },
+  "fr_furan": {
+   "smarts": "o1cccc1",
+   "describe": "Number of furan rings",
+   "en_matriz": true
+  },
+  "fr_guanido": {
+   "smarts": "C(=N)(N)N",
+   "describe": "Number of guanidine groups",
+   "en_matriz": true
+  },
+  "fr_halogen": {
+   "smarts": "[#9,#17,#35,#53]",
+   "describe": "Number of halogens",
+   "en_matriz": true
+  },
+  "fr_hdrzine": {
+   "smarts": "[N&X3]-[N&X3]",
+   "describe": "Number of hydrazine groups",
+   "en_matriz": false
+  },
+  "fr_hdrzone": {
+   "smarts": "C=N-[N&X3]",
+   "describe": "Number of hydrazone groups",
+   "en_matriz": false
+  },
+  "fr_imidazole": {
+   "smarts": "n1cncc1",
+   "describe": "Number of imidazole rings",
+   "en_matriz": true
+  },
+  "fr_imide": {
+   "smarts": "N(-C=O)-C=O",
+   "describe": "Number of imide groups",
+   "en_matriz": true
+  },
+  "fr_isocyan": {
+   "smarts": "N=C=O",
+   "describe": "Number of isocyanates",
+   "en_matriz": false
+  },
+  "fr_isothiocyan": {
+   "smarts": "N=C=S",
+   "describe": "Number of isothiocyanates",
+   "en_matriz": false
+  },
+  "fr_ketone": {
+   "smarts": "[#6][C&X3](=O)[#6]",
+   "describe": "Number of ketones",
+   "en_matriz": true
+  },
+  "fr_ketone_Topliss": {
+   "smarts": "[$([C&X3](=[O&X1])(C)[c,C])&!$([C&X3](=[O&X1])([C&H1]=C)[c,C])]",
+   "describe": "Number of ketones excluding diaryl, a,b-unsat. dienones, heteroatom on Calpha",
+   "en_matriz": false
+  },
+  "fr_lactam": {
+   "smarts": "N1C(=O)CC1",
+   "describe": "Number of beta lactams",
+   "en_matriz": true
+  },
+  "fr_lactone": {
+   "smarts": "[C&R1](=O)[O&R1][C&R1]",
+   "describe": "Number of cyclic esters (lactones)",
+   "en_matriz": true
+  },
+  "fr_methoxy": {
+   "smarts": "[O&X2](-[#6])-[C&H3]",
+   "describe": "Number of methoxy groups -OCH3",
+   "en_matriz": true
+  },
+  "fr_morpholine": {
+   "smarts": "O1CCNCC1",
+   "describe": "Number of morpholine rings",
+   "en_matriz": false
+  },
+  "fr_nitrile": {
+   "smarts": "[N&X1]#[C&X2]",
+   "describe": "Number of nitriles",
+   "en_matriz": true
+  },
+  "fr_nitro": {
+   "smarts": "[$([N&X3](=O)=O),$([N&X3&+](=O)[O&-])][!#8]",
+   "describe": "Number of nitro groups",
+   "en_matriz": true
+  },
+  "fr_nitro_arom": {
+   "smarts": "[$(c1(-[$([N&X3](=O)=O),$([N&X3&+](=O)[O&-])])ccccc1)]",
+   "describe": "Number of nitro benzene ring substituents",
+   "en_matriz": false
+  },
+  "fr_nitro_arom_nonortho": {
+   "smarts": "[$(c1(-[$([N&X3](=O)=O),$([N&X3&+](=O)[O&-])])ccccc1)&!$(cc-&!:*)]",
+   "describe": "Number of non-ortho nitro benzene ring substituents",
+   "en_matriz": false
+  },
+  "fr_nitroso": {
+   "smarts": "[N&!$(N-O)]=O",
+   "describe": "Number of nitroso groups, excluding NO2",
+   "en_matriz": false
+  },
+  "fr_oxazole": {
+   "smarts": "c1ocnc1",
+   "describe": "Number of oxazole rings",
+   "en_matriz": false
+  },
+  "fr_oxime": {
+   "smarts": "[C&X3]=[N&X2]-[O&X2]",
+   "describe": "Number of oxime groups",
+   "en_matriz": true
+  },
+  "fr_para_hydroxylation": {
+   "smarts": "[$([c&H1]1[c&H1]cc(c[c&H1]1)~[$([#8,$([#8]~[H1,c,C])])]),$([c&H1]1[c&H1]cc(c[c&H1]1)~[$([#7&X3,$([#7](~[H1,c,C])~[H1,c,C])])]),$([c&H1]1[c&H1]cc(c[c&H1]1)-&!:[$([N&X3&H1,$(NC(=O)[H1,c,C])])])]",
+   "describe": "Number of para-hydroxylation sites",
+   "en_matriz": true
+  },
+  "fr_phenol": {
+   "smarts": "[O&X2&H1]-c1ccccc1",
+   "describe": "Number of phenols",
+   "en_matriz": false
+  },
+  "fr_phenol_noOrthoHbond": {
+   "smarts": "[$(c1(-[O&X2&H1])ccccc1)&!$(cc-&!:[C&H2]-[O&X2&H1])&!$(cc-&!:C(=O)[O;H1,-])&!$(cc-&!:C(=O)-[N&H2])]",
+   "describe": "Number of phenolic OH excluding ortho intramolecular Hbond substituents",
+   "en_matriz": false
+  },
+  "fr_phos_acid": {
+   "smarts": "[$(P(=[O&X1])([$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)])([$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)])[$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)]),$([P&+]([O&X1&-])([$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)])([$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)])[$([O&X2&H1]),$([O&X1&-]),$([O&X2]P)])]",
+   "describe": "Number of phosphoric acid groups",
+   "en_matriz": false
+  },
+  "fr_phos_ester": {
+   "smarts": "[$(P(=[O&X1])([O&X2][#6])([$([O&X2&H1]),$([O&X1&-]),$([O&X2][#6])])[$([O&X2&H1]),$([O&X1&-]),$([O&X2][#6]),$([O&X2]P)]),$([P&+]([O&X1&-])([O&X2][#6])([$([O&X2&H1]),$([O&X1&-]),$([O&X2][#6])])[$([O&X2&H1]),$([O&X1&-]),$([O&X2][#6]),$([O&X2]P)])]",
+   "describe": "Number of phosphoric ester groups",
+   "en_matriz": false
+  },
+  "fr_piperdine": {
+   "smarts": "N1CCCCC1",
+   "describe": "Number of piperdine rings",
+   "en_matriz": true
+  },
+  "fr_piperzine": {
+   "smarts": "N1CCNCC1",
+   "describe": "Number of piperzine rings",
+   "en_matriz": true
+  },
+  "fr_priamide": {
+   "smarts": "C(=O)-[N&H2]",
+   "describe": "Number of primary amides",
+   "en_matriz": true
+  },
+  "fr_prisulfonamd": {
+   "smarts": "[N&H2]-S(=,-[O&X1;+0,-])(=,-[O&X1;+0,-])-[#6]",
+   "describe": "Number of primary sulfonamides",
+   "en_matriz": false
+  },
+  "fr_pyridine": {
+   "smarts": "n1ccccc1",
+   "describe": "Number of pyridine rings",
+   "en_matriz": true
+  },
+  "fr_quatN": {
+   "smarts": "[$([N&X4&+]),$([N&X4]=*)]",
+   "describe": "Number of quaternary nitrogens",
+   "en_matriz": false
+  },
+  "fr_sulfide": {
+   "smarts": "[S&X2](-[#6])-C",
+   "describe": "Number of thioether",
+   "en_matriz": true
+  },
+  "fr_sulfonamd": {
+   "smarts": "N-S(=,-[O&X1;+0,-])(=,-[O&X1;+0,-])-[#6]",
+   "describe": "Number of sulfonamides",
+   "en_matriz": true
+  },
+  "fr_sulfone": {
+   "smarts": "S(=,-[O&X1;+0,-])(=,-[O&X1;+0,-])(-[#6])-[#6]",
+   "describe": "Number of sulfone groups",
+   "en_matriz": true
+  },
+  "fr_term_acetylene": {
+   "smarts": "C#[C&H1]",
+   "describe": "Number of terminal acetylenes",
+   "en_matriz": true
+  },
+  "fr_tetrazole": {
+   "smarts": "c1nnnn1",
+   "describe": "Number of tetrazole rings",
+   "en_matriz": true
+  },
+  "fr_thiazole": {
+   "smarts": "c1scnc1",
+   "describe": "Number of thiazole rings",
+   "en_matriz": true
+  },
+  "fr_thiocyan": {
+   "smarts": "S-C#N",
+   "describe": "Number of thiocyanates",
+   "en_matriz": false
+  },
+  "fr_thiophene": {
+   "smarts": "s1cccc1",
+   "describe": "Number of thiophene rings",
+   "en_matriz": false
+  },
+  "fr_unbrch_alkane": {
+   "smarts": "[C&R0;D2,D1][C&R0&D2][C&R0&D2][C&R0;D2,D1]",
+   "describe": "Number of unbranched alkanes  of at least 4 members (excludes halogenated alkanes)",
+   "en_matriz": true
+  },
+  "fr_urea": {
+   "smarts": "C(=O)(-N)-N",
+   "describe": "Number of urea groups",
+   "en_matriz": true
+  }
+ }
+}

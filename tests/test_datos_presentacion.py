@@ -290,3 +290,133 @@ def test_el_mazo_declara_el_estado_que_el_registro_declara():
     huerfanas = sorted(citadas - set(estados))
     assert not huerfanas, (
         "el mazo enlaza entradas que el registro no tiene: " + ", ".join(huerfanas))
+
+
+def test_el_mazo_cuenta_los_estados_que_el_registro_tiene():
+    """El reparto por estado que anuncia el mazo es el del registro.
+
+    La guarda de arriba solo comprobaba que las entradas enlazadas existieran,
+    así que el mazo pudo publicar durante semanas un reparto que no cuadraba
+    con ninguna versión del registro: lo encontró una auditoría sumando a mano.
+    Aquí se cuentan los encabezados y se comparan con la frase, porque es una
+    cifra que cambia cada vez que se decide algo y nadie vuelve a sumarla.
+
+    `revisada` no entra en el reparto a propósito: es un estado que se añade
+    sobre otro —una entrada revisada sigue siendo vigente o ratificada— y el
+    mazo la cuenta aparte en la misma línea.
+    """
+    registro = REGISTRO.read_text(encoding="utf-8")
+    encabezados = re.findall(r"^#{3,4} [C\d]\.\d+ · .+?\{#d[c\d]-\d+([^}]*)\}",
+                             registro, re.M)
+    cuenta = {}
+    for clases in encabezados:
+        for clase in re.findall(r"\.([a-zá-ú]+)", clases):
+            cuenta[clase] = cuenta.get(clase, 0) + 1
+
+    mazo = MAZO.read_text(encoding="utf-8")
+    frase = re.search(
+        r"\*\*(\w+) entradas\*\* en \[la Ruta\][^:]*: *(.+?)\. ", mazo)
+    assert frase, "el mazo ya no declara el reparto por estado en la Ruta"
+    declarado = {}
+    for n, nombre in re.findall(r"(\d+) (ratificadas?|vigentes?|propuestas?"
+                                r"|abiertas?|revisadas?)", frase.group(2)):
+        declarado[nombre.rstrip("s")] = int(n)
+
+    singular = {"ratificada": "ratificada", "vigente": "vigente",
+                "propuesta": "propuesta", "abierta": "abierta"}
+    real = {k: v for k, v in cuenta.items() if k in singular}
+    assert declarado == real, (
+        f"el mazo declara {declarado} y el registro tiene {real}; "
+        "son los encabezados de docs/decisiones.md")
+
+    # Y el total, que va en la misma frase y en la diapositiva de la Ruta.
+    total = len(encabezados)
+    assert sum(real.values()) == total, (
+        f"{total} entradas pero {sum(real.values())} con estado de reparto")
+
+
+def test_el_mazo_cita_el_agrupamiento_que_da_el_generador(datos):
+    """Las cifras del agrupamiento del mazo son las de `recursos/datos.js`.
+
+    Es la afirmación metodológica central del proyecto y ya ha estado mal dos
+    veces: primero con las cifras de la matriz de 171 columnas, después con una
+    razón que dividía dos estimadores distintos. Las dos las encontró alguien
+    leyendo, no una comprobación — y la segunda sobrevivió a la corrección de
+    la primera. Esta las ata al generador.
+    """
+    a = datos["agrupamiento"]
+    texto = MAZO.read_text(encoding="utf-8")
+
+    # Los dos AUROC no se escriben en el mazo: los pone la gráfica leyendo este
+    # mismo archivo, que es por lo que dejaron de poder desviarse. Lo que sí se
+    # escribe a mano son las distancias, y son las que hay que atar.
+    assert 'data-grafica="particion"' in texto, (
+        "la diapositiva del agrupamiento ya no dibuja la gráfica, así que sus "
+        "AUROC vuelven a estar escritos a mano: átalos aquí")
+    esperadas = {
+        "distancia de AUROC entre los dos agrupamientos":
+            f"{a['solo_andamio']['auroc'] - a['andamio_esqueleto']['auroc']:.4f}",
+        "distancia de AUROC entre modelos": f"{a['entre_modelos']['auroc']:.4f}",
+    }
+    faltantes = {k: v for k, v in esperadas.items() if v not in texto}
+    assert not faltantes, (
+        "presentacion.qmd cita cifras de agrupamiento que no son las de "
+        "recursos/datos.js: "
+        + "; ".join(f"{k} deberia decir {v}" for k, v in faltantes.items()))
+
+    # Y la razon entre lo que mueve el agrupamiento y lo que mueve el modelo,
+    # que es donde se colo la comparacion entre estimadores.
+    razon = ((a["solo_andamio"]["mcc"] - a["andamio_esqueleto"]["mcc"])
+             / a["entre_modelos"]["mcc"])
+    assert 3.0 <= razon < 3.5, (
+        f"la razon entre agrupamiento y modelo en MCC es {razon:.1f}; el mazo "
+        "dice «algo mas de tres veces» y habria que reescribirlo")
+
+
+def test_cada_grafica_del_mazo_declara_tope_de_alto():
+    """Toda `.bio-grafica` del mazo lleva su clase de alto, y la gráfica existe.
+
+    Cuatro diapositivas se desbordaban del cuadro de 1280x760 y siete gráficas
+    no declaraban tope: una gráfica sin tope crece con sus datos y empuja el
+    texto fuera de la diapositiva sin que nada falle. Lo encontró medirlo en el
+    navegador, que es lo único que ve un desborde — pero el tope sí se puede
+    exigir aquí, y es lo que lo evita.
+
+    `.baja` acota el ancho y centra; `.gNNN` pone el maximo en pixeles. Van
+    siempre juntas: `.gNNN` sola no hace nada, porque la regla que la aplica
+    esta anidada bajo `.baja`.
+    """
+    mazo = MAZO.read_text(encoding="utf-8")
+    bloques = re.findall(r"^::: \{\.bio-grafica([^}]*)\}", mazo, re.M)
+    assert bloques, "el mazo ya no tiene ninguna gráfica"
+
+    sin_tope = []
+    for clases in bloques:
+        nombre = re.search(r'data-grafica="([^"]+)"', clases)
+        nombre = nombre.group(1) if nombre else "(sin nombre)"
+        if ".baja" not in clases or not re.search(r"\.g\d+\b", clases):
+            sin_tope.append(nombre)
+    assert not sin_tope, (
+        "estas gráficas del mazo no declaran tope de alto, así que pueden "
+        "desbordar la diapositiva: " + ", ".join(sin_tope)
+        + ". Añádeles `.baja .gNNN`, con NNN el máximo en píxeles")
+
+    # Y que cada una exista de verdad en el registro de graficas.js, porque un
+    # `data-grafica` mal escrito deja el hueco en blanco sin avisar.
+    js = (MAZO.parent / "recursos" / "graficas.js").read_text(encoding="utf-8")
+    registro = re.search(r"const GRAFICAS = \{(.+?)\}", js, re.S)
+    assert registro, "no se encuentra el registro GRAFICAS en recursos/graficas.js"
+    conocidas = {n.strip() for n in registro.group(1).split(",") if n.strip()}
+    pedidas = set(re.findall(r'data-grafica="([^"]+)"', mazo))
+    huerfanas = sorted(pedidas - conocidas)
+    assert not huerfanas, (
+        "el mazo pide gráficas que graficas.js no registra: "
+        + ", ".join(huerfanas))
+
+    # Y los topes que el mazo usa tienen su regla en los estilos.
+    scss = (MAZO.parent / "estilos-slides.scss").read_text(encoding="utf-8")
+    topes = set(re.findall(r"\.(g\d+)\b", " ".join(bloques)))
+    faltan = sorted(t for t in topes if f".baja.{t}" not in scss)
+    assert not faltan, (
+        "el mazo usa topes que estilos-slides.scss no define, así que no "
+        "acotan nada: " + ", ".join(faltan))

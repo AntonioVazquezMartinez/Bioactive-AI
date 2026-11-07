@@ -53,6 +53,15 @@ mlruns/
 # no la heredaba: un `git add -A` metió 53 MB de renders, mp3 y SVG a `main`.
 # Las reglas van aquí para que no dependan de en qué rama se esté.
 animaciones/media/
+# Y la de la raíz: manim escribe aquí cuando se le invoca desde el repositorio
+# en vez de desde , y así se colaron 29 archivos de una prueba.
+media/
+env-anim/
+
+# El audio generado: cuesta llamadas a la API y no se versiona.
+# `voz/tiempos.json` sí, porque es la fuente de los tiempos, y
+# `voz/huellas.json` también: es lo que dice qué tramos ya están grabados.
+# Sin él, quien clone el repositorio regraba los 7,365 caracteres enteros.
 animaciones/voz/*.mp3
 
 # Los worktrees de Claude Code, que son checkouts completos del repositorio
