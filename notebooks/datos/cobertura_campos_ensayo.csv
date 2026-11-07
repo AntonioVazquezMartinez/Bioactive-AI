@@ -1,0 +1,25 @@
+campo,columna,fuente,filas,con_valor,utiles,pct_con_valor,pct_utiles
+tipo de ensayo,assay_type,chembl,187354,90254,90254,48.17,48.17
+tipo de ensayo,assay_type,cmaup,3301,0,0,0.0,0.0
+tipo de ensayo,assay_type,npass,11992,0,0,0.0,0.0
+tipo de ensayo,assay_type,todas,202647,90254,90254,44.54,44.54
+formato BAO,assay_format,chembl,187354,90254,90254,48.17,48.17
+formato BAO,assay_format,cmaup,3301,0,0,0.0,0.0
+formato BAO,assay_format,npass,11992,0,0,0.0,0.0
+formato BAO,assay_format,todas,202647,90254,90254,44.54,44.54
+organismo,assay_organism,chembl,187354,0,0,0.0,0.0
+organismo,assay_organism,cmaup,3301,0,0,0.0,0.0
+organismo,assay_organism,npass,11992,11992,8213,100.0,68.49
+organismo,assay_organism,todas,202647,11992,8213,5.92,4.05
+puntaje de confianza,(no está en el archivo),chembl,187354,0,0,0.0,0.0
+puntaje de confianza,(no está en el archivo),cmaup,3301,0,0,0.0,0.0
+puntaje de confianza,(no está en el archivo),npass,11992,0,0,0.0,0.0
+puntaje de confianza,(no está en el archivo),todas,202647,0,0,0.0,0.0
+action_type,(no está en el archivo),chembl,187354,0,0,0.0,0.0
+action_type,(no está en el archivo),cmaup,3301,0,0,0.0,0.0
+action_type,(no está en el archivo),npass,11992,0,0,0.0,0.0
+action_type,(no está en el archivo),todas,202647,0,0,0.0,0.0
+identificador de ensayo,assay_chembl_id,chembl,187354,187354,187354,100.0,100.0
+identificador de ensayo,assay_chembl_id,cmaup,3301,0,0,0.0,0.0
+identificador de ensayo,assay_chembl_id,npass,11992,0,0,0.0,0.0
+identificador de ensayo,assay_chembl_id,todas,202647,187354,187354,92.45,92.45

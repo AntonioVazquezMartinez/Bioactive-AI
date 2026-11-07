@@ -1089,6 +1089,24 @@ Exigir que la medición sea de activación cambia 67 etiquetas y deja **2,047 pa
 
 **`DRD2`** tiene 9,618 pares y `diana_efecto_buscado` «agonismo o antagonismo (según enfermedad)»: agonistas en Parkinson, antagonistas en esquizofrenia. En 14,732 mediciones, 11,230 son Ki (conteo manual, sin script). Queda como trabajo futuro.
 
+**Los cinco campos de ensayo que pidió la patrocinadora, medidos antes de bajar nada (7 de noviembre).** Ella pidió traer por identificador de ensayo tipo de ensayo, formato BAO, puntaje de confianza, organismo y `action_type` ([#134](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/134)), y el issue puso la condición correcta: medir primero la cobertura, porque un campo casi vacío no se construye, se anota. Medir no necesitó la API, porque **tres de los cinco ya estaban en el archivo**. Corrida `2026-11-07-ingrid-2.11-cobertura-campos-ensayo` (`scripts/cobertura_campos_ensayo.py`, sin red, solo cuenta nulos; detalle por campo y fuente en `notebooks/datos/cobertura_campos_ensayo.csv`).
+
+| Campo que pidió | Dónde está | Con valor | Útil |
+|:--|:--|--:|--:|
+| tipo de ensayo (`assay_type`) | el archivo | 48.2% de ChEMBL, 0% de NPASS y CMAUP | igual |
+| formato BAO (`assay_format`) | **el archivo** | 48.2% de ChEMBL, 0% de NPASS y CMAUP | igual |
+| organismo (`assay_organism`) | el archivo, **solo NPASS** | 100% de NPASS, **0% de ChEMBL** | 68.5% de NPASS |
+| puntaje de confianza | en ninguna parte | 0% | — |
+| `action_type` | en ninguna parte | 0% | — |
+
+Tres cosas que la medición deja fijadas, y ninguna era la esperada:
+
+- **El formato BAO no hay que bajarlo: `assay_format` *es* el formato BAO**, con ocho valores que son etiquetas BAO (`cell membrane format`, `tissue-based format`, `cell-based format`, `subcellular format`, `organism-based format`…). Y **no añade cobertura**: está poblado en exactamente las mismas filas que `assay_type`, cero filas con uno y sin el otro, así que los dos vienen juntos de las mismas filas de origen.
+- **`assay_organism` está al revés de lo que se supondría:** 0% en las filas de ChEMBL y 100% en las de NPASS, que son justo las que **no** traen `assay_chembl_id` y por las que no se puede preguntar. Y 3,779 de esos 11,992 valores son el literal `n.a.`, que no es un organismo: útil quedan 8,213 filas, el 4.1% del archivo.
+- **El hueco de descarga del tipo de ensayo está acotado:** de los 16,510 ensayos distintos de ChEMBL, 7,797 traen tipo en el archivo y `notebooks/datos/tipos_ensayo_chembl.csv` ya bajó 9,894, de los cuales 5,699 cubren los que faltaban. Quedan **3,014 ensayos por bajar**, que son **31,551 filas** sin tipo si no se bajan.
+
+**Lo que hoy no se puede medir, y por qué no es nuestro.** El puntaje de confianza y `action_type` no están en el archivo, así que su cobertura solo se mide consultando ChEMBL, y la API sigue caída: en una comprobación del 7 de noviembre los endpoints `assay`, `activity`, `mechanism` y `status` devolvieron HTTP 500 mientras `target` y `molecule` respondieron, o sea que la caída es por endpoint e intermitente, seis semanas después de que quedara anotada. Y hay un supuesto del issue que conviene corregir antes de volver a intentarlo: **`action_type` no es un campo del endpoint `assay`** —pertenece al registro de actividad y al de mecanismo—, así que una petición por identificador de ensayo no lo traería ni con la API en pie. El resto del plan sigue valiendo: estos campos no entran como variables de entrada, porque solo las filas de ChEMBL traen identificador de ensayo (100% contra 0% y 0%, recontado aquí) y su ausencia delataría la fuente, que es el atajo que la [2.5](#d2-5) midió.
+
 **Pendiente, para el Avance 5.** Definir `direccion_consistente` para las 26 dianas (la tabla de tipos hoy solo cubre las tres de activación; por ejemplo, un EC50 sobre `GSK3B`, de inhibición) y su sensibilidad, declarada en la [página de variables objetivo](variable-objetivo-fase2.md). Medir cuánto cubre la API de los campos pedidos en nuestros compuestos: en todo ChEMBL, `action_type` está en 582,238 de unos 24.5 millones de actividades (2.4%).
 
 #### 2.12 · Los inactivos de DrugMatrix {#d2-12 .propuesta}
