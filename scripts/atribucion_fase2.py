@@ -46,6 +46,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shap
+from scipy.stats import spearmanr
 from sklearn.inspection import permutation_importance
 from sklearn.model_selection import StratifiedGroupKFold
 
@@ -306,6 +307,13 @@ def main() -> None:
 
         inter = concordantes(completas, n=PRIMERAS, columna=COL_SHAP)
 
+        # El Spearman sobre la unión de los 100 primeros de cada método es la regla con la
+        # que la corrida 2.13 juzgó el acuerdo, así que se registra para poder comparar.
+        union = pd.concat([medias.nlargest(100, COL_SHAP),
+                           medias.nlargest(100, "permutacion")])
+        union = union.drop_duplicates(subset="caracteristica")
+        rho_union = float(spearmanr(union[COL_SHAP], union["permutacion"]).statistic)
+
         # Generar gráfico con las dos atribuciones y la concordancia marcada
         fig, ax = plt.subplots(figsize=(8, 6))
         importancias_dos_metodos(completas, ax=ax, n=PRIMERAS, columna=COL_SHAP)
@@ -344,6 +352,8 @@ def main() -> None:
                 for feat in inter
             },
             "n_en_interseccion": len(inter),
+            "spearman_union_top100": round(rho_union, 3),
+            "n_en_union_top100": int(len(union)),
             "contraste_c2": contraste_c2,
             "caracteristicas_en_todos_los_pliegues": int(completas["caracteristica"].nunique()),
             "caracteristicas_fuera_por_pliegues_incompletos": int(n_fuera),
