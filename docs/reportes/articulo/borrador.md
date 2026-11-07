@@ -211,8 +211,8 @@ Limitaciones: la prueba se leyó siete veces; los modelos finales ya están guar
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
-cuatro familias de modelos, no las seis de la fase 1; los dos métodos de atribución
-no concuerdan a nivel de subestructura; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
+cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura
+excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
 comparar las palancas de la Figura 1.
 
 ## 8. Referencias y anexos
@@ -260,9 +260,10 @@ permeabilidad, no dominan la potencia** (lugares 44 y 165).
 **Qué pesa en la fase 1.** Los dos métodos (permutación y KernelSHAP) miran el mismo `svm_rbf`; una versión anterior mezclaba la permutación con la impureza de un bosque, que son dos modelos, y se quitó. Coinciden en seis descriptores entre sus quince primeros (`fr_lactam`, `NumHDonors`, `NumAliphaticCarbocycles`, `VSA_EState3`, `fr_Ar_OH`, `fr_ether`), estables entre dos muestras de compuestos; la correlación entre los dos rankings completos es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); **TPSA no** (40 por permutación y 10 por SHAP), porque comparte información con un racimo de columnas. No se afirma ninguna estructura: son seis nombres de descriptor, no un mecanismo.
 
 **Por subestructura.** El modelo final no usa huellas, así que se repitió el diseño con el brazo que sí
-(`aft_huellas`, que no mejora en NPASS). **Ahí los dos métodos no concuerdan según la regla declarada**
-(Spearman 0.38 contra 0.50, aunque comparten 11 de 15; la permutación es ruidosa con ~2,270 columnas). Las
-tres subestructuras que ven los dos son genéricas y frecuentes (un nitrógeno de anillo tipo piridina, un
-CH aromático vecino a ese nitrógeno y un carbono de tipo carbonilo, en el 57%, 21% y 52% de las moléculas):
-indican que el modelo usa heterociclos nitrogenados y carbonilos, no un farmacóforo específico. **No se
-afirma ninguna subestructura específica.**
+(`aft_huellas`, que no mejora en NPASS). **Con cinco repeticiones de permutación sobre las 11,248 filas, los dos métodos concuerdan según la regla declarada**
+(Spearman 0.577 sobre la unión de los 100 primeros, contra el 0.50 fijado de antemano, y 11 de 15 en común). Una medición previa con una
+repetición sobre 1,500 filas había dado 0.378 y «no concuerdan»; era ruido de la permutación, no un resultado. En la intersección
+hay dos subestructuras, un nitrógeno de anillo tipo piridina y un CH aromático vecino a ese nitrógeno, genéricas y frecuentes
+(en el 57% y 21% de las moléculas): indican que el modelo usa heterociclos nitrogenados, no un farmacóforo específico. **No se
+afirma ninguna subestructura específica.** Un límite declarado: 618 de 2,534 columnas (24.4%, todas huellas) existen en menos de
+cinco pliegues y se excluyen de la intersección; ninguna estaba arriba.
