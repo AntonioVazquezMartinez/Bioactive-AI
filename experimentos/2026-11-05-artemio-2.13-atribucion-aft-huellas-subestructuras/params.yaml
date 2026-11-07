@@ -1,0 +1,16 @@
+decision: '2.13'
+semillas:
+- 0
+params:
+  modelo: aft_huellas (201 descriptores, 2,048 huellas Sort & Slice y la diana)
+  semilla: 0
+  pliegues: 5
+  metodos:
+  - TreeSHAP
+  - permutación sobre la concordancia
+  filas_permutacion: 1500
+  top_acuerdo: 15
+  top_afirmar: 30
+  rho_minimo: 0.5
+  compartidas_minimo: 8
+  toca_prueba: false
