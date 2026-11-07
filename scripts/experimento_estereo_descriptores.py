@@ -52,6 +52,7 @@ medirlas otra vez no cambiaría ningún commit.
 
     ./env/bin/python scripts/experimento_estereo_descriptores.py
 """
+import json
 import os
 
 os.environ["OMP_NUM_THREADS"] = "1"   # un hilo por modelo, como el 05c: los tiempos comparan
@@ -70,8 +71,8 @@ import pandas as pd
 
 from src.evaluation.cv import METRICAS, clase_minoritaria, evaluar
 from src.features.molecular import CONTEOS_ESTEREO, a_mol, conteos_estereo
-from src.models.ensambles_clasificacion import ensambles
 from src.models.alternativos import seleccion
+from src.models.ensambles_clasificacion import ensambles
 from src.models.tareas import DESCRIPTORES, PROCESADOS, cargar
 
 SEMILLAS = (0, 1, 2)
@@ -153,6 +154,24 @@ def comparacion(res: pd.DataFrame, umbrales: dict, estrato: str = "todos") -> pd
     return c
 
 
+def serializable(objeto):
+    """Vuelve el árbol apto para `json.dumps`: claves de tupla a texto y escalares de numpy a Python.
+
+    `Corrida` escribe las métricas **al salir del contexto**, así que un tipo que `json` no acepta
+    tira el `with` cuando el cálculo ya terminó y se pierde la corrida entera. Pasó con una clave
+    `(modelo, métrica)` después de 78 minutos. Por eso esto y, sobre todo, por eso los CSV se
+    escriben antes de llamar a `metricas()`.
+    """
+    if isinstance(objeto, dict):
+        return {("/".join(map(str, k)) if isinstance(k, tuple) else str(k)): serializable(v)
+                for k, v in objeto.items()}
+    if isinstance(objeto, (list, tuple)):
+        return [serializable(v) for v in objeto]
+    if isinstance(objeto, np.generic):
+        return objeto.item()
+    return objeto
+
+
 def main() -> None:
     from src.tracking import Corrida
 
@@ -231,9 +250,18 @@ def main() -> None:
         mcc = {e: res[res["estrato"] == e].groupby(["brazo", "modelo"])["mcc"].mean().round(4)
                .unstack("brazo").to_dict("index") for e in estratos}
 
-        c.metricas({"techo_oraculo": techos, "umbrales": umbrales,
-                    "acierto_en_inseparables": lectura2,
-                    "diferencia_pareada": lectura3, "mcc_medio": mcc})
+        # **Los CSV primero.** Son el producto caro; las métricas se derivan de ellos y se
+        # escriben al salir del contexto, cuando ya no hay forma de recuperar el cálculo.
+        res.to_csv(c.carpeta / "evaluaciones.csv", index=False)
+        ac.to_csv(c.carpeta / "acierto_en_inseparables.csv", index=False)
+        pd.DataFrame({"fila": np.flatnonzero(mascara), "origen": origen[mascara],
+                      "y": y[mascara]}).to_csv(c.carpeta / "filas_inseparables.csv", index=False)
+
+        metricas = serializable({"techo_oraculo": techos, "umbrales": umbrales,
+                                 "acierto_en_inseparables": lectura2,
+                                 "diferencia_pareada": lectura3, "mcc_medio": mcc})
+        json.dumps(metricas)   # falla aquí, con los CSV ya en disco, no al cerrar la corrida
+        c.metricas(metricas)
 
         print("\nLectura 1 · techo de cada representación (filas de ajuste)")
         for b in brazos:
