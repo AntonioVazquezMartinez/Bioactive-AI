@@ -117,6 +117,59 @@ def _version(paquete: str) -> str | None:
         return None
 
 
+def exigir_corrida_reproducible(*, definitiva: bool, permitir_sucio: bool = False,
+                                raiz: Path = RAIZ) -> list[str]:
+    """Las dos cosas que hay que mirar **antes** de correr, porque después no se arreglan.
+
+    `entorno()` las registra fielmente, y ahí está el problema: registrar bien que la
+    corrida no se puede reproducir no la hace reproducible. Las dos salieron de revisar
+    corridas ya hechas, no de una comprobación:
+
+    1. **El árbol sucio.** `arbol_sucio: true` quiere decir que el código que corrió no
+       es el del commit que la corrida registra, así que nadie —ni tú en diciembre— puede
+       volver a esa cifra desde el registro. La guarda cuenta solo los seguidos, porque un
+       archivo suelto no cambia ninguna cifra. En una corrida definitiva es un defecto, y
+       aquí **aborta**; con `permitir_sucio=True` solo avisa, que es lo que quiere una
+       corrida de humo o una prueba a medio escribir. Si hay archivos sin seguimiento,
+       informa con un aviso pero no aborta.
+    2. **El autor.** `_autor` deriva el primer nombre de `git config user.name`, y para
+       quien lo tenga puesto como nombre completo sin espacios sale un identificador de
+       27 caracteres que no se parece a los `antonio`, `artemio` e `ingrid` del resto de
+       `experimentos/`. El nombre de la carpeta se cita en documentos, así que renombrarla
+       después obliga a corregirlos. Se arregla con `BIOACTIVE_AUTOR`.
+
+    Devuelve los avisos que encontró, para que quien llame los registre si quiere.
+    """
+    avisos = []
+    autor = _autor(Path(raiz))
+    if not os.environ.get("BIOACTIVE_AUTOR") and len(autor) > 12:
+        avisos.append(
+            f"el autor de la corrida saldria «{autor}» ({len(autor)} caracteres), que no "
+            "sigue la convencion de experimentos/; definelo con BIOACTIVE_AUTOR"
+        )
+    estado = _git("status", "--porcelain", "--untracked-files=all", raiz=Path(raiz))
+    lineas = estado.splitlines() if estado else []
+    sucio = any(not ln.startswith("??") for ln in lineas)
+    sueltos = sum(1 for ln in lineas if ln.startswith("??"))
+    if sucio:
+        avisos.append(
+            "el arbol esta sucio: el codigo que corre no es el del commit que se registra, "
+            "asi que la cifra no se podra reproducir desde entorno.json"
+        )
+    if sueltos > 0:
+        avisos.append(
+            f"hay {sueltos} archivo(s) sin seguimiento en el arbol (informativo; no ensucia)"
+        )
+    for a in avisos:
+        print(f"AVISO: {a}", file=sys.stderr)
+    if definitiva and sucio and not permitir_sucio:
+        raise SystemExit(
+            "ABORTA: no se lanza una corrida definitiva con el arbol sucio. Haz commit, o "
+            "pasa --arbol-sucio si de verdad quieres una cifra que no se puede reproducir."
+        )
+    return avisos
+
+
 def entorno(raiz: Path = RAIZ, datos: list[Path] | None = None) -> dict:
     """Todo lo que cambia una cifra sin cambiar el código: commit, sistema, versiones, datos.
 
@@ -204,7 +257,7 @@ def _comando(raiz: Path) -> str:
     """El comando sin rutas de la máquina: versión de Python y el script relativo al repositorio."""
     guion, *resto = sys.argv or [""]
     try:
-        guion = str(Path(guion).resolve().relative_to(raiz))
+        guion = Path(guion).resolve().relative_to(raiz).as_posix()
     except ValueError:
         pass
     return shlex.join([f"python{platform.python_version()}", guion, *resto])

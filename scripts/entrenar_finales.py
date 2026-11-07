@@ -71,9 +71,9 @@ def main() -> None:
     CARPETA.mkdir(parents=True, exist_ok=True)
     columnas1 = list(pd.read_parquet(PROCESADOS / DESC1["descriptores"]).columns)
     params = {"fase1": "svm_rbf, 6,306 filas de ajuste, 151 descriptores", "fase2": "aft, 56,241 filas de ajuste, 201 + 26",
-              "filas": "solo ajuste (decisión del 4 de noviembre)", "semilla": SEMILLA, "toca_prueba": False,
+              "filas": "solo ajuste (decisión del 4 de noviembre)", "svm_rbf": "escalador dentro de la calibración (#267)", "semilla": SEMILLA, "toca_prueba": False,
               "destino": str(CARPETA.relative_to(RAIZ))}
-    with Corrida("entrenar-modelos-finales", decision="1.5", params=params, semillas=[SEMILLA],
+    with Corrida("entrenar-modelos-finales-escalador-dentro", decision="1.5", params=params, semillas=[SEMILLA],
                  datos=[PROCESADOS / "bbb_meta.parquet", PROCESADOS / DESC1["descriptores"], PARES, DESC2]) as c:
         t0 = time.perf_counter()
         t = cargar("permeabilidad")                       # por omisión no incluye la prueba

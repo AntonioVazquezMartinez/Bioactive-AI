@@ -1,0 +1,23 @@
+{
+  "columnas": {
+    "fase1": 151,
+    "fase2": 227
+  },
+  "filas": {
+    "fase1": 6306,
+    "fase2": 56241
+  },
+  "recarga_menos_memoria_max": 0.0,
+  "segundos": {
+    "fase1": 2.3,
+    "fase2": 2.6
+  },
+  "tamano_bytes": {
+    "README.md": 2490,
+    "fase1_svm_rbf.joblib": 464761,
+    "fase2_aft.json": 666045,
+    "huellas_fase1.npz": 154561,
+    "huellas_fase2.npz": 1884241,
+    "meta.json": 11473
+  }
+}
