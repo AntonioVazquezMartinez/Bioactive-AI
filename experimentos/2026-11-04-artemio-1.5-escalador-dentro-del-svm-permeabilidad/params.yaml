@@ -1,0 +1,21 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  brazos:
+  - fuera
+  - dentro
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  filas: 6306
+  referencia_control:
+    mcc: 0.7017
+    auroc: 0.919
+  tolerancia: 0.003
+  regla_evaluaciones: 12
+  toca_prueba: false

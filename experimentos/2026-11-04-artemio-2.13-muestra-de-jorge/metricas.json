@@ -1,0 +1,86 @@
+{
+  "0.720_dentro_del_ic": false,
+  "global": {
+    "concordancia": 0.7919780189987109,
+    "concordancia_ic95": [
+      0.7866081625021254,
+      0.7972662018087583
+    ],
+    "esqueletos": 6923,
+    "fraccion_censurada": 0.1807228915662651,
+    "n_exactas": 6664,
+    "n_total": 8134,
+    "pares": 8134,
+    "rmse_exactas": 0.900269785793555,
+    "spearman_exactas": 0.7333770890382587
+  },
+  "pares_con_dianas_del_modelo": 8134,
+  "pares_externos_todas_las_dianas": 8151,
+  "por_estrato": {
+    "mixto": {
+      "concordancia": 0.6153472034585247,
+      "esqueletos": 152,
+      "fraccion_censurada": 0.17647058823529416,
+      "n_exactas": 168,
+      "n_total": 204,
+      "pares": 204,
+      "rmse_exactas": 0.9632178519196217,
+      "spearman_exactas": 0.28452836453947244
+    },
+    "solo_chembl": {
+      "concordancia": 0.7864344414165405,
+      "concordancia_ic95": [
+        0.7806290453750551,
+        0.7931537591748967
+      ],
+      "esqueletos": 6691,
+      "fraccion_censurada": 0.16898841296706157,
+      "n_exactas": 6383,
+      "n_total": 7681,
+      "pares": 7681,
+      "rmse_exactas": 0.8994169129406008,
+      "spearman_exactas": 0.7240422513936073
+    },
+    "solo_npass": {
+      "concordancia": 0.6667540811643611,
+      "esqueletos": 120,
+      "fraccion_censurada": 0.5461847389558233,
+      "n_exactas": 113,
+      "n_total": 249,
+      "pares": 249,
+      "rmse_exactas": 0.8501706231853067,
+      "spearman_exactas": 0.3092216253221974
+    }
+  },
+  "por_hermano": {
+    "con_hermano": {
+      "concordancia": 0.8183854623033259,
+      "concordancia_ic95": [
+        0.7941842140191138,
+        0.8364743259686199
+      ],
+      "esqueletos": 431,
+      "fraccion_censurada": 0.1922365988909427,
+      "n_exactas": 437,
+      "n_total": 541,
+      "pares": 541,
+      "rmse_exactas": 0.889605157495931,
+      "spearman_exactas": 0.7746825315624503
+    },
+    "sin_hermano": {
+      "concordancia": 0.7895891062507523,
+      "concordancia_ic95": [
+        0.7833570195477793,
+        0.7947684103185488
+      ],
+      "esqueletos": 6492,
+      "fraccion_censurada": 0.17990254181482945,
+      "n_exactas": 6227,
+      "n_total": 7593,
+      "pares": 7593,
+      "rmse_exactas": 0.9010134707058377,
+      "spearman_exactas": 0.7288836617679768
+    }
+  },
+  "prueba_reservada_global": 0.72
+}

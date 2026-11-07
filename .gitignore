@@ -77,3 +77,6 @@ animaciones/voz/*.mp3
 
 # Las presentaciones las arma scripts/armar_deck.py a partir de los notebooks.
 _decks/
+
+# Corridas de humo / pruebas preliminares
+experimentos/*-humo/
