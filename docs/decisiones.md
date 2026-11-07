@@ -1077,6 +1077,29 @@ entregable es una lista priorizada con un corte ([C.5](#dc-5)).
 
 *La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
 
+**Qué pesa en el `aft` final, con dos métodos independientes (4 de noviembre, [#146](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/146)).** Corrida `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion` (`scripts/experimento_atribucion_aft.py`), sin tocar la prueba reservada. La [C.2](#dc-2) exige al menos dos métodos de atribución independientes y reportar solo lo en que concuerdan; la fase 2 no tenía ninguno. Sobre el modelo final (201 descriptores y la diana), cinco pliegues agrupados de la semilla 0: **TreeSHAP** (cuánto aporta cada columna a la predicción, de la estructura de los propios árboles) y **permutación** (cuánta concordancia se pierde al barajar una columna en la validación, que solo usa la salida y la etiqueta). La regla se declaró antes: concuerdan si el Spearman entre sus importancias es ≥ 0.70 y comparten al menos 8 de sus 15 primeras columnas.
+
+**Los métodos concuerdan: Spearman 0.93 y 12 de 15 en común.** Las que están en el top 15 de **los dos**, que son las únicas que se afirman:
+
+| columna | TreeSHAP (rango) | pérdida de concordancia al barajar (rango) |
+|:--|--:|--:|
+| `BertzCT` (complejidad topológica) | 0.378 (1) | 0.0168 (3) |
+| diana `MAOA` | 0.295 (2) | 0.0326 (1) |
+| `fr_halogen` (halógenos) | 0.165 (3) | 0.0052 (8) |
+| diana `MAOB` | 0.161 (4) | 0.0227 (2) |
+| `SMR_VSA3` | 0.145 (5) | 0.0058 (6) |
+| diana `DRD2` | 0.143 (6) | 0.0069 (5) |
+| `FpDensityMorgan3` | 0.137 (7) | 0.0039 (11) |
+| `SlogP_VSA10` | 0.134 (8) | 0.0036 (15) |
+| diana `LRRK2` | 0.115 (9) | 0.0071 (4) |
+| `MolLogP` | 0.106 (11) | 0.0038 (12) |
+| diana `BCHE` | 0.097 (13) | 0.0056 (7) |
+| `BalabanJ` | 0.090 (14) | 0.0036 (14) |
+
+**Qué dice.** (1) La diana pesa mucho pero no todo: seis dianas (`MAOA`, `MAOB`, `DRD2`, `LRRK2`, `BCHE`, y `ACHE` solo en la permutación) están entre las primeras, y las 26 columnas de diana reúnen el 15.5% de la atribución de TreeSHAP; el 85% es química. (2) **El contraste que pide `CLAUDE.md` con TPSA y HBD**: TPSA queda en el lugar 44 (TreeSHAP) y 40 (permutación) y `NumHDonors` en el 165 en los dos, así que **no dominan la potencia**, a diferencia de lo que se espera para la permeabilidad de la fase 1; la afirmación vale para la fase 2 y no se traslada. (3) Las dos características químicas de arriba son de complejidad y forma (`BertzCT`, `BalabanJ`, `FpDensityMorgan3`), de lipofilia (`MolLogP`, `SlogP_VSA10`) y los halógenos. **Controles:** TreeSHAP suma al margen del modelo con diferencia 2×10⁻⁶ y coincide exactamente con `shap.TreeExplainer` en 200 filas; la estabilidad entre pliegues es de 0.91 para TreeSHAP y de 0.67 para la permutación, que es más ruidosa. **Verificado de forma independiente:** la permutación de scikit-learn sobre un pliegue y otra muestra da el mismo orden de magnitud (MAOA 0.027, BertzCT 0.023, TPSA 0.0015, `NumHDonors` 0.0002) y correlaciona 0.85 con la guardada.
+
+**Lo que esta corrida no cumple de la C.2.** Pide también atribución **por subestructura**, y el `aft` final **no usa huellas**: sus columnas son descriptores y dianas. Esa parte no se puede cumplir con este modelo; haría falta el brazo `aft_huellas` (que no mejora en NPASS y no es el modelo final) y mapear cada columna Sort & Slice a su subestructura. **Límites:** una sola semilla; la permutación sobre 3,000 filas de cada pliegue con dos repeticiones; columnas correlacionadas se reparten la importancia (la permutación puede subestimarlas); y la atribución dice qué usa el modelo, no por qué funciona.
+
 **Los cuatro brazos del `aft`, completos: ni filtrar los descriptores ni quitarlos mejora en NPASS (4 de noviembre).** Corrida `2026-11-04-artemio-2.13-brazos-aft-filtrados-y-huellas-solas` (`scripts/experimento_aft_brazos.py`), sin tocar la prueba reservada. La corrida de Ingrid midió `aft` y `aft_huellas`; faltaban dos de los cuatro brazos del plan (E3): los **descriptores filtrados** (el filtro de la 03c y la 04c, aprendido dentro de cada pliegue, con TPSA y HBD protegidos) y las **huellas solas** con la diana, sin ningún descriptor. Los cuatro con los mismos pliegues y semillas. La regla se declaró antes: la métrica principal es la concordancia en `solo_npass`; un brazo supera al `aft` si su diferencia pareada es positiva, mayor que su desviación y en 12 de 15 evaluaciones.
 
 | brazo | `solo_npass`: concordancia | diferencia con `aft` (desviación) | mejor / peor en | veredicto | `todos`: diferencia (desviación) |

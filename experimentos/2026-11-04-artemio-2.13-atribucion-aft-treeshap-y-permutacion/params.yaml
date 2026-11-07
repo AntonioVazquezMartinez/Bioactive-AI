@@ -1,0 +1,16 @@
+decision: '2.13'
+semillas:
+- 0
+params:
+  modelo: aft (201 descriptores y diana, la 2.13)
+  semilla: 0
+  pliegues: 5
+  metodos:
+  - TreeSHAP (pred_contribs)
+  - permutación sobre la concordancia
+  filas_permutacion: 3000
+  repeticiones: 2
+  top: 15
+  rho_minimo: 0.7
+  compartidas_minimo: 8
+  toca_prueba: false
