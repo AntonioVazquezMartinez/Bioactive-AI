@@ -98,6 +98,26 @@ def test_los_dos_metodos_coinciden_en_once_de_quince():
         assert esperada in coinciden
 
 
+def test_el_primer_metodo_se_nombra_y_no_siempre_es_la_impureza():
+    """La fase 2 pasa `shap_media_abs`, porque su primer método es TreeSHAP y no la impureza.
+
+    Llamar `impureza` a las dos cosas fue un defecto real: dos corridas hermanas de la C.2
+    traían esa columna con métodos distintos dentro. El valor por omisión sigue siendo el de
+    la fase 1, que es quien ya llamaba a esta función.
+    """
+    imp = pd.read_csv(RAIZ_DATOS)
+    # Una columna con el orden invertido: si `columna` no se usara, el resultado no cambiaría.
+    imp = imp.assign(shap_media_abs=-imp["impureza"])
+    por_impureza = concordantes(imp, n=15)
+    por_shap = concordantes(imp, n=15, columna="shap_media_abs")
+    assert por_impureza == concordantes(imp, n=15, columna="impureza"), "el defecto es el mismo"
+    assert por_shap != por_impureza, "`columna` no está llegando al cálculo"
+
+    _, ax = plt.subplots()
+    importancias_dos_metodos(imp, ax=ax, n=15, columna="shap_media_abs")
+    assert "shap_media_abs" in ax.get_title(), "el título debe decir qué método se comparó"
+
+
 def test_la_barra_de_importancias_marca_las_concordantes():
     imp = pd.read_csv(RAIZ_DATOS)
     _, ax = plt.subplots()

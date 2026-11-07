@@ -13,7 +13,7 @@ from scipy.stats import spearmanr
 from sklearn.base import clone
 from sklearn.exceptions import NotFittedError
 
-from src.models.aft import RegresionAFT
+from src.models.aft import AftConCensuraIzquierda, RegresionAFT
 
 INF = np.inf
 
@@ -30,7 +30,9 @@ def datos_censurados():
     inferior = y_latente.copy()
     superior = y_latente.copy()
 
-    # Censura por la izquierda en pActividad: mediciones < 5.0 (concentración > 10 µM)
+    # Censura por la derecha **en µM**: «> 10 µM», el inactivo. En pActividad eso es una
+    # cota superior («≤ 5»), porque la escala invierte el signo; el lado se nombra en µM,
+    # que es la escala en la que XGBoost recibe las cotas. Ver docs/glosario.md.
     cens = y_latente < 5.0
     inferior[cens] = -INF
     superior[cens] = 5.0
@@ -67,13 +69,20 @@ def test_predict_sin_fit_lanza_error():
 
 
 def test_descarte_de_filas_no_informativas(datos_censurados):
-    """Debe descartar filas con nan (contradictorias), [-inf, inf] y cota inferior cero."""
+    """Debe descartar filas con nan (contradictorias) y [-inf, inf].
+
+    Las filas con cota inferior cero en µM (sup=inf en pActividad, censura por la
+    izquierda) no son no informativas: el filtro histórico de RegresionAFT las
+    descarta, pero se conservan por la vía correcta con AftConCensuraIzquierda.
+    """
     X, _, inferior, superior = datos_censurados
 
     # Añadir 3 filas problemáticas:
-    # 1. Contradictoria (inf > sup) -> nan en micromolar
-    # 2. Sin cotas [-inf, inf] -> [0, inf] en micromolar (inf_um == 0)
-    # 3. sup = inf -> inf_um == 0 (concentración [0, L], sin cota inferior positiva)
+    # 1. Contradictoria (inf > sup) -> nan en micromolar (no informativa)
+    # 2. Sin cotas [-inf, inf] -> [0, inf] en micromolar (inf_um == 0, no informativa)
+    # 3. sup = inf -> inf_um == 0 en µM: concentración [0, L], o sea censura por la
+    #    **izquierda en µM** («más potente que L µM»), que es el lado opuesto al de la
+    #    fixture y el que `AftConCensuraIzquierda` conserva. Sí informa.
     X_extra = np.vstack([X, np.zeros((3, 3))])
     inf_extra = np.concatenate([inferior, [6.0, -INF, 5.0]])
     sup_extra = np.concatenate([superior, [4.0, INF, INF]])
@@ -81,9 +90,17 @@ def test_descarte_de_filas_no_informativas(datos_censurados):
     modelo = RegresionAFT(rondas=10, profundidad=2, semilla=0)
     modelo.fit(X_extra, inf_extra, sup_extra)
 
-    # Las 3 filas deben haberse descartado porque inf_um <= 0 o es nan
+    # El filtro por omisión de RegresionAFT descarta las 3 (incluyendo la censurada por la izquierda)
     assert modelo.n_descartadas_ >= 3
     assert hasattr(modelo, "booster_")
+
+    # Por la vía correcta (AftConCensuraIzquierda), esa tercera fila se conserva:
+    # solo se descartan las 2 que verdaderamente no informan o son contradictorias
+    modelo_izq = AftConCensuraIzquierda(rondas=10, profundidad=2, semilla=0)
+    modelo_izq.fit(X_extra, inf_extra, sup_extra)
+    assert modelo_izq.n_descartadas_ == modelo.n_descartadas_ - 1
+    assert modelo_izq.n_recuperadas_ >= 1
+    assert hasattr(modelo_izq, "booster_")
 
 
 def test_falla_si_no_hay_filas_validas():

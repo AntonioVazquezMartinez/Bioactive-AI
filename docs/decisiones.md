@@ -26,7 +26,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente | |
 | [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente | |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta | |
-| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Revisada | |
+| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Vigente · revisada | |
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
@@ -74,6 +74,12 @@ Lo que vale para las dos fases.
 **Estado:** vigente · requisito de la patrocinadora
 
 **Se decidió.** Al menos dos métodos de atribución independientes; solo se reportan como confirmadas las subestructuras en que coinciden. Un modelo interpretable simple se entrena en paralelo como control. Toda afirmación estructural se contrasta primero contra TPSA (<67 Å²) y HBD (≤1), que dominan empíricamente. Aplica a las dos fases.
+
+**Qué par es cada fase, porque no es el mismo.** En la fase 1 son la ganancia interna de los árboles y la importancia por permutación (`scripts/importancias_fase1.py`, corrida `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres`). En la fase 2 el primer método es **TreeSHAP** sobre el booster del `aft` con huellas, porque la ganancia interna no da dirección y aquí hace falta decir hacia qué lado empuja una subestructura (`scripts/atribucion_fase2.py`). El segundo sigue siendo la permutación, medida sobre la caída de concordancia de Harrell en el pliegue de evaluación. **La columna del primer método se nombra en cada corrida** (`columna_metodo_1` en sus `params`): llamarla `impureza` en las dos fases fue un defecto real, porque dos corridas hermanas traían el mismo nombre con métodos distintos dentro.
+
+**Y TreeSHAP en el `aft` trae una trampa de signo.** Explica el **margen**, que con `survival:aft` está en ln(µM), donde más alto es **menos** potente; verificado numéricamente, el margen reproduce `log` de lo que el booster predice y SHAP reproduce el margen. Para leerlo en [pActividad](glosario.md) hay que invertirlo y reescalarlo (−SHAP / ln 10). Sin eso, toda afirmación estructural sale al revés, y saldría al revés de forma plausible, que es lo peligroso.
+
+**La intersección se calcula solo sobre las características presentes en todos los pliegues.** El vocabulario Sort & Slice se reaprende en cada pliegue —y así debe ser, o la validación decidiría qué columnas existen—, así que una huella puede faltar en alguno. Promediar una media de un pliegue junto a una de cinco premia a las huellas raras justo en el top que esta decisión reporta; las incompletas quedan en el CSV de la corrida, pero no entran en la afirmación. Cuántas quedaron fuera se registra en `metricas.json`.
 
 ### Propuestas
 
@@ -361,9 +367,9 @@ Para el modelo que se entrega, `svm_rbf`: −0.0003 de MCC (desviación pareada 
 
 **Se propone.** Excluirlas de la clasificación y no imputar una etiqueta desde la conectividad, porque la estereoquímica puede cambiar la clase.
 
-#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .revisada}
+#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .vigente .revisada}
 
-**Estado:** revisada · el 12 de octubre y el 2 de noviembre
+**Estado:** vigente · revisada el 12 de octubre y el 2 de noviembre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 151 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
@@ -469,7 +475,24 @@ Solo la logística necesita escalar, así que cada modelo lleva su canalización
 
 **Por la regla declarada, la similitud al vecino no basta:** reponderar sube el AUROC esperado, porque la prueba no es más lejana que la validación agrupada (similitud media 0.414 contra 0.384), y deja una brecha de **0.097** (0.089 con cinco vecinos) que esa medida no ve. **La prueba es difícil por algo distinto de qué tan lejos queda de lo visto.** Lo que esta corrida no dice: qué es. Candidatos sin medir, todos sobre la prueba y por eso fuera de lo que esta corrida puede hacer sin etiquetas: la prevalencia de BBB+ (el ajuste tiene 65%), el peso molecular y la polaridad, la curación distinta de los datos, y que la prueba contenga los andamios raros a propósito. **Verificado de forma independiente:** con el vecino más cercano por la matriz densa (y no por el producto de matrices), cubetas por cuartiles de la prueba (y no deciles) y un AUROC ponderado escrito a mano, la validación sin ponderar da 0.8786 (idéntico) y la reponderada 0.8876 (0.8895 con deciles): la conclusión no depende de la discretización. Además la media (0.4139) y la mediana (0.3721) de la similitud de la prueba coinciden con las de la corrida E1+ (`…escalera-ampliada-permeabilidad`), calculadas con otro código. **Límites:** una sola familia de modelos (el `svm_rbf`), una definición de parecido (ECFP4; la E13 muestra que importa) y un solo vecino o cinco; ponderar por cubetas supone que la dificultad depende solo de la similitud dentro de cada cubeta.
 
+**¿Algún ensamble supera al `svm_rbf` en AUROC, con la diferencia pareada y su intervalo? Dos lo hacen sin corregir por comparaciones múltiples, y ninguno con la corrección (4 de noviembre, comentario de Grettel del 3 de noviembre).** Corrida `2026-11-04-artemio-1.7-auroc-pareado-ensambles-permeabilidad` (`scripts/experimento_auroc_pareado_ensambles.py`), sin entrenar nada ni tocar la prueba reservada: lee el `pliegues.csv` de la corrida de los ensambles. Grettel señaló que el traslape de intervalos individuales no prueba que no haya diferencia y que hay que estimar **la diferencia de AUROC con su intervalo**; el 05 lo hacía para MCC y AUPRC (con la corrección de Nadeau y Bengio de la [1.7](#d1-7)) y no para el AUROC, que decidió «no decide». Para los diez modelos distintos del individual, en las mismas 15 evaluaciones: diferencia pareada, y su IC del 95% corregido (error × √(1/15 + 1/4), t de 14 grados de libertad). La regla se declaró antes: supera si el límite inferior del IC es mayor que 0. **El control pasa:** la misma implementación reproduce los intervalos de MCC que publica el #188 para `stacking` (+0.0093 [−0.0101, +0.0287]) y `votacion` (+0.0075 [−0.0113, +0.0263]).
+
+| modelo | ΔAUROC contra `svm_rbf` | IC95% corregido | gana en | p (Nadeau–Bengio) | p con Holm (10 comparaciones) |
+|:--|--:|:--|--:|--:|--:|
+| `votacion` | +0.0139 | [+0.0038, +0.0239] | 15 de 15 | 0.010 | 0.103 |
+| `stacking` | +0.0128 | [+0.0023, +0.0233] | 14 de 15 | 0.020 | 0.180 |
+| `bosque` | +0.0138 | [−0.0011, +0.0288] | 14 de 15 | 0.067 | 0.535 |
+| `bosque afinado` | +0.0135 | [−0.0012, +0.0283] | 15 de 15 | 0.069 | 0.535 |
+| `boosting afinado` | +0.0103 | [−0.0022, +0.0229] | 12 de 15 | 0.100 | 0.599 |
+| `boosting` | +0.0112 | [−0.0042, +0.0265] | 12 de 15 | 0.141 | 0.707 |
+| `bagging_svm` | +0.0022 | [−0.0010, +0.0054] | 11 de 15 | 0.155 | 0.707 |
+| `mlp`, `logistica`, `knn` | −0.0080 a −0.0049 | todos incluyen el cero | 3 a 7 de 15 | 0.25 a 0.56 | 0.75 |
+
+**Lo que cambia, y es una corrección a lo que decíamos.** Por la regla declarada, `stacking` y `votacion` **sí superan al individual en AUROC**: su IC excluye el cero. La afirmación «ningún ensamble mejora de forma distinguible al mejor individual» **valía para MCC y AUPRC, no para el AUROC**, y el 05 la extendía por no tener un umbral para el AUROC. Dos matices que impiden convertirlo en una ventaja: (1) las magnitudes son de **1.3 y 1.4 puntos de AUROC** y, en las métricas de decisión (MCC y AUPRC), el mismo par no pasa; (2) son **diez comparaciones sin corregir**: con la de Holm, los valores p suben a 0.10 y 0.18 y **ninguno sobrevive**. La lectura honesta es: *hay una señal consistente de que los ensambles ordenan un poco mejor (los de bosque ganan en 14 o 15 de las 15 evaluaciones), que la corrección conservadora por pliegues compartidos no alcanza a separar del ruido una vez que se cuentan las diez comparaciones.* La elección del `svm_rbf` por MCC y AUPRC no cambia, pero el artículo y el 05 **no deben decir que ningún ensamble mejora en nada**. **Verificado de forma independiente:** los valores p se recalcularon por otra ruta (pivote de pandas y t explícita), coinciden con los intervalos, y la prueba de Wilcoxon (que ignora la dependencia entre pliegues y por eso no se usa para decidir) da valores mucho menores, el síntoma de por qué hace falta la corrección. **Límites:** una sola semilla de modelo; los pliegues comparten datos de entrenamiento (de ahí la corrección); el `mlp` y el `bosque` varían con la semilla del modelo (E16).
+
 **Con qué filas se sirven los modelos finales, y cómo se entregan (4 de noviembre).** Decisión del equipo, tomada tras la curva de aprendizaje (`2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`): **los dos modelos se sirven con las filas de ajuste y no con las de validación**. En la fase 1 la ganancia de usar el 100% sobre el 75% de las filas es +0.002 de AUROC (meseta), así que no hay nada que ganar; en la fase 2 sigue subiendo (+0.0076 de concordancia, 15 de 15) y **se renuncia a esa ganancia** a cambio de poder evaluar el modelo servido y repetir la cifra registrada (la prueba nunca entra). **Se entregan en `models/finales/` y se usan desde `notebooks/06_Uso_de_los_modelos.ipynb`, sin servicio** (reunión del 3 de noviembre). Corrida `…-entrenar-modelos-finales` (`scripts/entrenar_finales.py`): 6,306 filas en la fase 1 y 56,241 en la fase 2, los artefactos pesan unos 3 MB y van en git normal. **Verificado de forma independiente:** los descriptores que `src/inferencia.py` calcula desde un SMILES coinciden bit a bit con los de entrenamiento en 150 moléculas de cada fase (diferencia 0.0; las dos columnas `regla_2p` y `tpsa_por_mw` de la fase 1 son derivadas y se reproducen con su fórmula), y el modelo recargado desde disco reproduce al entrenado en memoria (diferencia 0.0). **Límites:** el `joblib` depende de la versión de scikit-learn; una predicción sobre un par (compuesto, diana) que nunca se midió es una extrapolación; y el cuaderno entrega la probabilidad sin corte porque a 0.5 el modelo cambia de sesgo bajo un cambio de distribución (E15).
+
+**Modelos finales regenerados con el escalador dentro del SVM** (4 de noviembre, corrida `…-entrenar-modelos-finales-escalador-dentro`; consecuencia de adoptar #267, cuyo efecto medido en E17 es nulo). Solo cambia el de la fase 1: el `aft`, las huellas y la fase 2 salen idénticos byte a byte. Las 25 predicciones de referencia de `meta.json` cambian en la fase 1 hasta 0.00065 de probabilidad y mantienen la misma clase a 0.5. El cuaderno 06, ejecutado de nuevo en una copia, cambia tres cifras de probabilidad en la tercera cifra decimal (resveratrol 0.182 a 0.181, curcumina 0.184 a 0.183, metano 0.914 a 0.915). **Versión anterior:** el escalador fuera de la calibración, el que entregaba el commit anterior.
 
 **Medición · andamios de la prueba reservada** (4 nov, corrida `2026-11-04-artemio-1.6-andamios-de-la-prueba`). Pregunta del comentario de Grettel del 3 de noviembre: qué proporción de la prueba tiene andamio o esqueleto que el entrenamiento no vio. Regla escrita y commiteada antes de correr; solo columnas estructurales, sin etiquetas.
 
@@ -1079,6 +1102,29 @@ subconjunto ([C.1](#dc-1)). La censura compra concordancia y MCC, que es donde v
 entregable es una lista priorizada con un corte ([C.5](#dc-5)).
 
 *La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
+
+**Qué pesa en el `aft` final, con dos métodos independientes (4 de noviembre, [#146](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/146)).** Corrida `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion` (`scripts/experimento_atribucion_aft.py`), sin tocar la prueba reservada. La [C.2](#dc-2) exige al menos dos métodos de atribución independientes y reportar solo lo en que concuerdan; la fase 2 no tenía ninguno. Sobre el modelo final (201 descriptores y la diana), cinco pliegues agrupados de la semilla 0: **TreeSHAP** (cuánto aporta cada columna a la predicción, de la estructura de los propios árboles) y **permutación** (cuánta concordancia se pierde al barajar una columna en la validación, que solo usa la salida y la etiqueta). La regla se declaró antes: concuerdan si el Spearman entre sus importancias es ≥ 0.70 y comparten al menos 8 de sus 15 primeras columnas.
+
+**Los métodos concuerdan: Spearman 0.93 y 12 de 15 en común.** Las que están en el top 15 de **los dos**, que son las únicas que se afirman:
+
+| columna | TreeSHAP (rango) | pérdida de concordancia al barajar (rango) |
+|:--|--:|--:|
+| `BertzCT` (complejidad topológica) | 0.378 (1) | 0.0168 (3) |
+| diana `MAOA` | 0.295 (2) | 0.0326 (1) |
+| `fr_halogen` (halógenos) | 0.165 (3) | 0.0052 (8) |
+| diana `MAOB` | 0.161 (4) | 0.0227 (2) |
+| `SMR_VSA3` | 0.145 (5) | 0.0058 (6) |
+| diana `DRD2` | 0.143 (6) | 0.0069 (5) |
+| `FpDensityMorgan3` | 0.137 (7) | 0.0039 (11) |
+| `SlogP_VSA10` | 0.134 (8) | 0.0036 (15) |
+| diana `LRRK2` | 0.115 (9) | 0.0071 (4) |
+| `MolLogP` | 0.106 (11) | 0.0038 (12) |
+| diana `BCHE` | 0.097 (13) | 0.0056 (7) |
+| `BalabanJ` | 0.090 (14) | 0.0036 (14) |
+
+**Qué dice.** (1) La diana pesa mucho pero no todo: seis dianas (`MAOA`, `MAOB`, `DRD2`, `LRRK2`, `BCHE`, y `ACHE` solo en la permutación) están entre las primeras, y las 26 columnas de diana reúnen el 15.5% de la atribución de TreeSHAP; el 85% es química. (2) **El contraste que pide `CLAUDE.md` con TPSA y HBD**: TPSA queda en el lugar 44 (TreeSHAP) y 40 (permutación) y `NumHDonors` en el 165 en los dos, así que **no dominan la potencia**, a diferencia de lo que se espera para la permeabilidad de la fase 1; la afirmación vale para la fase 2 y no se traslada. (3) Las dos características químicas de arriba son de complejidad y forma (`BertzCT`, `BalabanJ`, `FpDensityMorgan3`), de lipofilia (`MolLogP`, `SlogP_VSA10`) y los halógenos. **Controles:** TreeSHAP suma al margen del modelo con diferencia 2×10⁻⁶ y coincide exactamente con `shap.TreeExplainer` en 200 filas; la estabilidad entre pliegues es de 0.91 para TreeSHAP y de 0.67 para la permutación, que es más ruidosa. **Verificado de forma independiente:** la permutación de scikit-learn sobre un pliegue y otra muestra da el mismo orden de magnitud (MAOA 0.027, BertzCT 0.023, TPSA 0.0015, `NumHDonors` 0.0002) y correlaciona 0.85 con la guardada.
+
+**Lo que esta corrida no cumple de la C.2.** Pide también atribución **por subestructura**, y el `aft` final **no usa huellas**: sus columnas son descriptores y dianas. Esa parte no se puede cumplir con este modelo; haría falta el brazo `aft_huellas` (que no mejora en NPASS y no es el modelo final) y mapear cada columna Sort & Slice a su subestructura. **Límites:** una sola semilla; la permutación sobre 3,000 filas de cada pliegue con dos repeticiones; columnas correlacionadas se reparten la importancia (la permutación puede subestimarlas); y la atribución dice qué usa el modelo, no por qué funciona.
 
 **Los cuatro brazos del `aft`, completos: ni filtrar los descriptores ni quitarlos mejora en NPASS (4 de noviembre).** Corrida `2026-11-04-artemio-2.13-brazos-aft-filtrados-y-huellas-solas` (`scripts/experimento_aft_brazos.py`), sin tocar la prueba reservada. La corrida de Ingrid midió `aft` y `aft_huellas`; faltaban dos de los cuatro brazos del plan (E3): los **descriptores filtrados** (el filtro de la 03c y la 04c, aprendido dentro de cada pliegue, con TPSA y HBD protegidos) y las **huellas solas** con la diana, sin ningún descriptor. Los cuatro con los mismos pliegues y semillas. La regla se declaró antes: la métrica principal es la concordancia en `solo_npass`; un brazo supera al `aft` si su diferencia pareada es positiva, mayor que su desviación y en 12 de 15 evaluaciones.
 
