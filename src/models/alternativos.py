@@ -76,8 +76,13 @@ def catalogo(semilla: int = 0) -> dict[str, Pipeline]:
         # medir AUROC ni AUPRC. La calibración se la agrega por fuera: en
         # scikit-learn 1.9 `probability=True` quedó deprecado a favor de esto, y
         # con `ensemble=False` ajusta un solo modelo en vez de uno por pliegue.
-        "svm_rbf": _con_escala(
-            CalibratedClassifierCV(SVC(random_state=semilla), ensemble=False)),
+        # El escalador va DENTRO de la calibración (E17, #262): fuera, la calibración
+        # ajustaba Platt sobre datos que el escalador ya había visto. El efecto medido
+        # es nulo (MCC 0.7015 contra 0.7017; AUROC y AUPRC idénticos), pero la forma
+        # correcta no depende de que el efecto sea pequeño.
+        "svm_rbf": Pipeline([("modelo", CalibratedClassifierCV(
+            Pipeline([("escala", MinMaxScaler()), ("svc", SVC(random_state=semilla))]),
+            ensemble=False))]),
         # `modified_huber` es la pérdida que sí expone `predict_proba` en SGD.
         "svm_sgd": _con_escala(
             SGDClassifier(loss="modified_huber", max_iter=3000,
