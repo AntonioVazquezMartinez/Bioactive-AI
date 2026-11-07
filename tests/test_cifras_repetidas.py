@@ -95,14 +95,25 @@ def test_el_7_1_y_el_2_2_se_atribuyen_al_bosque(corpus):
     Una copia que los cite sin decir de qué modelo son los presenta como un efecto general,
     que es lo que la corrida 2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad desmintió.
     """
-    sueltas = []
+    # Por valor y no por índice: el #268 insertó dos entradas al principio de CIFRAS y
+    # esta prueba, que direccionaba CIFRAS[0] y CIFRAS[1], quedó comparando el patrón de
+    # las lecturas contra «7.1». Pasó en vacío hasta que alguien lo probó a mano.
+    vigiladas = [(p, v) for _, p, v in CIFRAS if v in ("7.1", "2.2")]
+    assert len(vigiladas) == 2, (
+        "las entradas del 7.1 y del 2.2 cambiaron de valor o salieron de CIFRAS")
+
+    sueltas, vistas = [], 0
     for ruta, texto in corpus.items():
-        for patron, valor in ((CIFRAS[0][1], "7.1"), (CIFRAS[1][1], "2.2")):
+        for patron, valor in vigiladas:
             for m in re.finditer(patron, texto):
                 if valor not in next(g for g in m.groups() if g):
                     continue
+                vistas += 1
                 contexto = texto[max(0, m.start() - 220):m.end() + 260]
                 if re.search(r"bosque|forest|svm_rbf|superad|dec[ií]a", contexto, re.I):
                     continue
                 sueltas.append(f"{ruta} cita {valor} sin decir que es del bosque")
+    assert vistas, (
+        "la guarda no encontró ninguna cita del 7.1 ni del 2.2: el patrón o la redacción "
+        "cambiaron y dejó de vigilar sin que nada falle")
     assert not sueltas, "; ".join(sueltas)
