@@ -91,6 +91,14 @@ columna `seg` como tiempo de reloj, y no lo es— queda corregido en la
 regla está dicha, y de hecho lo pareció en revisión: la carpeta se queda como quedó, la bitácora
 se lee.
 
+## `segundos_ajuste` no se repite: la prosa que lo cite tiene que nombrar su corrida
+
+Dos corridas del mismo modelo con el mismo `datos_sha256`, el mismo `lock_sha256`, la misma máquina y el
+mismo Python dan **métricas idénticas y tiempos distintos**: el `bosque afinado` del 05 tardó 309 s por
+ajuste el 29 de octubre y 340.6 s el 1 de noviembre, un 10% más. La columna mide el estado de la máquina
+y no el modelo, así que no es reproducible ni en el mismo portátil. Cualquier texto que cite
+`segundos_ajuste` debe decir de qué corrida sale, y no se compara un tiempo con el de otra.
+
 ## El AUPRC de la minoritaria de antes del arreglo de `orientar_minoritaria`
 
 Hasta `fix/auprc-minoritaria`, el AUPRC de la clase minoritaria se medía puntuando con `1 - p`,
