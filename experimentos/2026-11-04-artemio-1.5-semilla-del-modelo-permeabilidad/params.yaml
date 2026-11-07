@@ -1,0 +1,28 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+- 3
+- 4
+params:
+  modelos:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  - bosque
+  - boosting
+  semillas_particion:
+  - 0
+  - 1
+  - 2
+  semillas_modelo:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  umbral_mcc: 0.005
+  filas: 6306
+  toca_prueba: false

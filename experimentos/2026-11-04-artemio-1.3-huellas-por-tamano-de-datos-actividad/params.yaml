@@ -1,0 +1,25 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  tamanos:
+  - 5000
+  - 10000
+  - 20000
+  - completo
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  n_bits_sortslice: 2048
+  submuestreo: por grupos grupo_cv
+  referencia_control:
+    aft: 0.761
+    aft_huellas: 0.7659
+  tolerancia: 0.003
+  regla_evaluaciones: 12
+  toca_prueba: false
+  tamano_de_un_ajuste_de_la_fase_1: 5045

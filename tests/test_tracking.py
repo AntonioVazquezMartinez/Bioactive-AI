@@ -3,7 +3,7 @@ import json
 import pytest
 import yaml
 
-from src.tracking import Corrida, sha256
+from src.tracking import Corrida, exigir_corrida_reproducible, sha256
 
 
 def _corrida(tmp_path, **kw):
@@ -105,6 +105,55 @@ def test_un_archivo_seguido_modificado_si_ensucia_y_se_cuenta_aparte(tmp_path):
     entorno = json.loads((c.carpeta / "entorno.json").read_text())
     assert entorno["arbol_sucio"] is True
     assert entorno["sin_seguimiento"] == 1
+
+
+def test_una_corrida_definitiva_con_el_arbol_sucio_aborta(tmp_path, monkeypatch):
+    """Registrar bien que una cifra no se puede reproducir no la hace reproducible."""
+    monkeypatch.setenv("BIOACTIVE_AUTOR", "t")
+    _repo(tmp_path)
+    (tmp_path / "salida.csv").write_text("sin commitear\n")
+    with pytest.raises(SystemExit, match="arbol sucio"):
+        exigir_corrida_reproducible(definitiva=True, raiz=tmp_path)
+
+
+def test_el_arbol_sucio_solo_avisa_si_la_corrida_no_es_definitiva(tmp_path, monkeypatch):
+    monkeypatch.setenv("BIOACTIVE_AUTOR", "t")
+    _repo(tmp_path)
+    (tmp_path / "salida.csv").write_text("sin commitear\n")
+    # Una corrida de humo se lanza con el árbol sucio a propósito: es código a medio escribir.
+    avisos = exigir_corrida_reproducible(definitiva=False, raiz=tmp_path)
+    assert any("arbol" in a for a in avisos)
+    # Y una definitiva también, si quien la lanza lo dice explícitamente.
+    assert exigir_corrida_reproducible(definitiva=True, permitir_sucio=True, raiz=tmp_path)
+
+
+def test_la_guarda_informa_de_los_sueltos_sin_abortar(tmp_path, monkeypatch):
+    """Un archivo suelto no cambia ninguna cifra: la guarda informa pero no aborta."""
+    monkeypatch.setenv("BIOACTIVE_AUTOR", "t")
+    _repo(tmp_path)
+    (tmp_path / "suelto.txt").write_text("archivo no seguido\n")
+    avisos = exigir_corrida_reproducible(definitiva=True, raiz=tmp_path)
+    assert any("sin seguimiento" in a for a in avisos)
+
+
+def test_un_arbol_limpio_no_da_avisos(tmp_path, monkeypatch):
+    monkeypatch.setenv("BIOACTIVE_AUTOR", "t")
+    _repo(tmp_path)
+    assert exigir_corrida_reproducible(definitiva=True, raiz=tmp_path) == []
+
+
+def test_avisa_del_autor_largo_que_no_sigue_la_convencion(tmp_path, monkeypatch):
+    """`antonio` y `joseantoniovazquezmartinez` nombran la misma carpeta de distinta forma."""
+    monkeypatch.delenv("BIOACTIVE_AUTOR", raising=False)
+    import subprocess
+    _repo(tmp_path)
+    subprocess.run(["git", "config", "user.name", "JoseAntonioVazquezMartinez"],
+                   cwd=tmp_path, check=True)
+    avisos = exigir_corrida_reproducible(definitiva=True, raiz=tmp_path)
+    assert any("BIOACTIVE_AUTOR" in a for a in avisos), avisos
+    # Con la variable puesta, el aviso desaparece aunque git siga diciendo lo mismo.
+    monkeypatch.setenv("BIOACTIVE_AUTOR", "antonio")
+    assert exigir_corrida_reproducible(definitiva=True, raiz=tmp_path) == []
 
 
 def test_comando_sin_rutas_absolutas(tmp_path, monkeypatch):
