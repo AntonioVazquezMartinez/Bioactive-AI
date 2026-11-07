@@ -104,6 +104,17 @@ parecido que es cada compuesto (+0.036 en el tercil más raro, +0.106 en el más
 
 *Figura 4. Ventaja sobre la línea base por tercil de rareza, con IC95% por bootstrap de grupos.*
 
+**Dar más peso a lo raro durante el entrenamiento no ayuda.** Como la ventaja del modelo se pierde justo
+en lo raro, probamos repesar las filas raras que ya están en el ajuste: peso 3, 2 y 1 según el tercil de
+similitud al vecino más cercano de otro grupo, dentro de cada tramo de peso molecular (`svm_rbf`, 15
+evaluaciones agrupadas, regla escrita antes de correr, sin leer la prueba; decisión 1.10). En el tercil más raro
+de validación la ganancia de AUROC es −0.0005, positiva en 9 de 15 evaluaciones, cuando la regla pedía más de
+0.005 en 12. Un control con los mismos pesos asignados al azar mueve el AUROC global casi igual
+(+0.0015 contra +0.0022) y el MCC global baja 0.0022. **La regla tiene poca potencia para efectos chicos:**
+con la dispersión observada (0.0095) solo detectaría con 80% de probabilidad una mejora de unos 0.010, así
+que el resultado descarta una mejora grande, no una de 0.005. Tampoco es el experimento de pasar compuestos
+raros de la prueba al ajuste para aprender de ellos, que no se hizo.
+
 ### 5.3 La representación no se traslada entre fases
 
 Las huellas Sort & Slice **no mejoran a ningún modelo de la fase 1** y bajan el MCC de cinco de seis;
@@ -213,8 +224,9 @@ columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medi
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
 cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura
-excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; y ninguna corrida se diseñó para
-comparar las palancas de la Figura 1.
+excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; ninguna corrida se diseñó para
+comparar las palancas de la Figura 1; y no probamos aprender de los compuestos raros de la prueba (solo repesar los que ya
+están en el ajuste), ni con otro modelo que el `svm_rbf`.
 
 ## 8. Referencias y anexos
 
