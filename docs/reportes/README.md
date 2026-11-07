@@ -77,4 +77,10 @@ La prueba reservada se tomó una vez en la fase 1 y quedó registrada con su mot
 | Producto de difusión · artículo de 12–18 páginas | 8 de noviembre | Evaluación y despliegue |
 | Resumen ejecutivo · tres páginas para la dirección | 15 de noviembre | Evaluación y despliegue |
 
+Las dos traen ya su plantilla del curso versionada, con APA 7 fijado y la bibliografía del
+proyecto por enlace simbólico. Cómo se compila cada una, qué quedó decidido y qué falta está
+en el repositorio, en `docs/reportes/articulo/README.md` y
+`docs/reportes/resumen-ejecutivo/README.md`: son notas de trabajo y no se publican en el
+sitio, igual que el esqueleto del artículo.
+
 Las dos últimas no son libretas sino documentos en PDF, y entre las dos piden lo que el proyecto todavía no tiene escrito: una arquitectura de despliegue con su monitoreo, y una evaluación económica con beneficios mensuales, costo total de propiedad a doce meses y riesgos con su mitigación.
