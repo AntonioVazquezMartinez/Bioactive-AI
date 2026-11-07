@@ -809,13 +809,17 @@ Los pesos 1, 2 y 3 son fijos y se declaran aquí: no se afinan, porque afinarlos
 
 **El intercambio se acepta a propósito.** El 0.005 aparece con dos papeles: lo que B debe ganar donde es raro y lo que se le permite perder donde es parecido. Como los terciles son casi del mismo tamaño (2,072, 2,109 y 2,125 filas), la regla puede declarar «sirve» con una ganancia neta cercana a cero. Se acepta, porque la prueba reservada es química rara y es ahí donde se quiere mejorar; contra la desviación nula pareada del `svm_rbf` (0.0006, medida en el #280) ese 0.005 es unas ocho desviaciones, es decir, un permiso de pérdida real. Por eso el AUROC y el MCC globales se reportan aunque no entren en la regla, y el tercil intermedio, que recibe peso 2, se reporta sin criterio. Quien lea un «sirve» con el global plano o a la baja debe leerlo como este intercambio y no como una mejora general.
 
+**La peor forma admisible.** Con la media en −0.005 y el recuento en 3, lo peor que la regla 2 deja pasar son tres evaluaciones perdiendo 0.025 cada una y las otras doce planas.
+
+**Los umbrales se eligieron contra el `svm_rbf` y no se heredan.** La escala se midió donde toca, en subgrupos del tamaño de un tercil, con la intervención que no hace nada del #280: en `sin equivalente natural` (524 filas de media) y `natural exacto` (584) la desviación pareada es de 0.0008 y 0.0007, y la peor pérdida de una evaluación suelta es −0.0017, sin ninguna de 15 por encima de 0.010. El 0.010 es unas seis veces esa peor pérdida, así que no se dispara por azar. El 3 se deja en 3 porque aquí los terciles se recalculan dentro de cada pliegue y una fila puede cambiar de tercil, lo que añade una varianza que esa tabla no contiene. Con el `mlp` y la misma intervención nula la escala es otra: desviación de 0.0129 y 3 de 15 evaluaciones con pérdida mayor que 0.010 en `análogo estereoquímico`, y 0.0302 con 3 de 15 y peor pérdida −0.0518 en `sin equivalente natural`; ahí el recuento quedaría en su límite con ruido puro. Ni el 0.005 ni el 0.010 se trasladan a otro modelo sin medir su ruido.
+
 Si no se cumple, la entrada queda como resultado negativo medido y no se afina nada para rescatarlo. El brazo C solo se reporta como contraste del mecanismo y no decide.
 
 **Lo que no hace.** No toca la prueba reservada. Si B sirve, adoptarlo en el modelo entregado es **otra decisión**, con su propia lectura registrada en `experimentos/prueba.csv` y con su motivo. Tampoco incluye la fase 2: el `aft` con huellas se mide en horas y su respuesta ha sido distinta de la de la fase 1 en cada experimento anterior, así que solo se haría si la fase 1 muestra algo y hay margen de revisión.
 
 **Qué costaría equivocarse.** Si los pesos distorsionan la calibración, el AUROC puede subir y el MCC bajar; por eso se reportan los dos. Si la rareza por tramo de peso resulta correlacionada con la clase, B podría premiar un atajo; el control D y el reporte por tercil lo acotan, pero no lo eliminan.
 
-**Qué lo cambiaría.** Que la regla se cumpla (se abre la propuesta de adoptarlo) o que no se cumpla (queda como resultado negativo y como el límite declarado del E8).
+**Qué lo cambiaría.** Que la regla se cumpla (se abre la propuesta de adoptarlo) o que no se cumpla (queda como resultado negativo y como el límite declarado de la corrida `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`).
 
 **Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos.
 
