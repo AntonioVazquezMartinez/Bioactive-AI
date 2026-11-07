@@ -153,6 +153,8 @@ observado y la brecha». Cada una con su corrida, que es lo que las hace verific
 | fase 1, la brecha con huellas | se ensancha en 7 de 9 modelos | ídem |
 | atribución fase 1 (`svm_rbf` entregado), lo que coinciden los dos métodos | `fr_lactam`, `NumHDonors`, `NumAliphaticCarbocycles`, `VSA_EState3`, `fr_Ar_OH`, `fr_ether` (Spearman entre métodos 0.37; `MolLogP` sale de la intersección) | `2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` |
 | atribución fase 1, con el bosque (superada) | `fr_lactam`, `NumHDonors`, `VSA_EState3`, `MolLogP` | `2026-11-01-ingrid-C.2-atribucion-fase1-con-nombres` |
+| atribución fase 2 (`aft` final), dos métodos | TreeSHAP y permutación concuerdan (Spearman 0.93) | `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion` |
+| atribución fase 2 por subestructura (brazo `aft_huellas`), corrida definitiva | los métodos concuerdan: Spearman 0.577 sobre la unión de los 100 primeros y 11 de 15 en común, con cinco repeticiones de permutación; la medición previa con una repetición (0.378) era ruido | `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres` (#281) |
 
 ### Partición y tamaño
 
@@ -180,8 +182,10 @@ el proyecto midió y declara, nueve. **Las tres últimas son del mismo tipo: la 
    lectura por origen, que es el eje de los dos modelos finales.
 2. **La matriz de descriptores no es idéntica entre máquinas**
    ([#166](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/166)).
-3. **La explicabilidad no está cerrada**: falta el segundo método de atribución sobre
-   fragmentos ([#146](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/146)).
+3. **La explicabilidad por subestructura tiene un límite declarado**: los dos métodos concuerdan
+   en el brazo con huellas de la fase 2, pero 618 de 2,534 columnas (24.4%, todas huellas)
+   existen en menos de cinco pliegues y no pueden llegar arriba
+   ([#146](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/146)).
 4. **La regla de mejora resultó conservadora en la fase 1**, y se reportó así en vez de
    bajarla.
 5. **El umbral publicado no es el que su prosa define**
