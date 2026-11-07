@@ -31,6 +31,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 | [1.10](#d1-10) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
+| [1.11](#d1-11) | ¿Una fila de química rara enseña más que una parecida? Se mide la composición, sin tocar la partición | Propuesta | |
 
 **Fase 2 · Actividad**
 
@@ -823,6 +824,39 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 **Qué lo cambiaría.** Que la regla se cumpla (se abre la propuesta de adoptarlo) o que no se cumpla (queda como resultado negativo y como el límite declarado de la corrida `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`).
 
 **Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos.
+
+#### 1.11 · ¿Una fila de química rara enseña más que una parecida? {#d1-11 .propuesta}
+
+**Estado:** propuesta
+
+> **Pregunta:** a igual número de filas, ¿entrenar con química rara deja un mejor `svm_rbf` que entrenar con química parecida? Se mide solo en validación agrupada, dentro de las 6,306 filas de ajuste; la prueba reservada no se lee y la partición no se cambia.
+
+**Qué pasó.** Son tres preguntas distintas y es fácil confundirlas, porque las tres se dicen «aprender de lo raro». La curva de aprendizaje (`2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`) añade grupos **al azar**, concluye que la fase 1 está en meseta y declara en sus propios límites que **no mide si las filas raras aportan más o menos que las parecidas**. La [1.10](#d1-10) midió otra cosa: **repesar** las filas raras que ya están en el entrenamiento, y salió negativa. Esta entrada mide la que faltaba, que es la de **composición**, y es la que se había sugerido en el equipo. Importa porque la respuesta cambia qué se pide: si una fila rara enseña más, lo accionable es pedir química nueva y no más filas.
+
+**Lo que esta entrada no es, y conviene decirlo porque se propuso.** No es recomponer la partición moviendo compuestos raros de la prueba al entrenamiento. Eso no se puede medir: la prueba rinde 0.793 de AUROC **porque** tiene los andamios raros a propósito ([1.2](#d1-2)), así que quitarle raros sube la cifra por construcción y a la vez deja de ser reproducible la que ya está registrada y citada. Y lo poco que se sabe de esa variante no la favorece: la curva de aprendizaje proyectó añadir las 1,499 filas de la prueba en +0.004 de AUROC, menos que la desviación de la ganancia (0.007), aunque es una proyección sobre cuatro puntos y no una medición.
+
+**Qué se propone medir (nada se ha corrido).**
+
+| pieza | diseño |
+|:--|:--|
+| modelo y datos | `svm_rbf` de la fase 1 con los 151 descriptores, como se entrega; las 6,306 filas de ajuste en 1,048 grupos |
+| rareza | la de la [1.10](#d1-10), para que las dos corridas hablen de lo mismo: Tanimoto (Morgan radio 2, 2048 bits) al vecino más cercano **dentro del ajuste del pliegue y excluyendo las filas de su mismo grupo**. La de un grupo es la media de las de sus filas |
+| órdenes | se añaden grupos al 25, 50 y 75% de las filas del ajuste en tres órdenes: `raros` primero, `parecidos` primero y `azar` (la referencia, el orden de la curva de aprendizaje) |
+| ancla | al 100% los tres órdenes son el mismo conjunto, así que esa fila se corre una sola vez |
+| evaluación | validación cruzada agrupada, 3 semillas × 5 pliegues, siempre sobre el mismo pliegue de validación, así que las diferencias son pareadas; error de Nadeau y Bengio como en la [1.7](#d1-7) |
+
+**El confundido que el diseño tuvo que controlar, y que no estaba previsto.** Ordenar grupos por rareza mueve dos cosas más. En el primer pliegue, el 25% «raros primero» traía **68.1% de BBB+** y el «parecidos primero» **53.9%**: catorce puntos de prevalencia, de sobra para explicar cualquier brecha de AUROC sin que la química tenga nada que ver (es la [S1.2](#d1-1) por otra puerta: la clase va pegada a la estructura). Y los grupos raros son más pequeños, así que el número de filas se desviaba hasta un 10%. Por eso cada orden se corre en **dos variantes**: `equilibrado`, que es la que manda —en cada paso entra, de los 40 primeros grupos aún no usados de la cola, el que deje la prevalencia más cerca de la del pliegue, y el tamaño se afina con los grupos pequeños que queden—, y `crudo`, el orden puro. La diferencia entre las dos variantes **mide cuánto del efecto era prevalencia**. Lo que no se iguala es el número de grupos: igualarlo sería igualar la diversidad, que es justamente el mecanismo por el que una fila rara podría enseñar más.
+
+**La lectura, declarada antes de correr.** La diferencia pareada `raros − parecidos` de AUROC en cada fracción, con su intervalo del 95%. **No se fija un umbral de paso**, y es una lección de la 1.10: su umbral se puso contra la dispersión del nulo y dejó la regla con 26.6% de potencia para el efecto que nombraba, sin que se notara hasta después de correr. Aquí se reporta el intervalo y se dice qué efecto queda descartado. «Una fila rara enseña más» se sostiene si la diferencia es positiva y su intervalo excluye el cero en las tres fracciones; se sostiene lo contrario con el signo al revés; y si el intervalo contiene el cero se reporta la cota y no un empate. Secundarias, sin criterio: el MCC, la diferencia contra el orden `azar` (la comparación accionable) y el AUROC sobre el tercil más raro de la validación.
+
+**Lo que no hace.** No toca la prueba reservada, no cambia la partición y no decide con qué filas se entrena el modelo entregado, que es la [1.5](#d1-5). Tampoco cubre la fase 2.
+
+**Qué costaría equivocarse.** Si el equilibrado de prevalencia deja fuera sistemáticamente a los grupos raros con más BBB−, el orden `raros` ya no es «los más raros» sino «los más raros que no desequilibran», y el contraste de rareza se encoge; por eso se reporta la rareza media alcanzada por cada submuestra. Si la respuesta sale positiva, lo que sigue es una propuesta de adquisición de datos, no un cambio de modelo.
+
+**Qué lo cambiaría.** Que la diferencia excluya el cero en un sentido o en el otro. Si lo contiene, queda la cota y la pregunta pasa a trabajo futuro con el diseño ya declarado.
+
+**Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos. Si sale positiva, **lo que se le pediría a ella sí cambia**: química nueva en lugar de más filas.
+
 
 ### Supuestos
 
