@@ -1,0 +1,202 @@
+{
+  "e0_por_grupo": {
+    "grupo de 2-4|base_peso_tpsa": {
+      "auroc": 0.8275,
+      "mcc": 0.4857,
+      "n_medio": 299.6
+    },
+    "grupo de 2-4|logistica": {
+      "auroc": 0.8426,
+      "mcc": 0.5231,
+      "n_medio": 299.6
+    },
+    "grupo de 2-4|svm_rbf": {
+      "auroc": 0.8598,
+      "mcc": 0.563,
+      "n_medio": 299.6
+    },
+    "grupo de 5 o más|base_peso_tpsa": {
+      "auroc": 0.856,
+      "mcc": 0.5999,
+      "n_medio": 924.6
+    },
+    "grupo de 5 o más|logistica": {
+      "auroc": 0.929,
+      "mcc": 0.7238,
+      "n_medio": 924.6
+    },
+    "grupo de 5 o más|svm_rbf": {
+      "auroc": 0.9316,
+      "mcc": 0.7317,
+      "n_medio": 924.6
+    },
+    "todos|base_peso_tpsa": {
+      "auroc": 0.8472,
+      "mcc": 0.5793,
+      "n_medio": 1261.2
+    },
+    "todos|logistica": {
+      "auroc": 0.9133,
+      "mcc": 0.6866,
+      "n_medio": 1261.2
+    },
+    "todos|svm_rbf": {
+      "auroc": 0.919,
+      "mcc": 0.7017,
+      "n_medio": 1261.2
+    }
+  },
+  "e0_por_tramo": {
+    "250–350 Da|base_peso_tpsa": {
+      "auroc": 0.7814,
+      "mcc": 0.2871,
+      "n_medio": 348.8
+    },
+    "250–350 Da|logistica": {
+      "auroc": 0.8593,
+      "mcc": 0.5037,
+      "n_medio": 348.8
+    },
+    "250–350 Da|svm_rbf": {
+      "auroc": 0.8536,
+      "mcc": 0.5009,
+      "n_medio": 348.8
+    },
+    "350–500 Da|base_peso_tpsa": {
+      "auroc": 0.8264,
+      "mcc": 0.5466,
+      "n_medio": 480.0
+    },
+    "350–500 Da|logistica": {
+      "auroc": 0.9196,
+      "mcc": 0.7124,
+      "n_medio": 480.0
+    },
+    "350–500 Da|svm_rbf": {
+      "auroc": 0.9289,
+      "mcc": 0.7392,
+      "n_medio": 480.0
+    },
+    ">500 Da|base_peso_tpsa": {
+      "auroc": 0.8491,
+      "mcc": 0.6308,
+      "n_medio": 205.0
+    },
+    ">500 Da|logistica": {
+      "auroc": 0.8934,
+      "mcc": 0.6677,
+      "n_medio": 205.0
+    },
+    ">500 Da|svm_rbf": {
+      "auroc": 0.9085,
+      "mcc": 0.6967,
+      "n_medio": 205.0
+    },
+    "todos|base_peso_tpsa": {
+      "auroc": 0.8472,
+      "mcc": 0.5793,
+      "n_medio": 1261.2
+    },
+    "todos|logistica": {
+      "auroc": 0.9133,
+      "mcc": 0.6866,
+      "n_medio": 1261.2
+    },
+    "todos|svm_rbf": {
+      "auroc": 0.919,
+      "mcc": 0.7017,
+      "n_medio": 1261.2
+    },
+    "≤250 Da|base_peso_tpsa": {
+      "auroc": 0.7501,
+      "mcc": 0.1849,
+      "n_medio": 237.6923
+    },
+    "≤250 Da|logistica": {
+      "auroc": 0.822,
+      "mcc": 0.3601,
+      "n_medio": 237.6923
+    },
+    "≤250 Da|svm_rbf": {
+      "auroc": 0.8268,
+      "mcc": 0.3423,
+      "n_medio": 237.6923
+    }
+  },
+  "e1_escalera": [
+    {
+      "agrupacion": "1 al azar",
+      "auroc_logistica": 0.9338,
+      "auroc_svm_rbf": 0.947,
+      "grupos": 6306,
+      "mayor_grupo_pct": 0.0,
+      "mcc_logistica": 0.7195,
+      "mcc_svm_rbf": 0.7515,
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "2 por esqueleto",
+      "auroc_logistica": 0.9266,
+      "auroc_svm_rbf": 0.9338,
+      "grupos": 2626,
+      "mayor_grupo_pct": 0.1,
+      "mcc_logistica": 0.7142,
+      "mcc_svm_rbf": 0.7247,
+      "vecino_mas_cercano": 0.6181
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc_logistica": 0.9229,
+      "auroc_svm_rbf": 0.9319,
+      "grupos": 2239,
+      "mayor_grupo_pct": 6.0,
+      "mcc_logistica": 0.6979,
+      "mcc_svm_rbf": 0.7209,
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc_logistica": 0.9133,
+      "auroc_svm_rbf": 0.919,
+      "grupos": 1048,
+      "mayor_grupo_pct": 6.5,
+      "mcc_logistica": 0.6866,
+      "mcc_svm_rbf": 0.7017,
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc_logistica": 0.8974,
+      "auroc_svm_rbf": 0.9127,
+      "grupos": 1413,
+      "mayor_grupo_pct": 12.1,
+      "mcc_logistica": 0.6593,
+      "mcc_svm_rbf": 0.6876,
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc_logistica": 0.8477,
+      "auroc_svm_rbf": 0.8348,
+      "grupos": 1017,
+      "mayor_grupo_pct": 14.4,
+      "mcc_logistica": 0.5732,
+      "mcc_svm_rbf": 0.4859,
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc_logistica": 0.8161,
+      "auroc_svm_rbf": 0.7798,
+      "grupos": 631,
+      "mayor_grupo_pct": 15.9,
+      "mcc_logistica": 0.5132,
+      "mcc_svm_rbf": 0.419,
+      "vecino_mas_cercano": 0.2774
+    }
+  ],
+  "prueba_registrada_referencia": {
+    "auroc": 0.7928,
+    "mcc": 0.3385
+  }
+}

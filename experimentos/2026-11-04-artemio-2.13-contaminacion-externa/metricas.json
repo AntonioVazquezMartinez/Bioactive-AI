@@ -1,0 +1,38 @@
+{
+  "base_externa": {
+    "andamio_compuestos": 4450,
+    "andamio_fraccion_compuestos": 0.6399,
+    "andamio_fraccion_pares": 0.6491,
+    "compuestos": 6954,
+    "esqueleto_compuestos": 434,
+    "esqueleto_fraccion_compuestos": 0.0624,
+    "esqueleto_fraccion_pares": 0.0665,
+    "fraccion_por_encima_de_0.6": 0.8724,
+    "pares": 8151,
+    "piso_del_control": 0.005,
+    "similitud_media": 0.764,
+    "similitud_mediana": 0.7869,
+    "similitud_p90": 0.9543,
+    "smiles_exacto_compuestos": 0,
+    "smiles_exacto_fraccion_compuestos": 0.0,
+    "smiles_exacto_fraccion_pares": 0.0,
+    "veredicto": "NO comparable sin decirlo: 64.9% de los pares tiene el andamio ya visto, contra el 0.5% del control"
+  },
+  "control": {
+    "andamio_compuestos": 32,
+    "andamio_fraccion_compuestos": 0.0058,
+    "andamio_fraccion_pares": 0.005,
+    "con_las_columnas_guardadas": {
+      "andamio": 0,
+      "esqueleto": 0
+    },
+    "esqueleto_compuestos": 0,
+    "esqueleto_fraccion_compuestos": 0.0,
+    "esqueleto_fraccion_pares": 0.0,
+    "piso_andamio_recalculado": 0.005,
+    "similitud_mediana_al_entrenamiento": 0.6786,
+    "smiles_exacto_compuestos": 0,
+    "smiles_exacto_fraccion_compuestos": 0.0,
+    "smiles_exacto_fraccion_pares": 0.0
+  }
+}
