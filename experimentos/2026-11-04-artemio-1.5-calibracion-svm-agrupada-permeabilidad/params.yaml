@@ -1,0 +1,19 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  brazos:
+  - actual
+  - agrupada
+  - catalogo
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues_externos: 5
+  pliegues_internos: 5
+  regla_evaluaciones: 12
+  filas: 6306
+  toca_prueba: false
