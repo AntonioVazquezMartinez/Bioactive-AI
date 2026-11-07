@@ -823,6 +823,19 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 
 **Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos.
 
+**Resultado (7 de noviembre): B no sirve; la regla falla en la 1.** Corrida `2026-11-07-artemio-1.10-rareza-en-el-entrenamiento-permeabilidad` (`scripts/experimento_rareza_en_entrenamiento.py`), con el script y la regla en git antes de correr y sin tocar la prueba reservada. Las dos comprobaciones previas pasan: el brazo A reproduce al `svm_rbf` del catálogo con diferencia de MCC de 0 en las 15 evaluaciones, y los tres terciles de validación miden 407 a 434 filas, con 115 a 179 casos de la minoritaria (todas las celdas pasan el mínimo de 20).
+
+| AUROC, diferencia pareada contra A | tercil más raro | intermedio | más parecido | global |
+|:--|--:|--:|--:|--:|
+| B (pesos 3, 2, 1) | −0.0005 (desv. 0.0095), mejor en 9 de 15 | +0.0022, 9 de 15 | +0.0041, 11 de 15 | +0.0022, 12 de 15 |
+| D (los mismos pesos al azar) | −0.0009, 10 de 15 | | +0.0034, 9 de 15 | |
+| C (duplicando filas) | −0.0004, 9 de 15 | | +0.0041, 11 de 15 | |
+
+- **Regla 1, no se cumple:** la ganancia en el tercil más raro es −0.0005, no más de 0.005, y positiva en 9 de 15 y no en 12. **Regla 2, se cumple** (media +0.0041; ninguna pérdida mayor que 0.010). **Regla 3, se cumple de forma vacía:** B supera a D por +0.0004, que es cero dentro de una desviación de 0.0069.
+- **Lo que se ve, y no es un resultado de la regla.** (1) Cualquier cambio de pesos mueve lo mismo: B y D dan +0.0022 y +0.0016 de AUROC global y tienen el mismo patrón por tercil, así que lo que B hace no se distingue de lo que hace barajar los pesos. (2) Si algo, la ganancia va al revés de lo esperado: en el más parecido (+0.0041) y no en el más raro (−0.0005). (3) El MCC global baja −0.0022 (mejor en 6 de 15, con 4 evaluaciones por debajo de −0.010; en el tercil más raro −0.0083), el costo en el punto fijo de 0.5 que la entrada anticipaba. (4) `C` y `B` coinciden al cuarto decimal en AUROC: el mecanismo no importa.
+- **Qué queda dicho.** En el `svm_rbf` de la fase 1 y con pesos 3, 2 y 1, entrenar dando más peso a lo raro no mejora lo raro. El límite del que partía la propuesta (la curva de aprendizaje no mide si las filas raras aportan más) sigue en pie como pregunta, pero esta medición la responde en un sentido: no en esa forma. **No se adopta nada, no se afinan los pesos y la prueba reservada no se lee.** Límites: un solo modelo, una sola terna de pesos, y lo raro se midió con Tanimoto de Morgan a 2048 bits, cuya definición de «parecido» ya se vio que cambia lo que se ve (corrida `2026-11-04-artemio-1.2-escalera-definicion-de-parecido-permeabilidad`).
+- **Lectura pendiente de revisión.** Estado sin cambiar hasta que la revise quien no la corrió (miércoles 11).
+
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |
