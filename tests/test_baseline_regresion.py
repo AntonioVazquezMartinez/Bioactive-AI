@@ -187,5 +187,45 @@ def test_evaluar_baselines_acepta_matriz_dispersa():
     assert len(vio_dispersa) > 0 and all(vio_dispersa)
 
 
+def test_con_huellas_censurado_recorta_columnas_densas():
+    """`densas` llega a `AgregarHuellas` y el modelo recibe solo esas densas más las huellas."""
+    from scipy import sparse
+    from sklearn.base import BaseEstimator, RegressorMixin, clone
+    from src.models.baseline_regresion import ConHuellasCensurado
+
+    class EspiaAncho(BaseEstimator, RegressorMixin):
+        def fit(self, X, inferior, superior, grupos=None):
+            self.ancho_recibido_ = X.shape[1]
+            return self
+
+        def predict(self, X):
+            return np.zeros(X.shape[0])
+
+    # 10 muestras: 5 densas y 4 huellas (las dos primeras presentes, las dos últimas ausentes)
+    rng = np.random.default_rng(0)
+    X_densas = rng.normal(size=(10, 5))
+    huellas = np.array([[1, 1, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0]] * 3 + [[1, 1, 0, 0]], dtype=float)
+    mixta = sparse.csr_matrix(np.hstack([X_densas, huellas]))
+    inf = np.ones(10)
+    sup = np.ones(10)
+
+    # Solo queremos conservar las columnas densas 3 y 4 (2 de 5)
+    espia = EspiaAncho()
+    envoltorio = ConHuellasCensurado(espia, n_densas=5, densas=(3, 4), n_bits=2)
+    envoltorio.fit(mixta, inf, sup)
+
+    # densas debe haber llegado al transformador AgregarHuellas
+    assert envoltorio.huellas_.densas == (3, 4)
+    # y el modelo debe haber recibido 2 columnas densas + 2 huellas = 4 columnas
+    assert espia.ancho_recibido_ == 2 + 2
+
+    # Se puede clonar preservando densas
+    c = clone(envoltorio)
+    assert c.densas == (3, 4)
+    assert c.n_densas == 5
+    assert c.n_bits == 2
+
+
+
 
 
