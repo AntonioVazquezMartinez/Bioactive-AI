@@ -1,0 +1,28 @@
+decision: '1.10'
+semillas:
+- 0
+- 1
+- 2
+params:
+  brazos:
+  - A
+  - B
+  - C
+  - D
+  pesos_por_tercil:
+  - 3
+  - 2
+  - 1
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  filas: 6306
+  toca_prueba: false
+  regla:
+    ganancia_minima: 0.005
+    evaluaciones_minimas: 12
+    perdida_maxima: 0.005
+    perdida_suelta: 0.01
+    max_perdidas_sueltas: 3

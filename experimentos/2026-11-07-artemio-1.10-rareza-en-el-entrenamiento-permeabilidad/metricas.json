@@ -1,0 +1,400 @@
+{
+  "control_A_vs_catalogo_max_abs_dmcc": 0.0,
+  "efectos_globales": {
+    "B-A|todos|auroc": {
+      "desviacion": 0.0049,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0038,
+        0.0082
+      ],
+      "media": 0.0022,
+      "peor": -0.0071,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 12
+    },
+    "B-A|todos|mcc": {
+      "desviacion": 0.0107,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0152,
+        0.0107
+      ],
+      "media": -0.0022,
+      "peor": -0.025,
+      "perdidas_mayores_a_0.010": 4,
+      "positivas": 6
+    },
+    "C-A|todos|auroc": {
+      "desviacion": 0.0049,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0037,
+        0.0081
+      ],
+      "media": 0.0022,
+      "peor": -0.0071,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 12
+    },
+    "C-A|todos|mcc": {
+      "desviacion": 0.0105,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0154,
+        0.0099
+      ],
+      "media": -0.0028,
+      "peor": -0.025,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 6
+    },
+    "D-A|todos|auroc": {
+      "desviacion": 0.0036,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0029,
+        0.0059
+      ],
+      "media": 0.0015,
+      "peor": -0.006,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 11
+    },
+    "D-A|todos|mcc": {
+      "desviacion": 0.0125,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0182,
+        0.0121
+      ],
+      "media": -0.003,
+      "peor": -0.0272,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 8
+    }
+  },
+  "efectos_por_tercil": {
+    "B-A|intermedio|auroc": {
+      "desviacion": 0.0078,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0072,
+        0.0116
+      ],
+      "media": 0.0022,
+      "peor": -0.0123,
+      "perdidas_mayores_a_0.010": 1,
+      "positivas": 9
+    },
+    "B-A|intermedio|mcc": {
+      "desviacion": 0.0209,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0223,
+        0.028
+      ],
+      "media": 0.0029,
+      "peor": -0.0545,
+      "perdidas_mayores_a_0.010": 2,
+      "positivas": 8
+    },
+    "B-A|parecido|auroc": {
+      "desviacion": 0.0063,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0035,
+        0.0117
+      ],
+      "media": 0.0041,
+      "peor": -0.0034,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 11
+    },
+    "B-A|parecido|mcc": {
+      "desviacion": 0.0143,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0177,
+        0.0168
+      ],
+      "media": -0.0005,
+      "peor": -0.036,
+      "perdidas_mayores_a_0.010": 2,
+      "positivas": 7
+    },
+    "B-A|raro|auroc": {
+      "desviacion": 0.0095,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.012,
+        0.011
+      ],
+      "media": -0.0005,
+      "peor": -0.0165,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 9
+    },
+    "B-A|raro|mcc": {
+      "desviacion": 0.0228,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0358,
+        0.0192
+      ],
+      "media": -0.0083,
+      "peor": -0.05,
+      "perdidas_mayores_a_0.010": 7,
+      "positivas": 5
+    },
+    "B-D|intermedio|auroc": {
+      "desviacion": 0.0052,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0049,
+        0.0077
+      ],
+      "media": 0.0014,
+      "peor": -0.0088,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 10
+    },
+    "B-D|intermedio|mcc": {
+      "desviacion": 0.0285,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0278,
+        0.0409
+      ],
+      "media": 0.0065,
+      "peor": -0.0706,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 11
+    },
+    "B-D|parecido|auroc": {
+      "desviacion": 0.0036,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0036,
+        0.005
+      ],
+      "media": 0.0007,
+      "peor": -0.0059,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 8
+    },
+    "B-D|parecido|mcc": {
+      "desviacion": 0.0162,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0261,
+        0.013
+      ],
+      "media": -0.0065,
+      "peor": -0.0383,
+      "perdidas_mayores_a_0.010": 6,
+      "positivas": 6
+    },
+    "B-D|raro|auroc": {
+      "desviacion": 0.0069,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0079,
+        0.0087
+      ],
+      "media": 0.0004,
+      "peor": -0.0142,
+      "perdidas_mayores_a_0.010": 1,
+      "positivas": 8
+    },
+    "B-D|raro|mcc": {
+      "desviacion": 0.0242,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0257,
+        0.0328
+      ],
+      "media": 0.0035,
+      "peor": -0.023,
+      "perdidas_mayores_a_0.010": 5,
+      "positivas": 7
+    },
+    "C-A|intermedio|auroc": {
+      "desviacion": 0.0077,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0071,
+        0.0115
+      ],
+      "media": 0.0022,
+      "peor": -0.0123,
+      "perdidas_mayores_a_0.010": 1,
+      "positivas": 9
+    },
+    "C-A|intermedio|mcc": {
+      "desviacion": 0.0207,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.022,
+        0.0279
+      ],
+      "media": 0.0029,
+      "peor": -0.0545,
+      "perdidas_mayores_a_0.010": 2,
+      "positivas": 9
+    },
+    "C-A|parecido|auroc": {
+      "desviacion": 0.0063,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0035,
+        0.0117
+      ],
+      "media": 0.0041,
+      "peor": -0.0034,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 11
+    },
+    "C-A|parecido|mcc": {
+      "desviacion": 0.0143,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0177,
+        0.0168
+      ],
+      "media": -0.0005,
+      "peor": -0.036,
+      "perdidas_mayores_a_0.010": 2,
+      "positivas": 7
+    },
+    "C-A|raro|auroc": {
+      "desviacion": 0.0095,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0119,
+        0.0111
+      ],
+      "media": -0.0004,
+      "peor": -0.0166,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 9
+    },
+    "C-A|raro|mcc": {
+      "desviacion": 0.0217,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0359,
+        0.0164
+      ],
+      "media": -0.0098,
+      "peor": -0.05,
+      "perdidas_mayores_a_0.010": 7,
+      "positivas": 4
+    },
+    "D-A|intermedio|auroc": {
+      "desviacion": 0.0057,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0061,
+        0.0077
+      ],
+      "media": 0.0008,
+      "peor": -0.009,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 8
+    },
+    "D-A|intermedio|mcc": {
+      "desviacion": 0.0181,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0255,
+        0.0181
+      ],
+      "media": -0.0037,
+      "peor": -0.0317,
+      "perdidas_mayores_a_0.010": 8,
+      "positivas": 6
+    },
+    "D-A|parecido|auroc": {
+      "desviacion": 0.0053,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.003,
+        0.0099
+      ],
+      "media": 0.0034,
+      "peor": -0.0024,
+      "perdidas_mayores_a_0.010": 0,
+      "positivas": 9
+    },
+    "D-A|parecido|mcc": {
+      "desviacion": 0.0188,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0166,
+        0.0287
+      ],
+      "media": 0.0061,
+      "peor": -0.031,
+      "perdidas_mayores_a_0.010": 3,
+      "positivas": 9
+    },
+    "D-A|raro|auroc": {
+      "desviacion": 0.0078,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0103,
+        0.0085
+      ],
+      "media": -0.0009,
+      "peor": -0.0179,
+      "perdidas_mayores_a_0.010": 2,
+      "positivas": 10
+    },
+    "D-A|raro|mcc": {
+      "desviacion": 0.0253,
+      "evaluaciones": 15,
+      "ic95": [
+        -0.0423,
+        0.0187
+      ],
+      "media": -0.0118,
+      "peor": -0.0745,
+      "perdidas_mayores_a_0.010": 7,
+      "positivas": 6
+    }
+  },
+  "evaluable": true,
+  "medias_globales": {
+    "A": {
+      "auprc_minoritaria": 0.8842,
+      "auroc": 0.919,
+      "exactitud_balanceada": 0.8345,
+      "mcc": 0.7015
+    },
+    "B": {
+      "auprc_minoritaria": 0.8849,
+      "auroc": 0.9212,
+      "exactitud_balanceada": 0.8346,
+      "mcc": 0.6993
+    },
+    "C": {
+      "auprc_minoritaria": 0.8849,
+      "auroc": 0.9212,
+      "exactitud_balanceada": 0.8346,
+      "mcc": 0.6988
+    },
+    "D": {
+      "auprc_minoritaria": 0.8839,
+      "auroc": 0.9206,
+      "exactitud_balanceada": 0.8347,
+      "mcc": 0.6985
+    }
+  },
+  "regla": {
+    "b_sirve": false,
+    "regla_1": false,
+    "regla_2": true,
+    "regla_3": true
+  }
+}
