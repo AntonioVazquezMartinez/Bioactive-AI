@@ -1,12 +1,12 @@
 {
-  "arbol_sucio": false,
-  "commit": "9e5eb04f38f7ae32dec188886fc189cebd77c8b2",
+  "arbol_sucio": true,
+  "commit": "2e2c31d9409bd4ca54784779f934289138c9ae19",
   "datos_sha256": {
     "data/processed/bbb_descriptores_filtrados_sin_normalizar.parquet": "22a8af59982cf70c67c5189c5af97da9e7501c439ab4084cdf2a3c1c31fcc637",
     "data/processed/bbb_meta.parquet": "d4e96e57520cf0b8984ff80f4df568427c1f89bc4545abc5d728f7f3afe56727"
   },
   "decision": "1.3",
-  "duracion_s": 5.7,
+  "duracion_s": 6.8,
   "lock_sha256": "7b40cfb8375a9554a3f5c3dc86d1d0dfec9730c8602ea4df48053fd6b4748e2e",
   "paquetes": {
     "imbalanced-learn": "0.14.2",

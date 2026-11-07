@@ -96,5 +96,21 @@
       "sin_quiralidad": 55,
       "sin_quiralidad_pct": 2.1
     }
+  },
+  "vocabulario": {
+    "con_quiralidad": {
+      "apariciones": 308889,
+      "cobertura_pct": 78.9,
+      "corte_de_frecuencia": 17,
+      "cubiertas_por_n_bits": 243583,
+      "distintas": 22777
+    },
+    "sin_quiralidad": {
+      "apariciones": 308063,
+      "cobertura_pct": 83.4,
+      "corte_de_frecuencia": 16,
+      "cubiertas_por_n_bits": 257045,
+      "distintas": 13817
+    }
   }
 }

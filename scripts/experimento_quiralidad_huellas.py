@@ -33,6 +33,11 @@ declarar, donde la explicación 1 predice que no hay nada que codificar: sin sep
 ahí se leería como quiralidad cuando es efecto de la pareja. Así que de cada fila que deja de
 chocar se reporta si su propia huella cambió.
 
+**Y lo que el interruptor cuesta**, que no sale del conteo de inseparables: activarlo parte cada
+subestructura con estereocentro en sus variantes, así que con el mismo presupuesto de 2,048 columnas
+el vocabulario cubre una fracción menor de las apariciones. Sin esa cifra, un reajuste con la bandera
+activada mezclaría «gana resolución» con «pierde cobertura».
+
 Se mide sobre las 6,306 filas de ajuste (entrenamiento y validación). **No toca la prueba
 reservada** y no ajusta ningún modelo.
 
@@ -87,6 +92,27 @@ def sort_and_slice(llaves: np.ndarray, n_bits: int) -> np.ndarray:
         frecuencia.update(s)
     vocabulario = {k for k, _ in sorted(frecuencia.items(), key=lambda kv: (-kv[1], kv[0]))[:n_bits]}
     return np.array([s & vocabulario for s in llaves], dtype=object)
+
+
+def vocabulario(llaves: np.ndarray, n_bits: int) -> dict:
+    """Cuántas subestructuras distintas hay y qué fracción de las apariciones cubren las `n_bits`.
+
+    Es el costo del interruptor que no se ve en el conteo de inseparables: activar la quiralidad
+    parte cada subestructura con estereocentro en sus variantes, así que con el mismo presupuesto de
+    columnas el vocabulario cubre menos. Sin esto, un reajuste con la bandera activada mezcla «gana
+    resolución» con «pierde cobertura» y un resultado plano no se puede leer.
+    """
+    frecuencia = Counter()
+    for conjunto in llaves:
+        frecuencia.update(conjunto)
+    ordenadas = sorted(frecuencia.items(), key=lambda kv: (-kv[1], kv[0]))
+    total = sum(frecuencia.values())
+    elegidas = ordenadas[:n_bits]
+    return {"distintas": len(frecuencia),
+            "apariciones": total,
+            "cubiertas_por_n_bits": sum(c for _, c in elegidas),
+            "cobertura_pct": round(sum(c for _, c in elegidas) / total * 100, 1),
+            "corte_de_frecuencia": elegidas[-1][1] if elegidas else 0}
 
 
 def tabla(mascara_falso, mascara_verdadero, grupos: dict[str, np.ndarray]) -> dict:
@@ -169,6 +195,8 @@ def main() -> None:
                 "de_esas_con_estereo_de_enlace": int((cambia & sin_centro & con_enlace).sum()),
                 "sin_cambio_y_con_estereo_de_enlace": int((~cambia & sin_centro & con_enlace).sum()),
             },
+            "vocabulario": {"sin_quiralidad": vocabulario(llaves[False], N_BITS),
+                            "con_quiralidad": vocabulario(llaves[True], N_BITS)},
             "smiles_identico_con_clase_contraria": int(identico.sum()),
             "choques_restantes_con_quiralidad": int(choca[True].sum()),
         })
@@ -183,6 +211,10 @@ def main() -> None:
             print(f"  {nombre}: dejan de chocar {d['dejan_de_chocar']}, "
                   f"su huella cambia {d['su_huella_cambia']}, "
                   f"no cambia {d['su_huella_no_cambia']}")
+        voc = {q: vocabulario(llaves[q], N_BITS) for q in (False, True)}
+        print(f"\n  vocabulario: {voc[False]['distintas']:,} subestructuras distintas sin quiralidad "
+              f"-> {voc[True]['distintas']:,} con; cobertura de los {N_BITS:,} bits "
+              f"{voc[False]['cobertura_pct']}% -> {voc[True]['cobertura_pct']}%")
         print(f"\n  carpeta: experimentos/{c.id}")
 
 
