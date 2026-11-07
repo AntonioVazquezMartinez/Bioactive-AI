@@ -10,6 +10,7 @@ cita. Comprueba que las copias coincidan, que es la parte barata y la que se rom
 Exime una copia marcada como superada: el registro tiene que conservarlas visibles.
 """
 
+import csv
 import json
 import re
 from pathlib import Path
@@ -21,8 +22,19 @@ SUPERADO = re.compile(r"versi[oó]n anterior|versi[oó]n superada|superad\w+|dec
 ESPACIOS = re.compile(r"\s+")
 N = r"(\d\.\d)"
 
+# Cuántas veces se leyó la prueba: se cuenta de `experimentos/prueba.csv`, no se escribe a mano.
+# Esa cifra derivó 6 → 7 → 9 → 11 en tres días y cada corrección se hizo en el documento que
+# alguien estaba leyendo; ahora añadir una lectura al CSV sin actualizar las copias falla aquí.
+_LECTURAS = len(list(csv.DictReader((RAIZ / "experimentos" / "prueba.csv").open(encoding="utf-8"))))
+_EN_PALABRAS = {9: "nueve", 10: "diez", 11: "once", 12: "doce", 13: "trece", 14: "catorce",
+                15: "quince"}
+
 # (nombre, patrón con un grupo, valor canónico). Añadir una cifra vigilada es una línea.
 CIFRAS = [
+    ("las lecturas de la prueba, en palabras",
+     r"se ley[óo] \**(\w+) veces", _EN_PALABRAS.get(_LECTURAS, f"<{_LECTURAS}: añádela a _EN_PALABRAS>")),
+    ("las lecturas de la prueba, en cifras",
+     r"lecturas de la prueba \(`prueba\.csv`\) \| (\d+)", str(_LECTURAS)),
     ("el MCC que infla agrupar solo por andamio",
      rf"infla\w*.{{0,90}}?(?:MCC (?:en |de )?{N}|{N} (?:puntos )?de MCC)", "7.1"),
     ("el AUROC que infla agrupar solo por andamio",

@@ -1,0 +1,9 @@
+decision: '1.5'
+semillas:
+- 0
+params:
+  regla: terciles de similitud fijos sobre toda la prueba; IC por esqueleto
+  replicas: 1000
+  minimo_minoritaria: 20
+  motivo: Cruce del AUROC de la prueba con la similitud al ajuste, por origen (pregunta
+    6.3 de Grettel); el desglose por origen a secas ya estaba registrado
