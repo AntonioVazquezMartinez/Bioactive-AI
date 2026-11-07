@@ -1,0 +1,22 @@
+decision: '1.5'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelo: svm_rbf
+  semillas:
+  - 0
+  - 1
+  - 2
+  agrupamientos:
+  - actual
+  - '0.6'
+  - '0.5'
+  - '0.4'
+  cubetas: 10
+  k_vecinos: 5
+  auroc_prueba_registrado: 0.7928
+  tolerancia: 0.03
+  filas: 6306
+  toca_prueba: solo SMILES, sin etiquetas ni predicciones (acceso estructural)
