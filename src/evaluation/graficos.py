@@ -112,40 +112,52 @@ def matriz_confusion(y: np.ndarray, p: np.ndarray, *, ax: plt.Axes | None = None
     return ax
 
 
-def concordantes(importancias: pd.DataFrame, *, n: int = 15) -> list[str]:
+def concordantes(importancias: pd.DataFrame, *, n: int = 15,
+                 columna: str = "impureza") -> list[str]:
     """Las características que están en el top `n` de **los dos** métodos.
 
     Es lo que la [C.2](../../docs/decisiones.md#dc-2) exige antes de afirmar algo
     estructural: solo se reporta aquello en que dos métodos independientes
-    coinciden. La impureza es barata y se sesga hacia variables de muchos
-    valores; la permutación se mide sobre el pliegue de evaluación y responde
-    otra pregunta. Discrepan, y la intersección es la parte defendible.
+    coinciden. La permutación se mide sobre el pliegue de evaluación, y el otro
+    método responde otra pregunta. Discrepan, y la intersección es la parte
+    defendible.
+
+    **`columna` es el primer método, y cuál es depende de la fase**, porque no es el
+    mismo en las dos: en la fase 1 es `impureza`, la ganancia interna de los árboles,
+    barata y sesgada hacia variables de muchos valores; en la fase 2 es
+    `shap_media_abs`, la media de |[TreeSHAP](../../docs/glosario.md)| en pActividad.
+    Llamar `impureza` a las dos cosas fue un defecto real: dos corridas hermanas de la
+    C.2 traían esa columna con métodos distintos dentro. El nombre se pasa explícito
+    para que la corrida diga cuál usó; el valor por omisión es el de la fase 1, que es
+    quien ya llamaba a esta función.
     """
-    medias = importancias.groupby("caracteristica")[["impureza", "permutacion"]].mean()
-    top_impureza = set(medias.nlargest(n, "impureza").index)
+    medias = importancias.groupby("caracteristica")[[columna, "permutacion"]].mean()
+    top_primero = set(medias.nlargest(n, columna).index)
     top_permutacion = set(medias.nlargest(n, "permutacion").index)
     orden = medias.nlargest(n, "permutacion").index
-    return [c for c in orden if c in top_impureza & top_permutacion]
+    return [c for c in orden if c in top_primero & top_permutacion]
 
 
 def importancias_dos_metodos(importancias: pd.DataFrame, *,
-                             ax: plt.Axes | None = None, n: int = 15) -> plt.Axes:
-    """Top `n` por permutación, marcando las que también están en el top por impureza.
+                             ax: plt.Axes | None = None, n: int = 15,
+                             columna: str = "impureza") -> plt.Axes:
+    """Top `n` por permutación, marcando las que también están en el top del otro método.
 
     Las barras llevan la desviación entre pliegues porque sin ella el orden de la
     cola no se puede leer: una media de 0.0004 con desviación de 0.0012 no está
-    ordenada respecto a su vecina.
+    ordenada respecto a su vecina. `columna` nombra el otro método, y el título lo
+    dice, porque no es el mismo en las dos fases: ver `concordantes`.
     """
     ax = _eje(ax)
     g = importancias.groupby("caracteristica")["permutacion"]
     medias = g.mean().nlargest(n).iloc[::-1]
     desv = g.std().reindex(medias.index)
-    coinciden = set(concordantes(importancias, n=n))
+    coinciden = set(concordantes(importancias, n=n, columna=columna))
     colores = ["#1f77b4" if c in coinciden else "#b0c4de" for c in medias.index]
     ax.barh(medias.index, medias.values, xerr=desv.values, color=colores,
             error_kw={"elinewidth": 1, "ecolor": "0.4"})
     ax.set_xlabel("caída de desempeño al permutar")
-    ax.set_title(f"azul fuerte: también en el top {n} por impureza", fontsize="small")
+    ax.set_title(f"azul fuerte: también en el top {n} por {columna}", fontsize="small")
     return ax
 
 
