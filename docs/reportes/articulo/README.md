@@ -5,7 +5,10 @@ Entrega 7, **8 de noviembre de 2026**. PDF, nombre `articulo.#Equipo`.
 | archivo | qué es |
 |:--|:--|
 | `esqueleto.md` | el argumento y la tabla de cifras decisivas, con su corrida detrás |
-| `articulo.tex` | la plantilla del curso, con APA 7 fijado y la bibliografía del proyecto |
+| `borrador.md` | el texto del artículo: **aquí se editan las cifras y el texto** |
+| `articulo.tex` | el artículo en LaTeX, **generado** desde el borrador con `scripts/armar_articulo_tex.py`; no se edita a mano |
+| `plantilla.tex` | la plantilla del curso, con APA 7 fijado y la bibliografía del proyecto; de aquí sale el preámbulo |
+| `figuras/` | las figuras del artículo, generadas con `scripts/figuras_articulo.py`; el `.tex` usa los PNG |
 | `bibliografia.bib` | enlace simbólico a `docs/referencias/bibliografia.bib` |
 | `logo.jpeg` | enlace simbólico a `docs/reportes/logo-tec.jpeg` |
 | `figura_ejemplo.png` | el marcador que la plantilla referencia; se sustituye |
@@ -23,6 +26,11 @@ que resolverlos:
 ```bash
 cd docs/reportes/articulo && cp -L bibliografia.bib logo.jpeg /tmp/subir-a-overleaf/
 ```
+
+Hay que subir también `articulo.tex` y la carpeta `figuras/` con sus PNG (pdfLaTeX no incluye SVG).
+Si cambia el borrador, se regenera el `.tex` con `python3 scripts/armar_articulo_tex.py` (necesita
+`pandoc`); `tests/test_articulo_tex.py` falla si el `.tex` no coincide con el borrador. Los campos en
+rojo del encabezado (asesor y fecha de entrega) y la declaración de uso de IA los confirma el equipo.
 
 ## Decidido
 

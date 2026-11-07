@@ -1,3 +1,5 @@
+% Generado por scripts/armar_articulo_tex.py desde borrador.md y plantilla.tex.
+% No se edita a mano: se cambia el borrador y se vuelve a generar.
 % Plantilla del artículo del Proyecto Integrador (Producto de difusión)
 % Formato requerido: carta, una columna, 11 pt, márgenes de 2.5 cm, interlineado 1.15.
 % Extensión: la rúbrica pide 12 a 18 páginas desde el título hasta las referencias,
@@ -63,76 +65,212 @@
 \usepackage[hidelinks]{hyperref}
 \urlstyle{same}
 
+% --- Añadidos para el artículo generado desde borrador.md (scripts/armar_articulo_tex.py) ---
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{xcolor}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\emergencystretch}{3em}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{00B5}{\ensuremath{\mu}}
+
 % --- Título ---
-\title{\textbf{Título del proyecto}}
-\author{Integrante 1\quad Integrante 2\\[2pt] Integrante 3\\[6pt]
+\title{\textbf{Qué mueve el resultado al predecir la actividad de compuestos naturales}}
+\author{Ingrid Pamela Ruiz Puga\quad Artemio Santiago Padilla Robles\\[2pt] José Antonio Vázquez Martínez\\[6pt]
   \normalsize Proyecto Integrador · Maestría en Inteligencia Artificial Aplicada \\[6pt]
-  \normalsize Asesor: Nombre del asesor \quad·\quad Fecha de entrega}
+  \normalsize Asesor: \textcolor{red}{[nombre del asesor]} \quad·\quad \textcolor{red}{[fecha de entrega]}}
 \date{\vspace{-2ex}}
 
 \begin{document}
 
 \maketitle
 
-% --- Resumen (sin número) ---
 \begin{abstract}
-El resumen ocupa un solo párrafo de 150 a 250 palabras. Se escribe al final, cuando las cifras del artículo ya están cerradas, y debe entenderse sin leer el resto: qué problema se atendió, con qué datos, qué se obtuvo y qué se recomienda. Este párrafo es solo un ejemplo de su ubicación y de su forma.
+Buscamos compuestos naturales con potencial neuroprotector con dos modelos en paralelo: uno que clasifica si una molécula cruza la barrera hematoencefálica (fase 1) y otro que predice su potencia contra una diana, usando también las mediciones censuradas (fase 2). Comparamos once modelos y ningún ensamble mejora de forma distinguible al mejor modelo individual en MCC ni en AUPRC; en AUROC dos ensambles lo superan por 1.3 puntos, diferencia que no sobrevive a la corrección por diez comparaciones. Lo que sí mueve el resultado es una lección conocida \autocite{sheridan2013,roberts2017crossvalidation}, medida aquí con sus magnitudes: \textbf{cuánta semejanza se permite entre lo que se entrena y lo que se evalúa}. Con el modelo que entregamos, el MCC baja 33.3 puntos al exigir que ningún compuesto de entrenamiento se parezca más de 0.4 a uno de validación, contra 4.2 puntos entre los once modelos; la fase 2 muestra la misma escalera. Tres hallazgos propios: la prueba reservada es \textbf{más difícil de lo que su similitud predice} (AUROC esperado 0.89, observado 0.79); el MCC exagera esa caída porque corta en un punto fijo; y las huellas moleculares ayudan en la fase 2 y no en la 1, sin que lo expliquen el tamaño de los datos ni el tipo de etiqueta. El modelo de potencia, elegido por funcionar en compuestos que solo existen en NPASS, no se sostiene en la prueba en ese grupo (117 pares).
 \end{abstract}
 
-\begin{nota}
-\textbf{Nota de formato.} Las ocho partes van en este orden: Resumen; Contexto de negocio y problema; Datos y preparación; Metodología y modelos; Resultados y validación; Implementación y operación; Conclusiones clave; Referencias y anexos. El resumen y las referencias no llevan número; las demás secciones y sus subsecciones, sí. Este ejemplo muestra solo dos secciones.
-\end{nota}
-
-% --- Sección 1 ---
-\section{Contexto de negocio y problema}
-Las citas siguen un solo estilo en todo el artículo. En APA~7 se cita con autor y año, ya sea dentro de la oración, como \textcite{breiman2001}, o entre paréntesis al final de una idea \parencite{hastie2009}. Cuando se usa una biblioteca de software conviene citarla también \parencite{pedregosa2011}.
-
-% --- Sección 4 (el ejemplo salta a la numeración 4) ---
-\setcounter{section}{3}
-\section{Resultados y validación}
-Toda figura y toda tabla se menciona en el texto antes de aparecer: la
-Figura~\ref{fig:ejemplo} muestra una serie ilustrativa y la Tabla~\ref{tab:ejemplo}, un resumen con intervalos.
-
-\begin{nota}
-\textbf{Nota de formato.} Figuras y tablas numeradas, con pie; el pie de la figura va debajo y el de la tabla, arriba. Las cifras del artículo coinciden con las de los cuadernos ya entregados. Tablas extensas (por ejemplo: búsquedas de hiperparámetros) van a los anexos y el cuerpo las resume.
-\end{nota}
-
-% --- Figura 1 (pie debajo) ---
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.82\linewidth]{figura_ejemplo.png}
-  \caption{Pie de figura: dice qué se muestra y cómo leerlo (ejes, unidades, qué comparar). Datos ilustrativos.}
-  \label{fig:ejemplo}
+  \includegraphics[width=0.9\linewidth]{figuras/f0_palancas.png}
+  \caption{Cada barra viene de una corrida distinta, con otro propósito; indican el orden de magnitud, no miden el efecto de cada factor por separado.}
+  \label{fig:f0_palancas}
 \end{figure}
 
-% --- Tabla 1 (pie arriba) ---
-\begin{table}[H]
+\setcounter{section}{1}
+
+\section{Problema}
+Un compuesto natural bioactivo solo sirve si llega al cerebro y si actúa sobre una diana. El equipo con el Departamento de Bioingeniería necesita priorizar candidatos, no descartarlos: que una molécula sea predicha \textbf{BBB−} no la excluye, porque esa predicción no está verificada para la mayoría. Por eso los dos modelos son evidencia paralela que se combina en un ranking, no una cascada.
+
+\section{Datos y partición}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Fase 1:} 7,805 compuestos con clase del archivo curado de la patrocinadora (derivado de B3DB), 65\% BBB+; 6,306 para ajustar y validar, 1,499 reservados.
+\item
+  \textbf{Fase 2:} 202,647 registros de actividad (ChEMBL, NPASS, CMAUP) convertidos en intervalos de potencia; 56,241 pares para ajustar y 13,944 reservados. Se guarda el intervalo, no una etiqueta, porque el umbral de 10 µM es una decisión que puede cambiar.
+\item
+  \textbf{Partición.} Nunca al azar: se agrupa por andamio de Bemis--Murcko \emph{unido} al esqueleto de conectividad, para que los estereoisómeros no caigan a los dos lados (1,048 grupos en la fase 1).
+\end{itemize}
+
+\section{Métodos}
+\textbf{Modelos.} Once modelos de clasificación (de regresión logística a ensambles) y nueve de regresión. Final de la fase 1: \texttt{svm\_rbf} sobre 151 descriptores RDKit. Final de la fase 2: un modelo de supervivencia acelerada (AFT, XGBoost \autocite{chen2016xgboost}) que aprende de las mediciones censuradas.
+
+\textbf{Rigor.} Las reglas de decisión se escribieron antes de cada corrida y no se ajustaron después (no están pre-registradas); cada corrida reproduce una cifra ya registrada como control, y cada resultado nuevo se recalculó con un segundo código. Los intervalos remuestrean grupos, no filas. De los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predicción con cualquier semilla; el \texttt{mlp} y el \texttt{bosque} no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó \textbf{once veces}, cuatro de ellas sin etiquetas ---dos solo como SMILES (E1+ y E14) y dos solo estructurales (la proporción de andamios, una por fase)---, todas registradas en \texttt{experimentos/prueba.csv}; ningún modelo se eligió después de verla.
+
+\section{Resultados}
+\subsection{La escalera de semejanza}
+
+Entre los once modelos hay 4.2 puntos de MCC. Con el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues donde ningún compuesto de entrenamiento supera 0.4 de similitud con uno de validación cuesta 33.3 puntos (0.752 → 0.419). En validación cruzada, el modelo entregado da MCC 0.702 y AUROC 0.919.
+
+\begin{figure}[H]
   \centering
-  \caption{Pie de tabla, arriba de la tabla: qué contiene y de dónde salen las cifras. Valores ilustrativos.}
-  \label{tab:ejemplo}
-  \begin{tabular}{lcr}
-    \toprule
-    Modelo & Métrica & Intervalo de 95\,\% \\
-    \midrule
-    Referencia & 0.62 & [0.60, 0.64] \\
-    Modelo A   & 0.66 & [0.64, 0.68] \\
-    Modelo B   & 0.71 & [0.69, 0.73] \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+  \includegraphics[width=0.9\linewidth]{figuras/f1_escalera.png}
+  \caption{AUROC por peldaño, seis modelos. La línea naranja es la prueba reservada (0.793).}
+  \label{fig:f1_escalera}
+\end{figure}
 
-% --- Declaración de uso de IA (antes de las referencias) ---
+\textbf{La fase 2 muestra lo mismo, con una limitación del conjunto.} La concordancia del \texttt{aft} baja de 0.807 (por molécula) a 0.695 con similitud ≥ 0.6, siete veces la dispersión entre los modelos competitivos. A 0.5 y 0.4 no se puede ni construir la partición: el 69\% y el 90\% de las filas caen en un solo grupo. No hay manera de evaluar la fase 2 con química realmente nueva a esos niveles.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figuras/f6_escalera_fase2.png}
+  \caption{Concordancia del \texttt{aft} por peldaño; en gris, solo pares de NPASS.}
+  \label{fig:f6_escalera_fase2}
+\end{figure}
+
+\textbf{Dos matices que el artículo tiene que llevar.} La \emph{forma} de la escalera depende de cómo se defina «parecido»: con ECFP6 la caída es gradual y con ECFP4 casi todo ocurre entre 0.6 y 0.5, aunque la caída total es parecida (0.419 contra 0.434 de MCC); con atom-pair no se pueden construir los peldaños estrictos. Y el MCC exagera: con el mejor corte posible sería 0.655 y 0.560 en los dos peldaños estrictos, contra 0.486 y 0.419 con el corte fijo en 0.5. Un corte de igual prevalencia solo recupera +0.047 en el primero, así que no es una solución.
+
+\subsection{La prueba reservada es más difícil de lo que su similitud predice}
+
+En la prueba el AUROC es 0.793 y el MCC 0.339 (1,499 compuestos). Su similitud media al vecino más cercano (0.414) es mayor que la de la validación agrupada (0.384), así que por similitud tendría que rendir \emph{mejor}: reponderar las predicciones de validación a su distribución de similitud da un AUROC esperado de \textbf{0.89}, y el real es \textbf{0.79}. La brecha de 0.10 no se explica por qué tan lejos queda de lo visto; qué es, no está medido (candidatos: prevalencia, peso y polaridad, curación de los datos, andamios raros a propósito).
+
+Dentro de la prueba, la ventaja del modelo sobre una línea base de peso molecular y TPSA crece con lo parecido que es cada compuesto (+0.036 en el tercil más raro, +0.106 en el más parecido; diferencia +0.069, IC95\% 0.011 a 0.124); en la fase 2 la diferencia es cuatro veces menor.
+
+\textbf{La caída baja con la similitud.} Dividiendo la prueba en terciles de similitud al ajuste (cortes 0.31 y 0.46), el AUROC sube de 0.697 a 0.793 y a 0.875: +0.178 entre el tercil más parecido y el menos parecido, IC95\% {[}+0.119, +0.238{]} remuestreando esqueletos. En los compuestos sin equivalente natural la diferencia es +0.223 {[}+0.142, +0.306{]}; en los naturales exactos es +0.086 con un intervalo que incluye el cero {[}−0.029, +0.204{]}, así que con 446 compuestos no se distingue, y en los análogos estereoquímicos el tercil más parecido tiene menos de 20 casos de la minoritaria y no se reporta. Es una correlación dentro de la prueba y la similitud no explica toda la brecha (0.89 esperado contra 0.79).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figuras/f2_rareza.png}
+  \caption{Ventaja sobre la línea base por tercil de rareza, con IC95\% por bootstrap de grupos.}
+  \label{fig:f2_rareza}
+\end{figure}
+
+\textbf{Dar más peso a lo raro durante el entrenamiento no ayuda.} Como la ventaja del modelo se pierde justo en lo raro, probamos repesar las filas raras que ya están en el ajuste: peso 3, 2 y 1 según el tercil de similitud al vecino más cercano de otro grupo, dentro de cada tramo de peso molecular (\texttt{svm\_rbf}, 15 evaluaciones agrupadas, regla escrita antes de correr, sin leer la prueba; decisión 1.10). En el tercil más raro de validación la ganancia de AUROC es −0.0005, positiva en 9 de 15 evaluaciones, cuando la regla pedía más de 0.005 en 12. Un control con los mismos pesos asignados al azar mueve el AUROC global casi igual (+0.0015 contra +0.0022) y el MCC global baja 0.0022. \textbf{La regla tiene poca potencia para efectos chicos:} con la dispersión observada (0.0095) solo detectaría con 80\% de probabilidad una mejora de unos 0.010, así que el resultado descarta una mejora grande, no una de 0.005. Tampoco es el experimento de pasar compuestos raros de la prueba al ajuste para aprender de ellos, que no se hizo.
+
+\subsection{La representación no se traslada entre fases}
+
+Las huellas Sort \& Slice \textbf{no mejoran a ningún modelo de la fase 1} y bajan el MCC de cinco de seis; en la fase 2 mejoran a cinco de seis en las 15 evaluaciones. Por tramo de peso la media es negativa en la fase 1 sin tendencia y crece con el peso en la fase 2.
+
+El detalle por tramo de peso está en el Anexo C.
+
+Dos explicaciones simples se \textbf{descartaron} con experimentos propios. \textbf{No es el tamaño de los datos}: con el ajuste de la fase 2 reducido a 5,000 filas (el de la fase 1) la ganancia del \texttt{aft} es +0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). \textbf{No es la granularidad de la etiqueta}: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados (AUROC +0.017 a +0.085).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figuras/f5_rivales.png}
+  \caption{Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta.}
+  \label{fig:f5_rivales}
+\end{figure}
+
+Quedan en pie dos hipótesis. \textbf{La densidad del espacio químico} (que las huellas ganen donde hay muchos vecinos) se midió a igual peso molecular y el resultado es \textbf{no concluyente}: la fase 2 es 1.8 veces más densa que la 1 (61.9 contra 33.8 vecinos fuera del grupo), y en la fase 1 la pérdida por añadir huellas se concentra en el tercio más disperso, pero las diferencias no superan su desviación. Y que \textbf{la permeabilidad dependa de propiedades globales} que los descriptores ya capturan mientras la unión depende de subestructuras: no está medida. Los resultados valen para esas familias de modelos y no prueban qué pasa en la fase 1.
+
+\subsection{El modelo de potencia en NPASS}
+
+El AFT se eligió porque en los pares que solo tiene NPASS aprende de mediciones censuradas que los demás descartan. En validación cruzada su concordancia ahí es 0.632 contra 0.511 del bosque. En la prueba (117 pares) baja a 0.530 en la corrida registrada (0.511 al reajustarlo, que es lo que muestra la figura) y la línea base de peso y TPSA da 0.565. Con 117 pares no hay potencia para distinguir 0.511 de 0.632, y los pares no son la misma población (12.3\% de activos contra 44.4\%): \textbf{no refuta el resultado, pero tampoco lo confirma.} Además, su ventaja de MCC sobre el bosque (+0.155 con corte fijo) se reduce a +0.028 con un corte de igual prevalencia; sigue siendo positiva en las 15 evaluaciones y coincide con su ventaja de AUROC (+0.012).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figuras/f4_aft.png}
+  \caption{Izquierda: concordancia solo-NPASS. Derecha: ventaja en MCC del AFT sobre el bosque.}
+  \label{fig:f4_aft}
+\end{figure}
+
+Ningún otro brazo supera al \texttt{aft} en NPASS (filtrar los descriptores no cambia nada y quitarlos lo empeora 0.041), y dos métodos de atribución independientes concuerdan en lo que pesa, con la diana en primer plano y TPSA y los donadores de hidrógeno lejos (Anexo F).
+
+\emph{La operación de estos modelos ---un cuaderno, no un servicio--- está en la sección 6.}
+
+\section{Implementación y operación}
+\textbf{Qué se entrega: un cuaderno, no un servicio.} En la reunión del 3 de noviembre la patrocinadora dijo que no habrá un punto de acceso productivo; lo que conviene es dejarle un cuaderno que ella ejecute con sus propios compuestos. La entrada es una lista de SMILES; la salida, para cada compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha contra cada una de las 26 dianas (fase 2, una pActividad por diana y sin intervalo) y qué tan cerca queda de lo que los modelos vieron. \textbf{El cuaderno no combina las dos fases en un ranking}: esa combinación sigue pendiente (decisión C.3), y cuando exista será evidencia paralela y \textbf{no una cascada}, porque un BBB− no descarta un compuesto.
+
+\textbf{Estado hoy.} Los dos modelos finales están guardados en \texttt{models/finales/} (unos 3 MB), con un módulo de inferencia que no necesita los datos de entrenamiento, un script que los regenera y el cuaderno que los usa (\texttt{notebooks/06\_Uso\_de\_los\_modelos.ipynb}, \#261). Está comprobado que los descriptores calculados desde un SMILES coinciden bit a bit con los de entrenamiento (150 moléculas de cada fase) y que el modelo recargado reproduce al entrenado. Falta que el equipo los revise. El reajuste de la fase 2 con las filas de ajuste no reproduce exactamente la cifra de la prueba (0.7234 contra 0.7200). \textbf{Con qué filas se entrenan} lo decide la curva de aprendizaje y la decisión del 4 de noviembre: \textbf{los dos modelos se sirven con las filas de ajuste}. En la fase 1 la ganancia de usar el 100\% sobre el 75\% es +0.002 de AUROC (meseta); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y se renuncia a esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2564}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3077}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4359}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+requisito
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+por qué
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+responsable
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+script que entrena y guarda los dos modelos finales, con el comando y los \texttt{sha256} de los datos & que cualquiera pueda reconstruirlos (\texttt{experimentos/README.md} ya lo hace para las corridas) & hecho (\#261), por revisar \\
+cuaderno de uso con SMILES propios & es la forma de operación acordada & hecho (\#261), por revisar \\
+\textbf{advertencia de extrapolación}: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento & una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto & hecho en el cuaderno (\#261), por revisar \\
+reentrenar al llegar datos nuevos y \textbf{reevaluar con la escalera}, no con un corte al azar & evita celebrar una cifra inflada & patrocinadora, con apoyo del equipo \\
+evaluación externa con su conjunto de prueba & la prueba reservada es nuestra, no la de ella & \textbf{hecha una vez} con el \texttt{aft} final: concordancia 0.792 {[}0.787, 0.797{]} en 8,134 pares (\texttt{solo\_npass} 0.667, 249 pares), pero \textbf{no comparable}: el 64.9\% de sus pares tiene andamio ya visto; ver abajo \\
+\end{longtable}
+}
+
+\textbf{La base externa de la patrocinadora (4 nov).} El archivo \texttt{Testeo} no comparte identificador ni SMILES canónico con el de entrenamiento. Con el \texttt{aft} guardado, sin reentrenar, la concordancia en 8,134 pares de las 26 dianas del modelo es \textbf{0.792} (IC95\% remuestreando esqueletos: 0.787 a 0.797), mayor que el 0.720 de la prueba reservada; en \texttt{solo\_chembl} 0.786, en \texttt{mixto} 0.615 y en \texttt{solo\_npass} 0.667 (249 pares, Spearman 0.309). \textbf{Esa base no es comparable con la prueba reservada:} se separó por compuesto y no por andamio, y el 64.9\% de sus pares tiene un andamio que ya está en el ajuste (contra 0.5\% en el control interno), con una similitud mediana al vecino más cercano de 0.787 (0.679 en la validación de la misma fase). Que salga mejor es lo que predice la tesis del artículo, no una prueba de mejor generalización. Los naturales siguen siendo el estrato débil. Es una lectura única; el control reconstruye los 70,384 pares del entrenamiento sin diferencia.
+
+\textbf{Dos límites que el cuaderno tiene que decir.} La advertencia de extrapolación es una heurística: la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que una similitud alta no garantiza un buen resultado. Y la probabilidad de la fase 1 \textbf{no se corta}: a 0.5 sería un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 5.1), y por eso el cuaderno entrega la probabilidad y no una clase. \textbf{Uso no comercial}: NPASS es CC BY-NC. El \textbf{retorno de detectar un buen candidato} va en el resumen ejecutivo como un supuesto, no como una cifra medida.
+
+\section{Conclusiones y limitaciones}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Los ensambles no mejoran al modelo simple en MCC ni AUPRC; no es un fracaso}, es el peldaño más bajo de una escalera donde el modelo nunca fue el factor grande. En AUROC, votación (+0.0139 {[}+0.0038, +0.0239{]}) y stacking (+0.0128 {[}+0.0023, +0.0233{]}) sí superan al \texttt{svm\_rbf} con el intervalo corregido de Nadeau y Bengio, pero con Holm sobre diez comparaciones los valores p son 0.103 y 0.180: ninguno sobrevive. Acomodar el escalador dentro de la calibración del SVM no cambia nada (MCC 0.7015 contra 0.7017; AUROC y AUPRC idénticos).
+\item
+  \textbf{Una cifra de validación cruzada no describe a la química nueva}, y la similitud al vecino más cercano no basta para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10 más de lo que su similitud predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
+\item
+  \textbf{La representación no se traslada entre fases}, y no por tamaño de datos ni por tipo de etiqueta; la densidad del espacio químico queda como pista sin confirmar.
+\end{enumerate}
+
+Limitaciones: la prueba se leyó once veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el \texttt{svm\_rbf}, 2.2 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el \texttt{mlp} y el \texttt{bosque} varían con la semilla del modelo; ninguna corrida se diseñó para comparar las palancas de la Figura 1; y no probamos aprender de los compuestos raros de la prueba (solo repesar los que ya están en el ajuste), ni con otro modelo que el \texttt{svm\_rbf}.
+
+\section*{Fuentes y reproducibilidad}
+\textbf{Fuentes de datos:} B3DB \autocite{meng2021b3db}; NPASS \autocite{zhao2023npass} y \autocite{lin2026npass}; CMAUP \autocite{hou2024cmaup}; ChEMBL \autocite{zdrazil2024chembl}. \textbf{Representación y partición:} huellas de Morgan / ECFP \autocite{rogers2010ecfp}; RDKit \autocite{rdkit}; andamios de Bemis--Murcko \autocite{bemis1996properties}. \textbf{La lección de la escalera:} la partición por tiempo como estimación de la predicción prospectiva \autocite{sheridan2013}, y la validación por bloques que corrige la subestimación del error cuando los datos tienen estructura \autocite{roberts2017crossvalidation}. \textbf{Modelos y métricas:} XGBoost \autocite{chen2016xgboost}; la concordancia de Harrell \autocite{harrell1982yield}; la corrección de Nadeau y Bengio para los intervalos de la validación cruzada \autocite{nadeau2003inference}. Las cuatro últimas entradas se verificaron contra su DOI antes de añadirlas a \texttt{docs/referencias/bibliografia.bib}.
+
+\textbf{Código y datos.} Cada cifra tiene su corrida en \texttt{experimentos/} (parámetros, commit, \texttt{sha256} de los datos, comando) y se repite con \texttt{experimentos/README.md}; las lecturas de la prueba reservada están en \texttt{experimentos/prueba.csv}.
+
 \section*{Declaración de uso de inteligencia artificial}
-Se utilizó \textcite{anthropic2026claude} para \textcolor{red}{[indicar la finalidad]}.
-La responsabilidad final sobre el contenido entregado recae en los autores.
+Se utilizó \textcite{anthropic2026claude} para escribir el código de los experimentos y sus pruebas, generar las figuras a partir de las corridas registradas y redactar el borrador de este artículo. Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
 
-% --- Referencias (biblatex + Biber, solo lo citado) ---
 \printbibliography[title={Referencias}]
 
-% --- Anexos (en página nueva; \appendix cambia la numeración a A, B, ...) ---
 \clearpage
 \appendix
-\section{Título del anexo}
-Los anexos se titulan y se citan desde el cuerpo (por ejemplo, «véase el Anexo~A»).
+\section*{Anexos}
+\textbf{A. La escalera con seis modelos y con otra definición de «parecido»} (E1+, E13): la logística no se degrada menos que el \texttt{svm\_rbf} de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se pueden construir. \textbf{B. La línea base de peso y TPSA} (E0). \textbf{C. Las huellas por tramo de peso}, con la figura de abajo. \textbf{D. El ranking de la fase 2} (E5) y \textbf{la curva de aprendizaje} (E8). \textbf{E. La densidad del espacio químico a igual peso} (E11, no concluyente) y \textbf{cómo repetir cada corrida}, con tiempos y \texttt{sha256} de los datos.
+
+\setcounter{figure}{0}\renewcommand{\thefigure}{C\arabic{figure}}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figuras/f3_huellas.png}
+  \caption{Cambio por añadir huellas, por tramo de peso. Magnitudes menores a 0.01 en la fase 2.}
+  \label{fig:f3_huellas}
+\end{figure}
+
+\textbf{F. Los cuatro brazos del \texttt{aft} y la atribución.}
+
+\textbf{Qué ve el modelo.} De los cuatro brazos con los mismos pliegues, ninguno supera al \texttt{aft} en NPASS: filtrar los descriptores no cambia nada que se distinga del ruido (+0.002), y \textbf{quitar los descriptores y dejar solo huellas y diana lo empeora en las 15 evaluaciones} (−0.041), aunque en el agregado empata. Esto matiza la lectura del registro (1.3) de que en la fase 2 se pueden tirar los descriptores, porque las huellas solas casi igualaban al brazo ancho: en el estrato por el que se eligió el modelo no se pueden.
+
+\textbf{Qué pesa.} Dos métodos independientes, TreeSHAP (lee los árboles) y permutación (solo la salida), concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (\texttt{MAOA}, \texttt{MAOB}, \texttt{DRD2}, \texttt{LRRK2}, \texttt{BCHE}, el 15\% de la atribución) y, en la química, la complejidad topológica (\texttt{BertzCT}), la lipofilia y los halógenos. \textbf{TPSA y los donadores de hidrógeno, que dominan la permeabilidad, no dominan la potencia} (lugares 44 y 165).
+
+\textbf{Qué pesa en la fase 1.} Los dos métodos (permutación y KernelSHAP) miran el mismo \texttt{svm\_rbf}; una versión anterior mezclaba la permutación con la impureza de un bosque, que son dos modelos, y se quitó. Coinciden en seis descriptores entre sus quince primeros (\texttt{fr\_lactam}, \texttt{NumHDonors}, \texttt{NumAliphaticCarbocycles}, \texttt{VSA\_EState3}, \texttt{fr\_Ar\_OH}, \texttt{fr\_ether}), estables entre dos muestras de compuestos; la correlación entre los dos rankings completos es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); \textbf{TPSA no} (40 por permutación y 10 por SHAP), porque comparte información con un racimo de columnas. No se afirma ninguna estructura: son seis nombres de descriptor, no un mecanismo.
+
+\textbf{Por subestructura.} El modelo final no usa huellas, así que se repitió el diseño con el brazo que sí (\texttt{aft\_huellas}, que no mejora en NPASS). \textbf{Con cinco repeticiones de permutación sobre las 11,248 filas, los dos métodos concuerdan según la regla declarada} (Spearman 0.577 sobre la unión de los 100 primeros, contra el 0.50 fijado de antemano, y 11 de 15 en común). Una medición previa con una repetición sobre 1,500 filas había dado 0.378 y «no concuerdan»; era ruido de la permutación, no un resultado. En la intersección hay dos subestructuras, un nitrógeno de anillo tipo piridina y un CH aromático vecino a ese nitrógeno, genéricas y frecuentes (en el 57\% y 21\% de las moléculas): indican que el modelo usa heterociclos nitrogenados, no un farmacóforo específico. \textbf{No se afirma ninguna subestructura específica.} Un límite declarado: 618 de 2,534 columnas (24.4\%, todas huellas) existen en menos de cinco pliegues y se excluyen de la intersección; ninguna estaba arriba.
 
 \end{document}
