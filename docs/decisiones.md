@@ -30,6 +30,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
+| [1.9](#d1-9) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
 
 **Fase 2 · Actividad**
 
@@ -776,6 +777,45 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 **Cuánto pesa, y en qué métrica.** En **exactitud** ya está medido y no aprieta: son **151 errores inevitables sobre 7,805**, un techo del **98.1%** que ningún modelo realista alcanza, así que no explica nada de lo que falte ([los datos del proyecto](datos-contenido.md)). En **MCC y AUPRC sobre la clase minoritaria**, que son las métricas del proyecto por la [C.1](#dc-1), no está medido, y ahí sí podría apretar: los 429 compuestos no se reparten por igual entre las dos clases. Eso es lo que falta del [issue #28](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/28), cuyo enunciado pide calcular un techo que en exactitud ya existe.
 
 **Por qué se pregunta.** Es una de las dos lecturas y no se distinguen desde los datos. Si la estereoquímica cambia de verdad el paso por la barrera —cosa plausible, porque los transportadores son estereoselectivos—, entonces la representación actual pierde información y hay que decir en el reporte que el techo está acotado por diseño. Si en cambio los pares vienen de ensayos distintos que se compararon mal, entonces son ruido de curación y la cota es menor de lo que parece. Su criterio farmacológico es lo que decide cuál de las dos pesa más.
+
+#### 1.9 · Entrenar dando más peso a la química rara {#d1-9 .propuesta}
+
+**Estado:** propuesta
+
+> **Pregunta:** ¿Entrenar con más peso en las filas de química rara (poco parecidas al resto del ajuste) mejora al `svm_rbf` en lo raro sin empeorarlo en lo parecido? Se mide solo en validación agrupada; la prueba reservada no se lee.
+
+**Qué pasó.** La prueba cae de 0.919 a 0.793 de AUROC y el [E2](#d1-5) mostró que lo raro explica buena parte de esa caída: en el tercil más raro la ventaja del `svm_rbf` sobre peso y TPSA es +0.036 con el cero dentro del intervalo, y en el más parecido es +0.106. La escalera de agrupación mostró la misma palanca desde el otro lado: con pliegues al azar el MCC es 0.752, con `grupos_cv` 0.702 y con similitud ≥ 0.4 entre ajuste y validación 0.419 (corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`). Tener análogos cercanos en el entrenamiento mueve más la cifra que cambiar de modelo. Lo que nadie midió es entrenar *a propósito* con más peso en lo raro: la curva de aprendizaje (E8) añade filas en general y dice en sus propios límites que no mide si las filas raras aportan más o menos que las parecidas.
+
+**Qué se propone medir (nada se ha corrido).**
+
+| pieza | diseño |
+|:--|:--|
+| modelo y datos | `svm_rbf` de la fase 1 con los 151 descriptores, como se entrega; solo la fase 1 |
+| rareza de una fila de ajuste | Tanimoto al vecino más cercano **dentro del pliegue de ajuste, excluyendo las filas de su mismo grupo** (`grupos_cv`): si no se excluyen, sus estereoisómeros y compañeros de andamio la hacen parecer común. Terciles dentro de cada tramo de peso, como en el E2 |
+| brazo A | sin cambios (referencia) |
+| brazo B | peso por fila 1, 2 y 3 en los terciles de más parecido, intermedio y más raro, vía `sample_weight`, calculado dentro del pliegue |
+| brazo C | las mismas proporciones pero duplicando filas (×1, ×2, ×3) en lugar de pesarlas, para ver si el efecto depende del mecanismo |
+| brazo D | **control**: los mismos pesos 1, 2 y 3 asignados al azar, sin relación con la rareza |
+| evaluación | validación cruzada agrupada, 3 semillas × 5 pliegues, pareada contra A; la prueba reservada **no se lee** |
+| qué se reporta | AUROC y MCC global y por tercil de rareza de la validación (misma definición que el E2); un tercil solo se reporta si su clase minoritaria llega a 20 casos |
+| error | Nadeau y Bengio, como en la [1.7](#d1-7) |
+
+Los pesos 1, 2 y 3 son fijos y se declaran aquí: no se afinan, porque afinarlos favorecería al brazo con más intentos.
+
+**La regla, declarada antes de correr.** El brazo B *sirve* si se cumplen las tres:
+1. la ganancia de AUROC contra A en el tercil más raro es positiva en al menos 12 de las 15 evaluaciones y su media supera 0.005;
+2. en el tercil más parecido la media no pierde más de 0.005;
+3. en el tercil más raro, B supera a D por una media mayor que cero (el control: cualquier cambio de pesos mueve algo).
+
+Si no se cumple, la entrada queda como resultado negativo medido y no se afina nada para rescatarlo. El brazo C solo se reporta como contraste del mecanismo y no decide.
+
+**Lo que no hace.** No toca la prueba reservada. Si B sirve, adoptarlo en el modelo entregado es **otra decisión**, con su propia lectura registrada en `experimentos/prueba.csv` y con su motivo. Tampoco incluye la fase 2: el `aft` con huellas se mide en horas y su respuesta ha sido distinta de la de la fase 1 en cada experimento anterior, así que solo se haría si la fase 1 muestra algo y hay margen de revisión.
+
+**Qué costaría equivocarse.** Si los pesos distorsionan la calibración, el AUROC puede subir y el MCC bajar; por eso se reportan los dos. Si la rareza por tramo de peso resulta correlacionada con la clase, B podría premiar un atajo; el control D y el reporte por tercil lo acotan, pero no lo eliminan.
+
+**Qué lo cambiaría.** Que la regla se cumpla (se abre la propuesta de adoptarlo) o que no se cumpla (queda como resultado negativo y como el límite declarado del E8).
+
+**Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos.
 
 ### Supuestos
 
