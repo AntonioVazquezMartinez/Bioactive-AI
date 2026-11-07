@@ -1,0 +1,21 @@
+decision: '1.7'
+semillas:
+- 0
+- 1
+- 2
+params:
+  corrida_de_origen: 2026-11-01-artemio-1.5-ensambles-permeabilidad
+  individual: svm_rbf
+  evaluaciones: 15
+  correccion: Nadeau y Bengio, J = 15, proporcion 1/4, t de 14 g.l.
+  control:
+    stacking:
+    - 0.0093
+    - -0.0101
+    - 0.0287
+    votacion:
+    - 0.0075
+    - -0.0113
+    - 0.0263
+  tolerancia: 0.0005
+  toca_prueba: false

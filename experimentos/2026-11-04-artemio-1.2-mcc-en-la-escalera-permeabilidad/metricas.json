@@ -1,0 +1,67 @@
+{
+  "control_dentro_de_tolerancia": {
+    "1 al azar": true,
+    "3 por andamio": true,
+    "4 andamio + esqueleto (actual)": true,
+    "5 similitud ≥ 0.4": true,
+    "5 similitud ≥ 0.5": true,
+    "5 similitud ≥ 0.6": true
+  },
+  "escalera": [
+    {
+      "fijo": 0.7515,
+      "frac_positiva_a_05": 0.7095,
+      "optimo": 0.7634,
+      "peldano": "1 al azar",
+      "prevalencia": 0.7521,
+      "prevalencia_real": 0.6497,
+      "recuperado": 0.0006
+    },
+    {
+      "fijo": 0.7209,
+      "frac_positiva_a_05": 0.7065,
+      "optimo": 0.733,
+      "peldano": "3 por andamio",
+      "prevalencia": 0.7122,
+      "prevalencia_real": 0.6497,
+      "recuperado": -0.0087
+    },
+    {
+      "fijo": 0.7017,
+      "frac_positiva_a_05": 0.7085,
+      "optimo": 0.7135,
+      "peldano": "4 andamio + esqueleto (actual)",
+      "prevalencia": 0.6791,
+      "prevalencia_real": 0.6497,
+      "recuperado": -0.0225
+    },
+    {
+      "fijo": 0.6876,
+      "frac_positiva_a_05": 0.6976,
+      "optimo": 0.7072,
+      "peldano": "5 similitud ≥ 0.6",
+      "prevalencia": 0.6767,
+      "prevalencia_real": 0.6497,
+      "recuperado": -0.0109
+    },
+    {
+      "fijo": 0.4859,
+      "frac_positiva_a_05": 0.6061,
+      "optimo": 0.6554,
+      "peldano": "5 similitud ≥ 0.5",
+      "prevalencia": 0.5327,
+      "prevalencia_real": 0.6497,
+      "recuperado": 0.0468
+    },
+    {
+      "fijo": 0.419,
+      "frac_positiva_a_05": 0.5897,
+      "optimo": 0.5598,
+      "peldano": "5 similitud ≥ 0.4",
+      "prevalencia": 0.4233,
+      "prevalencia_real": 0.6497,
+      "recuperado": 0.0043
+    }
+  ],
+  "la_colocacion_explica_parte": true
+}

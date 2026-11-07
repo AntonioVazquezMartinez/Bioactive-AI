@@ -1,0 +1,4 @@
+decision: '1.6'
+semillas: []
+params:
+  regla: proporcion ausente del entrenamiento

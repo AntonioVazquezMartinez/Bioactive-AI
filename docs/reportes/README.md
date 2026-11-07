@@ -41,7 +41,7 @@ Entregado el 18 de octubre: [`notebooks/03_Baseline.ipynb`](../../notebooks/03_B
 Tres cosas que deja establecidas, y que condicionan cómo se leen las cifras siguientes:
 
 - **Ninguna canalización gana.** Los intervalos del 95% se solapan; con una configuración por familia, declarar un ganador sería prematuro. Afinar es del Avance 4.
-- **El criterio de agrupamiento pesa más que la elección de modelo, en MCC.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 7.1 — en MCC, algo más de tres veces lo que separa a las tres familias entre sí; en AUROC, lo mismo que las separa.
+- **Cuánta semejanza se permite entre entrenamiento y validación mueve más que elegir modelo.** Agrupar solo por andamio, en vez de unirlo al esqueleto de conectividad, infla el AUROC 2.2 puntos y el MCC 7.1 con el bosque, pero solo 1.3 y 1.9 respectivamente con el `svm_rbf` que se entrega: ese efecto depende del modelo. Lo que sí es general es la escalera (`2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`): el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.419 cuando ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación, 33.3 puntos.
 - **El desempeño de la fase 2 no es un número.** Por estrato de procedencia: 0.855 de AUROC donde solo hay ChEMBL y 0.607 donde solo hay NPASS, que son los productos naturales que el proyecto existe para priorizar.
 
 La prueba reservada no se ha mirado.

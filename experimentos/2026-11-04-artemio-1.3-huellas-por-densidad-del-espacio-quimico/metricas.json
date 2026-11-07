@@ -1,0 +1,421 @@
+{
+  "celdas_fase1": [
+    {
+      "dif_media": -0.0465,
+      "evaluaciones": 10,
+      "mejora_en": 1,
+      "modelo": "knn",
+      "nivel": "d1 baja",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": -0.0746,
+      "evaluaciones": 10,
+      "mejora_en": 1,
+      "modelo": "logistica",
+      "nivel": "d1 baja",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": -0.0496,
+      "evaluaciones": 10,
+      "mejora_en": 0,
+      "modelo": "svm_rbf",
+      "nivel": "d1 baja",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0468,
+      "evaluaciones": 10,
+      "mejora_en": 10,
+      "modelo": "knn",
+      "nivel": "d2",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.037,
+      "evaluaciones": 10,
+      "mejora_en": 8,
+      "modelo": "logistica",
+      "nivel": "d2",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0409,
+      "evaluaciones": 10,
+      "mejora_en": 9,
+      "modelo": "svm_rbf",
+      "nivel": "d2",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": -0.0159,
+      "evaluaciones": 13,
+      "mejora_en": 4,
+      "modelo": "knn",
+      "nivel": "d3 alta",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0108,
+      "evaluaciones": 13,
+      "mejora_en": 7,
+      "modelo": "logistica",
+      "nivel": "d3 alta",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0187,
+      "evaluaciones": 13,
+      "mejora_en": 9,
+      "modelo": "svm_rbf",
+      "nivel": "d3 alta",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": -0.0235,
+      "evaluaciones": 15,
+      "mejora_en": 7,
+      "modelo": "knn",
+      "nivel": "d1 baja",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0234,
+      "evaluaciones": 15,
+      "mejora_en": 10,
+      "modelo": "logistica",
+      "nivel": "d1 baja",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0089,
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "modelo": "svm_rbf",
+      "nivel": "d1 baja",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": -0.017,
+      "evaluaciones": 13,
+      "mejora_en": 3,
+      "modelo": "knn",
+      "nivel": "d2",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": -0.0027,
+      "evaluaciones": 13,
+      "mejora_en": 5,
+      "modelo": "logistica",
+      "nivel": "d2",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": -0.011,
+      "evaluaciones": 13,
+      "mejora_en": 4,
+      "modelo": "svm_rbf",
+      "nivel": "d2",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0011,
+      "evaluaciones": 12,
+      "mejora_en": 5,
+      "modelo": "knn",
+      "nivel": "d3 alta",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0002,
+      "evaluaciones": 12,
+      "mejora_en": 4,
+      "modelo": "logistica",
+      "nivel": "d3 alta",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": -0.0034,
+      "evaluaciones": 12,
+      "mejora_en": 4,
+      "modelo": "svm_rbf",
+      "nivel": "d3 alta",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": -0.0745,
+      "evaluaciones": 6,
+      "mejora_en": 1,
+      "modelo": "knn",
+      "nivel": "d1 baja",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": -0.0524,
+      "evaluaciones": 6,
+      "mejora_en": 2,
+      "modelo": "logistica",
+      "nivel": "d1 baja",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": -0.0753,
+      "evaluaciones": 6,
+      "mejora_en": 2,
+      "modelo": "svm_rbf",
+      "nivel": "d1 baja",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0015,
+      "evaluaciones": 5,
+      "mejora_en": 2,
+      "modelo": "knn",
+      "nivel": "d2",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0044,
+      "evaluaciones": 5,
+      "mejora_en": 2,
+      "modelo": "logistica",
+      "nivel": "d2",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0032,
+      "evaluaciones": 5,
+      "mejora_en": 1,
+      "modelo": "svm_rbf",
+      "nivel": "d2",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": -0.0003,
+      "evaluaciones": 7,
+      "mejora_en": 2,
+      "modelo": "knn",
+      "nivel": "d3 alta",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0011,
+      "evaluaciones": 7,
+      "mejora_en": 2,
+      "modelo": "logistica",
+      "nivel": "d3 alta",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": -0.0007,
+      "evaluaciones": 7,
+      "mejora_en": 2,
+      "modelo": "svm_rbf",
+      "nivel": "d3 alta",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0063,
+      "evaluaciones": 3,
+      "mejora_en": 2,
+      "modelo": "knn",
+      "nivel": "d1 baja",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0344,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "logistica",
+      "nivel": "d1 baja",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0419,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "svm_rbf",
+      "nivel": "d1 baja",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0509,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "knn",
+      "nivel": "d2",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": -0.0016,
+      "evaluaciones": 3,
+      "mejora_en": 1,
+      "modelo": "logistica",
+      "nivel": "d2",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0437,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "svm_rbf",
+      "nivel": "d2",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.012,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "knn",
+      "nivel": "d3 alta",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0197,
+      "evaluaciones": 3,
+      "mejora_en": 2,
+      "modelo": "logistica",
+      "nivel": "d3 alta",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.066,
+      "evaluaciones": 3,
+      "mejora_en": 3,
+      "modelo": "svm_rbf",
+      "nivel": "d3 alta",
+      "tramo": "≤250 Da"
+    }
+  ],
+  "celdas_fase2": [
+    {
+      "dif_media": 0.0036,
+      "evaluaciones": 15,
+      "mejora_en": 12,
+      "nivel": "d1 baja",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0014,
+      "evaluaciones": 15,
+      "mejora_en": 8,
+      "nivel": "d2",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0027,
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "nivel": "d3 alta",
+      "tramo": "250–350 Da"
+    },
+    {
+      "dif_media": 0.0045,
+      "evaluaciones": 15,
+      "mejora_en": 11,
+      "nivel": "d1 baja",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0066,
+      "evaluaciones": 15,
+      "mejora_en": 12,
+      "nivel": "d2",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0142,
+      "evaluaciones": 15,
+      "mejora_en": 14,
+      "nivel": "d3 alta",
+      "tramo": "350–500 Da"
+    },
+    {
+      "dif_media": 0.0162,
+      "evaluaciones": 15,
+      "mejora_en": 13,
+      "nivel": "d1 baja",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0079,
+      "evaluaciones": 15,
+      "mejora_en": 11,
+      "nivel": "d2",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": 0.0043,
+      "evaluaciones": 15,
+      "mejora_en": 9,
+      "nivel": "d3 alta",
+      "tramo": ">500 Da"
+    },
+    {
+      "dif_media": -0.0126,
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "nivel": "d1 baja",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": -0.0101,
+      "evaluaciones": 15,
+      "mejora_en": 5,
+      "nivel": "d2",
+      "tramo": "≤250 Da"
+    },
+    {
+      "dif_media": 0.0004,
+      "evaluaciones": 15,
+      "mejora_en": 6,
+      "nivel": "d3 alta",
+      "tramo": "≤250 Da"
+    }
+  ],
+  "control_fase1": {
+    "knn": true,
+    "logistica": true,
+    "svm_rbf": true
+  },
+  "control_fase2": true,
+  "fase1_por_modelo": {
+    "knn": {
+      "d_desv": 0.0788,
+      "d_media": 0.037,
+      "d_positiva_en": 11,
+      "evaluaciones": 15,
+      "veredicto": "no concluyente"
+    },
+    "logistica": {
+      "d_desv": 0.0669,
+      "d_media": 0.0113,
+      "d_positiva_en": 7,
+      "evaluaciones": 15,
+      "veredicto": "la densidad no la explica"
+    },
+    "svm_rbf": {
+      "d_desv": 0.044,
+      "d_media": 0.0184,
+      "d_positiva_en": 11,
+      "evaluaciones": 15,
+      "veredicto": "no concluyente"
+    }
+  },
+  "fase2": {
+    "d_desv": 0.0107,
+    "d_media": 0.0025,
+    "d_positiva_en": 9,
+    "evaluaciones": 15,
+    "veredicto": "no concluyente"
+  },
+  "todos_fase1": {
+    "knn": -0.0057,
+    "logistica": -0.0043,
+    "svm_rbf": -0.0016
+  },
+  "todos_fase2": 0.0057,
+  "veredicto_fase1": "no concluyente"
+}

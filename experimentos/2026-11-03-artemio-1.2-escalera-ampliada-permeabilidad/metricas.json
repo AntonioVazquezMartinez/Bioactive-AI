@@ -1,0 +1,627 @@
+{
+  "e1_ampliada": [
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.9731,
+      "grupos": 6306,
+      "mcc": 0.8168,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.9743,
+      "grupos": 6306,
+      "mcc": 0.8056,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.9488,
+      "grupos": 6306,
+      "mcc": 0.7395,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.9338,
+      "grupos": 6306,
+      "mcc": 0.7195,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.9639,
+      "grupos": 6306,
+      "mcc": 0.8064,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "1 al azar",
+      "auroc": 0.947,
+      "grupos": 6306,
+      "mcc": 0.7515,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.901
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.952,
+      "grupos": 2239,
+      "mcc": 0.762,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.9562,
+      "grupos": 2239,
+      "mcc": 0.763,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.9309,
+      "grupos": 2239,
+      "mcc": 0.7051,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.9229,
+      "grupos": 2239,
+      "mcc": 0.6979,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.9381,
+      "grupos": 2239,
+      "mcc": 0.7417,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "auroc": 0.9319,
+      "grupos": 2239,
+      "mcc": 0.7209,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.7504
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.9302,
+      "grupos": 1048,
+      "mcc": 0.7019,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.9329,
+      "grupos": 1048,
+      "mcc": 0.6996,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.9142,
+      "grupos": 1048,
+      "mcc": 0.6692,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.9133,
+      "grupos": 1048,
+      "mcc": 0.6866,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.911,
+      "grupos": 1048,
+      "mcc": 0.6743,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "auroc": 0.919,
+      "grupos": 1048,
+      "mcc": 0.7017,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.4971
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.9225,
+      "grupos": 1413,
+      "mcc": 0.6939,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.9251,
+      "grupos": 1413,
+      "mcc": 0.6937,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.91,
+      "grupos": 1413,
+      "mcc": 0.6709,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.8974,
+      "grupos": 1413,
+      "mcc": 0.6593,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.906,
+      "grupos": 1413,
+      "mcc": 0.6558,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "auroc": 0.9127,
+      "grupos": 1413,
+      "mcc": 0.6876,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.4219
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.85,
+      "grupos": 1017,
+      "mcc": 0.5512,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.8601,
+      "grupos": 1017,
+      "mcc": 0.5784,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.8261,
+      "grupos": 1017,
+      "mcc": 0.4829,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.8477,
+      "grupos": 1017,
+      "mcc": 0.5732,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.8197,
+      "grupos": 1017,
+      "mcc": 0.5182,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "auroc": 0.8348,
+      "grupos": 1017,
+      "mcc": 0.4859,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.3309
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.816,
+      "grupos": 631,
+      "mcc": 0.4795,
+      "modelo": "boosting",
+      "vecino_mas_cercano": 0.2774
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.8224,
+      "grupos": 631,
+      "mcc": 0.4739,
+      "modelo": "bosque",
+      "vecino_mas_cercano": 0.2774
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.7763,
+      "grupos": 631,
+      "mcc": 0.4323,
+      "modelo": "knn",
+      "vecino_mas_cercano": 0.2774
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.8161,
+      "grupos": 631,
+      "mcc": 0.5132,
+      "modelo": "logistica",
+      "vecino_mas_cercano": 0.2774
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.76,
+      "grupos": 631,
+      "mcc": 0.409,
+      "modelo": "mlp",
+      "vecino_mas_cercano": 0.2774
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "auroc": 0.7798,
+      "grupos": 631,
+      "mcc": 0.419,
+      "modelo": "svm_rbf",
+      "vecino_mas_cercano": 0.2774
+    }
+  ],
+  "pareadas": [
+    {
+      "agrupacion": "1 al azar",
+      "dif": -0.013,
+      "distinguible": true,
+      "hi": -0.0098,
+      "lo": -0.0164,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "1 al azar",
+      "dif": -0.029,
+      "distinguible": true,
+      "hi": -0.0186,
+      "lo": -0.04,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "1 al azar",
+      "dif": 0.0277,
+      "distinguible": true,
+      "hi": 0.0323,
+      "lo": 0.0234,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "1 al azar",
+      "dif": 0.0561,
+      "distinguible": true,
+      "hi": 0.0704,
+      "lo": 0.042,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "1 al azar",
+      "dif": 0.0016,
+      "distinguible": false,
+      "hi": 0.0062,
+      "lo": -0.0025,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "1 al azar",
+      "dif": -0.0107,
+      "distinguible": false,
+      "hi": 0.0034,
+      "lo": -0.0257,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": -0.0083,
+      "distinguible": true,
+      "hi": -0.0033,
+      "lo": -0.0134,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": -0.0222,
+      "distinguible": true,
+      "hi": -0.0032,
+      "lo": -0.0413,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": 0.0247,
+      "distinguible": true,
+      "hi": 0.0307,
+      "lo": 0.0186,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": 0.0435,
+      "distinguible": true,
+      "hi": 0.0614,
+      "lo": 0.0283,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": 0.0007,
+      "distinguible": false,
+      "hi": 0.0068,
+      "lo": -0.0058,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "3 por andamio",
+      "dif": -0.0128,
+      "distinguible": false,
+      "hi": 0.0061,
+      "lo": -0.0304,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": -0.007,
+      "distinguible": false,
+      "hi": 0.0024,
+      "lo": -0.0173,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": -0.0149,
+      "distinguible": false,
+      "hi": 0.0089,
+      "lo": -0.039,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": 0.0154,
+      "distinguible": true,
+      "hi": 0.0232,
+      "lo": 0.0079,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": 0.003,
+      "distinguible": false,
+      "hi": 0.0251,
+      "lo": -0.018,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": -0.0038,
+      "distinguible": false,
+      "hi": 0.0074,
+      "lo": -0.0167,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "4 andamio + esqueleto (actual)",
+      "dif": -0.0315,
+      "distinguible": true,
+      "hi": -0.0057,
+      "lo": -0.0591,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": -0.0109,
+      "distinguible": false,
+      "hi": 0.0014,
+      "lo": -0.0244,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": -0.0308,
+      "distinguible": false,
+      "hi": 0.0061,
+      "lo": -0.0733,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": 0.0102,
+      "distinguible": true,
+      "hi": 0.0203,
+      "lo": 0.001,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": 0.0082,
+      "distinguible": false,
+      "hi": 0.03,
+      "lo": -0.0132,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": -0.0029,
+      "distinguible": false,
+      "hi": 0.013,
+      "lo": -0.021,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.6",
+      "dif": -0.0318,
+      "distinguible": true,
+      "hi": -0.0018,
+      "lo": -0.0675,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": 0.0032,
+      "distinguible": false,
+      "hi": 0.0238,
+      "lo": -0.0136,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": 0.1153,
+      "distinguible": true,
+      "hi": 0.1966,
+      "lo": 0.0024,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": 0.0195,
+      "distinguible": false,
+      "hi": 0.0505,
+      "lo": -0.0009,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": 0.1322,
+      "distinguible": false,
+      "hi": 0.252,
+      "lo": -0.0181,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": -0.0133,
+      "distinguible": false,
+      "hi": 0.0035,
+      "lo": -0.0336,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.5",
+      "dif": 0.0065,
+      "distinguible": false,
+      "hi": 0.04,
+      "lo": -0.0399,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": 0.0246,
+      "distinguible": false,
+      "hi": 0.0794,
+      "lo": -0.0272,
+      "metrica": "auroc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": 0.0598,
+      "distinguible": false,
+      "hi": 0.1232,
+      "lo": -0.042,
+      "metrica": "mcc",
+      "par": "logistica - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": 0.03,
+      "distinguible": false,
+      "hi": 0.0828,
+      "lo": -0.007,
+      "metrica": "auroc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": 0.0337,
+      "distinguible": false,
+      "hi": 0.0638,
+      "lo": -0.0258,
+      "metrica": "mcc",
+      "par": "bosque - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": -0.0055,
+      "distinguible": false,
+      "hi": 0.0183,
+      "lo": -0.0315,
+      "metrica": "auroc",
+      "par": "knn - svm_rbf"
+    },
+    {
+      "agrupacion": "5 similitud ≥ 0.4",
+      "dif": -0.0275,
+      "distinguible": true,
+      "hi": -0.0069,
+      "lo": -0.0667,
+      "metrica": "mcc",
+      "par": "knn - svm_rbf"
+    }
+  ],
+  "prueba_similitud": {
+    "media": 0.4139,
+    "mediana": 0.3721,
+    "n": 1499,
+    "terciles": [
+      0.3081,
+      0.4589
+    ]
+  }
+}

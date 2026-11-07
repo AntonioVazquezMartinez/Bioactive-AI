@@ -1,0 +1,136 @@
+{
+  "caracteristicas_en_todos_los_pliegues": 1916,
+  "caracteristicas_fuera_por_pliegues_incompletos": 618,
+  "contraste_c2": {
+    "MolLogP": {
+      "caida_concordancia": 0.00204,
+      "puesto_permutacion": 13,
+      "puesto_shap": 12,
+      "shap_direccion_pActividad": 0.0012,
+      "shap_media_abs_pActividad": 0.03348
+    },
+    "MolWt": {
+      "caida_concordancia": 0.00016,
+      "puesto_permutacion": 220,
+      "puesto_shap": 264,
+      "shap_direccion_pActividad": 7e-05,
+      "shap_media_abs_pActividad": 0.00169
+    },
+    "NumHDonors": {
+      "caida_concordancia": 0.0001,
+      "puesto_permutacion": 308,
+      "puesto_shap": 247,
+      "shap_direccion_pActividad": -0.00011,
+      "shap_media_abs_pActividad": 0.00185
+    },
+    "TPSA": {
+      "caida_concordancia": 0.00071,
+      "puesto_permutacion": 48,
+      "puesto_shap": 54,
+      "shap_direccion_pActividad": -0.00055,
+      "shap_media_abs_pActividad": 0.01007
+    }
+  },
+  "interseccion": {
+    "BertzCT": {
+      "equivalentes": "",
+      "permutacion": 0.00919,
+      "puesto_permutacion": 3,
+      "puesto_shap": 1,
+      "shap_direccion": 0.00327,
+      "shap_media_abs": 0.1243,
+      "tipo": "descriptor"
+    },
+    "MolLogP": {
+      "equivalentes": "",
+      "permutacion": 0.00204,
+      "puesto_permutacion": 13,
+      "puesto_shap": 12,
+      "shap_direccion": 0.0012,
+      "shap_media_abs": 0.03348,
+      "tipo": "descriptor"
+    },
+    "SMR_VSA3": {
+      "equivalentes": "",
+      "permutacion": 0.00416,
+      "puesto_permutacion": 7,
+      "puesto_shap": 5,
+      "shap_direccion": 0.00785,
+      "shap_media_abs": 0.06417,
+      "tipo": "descriptor"
+    },
+    "diana_BCHE": {
+      "equivalentes": "",
+      "permutacion": 0.00508,
+      "puesto_permutacion": 6,
+      "puesto_shap": 10,
+      "shap_direccion": 0.00111,
+      "shap_media_abs": 0.03719,
+      "tipo": "diana"
+    },
+    "diana_DRD2": {
+      "equivalentes": "",
+      "permutacion": 0.0054,
+      "puesto_permutacion": 5,
+      "puesto_shap": 6,
+      "shap_direccion": 0.00353,
+      "shap_media_abs": 0.05994,
+      "tipo": "diana"
+    },
+    "diana_LRRK2": {
+      "equivalentes": "",
+      "permutacion": 0.00593,
+      "puesto_permutacion": 4,
+      "puesto_shap": 9,
+      "shap_direccion": 0.00623,
+      "shap_media_abs": 0.0439,
+      "tipo": "diana"
+    },
+    "diana_MAOA": {
+      "equivalentes": "",
+      "permutacion": 0.02525,
+      "puesto_permutacion": 1,
+      "puesto_shap": 2,
+      "shap_direccion": -0.00065,
+      "shap_media_abs": 0.11532,
+      "tipo": "diana"
+    },
+    "diana_MAOB": {
+      "equivalentes": "",
+      "permutacion": 0.01207,
+      "puesto_permutacion": 2,
+      "puesto_shap": 8,
+      "shap_direccion": -0.0035,
+      "shap_media_abs": 0.04931,
+      "tipo": "diana"
+    },
+    "fr_halogen": {
+      "equivalentes": "",
+      "permutacion": 0.0021,
+      "puesto_permutacion": 12,
+      "puesto_shap": 7,
+      "shap_direccion": 0.00274,
+      "shap_media_abs": 0.0547,
+      "tipo": "descriptor"
+    },
+    "huella_2041434490": {
+      "equivalentes": "",
+      "permutacion": 0.00414,
+      "puesto_permutacion": 8,
+      "puesto_shap": 3,
+      "shap_direccion": 0.01319,
+      "shap_media_abs": 0.10041,
+      "tipo": "huella"
+    },
+    "huella_3777168895": {
+      "equivalentes": "",
+      "permutacion": 0.00333,
+      "puesto_permutacion": 9,
+      "puesto_shap": 4,
+      "shap_direccion": 0.00731,
+      "shap_media_abs": 0.07058,
+      "tipo": "huella"
+    }
+  },
+  "n_en_interseccion": 11
+}

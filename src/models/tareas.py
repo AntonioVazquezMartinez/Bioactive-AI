@@ -72,6 +72,9 @@ class Tarea:
     meta: pd.DataFrame
     objetivo: str
     representacion: str
+    # Nombre de cada columna de `X`, en orden. Vacío si la representación no los tiene. Existe porque
+    # el cuaderno 05 pedía los nombres a `meta.attrs`, un canal que nadie escribía, y rotulaba por índice.
+    columnas: tuple[str, ...] = ()
 
     def __repr__(self) -> str:  # pragma: no cover - solo para inspección
         return (f"Tarea({self.nombre}, {self.X.shape[0]:,}×{self.X.shape[1]:,}, "
@@ -111,6 +114,18 @@ def _entradas_permeabilidad(representacion: str, filas: np.ndarray) -> np.ndarra
         return np.hstack([d.to_numpy(dtype=np.float32),
                           _denso(PROCESADOS / "bbb_morgan2048.npz")])[filas]
     raise ValueError(f"representación {representacion!r}; use una de {REPRESENTACIONES}")
+
+
+def _nombres_permeabilidad(representacion: str) -> tuple[str, ...]:
+    """Los nombres de las columnas de `X`, en el orden en que `_entradas_permeabilidad` las arma."""
+    if representacion in DESCRIPTORES:
+        return tuple(pd.read_parquet(PROCESADOS / DESCRIPTORES[representacion]).columns)
+    bits = tuple(f"bit_{i}" for i in range(2048))
+    if representacion in ("morgan", "sortslice"):
+        return bits
+    if representacion == "descriptores+morgan":
+        return _nombres_permeabilidad("descriptores") + bits
+    return ()
 
 
 def asignar_origen(exacto: pd.Series, key14: pd.Series) -> np.ndarray:
@@ -259,6 +274,7 @@ def _permeabilidad(representacion: str, incluir_prueba: bool,
         meta=m,
         objetivo="bbb_class (BBB+ = 1)",
         representacion=representacion,
+        columnas=_nombres_permeabilidad(representacion),
     )
 
 
@@ -305,8 +321,14 @@ def _actividad(representacion: str, umbral_um: float, incluir_prueba: bool) -> T
 
 def cargar(tarea: str = "permeabilidad", *, representacion: str = "descriptores",
            umbral_um: float = 10.0, incluir_prueba: bool = False,
-           estratos: str = "grupo") -> Tarea:
+           estratos: str = "grupo", motivo: str = "") -> Tarea:
     """Arma una tarea. `umbral_um` solo aplica a «actividad».
+
+    **`incluir_prueba=True` exige un `motivo`** (#200). Era la única puerta a la prueba reservada que no
+    pedía razón ni dejaba rastro, mientras `tomar_prueba` sí; ahora quien la abre tiene que decir para qué,
+    y el texto queda en el código de quien la llama. **El rastro en `experimentos/prueba.csv` lo sigue
+    dejando `tomar_prueba`**, y `tests/test_guarda_acceso_prueba.py` exige que todo script que pida la
+    prueba la llame: pasar por aquí no registra la lectura por sí solo.
 
     `estratos` elige cómo se desglosa el resultado en permeabilidad:
 
@@ -328,6 +350,9 @@ def cargar(tarea: str = "permeabilidad", *, representacion: str = "descriptores"
     En «actividad» los estratos son de procedencia y no se pueden cambiar:
     cualquier valor distinto de `"grupo"` da error.
     """
+    if incluir_prueba and not motivo.strip():
+        raise ValueError("incluir_prueba=True exige `motivo`: para qué se abre la prueba reservada. "
+                         "La lectura se registra con `src.tracking.tomar_prueba(final=True, motivo=...)`.")
     if estratos not in ESTRATOS:
         raise ValueError(f"estratos {estratos!r}; use uno de {ESTRATOS}")
     if tarea == "permeabilidad":

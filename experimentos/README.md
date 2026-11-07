@@ -36,11 +36,28 @@ pliegue y estrato. No lo escribe `Corrida`, lo deja el cuaderno al ir anotando s
 copia a la carpeta al cerrar. Son decenas de kilobytes, así que solo vale la pena cuando el
 argumento es un conteo.
 
-**Commitea cada corrida antes de lanzar la siguiente.** `entorno.json` toma `arbol_sucio` de
-`git status --porcelain`, que cuenta los archivos sin seguimiento: una carpeta de `experimentos/`
-recién creada ensucia el árbol para la corrida que venga después y la hace registrar
-`arbol_sucio: true` sin que nadie haya tocado el código. Al retropoblar las dos mediciones de la
-fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran en `false`.
+**`arbol_sucio` cuenta solo los archivos seguidos, y desde el 4 de noviembre.** La bandera
+existe para responder una sola pregunta: *¿el código que produjo esta cifra es el del `commit` de
+al lado?* Un archivo sin seguimiento no la cambia, así que ya no la dispara; se cuentan aparte en
+`sin_seguimiento`, que informa y no acusa.
+
+**Versión anterior:** tomaba `git status --porcelain` entero, que incluye los sin seguimiento.
+Por eso una carpeta de `experimentos/` recién creada ensuciaba la corrida siguiente, y la
+instrucción era *commitea cada corrida antes de lanzar la siguiente* — al retropoblar las dos
+mediciones de la fase 0.8 hubo que intercalar un commit entre las dos para que las dos salieran
+en `false`. Era un aviso en la documentación donde cabía un arreglo de dos líneas en el código.
+
+**Y por eso las 9 corridas que ya lo traen en `true` no se pueden releer**, porque la bandera no
+distinguía las dos causas: `…-1.5-baseline-permeabilidad-descriptores`, `…-1.5-baseline-permeabilidad-171col`,
+`…-2.3-baseline-actividad-descriptores-diana-10um`, `…-1.5-rubrica3`, `…-2.3-dianas-activacion`,
+`…-2.9-baseline-regresion-sencilla-exactas`, `…-1.5-modelo-final-permeabilidad`,
+`…-2.13-contaminacion-externa` y `…-2.3-atajo-procedencia`. De cualquiera de ellas solo se sabe
+que había **algo** en el árbol. La que más importa es `2026-11-01-artemio-1.5-modelo-final-permeabilidad`,
+que es la corrida detrás del MCC de 0.3385 y el AUROC de 0.7928 de la prueba reservada, las dos
+cifras de resultado del artículo: su `commit` puede no describir el código que las produjo. No se
+repara desde aquí —una carpeta de corrida no se reescribe— y reejecutarla costaría una lectura más
+de la prueba, así que lo que queda es saberlo. De las corridas nuevas en adelante la bandera dice
+lo que su nombre dice.
 
 **La partición de prueba solo sale por `tomar_prueba`** (`src/tracking.py`). Exige `final=True` y un
 `motivo`, imprime cuántas filas hay por estrato y agrega una línea a `experimentos/prueba.csv`
@@ -49,12 +66,13 @@ corregir una corrida; la deja a la vista en el `git diff` del PR. Para desarroll
 `pares[pares["particion"] != "prueba"]`. Hoy la guarda solo protege a quien la llama: el 04b
 todavía filtra a mano, y el primer cuaderno que la usa es el 05b.
 
-**Y la bitácora cae en el aviso de arriba, así que el orden importa:** `prueba.csv` no está
-versionado hasta que alguien lo escriba, así que la primera llamada a `tomar_prueba` ensucia el
-árbol. Llamarla **dentro** del `with Corrida(...)` está bien, porque el entorno se captura al
-entrar al contexto; llamarla antes hace que la corrida registre `arbol_sucio: true` sin que nadie
-haya tocado el código. No se arregla ignorando el archivo: que una reejecución cante en el
-`git diff` es justamente para lo que la bitácora existe.
+**Y la bitácora sigue haciendo que el orden importe, aunque por menos.** `prueba.csv` ya está
+versionado, así que cada línea nueva **modifica un archivo seguido** y eso sí ensucia el árbol.
+Llamar a `tomar_prueba` **dentro** del `with Corrida(...)` está bien, porque el entorno se captura
+al entrar al contexto; llamarla antes hace que la corrida se registre con `arbol_sucio: true`, y
+ahora esa bandera quiere decir algo, así que conviene más que antes no dispararla por el orden. No
+se arregla ignorando el archivo: que una reejecución cante en el `git diff` es justamente para lo
+que la bitácora existe.
 
 **Qué se puede reparar y qué no, porque no es lo mismo una carpeta de corrida que una bitácora.**
 `experimentos/<id>/` es el registro de lo que una corrida produjo y **no se reescribe**: si
@@ -107,3 +125,46 @@ mismos pliegues, no reejecutando las dos comparativas de seis modelos: la pregun
 cómo se distribuye su `p`, y los otros cinco modelos no pasan por el camino afectado. Se midió en
 macOS con la matriz de esta máquina, que es la salvedad del #166; que el 0.399 registrado coincida
 con las dos formas de medir aquí es la razón para no pedir una reejecución en la máquina original.
+
+## Cómo repetir las corridas del 3 de noviembre
+
+Todas se lanzan desde la raíz con el intérprete del lock (`env312/bin/python`, Python 3.12) y
+registran su carpeta solas. **Commitea el script antes de lanzarlo**: `entorno.json` anota si el
+árbol estaba sucio. Los tiempos son de macOS arm64 con 16 núcleos y salen de `duracion_s` de cada
+`entorno.json`; en otro sistema las cifras pueden cambiar en el tercer decimal (#166).
+
+| corrida | script | tiempo | datos que necesita |
+|:--|:--|--:|:--|
+| `…-1.2-escalera-agrupacion-permeabilidad` | `scripts/experimento_agrupacion.py` | 227 s | fase 1 |
+| `…-1.2-escalera-ampliada-permeabilidad` | `scripts/experimento_escalera_ampliada.py` | 480 s | fase 1; **una lectura estructural de la prueba** (solo SMILES) |
+| `…-C.5-ranking-fase2-aft` | `scripts/experimento_ranking_fase2.py` | 25 s | fase 2 |
+| `…-1.3-tamano-huellas-permeabilidad` | `scripts/experimento_tamano_fase1.py` | 431 s | fase 1 |
+| `…-1.3-tamano-huellas-actividad` | `scripts/experimento_tamano_fase2.py` | 159 s | fase 2 |
+| `…-1.5-curva-aprendizaje-modelos-finales` | `scripts/experimento_curva_aprendizaje.py` | 217 s | fases 1 y 2 |
+| `…-1.5-prueba-por-rareza` | `scripts/experimento_prueba_rareza.py` | 118 s | fases 1 y 2; **dos lecturas de la prueba** |
+
+Todas son `2026-11-03-artemio-…`. Cada script trae en su encabezado el diseño, **la regla de
+lectura declarada antes de correr** y el comando, y cada resultado tiene su entrada en
+[`docs/decisiones.md`](../docs/decisiones.md).
+
+**Los datos de `data/processed/` no están en git y hay que generarlos con el mismo intérprete.**
+Para la fase 1 salen del cuaderno 02; para la fase 2, del 02b
+(`fase2_pares.parquet` y `fase2_descriptores_limpios.parquet`). Una corrida que use un archivo
+distinto lo delata: `entorno.json` guarda el `sha256` de cada uno. Los de estas siete corridas
+son:
+
+| archivo | `sha256` |
+|:--|:--|
+| `bbb_meta.parquet` | `d4e96e57520cf0b8984ff80f4df568427c1f89bc4545abc5d728f7f3afe56727` |
+| `bbb_descriptores_filtrados_sin_normalizar.parquet` | `7907c916d3bb6e90f61283e1097b9e1e9a408a0df65e53e90ea3d866bebc4a1a` |
+| `fase2_pares.parquet` | `177773855b1c16be6c4ad2d4358dbb9d879eea2584412152b98b17eccf90bc5a` |
+| `fase2_descriptores_limpios.parquet` | `7491515858cad9a3d30b321c04d07906065aca21b820b78411674d850d499d1f` |
+
+**Qué se puede comprobar al repetir.** El reajuste de la fase 1 en `…-prueba-por-rareza`
+reproduce el AUROC registrado de la prueba (0.7928). El de la fase 2 da 0.7234 de concordancia
+contra 0.7200 registrada, y 0.511 contra 0.530 en `solo_npass`: la diferencia es del orden del
+ruido de un modelo de árboles y se reporta en la [1.5](../docs/decisiones.md#d1-5), no se
+oculta. Quien repita y obtenga algo distinto de esto debe decirlo en el PR antes de interpretar.
+
+**Lectura de la prueba reservada.** Cada corrida que la toca llama a `tomar_prueba` con su
+motivo, y `prueba.csv` lo acumula. No se escriben predicciones a git.
