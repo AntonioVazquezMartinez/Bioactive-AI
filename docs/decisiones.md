@@ -26,7 +26,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.2](#d1-2) | Partición por andamio, nunca aleatoria | Vigente | |
 | [1.3](#d1-3) | Descriptores RDKit más Morgan/ECFP4 | Vigente | |
 | [1.4](#d1-4) | Las 6 filas con logBB sin clase | Propuesta | |
-| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Revisada | |
+| [1.5](#d1-5) | Tres modelos candidatos; de ahí, si escalar y si reducir dimensión | Vigente · revisada | |
 | [1.6](#d1-6) | Naturales en la fase 1: evaluar por origen, no entrenar por separado | Vigente | 17 oct |
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
@@ -367,9 +367,9 @@ Para el modelo que se entrega, `svm_rbf`: −0.0003 de MCC (desviación pareada 
 
 **Se propone.** Excluirlas de la clasificación y no imputar una etiqueta desde la conectividad, porque la estereoquímica puede cambiar la clase.
 
-#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .revisada}
+#### 1.5 · Tres modelos candidatos; de ahí, si escalar y si reducir dimensión {#d1-5 .vigente .revisada}
 
-**Estado:** revisada · el 12 de octubre y el 2 de noviembre
+**Estado:** vigente · revisada el 12 de octubre y el 2 de noviembre
 
 > **Pregunta:** ¿Se prioriza la explicabilidad (matriz de 151 columnas, cada una una propiedad o subestructura) sobre la reducción de dimensión con PCA, que no se traduce a subestructuras?
 
