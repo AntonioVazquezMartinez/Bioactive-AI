@@ -1,0 +1,145 @@
+{
+  "auroc_control_n_pares": 0.451,
+  "auroc_negativo": [],
+  "ayudados": [
+    "arbol",
+    "bayes",
+    "logistica",
+    "svm_sgd"
+  ],
+  "por_modelo": {
+    "arbol": {
+      "auroc_descriptores": 0.6728,
+      "descriptores+huellas": {
+        "auroc": {
+          "dif_desv": 0.0119,
+          "dif_media": 0.0172,
+          "evaluaciones": 15,
+          "mejor_en": 14
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0199,
+          "dif_media": 0.0285,
+          "evaluaciones": 15,
+          "mejor_en": 14
+        }
+      },
+      "huellas": {
+        "auroc": {
+          "dif_desv": 0.0167,
+          "dif_media": 0.0399,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.024,
+          "dif_media": 0.0426,
+          "evaluaciones": 15,
+          "mejor_en": 14
+        }
+      }
+    },
+    "bayes": {
+      "auroc_descriptores": 0.5865,
+      "descriptores+huellas": {
+        "auroc": {
+          "dif_desv": 0.027,
+          "dif_media": 0.0848,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0424,
+          "dif_media": 0.0974,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      },
+      "huellas": {
+        "auroc": {
+          "dif_desv": 0.0274,
+          "dif_media": 0.0832,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0432,
+          "dif_media": 0.0967,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      }
+    },
+    "logistica": {
+      "auroc_descriptores": 0.7443,
+      "descriptores+huellas": {
+        "auroc": {
+          "dif_desv": 0.011,
+          "dif_media": 0.0736,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0362,
+          "dif_media": 0.1531,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      },
+      "huellas": {
+        "auroc": {
+          "dif_desv": 0.0115,
+          "dif_media": 0.0719,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0376,
+          "dif_media": 0.1441,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      }
+    },
+    "svm_sgd": {
+      "auroc_descriptores": 0.7437,
+      "descriptores+huellas": {
+        "auroc": {
+          "dif_desv": 0.0151,
+          "dif_media": 0.0452,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0419,
+          "dif_media": 0.1267,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      },
+      "huellas": {
+        "auroc": {
+          "dif_desv": 0.0131,
+          "dif_media": 0.0467,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        },
+        "ayuda": true,
+        "mcc": {
+          "dif_desv": 0.0468,
+          "dif_media": 0.1261,
+          "evaluaciones": 15,
+          "mejor_en": 15
+        }
+      }
+    }
+  },
+  "veredicto_declarado": "A se contradice"
+}

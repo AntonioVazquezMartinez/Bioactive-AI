@@ -1,0 +1,231 @@
+{
+  "fase1": {
+    "auroc_reajuste": 0.7928,
+    "n": 1499,
+    "por_tercil": [
+      {
+        "auroc_base": 0.6563,
+        "auroc_svm": 0.6928,
+        "n": 497,
+        "similitud_media": 0.26,
+        "tercil": "1 más raro"
+      },
+      {
+        "auroc_base": 0.7398,
+        "auroc_svm": 0.8069,
+        "n": 497,
+        "similitud_media": 0.379,
+        "tercil": "2 intermedio"
+      },
+      {
+        "auroc_base": 0.7597,
+        "auroc_svm": 0.8652,
+        "n": 505,
+        "similitud_media": 0.599,
+        "tercil": "3 más parecido"
+      }
+    ],
+    "por_tramo_y_tercil": [
+      {
+        "activos": 107,
+        "auroc_base": 0.5977,
+        "auroc_svm": 0.6511,
+        "n": 174,
+        "tercil": "1 más raro",
+        "tramo": "250–350 Da"
+      },
+      {
+        "activos": 119,
+        "auroc_base": 0.6673,
+        "auroc_svm": 0.7546,
+        "n": 178,
+        "tercil": "2 intermedio",
+        "tramo": "250–350 Da"
+      },
+      {
+        "activos": 129,
+        "auroc_base": 0.7169,
+        "auroc_svm": 0.8631,
+        "n": 178,
+        "tercil": "3 más parecido",
+        "tramo": "250–350 Da"
+      },
+      {
+        "activos": 101,
+        "auroc_base": 0.7122,
+        "auroc_svm": 0.7026,
+        "n": 203,
+        "tercil": "1 más raro",
+        "tramo": "350–500 Da"
+      },
+      {
+        "activos": 116,
+        "auroc_base": 0.7116,
+        "auroc_svm": 0.7717,
+        "n": 201,
+        "tercil": "2 intermedio",
+        "tramo": "350–500 Da"
+      },
+      {
+        "activos": 130,
+        "auroc_base": 0.7428,
+        "auroc_svm": 0.844,
+        "n": 206,
+        "tercil": "3 más parecido",
+        "tramo": "350–500 Da"
+      },
+      {
+        "activos": 17,
+        "auroc_base": NaN,
+        "auroc_svm": NaN,
+        "n": 65,
+        "tercil": "1 más raro",
+        "tramo": ">500 Da"
+      },
+      {
+        "activos": 9,
+        "auroc_base": NaN,
+        "auroc_svm": NaN,
+        "n": 64,
+        "tercil": "2 intermedio",
+        "tramo": ">500 Da"
+      },
+      {
+        "activos": 20,
+        "auroc_base": 0.7344,
+        "auroc_svm": 0.7856,
+        "n": 65,
+        "tercil": "3 más parecido",
+        "tramo": ">500 Da"
+      },
+      {
+        "activos": 30,
+        "auroc_base": 0.4947,
+        "auroc_svm": 0.6187,
+        "n": 55,
+        "tercil": "1 más raro",
+        "tramo": "≤250 Da"
+      },
+      {
+        "activos": 38,
+        "auroc_base": NaN,
+        "auroc_svm": NaN,
+        "n": 54,
+        "tercil": "2 intermedio",
+        "tramo": "≤250 Da"
+      },
+      {
+        "activos": 43,
+        "auroc_base": NaN,
+        "auroc_svm": NaN,
+        "n": 56,
+        "tercil": "3 más parecido",
+        "tramo": "≤250 Da"
+      }
+    ],
+    "similitud_media": 0.4139,
+    "ventaja": {
+      "dif_parecido_menos_raro": 0.0691,
+      "ic95": [
+        [
+          -0.0084,
+          0.0782
+        ],
+        [
+          0.0332,
+          0.1038
+        ],
+        [
+          0.0698,
+          0.1423
+        ]
+      ],
+      "ic95_dif": [
+        0.0109,
+        0.1243
+      ],
+      "remuestras_validas": 1000,
+      "ventaja": [
+        0.0364,
+        0.0671,
+        0.1055
+      ]
+    }
+  },
+  "fase2": {
+    "concordancia_reajuste": 0.7234,
+    "n": 13944,
+    "por_estrato": [
+      {
+        "conc_aft": 0.7209,
+        "conc_base": 0.6393,
+        "estrato": "solo_chembl",
+        "n": 13598
+      },
+      {
+        "conc_aft": 0.5829,
+        "conc_base": 0.5092,
+        "estrato": "mixto",
+        "n": 229
+      },
+      {
+        "conc_aft": 0.5108,
+        "conc_base": 0.5648,
+        "estrato": "solo_npass",
+        "n": 117
+      }
+    ],
+    "por_tercil": [
+      {
+        "conc_aft": 0.6628,
+        "conc_base": 0.5939,
+        "n": 4633,
+        "similitud_media": 0.469,
+        "tercil": "1 más raro"
+      },
+      {
+        "conc_aft": 0.7217,
+        "conc_base": 0.6348,
+        "n": 4627,
+        "similitud_media": 0.679,
+        "tercil": "2 intermedio"
+      },
+      {
+        "conc_aft": 0.7642,
+        "conc_base": 0.6776,
+        "n": 4684,
+        "similitud_media": 0.811,
+        "tercil": "3 más parecido"
+      }
+    ],
+    "similitud_media": 0.6536,
+    "solo_npass_reajuste": 0.5108,
+    "ventaja": {
+      "dif_parecido_menos_raro": 0.0177,
+      "ic95": [
+        [
+          0.0599,
+          0.0776
+        ],
+        [
+          0.079,
+          0.0946
+        ],
+        [
+          0.0781,
+          0.095
+        ]
+      ],
+      "ic95_dif": [
+        0.0046,
+        0.03
+      ],
+      "remuestras_validas": 200,
+      "ventaja": [
+        0.0689,
+        0.0869,
+        0.0866
+      ]
+    }
+  }
+}

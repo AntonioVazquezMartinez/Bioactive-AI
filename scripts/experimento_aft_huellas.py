@@ -42,7 +42,7 @@ from src.features.huellas import agrupar_iguales, identificadores_morgan        
 from src.models.aft import AftConCensuraIzquierda, RegresionAFT                    # noqa: E402
 from src.models.baseline_regresion import (ConHuellasCensurado, SoloExactas,      # noqa: E402
                                            evaluar_baselines)
-from src.tracking import Corrida                                                  # noqa: E402
+from src.tracking import Corrida, exigir_corrida_reproducible                     # noqa: E402
 
 PROCESADOS = RAIZ / "data" / "processed"
 PARES = PROCESADOS / "fase2_pares.parquet"
@@ -76,14 +76,21 @@ def datos():
 
     t = time.perf_counter()
     huellas, identificadores = identificadores_morgan(d["smiles"])
-    huellas, identificadores, _ = agrupar_iguales(huellas, identificadores)
+    huellas, identificadores, equivalentes = agrupar_iguales(huellas, identificadores)
     # Sobre el conjunto completo, para que una columna signifique lo mismo en ajuste y prueba.
     X_mixta = sparse.hstack([sparse.csr_matrix(X), huellas]).tocsr()
     print(f"huellas: {huellas.shape[1]:,} columnas en {time.perf_counter() - t:.0f} s "
           f"· X_mixta {X_mixta.shape}", flush=True)
 
     fuera = ~es_prueba
+    # Los nombres salen del MISMO DataFrame que las columnas, no de releer el parquet: la
+    # matriz se construye tras el merge con los descriptores y tras el filtro `util`, así
+    # que un gen que solo exista en las filas que esos dos pasos tiran desalinearía los
+    # nombres sin que nada falle.
+    nombres_densas = cols + [f"diana_{g}" for g in diana.columns]
     return {"X": X[fuera], "X_mixta": X_mixta[fuera], "n_densas": X.shape[1],
+            "n_desc": len(cols), "identificadores": identificadores,
+            "equivalentes": equivalentes, "nombres_densas": nombres_densas,
             "inferior": inferior[fuera], "superior": superior[fuera],
             "grupos": d["grupo_cv"].to_numpy()[fuera],
             "procedencia": d["estrato"].to_numpy()[fuera],
@@ -113,7 +120,7 @@ def brazos(n_densas: int) -> dict:
     return {
         "aft": ("X", RegresionAFT(semilla=SEMILLAS[0])),
         "aft_huellas": ("X_mixta", ConHuellasCensurado(RegresionAFT(semilla=SEMILLAS[0]),
-                                                       n_densas, N_BITS)),
+                                                       n_densas, n_bits=N_BITS)),
         "xgb_sin_censura": ("X", SoloExactas(XGBRegressor(
             n_estimators=100, max_depth=6, tree_method="hist",
             random_state=SEMILLAS[0], n_jobs=-1))),
@@ -152,13 +159,22 @@ def resumen(res: pd.DataFrame) -> dict:
 
 def main() -> None:
     solo_escala = "--solo-escala" in sys.argv
+    humo = "--humo" in sys.argv
+    semillas = [SEMILLAS[0]] if humo else SEMILLAS
+    pliegues = 2 if humo else PLIEGUES
+    # Antes de los minutos de huellas Morgan, no después: una corrida definitiva con el
+    # árbol sucio registra un commit que no contiene su código.
+    exigir_corrida_reproducible(definitiva=not humo,
+                                permitir_sucio=humo or "--arbol-sucio" in sys.argv)
+
     d = datos()
     catalogo = brazos_escala() if solo_escala else brazos(d["n_densas"])
     params = {
-        "modelos": list(catalogo), "pliegues": PLIEGUES, "n_bits_sortslice": N_BITS,
+        "modelos": list(catalogo), "pliegues": pliegues, "n_bits_sortslice": N_BITS,
         "radio_morgan": 2, "objetivo": "pActividad", "estratos": "procedencia",
         "metrica_principal": "concordancia en solo_npass, declarada antes de correr",
         "solo_escala": solo_escala,
+        "humo": humo,
         "entrena_con": {"aft": "todas las censuradas por la derecha",
                         "aft_huellas": "idem, con las huellas dentro del pliegue",
                         "xgb_sin_censura": "solo las exactas (SoloExactas)",
@@ -168,16 +184,26 @@ def main() -> None:
                       if solo_escala else 1.0,
         "nota_seg": "tiempo de ajuste con dieciséis núcleos; no comparable con la corrida "
                     "de la 2.13, que corrió en otra máquina",
+        "nota_matriz": "Corrida ejecutada sobre matriz local (sha256 en datos_sha256); no es "
+                       "comparable fila a fila con la corrida de Ingrid y por eso se repitió "
+                       "el brazo de control aft.",
     }
-    nombre = "sensibilidad-escala-aft" if solo_escala else "comparativa-aft-huellas-y-censura"
+    nombre = ("sensibilidad-escala-aft" if solo_escala else "comparativa-aft-huellas-y-censura") + (
+        "-humo" if humo else ""
+    )
+    if humo:
+        c_check = Corrida(nombre, decision="2.13", params=params, semillas=semillas)
+        if c_check.carpeta.exists():
+            import shutil
+            shutil.rmtree(c_check.carpeta)
     with Corrida(nombre, decision="2.13", params=params,
-                 semillas=SEMILLAS, datos=[PARES, DESCRIPTORES]) as c:
+                 semillas=semillas, datos=[PARES, DESCRIPTORES]) as c:
         partes = []
         for nombre, (matriz, modelo) in catalogo.items():
             t = time.perf_counter()
             r = evaluar_baselines(d[matriz], d["inferior"], d["superior"], d["grupos"],
-                                  d["procedencia"], d["clase"], semillas=SEMILLAS,
-                                  pliegues=PLIEGUES, modelos={nombre: modelo})
+                                  d["procedencia"], d["clase"], semillas=semillas,
+                                  pliegues=pliegues, modelos={nombre: modelo})
             partes.append(r)
             pd.concat(partes, ignore_index=True).to_csv(c.carpeta / "pliegues.csv", index=False)
             print(f"{nombre:18}{time.perf_counter() - t:7.0f} s", flush=True)
