@@ -1,0 +1,116 @@
+{
+  "choques_restantes_con_quiralidad": 10,
+  "filas": 6306,
+  "huella_cambia_al_activar": {
+    "con_estereocentro_de_atomo_declarado": 3854,
+    "de_esas_con_estereo_de_enlace": 122,
+    "de_un_total_con_estereocentro": 5324,
+    "filas": 3976,
+    "pct": 63.1,
+    "sin_cambio_y_con_estereo_de_enlace": 0,
+    "sin_estereocentro_de_atomo": 122
+  },
+  "por_que_dejan_de_chocar": {
+    "análogo · estereoquímica declarada": {
+      "dejan_de_chocar": 47,
+      "su_huella_cambia": 47,
+      "su_huella_no_cambia": 0
+    },
+    "análogo · estereoquímica sin declarar": {
+      "dejan_de_chocar": 41,
+      "su_huella_cambia": 15,
+      "su_huella_no_cambia": 26
+    }
+  },
+  "sin_plegar": {
+    "análogo estereoquímico": {
+      "con_quiralidad": 0,
+      "con_quiralidad_pct": 0.0,
+      "n": 768,
+      "sin_quiralidad": 88,
+      "sin_quiralidad_pct": 11.5
+    },
+    "análogo · estereoquímica declarada": {
+      "con_quiralidad": 0,
+      "con_quiralidad_pct": 0.0,
+      "n": 350,
+      "sin_quiralidad": 47,
+      "sin_quiralidad_pct": 13.4
+    },
+    "análogo · estereoquímica sin declarar": {
+      "con_quiralidad": 0,
+      "con_quiralidad_pct": 0.0,
+      "n": 418,
+      "sin_quiralidad": 41,
+      "sin_quiralidad_pct": 9.8
+    },
+    "natural exacto": {
+      "con_quiralidad": 8,
+      "con_quiralidad_pct": 0.3,
+      "n": 2920,
+      "sin_quiralidad": 260,
+      "sin_quiralidad_pct": 8.9
+    },
+    "sin equivalente natural": {
+      "con_quiralidad": 2,
+      "con_quiralidad_pct": 0.1,
+      "n": 2618,
+      "sin_quiralidad": 55,
+      "sin_quiralidad_pct": 2.1
+    }
+  },
+  "smiles_identico_con_clase_contraria": 0,
+  "sort_and_slice_2048": {
+    "análogo estereoquímico": {
+      "con_quiralidad": 15,
+      "con_quiralidad_pct": 2.0,
+      "n": 768,
+      "sin_quiralidad": 88,
+      "sin_quiralidad_pct": 11.5
+    },
+    "análogo · estereoquímica declarada": {
+      "con_quiralidad": 10,
+      "con_quiralidad_pct": 2.9,
+      "n": 350,
+      "sin_quiralidad": 47,
+      "sin_quiralidad_pct": 13.4
+    },
+    "análogo · estereoquímica sin declarar": {
+      "con_quiralidad": 5,
+      "con_quiralidad_pct": 1.2,
+      "n": 418,
+      "sin_quiralidad": 41,
+      "sin_quiralidad_pct": 9.8
+    },
+    "natural exacto": {
+      "con_quiralidad": 76,
+      "con_quiralidad_pct": 2.6,
+      "n": 2920,
+      "sin_quiralidad": 260,
+      "sin_quiralidad_pct": 8.9
+    },
+    "sin equivalente natural": {
+      "con_quiralidad": 23,
+      "con_quiralidad_pct": 0.9,
+      "n": 2618,
+      "sin_quiralidad": 55,
+      "sin_quiralidad_pct": 2.1
+    }
+  },
+  "vocabulario": {
+    "con_quiralidad": {
+      "apariciones": 308889,
+      "cobertura_pct": 78.9,
+      "corte_de_frecuencia": 17,
+      "cubiertas_por_n_bits": 243583,
+      "distintas": 22777
+    },
+    "sin_quiralidad": {
+      "apariciones": 308063,
+      "cobertura_pct": 83.4,
+      "corte_de_frecuencia": 16,
+      "cubiertas_por_n_bits": 257045,
+      "distintas": 13817
+    }
+  }
+}

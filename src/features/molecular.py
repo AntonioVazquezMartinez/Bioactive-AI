@@ -27,7 +27,7 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 from rdkit import Chem, RDLogger
-from rdkit.Chem import Descriptors, rdFingerprintGenerator
+from rdkit.Chem import Descriptors, rdCIPLabeler, rdFingerprintGenerator
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -51,6 +51,47 @@ def descriptores_rdkit(mols: list[Chem.Mol]) -> pd.DataFrame:
     reportan pero no se eliminan: esa decisión es del pipeline, no de aquí."""
     filas = [Descriptors.CalcMolDescriptors(m) for m in mols]
     return pd.DataFrame(filas)
+
+
+_ENLACES_E = (Chem.BondStereo.STEREOE, Chem.BondStereo.STEREOTRANS)
+_ENLACES_Z = (Chem.BondStereo.STEREOZ, Chem.BondStereo.STEREOCIS)
+CONTEOS_ESTEREO = ("n_R", "n_S", "n_E", "n_Z")
+
+
+def conteos_estereo(mols: list[Chem.Mol]) -> pd.DataFrame:
+    """Cuatro conteos de configuración: centros R, centros S, enlaces E y enlaces Z.
+
+    **Ninguno de los 217 descriptores de RDKit codifica configuración.** Los dos que hay
+    —`NumAtomStereoCenters` y `NumUnspecifiedAtomStereoCenters`— cuentan cuántos centros tiene la
+    molécula y cuántos no están declarados, nunca cuál de las dos formas es, así que dos
+    enantiómeros dan vectores idénticos en los 217. Estas cuatro columnas son el arreglo más
+    pequeño que los distingue: un enantiómero da (1, 0) y el otro (0, 1).
+
+    **Son conteos globales, no posicionales, y eso tiene un límite medido.** Dos estereoisómeros
+    con los mismos conteos y los centros en otras posiciones siguen dando el mismo vector. En la
+    fase 1 las cuatro columnas resuelven **157 de las 183 filas** que los 151 descriptores no
+    pueden separar (56 de 69 grupos); **las 26 que quedan son exactamente ese caso**, con los dos
+    lados declarando por ejemplo (3 R, 3 S). La versión posicional son las huellas con
+    `includeChirality` (la [1.9](../../docs/decisiones.md#d1-9)); esto cubre lo que puede cubrir
+    una columna por molécula, y cuánto rinde está en la [1.8](../../docs/decisiones.md#d1-8).
+
+    Las etiquetas R/S salen de `rdCIPLabeler`, que implementa las reglas CIP completas, y **no se
+    reutilizan las que `MolFromSmiles` ya deja puestas**: esas son del asignador heredado, que
+    resuelve mal los desempates lejanos, y en 104 de las 6,306 moléculas de la fase 1 no coinciden.
+    Se etiqueta sobre una copia porque `AssignCIPLabels` sobrescribe esas propiedades, y el
+    llamador no tiene por qué recibir las nuestras. Un centro o un enlace sin declarar no cuenta en
+    ninguna de las cuatro: no se infiere lo que el registro no dice.
+    """
+    filas = []
+    for m in mols:
+        copia = Chem.Mol(m)
+        rdCIPLabeler.AssignCIPLabels(copia)
+        cip = [a.GetProp("_CIPCode") for a in copia.GetAtoms() if a.HasProp("_CIPCode")]
+        enlaces = [b.GetStereo() for b in copia.GetBonds()]
+        filas.append({"n_R": cip.count("R"), "n_S": cip.count("S"),
+                      "n_E": sum(e in _ENLACES_E for e in enlaces),
+                      "n_Z": sum(e in _ENLACES_Z for e in enlaces)})
+    return pd.DataFrame(filas, columns=list(CONTEOS_ESTEREO))
 
 
 def limpiar_descriptores(desc: pd.DataFrame, verbose: bool = True

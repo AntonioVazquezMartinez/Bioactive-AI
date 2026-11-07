@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.features.molecular import SortAndSlice, a_mol, limpiar_descriptores
+from src.features.molecular import (CONTEOS_ESTEREO, SortAndSlice, a_mol, conteos_estereo,
+                                    descriptores_rdkit, limpiar_descriptores)
 
 
 def _mols(*smiles):
@@ -71,3 +72,56 @@ def test_limpiar_descriptores_deja_un_marco_que_sklearn_acepta():
     desc = pd.DataFrame({"Ipc": [1.0, 2.0, 1e41, 4.0], "x": [0.1, 0.5, 0.2, 0.9]})
     limpio, _ = limpiar_descriptores(desc, verbose=False)
     RandomForestClassifier(n_estimators=3).fit(limpio, [0, 1, 0, 1])   # no lanza
+
+
+# --- conteos_estereo: lo que los 217 descriptores no distinguen (1.8) -------------------------
+
+ALANINA = ("C[C@@H](N)C(=O)O", "C[C@H](N)C(=O)O")   # los dos enantiómeros
+
+
+def test_los_217_descriptores_no_distinguen_dos_enantiomeros():
+    """La premisa de la entrada: el arreglo hace falta porque ninguna de las 217 columnas cambia."""
+    desc = descriptores_rdkit(_mols(*ALANINA))
+    assert desc.shape[1] == 217
+    assert not (desc.iloc[0] != desc.iloc[1]).any()
+    # y las dos columnas de estereoquímica que sí existen cuentan, no configuran
+    assert desc["NumAtomStereoCenters"].tolist() == [1, 1]
+    assert desc["NumUnspecifiedAtomStereoCenters"].tolist() == [0, 0]
+
+
+def test_dos_enantiomeros_intercambian_los_conteos_r_y_s():
+    c = conteos_estereo(_mols(*ALANINA))
+    assert list(c.columns) == list(CONTEOS_ESTEREO)
+    assert c[["n_R", "n_S"]].values.tolist() in ([[1, 0], [0, 1]], [[0, 1], [1, 0]])
+    assert (c[["n_E", "n_Z"]] == 0).all().all()
+
+
+def test_una_molecula_sin_estereoquimica_da_cuatro_ceros():
+    c = conteos_estereo(_mols("CCO", "c1ccccc1"))
+    assert (c == 0).all().all()
+
+
+def test_un_centro_sin_declarar_no_se_infiere():
+    """`CC(N)C(=O)O` no dice la configuración: no cuenta ni como R ni como S."""
+    c = conteos_estereo(_mols("CC(N)C(=O)O"))
+    assert c.iloc[0].tolist() == [0, 0, 0, 0]
+
+
+def test_los_enlaces_e_y_z_se_cuentan_por_separado():
+    c = conteos_estereo(_mols(r"C/C=C/C", r"C/C=C\C", "CC=CC"))
+    assert c["n_E"].tolist() == [1, 0, 0]
+    assert c["n_Z"].tolist() == [0, 1, 0]
+
+
+def test_no_reescribe_las_etiquetas_de_la_molecula_que_recibe():
+    """`MolFromSmiles` ya deja `_CIPCode` puesto por el asignador heredado, y en 104 de las 6,306
+    moléculas de la fase 1 no coincide con `rdCIPLabeler`. Se etiqueta una copia para que el
+    llamador conserve las etiquetas de RDKit y no las de esta función."""
+    def etiquetas(m):
+        return {a.GetIdx(): a.GetProp("_CIPCode") for a in m.GetAtoms() if a.HasProp("_CIPCode")}
+
+    mol = _mols(ALANINA[0])[0]
+    antes = etiquetas(mol)
+    assert antes, "MolFromSmiles ya debería haber etiquetado el centro"
+    conteos_estereo([mol])
+    assert etiquetas(mol) == antes
