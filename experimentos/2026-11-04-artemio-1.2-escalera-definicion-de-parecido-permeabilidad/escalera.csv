@@ -1,0 +1,10 @@
+huella,peldano,clave,umbral,grupos,mayor_grupo_pct,auroc_logistica,mcc_logistica,auroc_svm_rbf,mcc_svm_rbf,nota
+ECFP4,≈1413 grupos,6,0.6,1413,12.1,0.8974,0.6593,0.9127,0.6876,
+ECFP4,≈1017 grupos,5,0.5,1017,14.4,0.8477,0.5732,0.8348,0.4859,
+ECFP4,≈631 grupos,4,0.4,631,15.9,0.8161,0.5132,0.7798,0.419,
+ECFP6,≈1413 grupos,6,0.52,1422,11.8,0.9002,0.6735,0.9157,0.6763,
+ECFP6,≈1017 grupos,5,0.42,1043,13.2,0.859,0.5968,0.8688,0.6356,
+ECFP6,≈631 grupos,4,0.32,608,14.9,0.8149,0.481,0.8088,0.4338,
+atom-pair,≈1413 grupos,6,0.65,1407,13.7,0.8807,0.6362,0.8939,0.663,
+atom-pair,≈1017 grupos,5,0.56,1010,32.7,,,,,no evaluable: un grupo pasa del 20% de las filas
+atom-pair,≈631 grupos,4,0.48,645,62.4,,,,,no evaluable: un grupo pasa del 20% de las filas
