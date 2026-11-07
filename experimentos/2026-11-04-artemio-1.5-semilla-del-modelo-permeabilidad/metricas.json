@@ -1,0 +1,62 @@
+{
+  "importan": [
+    "bosque",
+    "mlp"
+  ],
+  "por_modelo": [
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.0,
+      "desv_entre_semillas_de_modelo_mcc": 0.0,
+      "determinista": true,
+      "importa": false,
+      "maximo_auroc": 0.0,
+      "maximo_mcc": 0.0,
+      "modelo": "boosting"
+    },
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.00118,
+      "desv_entre_semillas_de_modelo_mcc": 0.0074,
+      "determinista": false,
+      "importa": true,
+      "maximo_auroc": 0.0024,
+      "maximo_mcc": 0.01961,
+      "modelo": "bosque"
+    },
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.0,
+      "desv_entre_semillas_de_modelo_mcc": 0.0,
+      "determinista": true,
+      "importa": false,
+      "maximo_auroc": 0.0,
+      "maximo_mcc": 0.0,
+      "modelo": "knn"
+    },
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.0,
+      "desv_entre_semillas_de_modelo_mcc": 0.0,
+      "determinista": true,
+      "importa": false,
+      "maximo_auroc": 0.0,
+      "maximo_mcc": 0.0,
+      "modelo": "logistica"
+    },
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.00621,
+      "desv_entre_semillas_de_modelo_mcc": 0.01725,
+      "determinista": false,
+      "importa": true,
+      "maximo_auroc": 0.01085,
+      "maximo_mcc": 0.02643,
+      "modelo": "mlp"
+    },
+    {
+      "desv_entre_semillas_de_modelo_auroc": 0.0,
+      "desv_entre_semillas_de_modelo_mcc": 0.0,
+      "determinista": true,
+      "importa": false,
+      "maximo_auroc": 0.0,
+      "maximo_mcc": 0.0,
+      "modelo": "svm_rbf"
+    }
+  ]
+}
