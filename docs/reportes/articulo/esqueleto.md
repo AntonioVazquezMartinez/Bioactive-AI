@@ -177,7 +177,7 @@ Corrida `2026-11-03-artemio-1.5-prueba-por-rareza`. Terciles de similitud al vec
 | fase 1, diferencia de ventajas parecido − raro | **+0.069** (IC95% 0.011 a 0.124) |
 | fase 2, diferencia de ventajas en concordancia | +0.018 (0.005 a 0.030), unas cuatro veces menor |
 | fase 2, `solo_npass` en la prueba | `aft` 0.511 contra 0.565 de la línea base (117 pares); registrada 0.530 |
-| lecturas de la prueba (`prueba.csv`) | 7: fase 1 cuatro (evaluación, dos accesos solo de SMILES —E1+ y E14— y E2); fase 2 tres (dos de Antonio y E2) |
+| lecturas de la prueba (`prueba.csv`) | 9, contadas de `prueba.csv`: fase 1 cinco (evaluación, dos accesos solo de SMILES —E1+ y E14—, E2 y la proporción de andamios ausentes); fase 2 cuatro (dos de Antonio, E2 y la proporción de andamios ausentes) |
 
 ### Ranking (E5), tamaño (E6) y curva de aprendizaje (E8)
 
