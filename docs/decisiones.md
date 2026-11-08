@@ -884,6 +884,25 @@ B, C y D entrenan con casi el mismo número de filas (difieren a lo más en un g
 
 **No decide la patrocinadora, pero sí quien lleva la guarda de la prueba.** Es interno y reversible, y requiere la revisión explícita de Pame antes de fusionar.
 
+**Resultado (7 de noviembre): B no mejora lo raro; fallan las reglas 1 y 2.** Corrida `2026-11-07-artemio-1.11-raros-al-ajuste-permeabilidad` (`scripts/experimento_raros_al_ajuste.py`), con el script y la regla en git antes de correr (commit `bf18719`, el que anota la lectura en `experimentos/prueba.csv`). Los controles pasan: el brazo A sobre toda la prueba da AUROC 0.7928, el registrado; B, C y D entrenan con 6,296, 6,296 y 6,011 filas de media; E tiene 744 a 768 filas y los tres terciles de E llegan a 20 casos de la minoritaria en los 15 sorteos (mínimos 128, 81 y 72).
+
+La prueba es más rara que el ajuste (similitud media 0.493 contra 0.544): 38% de sus filas están en el tercil más raro (570 de 1,499) contra 16% del ajuste (1,014 de 6,306).
+
+| AUROC, diferencia contra A, mismas filas de E | media (desv.) | mejor en |
+|:--|--:|--:|
+| B en lo raro | +0.0034 (0.0068) | 9 de 15 |
+| C (filas de la prueba al azar) en lo raro | +0.0063 (0.0069) | 12 de 15 |
+| D (solo quitar comunes) en lo raro | −0.0000 (0.0032) | 7 de 15 |
+| B − C en lo raro | −0.0029 (0.0069) | 7 de 15 |
+| B en lo intermedio | +0.0036 | 9 de 15 |
+| B en lo común | −0.0038 (peor −0.0200) | 5 de 15 |
+| B en todo E | +0.0020 (0.0039) | 12 de 15 |
+
+- **Regla 1, no se cumple:** la media de B en lo raro (+0.0034) no supera el piso max(0.005, σ_C) = 0.0069, y es positiva en 9 de 15 y no en 12. **Regla 2, no se cumple:** B − C es −0.0029. **Regla 3, se cumple:** −0.0038 en lo común, dentro del −0.005 permitido (el IC condicional, −0.0073 a −0.0002, no incluye el cero).
+- **Lo que se ve, y no es un resultado de la regla.** (1) Recibir filas de la prueba sirve un poco en lo raro, pero **no importa cuáles**: las elegidas al azar (+0.0063) rinden tanto o más que las raras elegidas a propósito (+0.0034). (2) Quitar comunes del ajuste no cuesta en lo raro (D, 0.0000) y sí algo en lo común (−0.0038 en B). (3) El AUROC de los comunes devueltos a la prueba (Q) no cambia entre B y D (−0.0005). Todo el efecto cabe en una desviación de sorteo.
+- **Qué queda dicho y qué no.** Con el `svm_rbf` y con esta prueba, mover los compuestos más raros de la prueba al entrenamiento no mejora lo raro que queda más que mover compuestos al azar. **No se afirma que el aprendizaje de lo raro no ayude**: C se solapa con B (la prueba tiene 38% de filas raras, así que un sorteo al azar trae muchas) y la dispersión entre sorteos (0.0068) es del tamaño del efecto, así que la regla solo detectaría con holgura una ganancia de ~0.010 o más; lo establecido es que no hay un efecto grande. Los 15 sorteos comparten las mismas filas, y el intervalo es condicional a esta prueba.
+- **Lo que no hace.** No cambia la partición oficial ni el modelo entregado, y el resultado no se usa para nada que ya se haya medido en la prueba. La partición alternativa del sorteo 0 está en la carpeta de la corrida (`particion_alternativa_sorteo0.csv`) para quien quiera usarla en otro experimento.
+
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |

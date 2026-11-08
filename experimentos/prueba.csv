@@ -10,3 +10,4 @@ fecha,autor,commit,filas,motivo
 2026-11-04,artemio,79d2428,1499,"E14: distribución de la similitud de la prueba con el ajuste, solo SMILES, sin etiquetas ni predicciones"
 2026-11-04,artemio,a2ee541,1499,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 1"
 2026-11-04,artemio,a2ee541,13973,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 2"
+2026-11-07,artemio,bf18719,1499,"1.11: pasar los raros de la prueba al ajuste y devolver comunes a la prueba; la prueba se reparte, no se evalúa con el modelo final"

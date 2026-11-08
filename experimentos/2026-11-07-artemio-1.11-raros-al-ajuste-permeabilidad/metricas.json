@@ -1,0 +1,237 @@
+{
+  "auroc_A_sobre_toda_la_prueba": 0.7928,
+  "composicion_por_tercil": {
+    "ajuste": {
+      "comun": 2417,
+      "intermedio": 2875,
+      "raro": 1014
+    },
+    "prueba": {
+      "comun": 455,
+      "intermedio": 474,
+      "raro": 570
+    }
+  },
+  "efectos": {
+    "B-A|E": {
+      "desviacion": 0.0039,
+      "ic95_condicional": [
+        -0.0002,
+        0.0042
+      ],
+      "media": 0.002,
+      "peor": -0.0056,
+      "positivos": 12,
+      "sorteos": 15
+    },
+    "B-A|comun": {
+      "desviacion": 0.0064,
+      "ic95_condicional": [
+        -0.0073,
+        -0.0002
+      ],
+      "media": -0.0038,
+      "peor": -0.02,
+      "positivos": 5,
+      "sorteos": 15
+    },
+    "B-A|intermedio": {
+      "desviacion": 0.0078,
+      "ic95_condicional": [
+        -0.0007,
+        0.0079
+      ],
+      "media": 0.0036,
+      "peor": -0.0064,
+      "positivos": 9,
+      "sorteos": 15
+    },
+    "B-A|raro": {
+      "desviacion": 0.0068,
+      "ic95_condicional": [
+        -0.0004,
+        0.0072
+      ],
+      "media": 0.0034,
+      "peor": -0.0054,
+      "positivos": 9,
+      "sorteos": 15
+    },
+    "B-C|raro": {
+      "desviacion": 0.0069,
+      "ic95_condicional": [
+        -0.0067,
+        0.0009
+      ],
+      "media": -0.0029,
+      "peor": -0.0168,
+      "positivos": 7,
+      "sorteos": 15
+    },
+    "B-D|Q": {
+      "desviacion": 0.0054,
+      "ic95_condicional": [
+        -0.0034,
+        0.0025
+      ],
+      "media": -0.0005,
+      "peor": -0.0103,
+      "positivos": 6,
+      "sorteos": 15
+    },
+    "B-D|raro": {
+      "desviacion": 0.0073,
+      "ic95_condicional": [
+        -0.0006,
+        0.0075
+      ],
+      "media": 0.0034,
+      "peor": -0.0072,
+      "positivos": 11,
+      "sorteos": 15
+    },
+    "C-A|E": {
+      "desviacion": 0.0036,
+      "ic95_condicional": [
+        0.0021,
+        0.006
+      ],
+      "media": 0.0041,
+      "peor": -0.0018,
+      "positivos": 14,
+      "sorteos": 15
+    },
+    "C-A|comun": {
+      "desviacion": 0.0077,
+      "ic95_condicional": [
+        -0.0033,
+        0.0052
+      ],
+      "media": 0.001,
+      "peor": -0.0104,
+      "positivos": 9,
+      "sorteos": 15
+    },
+    "C-A|intermedio": {
+      "desviacion": 0.0081,
+      "ic95_condicional": [
+        -0.0015,
+        0.0074
+      ],
+      "media": 0.0029,
+      "peor": -0.0141,
+      "positivos": 9,
+      "sorteos": 15
+    },
+    "C-A|raro": {
+      "desviacion": 0.0069,
+      "ic95_condicional": [
+        0.0025,
+        0.0101
+      ],
+      "media": 0.0063,
+      "peor": -0.0059,
+      "positivos": 12,
+      "sorteos": 15
+    },
+    "C-D|Q": {
+      "desviacion": 0.0066,
+      "ic95_condicional": [
+        -0.0004,
+        0.0069
+      ],
+      "media": 0.0032,
+      "peor": -0.0033,
+      "positivos": 11,
+      "sorteos": 15
+    },
+    "D-A|E": {
+      "desviacion": 0.0022,
+      "ic95_condicional": [
+        -0.0039,
+        -0.0015
+      ],
+      "media": -0.0027,
+      "peor": -0.0073,
+      "positivos": 1,
+      "sorteos": 15
+    },
+    "D-A|comun": {
+      "desviacion": 0.0051,
+      "ic95_condicional": [
+        -0.0081,
+        -0.0024
+      ],
+      "media": -0.0052,
+      "peor": -0.0145,
+      "positivos": 1,
+      "sorteos": 15
+    },
+    "D-A|intermedio": {
+      "desviacion": 0.0052,
+      "ic95_condicional": [
+        -0.0057,
+        0.0
+      ],
+      "media": -0.0028,
+      "peor": -0.0117,
+      "positivos": 3,
+      "sorteos": 15
+    },
+    "D-A|raro": {
+      "desviacion": 0.0032,
+      "ic95_condicional": [
+        -0.0018,
+        0.0018
+      ],
+      "media": -0.0,
+      "peor": -0.007,
+      "positivos": 7,
+      "sorteos": 15
+    }
+  },
+  "medias_por_brazo": {
+    "A": {
+      "E": 0.7903,
+      "comun": 0.8674,
+      "intermedio": 0.8356,
+      "raro": 0.682
+    },
+    "B": {
+      "E": 0.7923,
+      "comun": 0.8636,
+      "intermedio": 0.8392,
+      "raro": 0.6855
+    },
+    "C": {
+      "E": 0.7944,
+      "comun": 0.8683,
+      "intermedio": 0.8386,
+      "raro": 0.6884
+    },
+    "D": {
+      "E": 0.7876,
+      "comun": 0.8621,
+      "intermedio": 0.8328,
+      "raro": 0.682
+    }
+  },
+  "piso_regla_1": 0.0069,
+  "rareza_media": {
+    "ajuste": 0.5436,
+    "prueba": 0.4934
+  },
+  "regla": {
+    "b_mejora_lo_raro": false,
+    "evaluable": true,
+    "regla_1": false,
+    "regla_2": false,
+    "regla_3": true
+  },
+  "sigma_C": 0.0069,
+  "sorteos_evaluables": {
+    "comun": 15,
+    "intermedio": 15,
+    "raro": 15
+  }
+}
