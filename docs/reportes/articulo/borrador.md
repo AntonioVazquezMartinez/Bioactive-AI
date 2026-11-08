@@ -53,9 +53,18 @@ modelo de supervivencia acelerada (AFT, XGBoost `chen2016xgboost`) que aprende d
 resultado nuevo se recalculó con un segundo código. Los intervalos remuestrean grupos, no filas. De
 los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predicción con cualquier
 semilla; el `mlp` y el `bosque` no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó
-**once veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (E1+ y E14) y dos solo
+**doce veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
 estructurales (la proporción de andamios, una por fase)—, todas registradas en `experimentos/prueba.csv`; ningún modelo se eligió después
-de verla.
+de verla. La última (experimento 1.11) reparte la prueba entre ajuste y evaluación sin evaluar el modelo final.
+
+**Métricas.** El AUROC mide qué tan bien el modelo ordena a los compuestos permeables por encima de los no
+permeables, sin fijar un corte. El MCC (coeficiente de correlación de Matthews) resume en un número entre −1 y 1
+las cuatro casillas de la matriz de confusión y **sí exige un corte**, aquí 0.5; por eso se mueve más que el AUROC
+cuando cambia la distribución de los datos. El AUPRC sobre la clase minoritaria se lee contra su tasa base
+(0.35 en la fase 1), no contra cero. En la fase 2, donde la respuesta es una potencia con mediciones censuradas, se
+usa la concordancia de Harrell: la probabilidad de que, de dos pares, el modelo ordene bien al más potente (0.5 es
+el azar). Los modelos se comparan con la diferencia pareada en las mismas 15 evaluaciones (3 semillas × 5
+pliegues), con el intervalo corregido de Nadeau y Bengio `nadeau2003inference`.
 
 ## 5. Resultados
 
@@ -112,8 +121,18 @@ de validación la ganancia de AUROC es −0.0005, positiva en 9 de 15 evaluacion
 0.005 en 12. Un control con los mismos pesos asignados al azar mueve el AUROC global casi igual
 (+0.0015 contra +0.0022) y el MCC global baja 0.0022. **La regla tiene poca potencia para efectos chicos:**
 con la dispersión observada (0.0095) solo detectaría con 80% de probabilidad una mejora de unos 0.010, así
-que el resultado descarta una mejora grande, no una de 0.005. Tampoco es el experimento de pasar compuestos
-raros de la prueba al ajuste para aprender de ellos, que no se hizo.
+que el resultado descarta una mejora grande, no una de 0.005.
+
+**Pasar compuestos raros de la prueba al entrenamiento tampoco cierra la brecha.** Probamos la otra forma de
+aprender de lo raro (decisión 1.11, la lectura 12 de la prueba, regla escrita antes de correr). La mitad de los
+grupos de la prueba de cada tercil de rareza forma un núcleo de evaluación; de la otra mitad se pasan al ajuste
+las filas del tercil más raro (285 de media) y se devuelven a la prueba otras tantas filas comunes del ajuste,
+en 15 sorteos. En lo raro del núcleo el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas de
+la prueba **elegidas al azar** da +0.006: lo que ayuda es recibir filas de la prueba, no cuáles. El MCC pasa de
+0.33 a 0.36, lejos del 0.70 de la validación; como el AUROC casi no cambia y el azar también lo sube, lo más
+probable es que refleje el corte fijo en 0.5 y no mejor discriminación, aunque eso no se midió. Los 15 sorteos
+comparten las mismas 1,499 filas, así que el resultado descarta una ganancia grande y no una pequeña. No se
+adopta nada: 285 filas más de química rara no cierran la brecha entre 0.70 y 0.34 de MCC.
 
 ### 5.3 La representación no se traslada entre fases
 
@@ -182,6 +201,12 @@ dos modelos se sirven con las filas de ajuste**. En la fase 1 la ganancia de usa
 +0.002 de AUROC (meseta); en la fase 2 sigue subiendo (+0.0076 de concordancia en 15 de 15), y se renuncia a
 esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 
+![Despliegue](figuras/f7_despliegue.svg)
+
+*Figura 7. Arquitectura de despliegue: la patrocinadora ejecuta un cuaderno local que llama a un módulo de inferencia y a dos modelos guardados; no hay servicio. Abajo, lo que mantiene el equipo.*
+
+La tabla siguiente lista los requisitos para operar y quién responde de cada uno.
+
 | requisito | por qué | responsable |
 |:--|:--|:--|
 | script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | hecho (#261), por revisar |
@@ -198,6 +223,33 @@ andamio, y el 64.9% de sus pares tiene un andamio que ya está en el ajuste (con
 más cercano de 0.787 (0.679 en la validación de la misma fase). Que salga mejor es lo que predice la tesis del artículo, no una prueba de mejor
 generalización. Los naturales siguen siendo el estrato débil. Es una lectura única; el control reconstruye los 70,384 pares del
 entrenamiento sin diferencia.
+
+**Qué se supervisa durante la operación.** Como no hay servicio, la supervisión es una revisión periódica de lo que
+el cuaderno ya produce más una reevaluación cuando llegan datos etiquetados. Las referencias son cifras medidas en
+este trabajo; **los umbrales de alerta son propuestas y no se midieron**.
+
+| aspecto | señal | referencia y alerta propuesta | responsable |
+|:--|:--|:--|:--|
+| extrapolación | proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 | 0.31 es el corte del tercil más raro de la prueba (sección 5.2); si la mayoría de las consultas cae ahí, las cifras de validación no aplican | patrocinadora, con la advertencia del cuaderno |
+| desempeño | AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos | 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar | equipo, al llegar datos |
+| punto de operación | proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos | hoy 70.9% contra 64.97%; la diferencia crece cuando la química cambia (sección 5.1) | equipo |
+| integridad | `sha256` de modelos y datos contra `data/MANIFEST.json`; versiones del lock | el CI lo verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) | equipo |
+| datos y etiquetas | cuántos pares activos aporta cada fuente y qué concentración de corte se usa | el 10 µM es el de cribado heredado del archivo (decisión 2.3); NPASS es CC BY-NC, solo uso no comercial | patrocinadora y equipo |
+
+**Riesgos y su mitigación.** Cinco, dos de ellos del modelo y de los datos:
+
+1. **Química fuera de lo visto** (del modelo): una cifra de validación no describe a la química nueva. *Mitigación:*
+   la advertencia de extrapolación del cuaderno y la reevaluación con la escalera, no con un corte al azar.
+2. **Validez de las etiquetas** (de los datos): el corte de 10 µM es el del cribado heredado del archivo, no un
+   umbral biológico, y la misma molécula cambia de clase según la concentración. *Mitigación:* se guarda el
+   intervalo de potencia y no la etiqueta, de modo que cambiar el corte no reconstruye nada (decisión 2.10).
+3. **Punto de operación**: un MCC a 0.5 exagera la caída bajo un cambio de distribución. *Mitigación:* el
+   cuaderno entrega la probabilidad y no una clase.
+4. **Reproducibilidad**: la misma regresión logística da 0.481, 0.489 o 0.497 de MCC según el sistema operativo y la
+   versión de Python. *Mitigación:* un lock de dependencias, `sha256` de los datos y decidir con 15
+   evaluaciones y su error, no con una corrida.
+5. **Licencia**: NPASS es CC BY-NC. *Mitigación:* declarar el uso no comercial y revisar la licencia con la
+   patrocinadora antes de cualquier otro uso.
 
 **Dos límites que el cuaderno tiene que decir.** La advertencia de extrapolación es una heurística:
 la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que
@@ -218,15 +270,20 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    más de lo que su similitud predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
 3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta;
    la densidad del espacio químico queda como pista sin confirmar.
+4. **Para la patrocinadora:** usar el cuaderno para priorizar candidatos y no para descartarlos (un BBB− no
+   excluye un compuesto); leer la probabilidad de la fase 1 junto con la advertencia de similitud y no como una clase;
+   y medir cualquier mejora donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de
+   entrenamiento (Figura 1), no solo con el modelo que se prueba. Las dos formas de aprender de lo raro que
+   probamos no cerraron la brecha.
 
-Limitaciones: la prueba se leyó once veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
+Limitaciones: la prueba se leyó doce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
 cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura
 excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; ninguna corrida se diseñó para
-comparar las palancas de la Figura 1; y no probamos aprender de los compuestos raros de la prueba (solo repesar los que ya
-están en el ajuste), ni con otro modelo que el `svm_rbf`.
+comparar las palancas de la Figura 1; y las dos formas de aprender de lo raro que probamos (repesar y pasar filas de la prueba al ajuste) usan un solo
+modelo, el `svm_rbf`, y la segunda comparte las mismas 1,499 filas en sus 15 sorteos.
 
 ## 8. Referencias y anexos
 
@@ -236,21 +293,27 @@ RDKit `rdkit`; andamios de Bemis–Murcko `bemis1996properties`. **La lección d
 partición por tiempo como estimación de la predicción prospectiva `sheridan2013`, y la validación por
 bloques que corrige la subestimación del error cuando los datos tienen estructura `roberts2017crossvalidation`.
 **Modelos y métricas:** XGBoost `chen2016xgboost`; la concordancia de Harrell `harrell1982yield`; la corrección de
-Nadeau y Bengio para los intervalos de la validación cruzada `nadeau2003inference`. Las cuatro últimas entradas
-se verificaron contra su DOI antes de añadirlas a `docs/referencias/bibliografia.bib`.
-
+Nadeau y Bengio para los intervalos de la validación cruzada `nadeau2003inference`.
 **Código y datos.** Cada cifra tiene su corrida en `experimentos/` (parámetros, commit, `sha256` de los
 datos, comando) y se repite con `experimentos/README.md`; las lecturas de la prueba reservada están en
 `experimentos/prueba.csv`.
 
 ## Anexos
 
-**A. La escalera con seis modelos y con otra definición de «parecido»** (E1+, E13): la logística no se
-degrada menos que el `svm_rbf` de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los
-peldaños estrictos no se pueden construir. **B. La línea base de peso y TPSA** (E0). **C. Las huellas por
-tramo de peso**, con la figura de abajo. **D. El ranking de la fase 2** (E5) y **la curva de aprendizaje**
-(E8). **E. La densidad del espacio químico a igual peso** (E11, no concluyente) y **cómo repetir cada corrida**,
-con tiempos y `sha256` de los datos.
+Cada anexo viene de una corrida registrada; su carpeta está en `experimentos/` del repositorio.
+
+- **A. La escalera con seis modelos y con otra definición de «parecido».** La logística no se degrada menos que
+  el `svm_rbf` de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se
+  pueden construir. Corridas:
+  `2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad`,
+  `2026-11-04-artemio-1.2-escalera-definicion-de-parecido-permeabilidad`.
+- **B. La línea base de peso y TPSA.** Corrida: `2026-11-03-artemio-1.5-prueba-por-rareza`.
+- **C. Las huellas por tramo de peso**, con la figura de abajo.
+- **D. El ranking de la fase 2 y la curva de aprendizaje.** Corridas:
+  `2026-11-03-artemio-C.5-ranking-fase2-aft`,
+  `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`.
+- **E. La densidad del espacio químico a igual peso** (no concluyente) y **cómo repetir cada corrida**, con
+  tiempos y `sha256` de los datos. Corrida: `2026-11-04-artemio-1.3-huellas-por-densidad-del-espacio-quimico`.
 
 ![Huellas](figuras/f3_huellas.svg)
 

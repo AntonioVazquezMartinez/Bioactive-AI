@@ -310,9 +310,60 @@ def fig_escalera_fase2() -> None:
     guardar(fig, "f6_escalera_fase2")
 
 
+def fig_despliegue() -> None:
+    """Arquitectura de despliegue: lo que existe en el repositorio, sin servicios que no hay."""
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(figsize=(9.2, 6.0))
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 68)
+    ax.axis("off")
+
+    def caja(x, y, w, h, titulo, detalle="", color=GRIS_CLARO, borde=GRIS, negrita=True):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.4,rounding_size=1.2",
+                                    facecolor=color, edgecolor=borde, linewidth=1.1))
+        ax.text(x + w / 2, y + h - 2.4, titulo, ha="center", va="top", fontsize=8.6,
+                fontweight="bold" if negrita else "normal", color=TINTA)
+        if detalle:
+            ax.text(x + w / 2, y + h - 6.2, detalle, ha="center", va="top", fontsize=7.4,
+                    color=TINTA_2, linespacing=1.35)
+
+    def flecha(x0, y0, x1, y1, texto="", color=TINTA_2):
+        ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
+                    arrowprops=dict(arrowstyle="-|>", color=color, lw=1.2, shrinkA=1, shrinkB=1))
+        if texto:
+            ax.text((x0 + x1) / 2, (y0 + y1) / 2 + 1.6, texto, ha="center", fontsize=7, color=color)
+
+    ax.text(0, 67.5, "Operación: la patrocinadora ejecuta un cuaderno; no hay servicio",
+            fontsize=9.6, fontweight="bold", va="top")
+    claro_azul = "#d9e7f8"
+    caja(1, 44, 17, 17, "Patrocinadora", "lista de SMILES\ny su equipo\n(laboratorio)")
+    caja(24, 44, 22, 17, "Cuaderno 06", "uso de los modelos\n(Jupyter, local)\nsin red ni datos\nde entrenamiento", claro_azul, AZUL)
+    caja(52, 44, 21, 17, "src/inferencia.py", "descriptores desde\nel SMILES, igual\nque en entrenamiento\n(bit a bit)", claro_azul, AZUL)
+    caja(79, 44, 20, 17, "models/finales/", "svm_rbf (fase 1)\naft (fase 2)\n≈ 3 MB, con sha256", claro_azul, AZUL)
+    flecha(18.6, 52.5, 23.4, 52.5)
+    flecha(46.6, 52.5, 51.4, 52.5)
+    flecha(73.6, 52.5, 78.4, 52.5)
+    caja(14, 22, 72, 15, "Salida del cuaderno (por compuesto)",
+         "probabilidad de cruzar la barrera (fase 1)\n"
+         "potencia predicha contra cada una de las 26 dianas (fase 2)\n"
+         "similitud al vecino más cercano de entrenamiento y advertencia de extrapolación",
+         "#fde6dc", NARANJA)
+    flecha(35, 43.4, 35, 37.8, "", NARANJA)
+    flecha(13.4, 33, 9.5, 43.4, "", NARANJA)
+
+    ax.text(0, 19.5, "Mantenimiento y supervisión: el equipo, y la patrocinadora al reentrenar", fontsize=9.6,
+            fontweight="bold", va="top")
+    caja(1, 0.5, 31, 13, "Reentrenar y verificar", "entrenar_finales.py deja el comando\ny los sha256 (MANIFEST.json)", negrita=False)
+    caja(35, 0.5, 29, 13, "CI de GitHub", "pruebas, ruff y sha256\nde los datos en cada PR", negrita=False)
+    caja(68, 0.5, 31, 13, "Qué se vigila", "advertencias de extrapolación;\nMCC y AUROC reevaluados\ncon la escalera", negrita=False)
+    guardar(fig, "f7_despliegue")
+
+
 def main() -> int:
     print("figuras ->", SALIDA)
-    for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2):
+    for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2,
+              fig_despliegue):
         f()
     return 0
 

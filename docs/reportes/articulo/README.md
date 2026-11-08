@@ -1,12 +1,14 @@
 # Producto de difusión · artículo
 
-Entrega 7, **8 de noviembre de 2026**. PDF, nombre `articulo.#Equipo`.
+Entrega 7, **plazo duro el 15 de noviembre de 2026**. PDF, nombre `articulo.#Equipo`. El primer borrador completo
+se comparte antes, para recibir comentarios.
 
 | archivo | qué es |
 |:--|:--|
 | `esqueleto.md` | el argumento y la tabla de cifras decisivas, con su corrida detrás |
 | `borrador.md` | el texto del artículo: **aquí se editan las cifras y el texto** |
 | `articulo.tex` | el artículo en LaTeX, **generado** desde el borrador con `scripts/armar_articulo_tex.py`; no se edita a mano |
+| `articulo.pdf` | el PDF compilado con `scripts/compilar_articulo.sh`; se regenera cada vez que cambia el borrador |
 | `plantilla.tex` | la plantilla del curso, con APA 7 fijado y la bibliografía del proyecto; de aquí sale el preámbulo |
 | `figuras/` | las figuras del artículo, generadas con `scripts/figuras_articulo.py`; el `.tex` usa los PNG |
 | `bibliografia.bib` | enlace simbólico a `docs/referencias/bibliografia.bib` |
@@ -15,39 +17,45 @@ Entrega 7, **8 de noviembre de 2026**. PDF, nombre `articulo.#Equipo`.
 
 ## Cómo se compila
 
-Con **pdfLaTeX + Biber**, que es lo que la plantilla declara y la opción predeterminada de
-Overleaf. En esta máquina no hay `pdflatex` ni `biber` ni `quarto`, así que **el único sitio
-donde compila hoy es Overleaf**, y el PDF no se puede verificar en CI.
+Con **pdfLaTeX + Biber**, que es lo que la plantilla declara y la opción predeterminada de Overleaf.
 
-Los dos `.bib` y el logo son **enlaces simbólicos**, por la razón que da el `CLAUDE.md`: tres
-copias de la bibliografía ya habían divergido. Overleaf no los sigue, así que al subir hay
-que resolverlos:
+**En local, con Docker** (no hace falta instalar LaTeX):
+
+```bash
+python3 scripts/armar_articulo_tex.py    # borrador.md -> articulo.tex (necesita pandoc)
+sh scripts/compilar_articulo.sh          # articulo.tex -> articulo.pdf
+```
+
+La primera vez construye una imagen `tex-art` a partir de `texlive/texlive:latest-medium` más las colecciones
+`latexextra`, `bibtexextra`, `pictures` y `fontsrecommended` (unos 4 GB, varios minutos); después tarda segundos.
+Compila en una copia porque Docker no sigue los enlaces simbólicos de la bibliografía y el logo.
+
+**Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber, 15 páginas de las cuales
+el cuerpo, del título a las referencias, ocupa unas 12.4 (la rúbrica pide 12 a 18); los anexos van aparte.
+
+**En Overleaf**: los dos `.bib` y el logo son **enlaces simbólicos**, por la razón que da el `CLAUDE.md`: tres
+copias de la bibliografía ya habían divergido. Overleaf no los sigue, así que al subir hay que resolverlos:
 
 ```bash
 cd docs/reportes/articulo && cp -L bibliografia.bib logo.jpeg /tmp/subir-a-overleaf/
 ```
 
 Hay que subir también `articulo.tex` y la carpeta `figuras/` con sus PNG (pdfLaTeX no incluye SVG).
-Si cambia el borrador, se regenera el `.tex` con `python3 scripts/armar_articulo_tex.py` (necesita
-`pandoc`); `tests/test_articulo_tex.py` falla si el `.tex` no coincide con el borrador. Los campos en
-rojo del encabezado (asesor y fecha de entrega) y la declaración de uso de IA los confirma el equipo.
+`tests/test_articulo_tex.py` falla si el `.tex` no coincide con el borrador. El campo `note` de la bibliografía
+son anotaciones internas del equipo («LEÍDO PARCIAL»…) y el `.tex` lo suprime al imprimir las referencias.
 
 ## Decidido
 
 - **APA 7.** La plantilla ofrecía APA o IEEE y dejaba las dos líneas en el preámbulo; se
   quitó la de IEEE. El resto del proyecto ya cita en APA, con `docs/referencias/apa.csl`.
+- **Extensión: la que pide la rúbrica, 12 a 18 páginas** del título a las referencias, anexos aparte. El
+  encabezado de la plantilla dice «3 páginas» por herencia del resumen ejecutivo (los dos zips traen el mismo
+  `referencias.bib` y el mismo `logo.jpeg` byte a byte).
 
-## Por resolver, y las dos valen puntos
+## Por confirmar con el equipo
 
-- **La extensión.** El encabezado de la plantilla dice «3 páginas» y la rúbrica puntúa 12 a
-  18 (20 pts). La línea viene heredada del resumen ejecutivo: los dos zips traen el mismo
-  `referencias.bib` y el mismo `logo.jpeg` byte a byte. Manda la rúbrica, falta confirmarlo.
-- **El `logo_empresa.png`** que la plantilla del resumen espera no viene en ningún zip.
-  Preguntar si lo aporta la patrocinadora.
-
-## Lo que todavía no existe
-
-La **sección 5**, «Implementación y operación»: arquitectura de despliegue con diagrama,
-requisitos de operación con responsables y qué se supervisa. Son 25 puntos y no hay una sola
-línea escrita en el repositorio. El `docs/roadmap-mlops.md` alimenta el monitoreo y los
-riesgos, pero es MLOps de registro de experimentos, no una arquitectura de producción.
+- Los campos en rojo del encabezado: **nombre del asesor** y **fecha de entrega**.
+- La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo.
+- El **`logo_empresa.png`** que la plantilla del resumen espera no viene en ningún zip. Preguntar si lo aporta la
+  patrocinadora.
+- Los **umbrales de alerta** de la tabla de supervisión de la sección 6 son propuestas y no se midieron.

@@ -38,7 +38,9 @@ BIB = RAIZ / "docs" / "referencias" / "bibliografia.bib"
 
 AUTORES = ("Ingrid Pamela Ruiz Puga", "Artemio Santiago Padilla Robles", "José Antonio Vázquez Martínez")
 # Ancho relativo de las columnas de la tabla de la sección 6 (el Markdown no da más que iguales).
-ANCHO_TABLA = {"|:--|:--|:--|": "|:---------|:-----------|:----------------|"}
+# Va primero la de 4 columnas: la de 3 es subcadena de ella.
+ANCHO_TABLA = {"|:--|:--|:--|:--|": "|:-------|:-----------|:--------------------|:--------|",
+               "|:--|:--|:--|": "|:---------|:-----------|:----------------|"}
 PENDIENTE = r"\textcolor{red}{[%s]}"
 
 # Lo que pdfLaTeX no conoce, y cómo se dibuja.
@@ -56,6 +58,10 @@ EXTRA_PREAMBULO = r"""
 \usepackage{calc}
 \usepackage{xcolor}
 \providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcounter{none} % el longtable de pandoc declara \LTcaptype{none} y espera que el contador exista
+% El campo `note` de bibliografia.bib son anotaciones internas del equipo («LEÍDO PARCIAL», cómo se verificó
+% cada entrada): sirven en docs/referencias y no deben salir impresas en las referencias del artículo.
+\AtEveryBibitem{\clearfield{note}}
 \setlength{\emergencystretch}{3em}
 """ + "".join(f"\\DeclareUnicodeCharacter{{{h}}}{{{d}}}\n" for h, d in UNICODE.items())
 
@@ -187,8 +193,16 @@ def construir() -> str:
     return encabezado + "\n".join(cuerpo) + cierre
 
 
+def permitir_saltos(tex: str) -> str:
+    """Un `\\texttt` largo (el nombre de una carpeta de corrida) no se parte y se sale del margen:
+    se permite el salto de línea después de cada guion, barra o guion bajo."""
+    def parte(m):
+        return "\\texttt{" + re.sub(r"(-|/|\\_)", r"\1\\allowbreak{}", m.group(1)) + "}"
+    return re.sub(r"\\texttt\{([^{}]{30,})\}", parte, tex)
+
+
 def main() -> None:
-    nuevo = construir()
+    nuevo = permitir_saltos(construir())
     if "--revisar" in sys.argv:
         if not SALIDA.exists() or SALIDA.read_text(encoding="utf-8") != nuevo:
             sys.exit("articulo.tex no coincide con borrador.md: corre scripts/armar_articulo_tex.py")
