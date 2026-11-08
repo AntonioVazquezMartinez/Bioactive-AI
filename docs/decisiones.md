@@ -31,6 +31,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 | [1.10](#d1-10) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
+| [1.11](#d1-11) | Pasar compuestos raros de la prueba al ajuste y devolver comunes: experimento que toca la prueba reservada | Propuesta | |
 
 **Fase 2 · Actividad**
 
@@ -838,6 +839,50 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 - **Qué dice y qué no dice el negativo: la potencia de la regla.** La desviación pareada observada en el tercil más raro (0.0095) es mucho mayor que la del nulo con que se pensó el 0.005, y parte es el tamaño del subgrupo pero la mayor parte es que repesar tiene un efecto heterogéneo entre pliegues, algo que no se podía saber antes de correr. Simulando la regla con esa dispersión (40,000 sorteos de 15 evaluaciones; la revisión lo calculó y se reprodujo): con efecto real 0 la regla 1 pasa el 0.8% de las veces (excelente contra un falso positivo), con 0.005 el 26.6%, con 0.0073 el 55.4%, con 0.010 el 83.2% y con 0.012 el 93.8%. Para 80% de potencia hace falta un efecto de unos 0.0096, el doble del umbral declarado, y la condición que aprieta es el 12 de 15 y no la media. **Por eso lo que el negativo establece es «no hay un efecto de unos 0.010 o más en el tercil más raro», y no «no hay un efecto de 0.005».** Cualquier cita de este resultado debe llevar esa frase. Para la próxima regla declarada de antemano: el umbral se fija contra la dispersión de la intervención, no contra la del nulo, que solo acota el falso positivo.
 - **Detalles de la corrida.** El nivel de A (AUROC 0.9190, MCC 0.7015) difiere en 0.0002 de MCC del 0.7017 de la [1.5](#d1-5) porque el escalador pasó dentro de la calibración; esta entrada solo reporta diferencias pareadas, pero quien cite el nivel de A debe saberlo. El control D se siembra con la semilla del modelo, así que arranca igual en los 5 pliegues de una semilla: son 15 sorteos distintos pero 3 semillas independientes.
 - **Lectura revisada** por quien no la corrió: recalculó el veredicto desde `metricas.json`, comprobó que la rareza se calcula dentro del pliegue (en el ajuste excluyendo el grupo, en la validación sin excluirlo porque el grupo ya no está) y que la partición de la lectura por tercil es exactamente la del arnés.
+
+#### 1.11 · Pasar compuestos raros de la prueba al ajuste {#d1-11 .propuesta}
+
+**Estado:** propuesta
+
+**Toca la prueba reservada, con etiquetas**, así que necesita la revisión de quien lleva la guarda antes de fusionarse.
+
+> **Pregunta:** si el ajuste recibe compuestos raros que hoy solo están en la prueba, y la prueba recibe a cambio compuestos comunes, ¿mejora el `svm_rbf` en lo raro que queda en la prueba sin empeorar en lo común?
+
+**Qué pasó.** La [1.10](#d1-10) repesó las filas raras que **ya estaban** en el ajuste y no ayudó. No probó la idea original, que es otra: sacar química rara de la prueba, meterla al entrenamiento para que el modelo aprenda de ella, y devolver a la prueba algunos compuestos comunes. Esa idea no se había medido porque exige leer la prueba con etiquetas. Aquí se mide, como experimento, sin cambiar la partición del proyecto.
+
+**Qué se propone medir (nada se ha corrido).**
+
+| pieza | diseño |
+|:--|:--|
+| datos | las 7,805 filas de la fase 1, `svm_rbf` con los 151 descriptores, como se entrega |
+| unidad | el grupo (`grupos_cv`, calculado sobre las 7,805 filas): se mueven grupos enteros. Los grupos de la prueba que también tienen filas en el ajuste no se evalúan ni se mueven, y se cuentan |
+| rareza de un grupo | media de la similitud de Tanimoto (Morgan radio 2, 2048 bits) de sus filas con su vecino más cercano de **otro grupo** entre las 7,805 filas; terciles dentro de cada tramo de peso. Tercil 0 = el más raro, 2 = el más común. Es una propiedad del compuesto respecto al conjunto, igual para todos los brazos |
+| sorteo | 15 semillas. En cada una, la mitad de los grupos de la prueba de cada tercil forma el **núcleo de evaluación E**, igual en todos los brazos; la otra mitad es la reserva móvil **M** |
+| **A** | el ajuste original, sin tocar (referencia; se ajusta una vez) |
+| **D** | el ajuste sin **Q**: filas de grupos comunes del ajuste, al azar, tantas como filas raras hay en M |
+| **C** | D más **M_azar**: filas de grupos de M al azar, de cualquier tercil, tantas como filas raras de M (control: «más datos de la prueba», sin elegir) |
+| **B** | D más **M_raro**: los grupos del tercil más raro de M |
+| qué se reporta | AUROC (y MCC global) en E, global y por tercil; un tercil solo se lee si su clase minoritaria llega a 20 casos en 12 de los 15 sorteos. Además, AUROC sobre Q (comunes que quedaron fuera del entrenamiento) |
+| entregable de datos | `particion_alternativa_sorteo0.csv`: la partición del sorteo 0 con el brazo B (ajuste − Q + M_raro; prueba = el resto), con el tercil de cada fila |
+
+B, C y D entrenan con casi el mismo número de filas (difieren a lo más en un grupo), así que **B − C** no confunde «más raro» con «más datos»; y **A** se lee contra los tres como la partición de hoy.
+
+**La regla, declarada antes de correr.** Sea Δ_x el AUROC del brazo x menos el de A, sobre las mismas filas raras de E, en cada sorteo, y σ_C la desviación de Δ_C en los 15 sorteos. B *mejora lo raro* si se cumplen las tres:
+1. la media de Δ_B supera a max(0.005, σ_C) y Δ_B > 0 en al menos 12 de 15 sorteos;
+2. la media de Δ_B − Δ_C es mayor que cero (no es solo recibir filas de la prueba);
+3. en los comunes de E, la media de AUROC(B) − AUROC(A) no baja de −0.005 (lo que cuesta sacar a Q del entrenamiento).
+
+**El umbral sale de la dispersión del control, a propósito.** La [1.10](#d1-10) fijó 0.005 contra el ruido nulo y la dispersión real resultó dieciséis veces mayor, de modo que la regla casi no podía pasar con un efecto de 0.005. Aquí σ_C es la dispersión de mover filas sin elegir, la misma intervención sin la parte que se prueba; la regla exige superarla. Si σ_C resulta mayor que 0.005, el umbral sube con ella y se dice.
+
+**Lo que esta medición no es.**
+- **Los 15 sorteos no son 15 evaluaciones independientes**: comparten las mismas 1,499 filas de prueba y solo reparten cuáles se evalúan y cuáles se mueven. Los intervalos son condicionales a esta prueba. El resultado dice qué pasa con esta química, no que se generalice.
+- **No cambia la partición del proyecto.** La prueba reservada oficial y el modelo entregado quedan como están. Ningún modelo entrenado con filas movidas se entrega ni se evalúa contra la prueba oficial, y el resultado no se usa para decidir nada sobre lo que ya se midió en ella.
+- **Es una lectura más de la prueba**, con etiquetas, anotada en `experimentos/prueba.csv` por `tomar_prueba` con su motivo. Se agrega el script a `PERMITIDOS`, que es la decisión visible en la revisión.
+- Un solo modelo, y la rareza con Tanimoto de Morgan a 2048 bits, cuya definición cambia lo que se ve ([1.2](#d1-2)). E es la mitad de la prueba, y sus comunes pueden ser pocos: si el tercil común de E no llega a 20 casos de la minoritaria en 12 sorteos, la regla 3 no es evaluable y el veredicto es «no concluyente».
+
+**Qué lo cambiaría.** Que la regla se cumpla: se propone una versión que **no** use la prueba (mover entre ajuste y validación agrupada) para decidir si adoptar la idea sin gastar otra lectura. Que no se cumpla: queda como resultado negativo, con la salvedad de potencia que corresponda.
+
+**No decide la patrocinadora, pero sí quien lleva la guarda de la prueba.** Es interno y reversible, y requiere la revisión explícita de Pame antes de fusionar.
 
 ### Supuestos
 

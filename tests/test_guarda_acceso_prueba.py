@@ -27,6 +27,7 @@ PERMITIDOS = {
     "experimento_dificultad_de_la_prueba.py",  # distribución de la similitud de la prueba, solo SMILES (E14)
     "experimento_octava_lectura_origen.py",    # AUROC de la prueba por tercil de similitud y origen, con etiquetas (#268)
     "experimento_andamios_de_la_prueba.py",    # proporción de andamios y esqueletos nuevos en la prueba, sin etiquetas (#264)
+    "experimento_raros_al_ajuste.py",          # pasa raros de la prueba al ajuste y devuelve comunes a la prueba, con etiquetas (1.11)
 }
 PIDE_PRUEBA = re.compile(r"incluir_prueba\s*=\s*True")
 LLAMA_GUARDA = re.compile(r"\btomar_prueba\s*\(")
