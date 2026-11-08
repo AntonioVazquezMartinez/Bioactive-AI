@@ -2,7 +2,7 @@
 
 El valor de estas pruebas está en las dos primeras: si `submuestra` deja de igualar el número
 de filas o la proporción de BBB+ entre los órdenes, la diferencia `raros − parecidos` que la
-entrada 1.11 reporta deja de medir la química y nadie se enteraría mirando la cifra. El
+entrada 1.12 reporta deja de medir la química y nadie se enteraría mirando la cifra. El
 confundido es real y grande: sin el equilibrado, en el primer pliegue el 25% «raros primero»
 traía 68.1% de BBB+ y el «parecidos primero» 53.9%.
 """

@@ -1,0 +1,29 @@
+decision: '1.11'
+semillas:
+- 0
+- 1
+- 2
+params:
+  ordenes:
+  - raros
+  - parecidos
+  - azar
+  fracciones:
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1.0
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  filas: 6306
+  grupos: 1048
+  modelo: svm_rbf
+  submuestreo: grupos
+  toca_prueba: false
+  rareza: Tanimoto (Morgan r2, 2048) al vecino más cercano del ajuste del pliegue,
+    excluyendo su mismo grupo; la de un grupo es la media de sus filas
+  lectura_que_manda: diferencia pareada raros - parecidos de AUROC por fracción, IC
+    de Nadeau y Bengio; sin umbral de paso declarado

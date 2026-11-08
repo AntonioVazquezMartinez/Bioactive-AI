@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""¿Una fila de química rara enseña más que una parecida? (decisión 1.11, fase 1)
+"""¿Una fila de química rara enseña más que una parecida? (decisión 1.12, fase 1)
 
 La curva de aprendizaje (`2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`) añade grupos
 **al azar** y declara en sus propios límites que no mide si las filas raras aportan más o menos que
@@ -202,7 +202,7 @@ def main() -> None:
               "lectura_que_manda": "diferencia pareada raros - parecidos de AUROC por fracción, IC "
                                    "de Nadeau y Bengio; sin umbral de paso declarado"}
 
-    with Corrida("composicion-rareza-permeabilidad", decision="1.11", params=params,
+    with Corrida("composicion-rareza-permeabilidad", decision="1.12", params=params,
                  semillas=list(SEMILLAS), datos=datos) as c:
         print(f"{n:,} filas · {len(np.unique(g)):,} grupos · {y.mean():.1%} BBB+\n", flush=True)
         sim = matriz_similitud(t.meta["SMILES"].to_numpy())

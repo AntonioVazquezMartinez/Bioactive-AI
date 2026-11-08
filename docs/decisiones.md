@@ -31,7 +31,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 | [1.10](#d1-10) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
-| [1.11](#d1-11) | ¿Una fila de química rara enseña más que una parecida? Se mide la composición, sin tocar la partición | Propuesta | |
+| [1.12](#d1-12) | ¿Una fila de química rara enseña más que una parecida? Se mide la composición, sin tocar la partición | Propuesta | |
 
 **Fase 2 · Actividad**
 
@@ -825,7 +825,7 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 
 **Decide sin esperar a la patrocinadora.** Es una medición interna, reversible y sin datos nuevos.
 
-#### 1.11 · ¿Una fila de química rara enseña más que una parecida? {#d1-11 .propuesta}
+#### 1.12 · ¿Una fila de química rara enseña más que una parecida? {#d1-12 .propuesta}
 
 **Estado:** propuesta
 
