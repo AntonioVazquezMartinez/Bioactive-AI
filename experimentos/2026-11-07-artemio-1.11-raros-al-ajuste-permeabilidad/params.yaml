@@ -1,0 +1,26 @@
+decision: '1.11'
+semillas:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- 10
+- 11
+- 12
+- 13
+- 14
+params:
+  sorteos: 15
+  filas: 7805
+  toca_prueba: true
+  regla:
+    ganancia_minima: 0.005
+    sorteos_positivos: 12
+    perdida_maxima_en_comunes: 0.005
+    min_minoritaria: 20
