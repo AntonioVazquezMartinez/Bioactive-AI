@@ -32,6 +32,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 | [1.9](#d1-9) | `includeChirality` en las huellas: parametrizado, con `False` por omisión | Propuesta | |
 | [1.10](#d1-10) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
+| [1.11](#d1-11) | Pasar compuestos raros de la prueba al ajuste y devolver comunes: experimento que toca la prueba reservada | Propuesta | |
 | [1.12](#d1-12) | ¿Una fila de química rara enseña más que una parecida? **No: a igual tamaño enseña menos**, y contra el orden al azar cuesta 0.060 de AUROC al 25% | Revisada | |
 
 **Fase 2 · Actividad**
@@ -908,6 +909,74 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 - **Detalles de la corrida.** El nivel de A (AUROC 0.9190, MCC 0.7015) difiere en 0.0002 de MCC del 0.7017 de la [1.5](#d1-5) porque el escalador pasó dentro de la calibración; esta entrada solo reporta diferencias pareadas, pero quien cite el nivel de A debe saberlo. El control D se siembra con la semilla del modelo, así que arranca igual en los 5 pliegues de una semilla: son 15 sorteos distintos pero 3 semillas independientes.
 - **Lectura revisada** por quien no la corrió: recalculó el veredicto desde `metricas.json`, comprobó que la rareza se calcula dentro del pliegue (en el ajuste excluyendo el grupo, en la validación sin excluirlo porque el grupo ya no está) y que la partición de la lectura por tercil es exactamente la del arnés.
 
+#### 1.11 · Pasar compuestos raros de la prueba al ajuste {#d1-11 .propuesta}
+
+**Estado:** propuesta
+
+**Toca la prueba reservada, con etiquetas**, así que necesita la revisión de quien lleva la guarda antes de fusionarse.
+
+> **Pregunta:** si el ajuste recibe compuestos raros que hoy solo están en la prueba, y la prueba recibe a cambio compuestos comunes, ¿mejora el `svm_rbf` en lo raro que queda en la prueba sin empeorar en lo común?
+
+**Qué pasó.** La [1.10](#d1-10) repesó las filas raras que **ya estaban** en el ajuste y no ayudó. No probó la idea original, que es otra: sacar química rara de la prueba, meterla al entrenamiento para que el modelo aprenda de ella, y devolver a la prueba algunos compuestos comunes. Esa idea no se había medido porque exige leer la prueba con etiquetas. Aquí se mide, como experimento, sin cambiar la partición del proyecto.
+
+**Qué se propone medir (nada se ha corrido).**
+
+| pieza | diseño |
+|:--|:--|
+| datos | las 7,805 filas de la fase 1, `svm_rbf` con los 151 descriptores, como se entrega |
+| unidad | el grupo (`grupos_cv`, calculado sobre las 7,805 filas): se mueven grupos enteros. Los grupos de la prueba que también tienen filas en el ajuste no se evalúan ni se mueven, y se cuentan |
+| rareza de un grupo | media de la similitud de Tanimoto (Morgan radio 2, 2048 bits) de sus filas con su vecino más cercano de **otro grupo** entre las 7,805 filas; terciles dentro de cada tramo de peso. Tercil 0 = el más raro, 2 = el más común. Es una propiedad del compuesto respecto al conjunto, igual para todos los brazos |
+| sorteo | 15 semillas. En cada una, la mitad de los grupos de la prueba de cada tercil forma el **núcleo de evaluación E**, igual en todos los brazos; la otra mitad es la reserva móvil **M** |
+| **A** | el ajuste original, sin tocar (referencia; se ajusta una vez) |
+| **D** | el ajuste sin **Q**: filas de grupos comunes del ajuste, al azar, tantas como filas raras hay en M |
+| **C** | D más **M_azar**: filas de grupos de M al azar, de cualquier tercil, tantas como filas raras de M (control: «más datos de la prueba», sin elegir) |
+| **B** | D más **M_raro**: los grupos del tercil más raro de M |
+| qué se reporta | AUROC (y MCC global) en E, global y por tercil; un tercil solo se lee si su clase minoritaria llega a 20 casos en 12 de los 15 sorteos. Además, AUROC sobre Q (comunes que quedaron fuera del entrenamiento) |
+| entregable de datos | `particion_alternativa_sorteo0.csv`: la partición del sorteo 0 con el brazo B (ajuste − Q + M_raro; prueba = el resto), con el tercil de cada fila |
+
+B, C y D entrenan con casi el mismo número de filas (difieren a lo más en un grupo), así que **B − C** no confunde «más raro» con «más datos»; y **A** se lee contra los tres como la partición de hoy.
+
+**La regla, declarada antes de correr.** Sea Δ_x el AUROC del brazo x menos el de A, sobre las mismas filas raras de E, en cada sorteo, y σ_C la desviación de Δ_C en los 15 sorteos. B *mejora lo raro* si se cumplen las tres:
+1. la media de Δ_B supera a max(0.005, σ_C) y Δ_B > 0 en al menos 12 de 15 sorteos;
+2. la media de Δ_B − Δ_C es mayor que cero (no es solo recibir filas de la prueba);
+3. en los comunes de E, la media de AUROC(B) − AUROC(A) no baja de −0.005 (lo que cuesta sacar a Q del entrenamiento).
+
+**El umbral sale de la dispersión del control, a propósito.** La [1.10](#d1-10) fijó 0.005 contra el ruido nulo y la dispersión real resultó dieciséis veces mayor, de modo que la regla casi no podía pasar con un efecto de 0.005. Aquí σ_C es la dispersión de mover filas sin elegir, la misma intervención sin la parte que se prueba; la regla exige superarla. Si σ_C resulta mayor que 0.005, el umbral sube con ella y se dice.
+
+**Lo que esta medición no es.**
+- **Los 15 sorteos no son 15 evaluaciones independientes**: comparten las mismas 1,499 filas de prueba y solo reparten cuáles se evalúan y cuáles se mueven. Los intervalos son condicionales a esta prueba. El resultado dice qué pasa con esta química, no que se generalice.
+- **No cambia la partición del proyecto.** La prueba reservada oficial y el modelo entregado quedan como están. Ningún modelo entrenado con filas movidas se entrega ni se evalúa contra la prueba oficial, y el resultado no se usa para decidir nada sobre lo que ya se midió en ella.
+- **Es una lectura más de la prueba**, con etiquetas, anotada en `experimentos/prueba.csv` por `tomar_prueba` con su motivo. Se agrega el script a `PERMITIDOS`, que es la decisión visible en la revisión.
+- Un solo modelo, y la rareza con Tanimoto de Morgan a 2048 bits, cuya definición cambia lo que se ve ([1.2](#d1-2)). E es la mitad de la prueba, y sus comunes pueden ser pocos: si el tercil común de E no llega a 20 casos de la minoritaria en 12 sorteos, la regla 3 no es evaluable y el veredicto es «no concluyente».
+
+**Qué lo cambiaría.** Que la regla se cumpla: se propone una versión que **no** use la prueba (mover entre ajuste y validación agrupada) para decidir si adoptar la idea sin gastar otra lectura. Que no se cumpla: queda como resultado negativo, con la salvedad de potencia que corresponda.
+
+**No decide la patrocinadora, pero sí quien lleva la guarda de la prueba.** Es interno y reversible, y requiere la revisión explícita de Pame antes de fusionar.
+
+**Resultado (7 de noviembre): B no mejora lo raro; fallan las reglas 1 y 2.** Corrida `2026-11-07-artemio-1.11-raros-al-ajuste-permeabilidad` (`scripts/experimento_raros_al_ajuste.py`), con el script y la regla en git antes de correr (commit `bf18719`, el que anota la lectura en `experimentos/prueba.csv`). Los controles pasan: el brazo A sobre toda la prueba da AUROC 0.7928, el registrado; B, C y D entrenan con 6,296, 6,296 y 6,011 filas de media; E tiene 744 a 768 filas y los tres terciles de E llegan a 20 casos de la minoritaria en los 15 sorteos (mínimos 128, 81 y 72).
+
+La prueba es más rara que el ajuste (similitud media 0.493 contra 0.544): 38% de sus filas están en el tercil más raro (570 de 1,499) contra 16% del ajuste (1,014 de 6,306).
+
+| AUROC, diferencia contra A, mismas filas de E | media (desv.) | mejor en |
+|:--|--:|--:|
+| B en lo raro | +0.0034 (0.0068) | 9 de 15 |
+| C (filas de la prueba al azar) en lo raro | +0.0063 (0.0069) | 12 de 15 |
+| D (solo quitar comunes) en lo raro | −0.0000 (0.0032) | 7 de 15 |
+| B − C en lo raro | −0.0029 (0.0069) | 7 de 15 |
+| B en lo intermedio | +0.0036 | 9 de 15 |
+| B en lo común | −0.0038 (peor −0.0200) | 5 de 15 |
+| B en todo E | +0.0020 (0.0039) | 12 de 15 |
+
+- **Regla 1, no se cumple:** la media de B en lo raro (+0.0034) no supera el piso max(0.005, σ_C) = 0.0069, y es positiva en 9 de 15 y no en 12. **Regla 2, no se cumple:** B − C es −0.0029. **Regla 3, se cumple:** −0.0038 en lo común, dentro del −0.005 permitido (el IC condicional, −0.0073 a −0.0002, no incluye el cero).
+- **Lo que se ve, y no es un resultado de la regla.** (1) Recibir filas de la prueba sirve un poco en lo raro, pero **no importa cuáles**: las elegidas al azar (+0.0063) rinden tanto o más que las raras elegidas a propósito (+0.0034). (2) Quitar comunes del ajuste no cuesta en lo raro (D, 0.0000) y sí algo en lo común (−0.0038 en B). (3) El AUROC de los comunes devueltos a la prueba (Q) no cambia entre B y D (−0.0005). Todo el efecto cabe en una desviación de sorteo.
+- **Qué queda dicho y qué no.** Con el `svm_rbf` y con esta prueba, mover los compuestos más raros de la prueba al entrenamiento no mejora lo raro que queda más que mover compuestos al azar. **No se afirma que el aprendizaje de lo raro no ayude**: C se solapa con B (la prueba tiene 38% de filas raras, así que un sorteo al azar trae muchas) y la dispersión entre sorteos (0.0068) es del tamaño del efecto, así que la regla solo detectaría con holgura una ganancia de ~0.010 o más; lo establecido es que no hay un efecto grande. Los 15 sorteos comparten las mismas filas, y el intervalo es condicional a esta prueba.
+- **El MCC, fuera de la regla (que era de AUROC).** Sobre E, A da 0.3284, B 0.3637, C 0.3513 y D 0.3275. B − A es +0.0352 (desv. 0.0182, mejor en 15 de 15, peor +0.0080) y C − A +0.0228 (13 de 15). **Sigue siendo un MCC bajo** (ninguno llega a 0.40, contra 0.70 en validación cruzada) y **no se cita +0.035 como ganancia**: no pasa la regla, el AUROC de B se mueve solo +0.0020 (el orden casi no cambia y el MCC sí) y mover filas al azar también sube el MCC. Se parece a un efecto de umbral y no de aprendizaje ([1.2](#d1-2): de 0.14 a 0.17 de MCC dependen de dónde se corta). **La lectura por prevalencia se midió y no alcanza** (corrida `2026-11-08-artemio-1.11-raros-al-ajuste-prevalencia-permeabilidad`, `prevalencia.csv`, otra lectura de la prueba que no entrena nada): la prevalencia de BBB+ del entrenamiento es 0.6497 en A, 0.6452 en B, 0.6482 en C y 0.6518 en D. B baja **0.0045** contra A, frente a una distancia de 0.075 con la prevalencia de E (0.5748). Los raros que entran sí son más BBB− (50.6% BBB+ contra 64.97%), pero 285 filas entre 6,296 casi no cambian la proporción total; **si el MCC sube por un corte mejor puesto, no es por la prevalencia agregada**. Lo que mueve el corte se lee de los tres brazos juntos, en el punto siguiente.
+- **De dónde sale el MCC: de recibir filas de la distribución de evaluación, no del orden.** Descomposición de Pame con el `sorteos.csv` de esta corrida, sin gastar otra lectura de la prueba (recalculada aquí, coincide). ΔMCC contra A en E, con el IC95% de t sobre los 15 sorteos: **B +0.0352 [+0.0251, +0.0453]**, 15 de 15 positivas; **C +0.0228 [+0.0130, +0.0326]**, 13 de 15; **D −0.0010 [−0.0058, +0.0039]**, 7 de 15. D, que solo quita las 295 filas comunes, no mueve el MCC: el corte no se recoloca por perder filas del ajuste ni por la prevalencia, sino por recibir filas de la distribución sobre la que se evalúa. Es la misma forma que el AUROC (lo que ayuda es recibir filas de la prueba, no cuáles), en la métrica donde el efecto es grande. **Lo que sí distingue a lo raro es una disociación:** MCC de B − C = **+0.0124** [+0.0034, +0.0214], 13 de 15, y AUROC de B − C = **−0.0021** [−0.0040, −0.0001], 6 de 15, los dos con el cero fuera: la química rara mejora dónde cae el corte y empeora un poco el orden. Por cada punto de AUROC, B mueve 17.7 puntos de MCC y C 5.6, contra 3.3 en la relación empírica entre las dos métricas en esta canalización (pendiente sobre 266 pares de celdas de la [1.12](#d1-12), cifra de Pame que aquí no se recalculó). **El +0.035 de MCC no es discriminación.** Salvedades: los 15 sorteos comparten las mismas 1,499 filas, así que el intervalo es el de la diferencia pareada entre sorteos y no el de la población; y son comparaciones múltiples sin corregir (tres brazos por dos métricas), de modo que el que vale es el signo (15 de 15 y 7 de 15) y no el valor p implícito. Con el control C diluido por su 38% de química rara, el efecto verdadero del corte es mayor que +0.0124.
+- **Una lectura más de la prueba no se gasta aquí.** El MCC con corte de igual prevalencia pediría reajustar y guardar predicciones, y cuantificaría lo que la descomposición ya identifica. La lectura que falta —el MCC a un umbral elegido con validación interna agrupada— es la del [#191](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/191), y ninguna de las tres corridas de «aprender de lo raro» la ha hecho.
+- **Lo más útil de la corrida, y no estaba en la regla: lo que compra recomponer la muestra.** Los compuestos comunes que pasan a la prueba (Q, 295 filas de media) se miden con AUROC **0.940** en B (0.9404 en D y 0.9436 en C), y los raros de E se medían en **0.682** con el mismo modelo y sin reentrenar: 0.26 de AUROC entre unas filas y otras, y **cero** de lo que cambia el modelo (B − D en Q: −0.0005). Recomponer la prueba cambia el número que se reporta y no lo que el modelo sabe. Sirve para la próxima vez que alguien proponga mover filas entre ajuste y prueba.
+- **Límite del control C.** M_azar sortea de los tres terciles, así que cerca de 38% de lo que recibe C (la parte rara de la prueba) es la misma química rara que recibe B, y B − C ve solo parte de cualquier efecto real de la rareza. Con σ = 0.0069 la regla descarta un efecto de unos 0.010 y no menos. Un control que sortee solo de los terciles intermedio y común daría el contraste completo; no se corrió.
+- **Decisión: no se adopta nada.** El experimento queda como resultado negativo y como dato del artículo: 285 filas más de química rara no cierran la brecha entre 0.70 y 0.34 de MCC. No se corren variantes de este diseño tras ver el resultado.
+- **Lo que no hace.** No cambia la partición oficial ni el modelo entregado, y el resultado no se usa para nada que ya se haya medido en la prueba. La partición alternativa del sorteo 0 está en la carpeta de la corrida (`particion_alternativa_sorteo0.csv`) para quien quiera usarla en otro experimento.
 
 #### 1.12 · ¿Una fila de química rara enseña más que una parecida? No: enseña menos {#d1-12 .revisada}
 
