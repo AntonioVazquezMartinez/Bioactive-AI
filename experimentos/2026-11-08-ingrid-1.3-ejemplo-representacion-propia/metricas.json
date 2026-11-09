@@ -1,0 +1,44 @@
+{
+  "todos": [
+    {
+      "dif_media": -0.0826,
+      "distingue": true,
+      "evaluaciones": 15,
+      "ic95_inf": -0.1312,
+      "ic95_sup": -0.034,
+      "mejora_en": 1,
+      "metrica": "mcc",
+      "representacion": "tpsa_hbd_peso"
+    },
+    {
+      "dif_media": -0.0618,
+      "distingue": true,
+      "evaluaciones": 15,
+      "ic95_inf": -0.0979,
+      "ic95_sup": -0.0256,
+      "mejora_en": 0,
+      "metrica": "auroc",
+      "representacion": "tpsa_hbd_peso"
+    },
+    {
+      "dif_media": -0.687,
+      "distingue": true,
+      "evaluaciones": 15,
+      "ic95_inf": -0.7667,
+      "ic95_sup": -0.6073,
+      "mejora_en": 0,
+      "metrica": "mcc",
+      "representacion": "ruido_3_columnas"
+    },
+    {
+      "dif_media": -0.4031,
+      "distingue": true,
+      "evaluaciones": 15,
+      "ic95_inf": -0.439,
+      "ic95_sup": -0.3671,
+      "mejora_en": 0,
+      "metrica": "auroc",
+      "representacion": "ruido_3_columnas"
+    }
+  ]
+}
