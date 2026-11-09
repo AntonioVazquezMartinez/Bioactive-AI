@@ -88,6 +88,10 @@ AUROC_PRUEBA_REGISTRADO = 0.7928
 TOLERANCIA = 0.003
 PREVALENCIA_AJUSTE = 0.650        # declarada en la 1.2; el corte de igual prevalencia la usa
 REMUESTREOS = 2000
+REPETICIONES = 300                # particiones de grupos en mitades, por semilla
+# Dos mallas de cortes, porque el resultado es sensible a ella y eso se reporta en lugar de
+# elegir la que convenga: la de cuantiles de las probabilidades y una fija, la de la revisión.
+MALLA_FIJA = np.arange(0.20, 0.8001, 0.005)
 MOTIVO = ("#191: MCC de la prueba a un umbral elegido con validación interna agrupada, "
           "congelado antes de leerla; el corte fijo de 0.5 es el control")
 
@@ -157,9 +161,42 @@ def intervalo_por_grupos(y, p, grupos, a, b, remuestreos=REMUESTREOS, semilla=0)
             "remuestreos_validos": int(len(difs))}
 
 
-def fase_a(y, p_por_semilla):
-    """Elige el corte en validación y mide cuánto de la ganancia era ajustarlo a sus etiquetas."""
-    por_semilla, dentro, fuera = {}, [], []
+def guarda_por_mitades(y, p, grupos, rejilla_de_cortes, repeticiones=REPETICIONES, semilla=0):
+    """Elige el corte en una mitad de los **grupos** y lo mide en la otra, en las dos direcciones.
+
+    Esta es la guarda que de verdad deja etiquetas fuera. La anterior —elegir el corte con dos
+    semillas y medirlo en la tercera— no lo hacía: las tres semillas son el mismo conjunto de
+    6,306 filas con las mismas etiquetas y solo cambia el reparto en pliegues, así que no
+    distinguía «ajustar el corte a sus propias etiquetas» de «el máximo del MCC es inestable».
+    Lo encontró una revisión del PR, no una comprobación.
+    """
+    rng = np.random.default_rng(semilla)
+    unicos = np.unique(grupos)
+    difs = []
+    for _ in range(repeticiones):
+        permutados = rng.permutation(unicos)
+        mitad = permutados[: len(permutados) // 2]
+        a = np.isin(grupos, mitad)
+        for sel, otra in ((a, ~a), (~a, a)):
+            if len(np.unique(y[sel])) < 2 or len(np.unique(y[otra])) < 2:
+                continue
+            corte = max(rejilla_de_cortes, key=lambda c: mcc(y[sel], p[sel], c))
+            difs.append((mcc(y[otra], p[otra], corte) - mcc(y[otra], p[otra], 0.5), corte))
+    g = np.array([d for d, _ in difs])
+    cortes = np.array([c for _, c in difs])
+    return {"ganancia_media": round(float(g.mean()), 4),
+            "desviacion": round(float(g.std(ddof=1)), 4),
+            "positivas": round(float((g > 0).mean()), 3),
+            "evaluaciones": int(len(g)),
+            "corte_medio": round(float(cortes.mean()), 4),
+            "cortes_rango_5_95": [round(float(np.quantile(cortes, 0.05)), 4),
+                                  round(float(np.quantile(cortes, 0.95)), 4)],
+            "fraccion_de_cortes_bajo_0.5": round(float((cortes < 0.5).mean()), 3)}
+
+
+def fase_a(y, p_por_semilla, grupos):
+    """Elige el corte en validación y mide si se traslada a grupos cuyas etiquetas no lo eligieron."""
+    por_semilla, dentro, entre_semillas = {}, [], []
     for i, s in enumerate(SEMILLAS):
         p = p_por_semilla[i]
         corte, mcc_corte = mejor_corte(y, p)
@@ -169,19 +206,45 @@ def fase_a(y, p_por_semilla):
             "fraccion_positiva_en_0.5": round(float((p >= 0.5).mean()), 4),
             "fraccion_positiva_en_el_corte": round(float((p >= corte).mean()), 4)}
         dentro.append(mcc_corte - mcc(y, p, 0.5))
-        # dejar esta semilla fuera: el corte se elige con las otras dos y se mide en ella
+        # **Esto NO es una guarda de generalización, y decirlo importa.** Las tres semillas son
+        # el mismo conjunto con las mismas etiquetas y solo cambia el reparto en pliegues, así
+        # que elegir el corte con dos y medirlo en la tercera mide la estabilidad del máximo
+        # entre repartos, no si el corte se traslada a etiquetas que no lo eligieron.
         otras = [p_por_semilla[j] for j in range(len(SEMILLAS)) if j != i]
-        cortes_otras = [mejor_corte(y, q)[0] for q in otras]
-        c_fuera = float(np.median(cortes_otras))
-        fuera.append(mcc(y, p, c_fuera) - mcc(y, p, 0.5))
+        c_otras = float(np.median([mejor_corte(y, q)[0] for q in otras]))
+        entre_semillas.append(mcc(y, p, c_otras) - mcc(y, p, 0.5))
     congelado = round(float(np.median([v["corte"] for v in por_semilla.values()])), 3)
+
+    # La guarda que sí deja etiquetas fuera, con las dos mallas, porque el resultado es sensible
+    mitades = {}
+    for nombre_malla, hacer_rejilla in (("cuantiles", rejilla), ("fija", lambda _: MALLA_FIJA)):
+        por = [guarda_por_mitades(y, p_por_semilla[i], grupos, hacer_rejilla(p_por_semilla[i]),
+                                  semilla=s) for i, s in enumerate(SEMILLAS)]
+        g = [d["ganancia_media"] for d in por]
+        mitades[nombre_malla] = {
+            "ganancia_media": round(float(np.mean(g)), 4),
+            "por_semilla": por,
+            "desviacion_media": round(float(np.mean([d["desviacion"] for d in por])), 4),
+            "positivas": round(float(np.mean([d["positivas"] for d in por])), 3),
+            "fraccion_de_cortes_bajo_0.5": round(
+                float(np.mean([d["fraccion_de_cortes_bajo_0.5"] for d in por])), 3)}
+
+    # Sensibilidad a la malla del propio corte congelado, que la revisión midió y hay que decir
+    congelado_malla_fija = round(float(np.median(
+        [max(MALLA_FIJA, key=lambda c: mcc(y, q, c)) for q in p_por_semilla])), 3)
+
     return congelado, {
         "por_semilla": por_semilla,
         "corte_congelado": congelado,
+        "corte_congelado_con_malla_fija": congelado_malla_fija,
         "ganancia_dentro_de_muestra": {"media": round(float(np.mean(dentro)), 4),
                                        "por_semilla": [round(float(x), 4) for x in dentro]},
-        "ganancia_semilla_dejada_fuera": {"media": round(float(np.mean(fuera)), 4),
-                                          "por_semilla": [round(float(x), 4) for x in fuera]},
+        "estabilidad_entre_semillas": {
+            "media": round(float(np.mean(entre_semillas)), 4),
+            "por_semilla": [round(float(x), 4) for x in entre_semillas],
+            "advertencia": ("no es una guarda de generalización: las tres semillas comparten "
+                            "las mismas filas y etiquetas")},
+        "guarda_por_mitades_de_grupos": mitades,
     }
 
 
@@ -214,7 +277,7 @@ def main(leer_prueba: bool = False) -> None:
         _, fdp = evaluar({"svm_rbf": modelo}, t.X, y, grupos, estratos=t.estratos,
                          semillas=SEMILLAS, pliegues=PLIEGUES, verboso=True)
         p_cv = fdp["svm_rbf"]
-        congelado, a = fase_a(y, p_cv)
+        congelado, a = fase_a(y, p_cv, grupos)
 
         control_cv = abs(np.mean([v["mcc_en_0.5"] for v in a["por_semilla"].values()])
                          - MCC_CV_REGISTRADO)
@@ -261,10 +324,16 @@ def main(leer_prueba: bool = False) -> None:
         c.metricas(metricas)
 
         print(f"\ncorte congelado: {congelado}")
+        print(f"  corte congelado con la malla fija: {a['corte_congelado_con_malla_fija']}")
         print(f"  ganancia de MCC en validación, dentro de muestra: "
               f"{a['ganancia_dentro_de_muestra']['media']:+.4f}")
-        print(f"  ganancia con la semilla dejada fuera:             "
-              f"{a['ganancia_semilla_dejada_fuera']['media']:+.4f}")
+        for nm, d in a["guarda_por_mitades_de_grupos"].items():
+            print(f"  guarda por mitades de grupos, malla {nm:9}: "
+                  f"{d['ganancia_media']:+.4f} (desv {d['desviacion_media']:.4f}, "
+                  f"positiva en {d['positivas']:.0%}, cortes bajo 0.5 "
+                  f"{d['fraccion_de_cortes_bajo_0.5']:.0%})")
+        print(f"  estabilidad entre semillas (no es guarda): "
+              f"{a['estabilidad_entre_semillas']['media']:+.4f}")
         print(f"  control MCC a 0.5 contra {MCC_CV_REGISTRADO}: "
               f"{'pasa' if a['control_mcc_cv_en_0.5']['pasa'] else 'FALLA'} "
               f"(dif {a['control_mcc_cv_en_0.5']['diferencia']:+.4f})")

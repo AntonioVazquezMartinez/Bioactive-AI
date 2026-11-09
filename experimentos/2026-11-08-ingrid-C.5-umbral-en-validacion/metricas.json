@@ -6,6 +6,16 @@
       "pasa": true
     },
     "corte_congelado": 0.361,
+    "corte_congelado_con_malla_fija": 0.36,
+    "estabilidad_entre_semillas": {
+      "advertencia": "no es una guarda de generalización: las tres semillas comparten las mismas filas y etiquetas",
+      "media": -0.0013,
+      "por_semilla": [
+        -0.0006,
+        -0.0052,
+        0.002
+      ]
+    },
     "ganancia_dentro_de_muestra": {
       "media": 0.0049,
       "por_semilla": [
@@ -14,13 +24,95 @@
         0.0024
       ]
     },
-    "ganancia_semilla_dejada_fuera": {
-      "media": -0.0013,
-      "por_semilla": [
-        -0.0006,
-        -0.0052,
-        0.002
-      ]
+    "guarda_por_mitades_de_grupos": {
+      "cuantiles": {
+        "desviacion_media": 0.01,
+        "fraccion_de_cortes_bajo_0.5": 0.781,
+        "ganancia_media": -0.0022,
+        "por_semilla": [
+          {
+            "corte_medio": 0.3752,
+            "cortes_rango_5_95": [
+              0.3191,
+              0.5291
+            ],
+            "desviacion": 0.0115,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.833,
+            "ganancia_media": 0.0027,
+            "positivas": 0.765
+          },
+          {
+            "corte_medio": 0.442,
+            "cortes_rango_5_95": [
+              0.2704,
+              0.5511
+            ],
+            "desviacion": 0.0094,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.888,
+            "ganancia_media": -0.0042,
+            "positivas": 0.367
+          },
+          {
+            "corte_medio": 0.4228,
+            "cortes_rango_5_95": [
+              0.2925,
+              0.5137
+            ],
+            "desviacion": 0.0092,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.622,
+            "ganancia_media": -0.0052,
+            "positivas": 0.343
+          }
+        ],
+        "positivas": 0.492
+      },
+      "fija": {
+        "desviacion_media": 0.01,
+        "fraccion_de_cortes_bajo_0.5": 0.823,
+        "ganancia_media": -0.0029,
+        "por_semilla": [
+          {
+            "corte_medio": 0.3728,
+            "cortes_rango_5_95": [
+              0.305,
+              0.515
+            ],
+            "desviacion": 0.0113,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.83,
+            "ganancia_media": 0.0012,
+            "positivas": 0.692
+          },
+          {
+            "corte_medio": 0.4356,
+            "cortes_rango_5_95": [
+              0.27,
+              0.55
+            ],
+            "desviacion": 0.0097,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.91,
+            "ganancia_media": -0.0042,
+            "positivas": 0.407
+          },
+          {
+            "corte_medio": 0.4117,
+            "cortes_rango_5_95": [
+              0.275,
+              0.52
+            ],
+            "desviacion": 0.009,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.728,
+            "ganancia_media": -0.0056,
+            "positivas": 0.283
+          }
+        ],
+        "positivas": 0.461
+      }
     },
     "por_semilla": {
       "0": {
