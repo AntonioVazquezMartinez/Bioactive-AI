@@ -31,6 +31,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [1.7](#d1-7) | Tamaño L de Sort & Slice: 2048 de trabajo; 512 es posible con XGBoost o Random Forest | Propuesta | |
 | [1.8](#d1-8) | Los 131 esqueletos con etiquetas contradictorias | Abierta | |
 | [1.10](#d1-10) | Entrenar dando más peso a la química rara: se mide en validación, con la regla declarada antes | Propuesta | |
+| [1.12](#d1-12) | ¿Una fila de química rara enseña más que una parecida? **No: a igual tamaño enseña menos**, y contra el orden al azar cuesta 0.060 de AUROC al 25% | Revisada | |
 
 **Fase 2 · Actividad**
 
@@ -787,7 +788,7 @@ Lo que falta decidir con ella es la estrategia, no el número: si el criterio es
 
 **Qué pasó.** La prueba cae de 0.919 a 0.793 de AUROC y la corrida `2026-11-03-artemio-1.5-prueba-por-rareza` mostró que lo raro explica buena parte de esa caída: en el tercil más raro la ventaja del `svm_rbf` sobre peso y TPSA es +0.036 con el cero dentro del intervalo, y en el más parecido es +0.106. La escalera de agrupación mostró la misma palanca desde el otro lado: con pliegues al azar el MCC es 0.752, con `grupos_cv` 0.702 y con similitud ≥ 0.4 entre ajuste y validación 0.419 (corrida `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`). Tener análogos cercanos en el entrenamiento mueve más la cifra que cambiar de modelo. Lo que nadie midió es entrenar *a propósito* con más peso en lo raro: la curva de aprendizaje (corrida `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`) añade filas en general y dice en sus propios límites que no mide si las filas raras aportan más o menos que las parecidas.
 
-**Qué se propone medir (nada se ha corrido).**
+**Qué se midió.**
 
 | pieza | diseño |
 |:--|:--|
@@ -838,6 +839,66 @@ Si no se cumple, la entrada queda como resultado negativo medido y no se afina n
 - **Qué dice y qué no dice el negativo: la potencia de la regla.** La desviación pareada observada en el tercil más raro (0.0095) es mucho mayor que la del nulo con que se pensó el 0.005, y parte es el tamaño del subgrupo pero la mayor parte es que repesar tiene un efecto heterogéneo entre pliegues, algo que no se podía saber antes de correr. Simulando la regla con esa dispersión (40,000 sorteos de 15 evaluaciones; la revisión lo calculó y se reprodujo): con efecto real 0 la regla 1 pasa el 0.8% de las veces (excelente contra un falso positivo), con 0.005 el 26.6%, con 0.0073 el 55.4%, con 0.010 el 83.2% y con 0.012 el 93.8%. Para 80% de potencia hace falta un efecto de unos 0.0096, el doble del umbral declarado, y la condición que aprieta es el 12 de 15 y no la media. **Por eso lo que el negativo establece es «no hay un efecto de unos 0.010 o más en el tercil más raro», y no «no hay un efecto de 0.005».** Cualquier cita de este resultado debe llevar esa frase. Para la próxima regla declarada de antemano: el umbral se fija contra la dispersión de la intervención, no contra la del nulo, que solo acota el falso positivo.
 - **Detalles de la corrida.** El nivel de A (AUROC 0.9190, MCC 0.7015) difiere en 0.0002 de MCC del 0.7017 de la [1.5](#d1-5) porque el escalador pasó dentro de la calibración; esta entrada solo reporta diferencias pareadas, pero quien cite el nivel de A debe saberlo. El control D se siembra con la semilla del modelo, así que arranca igual en los 5 pliegues de una semilla: son 15 sorteos distintos pero 3 semillas independientes.
 - **Lectura revisada** por quien no la corrió: recalculó el veredicto desde `metricas.json`, comprobó que la rareza se calcula dentro del pliegue (en el ajuste excluyendo el grupo, en la validación sin excluirlo porque el grupo ya no está) y que la partición de la lectura por tercil es exactamente la del arnés.
+
+
+#### 1.12 · ¿Una fila de química rara enseña más que una parecida? No: enseña menos {#d1-12 .revisada}
+
+**Estado:** revisada
+
+Se propuso el 7 de noviembre de 2026 y se midió el 8, con el resultado contrario al que la propuesta esperaba. El diseño declarado queda tal como se escribió antes de correr.
+
+> **Pregunta:** a igual número de filas, ¿entrenar con química rara deja un mejor `svm_rbf` que entrenar con química parecida? Se mide solo en validación agrupada, dentro de las 6,306 filas de ajuste; la prueba reservada no se lee y la partición no se cambia.
+
+**Qué pasó.** Son tres preguntas distintas y es fácil confundirlas, porque las tres se dicen «aprender de lo raro». La curva de aprendizaje (`2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`) añade grupos **al azar**, concluye que la fase 1 está en meseta y declara en sus propios límites que **no mide si las filas raras aportan más o menos que las parecidas**. La [1.10](#d1-10) midió otra cosa: **repesar** las filas raras que ya están en el entrenamiento, y salió negativa. Esta entrada mide la que faltaba, que es la de **composición**, y es la que se había sugerido en el equipo. Importa porque la respuesta cambia qué se pide: si una fila rara enseña más, lo accionable es pedir química nueva y no más filas.
+
+**Lo que esta entrada no es, y conviene decirlo porque se propuso.** No es recomponer la partición moviendo compuestos raros de la prueba al entrenamiento. Eso no se puede medir: la prueba rinde 0.793 de AUROC **porque** tiene los andamios raros a propósito ([1.2](#d1-2)), así que quitarle raros sube la cifra por construcción y a la vez deja de ser reproducible la que ya está registrada y citada. Y lo poco que se sabe de esa variante no la favorece: la curva de aprendizaje proyectó añadir las 1,499 filas de la prueba en +0.004 de AUROC, menos que la desviación de la ganancia (0.007), aunque es una proyección sobre cuatro puntos y no una medición.
+
+**Qué se midió.**
+
+| pieza | diseño |
+|:--|:--|
+| modelo y datos | `svm_rbf` de la fase 1 con los 151 descriptores, como se entrega; las 6,306 filas de ajuste en 1,048 grupos |
+| rareza | la de la [1.10](#d1-10), para que las dos corridas hablen de lo mismo: Tanimoto (Morgan radio 2, 2048 bits) al vecino más cercano **dentro del ajuste del pliegue y excluyendo las filas de su mismo grupo**. La de un grupo es la media de las de sus filas |
+| órdenes | se añaden grupos al 25, 50 y 75% de las filas del ajuste en tres órdenes: `raros` primero, `parecidos` primero y `azar` (la referencia, el orden de la curva de aprendizaje) |
+| ancla | al 100% los tres órdenes son el mismo conjunto, así que esa fila se corre una sola vez |
+| evaluación | validación cruzada agrupada, 3 semillas × 5 pliegues, siempre sobre el mismo pliegue de validación, así que las diferencias son pareadas; error de Nadeau y Bengio como en la [1.7](#d1-7) |
+
+**El confundido que el diseño tuvo que controlar, y que no estaba previsto.** Ordenar grupos por rareza mueve dos cosas más. En el primer pliegue, el 25% «raros primero» traía **68.1% de BBB+** y el «parecidos primero» **53.9%**: catorce puntos de prevalencia, de sobra para explicar cualquier brecha de AUROC sin que la química tenga nada que ver (es la [S1.2](#d1-1) por otra puerta: la clase va pegada a la estructura). Y los grupos raros son más pequeños, así que el número de filas se desviaba hasta un 10%. Por eso cada orden se corre en **dos variantes**: `equilibrado`, que es la que manda —en cada paso entra, de los 40 primeros grupos aún no usados de la cola, el que deje la prevalencia más cerca de la del pliegue, y el tamaño se afina con los grupos pequeños que queden—, y `crudo`, el orden puro. La diferencia entre las dos variantes **mide cuánto del efecto era prevalencia**. Lo que no se iguala es el número de grupos: igualarlo sería igualar la diversidad, que es justamente el mecanismo por el que una fila rara podría enseñar más.
+
+**La lectura, declarada antes de correr.** La diferencia pareada `raros − parecidos` de AUROC en cada fracción, con su intervalo del 95%. **No se fija un umbral de paso**, y es una lección de la 1.10: su umbral se puso contra la dispersión del nulo y dejó la regla con 26.6% de potencia para el efecto que nombraba, sin que se notara hasta después de correr. Aquí se reporta el intervalo y se dice qué efecto queda descartado. «Una fila rara enseña más» se sostiene si la diferencia es positiva y su intervalo excluye el cero en las tres fracciones; se sostiene lo contrario con el signo al revés; y si el intervalo contiene el cero se reporta la cota y no un empate. Secundarias, sin criterio: el MCC, la diferencia contra el orden `azar` (la comparación accionable) y el AUROC sobre el tercil más raro de la validación.
+
+**Lo que salió, y es lo contrario de lo propuesto.** Corrida `2026-11-08-ingrid-1.12-composicion-rareza-permeabilidad` (`scripts/experimento_composicion_rareza.py`), sin tocar la prueba reservada. La diferencia pareada `raros − parecidos` de AUROC, con el intervalo corregido como en la [1.7](#d1-7):
+
+| fracción | `raros − parecidos` (equilibrado) | IC95 | positivas | `raros − azar` (equilibrado) | IC95 |
+|:--|--:|:--|--:|--:|:--|
+| 25% | **−0.0628** | [−0.1299, +0.0043] | 1/15 | **−0.0600** | **[−0.1095, −0.0105]** |
+| 50% | −0.0394 | [−0.0958, +0.0170] | 3/15 | −0.0413 | [−0.0913, +0.0087] |
+| 75% | +0.0002 | [−0.0032, +0.0036] | 9/15 | −0.0004 | [−0.0042, +0.0034] |
+
+**Por la lectura declarada, «una fila rara enseña más» no se sostiene, y lo que se sostiene es la cota.** El signo es negativo en las dos fracciones donde la composición se puede mover de verdad y es consistente —1 de 15 y 3 de 15 evaluaciones positivas—, pero el intervalo del estadístico principal incluye el cero en las tres fracciones, así que **no se afirma lo contrario como efecto medido**: lo que queda descartado es que una fila rara enseñe más de 0.004 de AUROC al 25% y de 0.017 al 50%. El efecto que la propuesta nombraba —pedir química nueva en lugar de más filas— exigiría una ganancia, y la ganancia no está.
+
+**La comparación accionable, que era secundaria y sin criterio, sí excluye el cero:** contra el orden `azar` —el de la curva de aprendizaje, que es lo que de verdad se haría— empezar por lo raro cuesta **−0.0600 de AUROC al 25%, IC95 [−0.1095, −0.0105], con 1 de 15 evaluaciones positivas**. Se reporta como secundaria porque así se declaró antes de correr y porque es una de doce lecturas sin corregir, no como el resultado de la entrada.
+
+**Tres cosas más que la corrida deja, y una de ellas no se esperaba.**
+
+- **Al 75% la composición deja de importar:** las diferencias caen a ±0.0004 con desviaciones de 0.003. Con tres cuartas partes de los grupos dentro, da igual en qué orden entraron, que es coherente con la meseta de la curva de aprendizaje.
+- **El MCC se mueve unas tres veces más que el AUROC** (−0.1910 al 25%, desviación 0.1806) con la prevalencia ya igualada por diseño. No es prevalencia: es el brazo de palanca del corte fijo en 0.5 sobre un modelo peor, la misma asimetría que el [#191](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/191) señala en la prueba reservada.
+- **Ni siquiera ayuda donde debería.** Sobre el tercil más raro de la validación —las filas a las que entrenar con química rara tendría que servir— la diferencia es +0.0034 al 25% (8 de 15) y −0.0002 al 50% (10 de 15): cero. El único sitio donde algo apunta a favor es la variante `crudo` al 75% (+0.0144, 14 de 15), y ahí la prevalencia no está igualada, así que no se puede separar de la clase.
+
+**El confundido quedó controlado, y está medido.** En las 45 celdas de la variante equilibrada el peor desvío del número de filas es **12.5%** y el peor de prevalencia **0.0128** (contra los 14 puntos de la versión sin controlar), y el número de grupos acabó pareado sin pedirlo (298 contra 300 al 25%). El contraste de rareza sobrevivió al equilibrado, que era el riesgo declarado: la rareza media del 25% es 0.298 en `raros` contra 0.654 en `parecidos`.
+
+**Qué significa junto con las otras dos.** Las tres preguntas que se dicen «aprender de lo raro» están ahora medidas y **las tres salen negativas o planas**: añadir filas al azar está en meseta (curva de aprendizaje), repesar las raras que ya están no mejora ([1.10](#d1-10)), y recomponer con cuáles se entrena tampoco ([1.12](#d1-12)). La 1.11 ([PR #290](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/290), sin fusionar al escribir esto) lo mide desde el otro lado de la partición —pasar raros de la prueba al ajuste— y encuentra que recibir filas ayuda igual venga de donde venga. Para el artículo es un resultado, no una carencia: **el límite de la fase 1 no es de cuántas filas ni de cuáles, y esa es la razón por la que la vía que queda es el punto de operación (#191) y no más datos.**
+
+**Límites.** Un solo modelo (el `svm_rbf`); los intervalos son anchos, así que el tamaño del efecto negativo no queda fijado, solo su signo y la cota por arriba; la rareza se mide dentro del ajuste del pliegue y no contra la prueba; y el número de grupos no se iguala a propósito, así que «raros» trae más diversidad y aun así pierde.
+
+**Lo que no hace.** No toca la prueba reservada, no cambia la partición y no decide con qué filas se entrena el modelo entregado, que es la [1.5](#d1-5). Tampoco cubre la fase 2.
+
+**Qué costaría equivocarse.** Si el equilibrado de prevalencia deja fuera sistemáticamente a los grupos raros con más BBB−, el orden `raros` ya no es «los más raros» sino «los más raros que no desequilibran», y el contraste de rareza se encoge; por eso se reporta la rareza media alcanzada por cada submuestra. Si la respuesta sale positiva, lo que sigue es una propuesta de adquisición de datos, no un cambio de modelo.
+
+**Qué lo cambiaría.** Un intervalo que excluya el cero en el estadístico principal, que con esta dispersión pediría más semillas: la desviación pareada es de 0.0556 al 25%, así que distinguir un efecto de 0.02 necesitaría del orden de ocho veces las evaluaciones. Con otro modelo podría salir distinto, porque la [1.3](#d1-3) ya mostró que la escala del ruido no se hereda entre modelos.
+
+**Qué se le pide a la patrocinadora: nada que cambie por esto.** La propuesta existía para poder pedirle química nueva en lugar de más filas, y **esa petición ya no tiene respaldo**. Lo que sí vale decirle es que la fase 1 no mejora con más datos del mismo tipo, medido por tres caminos independientes.
+
 
 ### Supuestos
 
