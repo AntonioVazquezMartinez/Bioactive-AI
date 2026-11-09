@@ -207,7 +207,8 @@ capacidad de ordenar.
 
 Las huellas Sort & Slice **no mejoran a ningún modelo de la fase 1** y bajan el MCC de cinco de seis;
 en la fase 2 mejoran a cinco de seis en las 15 evaluaciones. Por tramo de peso la media es negativa en
-la fase 1 sin tendencia y crece con el peso en la fase 2.
+la fase 1 sin tendencia; en la fase 2 la ganancia parece crecer con el peso, pero esa tendencia no se
+sostiene (su intervalo incluye el cero) y se aplana al igualar los tramos por submuestreo.
 
 El detalle por tramo de peso está en el Anexo C.
 
@@ -227,7 +228,11 @@ más densa que la 1 (61.9 contra 33.8 vecinos fuera del grupo), y en la fase 1 l
 huellas se concentra en el tercio más disperso, pero las diferencias no superan su desviación. Y que
 **la permeabilidad dependa de propiedades globales** que los descriptores ya capturan mientras la unión
 depende de subestructuras: no está medida. Los resultados valen para esas familias de modelos y no
-prueban qué pasa en la fase 1.
+prueban qué pasa en la fase 1. Igualar los tramos de peso por submuestreo (decisión 1.3) quita el argumento
+del tamaño de la molécula: la ganancia de las huellas no sigue a cuántos pares tiene cada tramo en el ajuste
+(la relación no es monótona), y lo que mueve la diferencia entre tramos es la composición del ajuste y no
+su tamaño total. Con una regla de baja potencia y un efecto original que no excluía el cero, eso es
+«no se puede sostener» y no «se demostró que es densidad».
 
 ### 4.5 El modelo de potencia en NPASS
 
@@ -341,8 +346,8 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
 2. **Una cifra de validación cruzada no describe a la química nueva**, y la similitud al vecino más
    cercano no basta para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10
    más de lo que su similitud predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
-3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta;
-   la densidad del espacio químico queda como pista sin confirmar.
+3. **La representación no se traslada entre fases**, y no por tamaño de datos, por tipo de etiqueta ni por
+   el peso de la molécula; la densidad del espacio químico queda como pista sin confirmar.
 4. **Para la patrocinadora:** usar el cuaderno para priorizar candidatos y no para descartarlos (un BBB− no
    excluye un compuesto); leer la probabilidad de la fase 1 junto con la advertencia de similitud y no como una clase;
    y medir cualquier mejora donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de
@@ -355,7 +360,7 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    el ajuste. (c) *Combinar las dos fases en el ranking* como evidencia paralela y medir si seleccionar con ambas
    supera a cada una, sobre los 1,033 esqueletos medidos en los dos conjuntos (decisión C.3). (d) *Confirmar o
    descartar la densidad del espacio químico* como la razón por la que las huellas ayudan en la fase 2 y no en la
-   1, igualando las celdas por submuestreo. (e) *Medir el modelo de potencia con más pares de NPASS:* con 117 no
+   1, y separarla de la composición del ajuste, con varios sorteos por pliegue; ya se igualaron los tramos de peso (decisión 1.3) y queda el control de rareza. (e) *Medir el modelo de potencia con más pares de NPASS:* con 117 no
    hay potencia para distinguirlo de la línea base (sección 4.5).
 
 Limitaciones: la prueba se leyó catorce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
