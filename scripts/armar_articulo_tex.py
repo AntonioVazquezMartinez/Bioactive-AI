@@ -178,10 +178,9 @@ def construir() -> str:
     )
     ia = (
         "\\section*{Declaración de uso de inteligencia artificial}\n"
-        "Se utilizó \\textcite{anthropic2026claude} con los modelos Claude Opus~5 (Ingrid Pamela Ruiz Puga), "
-        "Claude Sonnet~5.5 (Artemio Santiago Padilla Robles; Claude Sonnet~5 cuando las restricciones de "
-        "seguridad del modelo en temas de biología y química impidieron usar el 5.5) y "
-        + PENDIENTE % "modelo de José Antonio Vázquez Martínez" + " "
+        "Se utilizó \\textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claude Sonnet~5.5, "
+        "y Claude Sonnet~5 cuando las restricciones de seguridad del modelo en temas de biología y química "
+        "impidieron usar el 5.5, "
         "para escribir el código de los experimentos y sus pruebas, "
         "generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato al "
         "borrador de este artículo. "

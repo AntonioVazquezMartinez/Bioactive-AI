@@ -57,9 +57,7 @@ son anotaciones internas del equipo («LEÍDO PARCIAL»…) y el `.tex` lo supri
 ## Por confirmar con el equipo
 
 - El encabezado ya trae asesora, patrocinadora y fecha de entrega (13 de noviembre de 2026).
-- La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo. Trae
-  Claude Opus 5 (Pame) y Claude Sonnet 5.5 (Artemio; Sonnet 5 cuando los guardrails en biología y química lo impidieron);
-  **falta el modelo de Antonio**, en rojo.
+- La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo. La rúbrica pide herramienta, modelo y finalidad, no quién usó cuál, así que lista los modelos en general (Opus 5, Sonnet 5.5 y Sonnet 5 cuando los guardrails en biología y química lo impidieron). Antonio confirma que no usó otro.
 - El **`logo_empresa.png`** que la plantilla del resumen espera no viene en ningún zip. Preguntar si lo aporta la
   patrocinadora.
 - Los **umbrales de alerta** de la tabla de supervisión de la sección 6 son propuestas y no se midieron.
