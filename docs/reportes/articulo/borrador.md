@@ -53,9 +53,9 @@ modelo de supervivencia acelerada (AFT, XGBoost `chen2016xgboost`) que aprende d
 resultado nuevo se recalculó con un segundo código. Los intervalos remuestrean grupos, no filas. De
 los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predicción con cualquier
 semilla; el `mlp` y el `bosque` no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó
-**doce veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
+**trece veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
 estructurales (la proporción de andamios, una por fase)—, todas registradas en `experimentos/prueba.csv`; ningún modelo se eligió después
-de verla. La última (experimento 1.11) reparte la prueba entre ajuste y evaluación sin evaluar el modelo final.
+de verla. Las dos últimas (experimento 1.11) reparten la prueba entre ajuste y evaluación y miden la prevalencia de ese reparto, sin evaluar el modelo final.
 
 **Métricas.** El AUROC mide qué tan bien el modelo ordena a los compuestos permeables por encima de los no
 permeables, sin fijar un corte. El MCC (coeficiente de correlación de Matthews) resume en un número entre −1 y 1
@@ -129,10 +129,14 @@ grupos de la prueba de cada tercil de rareza forma un núcleo de evaluación; de
 las filas del tercil más raro (285 de media) y se devuelven a la prueba otras tantas filas comunes del ajuste,
 en 15 sorteos. En lo raro del núcleo el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas de
 la prueba **elegidas al azar** da +0.006: lo que ayuda es recibir filas de la prueba, no cuáles. El MCC pasa de
-0.33 a 0.36, lejos del 0.70 de la validación; como el AUROC casi no cambia y el azar también lo sube, lo más
-probable es que refleje el corte fijo en 0.5 y no mejor discriminación, aunque eso no se midió. Los 15 sorteos
-comparten las mismas 1,499 filas, así que el resultado descarta una ganancia grande y no una pequeña. No se
-adopta nada: 285 filas más de química rara no cierran la brecha entre 0.70 y 0.34 de MCC.
+0.33 a 0.36 (+0.035, en los 15 sorteos), lejos del 0.70 de la validación, mientras el AUROC apenas cambia
+(+0.002) y el azar también lo sube: el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. No
+lo explica la prevalencia del entrenamiento, que casi no se mueve (de 65.0% a 64.5% de BBB+). Lo más útil de la
+corrida es otra cosa: los compuestos comunes que pasan a la prueba se miden con AUROC 0.94 y los raros que
+quedaban en 0.68, con el mismo modelo y sin reentrenar; recomponer la prueba cambia el número que se reporta y
+no lo que el modelo sabe. Los 15 sorteos comparten las mismas 1,499 filas, así que el resultado descarta una
+ganancia grande y no una pequeña. No se adopta nada: 285 filas más de química rara no cierran la brecha entre
+0.70 y 0.34 de MCC.
 
 ### 5.3 La representación no se traslada entre fases
 
@@ -276,7 +280,7 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    entrenamiento (Figura 1), no solo con el modelo que se prueba. Las dos formas de aprender de lo raro que
    probamos no cerraron la brecha.
 
-Limitaciones: la prueba se leyó doce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
+Limitaciones: la prueba se leyó trece veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o

@@ -1,0 +1,13 @@
+{
+  "b_menos_a_prevalencia_entrena": -0.0045,
+  "medias": {
+    "prevalencia_E": 0.5748,
+    "prevalencia_Q": 0.6083,
+    "prevalencia_entrena_A": 0.6497,
+    "prevalencia_entrena_B": 0.6452,
+    "prevalencia_entrena_C": 0.6482,
+    "prevalencia_entrena_D": 0.6518,
+    "prevalencia_movidas_azar": 0.5733,
+    "prevalencia_movidas_raras": 0.5064
+  }
+}
