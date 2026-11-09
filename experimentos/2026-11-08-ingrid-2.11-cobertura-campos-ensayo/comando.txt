@@ -1,0 +1,1 @@
+python3.12.13 scripts/cobertura_campos_ensayo.py

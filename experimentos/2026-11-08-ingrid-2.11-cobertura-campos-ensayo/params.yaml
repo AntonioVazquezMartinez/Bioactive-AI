@@ -1,0 +1,18 @@
+decision: '2.11'
+semillas: []
+params:
+  archivo: snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv
+  bajados: tipos_ensayo_chembl.csv
+  campos_pedidos:
+  - tipo de ensayo
+  - formato BAO
+  - organismo
+  - puntaje de confianza
+  - action_type
+  no_informa:
+  - N.A.
+  - Unknown
+  - assay format
+  - n.a
+  - n.a.
+  - unknown
