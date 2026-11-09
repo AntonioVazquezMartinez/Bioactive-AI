@@ -1,0 +1,10 @@
+decision: '1.3'
+semillas: []
+params:
+  radio: 2
+  n_bits: 2048
+  brazos:
+  - includeChirality=False
+  - includeChirality=True
+  filas: ajuste (entrenamiento y validación); la prueba no se toca
+  lectura: filas que comparten huella exacta con otra de clase contraria
