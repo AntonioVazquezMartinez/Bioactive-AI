@@ -85,3 +85,26 @@ def test_frecuencia_sin_signo_no_vacia_el_vocabulario():
     X = sparse.hstack([sparse.csr_matrix(np.zeros((len(SMILES), 2), dtype=np.uint8)),
                        huellas.astype(np.uint8)]).tocsr()
     assert len(AgregarHuellas(n_densas=2, n_bits=5).fit(X).columnas_) == 5
+
+
+# Los dos enantiómeros de la alanina: misma conectividad, quiralidad opuesta. Es el caso que
+# el #183 usó para comprobar que las huellas por omisión son ciegas a la quiralidad.
+ALANINA = ["C[C@@H](N)C(=O)O", "C[C@H](N)C(=O)O"]
+
+
+def test_por_omision_las_huellas_son_ciegas_a_la_quiralidad():
+    """El valor por omisión no cambia: es el de todas las cifras publicadas del proyecto."""
+    m, _ = identificadores_morgan(ALANINA)
+    assert (m[0] != m[1]).nnz == 0
+
+
+def test_con_quiralidad_los_enantiomeros_se_distinguen():
+    m, _ = identificadores_morgan(ALANINA, quiralidad=True)
+    assert (m[0] != m[1]).nnz > 0
+
+
+def test_la_quiralidad_no_cambia_una_molecula_sin_estereocentros():
+    sin_estereo = ["CCO", "c1ccccc1"]
+    a, ids_a = identificadores_morgan(sin_estereo)
+    b, ids_b = identificadores_morgan(sin_estereo, quiralidad=True)
+    assert list(ids_a) == list(ids_b) and (a != b).nnz == 0
