@@ -14,7 +14,9 @@ parte, y ahí la cobertura es 0% por construcción y no por el dato.
 Dos cosas que este script existe para no volver a suponer:
 
 - `assay_format` **es** el formato BAO: sus ocho valores son etiquetas BAO («cell membrane
-  format», «tissue-based format»…). O sea que ese campo no hay que bajarlo.
+  format», «tissue-based format»…). O sea que ese campo no hay que bajarlo. Pero uno de esos
+  ocho valores es `assay format`, la **clase raíz** de BAO, en 2,921 filas: tener ese
+  «formato» no dice cuál, así que no cuenta como útil.
 - `assay_organism` está al revés de lo que cualquiera supondría: **0% en las filas de ChEMBL
   y 100% en las de NPASS**, que son justo las que no traen `assay_chembl_id` y por las que no
   se puede preguntar. Y una parte de esos valores es el literal `n.a.`, que no es un organismo.
@@ -48,8 +50,11 @@ PEDIDOS = {
     "puntaje de confianza": None,   # no está en el archivo: solo por API
     "action_type": None,            # no está, y no es un campo del endpoint `assay`
 }
-# `n.a.` es un valor presente que no informa: se cuenta aparte de los nulos.
-NO_INFORMA = {"n.a.", "n.a", "N.A.", "unknown", "Unknown"}
+# Valores presentes que no informan: se cuentan aparte de los nulos. `assay format` es la
+# clase raíz de BAO —el padre de `cell-based format` y los otros siete—, así que decir que un
+# ensayo tiene ese «formato» es decir que tiene un formato, no cuál: es el mismo caso que
+# `n.a.` y entra por el mismo criterio.
+NO_INFORMA = {"n.a.", "n.a", "N.A.", "unknown", "Unknown", "assay format"}
 
 
 def main() -> None:
