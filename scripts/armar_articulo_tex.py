@@ -10,9 +10,10 @@ encabezado con logo), así que el `.tex` nunca se edita a mano y no se desfasa d
 
 Necesita `pandoc` (3.x). Qué hace, en orden:
 
-1. Parte el borrador por sección. El resumen (primer párrafo de la sección 1) va al `abstract`;
-   la figura 1 queda justo después. La numeración conserva la del borrador (el resumen cuenta
-   como la 1, así que «Problema» es la 2 y el texto puede decir «sección 5.2»).
+1. Parte el borrador por sección. El resumen (primer párrafo de «Resumen») va al `abstract`;
+   la figura 1 queda justo después. La numeración es la de la plantilla del curso: el resumen y
+   las referencias no llevan número, «Contexto de negocio y problema» es la 1 e «Implementación
+   y operación» la 5 (la rúbrica dice «en la sección 5»).
 2. Las claves de bibliografía que el borrador escribe entre comillas invertidas se vuelven citas
    (`\\autocite`), y un grupo entre paréntesis de solo claves se junta en una sola cita.
 3. Cada figura (imagen más su pie en cursiva) pasa a un entorno `figure` con el PNG, no el SVG:
@@ -58,6 +59,7 @@ EXTRA_PREAMBULO = r"""
 \usepackage{calc}
 \usepackage{xcolor}
 \providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}} % babel-spanish dice «Cuadro»; la plantilla pide «Tabla»
 \newcounter{none} % el longtable de pandoc declara \LTcaptype{none} y espera que el contador exista
 % El campo `note` de bibliografia.bib son anotaciones internas del equipo («LEÍDO PARCIAL», cómo se verificó
 % cada entrada): sirven en docs/referencias y no deben salir impresas en las referencias del artículo.
@@ -129,7 +131,7 @@ def seccion_a_latex(titulo: str, cuerpo: str, claves: set[str], numerada: bool =
 def partir(md: str) -> tuple[str, dict[str, str], str]:
     """(título, {encabezado de sección: cuerpo}, anexos)."""
     titulo = re.search(r"^# (.+)$", md, re.M).group(1).strip()
-    cuerpo = md[md.index("\n## 1. "):]
+    cuerpo = md[md.index("\n## Resumen"):]
     partes = re.split(r"^## ", cuerpo, flags=re.M)[1:]
     return titulo, {p.split("\n", 1)[0].strip(): p.split("\n", 1)[1] for p in partes}, ""
 
@@ -141,7 +143,7 @@ def construir() -> str:
     plantilla = PLANTILLA.read_text(encoding="utf-8")
     preambulo = plantilla[:plantilla.index("% --- Título ---")].rstrip() + "\n" + EXTRA_PREAMBULO
 
-    resumen_md = secciones["1. Resumen"]
+    resumen_md = secciones["Resumen"]
     primero, resto = resumen_md.strip().split("\n\n", 1)
     resumen = pandoc(citas(primero, claves))
     resto_tex, bloques = figuras(citas(resto, claves))
@@ -151,16 +153,12 @@ def construir() -> str:
 
     cuerpo = []
     for encabezado, texto in secciones.items():
-        num, nombre = re.match(r"(\d+)\. (.+)", encabezado).groups() if encabezado[0].isdigit() \
-            else (None, encabezado)
-        if encabezado == "1. Resumen":
+        if encabezado in ("Resumen", "Anexos"):
             continue
-        if encabezado.startswith("8."):
-            cuerpo.append(seccion_a_latex("Fuentes y reproducibilidad", texto, claves, numerada=False))
-        elif encabezado == "Anexos":
-            continue
+        if encabezado == "Referencias y anexos":     # sin número, como pide la plantilla
+            cuerpo.append(seccion_a_latex(encabezado, texto, claves, numerada=False))
         else:
-            cuerpo.append(seccion_a_latex(nombre, texto, claves))
+            cuerpo.append(seccion_a_latex(re.match(r"\d+\. (.+)", encabezado).group(1), texto, claves))
     anexos = seccion_a_latex("Anexos", secciones["Anexos"], claves, numerada=False)
 
     autores = "\\quad ".join(AUTORES[:2]) + "\\\\[2pt] " + AUTORES[2]
@@ -176,12 +174,15 @@ def construir() -> str:
         + f"{PENDIENTE % 'fecha de entrega'}}}\n"
         + "\\date{\\vspace{-2ex}}\n\n\\begin{document}\n\n\\maketitle\n\n"
         + f"\\begin{{abstract}}\n{resumen}\n\\end{{abstract}}\n\n{resto_tex}\n\n"
-        + "\\setcounter{section}{1}\n\n"
     )
     ia = (
         "\\section*{Declaración de uso de inteligencia artificial}\n"
-        "Se utilizó \\textcite{anthropic2026claude} para escribir el código de los experimentos y sus pruebas, "
-        "generar las figuras a partir de las corridas registradas y redactar el borrador de este artículo. "
+        "Se utilizó \\textcite{anthropic2026claude} con los modelos Claude Opus~5 (Ingrid Pamela Ruiz Puga), "
+        "Claude Sonnet~5.5 (Artemio Santiago Padilla Robles) y "
+        + PENDIENTE % "modelo de José Antonio Vázquez Martínez" + " "
+        "para escribir el código de los experimentos y sus pruebas, "
+        "generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato al "
+        "borrador de este artículo. "
         "Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los "
         "resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. "
         "La responsabilidad final sobre el contenido entregado recae en los autores.\n"

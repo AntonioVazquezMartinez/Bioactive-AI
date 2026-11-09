@@ -63,11 +63,31 @@ def test_el_resumen_cabe_en_lo_que_pide_la_rubrica():
 
 def test_las_seccion_de_la_plantilla_estan_todas():
     tex = _tex()
-    for parte in ("\\section{Problema}", "\\section{Datos y partición}", "\\section{Métodos}",
-                  "\\section{Resultados}", "\\section{Implementación y operación}",
-                  "\\section{Conclusiones y limitaciones}", "\\printbibliography",
-                  "Declaración de uso de inteligencia artificial"):
+    # Los nombres son los de la plantilla del curso y de la rúbrica, en este orden.
+    orden = ["\\section{Contexto de negocio y problema}", "\\section{Datos y preparación}",
+             "\\section{Metodología y modelos}", "\\section{Resultados y validación}",
+             "\\section{Implementación y operación}", "\\section{Conclusiones clave}",
+             "\\section*{Referencias y anexos}"]
+    posiciones = []
+    for parte in orden:
         assert parte in tex, f"falta {parte}"
+        posiciones.append(tex.index(parte))
+    assert posiciones == sorted(posiciones), "las secciones no van en el orden de la rúbrica"
+    for parte in ("\\printbibliography", "Declaración de uso de inteligencia artificial"):
+        assert parte in tex, f"falta {parte}"
+
+
+def test_no_se_desplaza_la_numeracion_de_la_plantilla():
+    """La plantilla numera «Resultados y validación» como 4 e «Implementación» como 5: sin \\setcounter."""
+    assert "\\setcounter{section}" not in _tex()
+
+
+def test_cada_tabla_lleva_pie_y_la_declaracion_dice_el_modelo():
+    tex = _tex()
+    assert tex.count("\\begin{longtable}") == tex.count("\\caption{") - tex.count("\\begin{figure}"), \
+        "hay tablas sin pie"
+    declaracion = tex[tex.index("Declaración de uso de inteligencia artificial"):]
+    assert "Claude Opus" in declaracion and "Claude Sonnet" in declaracion, "la declaración no dice el modelo"
 
 
 @pytest.mark.skipif(shutil.which("pandoc") is None, reason="sin pandoc no se puede regenerar")

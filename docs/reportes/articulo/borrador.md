@@ -4,7 +4,7 @@
 lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registrada en
 `experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas y pendientes de la revisión del equipo.
 
-## 1. Resumen
+## Resumen
 
 Buscamos compuestos naturales con potencial neuroprotector con dos modelos en paralelo: uno que
 clasifica si una molécula cruza la barrera hematoencefálica (fase 1) y otro que predice su potencia
@@ -24,29 +24,58 @@ funcionar en compuestos que solo existen en NPASS, no se sostiene en la prueba e
 *Figura 1. Cada barra viene de una corrida distinta, con otro propósito; indican el orden de
 magnitud, no miden el efecto de cada factor por separado.*
 
-## 2. Problema
+## 1. Contexto de negocio y problema
 
-Un compuesto natural bioactivo solo sirve si llega al cerebro y si actúa sobre una diana. El
-equipo con el Departamento de Bioingeniería necesita priorizar candidatos, no descartarlos: que una
-molécula sea predicha **BBB−** no la excluye, porque esa predicción no está verificada para la
-mayoría. Por eso los dos modelos son evidencia paralela que se combina en un ranking, no una
-cascada.
+La patrocinadora, del Departamento de Bioingeniería del Tec de Monterrey, busca priorizar compuestos naturales
+con potencial neuroprotector y nootrópico antes de ensayarlos en el laboratorio, donde cada ensayo gasta tiempo
+y presupuesto. Un compuesto natural bioactivo solo sirve si llega al cerebro y si actúa sobre una diana, así que
+el problema tiene dos preguntas: si la molécula cruza la barrera hematoencefálica (fase 1, clasificación
+BBB+/BBB−) y con qué potencia actúa sobre cada una de 26 dianas del sistema nervioso central (fase 2,
+regresión). La entrada es la estructura (SMILES) y la salida es una lista priorizada, no una decisión
+automática.
 
-## 3. Datos y partición
+**El enfoque que se adoptó.** El planteamiento inicial encadenaba las dos preguntas: lo que saliera BBB− se
+descartaba. Se abandonó porque esa predicción no está verificada para la mayoría de los compuestos: solo 1,033
+esqueletos tienen medición en los dos conjuntos, y el otro 99% se filtraría con una predicción no comprobada.
+Los dos modelos son, por eso, evidencia paralela que se combinará en un ranking y no una cascada (la
+combinación sigue pendiente, decisión C.3).
 
-- **Fase 1:** 7,805 compuestos con clase del archivo curado de la patrocinadora (derivado de B3DB), 65% BBB+;
-  6,306 para ajustar y validar, 1,499 reservados.
-- **Fase 2:** 202,647 registros de actividad (ChEMBL, NPASS, CMAUP) convertidos en intervalos de
-  potencia; 56,241 pares para ajustar y 13,944 reservados. Se guarda el intervalo, no una etiqueta,
-  porque el umbral de 10 µM es una decisión que puede cambiar.
+**Qué significa equivocarse.** Un falso permeable manda al laboratorio a ensayar algo que no funciona; un falso
+no permeable descarta un candidato real sin que nadie se entere. Cuál error cuesta más lo decide el
+laboratorio, y por eso el entregable es un orden y no un punto de corte (decisión C.5).
+
+## 2. Datos y preparación
+
+- **Fase 1 (permeabilidad).** 7,805 compuestos con clase, del archivo curado de la patrocinadora (derivado de
+  B3DB y cruzado con COCONUT, lo que permite separar los naturales de los sintéticos); 65% BBB+; 6,306 para
+  ajustar y validar y 1,499 reservados. No se filtra por la columna de grupo de confiabilidad (A a D): el
+  análisis exploratorio mostró que está confundida con la clase, y filtrar empeora el desbalance en vez de
+  limpiar ruido.
+- **Fase 2 (potencia).** 202,647 registros de actividad (ChEMBL, NPASS, CMAUP); 56,241 pares para ajustar y
+  13,944 reservados. Las tres fuentes se etiquetan con las mismas columnas, porque la medida que solo trae
+  ChEMBL descartaría justo los naturales de NPASS y CMAUP. Se guarda el intervalo de potencia y no una
+  etiqueta, porque el corte de 10 µM, heredado del cribado, es una decisión que puede cambiar y porque el mismo
+  compuesto cambia de clase según la concentración. Los resultados se reportan por procedencia: un modelo que
+  solo ve de dónde viene un compuesto ya alcanza 65% del MCC de la química.
+- **Variables.** Descriptores 2D de RDKit (151 tras quitar los casi constantes y los redundantes, con la
+  selección hecha sobre valores crudos) y, en la fase 2, la diana. Las huellas moleculares se midieron aparte
+  (sección 4.4).
 - **Partición.** Nunca al azar: se agrupa por andamio de Bemis–Murcko *unido* al esqueleto de
   conectividad, para que los estereoisómeros no caigan a los dos lados (1,048 grupos en la fase 1).
 
-## 4. Métodos
+## 3. Metodología y modelos
 
-**Modelos.** Once modelos de clasificación (de regresión logística a ensambles) y nueve de
-regresión. Final de la fase 1: `svm_rbf` sobre 151 descriptores RDKit. Final de la fase 2: un
-modelo de supervivencia acelerada (AFT, XGBoost `chen2016xgboost`) que aprende de las mediciones censuradas.
+**Del baseline al modelo final.** *Baseline* (Avance 3): tres canalizaciones con validación cruzada agrupada, 3
+semillas × 5 pliegues: boosting por histogramas, bosque aleatorio y regresión logística (MCC 0.702, 0.700 y
+0.687; los intervalos del 95% se solapan y ninguna gana). Su resultado fijó el desempeño mínimo que había que
+superar, **0.70 de MCC** (y 0.93 de AUROC), contra un piso de 0 de MCC, 0.5 de AUROC y 0.35 de AUPRC que dan los
+clasificadores triviales. *Candidatos* (Avances 4 y 5): once modelos de clasificación, de la regresión logística
+a cinco ensambles y dos versiones afinadas, con una regla de mejora escrita antes de correr: una diferencia
+pareada media por encima de un umbral y positiva en al menos 12 de las 15 evaluaciones. *Modelo final:*
+ninguna de las treinta comparaciones contra el mejor individual pasó la regla, así que el final de la fase 1 es
+ese mejor individual, `svm_rbf` sobre 151 descriptores; se eligió por descarte y no porque ganara. En la fase 2,
+tras comparar nueve modelos de regresión, el final es un modelo de supervivencia acelerada (AFT, XGBoost
+`chen2016xgboost`) que aprende de las mediciones censuradas.
 
 **Rigor.** Las reglas de decisión se escribieron antes de cada corrida y no se ajustaron después
 (no están pre-registradas); cada corrida reproduce una cifra ya registrada como control, y cada
@@ -66,9 +95,25 @@ usa la concordancia de Harrell: la probabilidad de que, de dos pares, el modelo 
 el azar). Los modelos se comparan con la diferencia pareada en las mismas 15 evaluaciones (3 semillas × 5
 pliegues), con el intervalo corregido de Nadeau y Bengio `nadeau2003inference`.
 
-## 5. Resultados
+## 4. Resultados y validación
 
-### 5.1 La escalera de semejanza
+### 4.1 El modelo final contra el baseline y el umbral
+
+Contra el umbral de 0.70 de MCC que fijó el baseline, el modelo entregado lo iguala en validación cruzada y no
+lo supera: MCC 0.7017 (el boosting del baseline daba 0.7019), AUROC 0.919 y AUPRC de la clase minoritaria 0.884,
+contra un piso de 0.35. **El lift sobre el baseline es cero**, y es un resultado: elegir el modelo no fue la
+palanca. En la prueba reservada, leída una sola vez con el modelo final, el MCC es 0.339, el AUROC 0.793 y el
+AUPRC 0.720: una **brecha de 0.363 de MCC (52%) y de 0.126 de AUROC (14%)** frente a la validación cruzada. En
+la fase 2 la concordancia baja de 0.761 a 0.720. El AUROC de 0.93 del baseline sale de predicciones promediadas
+entre semillas y no se compara con el 0.919, que es el promedio de las 15 evaluaciones.
+
+**Qué significan los errores para el laboratorio.** A 0.5 el modelo declara permeable al 70.9% de los
+compuestos cuando la prevalencia real es 64.97%: de más, que es el error que gasta un ensayo. Pero la caída del
+MCC es mayor que la del AUROC porque el MCC exige un corte fijo y, bajo un cambio de distribución, el modelo
+cambia de sesgo (sección 4.2). Por eso el cuaderno entrega la probabilidad y no una clase, y lo que el
+laboratorio debe leer es el orden.
+
+### 4.2 La escalera de semejanza
 
 Entre los once modelos hay 4.2 puntos de MCC. Con el `svm_rbf`, pasar de pliegues al azar a pliegues
 donde ningún compuesto de entrenamiento supera 0.4 de similitud con uno de validación cuesta 33.3
@@ -94,7 +139,7 @@ estrictos. Y el MCC exagera: con el mejor corte posible sería 0.655 y 0.560 en 
 estrictos, contra 0.486 y 0.419 con el corte fijo en 0.5. Un corte de igual prevalencia solo recupera
 +0.047 en el primero, así que no es una solución.
 
-### 5.2 La prueba reservada es más difícil de lo que su similitud predice
+### 4.3 La prueba reservada es más difícil de lo que su similitud predice
 
 En la prueba el AUROC es 0.793 y el MCC 0.339 (1,499 compuestos). Su similitud media al vecino más
 cercano (0.414) es mayor que la de la validación agrupada (0.384), así que por similitud tendría que
@@ -138,7 +183,17 @@ no lo que el modelo sabe. Los 15 sorteos comparten las mismas 1,499 filas, así 
 ganancia grande y no una pequeña. No se adopta nada: 285 filas más de química rara no cierran la brecha entre
 0.70 y 0.34 de MCC.
 
-### 5.3 La representación no se traslada entre fases
+**Recomponer con cuáles filas se entrena tampoco ayuda.** La tercera forma (decisión 1.12) fija el tamaño, la
+prevalencia y el número de grupos del ajuste y cambia solo su composición. Empezar por lo raro cuesta −0.060 de
+AUROC contra el orden al azar con el 25% del ajuste (IC95% [−0.110, −0.011], a favor en 1 de 15 evaluaciones; es
+una comparación secundaria, declarada antes y sin corrección por comparaciones múltiples, y el estadístico
+principal incluye el cero); con el 75% la composición deja de importar (±0.0004), y ni siquiera mejora el
+tercil más raro de la validación (+0.003, 8 de 15). **Ninguna de las formas que probamos de aprender de lo
+raro —repesar, pasar filas de la prueba al ajuste y recomponer— cierra la brecha**, y añadir filas al azar ya
+estaba en meseta en la curva de aprendizaje. El límite de la fase 1 no es de cuántas filas ni de cuáles; lo
+que queda por medir es el punto de operación.
+
+### 4.4 La representación no se traslada entre fases
 
 Las huellas Sort & Slice **no mejoran a ningún modelo de la fase 1** y bajan el MCC de cinco de seis;
 en la fase 2 mejoran a cinco de seis en las 15 evaluaciones. Por tramo de peso la media es negativa en
@@ -164,7 +219,7 @@ huellas se concentra en el tercio más disperso, pero las diferencias no superan
 depende de subestructuras: no está medida. Los resultados valen para esas familias de modelos y no
 prueban qué pasa en la fase 1.
 
-### 5.4 El modelo de potencia en NPASS
+### 4.5 El modelo de potencia en NPASS
 
 El AFT se eligió porque en los pares que solo tiene NPASS aprende de mediciones censuradas que los
 demás descartan. En validación cruzada su concordancia ahí es 0.632 contra 0.511 del bosque. En la
@@ -183,9 +238,9 @@ Ningún otro brazo supera al `aft` en NPASS (filtrar los descriptores no cambia 
 empeora 0.041), y dos métodos de atribución independientes concuerdan en lo que pesa, con la diana en
 primer plano y TPSA y los donadores de hidrógeno lejos (Anexo F).
 
-*La operación de estos modelos —un cuaderno, no un servicio— está en la sección 6.*
+*La operación de estos modelos —un cuaderno, no un servicio— está en la sección 5.*
 
-## 6. Implementación y operación
+## 5. Implementación y operación
 
 **Qué se entrega: un cuaderno, no un servicio.** En la reunión del 3 de noviembre la patrocinadora
 dijo que no habrá un punto de acceso productivo; lo que conviene es dejarle un cuaderno que ella
@@ -209,15 +264,17 @@ esa ganancia a cambio de poder evaluar y repetir la cifra registrada.
 
 *Figura 7. Arquitectura de despliegue: la patrocinadora ejecuta un cuaderno local que llama a un módulo de inferencia y a dos modelos guardados; no hay servicio. Abajo, lo que mantiene el equipo.*
 
-La tabla siguiente lista los requisitos para operar y quién responde de cada uno.
+La Tabla 1 lista los requisitos para operar y quién responde de cada uno.
 
 | requisito | por qué | responsable |
 |:--|:--|:--|
 | script que entrena y guarda los dos modelos finales, con el comando y los `sha256` de los datos | que cualquiera pueda reconstruirlos (`experimentos/README.md` ya lo hace para las corridas) | hecho (#261), por revisar |
 | cuaderno de uso con SMILES propios | es la forma de operación acordada | hecho (#261), por revisar |
-| **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 5.1 muestra cuánto | hecho en el cuaderno (#261), por revisar |
+| **advertencia de extrapolación**: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto | hecho en el cuaderno (#261), por revisar |
 | reentrenar al llegar datos nuevos y **reevaluar con la escalera**, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
 | evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella | **hecha una vez** con el `aft` final: concordancia 0.792 [0.787, 0.797] en 8,134 pares (`solo_npass` 0.667, 249 pares), pero **no comparable**: el 64.9% de sus pares tiene andamio ya visto; ver abajo |
+
+Table: Requisitos para operar los modelos, por qué se piden y quién responde de cada uno. «Por revisar» indica lo que el equipo aún no ha revisado.
 
 **La base externa de la patrocinadora (4 nov).** El archivo `Testeo` no comparte identificador ni SMILES canónico con el de
 entrenamiento. Con el `aft` guardado, sin reentrenar, la concordancia en 8,134 pares de las 26 dianas del modelo es **0.792**
@@ -230,15 +287,17 @@ entrenamiento sin diferencia.
 
 **Qué se supervisa durante la operación.** Como no hay servicio, la supervisión es una revisión periódica de lo que
 el cuaderno ya produce más una reevaluación cuando llegan datos etiquetados. Las referencias son cifras medidas en
-este trabajo; **los umbrales de alerta son propuestas y no se midieron**.
+este trabajo; **los umbrales de alerta son propuestas y no se midieron** (Tabla 2).
 
 | aspecto | señal | referencia y alerta propuesta | responsable |
 |:--|:--|:--|:--|
-| extrapolación | proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 | 0.31 es el corte del tercil más raro de la prueba (sección 5.2); si la mayoría de las consultas cae ahí, las cifras de validación no aplican | patrocinadora, con la advertencia del cuaderno |
+| extrapolación | proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 | 0.31 es el corte del tercil más raro de la prueba (sección 4.3); si la mayoría de las consultas cae ahí, las cifras de validación no aplican | patrocinadora, con la advertencia del cuaderno |
 | desempeño | AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos | 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar | equipo, al llegar datos |
-| punto de operación | proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos | hoy 70.9% contra 64.97%; la diferencia crece cuando la química cambia (sección 5.1) | equipo |
+| punto de operación | proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos | hoy 70.9% contra 64.97%; la diferencia crece cuando la química cambia (sección 4.2) | equipo |
 | integridad | `sha256` de modelos y datos contra `data/MANIFEST.json`; versiones del lock | el CI lo verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) | equipo |
 | datos y etiquetas | cuántos pares activos aporta cada fuente y qué concentración de corte se usa | el 10 µM es el de cribado heredado del archivo (decisión 2.3); NPASS es CC BY-NC, solo uso no comercial | patrocinadora y equipo |
+
+Table: Qué se supervisa durante la operación: la señal, su referencia medida en este trabajo con la alerta propuesta, y el responsable.
 
 **Riesgos y su mitigación.** Cinco, dos de ellos del modelo y de los datos:
 
@@ -256,13 +315,13 @@ este trabajo; **los umbrales de alerta son propuestas y no se midieron**.
    patrocinadora antes de cualquier otro uso.
 
 **Dos límites que el cuaderno tiene que decir.** La advertencia de extrapolación es una heurística:
-la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 5.2), así que
+la similitud al vecino más cercano no anticipa bien la dificultad de la prueba (sección 4.3), así que
 una similitud alta no garantiza un buen resultado. Y la probabilidad de la fase 1 **no se corta**: a 0.5 sería
-un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 5.1), y por eso el cuaderno entrega
+un punto fijo que bajo un cambio de distribución cambia de sesgo (sección 4.2), y por eso el cuaderno entrega
 la probabilidad y no una clase. **Uso no comercial**: NPASS es CC BY-NC. El **retorno de detectar un
 buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra medida.
 
-## 7. Conclusiones y limitaciones
+## 6. Conclusiones clave
 
 1. **Los ensambles no mejoran al modelo simple en MCC ni AUPRC; no es un fracaso**, es el peldaño más bajo de una
    escalera donde el modelo nunca fue el factor grande. En AUROC, votación (+0.0139 [+0.0038, +0.0239]) y stacking
@@ -277,8 +336,17 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
 4. **Para la patrocinadora:** usar el cuaderno para priorizar candidatos y no para descartarlos (un BBB− no
    excluye un compuesto); leer la probabilidad de la fase 1 junto con la advertencia de similitud y no como una clase;
    y medir cualquier mejora donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de
-   entrenamiento (Figura 1), no solo con el modelo que se prueba. Las dos formas de aprender de lo raro que
-   probamos no cerraron la brecha.
+   entrenamiento (Figura 1), no solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro
+   que probamos cerró la brecha.
+5. **Trabajo futuro, ligado a lo medido.** (a) *El punto de operación:* elegir el corte con validación interna
+   agrupada y reportar el MCC con un corte de igual prevalencia junto al de 0.5, porque es donde el MCC se mueve
+   sin que el AUROC cambie (decisión C.5). (b) *Una evaluación externa separada por andamio y no por compuesto:*
+   la base externa de la patrocinadora no mide generalización, porque el 64.9% de sus pares ya tiene su andamio en
+   el ajuste. (c) *Combinar las dos fases en el ranking* como evidencia paralela y medir si seleccionar con ambas
+   supera a cada una, sobre los 1,033 esqueletos medidos en los dos conjuntos (decisión C.3). (d) *Confirmar o
+   descartar la densidad del espacio químico* como la razón por la que las huellas ayudan en la fase 2 y no en la
+   1, igualando las celdas por submuestreo. (e) *Medir el modelo de potencia con más pares de NPASS:* con 117 no
+   hay potencia para distinguirlo de la línea base (sección 4.5).
 
 Limitaciones: la prueba se leyó trece veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
@@ -286,10 +354,10 @@ dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AURO
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
 cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura
 excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; ninguna corrida se diseñó para
-comparar las palancas de la Figura 1; y las dos formas de aprender de lo raro que probamos (repesar y pasar filas de la prueba al ajuste) usan un solo
-modelo, el `svm_rbf`, y la segunda comparte las mismas 1,499 filas en sus 15 sorteos.
+comparar las palancas de la Figura 1; y las tres formas de aprender de lo raro que probamos (repesar, pasar filas de la prueba al ajuste y recomponer)
+usan un solo modelo, el `svm_rbf`, y la segunda comparte las mismas 1,499 filas en sus 15 sorteos.
 
-## 8. Referencias y anexos
+## Referencias y anexos
 
 **Fuentes de datos:** B3DB `meng2021b3db`; NPASS `zhao2023npass` y `lin2026npass`; CMAUP `hou2024cmaup`;
 ChEMBL `zdrazil2024chembl`. **Representación y partición:** huellas de Morgan / ECFP `rogers2010ecfp`;

@@ -30,8 +30,10 @@ La primera vez construye una imagen `tex-art` a partir de `texlive/texlive:lates
 `latexextra`, `bibtexextra`, `pictures` y `fontsrecommended` (unos 4 GB, varios minutos); después tarda segundos.
 Compila en una copia porque Docker no sigue los enlaces simbólicos de la bibliografía y el logo.
 
-**Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber, 15 páginas de las cuales
-el cuerpo, del título a las referencias, ocupa unas 12.4 (la rúbrica pide 12 a 18); los anexos van aparte.
+**Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber, 16 páginas de las cuales
+el cuerpo, del título a las referencias, ocupa 14 (la rúbrica pide 12 a 18); los anexos van aparte. Las secciones
+llevan los nombres y la numeración de la plantilla del curso (el resumen y las referencias no se numeran, así que
+«Implementación y operación» es la 5, como dice la rúbrica).
 
 **En Overleaf**: los dos `.bib` y el logo son **enlaces simbólicos**, por la razón que da el `CLAUDE.md`: tres
 copias de la bibliografía ya habían divergido. Overleaf no los sigue, así que al subir hay que resolverlos:
@@ -55,7 +57,9 @@ son anotaciones internas del equipo («LEÍDO PARCIAL»…) y el `.tex` lo supri
 ## Por confirmar con el equipo
 
 - Los campos en rojo del encabezado: **nombre del asesor** y **fecha de entrega**.
-- La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo.
+- La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo. Trae
+  Claude Opus 5 (Pame) y Claude Sonnet 5.5 (Artemio, el de la sesión que la escribió: confirmar si usó otros);
+  **falta el modelo de Antonio**, en rojo.
 - El **`logo_empresa.png`** que la plantilla del resumen espera no viene en ningún zip. Preguntar si lo aporta la
   patrocinadora.
 - Los **umbrales de alerta** de la tabla de supervisión de la sección 6 son propuestas y no se midieron.
