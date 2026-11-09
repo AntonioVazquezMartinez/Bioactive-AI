@@ -82,9 +82,9 @@ tras comparar nueve modelos de regresión, el final es un modelo de supervivenci
 resultado nuevo se recalculó con un segundo código. Los intervalos remuestrean grupos, no filas. De
 los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predicción con cualquier
 semilla; el `mlp` y el `bosque` no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó
-**trece veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
+**catorce veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
 estructurales (la proporción de andamios, una por fase)—, todas registradas en `experimentos/prueba.csv`; ningún modelo se eligió después
-de verla. Las dos últimas (experimento 1.11) reparten la prueba entre ajuste y evaluación y miden la prevalencia de ese reparto, sin evaluar el modelo final.
+de verla. Las dos de la 1.11 reparten la prueba entre ajuste y evaluación, reajustan el modelo y lo evalúan con etiquetas sobre el núcleo de evaluación en 15 sorteos, sin reevaluar el modelo final entregado; la última (C.5, #191) lee el MCC del modelo final a cuatro cortes, con el corte elegido y congelado en validación antes de leerla.
 
 **Métricas.** El AUROC mide qué tan bien el modelo ordena a los compuestos permeables por encima de los no
 permeables, sin fijar un corte. El MCC (coeficiente de correlación de Matthews) resume en un número entre −1 y 1
@@ -192,6 +192,16 @@ tercil más raro de la validación (+0.003, 8 de 15). **Ninguna de las formas qu
 raro —repesar, pasar filas de la prueba al ajuste y recomponer— cierra la brecha**, y añadir filas al azar ya
 estaba en meseta en la curva de aprendizaje. El límite de la fase 1 no es de cuántas filas ni de cuáles; lo
 que queda por medir es el punto de operación.
+
+**El punto de operación sí mueve el MCC, pero no se elige con validación.** A 0.5 el modelo entregado declara
+permeable al 79.3% de la prueba contra una prevalencia real de 57.3%: 22 puntos de desajuste, contra 6 en el ajuste
+(decisión C.5, lectura 14 de la prueba). Un corte elegido en validación interna agrupada, congelado antes de leerla, no
+recupera nada (MCC 0.3455 contra 0.3385; diferencia +0.0065, IC95% [−0.022, +0.034]), porque se elige donde la
+prevalencia es 65.0% y no puede saber que la de llegada es otra. Igualar la tasa declarada a una prevalencia
+supuesta (aquí la del ajuste, 65.0%) sube el MCC a 0.4095 (+0.071, IC95% [+0.030, +0.110]), casi la mitad del margen
+que deja el corte óptimo de la prueba (0.485), que usa sus etiquetas. Exige tener el lote completo y suponer una
+prevalencia; con el AUROC igual (0.793), el MCC dice cuánto cambió la tasa de aciertos de un punto de corte y no la
+capacidad de ordenar.
 
 ### 4.4 La representación no se traslada entre fases
 
@@ -338,9 +348,9 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    y medir cualquier mejora donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de
    entrenamiento (Figura 1), no solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro
    que probamos cerró la brecha.
-5. **Trabajo futuro, ligado a lo medido.** (a) *El punto de operación:* elegir el corte con validación interna
-   agrupada y reportar el MCC con un corte de igual prevalencia junto al de 0.5, porque es donde el MCC se mueve
-   sin que el AUROC cambie (decisión C.5). (b) *Una evaluación externa separada por andamio y no por compuesto:*
+5. **Trabajo futuro, ligado a lo medido.** (a) *El punto de operación:* reportar el MCC con un corte de igual prevalencia junto al de 0.5
+   (0.4095 contra 0.3385 en la prueba), y medirlo con una prevalencia de llegada conocida de los datos de la
+   patrocinadora; el corte elegido en validación no sirve (decisión C.5). (b) *Una evaluación externa separada por andamio y no por compuesto:*
    la base externa de la patrocinadora no mide generalización, porque el 64.9% de sus pares ya tiene su andamio en
    el ajuste. (c) *Combinar las dos fases en el ranking* como evidencia paralela y medir si seleccionar con ambas
    supera a cada una, sobre los 1,033 esqueletos medidos en los dos conjuntos (decisión C.3). (d) *Confirmar o
@@ -348,7 +358,7 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    1, igualando las celdas por submuestreo. (e) *Medir el modelo de potencia con más pares de NPASS:* con 117 no
    hay potencia para distinguirlo de la línea base (sección 4.5).
 
-Limitaciones: la prueba se leyó trece veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
+Limitaciones: la prueba se leyó catorce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o

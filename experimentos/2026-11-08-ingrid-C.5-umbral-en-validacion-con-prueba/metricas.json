@@ -1,0 +1,191 @@
+{
+  "corte_congelado": 0.361,
+  "fase_a": {
+    "control_mcc_cv_en_0.5": {
+      "diferencia": 0.0002,
+      "pasa": true
+    },
+    "corte_congelado": 0.361,
+    "corte_congelado_con_malla_fija": 0.36,
+    "estabilidad_entre_semillas": {
+      "advertencia": "no es una guarda de generalización: las tres semillas comparten las mismas filas y etiquetas",
+      "media": -0.0013,
+      "por_semilla": [
+        -0.0006,
+        -0.0052,
+        0.002
+      ]
+    },
+    "ganancia_dentro_de_muestra": {
+      "media": 0.0049,
+      "por_semilla": [
+        0.0094,
+        0.003,
+        0.0024
+      ]
+    },
+    "guarda_por_mitades_de_grupos": {
+      "cuantiles": {
+        "desviacion_media": 0.01,
+        "fraccion_de_cortes_bajo_0.5": 0.781,
+        "ganancia_media": -0.0022,
+        "por_semilla": [
+          {
+            "corte_medio": 0.3752,
+            "cortes_rango_5_95": [
+              0.3191,
+              0.5291
+            ],
+            "desviacion": 0.0115,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.833,
+            "ganancia_media": 0.0027,
+            "positivas": 0.765
+          },
+          {
+            "corte_medio": 0.442,
+            "cortes_rango_5_95": [
+              0.2704,
+              0.5511
+            ],
+            "desviacion": 0.0094,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.888,
+            "ganancia_media": -0.0042,
+            "positivas": 0.367
+          },
+          {
+            "corte_medio": 0.4228,
+            "cortes_rango_5_95": [
+              0.2925,
+              0.5137
+            ],
+            "desviacion": 0.0092,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.622,
+            "ganancia_media": -0.0052,
+            "positivas": 0.343
+          }
+        ],
+        "positivas": 0.492
+      },
+      "fija": {
+        "desviacion_media": 0.01,
+        "fraccion_de_cortes_bajo_0.5": 0.823,
+        "ganancia_media": -0.0029,
+        "por_semilla": [
+          {
+            "corte_medio": 0.3728,
+            "cortes_rango_5_95": [
+              0.305,
+              0.515
+            ],
+            "desviacion": 0.0113,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.83,
+            "ganancia_media": 0.0012,
+            "positivas": 0.692
+          },
+          {
+            "corte_medio": 0.4356,
+            "cortes_rango_5_95": [
+              0.27,
+              0.55
+            ],
+            "desviacion": 0.0097,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.91,
+            "ganancia_media": -0.0042,
+            "positivas": 0.407
+          },
+          {
+            "corte_medio": 0.4117,
+            "cortes_rango_5_95": [
+              0.275,
+              0.52
+            ],
+            "desviacion": 0.009,
+            "evaluaciones": 600,
+            "fraccion_de_cortes_bajo_0.5": 0.728,
+            "ganancia_media": -0.0056,
+            "positivas": 0.283
+          }
+        ],
+        "positivas": 0.461
+      }
+    },
+    "por_semilla": {
+      "0": {
+        "corte": 0.3191,
+        "fraccion_positiva_en_0.5": 0.7066,
+        "fraccion_positiva_en_el_corte": 0.7399,
+        "mcc_en_0.5": 0.6964,
+        "mcc_en_el_corte": 0.7059
+      },
+      "1": {
+        "corte": 0.4843,
+        "fraccion_positiva_en_0.5": 0.7057,
+        "fraccion_positiva_en_el_corte": 0.7101,
+        "mcc_en_0.5": 0.7037,
+        "mcc_en_el_corte": 0.7067
+      },
+      "2": {
+        "corte": 0.3612,
+        "fraccion_positiva_en_0.5": 0.7122,
+        "fraccion_positiva_en_el_corte": 0.7399,
+        "mcc_en_0.5": 0.7057,
+        "mcc_en_el_corte": 0.7081
+      }
+    }
+  },
+  "fase_b": {
+    "auroc": 0.7928423311990687,
+    "congelado": {
+      "corte": 0.361,
+      "fraccion_positiva": 0.8392261507671781,
+      "mcc": 0.34552359130756505
+    },
+    "control_auroc": {
+      "diferencia": 0.0,
+      "pasa": true
+    },
+    "control_mcc_en_0.5": {
+      "diferencia": 0.0,
+      "pasa": true
+    },
+    "fijo_0.5": {
+      "corte": 0.5,
+      "fraccion_positiva": 0.7931954636424283,
+      "mcc": 0.33847743654777934
+    },
+    "igual_prevalencia": {
+      "corte": 0.7465134271923475,
+      "fraccion_positiva": 0.6497665110073382,
+      "mcc": 0.409520958916696
+    },
+    "intervalo_congelado_menos_fijo": {
+      "ic95": [
+        -0.0224,
+        0.0341
+      ],
+      "media": 0.0065,
+      "remuestreos_validos": 2000
+    },
+    "intervalo_igual_prevalencia_menos_fijo": {
+      "ic95": [
+        0.0303,
+        0.1099
+      ],
+      "media": 0.0712,
+      "remuestreos_validos": 2000
+    },
+    "n": 1499,
+    "optimo_cota": {
+      "advertencia": "usa las etiquetas de lo que mide: cota, no resultado",
+      "corte": 0.8439515914413309,
+      "fraccion_positiva": 0.494996664442962,
+      "mcc": 0.4850088938623416
+    },
+    "prevalencia": 0.5730486991327551
+  }
+}
