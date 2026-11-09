@@ -1,0 +1,28 @@
+decision: C.2
+semillas:
+- 0
+params:
+  modelo: aft_huellas (ConHuellasCensurado + RegresionAFT)
+  metodo_1: TreeSHAP (TreeExplainer sobre booster_)
+  metodo_2: Permutation importance (caída en concordancia de Harrell)
+  pliegues: 5
+  repeticiones_permutacion: 5
+  rondas_arboles: 100
+  profundidad_arboles: 6
+  n_bits_sortslice: 2048
+  humo: false
+  nucleos_permutacion: 12
+  columna_metodo_1: shap_media_abs
+  nota_columna: 'La columna del primer método se llama shap_media_abs y NO impureza:
+    en la corrida de fase 1 esa columna lleva la ganancia interna de los árboles,
+    que es otro método. Se pasa explícita a concordantes().'
+  interseccion_solo_en_todos_los_pliegues: true
+  nota_pliegues: El vocabulario Sort & Slice se reaprende en cada pliegue, así que
+    una huella puede no existir en todos. Promediar sobre distinto número de pliegues
+    le da a esas una media más ruidosa que puede colarse en el top; la intersección
+    se calcula solo sobre las características presentes en los 5 pliegues.
+  explicacion_signo: TreeSHAP explica ln(µM). Dado que pActividad = 6 - ln(µM)/ln(10),
+    un delta positivo en ln(µM) indica menor potencia. El signo de SHAP se invierte
+    (-shap/ln(10)) para que positivo signifique mayor potencia biológica.
+  nota_matriz: Corrida ejecutada sobre matriz local (sha256 en datos_sha256); no es
+    comparable fila a fila con la de Ingrid y por eso el control se repitió.

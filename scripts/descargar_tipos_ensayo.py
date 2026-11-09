@@ -17,10 +17,17 @@ ensayo; los datos de ChEMBL son CC BY-SA 3.0). La descripción importa porque el
 hay ensayos `B` (unión) cuya descripción es funcional, como «Inhibition of PPARgamma assessed as
 transcriptional activity», y `medicion_dianas_activacion.py` la lee además del tipo.
 
-**Provisional:** completar el tipo de ensayo desde la API de ChEMBL se le preguntó a la
-patrocinadora y está pendiente de su visto bueno. Si dice que no, los IC vuelven a `ambigua`
-(`DIRECCION_DE_ENSAYO` vacío) y no hay que rehacer nada más. Pide solo los ensayos de filas IC50/IC33/IC60 que el
-archivo no tipifica ya, por lotes; necesita red y tarda un par de minutos.
+**Aprobado:** la patrocinadora dio el visto bueno el 24 de octubre —consultar la API no es
+inferir, es recuperar un dato registrado que no venía en el corte— y pidió además el formato BAO,
+el puntaje de confianza, el organismo y `action_type` (#134). De esos, `assay_format` ya venía en el
+archivo y **es** el formato BAO, así que no se pide aquí; el puntaje de confianza y el organismo sí
+faltan, y `action_type` **no es un campo de este endpoint**, pertenece al registro de actividad.
+La cobertura de los cinco está medida en la [2.11](../docs/decisiones.md#d2-11) (corrida
+`2026-11-07-ingrid-2.11-cobertura-campos-ensayo`).
+
+Pide solo los ensayos de filas IC50/IC33/IC60 que el archivo no tipifica ya, por lotes; necesita red
+y tarda un par de minutos. **Quedan 3,014 ensayos por bajar** (31,551 filas sin tipo si no se bajan).
+En una comprobación del 7 de noviembre la API seguía caída por endpoint: `assay` devolvía HTTP 500.
 """
 
 import sys

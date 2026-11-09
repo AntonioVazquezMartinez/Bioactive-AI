@@ -1,0 +1,46 @@
+{
+  "antes_con_bosque": [
+    "fr_lactam",
+    "NumHDonors",
+    "VSA_EState3",
+    "MolLogP"
+  ],
+  "comparten_entre_semillas": [
+    "NumAliphaticCarbocycles",
+    "NumHDonors",
+    "VSA_EState3",
+    "fr_Ar_OH",
+    "fr_ether",
+    "fr_lactam"
+  ],
+  "contraste_c2": {
+    "NumHDonors": {
+      "puesto_permutacion": 4,
+      "puesto_shap": 4
+    },
+    "TPSA": {
+      "puesto_permutacion": 40,
+      "puesto_shap": 10
+    }
+  },
+  "interseccion_semilla0": [
+    "NumAliphaticCarbocycles",
+    "NumHDonors",
+    "VSA_EState3",
+    "fr_Ar_OH",
+    "fr_ether",
+    "fr_lactam"
+  ],
+  "interseccion_semilla1": [
+    "NumAliphaticCarbocycles",
+    "NumHDonors",
+    "VSA_EState3",
+    "fr_Ar_OH",
+    "fr_ether",
+    "fr_lactam",
+    "fr_piperdine"
+  ],
+  "los_metodos_no_coinciden": false,
+  "spearman_entre_metodos": 0.36766171972697487,
+  "spearman_shap_entre_semillas": 0.8749473861800873
+}

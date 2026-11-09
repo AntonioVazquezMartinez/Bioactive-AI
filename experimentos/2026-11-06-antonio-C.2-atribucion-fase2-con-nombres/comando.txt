@@ -1,0 +1,1 @@
+python3.12.14 scripts/atribucion_fase2.py --nucleos 12

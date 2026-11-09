@@ -1,0 +1,14 @@
+decision: C.2
+semillas:
+- 0
+- 1
+params:
+  modelo: svm_rbf
+  metodos:
+  - permutacion MCC
+  - KernelSHAP |phi| medio
+  explicados_por_pliegue: 60
+  fondo_kmeans: 10
+  muestras: 400
+  primeras: 15
+  pliegues: 5

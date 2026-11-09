@@ -1,0 +1,27 @@
+decision: '1.2'
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelos:
+  - svm_rbf
+  - logistica
+  - mlp
+  - knn
+  - bosque
+  - boosting
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  umbrales_similitud:
+  - 0.6
+  - 0.5
+  - 0.4
+  grupo_maximo: 0.2
+  remuestras_bootstrap: 1000
+  filas: 6306
+  toca_prueba: solo SMILES, sin etiquetas ni predicciones (acceso estructural)
+  metrica_principal_pareada: auroc
