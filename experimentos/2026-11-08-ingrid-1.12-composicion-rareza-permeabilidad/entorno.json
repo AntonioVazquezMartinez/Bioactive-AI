@@ -1,12 +1,12 @@
 {
   "arbol_sucio": false,
-  "commit": "55deb8dc59704419f54d2506923477714d101ced",
+  "commit": "7eab13af4dc8ccf2f725cbe54b62d79fdf0f148b",
   "datos_sha256": {
     "data/processed/bbb_descriptores_filtrados_sin_normalizar.parquet": "22a8af59982cf70c67c5189c5af97da9e7501c439ab4084cdf2a3c1c31fcc637",
     "data/processed/bbb_meta.parquet": "d4e96e57520cf0b8984ff80f4df568427c1f89bc4545abc5d728f7f3afe56727"
   },
-  "decision": "1.11",
-  "duracion_s": 583.7,
+  "decision": "1.12",
+  "duracion_s": 605.9,
   "lock_sha256": "7b40cfb8375a9554a3f5c3dc86d1d0dfec9730c8602ea4df48053fd6b4748e2e",
   "paquetes": {
     "imbalanced-learn": "0.14.2",
