@@ -1,0 +1,49 @@
+{
+  "corte_congelado": 0.361,
+  "fase_a": {
+    "control_mcc_cv_en_0.5": {
+      "diferencia": 0.0002,
+      "pasa": true
+    },
+    "corte_congelado": 0.361,
+    "ganancia_dentro_de_muestra": {
+      "media": 0.0049,
+      "por_semilla": [
+        0.0094,
+        0.003,
+        0.0024
+      ]
+    },
+    "ganancia_semilla_dejada_fuera": {
+      "media": -0.0013,
+      "por_semilla": [
+        -0.0006,
+        -0.0052,
+        0.002
+      ]
+    },
+    "por_semilla": {
+      "0": {
+        "corte": 0.3191,
+        "fraccion_positiva_en_0.5": 0.7066,
+        "fraccion_positiva_en_el_corte": 0.7399,
+        "mcc_en_0.5": 0.6964,
+        "mcc_en_el_corte": 0.7059
+      },
+      "1": {
+        "corte": 0.4843,
+        "fraccion_positiva_en_0.5": 0.7057,
+        "fraccion_positiva_en_el_corte": 0.7101,
+        "mcc_en_0.5": 0.7037,
+        "mcc_en_el_corte": 0.7067
+      },
+      "2": {
+        "corte": 0.3612,
+        "fraccion_positiva_en_0.5": 0.7122,
+        "fraccion_positiva_en_el_corte": 0.7399,
+        "mcc_en_0.5": 0.7057,
+        "mcc_en_el_corte": 0.7081
+      }
+    }
+  }
+}

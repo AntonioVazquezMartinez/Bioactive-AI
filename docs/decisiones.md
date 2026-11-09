@@ -132,6 +132,24 @@ Es exploratorio: los 1,033 no son una muestra representativa (son los compuestos
 | Pocos compuestos (el realista) | ordenar bien; el falso positivo es el caro porque gasta presupuesto de ensayo | **enriquecimiento al 1%** (principal), enriquecimiento al 5%, precisión en los primeros 100, BEDROC, área bajo la curva de precisión-recall |
 | Cribado amplio | la sensibilidad: no perder candidatos reales | recall a precisión fija, enriquecimiento al 5% |
 
+**¿Un umbral elegido en validación recupera el MCC de la prueba? No: ni siquiera se traslada entre semillas (8 de noviembre).** Corrida `2026-11-08-ingrid-C.5-umbral-en-validacion` (`scripts/experimento_umbral_en_validacion.py`), **sin tocar la prueba reservada**. Era la lectura que faltaba del [#191](https://github.com/AntonioVazquezMartinez/Bioactive-AI/issues/191) y que la [1.2](#d1-2) declaraba sin medir: las otras tres —corte fijo, igual prevalencia y óptimo del pliegue— ya estaban, y la única reportable como resultado es el corte elegido con validación interna agrupada, porque el óptimo usa las etiquetas de lo que mide. El diseño se escribió antes de correr: `svm_rbf` como se entrega, las 6,306 filas de ajuste, 3 semillas × 5 pliegues, el corte que maximiza el MCC sobre las probabilidades fuera de pliegue de cada semilla, y **el corte congelado como la mediana de los tres**.
+
+| semilla | corte elegido | MCC a 0.5 | MCC en su corte | declara BBB+ a 0.5 | en su corte |
+|:--|--:|--:|--:|--:|--:|
+| 0 | 0.3191 | 0.6964 | 0.7059 | 0.707 | 0.740 |
+| 1 | 0.4843 | 0.7037 | 0.7067 | 0.706 | 0.710 |
+| 2 | 0.3612 | 0.7057 | 0.7081 | 0.712 | 0.740 |
+
+**El control pasa** (MCC medio a 0.5 de 0.7015 contra el 0.7017 registrado, diferencia 0.0002). Y hay tres hallazgos, el segundo decisivo:
+
+- **La ganancia dentro de muestra es de +0.0049 de MCC**, que ya de por sí es una décima parte de los 0.17 que la [1.2](#d1-2) midió como cota con el corte óptimo.
+- **Casi toda esa ganancia era ajustar el corte a sus propias etiquetas.** La guarda que ninguna de las tres lecturas anteriores tenía: para cada semilla se elige el corte con las **otras dos** y se mide en ella. Así la ganancia media es **−0.0013** (−0.0006, −0.0052 y +0.0020). El corte elegido en validación **no se traslada ni entre semillas del mismo conjunto**, así que no hay nada que trasladar a la prueba.
+- **Y va en la dirección contraria a la que la prueba necesita.** Los tres cortes caen por debajo de 0.5 (0.319, 0.484, 0.361), así que **aumentan** la fracción declarada BBB+, de 0.707 a 0.740. La prueba tiene 57.3% de BBB+ y el modelo ya declara 70.9%: lo que haría falta es declarar *menos*, no más. La razón es que el corte se elige donde la prevalencia es 65.0%, no 57.3%, y eso ninguna elección interna puede saberlo.
+
+**Qué queda dicho, y qué no.** La asimetría MCC/AUROC de la prueba es real y la cota de 0.17 de la [1.2](#d1-2) sigue en pie, pero **esa cota no es alcanzable con un umbral elegido en validación**: hace falta información de la distribución de llegada, que es exactamente lo que un conjunto reservado no puede dar sin dejar de serlo. Eso **cierra el punto abierto del #191 con una medición en lugar de una expectativa**, y refuerza la [C.5](#dc-5): el punto de operación no se fija, se entrega la curva y el laboratorio elige el corte con su propia prevalencia. **No se gastó una lectura de la prueba**: la respuesta estaba en validación, y gastarla habría sido medir una conclusión ya forzada. El script trae la fase B (`--leer-prueba`) con el corte congelado y sus cuatro lecturas, por si el equipo la quiere para el artículo; sería la lectura 14.
+
+**Límites.** Un solo modelo; el corte se elige maximizando el MCC y no otra métrica, así que esto no dice nada sobre un corte elegido para, por ejemplo, fijar la precisión; tres semillas son pocas para la estabilidad del corte, aunque el rango observado (0.165) es grande comparado con la ganancia; y no se midió un corte elegido con validación *anidada*, que es otra cosa.
+
 **Primera medición de estas métricas, fase 2 (4 de noviembre).** Corrida `2026-11-03-artemio-C.5-ranking-fase2-aft`: `aft` con predicciones fuera de pliegue (una semilla, 5 pliegues, sin tocar la prueba), α de BEDROC = 20 declarado antes, ordenando los pares por potencia predicha. Dos controles: azar y ordenar solo por la potencia media de la diana. Enriquecimiento, activos recuperados y tasa base:
 
 | estrato | tasa base | EF 1% (activos / k) | EF 5% | precisión en 100 | BEDROC | `solo_diana`, EF 1% |
