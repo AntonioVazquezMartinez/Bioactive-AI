@@ -302,7 +302,7 @@ responsable
 \endlastfoot
 extrapolación & proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 & 0.31 es el corte del tercil más raro de la prueba (sección 4.3); si la mayoría de las consultas cae ahí, las cifras de validación no aplican & patrocinadora, con la advertencia del cuaderno \\
 desempeño & AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos & 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar & equipo, al llegar datos \\
-punto de operación & proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos & hoy 70.9\% contra 64.97\%; la diferencia crece cuando la química cambia (sección 4.2) & equipo \\
+punto de operación & proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos & en el ajuste 70.9\% contra 64.97\%, y en la prueba reservada 79.3\% contra 57.3\%: la diferencia crece cuando la química cambia (sección 4.2) & equipo \\
 integridad & \texttt{sha256} de modelos y datos contra \texttt{data/MANIFEST.json}; versiones del lock & el CI lo verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) & equipo \\
 datos y etiquetas & cuántos pares activos aporta cada fuente y qué concentración de corte se usa & el 10 µM es el de cribado heredado del archivo (decisión 2.3); NPASS es CC BY-NC, solo uso no comercial & patrocinadora y equipo \\
 \end{longtable}
