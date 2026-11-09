@@ -1,0 +1,8 @@
+ambito,semilla,corte,mcc_en_el_corte,mcc_en_0.5,fraccion_positiva_en_0.5,fraccion_positiva_en_el_corte,lectura,mcc,fraccion_positiva
+validacion,0,0.3191,0.7059,0.6964,0.7066,0.7399,,,
+validacion,1,0.4843,0.7067,0.7037,0.7057,0.7101,,,
+validacion,2,0.3612,0.7081,0.7057,0.7122,0.7399,,,
+prueba,,0.5,,,,,fijo_0.5,0.3385,0.7932
+prueba,,0.361,,,,,congelado,0.3455,0.8392
+prueba,,0.7465,,,,,igual_prevalencia,0.4095,0.6498
+prueba,,0.844,,,,,optimo_cota,0.485,0.495

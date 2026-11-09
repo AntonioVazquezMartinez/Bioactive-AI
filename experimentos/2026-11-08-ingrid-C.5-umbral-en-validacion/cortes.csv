@@ -1,0 +1,4 @@
+ambito,semilla,corte,mcc_en_el_corte,mcc_en_0.5,fraccion_positiva_en_0.5,fraccion_positiva_en_el_corte
+validacion,0,0.3191,0.7059,0.6964,0.7066,0.7399
+validacion,1,0.4843,0.7067,0.7037,0.7057,0.7101
+validacion,2,0.3612,0.7081,0.7057,0.7122,0.7399
