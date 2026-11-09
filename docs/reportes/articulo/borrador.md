@@ -265,6 +265,8 @@ compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha c
 no combina las dos fases en un ranking**: esa combinación sigue pendiente (decisión C.3), y cuando exista será
 evidencia paralela y **no una cascada**, porque un BBB− no descarta un compuesto.
 
+**Un segundo entregable: la vara con que se mide.** Además de los modelos, el proyecto deja una herramienta para que la patrocinadora mida si **una tabla de columnas propia** (ómicas, propiedades calculadas con otro programa) predice mejor que los descriptores, sin tocar el código del proyecto. La tabla se une a los compuestos por SMILES canónico, se evalúa con la misma validación cruzada agrupada y se compara contra la referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio (`src/models/representaciones.py`, #297). Una guía que la acompaña reúne lo que costó aprender sobre **cómo agrupar** (nunca al azar: infla 7 a 13 puntos; por andamio y esqueleto juntos, no por andamio solo) y **cómo medir** (una corrida no decide, las 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de potencia en su umbral, y se reporta por subgrupo), y lo único que la herramienta no puede verificar: que las columnas no se hayan calculado con las etiquetas ni con todas las filas a la vez. Un ejemplo con datos reales: tres propiedades de los filtros de la literatura (TPSA, donadores de hidrógeno y peso) quedan 0.082 de MCC por debajo de los 151 descriptores (IC95% [−0.131, −0.034], mejora en 1 de 15). Es Python y no una interfaz; mide clasificación, no la regresión de supervivencia de la fase 2.
+
 **Estado hoy.** Los dos modelos finales están guardados en `models/finales/` (unos 3 MB), con un módulo de
 inferencia que no necesita los datos de entrenamiento, un script que los regenera y el cuaderno que los usa
 (`notebooks/06_Uso_de_los_modelos.ipynb`, #261). Está comprobado que los descriptores calculados desde un
@@ -352,7 +354,8 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    excluye un compuesto); leer la probabilidad de la fase 1 junto con la advertencia de similitud y no como una clase;
    y medir cualquier mejora donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de
    entrenamiento (Figura 1), no solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro
-   que probamos cerró la brecha.
+   que probamos cerró la brecha. Para probar columnas nuevas hay una herramienta y una guía (sección 5) que
+   aplican la misma validación agrupada, y son parte de lo que se entrega junto con los modelos.
 5. **Trabajo futuro, ligado a lo medido.** (a) *El punto de operación:* reportar el MCC con un corte de igual prevalencia junto al de 0.5
    (0.4095 contra 0.3385 en la prueba), y medirlo con una prevalencia de llegada conocida de los datos de la
    patrocinadora; el corte elegido en validación no sirve (decisión C.5). (b) *Una evaluación externa separada por andamio y no por compuesto:*
