@@ -51,6 +51,12 @@ medirlas otra vez no cambiaría ningún commit.
 - No toca la prueba reservada.
 
     ./env/bin/python scripts/experimento_estereo_descriptores.py
+
+Con `--solo-estructura` registra únicamente lo que es propiedad de la representación —los grupos
+de vector idéntico, las filas inseparables con su grupo y el techo del oráculo— **sin ajustar
+ningún modelo**: 3 s en lugar de 77 min. Sirve para completar o rehacer esos conteos sin repetir
+la comparación de desempeño, y su brazo de control tiene que reproducir las 183 filas y los 69
+grupos de la corrida completa.
 """
 import json
 import os
@@ -123,6 +129,30 @@ def techo(X: np.ndarray, y: np.ndarray, estratos: np.ndarray) -> dict:
     return salida
 
 
+def estructura_de_grupos(X: np.ndarray, y: np.ndarray) -> dict:
+    """Cuántos grupos de vector idéntico hay y cuántos reúnen las dos clases.
+
+    El conteo de filas inseparables no dice de cuántos grupos salen, y la diferencia importa:
+    183 filas en 69 grupos y 183 en 2 grupos serían el mismo número y problemas distintos.
+    """
+    g = grupos_identicos(X)
+    tam = pd.Series(y).groupby(g).agg(["size", "nunique"])
+    mezclados = tam[tam["nunique"] > 1]
+    return {"grupos": int(tam.shape[0]),
+            "grupos_mezclados": int(mezclados.shape[0]),
+            "filas_inseparables": int(mezclados["size"].sum()),
+            "grupo_mas_grande_mezclado": int(mezclados["size"].max()) if len(mezclados) else 0}
+
+
+def tabla_de_inseparables(X: np.ndarray, y: np.ndarray, origen: np.ndarray,
+                          brazo: str) -> pd.DataFrame:
+    """Una fila por fila inseparable, con el grupo al que pertenece dentro de su brazo."""
+    g = grupos_identicos(X)
+    m = inseparables(X, y)
+    return pd.DataFrame({"brazo": brazo, "grupo": g[m], "fila": np.flatnonzero(m),
+                         "origen": origen[m], "y": y[m]}).sort_values(["grupo", "fila"])
+
+
 def acierto_en(mascara: np.ndarray, fdp: dict, y: np.ndarray) -> pd.DataFrame:
     """Acierto fuera de pliegue sobre `mascara`, una fila por (modelo, semilla)."""
     filas = []
@@ -172,7 +202,7 @@ def serializable(objeto):
     return objeto
 
 
-def main() -> None:
+def main(solo_estructura: bool = False) -> None:
     from src.tracking import Corrida
 
     t = cargar("permeabilidad", estratos="origen")
@@ -211,6 +241,33 @@ def main() -> None:
               "manda": "la lectura 2; el agregado puede quedar plano con el mecanismo vivo",
               "alcance": "conteos globales: un diastereómero que invierta dos centros no se separa",
               "toca_prueba": False}
+
+    estructura = {b: estructura_de_grupos(M, y) for b, M in brazos.items()}
+    estructura["grupos_mezclados_que_dejan_de_estarlo"] = (
+        estructura[CONTROL]["grupos_mezclados"] - estructura[TRATAMIENTO]["grupos_mezclados"])
+    print("grupos de vector idéntico que reúnen las dos clases: "
+          f"{estructura[CONTROL]['grupos_mezclados']} con los {n_control} descriptores, "
+          f"{estructura[TRATAMIENTO]['grupos_mezclados']} con las cuatro columnas "
+          f"(dejan de estarlo {estructura['grupos_mezclados_que_dejan_de_estarlo']})\n", flush=True)
+
+    if solo_estructura:
+        # **Sin ajustar ningún modelo.** `grupos_identicos`, `inseparables` y `techo` no llaman a
+        # `.fit()`: son propiedades de la representación, así que esto corre en segundos y sirve
+        # para completar los conteos de grupos sin repetir los 77 minutos de la corrida completa.
+        with Corrida("estereo-descriptores-fase1-estructura", decision="1.8",
+                     params={**params, "solo_estructura": True,
+                             "modelos": [], "lectura_2": None, "lectura_3": None,
+                             "manda": "solo describe la representación; no compara desempeño"},
+                     semillas=[],
+                     datos=[PROCESADOS / "bbb_meta.parquet",
+                            PROCESADOS / DESCRIPTORES["descriptores"]]) as c:
+            pd.concat([tabla_de_inseparables(M, y, origen, b) for b, M in brazos.items()]
+                      ).to_csv(c.carpeta / "filas_inseparables.csv", index=False)
+            c.metricas(serializable({
+                "grupos_identicos": estructura,
+                "techo_oraculo": {b: techo(M, y, origen) for b, M in brazos.items()}}))
+            print(f"  carpeta: experimentos/{c.id}")
+        return
 
     with Corrida("estereo-descriptores-fase1", decision="1.8", params=params,
                  semillas=list(SEMILLAS),
@@ -254,10 +311,11 @@ def main() -> None:
         # escriben al salir del contexto, cuando ya no hay forma de recuperar el cálculo.
         res.to_csv(c.carpeta / "evaluaciones.csv", index=False)
         ac.to_csv(c.carpeta / "acierto_en_inseparables.csv", index=False)
-        pd.DataFrame({"fila": np.flatnonzero(mascara), "origen": origen[mascara],
-                      "y": y[mascara]}).to_csv(c.carpeta / "filas_inseparables.csv", index=False)
+        pd.concat([tabla_de_inseparables(X, y, origen, b) for b, X in brazos.items()]
+                  ).to_csv(c.carpeta / "filas_inseparables.csv", index=False)
 
         metricas = serializable({"techo_oraculo": techos, "umbrales": umbrales,
+                                 "grupos_identicos": estructura,
                                  "acierto_en_inseparables": lectura2,
                                  "diferencia_pareada": lectura3, "mcc_medio": mcc})
         json.dumps(metricas)   # falla aquí, con los CSV ya en disco, no al cerrar la corrida
@@ -283,4 +341,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(solo_estructura="--solo-estructura" in sys.argv)
