@@ -86,7 +86,8 @@
 \title{\textbf{Qué mueve el resultado al predecir la actividad de compuestos naturales}}
 \author{Ingrid Pamela Ruiz Puga\quad Artemio Santiago Padilla Robles\\[2pt] José Antonio Vázquez Martínez\\[6pt]
   \normalsize Proyecto Integrador · Maestría en Inteligencia Artificial Aplicada \\[6pt]
-  \normalsize Asesor: \textcolor{red}{[nombre del asesor]} \quad·\quad \textcolor{red}{[fecha de entrega]}}
+  \normalsize Asesora: Dra. Grettel Barceló Alonso \quad·\quad Patrocinadora: Dra. Mariana Martínez Ávila \\[2pt]
+  \normalsize 13 de noviembre de 2026}
 \date{\vspace{-2ex}}
 
 \begin{document}
@@ -347,7 +348,7 @@ Limitaciones: la prueba se leyó catorce veces; los modelos finales ya están gu
 \textbf{Fuentes de datos:} B3DB \autocite{meng2021b3db}; NPASS \autocite{zhao2023npass} y \autocite{lin2026npass}; CMAUP \autocite{hou2024cmaup}; ChEMBL \autocite{zdrazil2024chembl}. \textbf{Representación y partición:} huellas de Morgan / ECFP \autocite{rogers2010ecfp}; RDKit \autocite{rdkit}; andamios de Bemis--Murcko \autocite{bemis1996properties}. \textbf{La lección de la escalera:} la partición por tiempo como estimación de la predicción prospectiva \autocite{sheridan2013}, y la validación por bloques que corrige la subestimación del error cuando los datos tienen estructura \autocite{roberts2017crossvalidation}. \textbf{Modelos y métricas:} XGBoost \autocite{chen2016xgboost}; la concordancia de Harrell \autocite{harrell1982yield}; la corrección de Nadeau y Bengio para los intervalos de la validación cruzada \autocite{nadeau2003inference}. \textbf{Código y datos.} Cada cifra tiene su corrida en \texttt{experimentos/} (parámetros, commit, \texttt{sha256} de los datos, comando) y se repite con \texttt{experimentos/README.md}; las lecturas de la prueba reservada están en \texttt{experimentos/prueba.csv}.
 
 \section*{Declaración de uso de inteligencia artificial}
-Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 (Ingrid Pamela Ruiz Puga), Claude Sonnet~5.5 (Artemio Santiago Padilla Robles) y \textcolor{red}{[modelo de José Antonio Vázquez Martínez]} para escribir el código de los experimentos y sus pruebas, generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato al borrador de este artículo. Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
+Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 (Ingrid Pamela Ruiz Puga), Claude Sonnet~5.5 (Artemio Santiago Padilla Robles; Claude Sonnet~5 cuando las restricciones de seguridad del modelo en temas de biología y química impidieron usar el 5.5) y \textcolor{red}{[modelo de José Antonio Vázquez Martínez]} para escribir el código de los experimentos y sus pruebas, generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato al borrador de este artículo. Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
 
 \printbibliography[title={Referencias}]
 

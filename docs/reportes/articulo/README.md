@@ -56,9 +56,9 @@ son anotaciones internas del equipo («LEÍDO PARCIAL»…) y el `.tex` lo supri
 
 ## Por confirmar con el equipo
 
-- Los campos en rojo del encabezado: **nombre del asesor** y **fecha de entrega**.
+- El encabezado ya trae asesora, patrocinadora y fecha de entrega (13 de noviembre de 2026).
 - La **declaración de uso de IA**: la redactó la herramienta; el equipo confirma que describe lo que hizo. Trae
-  Claude Opus 5 (Pame) y Claude Sonnet 5.5 (Artemio, el de la sesión que la escribió: confirmar si usó otros);
+  Claude Opus 5 (Pame) y Claude Sonnet 5.5 (Artemio; Sonnet 5 cuando los guardrails en biología y química lo impidieron);
   **falta el modelo de Antonio**, en rojo.
 - El **`logo_empresa.png`** que la plantilla del resumen espera no viene en ningún zip. Preguntar si lo aporta la
   patrocinadora.
