@@ -53,7 +53,7 @@ modelo de supervivencia acelerada (AFT, XGBoost `chen2016xgboost`) que aprende d
 resultado nuevo se recalculó con un segundo código. Los intervalos remuestrean grupos, no filas. De
 los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predicción con cualquier
 semilla; el `mlp` y el `bosque` no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó
-**doce veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (E1+ y E14) y dos solo
+**trece veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (E1+ y E14) y dos solo
 estructurales (la proporción de andamios, una por fase)—, todas registradas en `experimentos/prueba.csv`; ningún modelo se eligió después
 de verla. La última (experimento 1.11) reparte la prueba entre ajuste y evaluación sin evaluar el modelo final.
 
@@ -208,7 +208,7 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
 3. **La representación no se traslada entre fases**, y no por tamaño de datos ni por tipo de etiqueta;
    la densidad del espacio químico queda como pista sin confirmar.
 
-Limitaciones: la prueba se leyó doce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
+Limitaciones: la prueba se leyó trece veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
 columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
 dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
 con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
