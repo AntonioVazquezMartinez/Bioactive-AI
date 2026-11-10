@@ -477,7 +477,7 @@ criptográfica de los datos y el comando; el código y los registros están en e
 
 ## Anexos
 
-Cada anexo resume una corrida registrada con sus parámetros, la versión del código y la huella de los datos.
+Cada anexo amplía un resultado del cuerpo.
 
 - *A. La escalera con seis modelos y con otra definición de «parecido».* La logística no se degrada menos que el
   `svm_rbf` de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se
@@ -485,9 +485,8 @@ Cada anexo resume una corrida registrada con sus parámetros, la versión del c�
 - *B. La línea base de peso y TPSA.*
 - *C. Las huellas por tramo de peso,* con la figura de abajo.
 - *D. El ranking de la fase 2 y la curva de aprendizaje.*
-- *E. La densidad del espacio químico a igual peso* (no concluyente), *los tramos de peso igualados por
-  submuestreo* (el control que deja sin sostén la tendencia de la sección 4.6) y *cómo repetir cada
-  corrida,* con tiempos y huella de los datos.
+- *E. La densidad del espacio químico a igual peso* (no concluyente) y *los tramos de peso igualados por
+  submuestreo* (el control que deja sin sostén la tendencia de la sección 4.6).
 
 ![Huellas](figuras/f3_huellas.svg)
 
