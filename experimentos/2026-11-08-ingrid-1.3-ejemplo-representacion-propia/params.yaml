@@ -1,0 +1,22 @@
+decision: '1.3'
+semillas:
+- 0
+- 1
+- 2
+params:
+  representaciones:
+  - descriptores
+  - tpsa_hbd_peso
+  - ruido_3_columnas
+  referencia: descriptores
+  modelo: logistica
+  columnas_propias:
+  - tpsa
+  - donadores
+  - peso
+  filas: 6306
+  grupos: 1048
+  por_que_estas_tres: son los filtros de la literatura de permeabilidad; la fase 1
+    ya midió que TPSA no domina (puesto 40 por permutación y 10 por SHAP) y que los
+    donadores sí entran (puesto 4)
+  toca_prueba: false
