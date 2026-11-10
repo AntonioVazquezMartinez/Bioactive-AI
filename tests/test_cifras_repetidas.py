@@ -46,6 +46,13 @@ CIFRAS = [
     ("cuántas veces pesa más el agrupamiento que el modelo",
      r"(?:agrupamiento|andamio).{0,170}?"
      r"((?:casi |algo más de |más de )?(?:dos|tres|cuatro|cinco)) veces", "tres"),
+    # El cruce entre las dos fases tiene dos valores verdaderos que cuentan archivos distintos, y el
+    # registro citaba solo el del archivo crudo. Se vigila el del archivo que ve el modelo, que es el
+    # que acota la C.3; el 1,033 del crudo se queda y no se vigila porque no es el que deriva.
+    ("los esqueletos comunes en el archivo que ve el modelo",
+     r"([\d,]{3,5}) esqueletos en el archivo que ve el modelo", "612"),
+    ("los esqueletos comunes en el archivo que ve el modelo, en inglés",
+     r"([\d,]{3,5}) skeletons in the file the model sees", "612"),
 ]
 
 
