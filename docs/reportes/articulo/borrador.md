@@ -494,7 +494,7 @@ Cada anexo viene de una corrida registrada; su carpeta está en `experimentos/` 
   `2026-11-03-artemio-C.5-ranking-fase2-aft`,
   `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`.
 - *E. La densidad del espacio químico a igual peso* (no concluyente), *los tramos de peso igualados por
-  submuestreo* —el control que deja sin sostén la tendencia de la sección 4.6— y *cómo repetir cada
+  submuestreo* (el control que deja sin sostén la tendencia de la sección 4.6) y *cómo repetir cada
   corrida,* con tiempos y `sha256` de los datos. Corridas:
   `2026-11-04-artemio-1.3-huellas-por-densidad-del-espacio-quimico`,
   `2026-11-08-artemio-1.3-tamano-huellas-actividad-igualado`.
