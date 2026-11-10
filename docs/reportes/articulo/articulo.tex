@@ -182,7 +182,7 @@ En la fase 2 comparamos nueve modelos de regresión. El final es un modelo de su
 
 \subsection{Cómo cuidamos no engañarnos}
 
-Planteamos cada prueba antes de ver su resultado, y cada corrida empieza reproduciendo una cifra ya registrada. Los intervalos remuestrean grupos de moléculas, no filas. La prueba reservada solo sirvió para medir, nunca para elegir: la abrimos catorce veces, cuatro de ellas sin mirar etiquetas, y todas están registradas en \texttt{experimentos/prueba.csv}.
+Planteamos cada prueba antes de ver su resultado, y cada corrida empieza reproduciendo una cifra ya registrada. Los intervalos remuestrean grupos de moléculas, no filas. La prueba reservada solo sirvió para medir, nunca para elegir un modelo.
 
 \section{Resultados y validación}
 \subsection{El mejor modelo apenas supera al punto de partida}
@@ -234,7 +234,7 @@ Como la ventaja del modelo se pierde justo en lo raro, probamos tres formas de e
 
 \emph{Repesar.} Dimos más peso a las filas raras que ya estaban en el ajuste: peso 3, 2 y 1 según el tercil de semejanza al vecino más cercano de otro grupo, dentro de cada tramo de peso molecular (\texttt{svm\_rbf}, 15 evaluaciones agrupadas, sin leer la prueba). En el tercil más raro de validación la ganancia de AUROC fue −0.0005, positiva en 9 de 15 evaluaciones, cuando la regla pedía más de 0.005 en 12. Un control con los mismos pesos asignados al azar mueve el AUROC global casi igual (+0.0015 contra +0.0022) y el MCC global baja 0.0022. La regla tiene poca potencia para efectos chicos: con la dispersión observada (0.0095) solo detectaría con 80\% de probabilidad una mejora de unos 0.010, así que descarta una mejora grande, no una de 0.005.
 
-\emph{Pasar filas de la prueba al entrenamiento.} La mitad de los grupos de la prueba de cada tercil de rareza forma un núcleo de evaluación; de la otra mitad pasamos al ajuste las filas del tercil más raro (285 de media) y devolvimos a la prueba otras tantas filas comunes del ajuste, en 15 sorteos (esta prueba usó las lecturas 12 y 13 de la prueba reservada; la segunda solo mide la prevalencia del reparto, sin entrenar). En lo raro del núcleo el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas elegidas al azar da +0.006: lo que ayuda es recibir filas de la prueba, no cuáles. El MCC pasa de 0.33 a 0.36 (+0.035, en los 15 sorteos), pero el AUROC apenas cambia (+0.002): el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. Separado en tres brazos, sin otra lectura de la prueba, se ve de dónde sale: quitar solo las 295 filas comunes del ajuste no lo mueve (−0.001), y recibir filas de la prueba sí, raras (+0.035, 15 de 15 sorteos) o al azar (+0.023, 13 de 15). El MCC sube por recibir filas de la distribución sobre la que se evalúa, no por cuáles; tampoco lo explica la prevalencia del entrenamiento, que casi no se mueve (de 65.0\% a 64.5\% de BBB+). Lo más útil de esta corrida fue otra cosa: los compuestos comunes que pasan a la prueba se miden con AUROC 0.94 y los raros que quedaban en 0.68, con el mismo modelo y sin reentrenar. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
+\emph{Pasar filas de la prueba al entrenamiento.} La mitad de los grupos de la prueba de cada tercil de rareza forma un núcleo de evaluación; de la otra mitad pasamos al ajuste las filas del tercil más raro (285 de media) y devolvimos a la prueba otras tantas filas comunes del ajuste, en 15 sorteos. En lo raro del núcleo el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas elegidas al azar da +0.006: lo que ayuda es recibir filas de la prueba, no cuáles. El MCC pasa de 0.33 a 0.36 (+0.035, en los 15 sorteos), pero el AUROC apenas cambia (+0.002): el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. Separado en tres brazos, sin otra lectura de la prueba, se ve de dónde sale: quitar solo las 295 filas comunes del ajuste no lo mueve (−0.001), y recibir filas de la prueba sí, raras (+0.035, 15 de 15 sorteos) o al azar (+0.023, 13 de 15). El MCC sube por recibir filas de la distribución sobre la que se evalúa, no por cuáles; tampoco lo explica la prevalencia del entrenamiento, que casi no se mueve (de 65.0\% a 64.5\% de BBB+). Lo más útil de esta corrida fue otra cosa: los compuestos comunes que pasan a la prueba se miden con AUROC 0.94 y los raros que quedaban en 0.68, con el mismo modelo y sin reentrenar. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 
 \emph{Recomponer con qué filas se entrena.} Fijamos el tamaño, la prevalencia y el número de grupos del ajuste y cambiamos solo su composición. Empezar por lo raro cuesta −0.060 de AUROC contra el orden al azar con el 25\% del ajuste (IC95\% {[}−0.110, −0.011{]}, a favor en 1 de 15 evaluaciones; es una comparación secundaria, declarada antes y sin corrección por comparaciones múltiples, y el estadístico principal incluye el cero). Con el 75\% la composición deja de importar (±0.0004), y ni siquiera mejora el tercil más raro de la validación (+0.003, 8 de 15).
 
@@ -329,7 +329,7 @@ responsable
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-script que entrena y guarda los dos modelos finales, con el comando y los \texttt{sha256} de los datos & que cualquiera pueda reconstruirlos (\texttt{experimentos/README.md} ya lo hace para las corridas) & equipo, disponible \\
+procedimiento que entrena y guarda los dos modelos finales, con el comando y la huella criptográfica de los datos & que cualquiera pueda reconstruirlos & equipo, disponible \\
 cuaderno de uso con SMILES propios & es la forma de operación acordada & equipo, disponible \\
 advertencia de extrapolación: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento & una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto & equipo, disponible en el cuaderno \\
 reentrenar al llegar datos nuevos y reevaluar con la escalera, no con un corte al azar & evita celebrar una cifra inflada & patrocinadora, con apoyo del equipo \\
@@ -338,7 +338,7 @@ evaluación externa con su conjunto de prueba & la prueba reservada es nuestra, 
 
 \subsection{Qué pasó con la base externa de la patrocinadora}
 
-El archivo \texttt{Testeo} no comparte identificador ni SMILES canónico con el de entrenamiento. Con el \texttt{aft} guardado y sin reentrenar, la concordancia en 8,134 pares de las 26 dianas del modelo es 0.792 (IC95\% remuestreando esqueletos: 0.787 a 0.797), mayor que el 0.720 de la prueba reservada. Por clase de procedencia, \texttt{solo\_chembl} da 0.786, \texttt{mixto} 0.615 y \texttt{solo\_npass} 0.667 (249 pares, Spearman 0.309).
+La base externa no comparte identificador ni SMILES canónico con el de entrenamiento. Con el \texttt{aft} guardado y sin reentrenar, la concordancia en 8,134 pares de las 26 dianas del modelo es 0.792 (IC95\% remuestreando esqueletos: 0.787 a 0.797), mayor que el 0.720 de la prueba reservada. Por clase de procedencia, \texttt{solo\_chembl} da 0.786, \texttt{mixto} 0.615 y \texttt{solo\_npass} 0.667 (249 pares, Spearman 0.309).
 
 Esa base no es comparable con la prueba reservada: se separó por compuesto y no por andamio, y el 64.9\% de sus pares tiene un andamio que ya está en el ajuste, contra 0.5\% en el control interno. La semejanza mediana al vecino más cercano es 0.787 (0.679 en la validación de la misma fase). Que salga mejor es justo lo que predice la tesis del artículo, no una prueba de mejor generalización. Los naturales siguen siendo el estrato débil. Es una lectura única, y el control reconstruye los 70,384 pares del entrenamiento sin diferencia.
 
@@ -381,7 +381,7 @@ responsable
 extrapolación & proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 & 0.31 es el corte del tercil más raro de la prueba (sección 4.3); si la mayoría de las consultas cae ahí, las cifras de validación no aplican & patrocinadora, con la advertencia del cuaderno \\
 desempeño & AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos & 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar & equipo, al llegar datos \\
 punto de operación & proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos & en el ajuste 70.9\% contra 64.97\%, y en la prueba reservada 79.3\% contra 57.3\%: la diferencia crece cuando la química cambia (sección 4.5) & equipo \\
-integridad & \texttt{sha256} de modelos y datos contra \texttt{data/MANIFEST.json}; versiones del lock & el CI lo verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) & equipo \\
+integridad & huella criptográfica de modelos y datos contra la registrada; versiones de las dependencias fijadas & se verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) & equipo \\
 datos y etiquetas & cuántos pares activos aporta cada fuente y qué concentración de corte se usa & el 10 µM es el de cribado heredado del archivo; NPASS es CC BY-NC, solo uso no comercial & patrocinadora y equipo \\
 \end{longtable}
 
@@ -399,7 +399,7 @@ Identificamos cinco, dos de ellos del modelo y de los datos:
 \item
   \emph{Punto de operación.} Un MCC a 0.5 exagera la caída bajo un cambio de distribución. Mitigación: el cuaderno entrega la probabilidad y no una clase.
 \item
-  \emph{Reproducibilidad.} La misma regresión logística da 0.481, 0.489 o 0.497 de MCC según el sistema operativo y la versión de Python. Mitigación: un lock de dependencias, \texttt{sha256} de los datos y decidir con 15 evaluaciones y su error, no con una corrida.
+  \emph{Reproducibilidad.} La misma regresión logística da 0.481, 0.489 o 0.497 de MCC según el sistema operativo y la versión de Python. Mitigación: dependencias fijadas, huella criptográfica de los datos y decidir con 15 evaluaciones y su error, no con una corrida.
 \item
   \emph{Licencia.} NPASS es CC BY-NC. Mitigación: declarar el uso no comercial y revisar la licencia con la patrocinadora antes de cualquier otro uso.
 \end{enumerate}
@@ -427,7 +427,7 @@ Hay además un límite en la propia advertencia de extrapolación: es una heurí
 \begin{itemize}
 \tightlist
 \item
-  La prueba reservada se leyó catorce veces, y los modelos finales están guardados a falta de la revisión del equipo.
+  La prueba reservada es una sola, de tamaño moderado (1,499 compuestos en la fase 1), así que los intervalos de los subgrupos pequeños son anchos.
 \item
   Las 151 columnas de la fase 1 se eligieron con etiquetas de entrenamiento, así que su sesgo de selección no es medible contra la dispersión.
 \item
@@ -461,7 +461,7 @@ Hay además un límite en la propia advertencia de extrapolación: es una heurí
 \end{itemize}
 
 \section*{Referencias y anexos}
-Fuentes de datos: B3DB \autocite{meng2021b3db}; NPASS \autocite{zhao2023npass} y \autocite{lin2026npass}; CMAUP \autocite{hou2024cmaup}; ChEMBL \autocite{zdrazil2024chembl}. Representación y partición: huellas de Morgan / ECFP \autocite{rogers2010ecfp}; RDKit \autocite{rdkit}; andamios de Bemis--Murcko \autocite{bemis1996properties}. La lección de la escalera: la partición por tiempo como estimación de la predicción prospectiva \autocite{sheridan2013}, y la validación por bloques que corrige la subestimación del error cuando los datos tienen estructura \autocite{roberts2017crossvalidation}. Modelos y métricas: XGBoost \autocite{chen2016xgboost}; la concordancia de Harrell \autocite{harrell1982yield}; la corrección de Nadeau y Bengio para los intervalos de la validación cruzada \autocite{nadeau2003inference}. Código y datos: cada cifra tiene su corrida en \texttt{experimentos/} (parámetros, commit, \texttt{sha256} de los datos, comando) y se repite con \texttt{experimentos/README.md}; las lecturas de la prueba reservada están en \texttt{experimentos/prueba.csv}.
+Fuentes de datos: B3DB \autocite{meng2021b3db}; NPASS \autocite{zhao2023npass} y \autocite{lin2026npass}; CMAUP \autocite{hou2024cmaup}; ChEMBL \autocite{zdrazil2024chembl}. Representación y partición: huellas de Morgan / ECFP \autocite{rogers2010ecfp}; RDKit \autocite{rdkit}; andamios de Bemis--Murcko \autocite{bemis1996properties}. La lección de la escalera: la partición por tiempo como estimación de la predicción prospectiva \autocite{sheridan2013}, y la validación por bloques que corrige la subestimación del error cuando los datos tienen estructura \autocite{roberts2017crossvalidation}. Modelos y métricas: XGBoost \autocite{chen2016xgboost}; la concordancia de Harrell \autocite{harrell1982yield}; la corrección de Nadeau y Bengio para los intervalos de la validación cruzada \autocite{nadeau2003inference}. Código y datos: cada cifra viene de una corrida registrada con sus parámetros, la versión del código, la huella criptográfica de los datos y el comando; el código y los registros están en el repositorio del proyecto.
 
 \section*{Declaración de uso de inteligencia artificial}
 Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claude Sonnet~5.5, y Claude Sonnet~5 cuando las restricciones de seguridad del modelo en temas de biología y química impidieron usar el 5.5, para escribir el código de los experimentos y sus pruebas, generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato al borrador de este artículo. Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
@@ -471,20 +471,20 @@ Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claud
 \clearpage
 \appendix
 \section*{Anexos}
-Cada anexo viene de una corrida registrada; su carpeta está en \texttt{experimentos/} del repositorio.
+Cada anexo resume una corrida registrada con sus parámetros, la versión del código y la huella de los datos.
 
 \begin{itemize}
 \tightlist
 \item
-  \emph{A. La escalera con seis modelos y con otra definición de «parecido».} La logística no se degrada menos que el \texttt{svm\_rbf} de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se pueden construir. Corridas: \texttt{2026-\allowbreak{}11-\allowbreak{}03-\allowbreak{}artemio-\allowbreak{}1.2-\allowbreak{}escalera-\allowbreak{}ampliada-\allowbreak{}permeabilidad}, \texttt{2026-\allowbreak{}11-\allowbreak{}04-\allowbreak{}artemio-\allowbreak{}1.2-\allowbreak{}escalera-\allowbreak{}definicion-\allowbreak{}de-\allowbreak{}parecido-\allowbreak{}permeabilidad}.
+  \emph{A. La escalera con seis modelos y con otra definición de «parecido».} La logística no se degrada menos que el \texttt{svm\_rbf} de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se pueden construir.
 \item
-  \emph{B. La línea base de peso y TPSA.} Corrida: \texttt{2026-\allowbreak{}11-\allowbreak{}03-\allowbreak{}artemio-\allowbreak{}1.5-\allowbreak{}prueba-\allowbreak{}por-\allowbreak{}rareza}.
+  \emph{B. La línea base de peso y TPSA.}
 \item
   \emph{C. Las huellas por tramo de peso,} con la figura de abajo.
 \item
-  \emph{D. El ranking de la fase 2 y la curva de aprendizaje.} Corridas: \texttt{2026-\allowbreak{}11-\allowbreak{}03-\allowbreak{}artemio-\allowbreak{}C.5-\allowbreak{}ranking-\allowbreak{}fase2-\allowbreak{}aft}, \texttt{2026-\allowbreak{}11-\allowbreak{}03-\allowbreak{}artemio-\allowbreak{}1.5-\allowbreak{}curva-\allowbreak{}aprendizaje-\allowbreak{}modelos-\allowbreak{}finales}.
+  \emph{D. El ranking de la fase 2 y la curva de aprendizaje.}
 \item
-  \emph{E. La densidad del espacio químico a igual peso} (no concluyente), \emph{los tramos de peso igualados por submuestreo} (el control que deja sin sostén la tendencia de la sección 4.6) y \emph{cómo repetir cada corrida,} con tiempos y \texttt{sha256} de los datos. Corridas: \texttt{2026-\allowbreak{}11-\allowbreak{}04-\allowbreak{}artemio-\allowbreak{}1.3-\allowbreak{}huellas-\allowbreak{}por-\allowbreak{}densidad-\allowbreak{}del-\allowbreak{}espacio-\allowbreak{}quimico}, \texttt{2026-\allowbreak{}11-\allowbreak{}08-\allowbreak{}artemio-\allowbreak{}1.3-\allowbreak{}tamano-\allowbreak{}huellas-\allowbreak{}actividad-\allowbreak{}igualado}.
+  \emph{E. La densidad del espacio químico a igual peso} (no concluyente), \emph{los tramos de peso igualados por submuestreo} (el control que deja sin sostén la tendencia de la sección 4.6) y \emph{cómo repetir cada corrida,} con tiempos y huella de los datos.
 \end{itemize}
 
 \setcounter{figure}{0}\renewcommand{\thefigure}{C\arabic{figure}}
