@@ -37,9 +37,20 @@ no entra, y lo que se añada conviene que sustituya. Las secciones llevan los no
 plantilla del curso (el resumen y las referencias no se numeran, así que «Implementación y operación» es la 5,
 como dice la rúbrica).
 
-**Pendiente:** el PDF del repositorio es anterior al párrafo del corte de igual prevalencia de la §4.1. Hay que
-volver a compilar con `sh scripts/compilar_articulo.sh`, que **necesita Docker**, y revisar el PDF página por
-página antes de dar el artículo por listo. El `.tex` sí está regenerado y `tests/test_articulo_tex.py` pasa.
+**Pendiente, y es lo único que falta:** el PDF del repositorio es anterior al repaso de redacción del 9 de
+noviembre (título nuevo, la lista de limitaciones, el trabajo futuro de la a a la e, la §5 partida en tres y la
+§4.1 en dos). Hay que volver a compilar con `sh scripts/compilar_articulo.sh`, que **necesita Docker**, y
+revisar el PDF página por página antes de dar el artículo por listo. El `.tex` sí está regenerado y
+`tests/test_articulo_tex.py` pasa.
+
+**Y al compilar hay que mirar el conteo.** El repaso partió párrafos y convirtió dos bloques en listas, lo que
+añade espaciado: con dos páginas de margen debería entrar, pero si el cuerpo pasa de 18 lo que sale es la §4.1
+antigua, no las listas nuevas.
+
+**Por qué se midió la prosa.** Las frases más largas llegaban a 929 caracteres (las limitaciones, nueve
+cláusulas con punto y coma) y 1,112 (el trabajo futuro, de la a a la e sin un punto), contra el techo de 421
+que `tests/test_prosa_cuadernos.py` le pone a los cuadernos. El artículo quedó fuera de esa medición y por eso
+creció. Tras el repaso ninguna frase pasa de 414 y la mediana es de 170.
 
 **En Overleaf**: los dos `.bib` y el logo son **enlaces simbólicos**, por la razón que da el `CLAUDE.md`: tres
 copias de la bibliografía ya habían divergido. Overleaf no los sigue, así que al subir hay que resolverlos:

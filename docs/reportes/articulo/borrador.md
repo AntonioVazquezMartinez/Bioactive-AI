@@ -1,8 +1,10 @@
-# Qué mueve el resultado al predecir la actividad de compuestos naturales
+# Cuánto confiar en una predicción depende de la molécula, no del modelo: permeabilidad y potencia en compuestos naturales
 
-**Borrador del 4 de noviembre, tercera versión, para 6 a 8 páginas** (decisión del 4 de noviembre: el cuerpo
-lleva un hilo y el detalle va a anexos). Cada cifra sale de una corrida registrada en
-`experimentos/`; las figuras se generan con `scripts/figuras_articulo.py`. Las secciones 6 y 8 están escritas y pendientes de la revisión del equipo.
+**Nota de trabajo, no llega al `.tex`.** Borrador para la entrega del **13 de noviembre de 2026**; el plazo
+del curso es el 15. El cuerpo lleva un hilo y el detalle va a anexos, por la decisión del 4 de noviembre.
+Cada cifra sale de una corrida registrada en `experimentos/` y las figuras se generan con
+`scripts/figuras_articulo.py`. El cuerpo, del título a las referencias, ocupa 16 de las 12 a 18 páginas que
+pide la rúbrica, así que lo que se añada conviene que sustituya.
 
 ## Resumen
 
@@ -35,8 +37,9 @@ regresión). La entrada es la estructura (SMILES) y la salida es una lista prior
 automática.
 
 **El enfoque que se adoptó.** El planteamiento inicial encadenaba las dos preguntas: lo que saliera BBB− se
-descartaba. Se abandonó porque esa predicción no está verificada para la mayoría de los compuestos: solo 1,033
-esqueletos tienen medición en los dos conjuntos, y el otro 99% se filtraría con una predicción no comprobada.
+descartaba. Se abandonó porque esa predicción no está verificada para la mayoría de los compuestos: de los
+99,585 esqueletos con actividad medida, solo 1,033 tienen además permeabilidad medida, y el otro 99% se
+filtraría con una predicción no comprobada.
 Los dos modelos son, por eso, evidencia paralela que se combinará en un ranking y no una cascada (la
 combinación sigue pendiente, decisión C.3).
 
@@ -84,7 +87,12 @@ los seis modelos de la fase 1, cuatro (incluido el entregado) dan la misma predi
 semilla; el `mlp` y el `bosque` no (desviación de 0.017 y 0.007 de MCC). La prueba reservada se leyó
 **catorce veces**, cuatro de ellas sin etiquetas —dos solo como SMILES (la escalera ampliada y la distribución de similitud de la prueba) y dos solo
 estructurales (la proporción de andamios, una por fase)—, todas registradas en `experimentos/prueba.csv`; ningún modelo se eligió después
-de verla. Las dos de la 1.11 reparten la prueba entre ajuste y evaluación, reajustan el modelo y lo evalúan con etiquetas sobre el núcleo de evaluación en 15 sorteos, sin reevaluar el modelo final entregado; la última (C.5, #191) lee el MCC del modelo final a cuatro cortes, con el corte elegido y congelado en validación antes de leerla.
+de verla.
+
+**Qué hicieron las tres lecturas con etiquetas más recientes.** Dos reparten la prueba entre ajuste y
+evaluación y reajustan el modelo, midiéndolo en 15 sorteos sobre el núcleo que queda; **no reevalúan el
+modelo final que se entrega** (sección 4.3). La tercera sí lo evalúa, y lee su MCC a cuatro cortes: el corte
+se eligió y se congeló en validación **antes** de abrir la prueba (sección 4.1).
 
 **Métricas.** El AUROC mide qué tan bien el modelo ordena a los compuestos permeables por encima de los no
 permeables, sin fijar un corte. El MCC (coeficiente de correlación de Matthews) resume en un número entre −1 y 1
@@ -114,17 +122,19 @@ cambia de sesgo (sección 4.2). Por eso el cuaderno entrega la probabilidad y no
 laboratorio debe leer es el orden.
 
 **El corte no es parte del modelo, y moverlo recupera la mitad del margen.** El 0.339 es con el corte fijo en
-0.5, que es una convención heredada y no una decisión: sobre la prueba ese corte declara BBB+ al 79.3% de los
-compuestos cuando la prevalencia real es 57.3%, **22 puntos de desajuste** frente a los 6 del ajuste. Igualar la
-tasa declarada a una prevalencia supuesta, sin usar las etiquetas de la prueba, sube el MCC a **0.4095**:
-**+0.0712 de MCC, IC95% [+0.0303, +0.1099]** por remuestreo de los grupos de andamio. Y no exige acertar la
-prevalencia —el corte se fijó suponiendo la del ajuste, 65.0%, cuando la de la prueba era 57.3%, un error de 7.7
-puntos, y la ganancia se sostiene—. En cambio **elegir el corte con las etiquetas de validación no recupera
-nada**: +0.0065 [−0.0224, +0.0341]. Las dos lecturas son del mismo modelo entregado y de la misma lectura de la
-prueba (corrida `2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba`, con el corte congelado antes de leerla,
-y los dos controles reproducen el 0.3385 y el AUROC 0.793 registrados). La brecha de 0.363 de MCC contra
-validación cruzada se mide con el corte fijo en los dos lados y no cambia. El techo, 0.485, **usa las etiquetas
-de la prueba para elegir el corte y no es alcanzable**: mide con lo que mide.
+0.5, que es una convención heredada y no una decisión. Sobre la prueba, ese corte declara BBB+ al 79.3% de los
+compuestos cuando la prevalencia real es 57.3%: **22 puntos de desajuste**, frente a los 6 que hay en el
+ajuste. Igualar la tasa declarada a una prevalencia supuesta, sin usar las etiquetas de la prueba, sube el MCC
+a **0.4095**, es decir **+0.0712 con IC95% [+0.0303, +0.1099]** remuestreando los grupos de andamio. Y no hace
+falta acertar la prevalencia: el corte se fijó suponiendo la del ajuste, 65.0%, cuando la de la prueba era
+57.3%, un error de 7.7 puntos, y la ganancia se sostuvo igual. En cambio **elegir el corte con las etiquetas de
+validación no recupera nada**, +0.0065 [−0.0224, +0.0341].
+
+Tres cosas que esas cifras no dicen. Las dos lecturas salen del modelo entregado y de una sola apertura de la
+prueba, con el corte congelado antes, y sus dos controles reproducen el 0.3385 y el AUROC 0.793 ya registrados.
+La brecha de 0.363 de MCC contra validación cruzada se mide con el corte fijo en los dos lados, así que no
+cambia. Y el techo de 0.485 **elige el corte con las etiquetas de la prueba**, de modo que no es alcanzable: lo
+que mide es el margen que queda, no un resultado.
 
 ### 4.2 La escalera de semejanza
 
@@ -282,7 +292,24 @@ compuesto, la probabilidad de cruzar la barrera (fase 1), la potencia predicha c
 no combina las dos fases en un ranking**: esa combinación sigue pendiente (decisión C.3), y cuando exista será
 evidencia paralela y **no una cascada**, porque un BBB− no descarta un compuesto.
 
-**Un segundo entregable: la vara con que se mide.** Además de los modelos, el proyecto deja una herramienta para que la patrocinadora mida si **una tabla de columnas propia** (ómicas, propiedades calculadas con otro programa) predice mejor que los descriptores, sin tocar el código del proyecto. La tabla se une a los compuestos por SMILES canónico, se evalúa con la misma validación cruzada agrupada y se compara contra la referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio (`src/models/representaciones.py`, #297). Una guía que la acompaña reúne lo que costó aprender sobre **cómo agrupar** (nunca al azar: infla 7 a 13 puntos; por andamio y esqueleto juntos, no por andamio solo) y **cómo medir** (una corrida no decide, las 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de potencia en su umbral, y se reporta por subgrupo), y lo único que la herramienta no puede verificar: que las columnas no se hayan calculado con las etiquetas ni con todas las filas a la vez. Un ejemplo con datos reales: tres propiedades de los filtros de la literatura (TPSA, donadores de hidrógeno y peso) quedan 0.082 de MCC por debajo de los 151 descriptores (IC95% [−0.131, −0.034], mejora en 1 de 15). Es Python y no una interfaz; mide clasificación, no la regresión de supervivencia de la fase 2.
+**Un segundo entregable: la vara con que se mide.** Además de los modelos, el proyecto deja una herramienta
+para que la patrocinadora compruebe si **una tabla de columnas propia** —ómicas, propiedades calculadas con
+otro programa— predice mejor que los descriptores, sin tocar el código del proyecto. La tabla se une a los
+compuestos por SMILES canónico, se evalúa con la misma validación cruzada agrupada y se compara contra la
+referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio
+(`src/models/representaciones.py`, #297).
+
+**Y una guía, porque la herramienta sola no basta.** Reúne lo que costó aprender sobre dos cosas. **Cómo
+agrupar:** nunca al azar, que infla de 7 a 13 puntos, y por andamio y esqueleto juntos y no por andamio solo.
+**Cómo medir:** una corrida no decide, las 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de
+potencia en el umbral que esa regla nombra, y el resultado se reporta por subgrupo. La guía dice también lo
+único que la herramienta no puede verificar por nadie: que las columnas no se hayan calculado usando las
+etiquetas, ni usando todas las filas a la vez.
+
+El ejemplo que la acompaña usa datos reales y replica un hallazgo del propio proyecto: las tres propiedades de
+los filtros de la literatura —TPSA, donadores de hidrógeno y peso— quedan 0.082 de MCC por debajo de los 151
+descriptores (IC95% [−0.131, −0.034], mejoran en 1 de 15 evaluaciones). La herramienta es Python y no una
+interfaz, y mide clasificación, no la regresión de supervivencia de la fase 2.
 
 **Estado hoy.** Los dos modelos finales están guardados en `models/finales/` (unos 3 MB), con un módulo de
 inferencia que no necesita los datos de entrenamiento, un script que los regenera y el cuaderno que los usa
@@ -373,24 +400,40 @@ buen candidato** va en el resumen ejecutivo como un supuesto, no como una cifra 
    entrenamiento (Figura 1), no solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro
    que probamos cerró la brecha. Para probar columnas nuevas hay una herramienta y una guía (sección 5) que
    aplican la misma validación agrupada, y son parte de lo que se entrega junto con los modelos.
-5. **Trabajo futuro, ligado a lo medido.** (a) *El punto de operación:* reportar el MCC con un corte de igual prevalencia junto al de 0.5
-   (0.4095 contra 0.3385 en la prueba), y medirlo con una prevalencia de llegada conocida de los datos de la
-   patrocinadora; el corte elegido en validación no sirve (decisión C.5). (b) *Una evaluación externa separada por andamio y no por compuesto:*
-   la base externa de la patrocinadora no mide generalización, porque el 64.9% de sus pares ya tiene su andamio en
-   el ajuste. (c) *Combinar las dos fases en el ranking* como evidencia paralela y medir si seleccionar con ambas
-   supera a cada una, sobre los 1,033 esqueletos medidos en los dos conjuntos (decisión C.3). (d) *Confirmar o
-   descartar la densidad del espacio químico* como la razón por la que las huellas ayudan en la fase 2 y no en la
-   1, y separarla de la composición del ajuste, con varios sorteos por pliegue; ya se igualaron los tramos de peso (decisión 1.3) y queda el control de rareza. (e) *Medir el modelo de potencia con más pares de NPASS:* con 117 no
-   hay potencia para distinguirlo de la línea base (sección 4.5).
+5. **Trabajo futuro, ligado a lo medido.** Cinco cosas, cada una con la medición que la deja planteada:
 
-Limitaciones: la prueba se leyó catorce veces; los modelos finales ya están guardados y falta la revisión del equipo; las 151
-columnas de la fase 1 se eligieron con etiquetas de entrenamiento (sesgo no medible contra la
-dispersión); el efecto de la agrupación depende del modelo (1.3 puntos de AUROC con el `svm_rbf`, 2.2
-con el bosque) y de la definición de «parecido»; los experimentos de la representación usan una o
-cuatro familias de modelos, no las seis de la fase 1; la atribución por subestructura
-excluye 618 de 2,534 columnas (todas huellas) por existir en menos de cinco pliegues; el `mlp` y el `bosque` varían con la semilla del modelo; ninguna corrida se diseñó para
-comparar las palancas de la Figura 1; y las tres formas de aprender de lo raro que probamos (repesar, pasar filas de la prueba al ajuste y recomponer)
-usan un solo modelo, el `svm_rbf`, y la segunda comparte las mismas 1,499 filas en sus 15 sorteos.
+   a. *El punto de operación.* Reportar el MCC con un corte de igual prevalencia junto al de 0.5 (0.4095
+      contra 0.3385 en la prueba) y medirlo con una prevalencia de llegada conocida de los datos de la
+      patrocinadora. El corte elegido en validación no sirve (decisión C.5).
+   b. *Una evaluación externa separada por andamio y no por compuesto.* La base externa de la patrocinadora
+      no mide generalización: el 64.9% de sus pares ya tiene su andamio en el ajuste.
+   c. *Combinar las dos fases en el ranking*, como evidencia paralela, y medir si seleccionar con ambas supera
+      a cada una por separado. Se puede comprobar sobre los 612 esqueletos con medición en los dos archivos
+      que usan los modelos, que son 1,594 pares sobre 23 dianas: poca potencia, así que la regla de lectura
+      tiene que admitir «no alcanza» como veredicto (decisión C.3).
+   d. *Confirmar o descartar la densidad del espacio químico* como la razón por la que las huellas ayudan en
+      la fase 2 y no en la 1, separándola de la composición del ajuste con varios sorteos por pliegue. Los
+      tramos de peso ya se igualaron (decisión 1.3) y queda el control de rareza.
+   e. *Medir el modelo de potencia con más pares de NPASS.* Con 117 no hay potencia para distinguirlo de la
+      línea base (sección 4.5).
+
+**Limitaciones.** Lo que acota lo que se puede concluir de aquí:
+
+- La prueba reservada **se leyó catorce veces**, y los modelos finales están guardados a falta de la revisión
+  del equipo.
+- Las 151 columnas de la fase 1 se eligieron **con etiquetas de entrenamiento**, así que su sesgo de selección
+  no es medible contra la dispersión.
+- El efecto de agrupar **depende del modelo** (1.3 puntos de AUROC con el `svm_rbf` y 2.2 con el bosque) y de
+  qué se llame «parecido».
+- Los experimentos de la representación usan **una o cuatro familias** de modelos, no las seis de la fase 1.
+- La atribución por subestructura **excluye 618 de 2,534 columnas**, todas huellas, por existir en menos de
+  cinco pliegues.
+- El `mlp` y el `bosque` **varían con la semilla** del modelo.
+- **Ninguna corrida se diseñó para comparar las palancas de la Figura 1**, así que sus barras indican el orden
+  de magnitud y no miden el efecto de cada factor por separado.
+- Las tres formas de aprender de lo raro que probamos —repesar, pasar filas de la prueba al ajuste y
+  recomponer— **usan un solo modelo**, el `svm_rbf`, y la segunda comparte las mismas 1,499 filas en sus 15
+  sorteos.
 
 ## Referencias y anexos
 
@@ -419,8 +462,11 @@ Cada anexo viene de una corrida registrada; su carpeta está en `experimentos/` 
 - **D. El ranking de la fase 2 y la curva de aprendizaje.** Corridas:
   `2026-11-03-artemio-C.5-ranking-fase2-aft`,
   `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`.
-- **E. La densidad del espacio químico a igual peso** (no concluyente) y **cómo repetir cada corrida**, con
-  tiempos y `sha256` de los datos. Corrida: `2026-11-04-artemio-1.3-huellas-por-densidad-del-espacio-quimico`.
+- **E. La densidad del espacio químico a igual peso** (no concluyente), **los tramos de peso igualados por
+  submuestreo** —el control que deja sin sostén la tendencia de la sección 4.4— y **cómo repetir cada
+  corrida**, con tiempos y `sha256` de los datos. Corridas:
+  `2026-11-04-artemio-1.3-huellas-por-densidad-del-espacio-quimico`,
+  `2026-11-08-artemio-1.3-tamano-huellas-actividad-igualado`.
 
 ![Huellas](figuras/f3_huellas.svg)
 
