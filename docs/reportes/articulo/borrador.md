@@ -137,8 +137,8 @@ puntos (0.752 → 0.419). En validación cruzada, el modelo entregado da MCC 0.7
 *Figura 2. AUROC por peldaño, seis modelos. La línea naranja es la prueba reservada (0.793).*
 
 **La fase 2 muestra lo mismo, con una limitación del conjunto.** La concordancia del `aft` baja de
-0.807 (por molécula) a 0.695 con similitud ≥ 0.6, siete veces la dispersión entre los modelos
-competitivos. A 0.5 y 0.4 no se puede ni construir la partición: el 69% y el 90% de las filas caen en
+0.807 (por molécula) a 0.695 con similitud ≥ 0.6: una caída de 0.112, unas siete veces la dispersión de
+0.015 entre los siete modelos competitivos de la fase 2 (el doble, 0.030, era el umbral declarado). A 0.5 y 0.4 no se puede ni construir la partición: el 69% y el 90% de las filas caen en
 un solo grupo. No hay manera de evaluar la fase 2 con química realmente nueva a esos niveles.
 
 ![Escalera fase 2](figuras/f6_escalera_fase2.svg)
@@ -182,13 +182,17 @@ con la dispersión observada (0.0095) solo detectaría con 80% de probabilidad u
 que el resultado descarta una mejora grande, no una de 0.005.
 
 **Pasar compuestos raros de la prueba al entrenamiento tampoco cierra la brecha.** Probamos la otra forma de
-aprender de lo raro (decisión 1.11, la lectura 12 de la prueba, regla escrita antes de correr). La mitad de los
+aprender de lo raro (decisión 1.11, lecturas 12 y 13 de la prueba —la segunda solo mide la prevalencia del reparto, sin
+entrenar—, regla escrita antes de correr). La mitad de los
 grupos de la prueba de cada tercil de rareza forma un núcleo de evaluación; de la otra mitad se pasan al ajuste
 las filas del tercil más raro (285 de media) y se devuelven a la prueba otras tantas filas comunes del ajuste,
 en 15 sorteos. En lo raro del núcleo el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas de
 la prueba **elegidas al azar** da +0.006: lo que ayuda es recibir filas de la prueba, no cuáles. El MCC pasa de
 0.33 a 0.36 (+0.035, en los 15 sorteos), lejos del 0.70 de la validación, mientras el AUROC apenas cambia
-(+0.002) y el azar también lo sube: el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. No
+(+0.002): el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. Descomponerlo con los tres
+brazos, sin otra lectura de la prueba, dice de dónde sale: quitar solo las 295 filas comunes del ajuste no lo
+mueve (−0.001); recibir filas de la prueba sí, raras (+0.035, 15 de 15 sorteos) o al azar (+0.023, 13 de 15). El
+MCC sube por recibir filas de la distribución sobre la que se evalúa, no por cuáles. No
 lo explica la prevalencia del entrenamiento, que casi no se mueve (de 65.0% a 64.5% de BBB+). Lo más útil de la
 corrida es otra cosa: los compuestos comunes que pasan a la prueba se miden con AUROC 0.94 y los raros que
 quedaban en 0.68, con el mismo modelo y sin reentrenar; recomponer la prueba cambia el número que se reporta y
