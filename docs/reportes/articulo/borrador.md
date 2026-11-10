@@ -10,10 +10,10 @@ que sustituya.
 
 Queríamos saber qué tan lejos podía llegar un modelo para priorizar compuestos naturales con potencial
 neuroprotector, y encontramos que casi nunca era el modelo lo que importaba. Entrenamos dos modelos
-independientes: uno que decide si una molécula cruza la barrera hematoencefálica (fase 1) y otro que estima su
+en paralelo: uno que decide si una molécula cruza la barrera hematoencefálica (fase 1) y otro que estima su
 potencia contra 26 dianas del sistema nervioso central, usando también las mediciones censuradas (fase 2).
 Comparamos once modelos, de una regresión logística a ensambles, y ninguno mejoró de forma distinguible al mejor
-modelo individual: entre ellos hay 4.2 puntos de MCC (una medida de acierto entre −1 y 1), contra 33.3 puntos que se
+modelo individual: entre ellos hay 4.2 puntos de MCC (una medida que pesa los aciertos y errores de las dos clases, entre −1 y 1), contra 33.3 puntos que se
 pierden al exigir que lo evaluado se parezca menos a lo entrenado. En la prueba reservada el mejor modelo rindió
 peor de lo que su semejanza predecía (AUROC 0.79 en lugar de 0.89), y tres formas distintas de enseñarle química
 rara no cerraron la brecha. Lo que sí movió el resultado fue el corte de decisión: igualar la tasa de compuestos
@@ -39,7 +39,7 @@ permeable, BBB−). La segunda es con qué potencia actúa sobre cada una de 26 
 (fase 2, regresión). La entrada es la estructura de la molécula escrita como texto (SMILES) y la salida es una
 lista priorizada, no una decisión automática.
 
-### 1.2 Por qué dos fases independientes
+### 1.2 Por qué dos fases en paralelo y no en cascada
 
 Nuestra primera idea fue encadenarlas: lo que saliera BBB− se descartaba y solo el resto pasaba a estimar su
 potencia. La abandonamos porque no hay datos para comprobarla. De los 99,585 esqueletos con actividad medida, solo
@@ -47,9 +47,10 @@ potencia. La abandonamos porque no hay datos para comprobarla. De los 99,585 esq
 filtraría con una predicción que nadie ha verificado. Y una predicción de permeabilidad se equivoca: descartar con
 ella sería perder candidatos reales.
 
-Por eso tratamos las fases como independientes. La primera ayuda a saber si algo puede permear; la segunda estima
-cuánto actuaría, y esa segunda respuesta sigue siendo útil aunque la primera sea dudosa. Cómo combinarlas en un solo
-orden queda como trabajo futuro (sección 6).
+Por eso tratamos las fases en paralelo: cada una se entrena y se evalúa por su cuenta, y sus predicciones son
+evidencia que se combinará en un solo orden, no filtros encadenados. La primera ayuda a saber si algo puede
+permear; la segunda estima cuánto actuaría, y esa segunda respuesta sigue siendo útil aunque la primera sea dudosa.
+Cómo combinarlas queda como trabajo futuro (sección 6).
 
 ### 1.3 Qué significa equivocarse
 
@@ -144,7 +145,8 @@ elegir: la abrimos catorce veces, cuatro de ellas sin mirar etiquetas, y todas e
 
 Contra el listón de 0.70 de MCC que fijó el baseline, el modelo final lo iguala en validación cruzada y no lo
 supera: MCC 0.7017 (el boosting del baseline daba 0.7019), AUROC 0.919 y AUPRC de la clase minoritaria 0.884,
-contra un piso de 0.35. El avance sobre el baseline es cero, y lo tomamos como un resultado: elegir el modelo no
+contra un piso de 0.35. El lift sobre el baseline, es decir, cuánto mejora el modelo final al punto de partida, es cero, y lo tomamos
+como un resultado: elegir el modelo no
 fue la palanca.
 
 Después medimos el modelo final en la prueba reservada. Allí el MCC es 0.339, el AUROC 0.793 y el
@@ -245,8 +247,7 @@ descarta una ganancia grande y no una pequeña.
 
 El MCC cae más que el AUROC porque exige un corte, y el 0.5 es una convención heredada, no una decisión. En la
 prueba ese corte declara BBB+ al 79.3% de los compuestos cuando la prevalencia real es 57.3%: 22 puntos de
-desajuste, frente a los 6 que hay en el ajuste (70.9% contra 64.97%). Veníamos citando el 70.9% como si describiera
-la prueba, y describe el ajuste.
+desajuste, frente a los 6 que hay en el ajuste (70.9% contra 64.97%).
 
 Igualar la tasa declarada a una prevalencia supuesta, sin usar las etiquetas de la prueba, sube el MCC de 0.3385 a
 0.4095: +0.0712, IC95% [+0.0303, +0.1099], remuestreando grupos de andamio. Ni siquiera hace falta acertar la
