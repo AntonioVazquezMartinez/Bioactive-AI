@@ -74,7 +74,7 @@ La prueba reservada se tomó una vez en la fase 1 y quedó registrada con su mot
 
 | Entrega | Fecha | Fase de CRISP-ML(Q) |
 |:--------|:------|:--------------------|
-| Producto de difusión · artículo de 12–18 páginas | 8 de noviembre | Evaluación y despliegue |
+| Producto de difusión · artículo de 12–18 páginas | 15 de noviembre, el equipo entrega el 13 | Evaluación y despliegue |
 | Resumen ejecutivo · tres páginas para la dirección | 15 de noviembre | Evaluación y despliegue |
 
 Las dos traen ya su plantilla del curso versionada, con APA 7 fijado y la bibliografía del

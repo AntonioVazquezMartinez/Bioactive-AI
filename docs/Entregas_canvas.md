@@ -10,8 +10,15 @@
 | 4 | Avance 3. Baseline | **18 de octubre de 2026** | `Avance3.#Equipo` | Liga a GitHub | 100 |
 | 5 | Avance 4. Modelos alternativos | **25 de octubre de 2026** | `Avance4.#Equipo` | Liga a GitHub | 100 |
 | 6 | Avance 5. Modelo final | **1 de noviembre de 2026** | `Avance5.#Equipo` | Liga a GitHub | 100 |
-| 7 | Producto de difusión (artículo) | **8 de noviembre de 2026** | `articulo.#Equipo` | PDF | 100 |
+| 7 | Producto de difusión (artículo) | **15 de noviembre de 2026** (ver la nota) | `articulo.#Equipo` | PDF | 100 |
 | 8 | Resumen ejecutivo | **15 de noviembre de 2026** | `resumen_ejecutivo.#Equipo` | PDF | 100 |
+
+**La fecha de la entrega 7 tuvo tres valores a la vez, y esta tabla es la que manda.** El calendario
+original del curso la ponía el **8 de noviembre**, siguiendo la cadencia semanal de los avances; la
+plataforma muestra el **15 de noviembre**, que es el plazo duro y es el que queda arriba. El equipo
+entrega el **13 de noviembre**, que es la fecha de la portada del artículo y del README de
+`docs/reportes/articulo/`: es un margen propio, no el plazo. Cuando difieran, el plazo es el de la
+plataforma y la fecha de trabajo es la del equipo.
 
 **Condiciones comunes a todas las entregas**
 
@@ -29,7 +36,7 @@
 4. [Entrega 4. Avance 3, baseline (18 oct)](#entrega-4--18-de-octubre-de-2026)
 5. [Entrega 5. Avance 4, modelos alternativos (25 oct)](#entrega-5--25-de-octubre-de-2026)
 6. [Entrega 6. Avance 5, modelo final (1 nov)](#entrega-6--1-de-noviembre-de-2026)
-7. [Entrega 7. Producto de difusión, artículo (8 nov)](#entrega-7--8-de-noviembre-de-2026)
+7. [Entrega 7. Producto de difusión, artículo (15 nov)](#entrega-7--15-de-noviembre-de-2026)
 8. [Entrega 8. Resumen ejecutivo (15 nov)](#entrega-8--15-de-noviembre-de-2026)
 
 ---
@@ -473,7 +480,7 @@ Revisa los criterios con que se evaluará este avance en la rúbrica al final de
 
 ---
 
-# Entrega 7 : 8 de noviembre de 2026
+# Entrega 7 : 15 de noviembre de 2026
 
 **Producto de difusión**
 

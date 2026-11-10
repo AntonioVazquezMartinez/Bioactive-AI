@@ -1,6 +1,6 @@
 # Esqueleto del producto de difusión
 
-Documento de trabajo para la entrega 7 del 8 de noviembre de 2026. **No es el artículo**:
+Documento de trabajo para la entrega 7, cuyo plazo duro es el 15 de noviembre de 2026 y que el equipo entrega el 13. **No es el artículo**:
 es dónde vive su argumento, su tabla de cifras y su mapa a la rúbrica mientras se escribe,
 para que nada de eso exista solo en una conversación. Como `roadmap-mlops.md`, es interno y
 no se publica en el sitio.

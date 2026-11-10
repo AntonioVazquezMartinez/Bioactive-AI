@@ -66,7 +66,7 @@ El trabajo se entrega en avances semanales (ver `docs/Entregas_canvas.md` para e
 | Avance 3 | Modelo de referencia (baseline) | 18 de octubre |
 | Avance 4 | Modelos alternativos | 25 de octubre |
 | Avance 5 | Modelo final | 1 de noviembre |
-| Producto de difusión | Artículo de 12–18 páginas con las ocho secciones del curso | 8 de noviembre |
+| Producto de difusión | Artículo de 12–18 páginas con las ocho secciones del curso | 15 de noviembre (el equipo entrega el 13) |
 | Resumen ejecutivo | Tres páginas dirigidas a la dirección de la patrocinadora, con beneficios mensuales, TCO a 12 meses y riesgos | 15 de noviembre |
 
 ---
@@ -90,7 +90,7 @@ El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 | 3 | Modelo de referencia (`notebooks/03_Baseline.ipynb`) | Entregado el 18 de octubre: las dos fases, con validación cruzada agrupada, diagnóstico de sobreajuste, atribución por dos métodos y piso contra el que comparar |
 | 4 | Modelos alternativos (`notebooks/04_Models.ipynb`) | Entregado el 25 de octubre: seis familias sin ensamble en las dos fases, con el ajuste fino de las dos mejores. El individual final de la fase 1 es el SVM RBF sin afinar. Tres acompañantes miden qué añaden las huellas moleculares |
 | 5 | Modelo final | Entregado el 1 de noviembre, en tres cuadernos. Fase 1 (`notebooks/05_Modelo_Final.ipynb`): el SVM RBF como final, porque ninguna de las 30 comparaciones pasa la regla, con la prueba reservada tomada una vez. Fase 2 (`notebooks/05b_Ensambles_actividad.ipynb`): el AFT censurado como final. Y `notebooks/05c_Ensambles_permeabilidad_huellas.ipynb`, las huellas sobre los ensambles de la fase 1. Una auditoría posterior abrió sus hallazgos como issues `deuda` |
-| — | Producto de difusión | Vence el 8 de noviembre · sin redactar |
+| — | Producto de difusión | Vence el 15 de noviembre, el equipo entrega el 13 · primer borrador completo en el [#289](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/289), 18 páginas |
 | — | Resumen ejecutivo | Vence el 15 de noviembre · sin redactar |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
