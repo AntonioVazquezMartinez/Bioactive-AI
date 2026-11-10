@@ -72,6 +72,9 @@ class Tarea:
     meta: pd.DataFrame
     objetivo: str
     representacion: str
+    # Nombre de cada columna de `X`, en orden. Vacío si la representación no los tiene. Existe porque
+    # el cuaderno 05 pedía los nombres a `meta.attrs`, un canal que nadie escribía, y rotulaba por índice.
+    columnas: tuple[str, ...] = ()
 
     def __repr__(self) -> str:  # pragma: no cover - solo para inspección
         return (f"Tarea({self.nombre}, {self.X.shape[0]:,}×{self.X.shape[1]:,}, "
@@ -111,6 +114,18 @@ def _entradas_permeabilidad(representacion: str, filas: np.ndarray) -> np.ndarra
         return np.hstack([d.to_numpy(dtype=np.float32),
                           _denso(PROCESADOS / "bbb_morgan2048.npz")])[filas]
     raise ValueError(f"representación {representacion!r}; use una de {REPRESENTACIONES}")
+
+
+def _nombres_permeabilidad(representacion: str) -> tuple[str, ...]:
+    """Los nombres de las columnas de `X`, en el orden en que `_entradas_permeabilidad` las arma."""
+    if representacion in DESCRIPTORES:
+        return tuple(pd.read_parquet(PROCESADOS / DESCRIPTORES[representacion]).columns)
+    bits = tuple(f"bit_{i}" for i in range(2048))
+    if representacion in ("morgan", "sortslice"):
+        return bits
+    if representacion == "descriptores+morgan":
+        return _nombres_permeabilidad("descriptores") + bits
+    return ()
 
 
 def asignar_origen(exacto: pd.Series, key14: pd.Series) -> np.ndarray:
@@ -259,6 +274,7 @@ def _permeabilidad(representacion: str, incluir_prueba: bool,
         meta=m,
         objetivo="bbb_class (BBB+ = 1)",
         representacion=representacion,
+        columnas=_nombres_permeabilidad(representacion),
     )
 
 

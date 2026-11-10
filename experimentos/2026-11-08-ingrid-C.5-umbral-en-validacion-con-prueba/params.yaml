@@ -1,0 +1,35 @@
+decision: C.5
+semillas:
+- 0
+- 1
+- 2
+params:
+  modelo: svm_rbf
+  semillas:
+  - 0
+  - 1
+  - 2
+  pliegues: 5
+  filas_ajuste: 6306
+  grupos: 1048
+  eleccion_del_corte: máximo MCC sobre las probabilidades fuera de pliegue de cada
+    semilla
+  corte_congelado: la mediana de los tres de semilla, a tres decimales
+  guarda: 'semilla dejada fuera: el corte de las otras dos, medido en ella'
+  lecturas:
+  - fijo_0.5
+  - congelado
+  - igual_prevalencia
+  - optimo_cota
+  intervalo: bootstrap de grupos de andamio, 2,000 remuestreos
+  sin_umbral_de_paso: 'lección de la 1.10: se reporta el intervalo y la cota'
+  negativo_es_resultado: 'la validación tiene 65.0% de BBB+ y la prueba 57.3%: el
+    corte puede no moverse en la dirección que la prueba pide'
+  controles:
+    mcc_cv_en_0.5: 0.7017
+    mcc_prueba_en_0.5: 0.3385
+    auroc_prueba: 0.7928
+    tolerancia: 0.003
+  toca_prueba: true
+  motivo_de_la_lectura: '#191: MCC de la prueba a un umbral elegido con validación
+    interna agrupada, congelado antes de leerla; el corte fijo de 0.5 es el control'

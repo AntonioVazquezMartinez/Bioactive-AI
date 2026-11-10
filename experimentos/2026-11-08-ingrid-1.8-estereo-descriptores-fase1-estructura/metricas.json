@@ -1,0 +1,87 @@
+{
+  "grupos_identicos": {
+    "descriptores": {
+      "filas_inseparables": 183,
+      "grupo_mas_grande_mezclado": 5,
+      "grupos": 4632,
+      "grupos_mezclados": 69
+    },
+    "descriptores+estereo": {
+      "filas_inseparables": 26,
+      "grupo_mas_grande_mezclado": 2,
+      "grupos": 6083,
+      "grupos_mezclados": 13
+    },
+    "grupos_mezclados_que_dejan_de_estarlo": 56
+  },
+  "techo_oraculo": {
+    "descriptores": {
+      "análogo estereoquímico": {
+        "auprc_minoritaria": 0.9993,
+        "auroc": 0.9996,
+        "exactitud_balanceada": 0.9878,
+        "inseparables": 25,
+        "mcc": 0.9736,
+        "n": 768
+      },
+      "natural exacto": {
+        "auprc_minoritaria": 0.9987,
+        "auroc": 0.9992,
+        "exactitud_balanceada": 0.9809,
+        "inseparables": 142,
+        "mcc": 0.9628,
+        "n": 2920
+      },
+      "sin equivalente natural": {
+        "auprc_minoritaria": 0.9998,
+        "auroc": 1.0,
+        "exactitud_balanceada": 0.9939,
+        "inseparables": 16,
+        "mcc": 0.9916,
+        "n": 2618
+      },
+      "todos": {
+        "auprc_minoritaria": 0.9992,
+        "auroc": 0.9997,
+        "exactitud_balanceada": 0.9863,
+        "inseparables": 183,
+        "mcc": 0.9756,
+        "n": 6306
+      }
+    },
+    "descriptores+estereo": {
+      "análogo estereoquímico": {
+        "auprc_minoritaria": 1.0,
+        "auroc": 1.0,
+        "exactitud_balanceada": 0.9977,
+        "inseparables": 4,
+        "mcc": 0.9947,
+        "n": 768
+      },
+      "natural exacto": {
+        "auprc_minoritaria": 1.0,
+        "auroc": 1.0,
+        "exactitud_balanceada": 0.997,
+        "inseparables": 16,
+        "mcc": 0.9945,
+        "n": 2920
+      },
+      "sin equivalente natural": {
+        "auprc_minoritaria": 1.0,
+        "auroc": 1.0,
+        "exactitud_balanceada": 0.9965,
+        "inseparables": 6,
+        "mcc": 0.9958,
+        "n": 2618
+      },
+      "todos": {
+        "auprc_minoritaria": 1.0,
+        "auroc": 1.0,
+        "exactitud_balanceada": 0.9971,
+        "inseparables": 26,
+        "mcc": 0.9955,
+        "n": 6306
+      }
+    }
+  }
+}

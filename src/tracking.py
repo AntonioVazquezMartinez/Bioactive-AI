@@ -193,7 +193,7 @@ def entorno(raiz: Path = RAIZ, datos: list[Path] | None = None) -> dict:
         "python": platform.python_version(),
         "paquetes": {p: _version(p) for p in PAQUETES},
         "lock_sha256": sha256(lock) if lock.exists() else None,
-        "datos_sha256": {str(Path(d).resolve().relative_to(raiz)): sha256(Path(d))
+        "datos_sha256": {Path(d).resolve().relative_to(raiz).as_posix(): sha256(Path(d))
                          for d in datos or []},
     }
 

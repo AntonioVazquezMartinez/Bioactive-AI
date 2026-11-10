@@ -162,3 +162,14 @@ def test_comando_sin_rutas_absolutas(tmp_path, monkeypatch):
         c.metricas({"x": 1})
     comando = (c.carpeta / "comando.txt").read_text().split()
     assert comando[0].startswith("python3.") and comando[1:] == ["scripts/exp.py", "--rapido"]
+
+
+def test_datos_sha256_usa_rutas_posix(tmp_path):
+    sub = tmp_path / "data" / "processed"
+    sub.mkdir(parents=True)
+    f = sub / "archivo.parquet"
+    f.write_text("x")
+    with _corrida(tmp_path, datos=[f]) as c:
+        c.metricas({"x": 1})
+    env = json.loads((c.carpeta / "entorno.json").read_text())
+    assert "data/processed/archivo.parquet" in env["datos_sha256"]

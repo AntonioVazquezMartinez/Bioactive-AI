@@ -10,6 +10,7 @@ cita. Comprueba que las copias coincidan, que es la parte barata y la que se rom
 Exime una copia marcada como superada: el registro tiene que conservarlas visibles.
 """
 
+import csv
 import json
 import re
 from pathlib import Path
@@ -21,8 +22,19 @@ SUPERADO = re.compile(r"versi[oó]n anterior|versi[oó]n superada|superad\w+|dec
 ESPACIOS = re.compile(r"\s+")
 N = r"(\d\.\d)"
 
+# Cuántas veces se leyó la prueba: se cuenta de `experimentos/prueba.csv`, no se escribe a mano.
+# Esa cifra derivó 6 → 7 → 9 → 11 en tres días y cada corrección se hizo en el documento que
+# alguien estaba leyendo; ahora añadir una lectura al CSV sin actualizar las copias falla aquí.
+_LECTURAS = len(list(csv.DictReader((RAIZ / "experimentos" / "prueba.csv").open(encoding="utf-8"))))
+_EN_PALABRAS = {9: "nueve", 10: "diez", 11: "once", 12: "doce", 13: "trece", 14: "catorce",
+                15: "quince"}
+
 # (nombre, patrón con un grupo, valor canónico). Añadir una cifra vigilada es una línea.
 CIFRAS = [
+    ("las lecturas de la prueba, en palabras",
+     r"se ley[óo] \**(\w+) veces", _EN_PALABRAS.get(_LECTURAS, f"<{_LECTURAS}: añádela a _EN_PALABRAS>")),
+    ("las lecturas de la prueba, en cifras",
+     r"lecturas de la prueba \(`prueba\.csv`\) \| (\d+)", str(_LECTURAS)),
     ("el MCC que infla agrupar solo por andamio",
      rf"infla\w*.{{0,90}}?(?:MCC (?:en |de )?{N}|{N} (?:puntos )?de MCC)", "7.1"),
     ("el AUROC que infla agrupar solo por andamio",
@@ -83,14 +95,25 @@ def test_el_7_1_y_el_2_2_se_atribuyen_al_bosque(corpus):
     Una copia que los cite sin decir de qué modelo son los presenta como un efecto general,
     que es lo que la corrida 2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad desmintió.
     """
-    sueltas = []
+    # Por valor y no por índice: el #268 insertó dos entradas al principio de CIFRAS y
+    # esta prueba, que direccionaba CIFRAS[0] y CIFRAS[1], quedó comparando el patrón de
+    # las lecturas contra «7.1». Pasó en vacío hasta que alguien lo probó a mano.
+    vigiladas = [(p, v) for _, p, v in CIFRAS if v in ("7.1", "2.2")]
+    assert len(vigiladas) == 2, (
+        "las entradas del 7.1 y del 2.2 cambiaron de valor o salieron de CIFRAS")
+
+    sueltas, vistas = [], 0
     for ruta, texto in corpus.items():
-        for patron, valor in ((CIFRAS[0][1], "7.1"), (CIFRAS[1][1], "2.2")):
+        for patron, valor in vigiladas:
             for m in re.finditer(patron, texto):
                 if valor not in next(g for g in m.groups() if g):
                     continue
+                vistas += 1
                 contexto = texto[max(0, m.start() - 220):m.end() + 260]
                 if re.search(r"bosque|forest|svm_rbf|superad|dec[ií]a", contexto, re.I):
                     continue
                 sueltas.append(f"{ruta} cita {valor} sin decir que es del bosque")
+    assert vistas, (
+        "la guarda no encontró ninguna cita del 7.1 ni del 2.2: el patrón o la redacción "
+        "cambiaron y dejó de vigilar sin que nada falle")
     assert not sueltas, "; ".join(sueltas)

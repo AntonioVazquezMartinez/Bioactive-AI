@@ -2,8 +2,14 @@ fecha,autor,commit,filas,motivo
 2026-10-31,antonio,8759bbc,13944,Evaluación final del 05b (decisión 2.13) con aft
 2026-11-01,antonio,7bc114e,13944,"Recálculo de las cifras que acompañan a los cuatro gráficos del 05b, con el modelo final ya elegido"
 2026-11-01,artemio,a19158a,1499,"Ninguna comparación pasó la regla de mejora, así que el final es el mejor individual; la estabilidad y los intervalos solapados de AUROC apuntan al mismo modelo."
+2026-11-04,artemio,26cf50a,1499,"Cruce del AUROC de la prueba con la similitud al ajuste, por origen (pregunta 6.3 de Grettel); el desglose por origen a secas ya estaba registrado"
+2026-11-04,artemio,26cf50a,1499,"Verificación independiente de la octava lectura (misma pregunta, otro cálculo de similitud y de AUROC)"
+2026-11-03,artemio,3265aa2,1499,"E1+: similitud estructural de la prueba con el ajuste, solo SMILES, sin etiquetas ni predicciones"
 2026-11-03,artemio,7362f3f,1499,E2 fase 1: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso y TPSA; modelos reajustados con las filas de ajuste
 2026-11-03,artemio,7362f3f,13944,"E2 fase 2: la prueba por rareza (terciles de similitud dentro de cada tramo de peso) contra una línea base de peso, TPSA y diana; modelos reajustados con las filas de ajuste"
 2026-11-04,artemio,79d2428,1499,"E14: distribución de la similitud de la prueba con el ajuste, solo SMILES, sin etiquetas ni predicciones"
 2026-11-04,artemio,a2ee541,1499,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 1"
 2026-11-04,artemio,a2ee541,13973,"Proporción de andamios y esqueletos de la prueba ausentes del entrenamiento (estructural, sin etiquetas), fase 2"
+2026-11-07,artemio,bf18719,1499,"1.11: pasar los raros de la prueba al ajuste y devolver comunes a la prueba; la prueba se reparte, no se evalúa con el modelo final"
+2026-11-08,artemio,4a1a2c6,1499,"1.11: prevalencia de BBB+ en el entrenamiento de cada brazo (no entrena nada), para leer el efecto del MCC como umbral o como aprendizaje"
+2026-11-08,ingrid,78fb31e,1499,"#191: MCC de la prueba a un umbral elegido con validación interna agrupada, congelado antes de leerla; el corte fijo de 0.5 es el control"

@@ -1,0 +1,23 @@
+{
+  "arbol_sucio": true,
+  "commit": "2d14bbe3d0782c9d05be951d66f6ee18ff719b4e",
+  "datos_sha256": {
+    "data/external/profesora/snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv": "8dfeeec3f1a223e70c086e645e8e3b2423ea29f5b045d7897d8d7ee8a5ba8fd6",
+    "notebooks/datos/tipos_ensayo_chembl.csv": "65c5df6eb3d84bcbe873411209c0004890f902d97b4894052fcb26994608c24c"
+  },
+  "decision": "2.11",
+  "duracion_s": 0.0,
+  "lock_sha256": "7b40cfb8375a9554a3f5c3dc86d1d0dfec9730c8602ea4df48053fd6b4748e2e",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.13",
+  "sin_seguimiento": 0,
+  "sistema": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43"
+}

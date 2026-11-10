@@ -1,0 +1,121 @@
+{
+  "azar": {
+    "d_media": 0.010399662830957746,
+    "d_positivas": 13,
+    "d_sd": 0.008456941096266792,
+    "evaluaciones": 15,
+    "veredicto_por_la_regla": "sobrevive"
+  },
+  "d_e6_evaluaciones": 15,
+  "d_e6_media": 0.006591350961752234,
+  "d_e6_positivas": 10,
+  "equilibrado": {
+    "d_media": 0.0007745235175909674,
+    "d_positivas": 7,
+    "d_sd": 0.01009624508884765,
+    "evaluaciones": 15,
+    "veredicto_por_la_regla": "se aplana"
+  },
+  "por_ajuste_y_tramo": [
+    {
+      "aft": 0.7025,
+      "aft_huellas": 0.7079,
+      "ajuste": "azar",
+      "dif": 0.0055,
+      "dif_e6": 0.0023,
+      "evaluaciones": 15,
+      "mejora_en": 12,
+      "tramo": "250–350 Da"
+    },
+    {
+      "aft": 0.7405,
+      "aft_huellas": 0.752,
+      "ajuste": "azar",
+      "dif": 0.0115,
+      "dif_e6": 0.0085,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "tramo": "350–500 Da"
+    },
+    {
+      "aft": 0.7227,
+      "aft_huellas": 0.7386,
+      "ajuste": "azar",
+      "dif": 0.0159,
+      "dif_e6": 0.0089,
+      "evaluaciones": 15,
+      "mejora_en": 14,
+      "tramo": ">500 Da"
+    },
+    {
+      "aft": 0.7399,
+      "aft_huellas": 0.7495,
+      "ajuste": "azar",
+      "dif": 0.0096,
+      "dif_e6": 0.0057,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "tramo": "todos"
+    },
+    {
+      "aft": 0.6408,
+      "aft_huellas": 0.6338,
+      "ajuste": "azar",
+      "dif": -0.0069,
+      "dif_e6": -0.0035,
+      "evaluaciones": 3,
+      "mejora_en": 1,
+      "tramo": "≤250 Da"
+    },
+    {
+      "aft": 0.6979,
+      "aft_huellas": 0.7066,
+      "ajuste": "equilibrado",
+      "dif": 0.0087,
+      "dif_e6": 0.0023,
+      "evaluaciones": 15,
+      "mejora_en": 13,
+      "tramo": "250–350 Da"
+    },
+    {
+      "aft": 0.7262,
+      "aft_huellas": 0.7397,
+      "ajuste": "equilibrado",
+      "dif": 0.0135,
+      "dif_e6": 0.0085,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "tramo": "350–500 Da"
+    },
+    {
+      "aft": 0.7379,
+      "aft_huellas": 0.7474,
+      "ajuste": "equilibrado",
+      "dif": 0.0095,
+      "dif_e6": 0.0089,
+      "evaluaciones": 15,
+      "mejora_en": 13,
+      "tramo": ">500 Da"
+    },
+    {
+      "aft": 0.7346,
+      "aft_huellas": 0.745,
+      "ajuste": "equilibrado",
+      "dif": 0.0104,
+      "dif_e6": 0.0057,
+      "evaluaciones": 15,
+      "mejora_en": 15,
+      "tramo": "todos"
+    },
+    {
+      "aft": 0.6614,
+      "aft_huellas": 0.6557,
+      "ajuste": "equilibrado",
+      "dif": -0.0057,
+      "dif_e6": -0.0035,
+      "evaluaciones": 3,
+      "mejora_en": 1,
+      "tramo": "≤250 Da"
+    }
+  ]
+}

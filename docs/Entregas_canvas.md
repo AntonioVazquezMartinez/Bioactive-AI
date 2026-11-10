@@ -503,7 +503,12 @@ Integrar y comunicar los principales hallazgos del proyecto en un artículo que 
 - Extensión 12–18 páginas contadas desde el título hasta las referencias; los anexos no cuentan.
 - Página carta (8.5 × 11 in), una columna, letra de 11 pt, márgenes de 2.5 cm, interlineado 1.15.
 - Figuras y tablas numeradas y con pie. Un solo estilo de referencias en todo el documento: APA 7 o IEEE.
-- Plantilla de LaTeX provista por el curso (`Articulo.zip`); compila en Overleaf.
+- Plantilla de LaTeX provista por el curso (`Articulo.zip`); compila en Overleaf. Está
+  versionada en `docs/reportes/articulo/articulo.tex`. **Su encabezado dice «3 páginas» y
+  no es lo que aplica aquí:** es la cifra del resumen ejecutivo, heredada al derivar una
+  plantilla de la otra —los dos zips traen el mismo `referencias.bib` y el mismo
+  `logo.jpeg` byte a byte—. Manda la extensión de 12 a 18 páginas de esta misma sección y
+  de la rúbrica; queda por confirmar con la profesora.
 
 ## Declaración de uso de IA
 
@@ -570,6 +575,10 @@ Se dirige a la dirección de la patrocinadora, no es un informe académico ni un
 - Página carta (8.5 × 11 in), una columna, letra de 11 pt, márgenes de 2.5 cm, interlineado 1.15.
 - Figuras y tablas numeradas y con pie. Referencias en APA 7.
 - Plantilla de LaTeX provista por el curso (`Resumen ejecutivo.zip`); compila en Overleaf.
+  Está versionada en `docs/reportes/resumen-ejecutivo/resumen_ejecutivo.tex`. Sus recuadros
+  de cifras —latencia, cobertura, ahorro en horas y costos por mes— están escritos para un
+  proyecto de automatización de procesos, no para uno de priorización de candidatos:
+  reencuadrarlos sobre la unidad real del proyecto es parte del trabajo, no un relleno.
 
 ## Declaración de uso de IA
 
