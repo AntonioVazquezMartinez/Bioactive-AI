@@ -49,6 +49,8 @@ website:
         menu:
           - href: contenido/guia-del-proyecto.md
             text: Guía del proyecto
+          - href: contenido/medir-una-representacion.md
+            text: Medir una representación
           - href: contenido/glosario.md
             text: Glosario
           - href: presentacion.qmd
