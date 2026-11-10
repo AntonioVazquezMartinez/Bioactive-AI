@@ -514,7 +514,7 @@ Lo que **no** se puede afirmar todavía es que el modelo no sirva para productos
 :::
 
 ::: {.callout-note}
-**La prueba reservada no se ha mirado**, y cuando se mire hay que decir antes que trae 117 pares de NPASS puros: el intervalo sobre naturales va a ser ancho por construcción.
+**La prueba reservada ya se miró, y en ese grupo no confirma al modelo**: en los 117 pares de NPASS puros la concordancia baja a 0.530 (0.632 en validación) y la línea base de peso y TPSA da 0.565. Con 117 pares no hay potencia para distinguirlas, así que ni lo refuta ni lo confirma.
 :::
 
 # 6 · La Ruta del proyecto {background-color="#2a3441"}
@@ -523,7 +523,7 @@ Donde quedó cada decisión, con lo que se descartó y lo que cuesta.
 
 ## Todo queda registrado, y algunas decisiones se revirtieron {.smaller}
 
-**Veintinueve entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
+**Treinta y tres entradas** con su contexto, lo que se descartó y lo que cuesta, en [La ruta del proyecto](contenido/decisiones.html). **Dos están ratificadas** —la 2.1 y la 2.6, las primeras del proyecto— porque la patrocinadora las revisó el 15 de octubre; el resto no, y lo dice.
 
 **Dos se revirtieron al medir:**
 
@@ -581,7 +581,7 @@ Ninguna de las cinco se declara ratificada y **cada una dice qué la haría camb
 
 **Cero entradas esperando su definición.** De las siete que había: dos ratificadas el 15 de octubre y cinco decididas por el equipo, cada una con lo que la haría cambiar y ninguna declarada ratificada.
 
-**Veintinueve entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 18 vigentes, 8 propuestas y 1 abierta. Nueve de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
+**33 entradas** en [la Ruta](contenido/decisiones.html): 2 ratificadas, 18 vigentes, 11 propuestas y 1 abierta, más la 1.5, que solo está revisada. Diez de ellas están además marcadas como revisadas, que es el estado que deja visible la versión superada.
 
 ## Lo que falta antes de reportar candidatos
 

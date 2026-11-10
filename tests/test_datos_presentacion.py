@@ -330,9 +330,16 @@ def test_el_mazo_cuenta_los_estados_que_el_registro_tiene():
         "son los encabezados de docs/decisiones.md")
 
     # Y el total, que va en la misma frase y en la diapositiva de la Ruta.
+    # Una entrada puede llevar solo `revisada` (la 1.5): es un estado legítimo del registro y no entra en
+    # el reparto, así que se cuenta aparte y la frase del mazo tiene que decirlo.
+    solo_revisadas = sum(1 for clases in encabezados
+                         if ".revisada" in clases and not any(f".{k}" in clases for k in singular))
     total = len(encabezados)
-    assert sum(real.values()) == total, (
-        f"{total} entradas pero {sum(real.values())} con estado de reparto")
+    assert sum(real.values()) + solo_revisadas == total, (
+        f"{total} entradas pero {sum(real.values())} con estado de reparto y {solo_revisadas} solo revisadas")
+    if solo_revisadas:
+        assert "solo está revisada" in frase.group(0) + mazo[frase.end():frase.end() + 80], (
+            "hay entradas que solo están revisadas y el mazo no lo dice junto al reparto")
 
 
 def test_el_mazo_cita_el_agrupamiento_que_da_el_generador(datos):
