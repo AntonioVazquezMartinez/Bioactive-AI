@@ -34,8 +34,11 @@ Compila en una copia porque Docker no sigue los enlaces simbólicos de la biblio
 tiene **18 páginas**: el cuerpo, del título a las referencias, ocupa **16** (la rúbrica pide 12 a 18) y los
 anexos son las dos últimas, que van aparte. Así que **quedan dos páginas de margen, no cinco**: una sección nueva
 no entra, y lo que se añada conviene que sustituya. Las secciones llevan los nombres y la numeración de la
-plantilla del curso (el resumen y las referencias no se numeran, así que «Implementación y operación» es la 5,
-como dice la rúbrica).
+plantilla del curso. **Ojo con la numeración, que esta frase decía algo falso:** la rúbrica lista las ocho
+secciones numerando el resumen como 1 y las referencias como 8, de modo que para ella «Implementación y
+operación» es la **6**. El artículo la numera **5** porque no numera el resumen ni las referencias, que es lo
+normal. Las ocho están y en el orden que pide, así que **no hay que renumerar nada**; lo que no se puede decir
+es que el 5 venga de la rúbrica.
 
 **Pendiente, y es lo único que falta:** el PDF del repositorio es anterior al repaso de redacción del 9 de
 noviembre (título nuevo, la lista de limitaciones, el trabajo futuro de la a a la e, la §5 partida en tres y la
