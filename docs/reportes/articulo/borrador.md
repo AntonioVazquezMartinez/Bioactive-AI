@@ -61,8 +61,8 @@ lo que producimos es un orden de prioridad y no un punto de corte.
 
 - Los resultados valen para estos datos, con las particiones que describimos y para las familias de modelos que
   probamos.
-- La prueba reservada es una sola, de 1,499 compuestos en la fase 1: la abrimos catorce veces para medir y nunca
-  para elegir un modelo.
+- La prueba reservada es una sola, de 1,499 compuestos en la fase 1, y solo la usamos para medir, nunca para
+  elegir un modelo.
 - Una cifra de validación cruzada no describe a la química nueva; la sección 4 muestra cuánto cae.
 - Quedan preguntas abiertas: por qué las huellas moleculares ayudan en una fase y no en la otra, y qué explica
   que la prueba rinda menos de lo que su semejanza predice.
@@ -147,7 +147,7 @@ supera: MCC 0.7017 (el boosting del baseline daba 0.7019), AUROC 0.919 y AUPRC d
 contra un piso de 0.35. El avance sobre el baseline es cero, y lo tomamos como un resultado: elegir el modelo no
 fue la palanca.
 
-Después abrimos la prueba reservada, una sola vez con el modelo final. Allí el MCC es 0.339, el AUROC 0.793 y el
+Después medimos el modelo final en la prueba reservada. Allí el MCC es 0.339, el AUROC 0.793 y el
 AUPRC 0.720: una brecha de 0.363 de MCC (52%) y de 0.126 de AUROC (14%) frente a la validación cruzada. En la fase
 2 la concordancia baja de 0.761 a 0.720. Una precisión: el AUROC de 0.93 del baseline sale de predicciones
 promediadas entre semillas y no es comparable con el 0.919, que es el promedio de las 15 evaluaciones.
