@@ -111,11 +111,9 @@ y 0.35 de AUPRC que dan los clasificadores triviales.
 
 ### 3.2 Los candidatos y cómo elegimos
 
-Probamos once modelos de clasificación, de la regresión logística a cinco ensambles y dos versiones afinadas. La
-regla de mejora se escribió antes de correr: una diferencia pareada media por encima de un umbral y positiva en al
-menos 12 de las 15 evaluaciones. Ninguna de las treinta comparaciones contra el mejor modelo individual la
-cumplió, así que el modelo final de la fase 1 es ese mejor individual, una máquina de vectores de soporte con
-núcleo radial (`svm_rbf`) sobre los 151 descriptores. Lo elegimos por descarte, no porque ganara.
+Probamos once modelos de clasificación, de la regresión logística a cinco ensambles y dos versiones afinadas. Ninguno
+superó al mejor modelo individual, así que el modelo final de la fase 1 es ese, una máquina de vectores de soporte
+con núcleo radial (`svm_rbf`) sobre los 151 descriptores. Lo elegimos por descarte, no porque ganara.
 
 En la fase 2 comparamos nueve modelos de regresión. El final es un modelo de supervivencia acelerada (AFT,
 XGBoost `chen2016xgboost`), que aprende de las mediciones censuradas: las que solo dicen que la potencia es menor
