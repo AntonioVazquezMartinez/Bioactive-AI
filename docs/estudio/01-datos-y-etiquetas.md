@@ -344,13 +344,15 @@ más potente, que sesgaría hacia los activos. Así los conflictos bajan de 1,78
 ## 2.6 · ¿Se pueden encadenar las dos fases?
 
 **Solo 1,033 esqueletos tienen medición en las dos** (`01b` §4): el 1.0% del conjunto de
-actividad y el 25.7% del de permeabilidad.
+actividad y el 25.7% del de permeabilidad. Eso cuenta el **archivo crudo** de actividad. Hay
+**612 esqueletos en el archivo que ve el modelo**, `fase2_pares.parquet`, el 15.2% de la fase 1
+(`scripts/cruce_de_fases.py`).
 
 **Esto es lo que sostiene que la fase 1 no sea un filtro duro.** Para el 99% de los
 compuestos con actividad documentada la permeabilidad sería una *predicción sin verificar*, y
 descartarlos con ella eliminaría candidatos con actividad real.
 
-> **P. ¿Por qué no usan esos 1,033 para evaluar la cadena completa?**
+> **P. ¿Por qué no usan los comunes para evaluar la cadena completa?**
 > Es una **decisión abierta**: reservarlos cuesta un cuarto de los datos de la fase 1, porque
 > tendrían que salir también de su entrenamiento para no filtrar. El `01b` la deja como paso
 > pendiente, y la propuesta C.3 —que prueba si combinar las dos predicciones selecciona mejor—

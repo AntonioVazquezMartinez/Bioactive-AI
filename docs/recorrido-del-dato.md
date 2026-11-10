@@ -95,7 +95,7 @@ Sale una clase: **BBB+** si el compuesto atraviesa la barrera hematoencefálica,
 
 **Por qué no se usa la exactitud para medir.** Hay 1.74 positivos por cada negativo, así que un modelo que diga siempre BBB+ acierta el 63.5% sin aprender nada. Se reportan **MCC y AUPRC sobre la clase minoritaria** ([C.1](decisiones.md#dc-1)).
 
-**Y un BBB− no descarta al compuesto.** Solo 1,033 esqueletos tienen medición en las dos fases, así que filtrar por una predicción no verificada tiraría el 99% restante. Las dos fases son evidencia paralela que se combina al ordenar, no una cascada.
+**Y un BBB− no descarta al compuesto.** Solo 1,033 esqueletos tienen medición en las dos fases contando el archivo crudo de actividad, y hay 612 esqueletos en el archivo que ve el modelo ([C.3](decisiones.md#dc-3)), así que filtrar por una predicción no verificada tiraría el 99% restante. Las dos fases son evidencia paralela que se combina al ordenar, no una cascada.
 
 ## 9 · Fase 2 · ¿qué tan potente es contra cada diana?
 
