@@ -113,6 +113,19 @@ MCC es mayor que la del AUROC porque el MCC exige un corte fijo y, bajo un cambi
 cambia de sesgo (sección 4.2). Por eso el cuaderno entrega la probabilidad y no una clase, y lo que el
 laboratorio debe leer es el orden.
 
+**El corte no es parte del modelo, y moverlo recupera la mitad del margen.** El 0.339 es con el corte fijo en
+0.5, que es una convención heredada y no una decisión: sobre la prueba ese corte declara BBB+ al 79.3% de los
+compuestos cuando la prevalencia real es 57.3%, **22 puntos de desajuste** frente a los 6 del ajuste. Igualar la
+tasa declarada a una prevalencia supuesta, sin usar las etiquetas de la prueba, sube el MCC a **0.4095**:
+**+0.0712 de MCC, IC95% [+0.0303, +0.1099]** por remuestreo de los grupos de andamio. Y no exige acertar la
+prevalencia —el corte se fijó suponiendo la del ajuste, 65.0%, cuando la de la prueba era 57.3%, un error de 7.7
+puntos, y la ganancia se sostiene—. En cambio **elegir el corte con las etiquetas de validación no recupera
+nada**: +0.0065 [−0.0224, +0.0341]. Las dos lecturas son del mismo modelo entregado y de la misma lectura de la
+prueba (corrida `2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba`, con el corte congelado antes de leerla,
+y los dos controles reproducen el 0.3385 y el AUROC 0.793 registrados). La brecha de 0.363 de MCC contra
+validación cruzada se mide con el corte fijo en los dos lados y no cambia. El techo, 0.485, **usa las etiquetas
+de la prueba para elegir el corte y no es alcanzable**: mide con lo que mide.
+
 ### 4.2 La escalera de semejanza
 
 Entre los once modelos hay 4.2 puntos de MCC. Con el `svm_rbf`, pasar de pliegues al azar a pliegues

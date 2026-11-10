@@ -30,10 +30,16 @@ La primera vez construye una imagen `tex-art` a partir de `texlive/texlive:lates
 `latexextra`, `bibtexextra`, `pictures` y `fontsrecommended` (unos 4 GB, varios minutos); después tarda segundos.
 Compila en una copia porque Docker no sigue los enlaces simbólicos de la bibliografía y el logo.
 
-**Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber, 16 páginas de las cuales
-el cuerpo, del título a las referencias, ocupa 14 (la rúbrica pide 12 a 18); los anexos van aparte. Las secciones
-llevan los nombres y la numeración de la plantilla del curso (el resumen y las referencias no se numeran, así que
-«Implementación y operación» es la 5, como dice la rúbrica).
+**Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber. El PDF del repositorio
+tiene **18 páginas**: el cuerpo, del título a las referencias, ocupa **16** (la rúbrica pide 12 a 18) y los
+anexos son las dos últimas, que van aparte. Así que **quedan dos páginas de margen, no cinco**: una sección nueva
+no entra, y lo que se añada conviene que sustituya. Las secciones llevan los nombres y la numeración de la
+plantilla del curso (el resumen y las referencias no se numeran, así que «Implementación y operación» es la 5,
+como dice la rúbrica).
+
+**Pendiente:** el PDF del repositorio es anterior al párrafo del corte de igual prevalencia de la §4.1. Hay que
+volver a compilar con `sh scripts/compilar_articulo.sh`, que **necesita Docker**, y revisar el PDF página por
+página antes de dar el artículo por listo. El `.tex` sí está regenerado y `tests/test_articulo_tex.py` pasa.
 
 **En Overleaf**: los dos `.bib` y el logo son **enlaces simbólicos**, por la razón que da el `CLAUDE.md`: tres
 copias de la bibliografía ya habían divergido. Overleaf no los sigue, así que al subir hay que resolverlos:
