@@ -136,7 +136,14 @@ No es el modelo.
 
 ## La escalera de semejanza {.smaller}
 
-![](docs/reportes/articulo/figuras/f1_escalera.svg){fig-alt="AUROC por peldaño de semejanza permitida entre entrenamiento y validación" width="60%"}
+::: {.columns}
+::: {.column width="50%"}
+![](docs/reportes/articulo/figuras/f1_escalera.svg){fig-alt="AUROC por peldaño de semejanza permitida entre entrenamiento y validación"}
+:::
+::: {.column width="50%"}
+![](docs/reportes/articulo/figuras/f2_rareza.svg){fig-alt="Ventaja del modelo sobre la línea base por tercil de rareza"}
+:::
+:::
 
 - Si nada de lo entrenado puede parecerse más de 0.4 a lo evaluado, el MCC baja de **0.75 a 0.42**: 33 puntos, contra 4.2 entre modelos.
 - La fase 2 hace lo mismo, en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
@@ -150,8 +157,6 @@ Importa qué tan nueva es la molécula.
 :::
 
 ## Pero no lo explica todo {.smaller}
-
-![](docs/reportes/articulo/figuras/f2_rareza.svg){fig-alt="Ventaja del modelo sobre la línea base por tercil de rareza" width="55%"}
 
 - La prueba se parece **más** a lo entrenado que la validación (0.414 contra 0.384): debería rendir mejor.
 - Esperábamos AUROC **0.89**; vemos **0.79**.
@@ -187,10 +192,10 @@ El problema no es cuánta química rara ve el modelo.
 Límite: necesita el lote completo y suponer una prevalencia.
 :::
 
-**Respuesta al gancho:** el orden casi no cambió; lo que cayó fue el corte fijo.
+**Respuesta al gancho:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
-**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793). El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad: de 0.919 en validación. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
 :::
 
 ## El cuaderno
