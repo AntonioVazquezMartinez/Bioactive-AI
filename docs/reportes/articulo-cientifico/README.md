@@ -64,7 +64,7 @@ cd docs/reportes/articulo-cientifico && mkdir -p /tmp/subir && cp -RL articulo-c
 - **Doble columna, 10 pt, márgenes de 1.9 cm**, con el resumen a ancho de página. No es la plantilla de ninguna
   revista concreta: cuando haya una revista o un congreso destino, su plantilla manda y el cuerpo se traslada.
 - **El título lleva el hallazgo**, no el nombre del sistema: la semejanza química, y no la familia de modelos,
-  gobierna el desempeño. Es la diferencia de forma más visible con el entregable, que se titula por el proyecto.
+  condiciona el desempeño. Es la diferencia de forma más visible con el entregable, que se titula por el proyecto.
 - **Las figuras son las mismas seis** del entregable (de las ocho que hay), por la razón del `CLAUDE.md`: una
   figura que se dibuja dos veces deriva. Las dos que no entran son la de huellas por tramo de peso, que es de
   anexo, y la de arquitectura de despliegue, que es de operación y no de resultados.
