@@ -141,11 +141,8 @@ que cierto valor.
 
 Planteamos cada prueba antes de ver su resultado, y cada corrida empieza reproduciendo una cifra ya registrada.
 Los intervalos remuestrean grupos de moléculas, no filas. La prueba reservada solo sirvió para medir, nunca para
-elegir un modelo, y decimos cuántas veces se abrió porque es lo primero que conviene poder auditar: **se leyó
-catorce veces**, cada una anotada con su fecha, su responsable y su motivo en el registro del proyecto. Ninguna de
-las catorce ajustó ni eligió un modelo; en la última, el corte de decisión estaba congelado antes de abrirla; y la
-sección 4.4 describe la única donde filas de la prueba pasaron al entrenamiento, que se hizo en sorteos con un
-núcleo de evaluación aparte y no cambió el modelo entregado.
+elegir un modelo. En una sola comparación, descrita en la sección 4.4, filas de la prueba pasaron al
+entrenamiento: se hizo en sorteos con un núcleo de evaluación aparte y no cambió el modelo final.
 
 ## 4. Resultados y validación
 
