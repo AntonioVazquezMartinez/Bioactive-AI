@@ -31,24 +31,31 @@ La primera vez construye una imagen `tex-art` a partir de `texlive/texlive:lates
 Compila en una copia porque Docker no sigue los enlaces simbólicos de la bibliografía y el logo.
 
 **Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber. El PDF del repositorio
-tiene **18 páginas**: el cuerpo, del título a las referencias, ocupa **16** (la rúbrica pide 12 a 18) y los
-anexos son las dos últimas, que van aparte. Así que **quedan dos páginas de margen, no cinco**: una sección nueva
-no entra, y lo que se añada conviene que sustituya. Las secciones llevan los nombres y la numeración de la
+tiene **19 páginas**: el cuerpo, del título a las referencias, ocupa **17** (la rúbrica pide 12 a 18) y los
+anexos son las dos últimas, que van aparte. Así que **queda una página de margen, no dos ni cinco**: una sección
+nueva no entra, y lo que se añada conviene que sustituya. Esta cuenta se rehace en cada compilación y ya se quedó
+corta una vez, así que conviene verificarla en el PDF y no heredarla de aquí. **Y hay que decidirlo a conciencia:**
+si quien califica cuenta el PDF completo en lugar de contar hasta las referencias, ve 19 contra un máximo de 18.
+Lo que crezca de aquí en adelante conviene que vaya a los anexos, que quedan fuera de la cuenta. Las secciones llevan los nombres y la numeración de la
 plantilla del curso. **Ojo con la numeración, que esta frase decía algo falso:** la rúbrica lista las ocho
 secciones numerando el resumen como 1 y las referencias como 8, de modo que para ella «Implementación y
 operación» es la **6**. El artículo la numera **5** porque no numera el resumen ni las referencias, que es lo
 normal. Las ocho están y en el orden que pide, así que **no hay que renumerar nada**; lo que no se puede decir
 es que el 5 venga de la rúbrica.
 
-**Pendiente, y es lo único que falta:** el PDF del repositorio es anterior al repaso de redacción del 9 de
-noviembre (título nuevo, la lista de limitaciones, el trabajo futuro de la a a la e, la §5 partida en tres y la
-§4.1 en dos). Hay que volver a compilar con `sh scripts/compilar_articulo.sh`, que **necesita Docker**, y
-revisar el PDF página por página antes de dar el artículo por listo. El `.tex` sí está regenerado y
-`tests/test_articulo_tex.py` pasa.
+**Pendiente, y son dos cosas.** La primera: **el PDF del repositorio es anterior a los nombres de corrida de los
+anexos y a los seis arreglos de redacción que entraron con ellos**, así que hay que volver a compilar con
+`sh scripts/compilar_articulo.sh`, que **necesita Docker**. La segunda: revisar el PDF resultante página por
+página, mirando dónde cayó cada figura y si algún encabezado quedó solo al pie. Eso pide ojos humanos y no lo
+cubre ninguna prueba.
 
-**Y al compilar hay que mirar el conteo.** El repaso partió párrafos y convirtió dos bloques en listas, lo que
-añade espaciado: con dos páginas de margen debería entrar, pero si el cuerpo pasa de 18 lo que sale es la §4.1
-antigua, no las listas nuevas.
+Lo que sí está comprobado sin compilar: el `.tex` se regenera byte a byte igual desde el borrador y las ocho
+figuras se regeneran idénticas desde sus corridas, salvo la fecha y los identificadores internos que matplotlib
+escribe en cada SVG.
+
+**Y al compilar hay que mirar el conteo,** porque una frase añadida en el cuerpo puede empujar una página entera
+cuando parte un párrafo o deja un encabezado huérfano. Con una sola página de margen, lo que no entre sale de lo
+que ya está.
 
 **Por qué se midió la prosa.** Las frases más largas llegaban a 929 caracteres (las limitaciones, nueve
 cláusulas con punto y coma) y 1,112 (el trabajo futuro, de la a a la e sin un punto), contra el techo de 421

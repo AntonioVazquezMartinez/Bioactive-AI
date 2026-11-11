@@ -36,8 +36,8 @@ tiempo y presupuesto de ensayo. Un compuesto así solo sirve si llega al cerebro
 proteína a la que se une. El problema tiene entonces dos preguntas. La primera es si la molécula cruza la barrera
 hematoencefálica, la membrana que protege al cerebro (fase 1, clasificación entre permeable, BBB+, y no
 permeable, BBB−). La segunda es con qué potencia actúa sobre cada una de 26 dianas del sistema nervioso central
-(fase 2, regresión). La entrada es la estructura de la molécula escrita como texto (SMILES) y la salida es una
-lista priorizada, no una decisión automática.
+(fase 2, regresión). La entrada es la estructura de la molécula escrita como texto (SMILES) y la salida es
+evidencia para priorizar, no una decisión automática.
 
 ### 1.2 Por qué dos fases en paralelo y no en cascada
 
@@ -56,7 +56,12 @@ Cómo combinarlas queda como trabajo futuro (sección 6).
 
 Un falso permeable gasta tiempo en un compuesto que no llegará al cerebro. Un falso no permeable descarta un
 candidato real sin que nadie se entere. Cuál de los dos errores cuesta más depende de quien use la lista, y por eso
-lo que producimos es un orden de prioridad y no un punto de corte.
+entregamos una probabilidad y no una clase.
+
+Conviene decir con precisión qué se entrega hoy. Por cada compuesto salen tres cosas: la probabilidad de cruzar la
+barrera, la potencia predicha contra cada diana y qué tan cerca queda la molécula de lo que los modelos vieron.
+Combinar las tres en una sola lista priorizada es un entregable que falta y no un detalle de presentación: la
+sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo.
 
 ### 1.4 Qué puede y qué no puede decir este trabajo
 
@@ -136,7 +141,8 @@ que cierto valor.
 
 Planteamos cada prueba antes de ver su resultado, y cada corrida empieza reproduciendo una cifra ya registrada.
 Los intervalos remuestrean grupos de moléculas, no filas. La prueba reservada solo sirvió para medir, nunca para
-elegir un modelo.
+elegir un modelo. En una sola comparación, descrita en la sección 4.4, filas de la prueba pasaron al
+entrenamiento: se hizo en sorteos con un núcleo de evaluación aparte y no cambió el modelo final.
 
 ## 4. Resultados y validación
 
@@ -218,8 +224,9 @@ mejora de unos 0.010, así que descarta una mejora grande, no una de 0.005.
 
 *Pasar filas de la prueba al entrenamiento.* La mitad de los grupos de la prueba de cada tercil de rareza forma un
 núcleo de evaluación; de la otra mitad pasamos al ajuste las filas del tercil más raro (285 de media) y devolvimos
-a la prueba otras tantas filas comunes del ajuste, en 15 sorteos. En lo raro del núcleo el AUROC
-sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas elegidas al azar da +0.006: lo que ayuda es recibir
+a la prueba un número parecido de filas comunes del ajuste (295 de media), en 15 sorteos. En lo raro del núcleo
+el AUROC sube +0.003 (mejor en 9 de 15), y pasar el mismo número de filas elegidas al azar da +0.006: lo que ayuda
+es recibir
 filas de la prueba, no cuáles. El MCC pasa de 0.33 a 0.36 (+0.035, en los 15 sorteos), pero el AUROC apenas
 cambia (+0.002): el orden casi no cambia y el corte sí, así que no lo leemos como ganancia. Separado en tres
 brazos, sin otra lectura de la prueba, se ve de dónde sale: quitar solo las 295 filas comunes del ajuste no lo
@@ -269,9 +276,10 @@ tendencia. En la fase 2 la ganancia parece crecer con el peso, pero esa tendenci
 incluye el cero) y se aplana al igualar los tramos por submuestreo; el detalle está en el Anexo C.
 
 Dos explicaciones simples las descartamos con experimentos propios. No es el tamaño de los datos: con el ajuste de
-la fase 2 reducido a 5,000 filas (el de la fase 1) la ganancia del `aft` es +0.0105 en 14 de 15 evaluaciones, mayor
-que con el ajuste completo (+0.0057). Tampoco es la granularidad de la etiqueta: con la etiqueta «molécula activa
-contra alguna diana» las huellas ayudan a los cuatro modelos probados (AUROC +0.017 a +0.085).
+la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, 0.8 × 6,306) la ganancia del `aft` es
++0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). Tampoco es la granularidad de la
+etiqueta: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados
+(AUROC +0.017 a +0.085).
 
 ![Rivales](figuras/f5_rivales.svg)
 
@@ -370,7 +378,7 @@ Esa base no es comparable con la prueba reservada: se separó por compuesto y no
 pares tiene un andamio que ya está en el ajuste, contra 0.5% en el control interno. La semejanza mediana al vecino
 más cercano es 0.787 (0.679 en la validación de la misma fase). Que salga mejor es justo lo que predice la tesis del
 artículo, no una prueba de mejor generalización. Los naturales siguen siendo el estrato débil. Es una lectura única,
-y el control reconstruye los 70,384 pares del entrenamiento sin diferencia.
+y su control reconstruye sin diferencia la matriz de pares completa a partir del archivo de entrenamiento.
 
 ### 5.5 Qué se supervisa durante la operación
 
@@ -477,16 +485,36 @@ criptográfica de los datos y el comando; el código y los registros están en e
 
 ## Anexos
 
-Cada anexo amplía un resultado del cuerpo.
+Cada anexo amplía un resultado del cuerpo y nombra la corrida de la que sale, para que cualquiera pueda abrirla
+en el registro del proyecto y repetir la cifra.
 
 - *A. La escalera con seis modelos y con otra definición de «parecido».* La logística no se degrada menos que el
   `svm_rbf` de forma distinguible; con ECFP6 la caída es gradual y con atom-pair los peldaños estrictos no se
-  pueden construir.
-- *B. La línea base de peso y TPSA.*
-- *C. Las huellas por tramo de peso,* con la figura de abajo.
-- *D. El ranking de la fase 2 y la curva de aprendizaje.*
-- *E. La densidad del espacio químico a igual peso* (no concluyente) y *los tramos de peso igualados por
-  submuestreo* (el control que deja sin sostén la tendencia de la sección 4.6).
+  pueden construir. Corridas `2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad` y
+  `2026-11-04-artemio-1.2-escalera-definicion-de-parecido-permeabilidad`.
+- *B. La línea base de peso y TPSA,* por tercil de semejanza y por tramo de peso molecular. Corrida
+  `2026-11-03-artemio-1.5-prueba-por-rareza`.
+- *C. Las huellas por tramo de peso,* con la figura de abajo. Corridas
+  `2026-11-03-artemio-1.3-tamano-huellas-permeabilidad` y `2026-11-03-artemio-1.3-tamano-huellas-actividad`.
+- *D. El ranking de la fase 2 y la curva de aprendizaje.* Corridas `2026-11-03-artemio-C.5-ranking-fase2-aft` y
+  `2026-11-03-artemio-1.5-curva-aprendizaje-modelos-finales`.
+- *E. La densidad del espacio químico a igual peso,* no concluyente
+  (`2026-11-04-artemio-1.3-huellas-por-densidad-del-espacio-quimico`), y *los tramos de peso igualados por
+  submuestreo,* el control que deja sin sostén la tendencia de la sección 4.6
+  (`2026-11-08-artemio-1.3-tamano-huellas-actividad-igualado`).
+
+*De dónde sale cada figura.* La 1 junta cuatro comparaciones medidas por separado: los ensambles contra el mejor
+modelo individual y el rango entre los once modelos salen de
+`2026-11-01-artemio-1.5-ensambles-permeabilidad`, el criterio de partición de
+`2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad` y la semejanza permitida de
+`2026-11-03-artemio-1.2-escalera-ampliada-permeabilidad`. La 2 sale de esa misma escalera ampliada, con la línea de
+la prueba reservada de `2026-11-01-artemio-1.5-modelo-final-permeabilidad`. La 3 sale de
+`2026-11-04-artemio-1.2-escalera-agrupacion-actividad` y la 4 de la corrida del anexo B. La 5 junta
+`2026-11-04-artemio-1.3-huellas-por-tamano-de-datos-actividad` y
+`2026-11-04-artemio-1.3-huellas-por-etiqueta-de-molecula-actividad`. La 6 junta
+`2026-11-04-artemio-2.13-mcc-por-umbral-aft-contra-bosque` y
+`2026-10-31-antonio-2.13-comparativa-regresion-ensambles`, y la C1 las dos corridas del anexo C. La 7 es un
+diagrama de la arquitectura y no tiene una corrida detrás.
 
 ![Huellas](figuras/f3_huellas.svg)
 
@@ -494,26 +522,31 @@ Cada anexo amplía un resultado del cuerpo.
 
 *F. Los cuatro brazos del `aft` y la atribución.*
 
-*Qué ve el modelo.* De los cuatro brazos con los mismos pliegues, ninguno supera al `aft` en NPASS: filtrar los
+*Qué ve el modelo.* Corrida `2026-11-04-artemio-2.13-brazos-aft-filtrados-y-huellas-solas`. De los cuatro brazos
+con los mismos pliegues, ninguno supera al `aft` en NPASS: filtrar los
 descriptores no cambia nada que se distinga del ruido (+0.002), y quitar los descriptores y dejar solo huellas y
 diana lo empeora en las 15 evaluaciones (−0.041), aunque en el agregado empata. Esto matiza la lectura de que en la
 fase 2 se pueden tirar los descriptores, porque las huellas solas casi igualaban al brazo ancho: en el estrato por
 el que se eligió el modelo no se pueden.
 
-*Qué pesa.* Dos métodos independientes, TreeSHAP (lee los árboles) y permutación (solo la salida), concuerdan
+*Qué pesa.* Corrida `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`. Dos métodos independientes,
+TreeSHAP (lee los árboles) y permutación (solo la salida), concuerdan
 (Spearman 0.93; 12 de sus 15 columnas más importantes son las mismas). Pesan la diana (`MAOA`, `MAOB`, `DRD2`,
 `LRRK2`, `BCHE`, el 15% de la atribución) y, en la química, la complejidad topológica (`BertzCT`), la lipofilia y
 los halógenos. TPSA y los donadores de hidrógeno, que dominan la permeabilidad, no dominan la potencia (lugares 44
 y 165).
 
-*Qué pesa en la fase 1.* Los dos métodos (permutación y KernelSHAP) miran el mismo `svm_rbf`. Coinciden en seis
+*Qué pesa en la fase 1.* Corrida `2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos`. Los dos métodos
+(permutación y KernelSHAP) miran el mismo `svm_rbf`. Coinciden en seis
 descriptores entre sus quince primeros (`fr_lactam`, `NumHDonors`, `NumAliphaticCarbocycles`, `VSA_EState3`,
 `fr_Ar_OH`, `fr_ether`), estables entre dos muestras de compuestos; la correlación entre los dos rankings completos
 es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); TPSA no (40 por permutación y 10 por SHAP), porque
 comparte información con un racimo de columnas. No afirmamos ninguna estructura: son seis nombres de descriptor, no
 un mecanismo.
 
-*Por subestructura.* El modelo final no usa huellas, así que repetimos el diseño con el brazo que sí (`aft_huellas`,
+*Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
+cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,
+así que repetimos el diseño con el brazo que sí (`aft_huellas`,
 que no mejora en NPASS). Con cinco repeticiones de permutación sobre las 11,248 filas, los dos métodos concuerdan
 según la regla declarada (Spearman 0.577 sobre la unión de los 100 primeros, contra el 0.50 fijado de antemano, y
 11 de 15 en común). Una medición previa con una repetición sobre 1,500 filas había dado 0.378 y «no concuerdan»;
