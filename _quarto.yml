@@ -10,6 +10,7 @@ project:
     - index.qmd
     - visualizador.qmd
     - presentacion.qmd
+    - presentacion-final.qmd
     - consulta.qmd
     - bibliografia.qmd
     - contenido/**/*.md

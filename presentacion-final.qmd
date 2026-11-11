@@ -1,0 +1,249 @@
+---
+# Presentación final, 30 minutos: 13 diapositivas (25 min) y 5 de preguntas; dos de respaldo al final.
+# Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
+# Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
+title: "Bioactive"
+subtitle: "Cuánto confiar en una predicción depende de la molécula, no del modelo"
+author: "Equipo 7 · Ingrid Pamela Ruiz Puga · Artemio Santiago Padilla Robles · José Antonio Vázquez Martínez"
+institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey"
+date: "13 de noviembre de 2026"
+lang: es
+format:
+  revealjs:
+    theme: [default, estilos-slides.scss]
+    slide-number: c/t
+    show-slide-number: all
+    transition: fade
+    controls: true
+    progress: true
+    hash: true
+    width: 1280
+    height: 760
+    center: true
+---
+
+## Qué buscamos
+
+- Priorizar **compuestos naturales** con potencial neuroprotector.
+- Para servir, un compuesto tiene que **llegar al cerebro** y **actuar sobre su diana**.
+- Lo que producimos es *evidencia para priorizar*, no una decisión automática.
+
+::: {.notes}
+**Antonio · 1.5 min.** Un compuesto natural solo sirve si cumple las dos cosas. La salida es evidencia para priorizar, no una decisión automática.
+:::
+
+## Dos preguntas, en paralelo
+
+::: {.columns}
+::: {.column width="50%"}
+### Fase 1
+
+¿**Cruza la barrera** hematoencefálica?
+
+Clasificación: permeable o no.
+:::
+::: {.column width="50%"}
+### Fase 2
+
+¿Con qué **potencia** actúa sobre cada una de **26 dianas**?
+
+Regresión.
+:::
+:::
+
+::: {.callout-note}
+Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos** están medidos en las dos. Y un «no permeable» predicho se equivoca: descartar con él perdería candidatos reales.
+:::
+
+::: {.notes}
+**Antonio · 2 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
+:::
+
+## El gancho
+
+::: {.columns}
+::: {.column width="45%"}
+### Validación
+
+[0.70]{style="font-size:4.5em;font-weight:700;"}
+
+MCC
+:::
+::: {.column width="10%"}
+[→]{style="font-size:3em;"}
+:::
+::: {.column width="45%"}
+### Prueba reservada
+
+[0.34]{style="font-size:4.5em;font-weight:700;"}
+
+MCC
+:::
+:::
+
+El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
+
+**¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
+
+::: {.notes}
+**Antonio · 1.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista.
+:::
+
+## Los datos {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Fase 1 · permeabilidad
+
+- **7,805** compuestos con clase; 65% permeables.
+- **1,499** reservados para la prueba.
+:::
+::: {.column width="50%"}
+### Fase 2 · potencia
+
+- **202,647** registros de tres fuentes: ChEMBL, NPASS y CMAUP.
+- Guardamos el **intervalo de potencia**, no una etiqueta: el corte de «activo» puede cambiar.
+:::
+:::
+
+::: {.notes}
+**Antonio · 1 min.** Los datos de la fase 1 vienen de un archivo curado que cruzamos con una base de productos naturales; los de la fase 2, de tres fuentes etiquetadas con las mismas columnas.
+:::
+
+## Cómo medimos sin engañarnos
+
+- **Agrupamos por esqueleto** de la molécula, nunca al azar: así lo evaluado no es un análogo de lo entrenado.
+- Cada prueba se **planteó antes** de ver su resultado.
+- La prueba reservada solo sirvió **para medir**, nunca para elegir un modelo.
+
+::: {.notes}
+**Antonio · 1 min.** Partir al azar infla los resultados entre 7 y 13 puntos. Los intervalos remuestrean grupos de moléculas, no filas.
+:::
+
+## El modelo no es la palanca
+
+- Probamos **once modelos**, de regresión logística a ensambles.
+- Entre ellos hay solo **4.2 puntos** de MCC.
+- El mejor iguala el punto de partida y no lo supera: MCC 0.7017 contra 0.70. El **lift es cero**.
+
+::: {.callout-tip title="Pista 1"}
+No es el modelo.
+:::
+
+::: {.notes}
+**Antonio · 2 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
+:::
+
+## La escalera de semejanza {.smaller}
+
+![](docs/reportes/articulo/figuras/f1_escalera.svg){fig-alt="AUROC por peldaño de semejanza permitida entre entrenamiento y validación" width="60%"}
+
+- Si nada de lo entrenado puede parecerse más de 0.4 a lo evaluado, el MCC baja de **0.75 a 0.42**: 33 puntos, contra 4.2 entre modelos.
+- La fase 2 hace lo mismo, en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
+
+::: {.callout-tip title="Pista 2"}
+Importa qué tan nueva es la molécula.
+:::
+
+::: {.notes}
+**Pame · 2 min.** No dividir 33 entre 4.2: son dos estimadores distintos. La escalera de la fase 2 se detiene en 0.6 porque más abajo la partición no se puede construir.
+:::
+
+## Pero no lo explica todo {.smaller}
+
+![](docs/reportes/articulo/figuras/f2_rareza.svg){fig-alt="Ventaja del modelo sobre la línea base por tercil de rareza" width="55%"}
+
+- La prueba se parece **más** a lo entrenado que la validación (0.414 contra 0.384): debería rendir mejor.
+- Esperábamos AUROC **0.89**; vemos **0.79**.
+- La semejanza nos dice **qué compuestos serán más difíciles**, no cuánto va a caer el conjunto.
+
+::: {.notes}
+**Pame · 1.5 min.** Dentro de la prueba, el AUROC sube de 0.697 a 0.875 del tercio más raro al más parecido. Pero esa semejanza ordena, no calibra. Qué explica los diez puntos no está medido; hay cuatro candidatos anotados.
+:::
+
+## Enseñarle lo raro no ayuda {.smaller}
+
+| Qué probamos | Resultado |
+|:--|:--|
+| **Repesar** las filas raras | AUROC −0.0005 en lo más raro; un control al azar mueve casi igual |
+| **Pasar filas de la prueba** al entrenamiento | MCC sube 0.035, pero el orden casi no cambia (AUROC +0.002) |
+| **Recomponer** qué filas se usan | −0.060 de AUROC al empezar por lo raro, con el 25% del ajuste |
+
+::: {.callout-tip title="Pista 3"}
+El problema no es cuánta química rara ve el modelo.
+:::
+
+::: {.notes}
+**Pame · 2.5 min.** Pasar filas sube el MCC porque cambia el corte, no lo que el modelo sabe: tanto con filas raras (+0.035) como al azar (+0.023). Las tres reglas estaban escritas antes de correr.
+:::
+
+## El giro: el corte de 0.5 {.smaller}
+
+- A 0.5 el modelo declara permeable al **79.3%** de la prueba; lo real es **57.3%**: 22 puntos de desajuste.
+- Igualar esa tasa a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba.
+- Elegir el corte con validación **no sirve**: +0.0065, indistinguible de cero.
+
+::: {.callout-important}
+Límite: necesita el lote completo y suponer una prevalencia.
+:::
+
+**Respuesta al gancho:** el orden casi no cambió; lo que cayó fue el corte fijo.
+
+::: {.notes}
+**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793). El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+:::
+
+## El cuaderno
+
+![](docs/reportes/articulo/figuras/f7_despliegue.svg){fig-alt="Arquitectura de despliegue: un cuaderno local, un módulo de inferencia y dos modelos guardados" width="55%"}
+
+- Se ejecuta con **SMILES propios**: no hay servicio.
+- Entrega la probabilidad, la potencia por diana y una **advertencia de extrapolación**.
+- No combina las fases en un ranking: queda como trabajo futuro.
+
+::: {.notes}
+**Art · 2 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+:::
+
+## Una herramienta para medir columnas nuevas {.smaller}
+
+- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada**.
+- Incluye un **control de ruido** y una **guía** de cómo agrupar y cómo medir.
+- Ejemplo: TPSA, donadores de hidrógeno y peso quedan **0.082 de MCC** por debajo de los 151 descriptores.
+
+::: {.callout-note}
+Es Python, no una interfaz; mide clasificación.
+:::
+
+::: {.notes}
+**Art · 2 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
+:::
+
+## Qué concluimos {.smaller}
+
+![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
+
+- La confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
+- Lo único que recuperó algo fue el **corte**, que se puede ajustar: MCC de 0.34 a 0.41.
+- **Límites:** una sola prueba, un modelo por fase, la brecha sin explicar.
+- **Siguiente:** combinar las fases en un orden y una evaluación externa separada por esqueleto.
+
+::: {.notes}
+**Art · 3 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado.
+:::
+
+# Respaldo
+
+## Las huellas ayudan en una fase y no en la otra {.smaller}
+
+![](docs/reportes/articulo/figuras/f5_rivales.svg){fig-alt="Las huellas ayudan aunque se achiquen los datos o se cambie la etiqueta" width="55%"}
+
+- Ayudan a cinco de seis modelos en la fase 2 y a ninguno en la fase 1.
+- No es el tamaño de los datos ni el tipo de etiqueta.
+
+## El modelo de potencia en NPASS {.smaller}
+
+![](docs/reportes/articulo/figuras/f4_aft.svg){fig-alt="Concordancia solo NPASS y ventaja en MCC del AFT sobre el bosque" width="55%"}
+
+- 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación.
+- Con 117 pares no hay potencia: **ni refuta ni confirma**.
