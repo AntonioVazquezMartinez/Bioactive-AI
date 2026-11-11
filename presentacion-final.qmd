@@ -20,7 +20,6 @@ format:
     width: 1280
     height: 760
     center: true
-    embed-resources: true
 ---
 
 ## Qué buscamos
