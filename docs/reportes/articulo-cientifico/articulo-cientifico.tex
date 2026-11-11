@@ -1,0 +1,318 @@
+% Artículo científico del proyecto Bioactive AI, a doble columna.
+%
+% Este archivo SÍ se edita a mano, al contrario que docs/reportes/articulo/articulo.tex, que se
+% genera desde su borrador.md con scripts/armar_articulo_tex.py. La razón está en el README de esta
+% carpeta: este documento no es el entregable de la rúbrica, no sigue su numeración de ocho
+% secciones y no comparte su estructura, así que no puede salir del mismo borrador.
+%
+% Las cifras son las mismas del entregable (docs/reportes/articulo/borrador.md) y de las corridas
+% registradas en experimentos/. Ninguna cifra nace aquí: si una cambia, cambia en los dos documentos.
+%
+% Compila con pdfLaTeX + Biber:  sh scripts/compilar_articulo.sh articulo-cientifico
+\documentclass[twocolumn,10pt,letterpaper]{article}
+
+% --- Idioma y tipografía ---
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[spanish,es-tabla,es-noquoting]{babel}
+
+% --- Página: carta, márgenes de revista, columnas separadas ---
+\usepackage[margin=1.9cm]{geometry}
+\setlength{\columnsep}{0.7cm}
+
+% --- Figuras y tablas ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf,labelsep=period]{caption}
+
+% --- Encabezados compactos, como pide una columna estrecha ---
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.4ex plus 0.3ex}{0.8ex}
+\titlespacing*{\subsection}{0pt}{1.1ex plus 0.3ex}{0.6ex}
+
+% --- Referencias: APA 7, el estilo del resto del proyecto ---
+\usepackage{csquotes}
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{bibliografia.bib}
+% El campo `note` de bibliografia.bib son anotaciones internas del equipo («LEÍDO PARCIAL», cómo se
+% verificó cada entrada): sirven en docs/referencias y no deben salir impresas.
+\AtEveryBibitem{\clearfield{note}}
+
+% --- Enlaces (DOI); se carga al final ---
+\usepackage[hidelinks]{hyperref}
+\urlstyle{same}
+
+% Una columna estrecha deja huecos entre palabras; esto los reparte.
+\setlength{\emergencystretch}{3em}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{00B5}{\ensuremath{\mu}}
+
+% --- Resumen a doble columna: ocupa el ancho de la página, como en una revista ---
+\newcommand{\resumenancho}[2]{%
+  \twocolumn[{%
+    \begin{@twocolumnfalse}
+      \maketitle
+      \begin{abstract}\noindent #1 \end{abstract}
+      \vspace{0.5ex}\noindent\textbf{\small Palabras clave:} {\small #2}
+      \vspace{3ex}
+    \end{@twocolumnfalse}}]}
+
+\title{\textbf{\large La semejanza química, y no la familia de modelos, gobierna el desempeño\\
+al priorizar productos naturales con potencial neuroprotector}}
+\author{%
+  \normalsize Ingrid Pamela Ruiz Puga \quad Artemio Santiago Padilla Robles \quad José Antonio Vázquez Martínez\\[4pt]
+  \small Maestría en Inteligencia Artificial Aplicada, Tecnológico de Monterrey\\[2pt]
+  \small Asesora: Dra. Grettel Barceló Alonso \quad·\quad Patrocinadora: Dra. Mariana Martínez Ávila\\[2pt]
+  \small 13 de noviembre de 2026}
+\date{}
+
+\begin{document}
+
+\resumenancho{%
+La selección temprana de compuestos naturales con potencial neuroprotector exige dos predicciones a partir de la estructura de la molécula: si cruza la barrera hematoencefálica y con qué potencia actúa sobre una diana del sistema nervioso central. Entrenamos y evaluamos las dos como tareas paralelas sobre 7,805 compuestos con permeabilidad medida y 202,647 registros de actividad de tres fuentes, con particiones agrupadas por andamio de Bemis--Murcko y esqueleto de conectividad. Comparamos once clasificadores para la permeabilidad y nueve regresores para la potencia. El hallazgo central es de magnitudes: entre los once modelos hay 4.2 puntos de coeficiente de correlación de Matthews (MCC), mientras que endurecer la semejanza permitida entre entrenamiento y validación cuesta 33.3 puntos al mismo modelo (0.752 a 0.419). En la prueba reservada el modelo final rinde por debajo de lo que su semejanza predice (AUROC 0.793 frente a 0.89 esperado), y tres estrategias declaradas de antemano para aprender de la química poco representada no cierran esa brecha. Lo que sí la mueve es el punto de operación: igualar la tasa declarada permeable a una prevalencia supuesta eleva el MCC de 0.339 a 0.410. Las huellas moleculares ayudan en la tarea de potencia y perjudican en la de permeabilidad, y descartamos el tamaño de los datos y el tipo de etiqueta como explicación. Concluimos que la incertidumbre de una predicción depende sobre todo de la novedad estructural del compuesto consultado, por lo que la distancia al conjunto de entrenamiento debe medirse y entregarse junto con cada predicción.%
+}{barrera hematoencefálica, productos naturales, neuroprotección, validación agrupada por andamio, desplazamiento de distribución, regresión con censura, explicabilidad}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.88\textwidth]{figuras/f0_palancas.png}
+  \caption{Orden de magnitud de los factores que mueven el desempeño en la tarea de permeabilidad. Cada barra proviene de una corrida distinta, con su propio propósito, de modo que la figura ordena magnitudes y no mide el efecto aislado de cada factor.}
+  \label{fig:palancas}
+\end{figure*}
+
+\section{Introducción}
+
+\subsection{El problema de selección}
+
+Un compuesto natural solo resulta útil como candidato neuroprotector si llega al cerebro y si además actúa sobre una diana, la proteína a la que se une. Verificar ambas cosas en el laboratorio es costoso, y de ahí el interés en ordenar los candidatos antes de ensayarlos. El problema se descompone entonces en dos preguntas que se responden desde la misma entrada, la estructura de la molécula escrita como texto en notación SMILES: si la molécula atraviesa la barrera hematoencefálica, la membrana selectiva que protege al cerebro (tarea que llamamos fase~1, una clasificación entre permeable, BBB+, y no permeable, BBB$-$), y con qué potencia actúa sobre cada una de 26 dianas del sistema nervioso central (fase~2, una regresión). La salida pretendida es evidencia para priorizar, no una decisión automática.
+
+\subsection{Dos tareas paralelas, no una cascada}
+
+La formulación intuitiva encadena las dos fases: lo que se predice como BBB$-$ se descarta y solo el resto pasa a la estimación de potencia. La descartamos por falta de datos para sostenerla. De los 99,585 esqueletos de conectividad con actividad medida, solo 1,033 tienen además permeabilidad medida, y 612 en los archivos que efectivamente alimentan a los modelos, de modo que el resto se filtraría con una predicción que nadie ha verificado. Como toda predicción de permeabilidad se equivoca, descartar con ella elimina candidatos reales sin dejar rastro.
+
+Tratamos por eso las dos fases en paralelo: cada una se entrena y se evalúa por separado y sus salidas son evidencia que se combina en un único orden de prioridad. La primera informa si el compuesto puede permear; la segunda estima cuánto actuaría, y esa respuesta sigue siendo útil cuando la primera es dudosa. La combinación explícita de ambas en un solo ranking queda como trabajo pendiente (sección~\ref{sec:futuro}).
+
+\subsection{Contribuciones}
+
+\begin{itemize}\itemsep1pt
+\item Cuantificamos, sobre el mismo conjunto y el mismo modelo, cuánto del desempeño depende de la familia de modelos y cuánto de la semejanza permitida entre entrenamiento y evaluación. La segunda domina por un factor grande (Figura~\ref{fig:palancas}).
+\item Mostramos que la semejanza al vecino más cercano, el indicador habitual de aplicabilidad, no basta para anticipar la caída: nuestra prueba reservada es \emph{más} parecida al entrenamiento que la validación y aun así rinde 0.10 de AUROC por debajo de lo esperado.
+\item Evaluamos tres estrategias, con la regla de lectura escrita antes de correr cada una, para que el modelo aprenda de la química poco representada. Ninguna cierra la brecha, y reportamos ese resultado negativo con su potencia estadística.
+\item Documentamos que la utilidad de las huellas moleculares no se traslada entre las dos tareas, y descartamos experimentalmente dos explicaciones simples.
+\item Medimos el desempeño por estrato de procedencia y mostramos que el estrato de productos naturales, el que motiva el proyecto, es sistemáticamente el más débil.
+\end{itemize}
+
+\section{Datos y preparación}
+
+\subsection{Permeabilidad (fase 1)}
+
+Partimos de un archivo curado por la patrocinadora, derivado de B3DB \autocite{meng2021b3db} y cruzado contra COCONUT \autocite{chandrasekhar2025coconut}, una colección abierta de productos naturales; ese cruce es lo que permite separar los compuestos naturales de los sintéticos y reportar por separado. Quedan 7,805 compuestos con clase asignada, el 65\,\% de ellos BBB+, con un umbral de logBB de $-1.0$. Reservamos 1,499 compuestos como prueba y usamos 6,306 para ajustar y validar.
+
+El archivo incluye una columna de confiabilidad con grupos de A a D. Decidimos no usarla para filtrar: el análisis exploratorio mostró que está confundida con la clase, de modo que restringir a los grupos más confiables reduce la clase minoritaria del 36.5\,\% al 27.0\,\% y empeora el desbalance en lugar de limpiar ruido. La usamos para estratificar, nunca para excluir.
+
+\subsection{Potencia (fase 2)}
+
+Reunimos 202,647 registros de actividad de tres fuentes: ChEMBL \autocite{zdrazil2024chembl}, NPASS \autocite{zhao2023npass,lin2026npass} y CMAUP \autocite{hou2024cmaup}. Tras la depuración quedan 56,241 pares molécula--diana para ajuste y validación y 13,944 reservados.
+
+Dos decisiones de etiquetado condicionan todo lo que sigue. La primera es etiquetar las tres fuentes con las mismas columnas informadas, y no con la medida de potencia normalizada que solo trae ChEMBL: hacerlo con esa medida descarta en silencio justamente los registros de NPASS y CMAUP, que son los productos naturales que el proyecto existe para priorizar. La segunda es almacenar el intervalo de potencia en lugar de una etiqueta binaria. El corte de 10\,µM es la concentración de cribado heredada del archivo de origen (el 67.4\,\% de las mediciones censuradas lo está exactamente en ese valor) y no un umbral biológico, y la misma molécula pasa de inactiva a activa según la concentración ensayada. Guardar el intervalo deja el corte como un parámetro de lectura y no como un dato.
+
+La procedencia no es inocua: un modelo que solo observa de qué fuente viene un par alcanza ya el 65\,\% del MCC que logra la química. Por eso todas las métricas se reportan desglosadas por estrato de procedencia.
+
+\subsection{Representación}
+
+Calculamos descriptores 2D con RDKit \autocite{rdkit} y conservamos 151 tras eliminar los casi constantes y los redundantes. La selección se hace sobre los valores crudos, con el valor modal para los casi constantes y la correlación de Spearman para la redundancia, de modo que el conjunto de columnas no depende de cómo se escalen después; las mismas 151 columnas salen bajo las tres transformaciones que probamos. En la fase~2 se añade la identidad de la diana como variable.
+
+Las huellas moleculares de tipo Morgan/ECFP4 \autocite{rogers2010ecfp}, vectores de bits que marcan qué fragmentos contiene una molécula, se evalúan como una condición aparte (sección~\ref{sec:huellas}) con el vocabulario reaprendido dentro de cada pliegue.
+
+\subsection{Partición agrupada}
+\label{sec:particion}
+
+Nunca partimos al azar. Agrupamos por andamio de Bemis--Murcko \autocite{bemis1996properties}, el esqueleto central de la molécula, unido al esqueleto de conectividad. Unir los dos criterios importa: un mismo esqueleto puede aparecer bajo andamios distintos, y agrupar solo por andamio coloca estereoisómeros del mismo compuesto a los dos lados de una partición. En la fase~1 el criterio conjunto deja 1,048 grupos, frente a 2,239 con el andamio solo. La diferencia en desempeño depende del modelo: 2.2 puntos de AUROC y 7.1 de MCC con el bosque aleatorio \autocite{breiman2001}, pero 1.3 y 1.9 con el modelo que finalmente entregamos. Una cifra que no declara cómo agrupó no es comparable.
+
+\section{Métodos}
+
+\subsection{Modelos}
+
+Fijamos primero un punto de referencia con tres modelos simples (potenciación por gradiente sobre histogramas, bosque aleatorio y regresión logística) bajo validación cruzada agrupada con 3 semillas $\times$ 5 pliegues, es decir 15 evaluaciones. Sus MCC fueron 0.702, 0.700 y 0.687, con intervalos del 95\,\% solapados: ninguno gana, y el listón a superar quedó en 0.70 de MCC frente a un piso de 0 que dan los clasificadores triviales.
+
+Sobre ese listón comparamos once clasificadores para la fase~1, desde la regresión logística hasta cinco ensambles y dos variantes con ajuste de hiperparámetros \autocite{hastie2009,pedregosa2011}. Ninguno supera de forma distinguible al mejor modelo individual, una máquina de vectores de soporte con núcleo radial (\texttt{svm\_rbf}) sobre los 151 descriptores, que es el modelo que entregamos; lo elegimos por descarte y por consistencia entre evaluaciones, no porque gane. Para la fase~2 comparamos nueve regresores y el final es un modelo de tiempo de falla acelerado (AFT) implementado sobre XGBoost \autocite{chen2016xgboost}, que aprende de las mediciones censuradas, aquellas que solo informan que la potencia es menor que cierto valor.
+
+\subsection{Métricas}
+
+Reportamos AUROC, que mide la capacidad de ordenar sin fijar un corte y vale 0.5 en el azar; MCC, que resume entre $-1$ y 1 los aciertos y errores de las dos clases y es preferible a la exactitud bajo desbalance \autocite{chicco2020}, pero exige un corte y por eso se mueve más; el AUPRC de la clase minoritaria, que se lee contra su tasa base de 0.35 y no contra cero; y, en la fase~2, la concordancia de Harrell \autocite{harrell1982yield}, la probabilidad de que el modelo ordene correctamente al más potente de dos pares. Las comparaciones entre modelos son diferencias pareadas sobre las mismas 15 evaluaciones con el intervalo corregido de Nadeau y Bengio \autocite{nadeau2003inference}, y todos los intervalos remuestrean grupos de moléculas y no filas, porque la fila no es la unidad independiente.
+
+\subsection{La escalera de semejanza}
+\label{sec:escalera}
+
+Para medir cuánto del desempeño depende del parecido entre lo entrenado y lo evaluado construimos una escalera de particiones cada vez más exigentes: pliegues al azar; pliegues agrupados por andamio y esqueleto (sección~\ref{sec:particion}); y pliegues donde ningún compuesto de entrenamiento puede parecerse a uno de validación más que un umbral de similitud de Tanimoto, con peldaños en 0.6, 0.5 y 0.4. La idea de que la partición debe respetar la estructura de los datos no es nueva: la partición temporal se usa como estimación del desempeño prospectivo \autocite{sheridan2013} y la validación por bloques corrige la subestimación del error cuando los datos están estructurados \autocite{roberts2017crossvalidation}. Lo que aportamos es la magnitud sobre este caso de uso.
+
+\subsection{Disciplina experimental}
+
+Cada prueba se planteó con su regla de lectura escrita antes de ver el resultado, y cada corrida comienza reproduciendo una cifra ya registrada como control. La prueba reservada sirvió solo para medir y nunca para elegir un modelo; se abrió catorce veces, cada una anotada con su fecha, su responsable y su motivo. En la última el corte de decisión estaba congelado antes de abrirla, y la única corrida en que filas de la prueba pasaron al entrenamiento (sección~\ref{sec:rara}) se hizo sobre sorteos con un núcleo de evaluación separado y no modificó el modelo entregado.
+
+\section{Resultados: permeabilidad}
+
+\subsection{La familia de modelos no es la palanca}
+
+Contra el listón de 0.70 de MCC, el modelo final lo iguala sin superarlo en validación cruzada: MCC 0.7017, AUROC 0.919 y AUPRC de la clase minoritaria 0.884 (Tabla~\ref{tab:resumen}). La mejora sobre el punto de referencia es nula, y la tomamos como resultado y no como fracaso. En AUROC, la votación ($+0.0139$, IC95\,\% $[+0.0038, +0.0239]$) y el \emph{stacking} ($+0.0128$, $[+0.0023, +0.0233]$) sí superan al \texttt{svm\_rbf} con el intervalo corregido, pero al corregir por las diez comparaciones realizadas ninguno se sostiene ($p = 0.103$ y $0.180$).
+
+Sobre la prueba reservada el mismo modelo da MCC 0.339, AUROC 0.793 y AUPRC 0.720: una brecha de 0.363 de MCC, el 52\,\%, y de 0.126 de AUROC, el 14\,\%.
+
+\begin{table}[t]
+  \centering
+  \caption{Desempeño del modelo final de cada fase en validación cruzada agrupada (15 evaluaciones) y en la prueba reservada, abierta una sola vez para esta lectura. Las cifras de la fase 1 son del \texttt{svm\_rbf} y las de la fase 2, del AFT.}
+  \label{tab:resumen}
+  \small
+  \begin{tabular}{llcc}
+    \toprule
+    Fase & Métrica & Validación & Prueba \\
+    \midrule
+    1 & AUROC            & 0.919 & 0.793 \\
+    1 & MCC (corte 0.5)  & 0.702 & 0.339 \\
+    1 & AUPRC minoritaria& 0.884 & 0.720 \\
+    2 & Concordancia     & 0.761 & 0.720 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{La semejanza permitida domina}
+
+La comparación de magnitudes es el resultado central. Entre los once clasificadores hay 4.2 puntos de MCC, el rango entre los dos más alejados. Con un único modelo, el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues agrupados y de ahí al peldaño donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos: 0.752, 0.702 y 0.419 de MCC. La Figura~\ref{fig:escalera} muestra la escalera en AUROC para seis modelos, con la prueba reservada marcada como referencia.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figuras/f1_escalera.png}
+  \caption{AUROC por peldaño de la escalera de semejanza, seis modelos de la fase 1. La línea horizontal marca la prueba reservada (0.793). Los modelos se degradan juntos: la pendiente no distingue entre ellos.}
+  \label{fig:escalera}
+\end{figure}
+
+Dos matices acotan la lectura. La forma de la escalera depende de cómo se defina el parecido: con ECFP6 la caída es gradual y con ECFP4 se concentra entre los peldaños de 0.6 y 0.5, aunque la caída total es parecida (0.419 frente a 0.434 de MCC), y con huellas de pares de átomos los peldaños estrictos no se pueden construir. Y el MCC exagera la caída, porque arrastra el efecto del corte: con el mejor corte posible los dos peldaños estrictos darían 0.655 y 0.560 en lugar de 0.486 y 0.419.
+
+\subsection{La prueba es más difícil de lo que su semejanza predice}
+\label{sec:brecha}
+
+Esperábamos que la prueba cayera por contener química más nueva, pero la explicación no se sostiene. Su semejanza media al vecino más cercano del entrenamiento es 0.414, \emph{mayor} que la de la validación agrupada, 0.384, así que por semejanza debería rendir mejor. Al reponderar las predicciones de validación a la distribución de semejanza de la prueba, el AUROC esperado es 0.89 frente al 0.793 observado. Esa brecha de 0.10 queda sin explicar, y los candidatos que enumeramos (prevalencia, peso molecular y polaridad, criterios de curación, andamios deliberadamente raros) no están medidos. Es, a nuestro juicio, la limitación más importante de este trabajo: el indicador de aplicabilidad más usado no anticipa la dificultad.
+
+Lo que sí es consistente es que la caída se agrava con la rareza. Dividiendo la prueba en terciles de semejanza al ajuste (cortes en 0.31 y 0.46), el AUROC sube de 0.697 a 0.793 y a 0.875, una diferencia de $+0.178$ entre el tercil más parecido y el menos parecido (IC95\,\% $[+0.119, +0.238]$, remuestreando esqueletos). En los compuestos sin equivalente natural la diferencia llega a $+0.223$ $[+0.142, +0.306]$; en los naturales exactos es $+0.086$ con un intervalo que incluye el cero ($[-0.029, +0.204]$), de modo que con 446 compuestos no se distingue.
+
+La ventaja del modelo sobre una línea base de solo peso molecular y superficie polar topológica (TPSA), del tipo de propiedades fisicoquímicas con que la literatura filtra permeabilidad \autocite{lipinski2001}, se comporta igual: $+0.036$ en el tercil más raro y $+0.106$ en el más parecido, una diferencia de $+0.069$ $[+0.011, +0.124]$ (Figura~\ref{fig:rareza}). El modelo aporta menos justamente donde más se le necesita.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figuras/f2_rareza.png}
+  \caption{Ventaja del modelo sobre la línea base de peso molecular y TPSA, por tercil de rareza, con intervalos del 95\,\% por remuestreo de grupos. La ventaja se concentra en los compuestos parecidos a lo ya visto.}
+  \label{fig:rareza}
+\end{figure}
+
+\subsection{Enseñar más química rara no cierra la brecha}
+\label{sec:rara}
+
+Probamos tres estrategias, cada una con su regla de decisión escrita antes de correr.
+
+\textbf{Repesar.} Dimos peso 3, 2 y 1 a las filas de ajuste según su tercil de semejanza al vecino más cercano de otro grupo, dentro de cada tramo de peso molecular. En el tercil más raro de validación la ganancia de AUROC fue de $-0.0005$, positiva en 9 de 15 evaluaciones, cuando la regla exigía más de 0.005 en 12. Un control con los mismos pesos asignados al azar mueve el AUROC global casi igual ($+0.0015$ frente a $+0.0022$). La regla tiene poca potencia para efectos pequeños: con la dispersión observada (0.0095) solo detectaría con probabilidad 0.8 una mejora cercana a 0.010, así que descarta una mejora grande y no una de 0.005.
+
+\textbf{Trasladar filas de la prueba al ajuste.} La mitad de los grupos de la prueba de cada tercil forma un núcleo de evaluación intacto; de la otra mitad trasladamos al ajuste las filas del tercil más raro (285 de media) y devolvimos a la prueba un número parecido de filas comunes (295 de media), en 15 sorteos. El MCC sube de 0.33 a 0.36, pero el AUROC apenas se mueve ($+0.002$): cambia el corte y no el orden. Separado en brazos, quitar las filas comunes del ajuste no mueve nada ($-0.001$) y recibir filas de la prueba sí, tanto raras ($+0.035$, 15 de 15 sorteos) como al azar ($+0.023$, 13 de 15). Lo que ayuda es recibir filas de la distribución sobre la que se evalúa, no cuáles sean. El resultado más informativo fue colateral: con el mismo modelo y sin reentrenar, los compuestos comunes trasladados a la prueba se miden con AUROC 0.94 y los raros que quedaron, con 0.68. Recomponer la prueba cambia la cifra que se reporta, no lo que el modelo sabe.
+
+\textbf{Recomponer el ajuste.} Fijando tamaño, prevalencia y número de grupos, y cambiando solo la composición, empezar por lo raro cuesta $-0.060$ de AUROC frente al orden al azar con el 25\,\% del ajuste ($[-0.110, -0.011]$; comparación secundaria declarada de antemano y sin corrección por multiplicidad). Con el 75\,\% la composición deja de importar ($\pm 0.0004$).
+
+Ninguna de las tres cierra la distancia entre 0.70 y 0.34 de MCC, y añadir filas al azar ya estaba en meseta en la curva de aprendizaje. El límite de la fase~1 no parece ser cuántas filas hay ni cuáles.
+
+\subsection{El punto de operación sí mueve el resultado}
+\label{sec:corte}
+
+El MCC cae más que el AUROC porque exige un corte, y el 0.5 es una convención heredada. En la prueba ese corte declara BBB+ al 79.3\,\% de los compuestos cuando la prevalencia real es 57.3\,\%: 22 puntos de desajuste, frente a los 6 del ajuste (70.9\,\% contra 64.97\,\%).
+
+Igualar la tasa declarada a una prevalencia supuesta, sin usar las etiquetas de la prueba, eleva el MCC de 0.3385 a 0.4095 ($+0.0712$, IC95\,\% $[+0.0303, +0.1099]$). No hace falta acertar la prevalencia: supusimos la del ajuste, 65.0\,\%, cuando la real era 57.3\,\%, un error de 7.7 puntos, y la ganancia se sostuvo. Elegir el corte con las etiquetas de validación, en cambio, no recupera nada ($+0.0065$, $[-0.0224, +0.0341]$), porque se elige donde la prevalencia es otra.
+
+Tres salvedades. El corte de igual prevalencia necesita el lote completo y una prevalencia supuesta, así que no aplica a un compuesto suelto. El techo de 0.485 se obtiene eligiendo el corte con las etiquetas de la prueba y por tanto no es alcanzable: mide el margen que queda. Y el AUROC es idéntico con cualquier corte: lo que cambia es cuántos compuestos se declaran permeables, no la capacidad de ordenarlos. Por eso entregamos la probabilidad y no una clase.
+
+\section{Resultados: potencia}
+
+\subsection{Regresión con censura}
+
+La fase~2 es una regresión y no una clasificación, por una razón del dominio: el corte de 10\,µM no significa lo mismo en cada diana, pues deja a \texttt{LRRK2} con el 98.1\,\% de activos y a \texttt{NFE2L2} con el 50.7\,\%, y clasificar destruye el orden dentro de cada clase, que es justamente lo que una lista de prioridad necesita. El modelo final, el AFT, alcanza una concordancia de 0.761 en validación y 0.720 en la prueba reservada (Tabla~\ref{tab:resumen}).
+
+\subsection{La escalera, con un límite del conjunto}
+
+La fase~2 reproduce el patrón de la fase~1. La concordancia del AFT baja de 0.807, agrupando por molécula, a 0.695 en el peldaño de semejanza 0.6: una caída de 0.112, unas siete veces la dispersión de 0.015 entre los siete regresores competitivos (Figura~\ref{fig:escalera2}). Pero aquí aparece un límite del propio conjunto: en los peldaños de 0.5 y 0.4 la partición no se puede construir, porque el 69\,\% y el 90\,\% de las filas caen en un solo grupo. No existe forma de evaluar la fase~2 contra química realmente nueva a esos niveles, y conviene decirlo antes de que alguien lea la ausencia de la cifra como una cifra buena.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figuras/f6_escalera_fase2.png}
+  \caption{Concordancia del AFT por peldaño de semejanza en la fase 2 y, en gris, restringida a los pares que solo aporta NPASS. Los peldaños estrictos no se pueden construir en este conjunto.}
+  \label{fig:escalera2}
+\end{figure}
+
+\subsection{El estrato de productos naturales es el más débil}
+
+El desempeño agregado de la fase~2 no describe al caso de uso. Por estrato de procedencia, el AUROC es 0.855 donde solo hay registros de ChEMBL y 0.607 donde solo hay NPASS, que son los productos naturales que el proyecto existe para priorizar. Es una diferencia de 0.248 entre los dos extremos del mismo modelo, y un promedio agregado la oculta por completo.
+
+Elegimos el AFT precisamente por ese estrato: en los pares que solo tiene NPASS aprende de mediciones censuradas que los demás modelos descartan, y su concordancia ahí es 0.632 frente a 0.511 del bosque aleatorio en validación cruzada (Figura~\ref{fig:aft}). La prueba no confirma ni refuta: con 117 pares la concordancia baja a 0.530 y la línea base de peso y TPSA da 0.565, pero con ese tamaño no hay potencia para distinguir 0.511 de 0.632, y los pares no son la misma población (12.3\,\% de activos frente a 44.4\,\%). Su ventaja de MCC sobre el bosque, $+0.155$ con corte fijo, se reduce a $+0.028$ con un corte de igual prevalencia, lo que vuelve a señalar al punto de operación (sección~\ref{sec:corte}).
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.88\textwidth]{figuras/f4_aft.png}
+  \caption{Izquierda: concordancia sobre los pares que solo aporta NPASS, el estrato por el que se eligió el modelo. Derecha: ventaja en MCC del AFT sobre el bosque aleatorio, que se reduce al corregir el punto de operación.}
+  \label{fig:aft}
+\end{figure*}
+
+\subsection{Qué pesa en la predicción de potencia}
+
+La explicabilidad a nivel de subestructura era un requisito de la patrocinadora, no un añadido. Aplicamos dos métodos independientes de atribución y reportamos solo aquello en lo que concuerdan \autocite{rodriguezperez2020shapley}: TreeSHAP, que lee la estructura de los árboles, y la permutación de columnas, que solo observa la salida. Concuerdan (Spearman 0.93; 12 de sus 15 columnas más importantes coinciden) y señalan la identidad de la diana (\texttt{MAOA}, \texttt{MAOB}, \texttt{DRD2}, \texttt{LRRK2}, \texttt{BCHE}, el 15\,\% de la atribución) y, en la química, la complejidad topológica, la lipofilia y los halógenos.
+
+El contraste entre fases es informativo y conviene no trasladarlo: TPSA y los donadores de hidrógeno, las dos propiedades que dominan la literatura de permeabilidad, no dominan la potencia (lugares 44 y 165), mientras que en la fase~1 los donadores de hidrógeno sí entran en el cuarto lugar con ambos métodos y TPSA no (lugares 40 y 10), porque comparte información con un conjunto de columnas correlacionadas. Con el brazo que sí usa huellas, los dos métodos concuerdan según la regla declarada (Spearman 0.577 sobre la unión de los 100 primeros, contra el 0.50 fijado de antemano) y la intersección contiene dos subestructuras genéricas y frecuentes, un nitrógeno de anillo tipo piridina y un CH aromático vecino, presentes en el 57\,\% y el 21\,\% de las moléculas. Indican que el modelo usa heterociclos nitrogenados; no afirmamos ningún farmacóforo específico.
+
+\section{La representación no se traslada entre fases}
+\label{sec:huellas}
+
+Las huellas moleculares añadidas a los descriptores mejoran a cinco de los seis modelos de la fase~2 en las 15 evaluaciones y en buena medida sustituyen a los descriptores; en la fase~1 no mejoran a ninguno, bajan el MCC de cinco de seis y ensanchan la brecha entre entrenamiento y validación. Es un resultado incómodo porque impide una recomendación única de representación, y las dos explicaciones simples no sobreviven a su control (Figura~\ref{fig:rivales}).
+
+No es el tamaño de los datos: reduciendo el ajuste de la fase~2 a 5,000 filas, aproximadamente lo que ve un pliegue de la fase~1, la ganancia del AFT es $+0.0105$ en 14 de 15 evaluaciones, \emph{mayor} que con el ajuste completo ($+0.0057$). Tampoco es la granularidad de la etiqueta: con la etiqueta «molécula activa contra alguna diana», que es tan gruesa como la de la fase~1, las huellas ayudan a los cuatro modelos probados (AUROC de $+0.017$ a $+0.085$).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figuras/f5_rivales.png}
+  \caption{Las huellas siguen ayudando en la fase 2 al reducir el ajuste al tamaño de un pliegue de la fase 1 y al sustituir la etiqueta por una de molécula. Ni el tamaño de los datos ni la granularidad de la etiqueta explican la inversión entre fases.}
+  \label{fig:rivales}
+\end{figure}
+
+Quedan dos hipótesis en pie. La densidad del espacio químico, que las huellas rindan donde cada molécula tiene muchos vecinos, es compatible con los datos pero no concluyente: a igual peso molecular la fase~2 es 1.8 veces más densa que la fase~1 (61.9 frente a 33.8 vecinos fuera del grupo) y en la fase~1 la pérdida se concentra en el tercio más disperso, pero las diferencias no superan su desviación. Igualar los tramos de peso por submuestreo retira además el argumento del tamaño de la molécula. La segunda hipótesis, que la permeabilidad dependa de propiedades globales ya capturadas por los descriptores mientras la unión a una diana dependa de subestructuras locales, es coherente con la atribución de la sección anterior pero no está medida.
+
+En las dos fases la ganancia de las huellas se concentra donde el caso de uso no la necesita: en los pares que solo aporta ChEMBL y en los compuestos sin equivalente natural. En la fase~1 el argumento que queda a su favor no es el desempeño sino la explicabilidad, porque cada columna corresponde a una subestructura concreta, y conviene presentarlo así.
+
+\section{Discusión}
+
+\subsection{Qué significa para el caso de uso}
+
+Los resultados reordenan las prioridades de ingeniería. Si entre once familias de modelos hay 4.2 puntos de MCC y entre dos criterios de partición hay 33.3 sobre el modelo que se entrega, entonces el esfuerzo rinde más en caracterizar y comunicar la novedad estructural de cada consulta que en buscar un modelo mejor. De ahí tres recomendaciones operativas. Primera, entregar la probabilidad y no una clase, y acompañarla de la distancia del compuesto al conjunto de entrenamiento. Segunda, cuando se evalúa un lote completo y se puede suponer su prevalencia, corregir el punto de operación en lugar de heredar el corte de 0.5 (sección~\ref{sec:corte}). Tercera, no usar la fase~1 como filtro: un resultado BBB$-$ reordena al candidato pero no lo elimina, y el estrato de productos naturales es el más débil en las dos fases.
+
+Lo que entregamos, en consecuencia, no es un servicio sino un cuaderno ejecutable con los dos modelos finales, entrenados solo sobre las filas de ajuste, que para cada SMILES devuelve la probabilidad de permear, la potencia predicha contra cada una de las 26 dianas y la similitud al vecino más cercano de entrenamiento como advertencia de extrapolación.
+
+\subsection{Limitaciones}
+
+La prueba reservada es una sola y de tamaño moderado (1,499 compuestos en la fase~1), de modo que los intervalos de los subgrupos pequeños son anchos. Las 151 columnas de la fase~1 se seleccionaron con etiquetas de entrenamiento, así que su sesgo de selección no es medible contra la dispersión. El efecto de agrupar depende del modelo y de cómo se defina el parecido. Los experimentos de representación usan una o cuatro familias de modelos y no las seis de la comparación principal, y la atribución por subestructura excluye 618 de 2,534 columnas, todas huellas, por aparecer en menos de cinco pliegues. Las tres estrategias de la sección~\ref{sec:rara} usan un solo modelo, y la segunda comparte las mismas 1,499 filas en sus 15 sorteos, de modo que descarta una ganancia grande y no una pequeña. Ninguna corrida se diseñó para comparar entre sí las barras de la Figura~\ref{fig:palancas}, que indican orden de magnitud y no efectos aislados. Por último, la reproducibilidad entre plataformas no es exacta: la misma regresión logística da 0.481, 0.489 o 0.497 de MCC según el sistema operativo y la versión del intérprete, razón por la cual ninguna decisión se tomó con una sola corrida.
+
+\subsection{Trabajo futuro}
+\label{sec:futuro}
+
+Lo primero es explicar la brecha de la sección~\ref{sec:brecha}, porque afecta a cualquier uso de la similitud como indicador de aplicabilidad. Después, una validación externa separada por andamio y no por compuesto: la base externa que recibimos da una concordancia de 0.792 en 8,134 pares, mejor que nuestra prueba reservada, pero el 64.9\,\% de sus pares tiene un andamio ya presente en el ajuste y su semejanza mediana al vecino más cercano es 0.787, de modo que esa cifra es exactamente lo que predice la tesis de este artículo y no evidencia de mejor generalización. Queda también combinar las dos fases en un único orden y medir si seleccionar con ambas supera a cada una por separado, lo que solo puede comprobarse sobre los 612 esqueletos con medición en los dos archivos, 1,594 pares sobre 23 dianas: poca potencia, así que la regla de lectura tiene que admitir «no alcanza» como veredicto. Por último, separar la densidad del espacio químico de la composición del ajuste para cerrar la pregunta de la sección~\ref{sec:huellas}, y medir la fase~2 con más pares de NPASS, porque con 117 no se distingue de la línea base.
+
+\section{Conclusiones}
+
+Sobre dos tareas de selección temprana de compuestos naturales neuroprotectores, la elección de la familia de modelos resultó ser el factor menos influyente de los que medimos. Once clasificadores se separan por 4.2 puntos de MCC; el mismo modelo pierde 33.3 puntos cuando se le exige generalizar a química estructuralmente distinta, y agrupar las particiones solo por andamio, en lugar de unir andamio y esqueleto, infla además el MCC 7.1 puntos con el bosque aleatorio y 1.9 con el modelo que entregamos. La prueba reservada rinde además por debajo de lo que su semejanza predice, y ninguna de las tres estrategias que probamos para aprender de la química poco representada cerró esa brecha. En cambio, corregir el punto de operación recupera 7.1 puntos de MCC sin tocar el modelo. La conclusión práctica es que la confianza en una predicción depende de la novedad de la molécula consultada más que del algoritmo que la produce, y que esa distancia debe medirse, reportarse y entregarse junto con cada predicción.
+
+\section*{Declaración de uso de inteligencia artificial}
+
+Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claude Sonnet~5.5, y Claude Sonnet~5 cuando las restricciones de seguridad del modelo en temas de biología y química impidieron usar el 5.5, para escribir el código de los experimentos y sus pruebas, generar con ese código las figuras a partir de las corridas registradas y redactar y dar formato a este artículo. Las preguntas, las reglas de decisión escritas antes de cada corrida, la interpretación de los resultados y las conclusiones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido recae en los autores.
+
+\section*{Disponibilidad de código y datos}
+
+Cada cifra proviene de una corrida registrada con sus parámetros, la versión del código, la huella criptográfica de los datos y el comando que la produjo. El código, los registros de las corridas y los cuadernos están en el repositorio del proyecto. El archivo de permeabilidad deriva de B3DB, de licencia CC0; NPASS se distribuye bajo CC BY-NC, por lo que su uso aquí es no comercial.
+
+\printbibliography[title={Referencias}]
+
+\end{document}

@@ -84,3 +84,12 @@ en el repositorio, en `docs/reportes/articulo/README.md` y
 sitio, igual que el esqueleto del artículo.
 
 Las dos últimas no son libretas sino documentos en PDF, y entre las dos piden lo que el proyecto todavía no tiene escrito: una arquitectura de despliegue con su monitoreo, y una evaluación económica con beneficios mensuales, costo total de propiedad a doce meses y riesgos con su mitigación.
+
+## Fuera del curso · artículo científico
+
+Además del artículo que cubre la rúbrica, el mismo trabajo está escrito con la forma de un artículo de
+investigación en `docs/reportes/articulo-cientifico/`: doble columna, estructura de introducción, datos, métodos,
+resultados y discusión, y el hallazgo en el título en vez del nombre del proyecto. **No es un entregable del
+curso** y existe para circular fuera de él. Usa las mismas figuras y las mismas cifras que el entregable, con la
+salvedad de que se edita a mano y la coincidencia entre los dos es manual; su README explica por qué y qué queda
+pendiente.

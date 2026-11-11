@@ -1,15 +1,24 @@
 #!/bin/sh
-# Compila docs/reportes/articulo/articulo.tex a PDF con TeX Live en Docker (pdfLaTeX + Biber), sin instalar
+# Compila a PDF un artículo de docs/reportes/ con TeX Live en Docker (pdfLaTeX + Biber), sin instalar
 # LaTeX en la máquina. La primera vez construye la imagen `tex-art` (unos 4 GB, varios minutos).
 #
-#     sh scripts/compilar_articulo.sh
+#     sh scripts/compilar_articulo.sh                      # el entregable de la rúbrica (una columna)
+#     sh scripts/compilar_articulo.sh articulo-cientifico  # el artículo científico (doble columna)
 #
-# Deja el PDF en docs/reportes/articulo/articulo.pdf. Se compila en una copia, porque la bibliografía y el
-# logo son enlaces simbólicos que Docker no sigue.
+# Toma el nombre de la carpeta bajo docs/reportes/ y compila el .tex que se llama igual que ella
+# (articulo/articulo.tex, articulo-cientifico/articulo-cientifico.tex). Deja el PDF junto al .tex.
+# Se compila en una copia, porque la bibliografía, el logo y las figuras son enlaces simbólicos que
+# Docker no sigue; `cp -RL` los resuelve.
 set -e
 RAIZ=$(cd "$(dirname "$0")/.." && pwd)
-CARPETA="$RAIZ/docs/reportes/articulo"
+NOMBRE=${1:-articulo}
+CARPETA="$RAIZ/docs/reportes/$NOMBRE"
 TMP=$(mktemp -d)
+
+if [ ! -f "$CARPETA/$NOMBRE.tex" ]; then
+  echo "no existe $CARPETA/$NOMBRE.tex" >&2
+  exit 1
+fi
 
 if ! docker image inspect tex-art >/dev/null 2>&1; then
   echo "construyendo la imagen tex-art (solo la primera vez)..."
@@ -20,7 +29,7 @@ if ! docker image inspect tex-art >/dev/null 2>&1; then
 fi
 
 cp -RL "$CARPETA/." "$TMP/"
-docker run --rm -v "$TMP":/work -w /work tex-art latexmk -pdf -quiet -interaction=nonstopmode articulo.tex
-cp "$TMP/articulo.pdf" "$CARPETA/articulo.pdf"
-echo "listo: $CARPETA/articulo.pdf"
+docker run --rm -v "$TMP":/work -w /work tex-art latexmk -pdf -quiet -interaction=nonstopmode "$NOMBRE.tex"
+cp "$TMP/$NOMBRE.pdf" "$CARPETA/$NOMBRE.pdf"
+echo "listo: $CARPETA/$NOMBRE.pdf"
 rm -rf "$TMP"
