@@ -179,9 +179,33 @@ Sobre la prueba reservada el mismo modelo da MCC 0.339, AUROC 0.793 y AUPRC 0.72
   \end{tabular}
 \end{table}
 
+\begin{table}[tb]
+  \centering
+  \caption{Los once clasificadores de la fase 1, ordenados por MCC medio sobre las 15 evaluaciones de la validación cruzada agrupada (3 semillas $\times$ 5 pliegues). La desviación es entre evaluaciones y no un error estándar, porque las semillas comparten filas. El rango completo es de 4.2 puntos de MCC y 2.2 de AUROC. Corrida \texttt{2026-11-01-artemio-1.5-ensambles-permeabilidad}.}
+  \label{tab:modelos}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    Modelo & MCC & (desv.) & AUROC & AUPRC \\
+    \midrule
+    \emph{Stacking}        & 0.711 & 0.068 & 0.932 & 0.894 \\
+    Votación               & 0.709 & 0.069 & 0.933 & 0.895 \\
+    Bosque afinado         & 0.702 & 0.070 & 0.933 & 0.894 \\
+    Potenciación           & 0.702 & 0.061 & 0.930 & 0.884 \\
+    \textbf{SVM radial}    & \textbf{0.702} & 0.071 & 0.919 & 0.884 \\
+    Potenciación afinada   & 0.700 & 0.061 & 0.929 & 0.886 \\
+    Bosque aleatorio       & 0.700 & 0.069 & 0.933 & 0.895 \\
+    \emph{Bagging} de SVM  & 0.695 & 0.071 & 0.921 & 0.886 \\
+    Regresión logística    & 0.687 & 0.064 & 0.913 & 0.872 \\
+    Perceptrón multicapa   & 0.674 & 0.062 & 0.911 & 0.864 \\
+    $k$ vecinos            & 0.669 & 0.079 & 0.914 & 0.863 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{La semejanza permitida domina}
 
-La comparación de magnitudes es el resultado central. Entre los once clasificadores hay 4.2 puntos de MCC, el rango entre los dos más alejados. Con un único modelo, el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues agrupados y de ahí al peldaño donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos: 0.752, 0.702 y 0.419 de MCC. La Figura~\ref{fig:escalera} muestra la escalera en AUROC para seis modelos, con la prueba reservada marcada como referencia.
+La comparación de magnitudes es el resultado central. Entre los once clasificadores hay 4.2 puntos de MCC, el rango entre los dos más alejados, y la desviación de cada uno entre sus 15 evaluaciones es mayor que la distancia entre vecinos de la tabla (Tabla~\ref{tab:modelos}). El modelo que entregamos ocupa el quinto lugar de once por MCC medio: lo elegimos, como se dijo, por consistencia y por descarte. Con un único modelo, el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues agrupados y de ahí al peldaño donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos: 0.752, 0.702 y 0.419 de MCC. La Figura~\ref{fig:escalera} muestra la escalera en AUROC para seis modelos, con la prueba reservada marcada como referencia.
 
 \begin{figure}[t]
   \centering
