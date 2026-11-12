@@ -153,16 +153,16 @@ Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5, Claude
 % --- Anexos ---
 \clearpage
 \section*{Anexo A. Beneficios: supuestos, escenarios y lo medido}
-\noindent\textit{Lo medido.} Con las probabilidades que el modelo final dio a los 1,499 compuestos de la prueba reservada, ordenamos de mayor a menor probabilidad de cruzar la barrera y simulamos ensayar solo los mejor ordenados. La Tabla~\ref{tab:ahorro} da, para cada fracción ensayada, qué parte de los permeables reales queda dentro (con intervalo del 95\,\% que remuestrea grupos de andamio) y qué tan seguido acierta lo ensayado, contra una prevalencia de 57.3\,\%. Si en lugar del modelo se eligiera al azar, la fracción de permeables conservados sería igual a la fracción confirmada; por eso el beneficio del modelo es la diferencia: con el 70\,\% confirmado conserva el 85.3\,\%, y un sorteo tendría que confirmar el 85.3\,\% para igualarlo, 15.3 puntos más.
+\noindent\textit{Lo medido.} Con las probabilidades que el modelo final dio a los 1,499 compuestos de la prueba reservada, ordenamos de mayor a menor probabilidad de cruzar la barrera y simulamos confirmar solo los mejor ordenados. La Tabla~\ref{tab:ahorro} da, para cada fracción confirmada, qué parte de los permeables reales queda dentro (con intervalo del 95\,\% que remuestrea grupos de andamio) y qué tan seguido acierta lo confirmado, contra una prevalencia de 57.3\,\%. Si en lugar del modelo se eligiera al azar, la fracción de permeables conservados sería igual a la fracción confirmada; por eso el beneficio del modelo es la diferencia: con el 70\,\% confirmado conserva el 85.3\,\%, y un sorteo tendría que confirmar el 85.3\,\% para igualarlo, 15.3 puntos más.
 
 \begin{table}[h]
 \centering
-\caption{Ensayar solo la fracción mejor ordenada: ensayos que se evitan, permeables que se conservan y aciertos entre lo ensayado.}
+\caption{Confirmar solo la fracción mejor ordenada: qué queda sin confirmar, qué permeables se conservan y qué tan seguido acierta lo confirmado. Dejar algo sin confirmar no es un ahorro del modelo: un sorteo también lo deja, y conserva menos permeables.}
 \label{tab:ahorro}
 \small
 \begin{tabular}{rrrrr}
 \toprule
-Fracción ensayada & Ensayos evitados & Permeables conservados & IC95\,\% & Acierto entre lo ensayado\\
+Fracción confirmada & Sin confirmar & Permeables conservados & IC95\,\% & Acierto entre lo confirmado\\
 \midrule
 40\,\% & 60\,\% & 58.8\,\% & 56.3 a 61.1 & 84.2\,\%\\
 50\,\% & 50\,\% & 70.9\,\% & 68.5 a 73.1 & 81.2\,\%\\
