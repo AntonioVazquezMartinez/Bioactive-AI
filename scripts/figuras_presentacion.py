@@ -363,37 +363,110 @@ def fig_medir() -> dict:
     return {"tres": tres["dif_media"], "ruido": ruido["dif_media"]}
 
 
+# nombre en español y, aparte, el código de RDKit con el que aparece en el cuaderno
+NOMBRES = {
+    # fase 1
+    "fr_lactam": ("Lactamas", "fr_lactam"),
+    "qed": ("Parecido a un fármaco", "qed"),
+    "NumAliphaticCarbocycles": ("Anillos de carbono no aromáticos", "NumAliphaticCarbocycles"),
+    "NumHDonors": ("Donadores de hidrógeno", "NumHDonors"),
+    "EState_VSA10": ("Superficie y estado electrónico", "EState_VSA10"),
+    "VSA_EState3": ("Superficie y estado electrónico", "VSA_EState3"),
+    "fr_COO": ("Ácidos carboxílicos", "fr_COO"),
+    "NumAtomStereoCenters": ("Centros estereogénicos", "NumAtomStereoCenters"),
+    "fr_Ar_OH": ("Hidroxilos aromáticos", "fr_Ar_OH"),
+    "fr_ether": ("Éteres", "fr_ether"),
+    "MolLogP": ("Lipofilia", "MolLogP"),
+    "TPSA": ("Superficie polar", "TPSA"),
+    # fase 2
+    "BertzCT": ("Complejidad topológica", "BertzCT"),
+    "diana:MAOA": ("Diana MAOA", "monoamino oxidasa A"),
+    "diana:MAOB": ("Diana MAOB", "monoamino oxidasa B"),
+    "diana:DRD2": ("Diana DRD2", "receptor de dopamina D2"),
+    "diana:LRRK2": ("Diana LRRK2", "quinasa LRRK2"),
+    "fr_halogen": ("Halógenos", "fr_halogen"),
+    "SMR_VSA3": ("Refractividad y superficie", "SMR_VSA3"),
+    "FpDensityMorgan3": ("Densidad de la huella Morgan", "FpDensityMorgan3"),
+    "SlogP_VSA10": ("Lipofilia y superficie", "SlogP_VSA10"),
+    "fr_Ar_N": ("Nitrógenos aromáticos", "fr_Ar_N"),
+    "PEOE_VSA1": ("Carga parcial y superficie", "PEOE_VSA1"),
+}
+
+
+def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6) -> list:
+    """Gráfico de puntos de SHAP: una fila por columna, un punto por compuesto, color = valor de la columna."""
+    import numpy as np
+    from matplotlib.colors import LinearSegmentedColormap
+
+    mapa = LinearSegmentedColormap.from_list("bajo_alto", [AZUL, "#e4e4e4", NARANJA])
+    orden = list(d.assign(a=d["shap"].abs()).groupby("columna")["a"].mean().sort_values(ascending=False).head(n).index)
+    rng = np.random.default_rng(0)
+    for y, col in enumerate(orden):
+        f = d[d["columna"] == col]
+        v = f["valor"].to_numpy(float)
+        lo, hi = np.percentile(v, 2), np.percentile(v, 98)
+        color = np.clip((v - lo) / (hi - lo), 0, 1) if hi > lo else np.full(len(v), 0.0)
+        ax.scatter(f["shap"], y + rng.uniform(-0.3, 0.3, len(f)), c=color, cmap=mapa, s=11, alpha=0.9,
+                   linewidths=0, vmin=0, vmax=1)
+        ax.axhline(y + 0.5, color="#efefef", lw=0.8)
+    ax.axvline(0, color="#333333", lw=1)
+    ax.set_yticks([])
+    ax.set_ylim(len(orden) - 0.45, -0.55)
+    ax.set_xlabel(etiqueta_x, fontsize=10.5, color="#333333")
+    ax.tick_params(axis="x", labelsize=9.5, colors=GRIS)
+    for lado in ("left", "right", "top"):
+        ax.spines[lado].set_visible(False)
+    ax.spines["bottom"].set_color("#cccccc")
+    ax.set_title(titulo, fontsize=13.5, fontweight="bold", color=AZUL, loc="left", pad=30)
+    # etiquetas: nombre en español y, debajo, el código; a la derecha, si la permutación lo confirma
+    for y, col in enumerate(orden):
+        nombre, codigo = NOMBRES.get(col, (col, ""))
+        ax.text(-0.02, y - 0.1, nombre, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                fontsize=11, color="#111111", fontweight="bold")
+        ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                fontsize=8.6, color=GRIS)
+        ok = col in confirmadas
+        ax.text(1.02, y, "confirmada por\npermutación" if ok else "solo SHAP", transform=ax.get_yaxis_transform(),
+                ha="left", va="center", fontsize=8.8, color=AZUL if ok else "#a0a0a0", linespacing=1.1)
+    return orden
+
+
 def fig_importancias() -> dict:
-    """Qué pesa en cada fase: |SHAP| medio por columna, con el lugar por permutación al lado."""
-    m1 = json.loads((ATRIB1 / "metricas.json").read_text(encoding="utf-8"))
-    comunes1 = set(m1["interseccion_semilla0"])
-    d1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv").sort_values("shap", ascending=False).head(8)
-    d1 = d1.assign(comun=d1["caracteristica"].isin(comunes1), rango_perm=d1["r_perm"], valor=d1["shap"])
-    d1["nombre"] = d1["caracteristica"]
-    d2 = pd.read_csv(ATRIB2).sort_values("shap", ascending=False).head(8)
-    d2 = d2.assign(comun=(d2["rango_shap"] <= 15) & (d2["rango_permutacion"] <= 15),
-                   rango_perm=d2["rango_permutacion"], valor=d2["shap"])
-    d2["nombre"] = d2["columna"].str.replace("diana:", "diana ", regex=False)
-    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 4.6), gridspec_kw={"wspace": 0.75})
-    for ax, d, titulo in ((ejes[0], d1, "Fase 1 · permeabilidad (svm_rbf)"), (ejes[1], d2, "Fase 2 · potencia (aft)")):
-        y = range(len(d))
-        ax.barh(y, d["valor"] / d["valor"].max(), color=[AZUL if c else GRIS_CLARO for c in d["comun"]], height=0.62)
-        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
-            ax.text(fila["valor"] / d["valor"].max() + 0.02, yi, f"perm. {int(fila['rango_perm'])}", va="center",
-                    fontsize=8.5, color=AZUL if fila["comun"] else GRIS)
-        ax.set_yticks(list(y), list(d["nombre"]), fontsize=9.5)
-        ax.invert_yaxis()
-        ax.set_xlim(0, 1.32)
-        ax.set_xticks([])
-        for lado in ("left", "right", "top", "bottom"):
-            ax.spines[lado].set_visible(False)
-        ax.set_title(titulo, fontsize=11.5, fontweight="bold", color=AZUL, loc="left")
-    fig.text(0.01, -0.02, "Largo de la barra: |SHAP| medio relativo al primero. En azul, lo que SHAP y la permutación "
-             "ponen los dos entre sus quince primeros;\nel número es el lugar por permutación.", fontsize=8.8, color=GRIS)
+    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma."""
+    from matplotlib.cm import ScalarMappable
+    from matplotlib.colors import LinearSegmentedColormap, Normalize
+
+    carpetas = {f: sorted((RAIZ / "experimentos").glob(f"*puntos-shap-por-compuesto-{f}"))[-1] for f in ("fase1", "fase2")}
+    d1 = pd.read_csv(carpetas["fase1"] / "shap_fase1.csv")
+    d2 = pd.read_csv(carpetas["fase2"] / "shap_fase2.csv")
+    a1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv")
+    conf1 = set(a1[(a1["r_perm"] <= 15) & (a1["r_shap"] <= 15)]["caracteristica"])
+    a2 = pd.read_csv(ATRIB2)
+    conf2 = set(a2[(a2["rango_shap"] <= 15) & (a2["rango_permutacion"] <= 15)]["columna"])
+
+    fig, ejes = plt.subplots(1, 2, figsize=(11.8, 4.9), gridspec_kw={"wspace": 1.55})
+    o1 = _puntos(ejes[0], d1, conf1, "Fase 1 · permeabilidad",
+                 "efecto en la probabilidad de cruzar la barrera")
+    o2 = _puntos(ejes[1], d2, conf2, "Fase 2 · potencia",
+                 "efecto en la potencia predicha (pActividad)")
+    for ax in ejes:   # guía de lectura dentro de la figura, bajo el eje
+        x0, x1 = ax.get_xlim()
+        ax.text(0, 1.015, "← baja la predicción", transform=ax.get_xaxis_transform(), ha="right", va="bottom",
+                fontsize=8.8, color=GRIS)
+        ax.text(0, 1.015, "  la sube →", transform=ax.get_xaxis_transform(), ha="left", va="bottom",
+                fontsize=8.8, color=GRIS)
+    mapa = LinearSegmentedColormap.from_list("bajo_alto", [AZUL, "#e4e4e4", NARANJA])
+    barra = fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=mapa), ax=ejes, orientation="horizontal",
+                         fraction=0.03, pad=0.17, aspect=45, shrink=0.28)
+    barra.set_ticks([0, 1])
+    barra.set_ticklabels(["valor bajo de la columna", "valor alto"], fontsize=9.5)
+    barra.outline.set_visible(False)
+    fig.text(0.5, -0.03, "Cada punto es un compuesto (300 en la fase 1, 3,000 en la 2). Su posición dice cuánto empuja esa columna "
+             "la predicción en ese compuesto; su color, qué valor tiene la columna.", fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
-    return {"fase1": list(d1["nombre"]), "fase2": list(d2["nombre"])}
+    return {"fase1": o1, "fase2": o2}
 
 
 def fig_ranking() -> dict:
