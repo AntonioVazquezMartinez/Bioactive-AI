@@ -43,9 +43,10 @@
 
 % --- Recuadros de cifras (texto grande) ---
 % \cifra{fondo}{color del texto}{valor}{etiqueta}{unidad}
+\newlength{\alturacifra}\setlength{\alturacifra}{2.3cm}
 \newcommand{\cifra}[5]{%
   \begingroup\setlength{\fboxsep}{5pt}%
-  \colorbox{#1}{\parbox[t]{\dimexpr\linewidth-2\fboxsep\relax}{%
+  \colorbox{#1}{\parbox[t][\alturacifra][t]{\dimexpr\linewidth-2\fboxsep\relax}{%
     \setstretch{1}\raggedright\color{#2}{\Large\bfseries #3}\par
     #4%
     \ifx\relax#5\relax\else\par{\footnotesize #5}\fi}}%
@@ -77,6 +78,7 @@ Un compuesto natural que se considera para una terapia neuroprotectora tiene que
 % --- Cifras de desempeño del modelo ---
 \medskip
 \noindent
+\setlength{\alturacifra}{2.3cm}
 \begin{minipage}[t]{0.235\linewidth}\cifragris{0.793}{AUROC}{orden, con compuestos no vistos}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifragris{85\,\%}{Conservados}{permeables, al confirmar el 70\,\% mejor ordenado}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifragris{0.339}{MCC}{corte 0.5; 0.410 ajustado}{}\end{minipage}\hfill
@@ -89,6 +91,7 @@ Con 1,499 compuestos reservados que ningún modelo vio, ante un permeable y un n
 % --- Beneficios cuantificables (mensuales) ---
 \medskip
 \noindent
+\setlength{\alturacifra}{2.2cm}
 \begin{minipage}[t]{0.485\linewidth}\cifragris{3}{Pruebas menos por semestre}{a igual recuperación de permeables frente a un sorteo, con 20 compuestos por semestre (supuesto)}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.485\linewidth}\cifragris{\$3,270}{Ahorro}{MXN/mes con insumos propios; \$18,240 si se contrata el servicio (precios de EE.~UU.)}{}\end{minipage}
 
@@ -108,6 +111,7 @@ El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,
 
 \medskip
 \noindent
+\setlength{\alturacifra}{1.9cm}
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$121,500}{Desarrollo}{600 h, ya realizado}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$51,840}{A financiar}{80 h de puesta en marcha y 176 h de operación}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$173,340}{TCO 12 meses}{MXN, con el desarrollo}{}\end{minipage}
