@@ -21,8 +21,11 @@ anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resume
   reservada que ya estaba versionada y calcula qué parte de los permeables queda al ensayar solo lo mejor
   ordenado. **No abre la prueba de nuevo.** Su corrida está en `experimentos/*ahorro-por-priorizacion-fase1`.
 - **Costos:** **son supuestos del equipo, a confirmar con la patrocinadora**, y el resumen lo dice. Los precios
-  de ensayo son tres puntos de referencia de laboratorios universitarios (reactivos de una membrana artificial,
-  un servicio de cribado y un ensayo ADME de servicio), no precios de ella. Las horas de desarrollo,
+  de ensayo se dan en **dos mercados**: los de EE. UU. (reactivos de una membrana artificial, un servicio de
+  cribado y un ensayo ADME de servicio, en dólares y convertidos a 17.5) y los de México. **Para México no hay
+  precios publicados de estos ensayos**: el escenario bajo es el de EE. UU. con IVA del 16% (sin flete ni aduana), el
+  medio toma 2,500 pesos, mitad del rango de servicios analíticos de un centro público mexicano (que no son ensayos
+  de permeabilidad) y el alto queda sin dato. No son precios de ella. Las horas de desarrollo,
   implementación y operación (856 en total) y el volumen de 50 compuestos al mes no vienen de ninguna fuente:
   hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al mes, dentro del rango de
   las guías salariales, con 1.35 de cargas.

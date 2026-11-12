@@ -65,3 +65,13 @@ def test_la_tabla_de_ahorro_es_la_de_la_corrida():
         acierto = f"{float(fila['aciertos_entre_lo_ensayado']) * 100:.1f}"
         renglon = next(r for r in TEX.splitlines() if r.lstrip().startswith(f"{fraccion}\\,\\%") and "&" in r)
         assert cobertura in renglon and acierto in renglon, f"la fila de {fraccion}% no coincide con la corrida"
+
+
+def test_los_dos_mercados_de_precios_cuadran():
+    """EE. UU. convertido a 17.5 pesos por dólar y México: el bajo con IVA del 16%, el medio de un centro público."""
+    assert round(5 * 17.5, -1) == 90 and round(20 * 17.5) == 350 and 2000 * 17.5 == 35000
+    assert round(90 * 1.16) == 104 and 15 * 104 == 1560 and 15 * 2500 == 37500
+    plano = TEX.replace("{,}", ",")
+    for cifra in ("1,560", "37,500", "9,905", "2,962"):
+        assert cifra in plano, f"falta {cifra}"
+    assert round(173340 / 17.5) == 9905 and round(51840 / 17.5) == 2962

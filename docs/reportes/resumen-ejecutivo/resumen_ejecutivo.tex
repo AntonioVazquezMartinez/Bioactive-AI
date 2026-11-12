@@ -92,14 +92,14 @@ Con 1,499 compuestos reservados que ningún modelo vio, el modelo ordena bien: a
 
 \vspace{5pt}
 \noindent
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$\$5,250}{Costos de ensayo}{MXN/mes, a \$350 por ensayo (supuesto)}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$\$5,250}{Costos de ensayo}{MXN/mes a \$350 por ensayo (EE.~UU.); \$37,500 a \$2,500 (México)}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.485\linewidth}\cifragris{15\,\%}{Permeables que se pierden}{riesgo medido: 100\,\% menos 85\,\% conservado}{}\end{minipage}
 
 \smallskip
 \noindent{\footnotesize\textcolor{black!60}{Cálculo, escenarios y supuestos en el Anexo~A.}}
 \medskip
 
-Lo medido es el intercambio: ensayar solo el 70\,\% mejor ordenado evita el 30\,\% de los ensayos y aun así conserva el 85\,\% de los permeables reales (intervalo del 95\,\%, de 84 a 87), contra el 70\,\% que conservaría un sorteo al azar. Lo supuesto es el volumen, 50 compuestos al mes, y el costo de un ensayo de confirmación, que no conocemos: tomamos 350 pesos como referencia de un servicio universitario \parencite{osu2026htscore}. El ahorro crece en proporción directa con ese costo, y por eso la recomendación depende de él.
+Lo medido es el intercambio: ensayar el 70\,\% mejor ordenado evita el 30\,\% de los ensayos y conserva el 85\,\% de los permeables (intervalo del 95\,\%, de 84 a 87), contra el 70\,\% de un sorteo al azar. Lo supuesto es el volumen, 50 compuestos al mes, y el costo de un ensayo de confirmación, que no conocemos: tomamos como referencia 350 pesos, de un servicio universitario de EE.~UU. convertido a pesos, y 2,500 de servicios analíticos de un centro mexicano (fuentes en el Anexo~A). El ahorro crece en proporción directa con ese costo, y por eso la recomendación depende de él.
 
 % --- Beneficios intangibles ---
 \medskip
@@ -110,10 +110,10 @@ Lo medido es el intercambio: ensayar solo el 70\,\% mejor ordenado evita el 30\,
 \noindent\textit{Facilidad del trabajo.} El cuaderno ordena una lista de compuestos propios en minutos, sin infraestructura que mantener.\par
 \smallskip
 \noindent\textit{Innovación.} Una herramienta para medir si columnas propias, como datos ómicos, predicen mejor que las actuales.\par
-\medskip
+\smallskip
 
 % --- Inversión y costos (TCO a 12 meses) ---
-El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN. De ellos, \$121,500 son el desarrollo, que ya se realizó y se valora a la tarifa de un perfil junior (\$202.50 por hora, de un sueldo de \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 que reportan las guías salariales \parencite{keepcoding2026salarios}); lo que habría que financiar de aquí en adelante es la implementación y la operación, \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local y los datos de NPASS son de uso no comercial.
+El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN. De ellos, \$121,500 son el desarrollo, que ya se realizó y se valora a la tarifa de un perfil junior (\$202.50 por hora, de un sueldo de \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de las guías salariales, Anexo~B); lo que habría que financiar de aquí en adelante es la implementación y la operación, \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local y los datos de NPASS son de uso no comercial.
 
 \medskip
 \noindent
@@ -121,7 +121,7 @@ El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN. De ell
 \begin{minipage}[t]{0.235\linewidth}\cifragris{\$16,200}{Implementación}{80 h}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifragris{\$35,640}{Operación}{176 h en 12 meses}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifraacento{\$173,340}{TCO 12 meses}{MXN}{}\end{minipage}
-\medskip
+\smallskip
 
 Recomendamos adoptarlo como apoyo a la priorización y no como filtro de descarte, con una condición de arranque: apartar al azar 10 de cada 100 compuestos aunque queden mal ordenados y ensayarlos también, para medir con datos propios cuántos permeables se pierden. La inversión se compensa si cada ensayo de confirmación cuesta más de unos \$290 con 50 compuestos al mes, sin contar el desarrollo, o unos \$960 contándolo (Anexo~B); con un ensayo más barato o menos volumen, no conviene.
 
@@ -142,13 +142,13 @@ Continuidad: depende de que alguien lo mantenga y reentrene. & Procedimiento doc
 
 % --- Transferencia y continuidad ---
 \section*{Transferencia y continuidad}
-Se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos guardados (unos 3 MB) con un módulo de inferencia que no necesita los datos de entrenamiento; un procedimiento para reentrenar con datos nuevos; y una guía con la herramienta para medir columnas propias. La operación queda a cargo de la patrocinadora, con una revisión mensual de la advertencia de similitud y una reevaluación cuando lleguen compuestos con resultado de ensayo; el equipo acompaña la implementación.
+Se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos guardados con un módulo de inferencia que no necesita los datos de entrenamiento; un procedimiento para reentrenar con datos nuevos; y una guía con la herramienta para medir columnas propias. La operación queda a cargo de la patrocinadora, con una revisión mensual de la advertencia de similitud y una reevaluación cuando lleguen compuestos con resultado de ensayo; el equipo acompaña la implementación.
 
 \section*{Declaración de uso de inteligencia artificial}
-Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claude Sonnet~5.5, y Claude Sonnet~5 cuando las restricciones de seguridad del modelo en temas de biología y química impidieron usar el 5.5, para redactar y dar formato a este resumen, calcular las cifras de los anexos y escribir el código de las mediciones en que se apoya. Los supuestos, la interpretación de los resultados y las recomendaciones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
+Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5 y Claude Sonnet~5.5, y Claude Sonnet~5 cuando las restricciones de seguridad del modelo en biología y química impidieron usar el 5.5, para redactar y dar formato a este resumen y calcular las cifras de los anexos. Los supuestos, la interpretación y las recomendaciones son del equipo, que contrastó cada cifra con su corrida. La responsabilidad final sobre el contenido entregado recae en los autores.
 
 % --- Referencias (biblatex + Biber, solo lo citado) ---
-\printbibliography[title={Referencias}]
+\printbibliography[title={Referencias},notkeyword=anexo]
 
 % --- Anexos ---
 \clearpage
@@ -174,28 +174,29 @@ Fracción ensayada & Ensayos evitados & Permeables conservados & IC95\,\% & Acie
 \end{tabular}
 \end{table}
 
-\noindent\textit{Los supuestos.} Volumen de 50 compuestos considerados al mes. Fracción ensayada de 70\,\% (30\,\% de ensayos evitados). Costo de un ensayo de confirmación en tres escenarios, a 17.5 pesos por dólar: \emph{bajo}, \$90 (unos 5 USD por pozo de reactivos de un ensayo de membrana artificial \parencite{calibre2026pampa}); \emph{medio}, \$350 (unos 20 USD, un ensayo en un servicio universitario con curva de dosis, de 1 a 2.5 USD por pozo \parencite{osu2026htscore}); \emph{alto}, \$35,000 (unos 2,000 USD por compuesto en un ensayo ADME de servicio \parencite{ttuhsc2025wtpc}). Son tres puntos de referencia de laboratorios universitarios y no precios de la patrocinadora, que debe confirmar.
+\noindent\textit{Los supuestos.} Volumen de 50 compuestos considerados al mes. Fracción ensayada de 70\,\% (30\,\% de ensayos evitados). Costo de un ensayo de confirmación en tres escenarios y en dos mercados, a 17.5 pesos por dólar. Los de EE.~UU. son precios de lista de reactivos y de laboratorios universitarios estadounidenses, en dólares y convertidos: \emph{bajo}, 5 USD por pozo de reactivos de una membrana artificial \parencite{calibre2026pampa}; \emph{medio}, unos 20 USD, de 1 a 2.5 USD por pozo con curva de dosis \parencite{osu2026htscore}; \emph{alto}, 2,000 USD por compuesto en un ensayo ADME de servicio \parencite{ttuhsc2025wtpc}. Para México no encontramos precios publicados de estos ensayos: el \emph{bajo} es el de EE.~UU. con el IVA del 16\,\% (sin flete ni aduana, que no conocemos); el \emph{medio} toma 2,500 pesos, mitad del rango de 1,700 a 4,000 pesos por muestra que cobra un centro público mexicano por servicios analíticos \parencite{ciatej2026catalogo}, que no son ensayos de permeabilidad; y el \emph{alto} se queda sin dato. Son referencias y no precios de la patrocinadora, que debe confirmar.
 
 \begin{table}[h]
 \centering
-\caption{Ahorro mensual de ensayos con 50 compuestos al mes y 30\,\% de ensayos evitados (15 ensayos).}
+\caption{Costo por ensayo y ahorro mensual con 50 compuestos al mes y 30\,\% de ensayos evitados (15 ensayos), con precios de EE.~UU. y de México (MXN).}
 \label{tab:escenarios}
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{lrrrr}
 \toprule
-Escenario de costo por ensayo & Costo (MXN) & Ahorro (MXN/mes)\\
+ & \multicolumn{2}{c}{EE.~UU., en pesos} & \multicolumn{2}{c}{México}\\
+Escenario & Por ensayo & Ahorro al mes & Por ensayo & Ahorro al mes\\
 \midrule
-Bajo (reactivos de membrana artificial) & 90 & 1,350\\
-Medio (servicio universitario) & 350 & 5,250\\
-Alto (ensayo ADME de servicio) & 35,000 & 525,000\\
+Bajo (reactivos) & 90 & 1,350 & 104 & 1,560\\
+Medio (servicio) & 350 & 5,250 & 2,500 & 37,500\\
+Alto (ADME de servicio) & 35,000 & 525,000 & sin dato & sin dato\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent El escenario alto es un techo de referencia y no una expectativa: supone que cada ensayo evitado cuesta lo que un ensayo ADME completo. Los beneficios intangibles no se cuantifican.
+\noindent El escenario alto es un techo de referencia y no una expectativa: supone que cada ensayo evitado cuesta lo que un ensayo ADME completo. El ahorro depende del precio del ensayo, no del gasto del proyecto, así que el punto de equilibrio del Anexo~B es el mismo en los dos mercados. Los beneficios intangibles no se cuantifican.
 
 \section*{Anexo B. Costo total de propiedad a 12 meses, por servicio}
-\noindent Todas las horas son supuestos del equipo, a confirmar. La tarifa es \$24,000 al mes por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora.
+\noindent Todas las horas son supuestos del equipo, a confirmar. La tarifa es \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de una guía salarial \parencite{keepcoding2026salarios}, por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora. En dólares, a 17.5, el TCO es de unos 9,905 USD (2,962 sin el desarrollo); el salario es el mexicano, así que a la tarifa de un perfil estadounidense sería mayor.
 
 \begin{table}[h]
 \centering
@@ -239,5 +240,7 @@ Compuestos al mes & Ensayos evitados al mes & Sin desarrollo & Con desarrollo\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\printbibliography[title={Fuentes de precios y salarios de los anexos},keyword=anexo]
 
 \end{document}
