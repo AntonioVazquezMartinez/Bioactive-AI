@@ -1,0 +1,328 @@
+{
+ "apertura": {
+  "voz_s": 70.17,
+  "video_s": 74.53,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El problema",
+    "segundos": 17.55,
+    "palabras": 44
+   },
+   {
+    "n": 2,
+    "titulo": "La apuesta",
+    "segundos": 19.23,
+    "palabras": 48
+   },
+   {
+    "n": 3,
+    "titulo": "La tesis",
+    "segundos": 33.39,
+    "palabras": 88
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "linaje": {
+  "voz_s": 131.43,
+  "video_s": 141.2,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El embudo de filas",
+    "segundos": 61.63,
+    "palabras": 150
+   },
+   {
+    "n": 2,
+    "titulo": "Las columnas",
+    "segundos": 35.57,
+    "palabras": 95
+   },
+   {
+    "n": 3,
+    "titulo": "La partición",
+    "segundos": 19.18,
+    "palabras": 54
+   },
+   {
+    "n": 4,
+    "titulo": "Cierre",
+    "segundos": 15.05,
+    "palabras": 42
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "intervalo": {
+  "voz_s": 93.9,
+  "video_s": 101.8,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El eje",
+    "segundos": 30.79,
+    "palabras": 84
+   },
+   {
+    "n": 2,
+    "titulo": "Una medición exacta",
+    "segundos": 6.78,
+    "palabras": 18
+   },
+   {
+    "n": 3,
+    "titulo": "Una censurada",
+    "segundos": 19.27,
+    "palabras": 51
+   },
+   {
+    "n": 4,
+    "titulo": "El corte decide",
+    "segundos": 25.03,
+    "palabras": 72
+   },
+   {
+    "n": 5,
+    "titulo": "Mover el corte",
+    "segundos": 12.03,
+    "palabras": 32
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "fingerprints": {
+  "voz_s": 82.85,
+  "video_s": 91.87,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "La colisión",
+    "segundos": 21.78,
+    "palabras": 60
+   },
+   {
+    "n": 2,
+    "titulo": "Ordenar y cortar",
+    "segundos": 13.37,
+    "palabras": 33
+   },
+   {
+    "n": 3,
+    "titulo": "Lo que cuesta",
+    "segundos": 38.55,
+    "palabras": 105
+   },
+   {
+    "n": 4,
+    "titulo": "Cierre",
+    "segundos": 9.15,
+    "palabras": 21
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "particion": {
+  "voz_s": 83.46,
+  "video_s": 93.67,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El conjunto",
+    "segundos": 10.87,
+    "palabras": 33
+   },
+   {
+    "n": 2,
+    "titulo": "La partición al azar",
+    "segundos": 18.81,
+    "palabras": 53
+   },
+   {
+    "n": 3,
+    "titulo": "La partición por familia",
+    "segundos": 23.92,
+    "palabras": 66
+   },
+   {
+    "n": 4,
+    "titulo": "Lo que cuesta",
+    "segundos": 29.86,
+    "palabras": 83
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "cierre": {
+  "voz_s": 69.52,
+  "video_s": 78.66,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "Funciona",
+    "segundos": 11.33,
+    "palabras": 32
+   },
+   {
+    "n": 2,
+    "titulo": "Pero",
+    "segundos": 34.55,
+    "palabras": 94
+   },
+   {
+    "n": 3,
+    "titulo": "Lo que se entrega",
+    "segundos": 23.64,
+    "palabras": 74
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "matriz": {
+  "voz_s": 84.85,
+  "video_s": 73.73,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El SMILES",
+    "segundos": 14.54,
+    "palabras": 43
+   },
+   {
+    "n": 2,
+    "titulo": "La fila de tres bloques",
+    "segundos": 53.22,
+    "palabras": 130
+   },
+   {
+    "n": 3,
+    "titulo": "Muchas filas son la matriz",
+    "segundos": 17.09,
+    "palabras": 53
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "direccion": {
+  "voz_s": 148.24,
+  "video_s": 42.8,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "La diana pide una dirección",
+    "segundos": 29.12,
+    "palabras": 71
+   },
+   {
+    "n": 2,
+    "titulo": "El tipo de medida también apunta",
+    "segundos": 26.61,
+    "palabras": 71
+   },
+   {
+    "n": 3,
+    "titulo": "Cuánto está en juego",
+    "segundos": 23.78,
+    "palabras": 68
+   },
+   {
+    "n": 4,
+    "titulo": "El mismo problema, por el otro lado",
+    "segundos": 35.94,
+    "palabras": 106
+   },
+   {
+    "n": 5,
+    "titulo": "Lo que el dato no decide",
+    "segundos": 32.79,
+    "palabras": 84
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "resultados": {
+  "voz_s": 170.61,
+  "video_s": 44.27,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "El piso",
+    "segundos": 28.14,
+    "palabras": 74
+   },
+   {
+    "n": 2,
+    "titulo": "Las tres familias acaban en el mismo sitio",
+    "segundos": 24.75,
+    "palabras": 70
+   },
+   {
+    "n": 3,
+    "titulo": "Lo que las separa es cuánto memorizan",
+    "segundos": 33.53,
+    "palabras": 95
+   },
+   {
+    "n": 4,
+    "titulo": "Y todavía no se acaba",
+    "segundos": 31.76,
+    "palabras": 94
+   },
+   {
+    "n": 5,
+    "titulo": "Y la pregunta del proyecto",
+    "segundos": 52.43,
+    "palabras": 149
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ },
+ "objetivo": {
+  "voz_s": 151.68,
+  "video_s": 42.93,
+  "tramos": [
+   {
+    "n": 1,
+    "titulo": "La unidad es el par, no la medición",
+    "segundos": 26.33,
+    "palabras": 71
+   },
+   {
+    "n": 2,
+    "titulo": "Con números exactos, la mediana",
+    "segundos": 37.2,
+    "palabras": 104
+   },
+   {
+    "n": 3,
+    "titulo": "Sin números exactos, las cotas se cruzan",
+    "segundos": 26.19,
+    "palabras": 78
+   },
+   {
+    "n": 4,
+    "titulo": "Lo que se guarda es el intervalo, no la etiqueta",
+    "segundos": 35.02,
+    "palabras": 92
+   },
+   {
+    "n": 5,
+    "titulo": "Y cuando la evidencia se contradice, se marca",
+    "segundos": 26.94,
+    "palabras": 80
+   }
+  ],
+  "voz_id": "sAJBOuXPVjIijtxp2LLu",
+  "modelo": "eleven_multilingual_v2"
+ }
+}

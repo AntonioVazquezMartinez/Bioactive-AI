@@ -1,0 +1,60 @@
+/* Generado por scripts/paleta.py desde recursos/paleta.json. No editar a mano. */
+//
+// Un mapa por modo, y variables CSS para quien las prefiera.
+$paleta-claro: (
+  "positivo": #2a78d6,
+  "negativo": #eb6834,
+  "natural": #1baf7a,
+  "alerta": #e34948,
+  "fondo": #f6f8fb,
+  "texto": #1e252e,
+  "tenue": #52514e,
+  "rejilla": #d7dde5,
+  "secundaria": #4a6fa5,
+);
+$paleta-oscuro: (
+  "positivo": #3987e5,
+  "negativo": #d95926,
+  "natural": #199e70,
+  "alerta": #e66767,
+  "fondo": #1b2430,
+  "texto": #e8edf3,
+  "tenue": #9aa8b8,
+  "rejilla": #3a4654,
+  "secundaria": #8fb3dd,
+);
+
+:root {
+  --bio-positivo: #2a78d6;
+  --bio-negativo: #eb6834;
+  --bio-natural: #1baf7a;
+  --bio-alerta: #e34948;
+  --bio-fondo: #f6f8fb;
+  --bio-texto: #1e252e;
+  --bio-tenue: #52514e;
+  --bio-rejilla: #d7dde5;
+  --bio-secundaria: #4a6fa5;
+}
+
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bio-positivo: #3987e5;
+  --bio-negativo: #d95926;
+  --bio-natural: #199e70;
+  --bio-alerta: #e66767;
+  --bio-fondo: #1b2430;
+  --bio-texto: #e8edf3;
+  --bio-tenue: #9aa8b8;
+  --bio-rejilla: #3a4654;
+  --bio-secundaria: #8fb3dd;
+} }
+[data-theme="dark"] {
+  --bio-positivo: #3987e5;
+  --bio-negativo: #d95926;
+  --bio-natural: #199e70;
+  --bio-alerta: #e66767;
+  --bio-fondo: #1b2430;
+  --bio-texto: #e8edf3;
+  --bio-tenue: #9aa8b8;
+  --bio-rejilla: #3a4654;
+  --bio-secundaria: #8fb3dd;
+}

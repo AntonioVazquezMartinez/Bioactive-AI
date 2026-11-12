@@ -400,6 +400,41 @@ def actividad() -> dict:
     }
 
 
+def agrupamiento() -> dict:
+    """Lo que cuesta agrupar mal, para que el mazo lo pueda dibujar.
+
+    Es la afirmación metodológica central del proyecto —el criterio de
+    agrupamiento pesa más que la elección de modelo— y vivía solo como una
+    tabla de dos filas. Las cifras salen de la celda de la §2.1 del notebook 03
+    (bosque aleatorio, una semilla, predicciones fuera de pliegue, intervalo
+    por bootstrap de grupos), que es el mismo estimador para las dos filas.
+
+    **Las dos distancias del modelo se toman cada una de su métrica**, porque
+    el par más lejano no es el mismo: en MCC son el boosting y la logística, en
+    AUROC el bosque y la logística ([1.2](../docs/decisiones.md#d1-2)).
+    """
+    base = pd.read_csv(RAIZ / "notebooks/datos/baseline_permeabilidad-descriptores.csv")
+    t = base[base.estrato.eq("todos")]
+    # **La misma semilla que la celda 10**, no el promedio de las quince. Con el
+    # promedio la distancia entre modelos sale 0.0153 de MCC y la razón contra el
+    # agrupamiento, 4.6; con la misma medida en los dos lados es 0.0222 y 3.2.
+    # Comparar dos estimadores distintos es el defecto que la auditoría del
+    # Avance 3 encontró en esta misma afirmación, y sobrevivía en la razón.
+    g = t[t.semilla.eq(0)].groupby("modelo")[["mcc", "auroc"]].mean()
+    return {
+        # de la celda 10 del notebook 03; una semilla, el mismo estimador en las dos
+        "andamio_esqueleto": {"grupos": 1048, "auroc": 0.9363, "ic": [0.9122, 0.9545],
+                              "mcc": 0.6989},
+        "solo_andamio": {"grupos": 2239, "auroc": 0.9586, "ic": [0.9408, 0.9725],
+                         "mcc": 0.7694},
+        # el par más lejano de cada métrica, que no es el mismo par
+        "entre_modelos": {
+            "mcc": round(float(g["mcc"].max() - g["mcc"].min()), 4),
+            "auroc": round(float(g["auroc"].max() - g["auroc"].min()), 4),
+        },
+    }
+
+
 def experimentos() -> dict:
     """Los dos experimentos del Avance 2, resumidos desde sus CSV versionados.
 
@@ -487,6 +522,7 @@ def main() -> None:
           f"{100 * len(ambos) / len(de_permeabilidad):.1f}% de la fase 1)")
     print("Experimentos del Avance 2…")
     datos["experimentos"] = experimentos()
+    datos["agrupamiento"] = agrupamiento()
     datos["generado"] = date.today().isoformat()
     datos["huellas"] = {PERMEABILIDAD.name: sha256(PERMEABILIDAD)[:16],
                         ACTIVIDAD.name: sha256(ACTIVIDAD)[:16]}
