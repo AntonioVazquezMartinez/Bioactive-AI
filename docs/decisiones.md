@@ -14,7 +14,7 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente | |
 | [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta | |
 | [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta | |
-| [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente | 17 oct · 24 oct |
+| [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente · revisada | 17 oct · 24 oct · 12 nov |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta | |
 | [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta | |
 
@@ -116,9 +116,11 @@ Es exploratorio: los 612 no son una muestra representativa (son los compuestos c
 
 **Se propone.** PAINS no entra al entrenamiento ni a la prueba, para no sesgar contra los naturales. Se aplica a la salida: cada candidato del ranking lleva su alerta y el ranking se reporta con y sin esos compuestos. Nunca se filtra la prueba. El protocolo de tres brazos (sin filtrar, filtrado solo en entrenamiento y evaluación estratificada) puede retomarse si el ranking resulta dominado por alertas, declarándolo antes de correrlo. Una molécula que agrega no falsea un logBB, así que en la fase 1 la alerta es información; en la fase 2 sí condiciona cómo leer el ranking.
 
-#### C.5 · El entregable es una lista priorizada, y el punto de operación se entrega como curva {#dc-5 .vigente}
+#### C.5 · El entregable es una lista priorizada, y el punto de operación se entrega como curva {#dc-5 .vigente .revisada}
 
-**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026
+**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada el 12 de noviembre: lo que se entrega es el ordenador, no una lista (ver abajo)
+
+**Revisada el 12 de noviembre.** La versión de octubre decía que el entregable es una lista de candidatos priorizados. **No se entrega una lista de compuestos concretos**: la patrocinadora no nos dio candidatos, y el cuaderno 06 devuelve, por cada estructura que ella ponga, la probabilidad de cruzar la barrera, la potencia por diana y la advertencia de extrapolación, **sin combinar las dos predicciones en un solo ranking** (la combinación sigue pendiente, [C.3](#dc-3)). Lo que sí se entrega es lo que permite construir esa lista con sus propios compuestos. El texto de octubre queda abajo porque la curva de precisión contra profundidad y las métricas de ranking siguen siendo el criterio para cuando exista el ranking combinado.
 
 **Qué se decidió.** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
 

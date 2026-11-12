@@ -122,3 +122,10 @@ def test_el_ahorro_al_mes_de_cada_escenario():
     plano = TEX.replace("{,}", ",")
     for cifra in ("3,270", "3,790", "18,240", "21,160"):
         assert cifra in plano
+
+
+def test_el_readme_dice_los_ahorros_del_documento():
+    """El README es donde el equipo busca de dónde sale cada número: no puede decir otro."""
+    readme = (RAIZ / "docs/reportes/resumen-ejecutivo/README.md").read_text(encoding="utf-8")
+    assert "3,270" in readme and "3,790" in readme
+    assert "2,770" not in readme and "4,290" not in readme
