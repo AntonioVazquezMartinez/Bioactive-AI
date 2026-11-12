@@ -237,16 +237,16 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Art · 1 min.** Dos métodos independientes, SHAP y permutación; "confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación), por eso en la fase 2 pesa tanto qué diana es. El detalle está en el respaldo.
 :::
 
-## El cuaderno
+## El cuaderno 06: usar los modelos con tus compuestos {.smaller}
 
-![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de compuestos de ejemplo: probabilidad de cruzar la barrera y potencia máxima predicha" width="90%"}
+![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de compuestos de ejemplo: probabilidad de cruzar la barrera y potencia máxima predicha" width="85%"}
 
-- Se ejecuta con **SMILES propios**: no hay servicio.
-- Entrega la probabilidad, la potencia por diana y una **advertencia de extrapolación**, y ordena **cada fase por separado**.
-- **No combina** las fases en un ranking: queda como trabajo futuro.
+- **Qué es:** `notebooks/06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio.
+- **Qué se ve:** su salida para seis compuestos conocidos, **ordenada por fase**. A la izquierda, qué tan probable es que crucen la barrera; a la derecha, con qué potencia actúan sobre su mejor diana (entre paréntesis). Uno puede ir arriba en una lista y abajo en la otra.
+- **No combina** las fases en un solo ranking (queda como trabajo futuro) y **no es una lista de candidatos**.
 
 ::: {.notes}
-**Art · 0.75 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 0.75 min.** Es el cuaderno que usa la patrocinadora. La figura es su salida para seis compuestos conocidos que trae de ejemplo, no resultados del proyecto: varios estaban en el entrenamiento. Cada panel es una lista distinta: a la izquierda la probabilidad de cruzar la barrera, y a la derecha la potencia máxima predicha contra alguna de las 26 dianas. Por eso la curcumina va primera en potencia y cuarta en permeabilidad. En naranja, un compuesto cuya similitud con lo que el modelo vio es menor de 0.4 en esa fase: la advertencia de extrapolación.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
