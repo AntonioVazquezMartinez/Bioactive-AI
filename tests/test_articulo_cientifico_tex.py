@@ -80,3 +80,29 @@ def test_lleva_declaracion_de_ia_con_su_modelo_y_las_referencias():
     declaracion = tex[tex.index("Declaración de uso de inteligencia artificial"):]
     assert "Claude Opus" in declaracion and "Claude Sonnet" in declaracion, \
         "la declaración no dice el modelo"
+
+
+def test_el_orden_combinado_de_las_dos_fases_se_dice_pendiente():
+    """La combinación de las dos fases en un solo ranking no existe, y el texto no puede darla por hecha.
+
+    La [C.5](docs/decisiones.md) se revisó el 12 de noviembre: lo que se entrega es el cuaderno que
+    ordena **por fase**, no una lista combinada, y la combinación sigue pendiente (C.3). Este
+    artículo decía «sus salidas son evidencia que se combina en un único orden de prioridad» —en
+    presente— dos oraciones antes de llamar pendiente a esa misma combinación, y la guarda de cifras
+    no lo veía porque no es una cifra. Así que: toda mención de ese orden único lleva al lado la
+    palabra que lo marca pendiente.
+    """
+    tex = _tex()
+    menciones = list(re.finditer(r"(?:[úu]nico orden|un solo ranking|orden de prioridad|orden combinado)", tex))
+    assert menciones, (
+        "el artículo ya no menciona el orden combinado de las dos fases: si se quitó a propósito, "
+        "quita esta guarda; si cambió la redacción, ajusta el patrón")
+    sueltas = []
+    for m in menciones:
+        contexto = tex[max(0, m.start() - 320):m.end() + 320]
+        if re.search(r"pendiente|todav[ií]a no|no existe|queda\b|cuando exista", contexto, re.I):
+            continue
+        sueltas.append(re.sub(r"\s+", " ", tex[max(0, m.start() - 80):m.end() + 80]))
+    assert not sueltas, (
+        "estas menciones presentan como hecho el orden que combina las dos fases, que no existe: "
+        + "; ".join(f"«…{s}…»" for s in sueltas))

@@ -53,6 +53,23 @@ CIFRAS = [
      r"([\d,]{3,5}) esqueletos en el archivo que ve el modelo", "612"),
     ("los esqueletos comunes en el archivo que ve el modelo, en inglés",
      r"([\d,]{3,5}) skeletons in the file the model sees", "612"),
+    # La prevalencia tiene tres valores verdaderos sobre poblaciones distintas —63.5% en los 7,805
+    # con clase, 65.0% en las 6,306 de ajuste y 57.3% en la prueba— y se vigila solo la primera,
+    # atada a la frase que la nombra. El #313 la corrigió en el entregable y el artículo científico
+    # se quedó con el 65%, que es la del ajuste: el documento escrito a mano quedó fuera de la
+    # cadena del borrador y nada lo detectó. Las otras dos no se vigilan porque su contexto dice de
+    # qué población habla, y el piso de AUPRC de 0.350 las ata aparte.
+    # Va anclada a la población y no solo a «% son BBB+»: sin el ancla enganchaba el 99.5% de los
+    # 410 compuestos de un componente conexo del Avance 0, que es otra cifra verdadera.
+    ("la prevalencia de BBB+ en los 7,805 compuestos con clase",
+     r"7,805 compuestos con clase.{0,260}?([\d.]{2,4})\s*\\?,?\\?%\s*(?:son|de ellos) BBB\+", "63.5"),
+    # Meter los decks al corpus no bastó: citan las mismas cifras con su propia redacción, más corta,
+    # y ningún patrón anclado en una frase de la prosa las alcanzaba. Así que cada cifra que el deck
+    # repite necesita su propia entrada, igual que la versión en inglés de los 612.
+    ("la prevalencia de BBB+, como la dice el deck",
+     r"([\d.]{2,4})\s*\\?,?\\?%\s*es el archivo completo", "63.5"),
+    ("los esqueletos medidos en las dos fases, como lo dice el deck",
+     r"\*{0,2}([\d,]{3,5})\s*esqueletos\*{0,2}\s*est[áa]n medidos en las dos", "612"),
 ]
 
 
@@ -62,7 +79,12 @@ def _corpus() -> dict[str, str]:
     # que ahí la cifra ya venía vigilada en el Markdown; el científico se escribe a mano y queda
     # fuera de esa cadena, de modo que sin esto una cifra podía corregirse en un artículo y no en
     # el otro. La plantilla del curso también es `.tex` y no cita cifras, así que no molesta.
-    for p in [RAIZ / "CLAUDE.md", *RAIZ.glob("docs/**/*.md"), *RAIZ.glob("docs/**/*.qmd"),
+    # Los dos decks viven en la raíz y no bajo `docs/`, así que el glob de abajo no los veía: con el
+    # #310 y el #314 `presentacion-final.qmd` ya repite el 0.752, el 0.419, el 1,048, el 4.2, el 63.5,
+    # el 57.3 y los 612, y quedaban fuera de la red. Entran por nombre y no con `*.qmd` de la raíz,
+    # porque `index.qmd`, `consulta.qmd` y `visualizador.qmd` son páginas del sitio que no citan cifras.
+    for p in [RAIZ / "CLAUDE.md", RAIZ / "presentacion.qmd", RAIZ / "presentacion-final.qmd",
+              *RAIZ.glob("docs/**/*.md"), *RAIZ.glob("docs/**/*.qmd"),
               *RAIZ.glob("docs/**/*.tex")]:
         textos[str(p.relative_to(RAIZ))] = ESPACIOS.sub(" ", p.read_text(encoding="utf-8"))
     for nb in RAIZ.glob("notebooks/*.ipynb"):
