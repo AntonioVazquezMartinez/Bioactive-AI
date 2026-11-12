@@ -3,42 +3,46 @@
 Entrega 8, **15 de noviembre de 2026**. PDF de 3 páginas más anexos, nombre
 `resumen_ejecutivo.#Equipo`.
 
+**Estado:** primer borrador completo, compilado en `resumen_ejecutivo.pdf` (3 páginas hasta las referencias,
+anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resumen-ejecutivo` y se verifica con
+`tests/test_resumen_ejecutivo_tex.py`.
+
 | archivo | qué es |
 |:--|:--|
-| `resumen_ejecutivo.tex` | la plantilla del curso, con la bibliografía del proyecto |
+| `resumen_ejecutivo.tex` | el resumen, sobre la plantilla del curso, con la bibliografía del proyecto |
+| `resumen_ejecutivo.pdf` | el PDF compilado |
 | `bibliografia.bib` | enlace simbólico a `docs/referencias/bibliografia.bib` |
 | `logo.jpeg` | enlace simbólico a `docs/reportes/logo-tec.jpeg` |
 
-Se compila igual que el artículo: **pdfLaTeX + Biber** en Overleaf, resolviendo los enlaces
-simbólicos antes de subir. Ver `../articulo/README.md`.
+## De dónde sale cada cifra
 
-## La plantilla está escrita para otro tipo de proyecto
+- **Desempeño:** las del artículo (`../articulo/borrador.md`); una prueba comprueba que coincidan.
+- **Beneficio medido:** `scripts/ahorro_por_priorizacion.py` lee las predicciones de la lectura de la prueba
+  reservada que ya estaba versionada y calcula qué parte de los permeables queda al ensayar solo lo mejor
+  ordenado. **No abre la prueba de nuevo.** Su corrida está en `experimentos/*ahorro-por-priorizacion-fase1`.
+- **Costos:** **son supuestos del equipo, a confirmar con la patrocinadora**, y el resumen lo dice. Los precios
+  de ensayo son tres puntos de referencia de laboratorios universitarios (reactivos de una membrana artificial,
+  un servicio de cribado y un ensayo ADME de servicio), no precios de ella. Las horas de desarrollo,
+  implementación y operación (856 en total) y el volumen de 50 compuestos al mes no vienen de ninguna fuente:
+  hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al mes, dentro del rango de
+  las guías salariales, con 1.35 de cargas.
+- **El punto de equilibrio** (Anexo B) es lo que sostiene la recomendación sin depender de un precio
+  que no conocemos: dice cuánto debe costar un ensayo para que el ahorro compense el gasto.
 
-Sus ocho recuadros de cifras asumen un proceso de negocio que se automatiza. Rellenarlos tal
-cual sería inventar, y la rúbrica pide «beneficios cuantificables con supuestos razonables y
-coherentes con el contexto de la patrocinadora» (30 pts).
+## Lo que decidimos de la plantilla
 
-| recuadro de la plantilla | qué asume | qué tiene este proyecto |
-|:--|:--|:--|
-| Métrica · Mejora | un modelo en servicio | MCC 0.3385 en la prueba reservada de la fase 1 |
-| Cobertura · Latencia | peticiones atendidas | no hay servicio desplegado |
-| Ahorro de tiempo (h/mes) | trabajo manual que se sustituye | no hay proceso operativo que reemplazar |
-| Costos operativos (MXN/mes) | un gasto corriente que baja | la patrocinadora es un departamento de bioingeniería |
-| Reducción de errores · Capacidad de atención | un flujo con volumen | el entregable es priorización de candidatos |
+Sus recuadros están escritos para un proceso que se automatiza (latencia, cobertura, horas ahorradas). Se
+reencuadraron sobre la unidad real del proyecto —ensayos de confirmación que se evitan, permeables que se
+conservan— y no se rellenaron con cifras que no existen. Se quitó el logo de empresa: la patrocinadora es una
+académica del Tec y no hay empresa.
 
-Lo defendible es reencuadrarlos sobre la unidad real —compuestos triados por lote de ensayo,
-costo de ensayo evitado por candidato descartado, fracción de la biblioteca que hay que medir
-para recuperar los activos— con el cálculo y los supuestos en el Anexo A, que es donde la
-plantilla los pide.
+## Pendiente de confirmar
 
-**Y el recuadro «Mejora» tiene una trampa.** La rúbrica exige que todos los valores coincidan
-con el artículo, y el artículo ya fijó su regla de cita: el 0.6322 de `solo_npass` no viaja
-sin el 0.530 de la prueba reservada al lado. Un recuadro con un porcentaje suelto contradice
-esa regla.
+- Las **horas** y el **volumen mensual** de los anexos, y la tarifa.
+- El **costo real de un ensayo de confirmación** de la patrocinadora, que mueve la recomendación.
+- La **fecha de entrega** (la portada dice 15 de noviembre).
+- La revisión del equipo, página por página, del PDF.
 
 ## La declaración de uso de IA
 
-La plantilla trae un marcador que cita `anthropic2026claude` «para [indicar la finalidad]».
-Los cuadernos ya tienen una declaración mejor —tabla con herramienta, propósito, alcance por
-sección y qué validó el equipo—: reutilizarla es lo más barato del criterio de estructura.
-**El modelo concreto lo tiene que escribir quien firme la declaración**, no esta carpeta.
+Lista los modelos en general, como en el artículo. Quien firma confirma que describe lo que se hizo.

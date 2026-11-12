@@ -1,0 +1,69 @@
+{
+  "n": 1499,
+  "por_fraccion": [
+    {
+      "aciertos_entre_lo_ensayado": 0.8667,
+      "cobertura_al_azar": 0.3,
+      "cobertura_ic95_inf": 0.4337,
+      "cobertura_ic95_sup": 0.4773,
+      "cobertura_permeables": 0.454,
+      "ensayos_evitados": 0.7,
+      "fraccion_ensayada": 0.3
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.8417,
+      "cobertura_al_azar": 0.4,
+      "cobertura_ic95_inf": 0.563,
+      "cobertura_ic95_sup": 0.6111,
+      "cobertura_permeables": 0.5879,
+      "ensayos_evitados": 0.6,
+      "fraccion_ensayada": 0.4
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.812,
+      "cobertura_al_azar": 0.5,
+      "cobertura_ic95_inf": 0.6847,
+      "cobertura_ic95_sup": 0.7311,
+      "cobertura_permeables": 0.709,
+      "ensayos_evitados": 0.5,
+      "fraccion_ensayada": 0.5
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.7408,
+      "cobertura_al_azar": 0.6,
+      "cobertura_ic95_inf": 0.7544,
+      "cobertura_ic95_sup": 0.7993,
+      "cobertura_permeables": 0.7753,
+      "ensayos_evitados": 0.4,
+      "fraccion_ensayada": 0.6
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.6988,
+      "cobertura_al_azar": 0.7,
+      "cobertura_ic95_inf": 0.8353,
+      "cobertura_ic95_sup": 0.8749,
+      "cobertura_permeables": 0.8533,
+      "ensayos_evitados": 0.3,
+      "fraccion_ensayada": 0.7
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.6564,
+      "cobertura_al_azar": 0.8,
+      "cobertura_ic95_inf": 0.8974,
+      "cobertura_ic95_sup": 0.9346,
+      "cobertura_permeables": 0.9162,
+      "ensayos_evitados": 0.2,
+      "fraccion_ensayada": 0.8
+    },
+    {
+      "aciertos_entre_lo_ensayado": 0.6145,
+      "cobertura_al_azar": 0.9,
+      "cobertura_ic95_inf": 0.953,
+      "cobertura_ic95_sup": 0.9773,
+      "cobertura_permeables": 0.9651,
+      "ensayos_evitados": 0.1,
+      "fraccion_ensayada": 0.9
+    }
+  ],
+  "prevalencia": 0.5730486991327551
+}
