@@ -1,0 +1,7 @@
+lugar,nombre,p_bbb_mas,similitud_fase1,aviso_extrapolacion
+1,galantamina,0.9619399346753551,1.0,False
+2,cafeína,0.9443944833790564,1.0,False
+3,nicotina,0.9331813084617919,1.0,False
+4,curcumina,0.1827143875821826,0.4390244,False
+5,resveratrol,0.18066703919345753,0.37931034,True
+6,quercetina,0.023017602958357194,0.5263158,False

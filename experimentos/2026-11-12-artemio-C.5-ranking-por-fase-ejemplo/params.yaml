@@ -1,0 +1,13 @@
+decision: C.5
+semillas:
+- 0
+params:
+  compuestos:
+    cafeína: Cn1cnc2c1c(=O)n(C)c(=O)n2C
+    nicotina: CN1CCC[C@H]1c1cccnc1
+    galantamina: COc1ccc2c3c1O[C@H]1C[C@@H](O)C=C[C@@]31CCN(C)C2
+    resveratrol: Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1
+    curcumina: COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O
+    quercetina: O=c1c(O)c(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12
+  toca_prueba: false
+  combina_fases: false

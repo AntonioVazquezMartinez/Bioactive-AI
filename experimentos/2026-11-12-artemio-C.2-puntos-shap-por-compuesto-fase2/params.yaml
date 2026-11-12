@@ -1,0 +1,18 @@
+decision: C.2
+semillas:
+- 0
+params:
+  fase1:
+    modelo: svm_rbf
+    metodo: KernelSHAP
+    explicados_por_pliegue: 60
+    fondo_kmeans: 10
+    muestras: 400
+  fase2:
+    modelo: aft
+    metodo: TreeSHAP
+    filas_por_pliegue: 600
+  pliegues: 5
+  columnas_guardadas: 12
+  toca_prueba: false
+  cual: fase2
