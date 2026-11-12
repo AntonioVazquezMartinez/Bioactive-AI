@@ -350,7 +350,7 @@ resultado se reporta por subgrupo. La guía dice también lo único que la herra
 columnas no se hayan calculado usando las etiquetas ni usando todas las filas a la vez.
 
 El ejemplo que la acompaña usa datos reales y replica un hallazgo del propio proyecto: las tres propiedades de los
-filtros de la literatura (TPSA, donadores de hidrógeno y peso) quedan 0.082 de MCC por debajo de los 151
+filtros de la literatura (TPSA, donadores de hidrógeno y peso) quedan 0.083 de MCC por debajo de los 151
 descriptores (IC95% [−0.131, −0.034], mejoran en 1 de 15 evaluaciones).
 
 ### 5.3 Requisitos para operar
