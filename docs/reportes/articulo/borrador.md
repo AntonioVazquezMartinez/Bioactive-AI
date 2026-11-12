@@ -333,7 +333,7 @@ cifra registrada.
 
 ![Despliegue](figuras/f7_despliegue.svg)
 
-*Figura 7. Arquitectura de despliegue: se ejecuta un cuaderno local que llama a un módulo de inferencia y a dos modelos guardados; no hay servicio. Abajo, lo que mantiene el equipo.*
+*Figura 7. Arquitectura de despliegue: se ejecuta un cuaderno local que llama a un módulo de inferencia y a dos modelos guardados; no hay servicio. Abajo, cómo continúa la patrocinadora con lo que se entrega.*
 
 ### 5.2 Una herramienta para medir columnas nuevas
 
@@ -388,11 +388,11 @@ se midieron (Tabla 2).
 
 | aspecto | señal | referencia y alerta propuesta | responsable |
 |:--|:--|:--|:--|
-| extrapolación | proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 | 0.31 es el corte del tercil más raro de la prueba (sección 4.3); si la mayoría de las consultas cae ahí, las cifras de validación no aplican | patrocinadora, con la advertencia del cuaderno |
-| desempeño | AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos | 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar | equipo, al llegar datos |
-| punto de operación | proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos | en el ajuste 70.9% contra 64.97%, y en la prueba reservada 79.3% contra 57.3%: la diferencia crece cuando la química cambia (sección 4.5) | equipo |
-| integridad | huella criptográfica de modelos y datos contra la registrada; versiones de las dependencias fijadas | se verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) | equipo |
-| datos y etiquetas | cuántos pares activos aporta cada fuente y qué concentración de corte se usa | el 10 µM es el de cribado heredado del archivo; NPASS es CC BY-NC, solo uso no comercial | patrocinadora y equipo |
+| extrapolación | proporción de los compuestos consultados cuya similitud al vecino más cercano de entrenamiento es menor que 0.31 | 0.31 es el corte del tercil más raro de la prueba (sección 4.3); si la mayoría de las consultas cae ahí, las cifras de validación no aplican | grupo de la patrocinadora, con la advertencia del cuaderno |
+| desempeño | AUROC y MCC (fase 1) y concordancia (fase 2) sobre datos etiquetados nuevos, con intervalo remuestreando grupos | 0.793, 0.339 y 0.720 en la prueba reservada; una caída mayor que la desviación entre pliegues pide revisar | grupo de la patrocinadora, al llegar datos |
+| punto de operación | proporción declarada permeable al cortar en 0.5 contra la prevalencia de los datos nuevos | en el ajuste 70.9% contra 64.97%, y en la prueba reservada 79.3% contra 57.3%: la diferencia crece cuando la química cambia (sección 4.5) | grupo de la patrocinadora |
+| integridad | huella criptográfica de modelos y datos contra la registrada; versiones de las dependencias fijadas | se verifica en cada cambio; el reajuste de la fase 2 no repite la cifra de la prueba exactamente (0.7234 contra 0.7200) | grupo de la patrocinadora |
+| datos y etiquetas | cuántos pares activos aporta cada fuente y qué concentración de corte se usa | el 10 µM es el de cribado heredado del archivo; NPASS es CC BY-NC, solo uso no comercial | grupo de la patrocinadora |
 
 Table: Qué se supervisa durante la operación: la señal, su referencia medida en este trabajo con la alerta propuesta, y el responsable.
 
