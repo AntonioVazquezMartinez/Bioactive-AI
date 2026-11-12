@@ -131,7 +131,7 @@ Las huellas moleculares de tipo Morgan/ECFP4 \autocite{rogers2010ecfp}, vectores
 \subsection{Partición agrupada}
 \label{sec:particion}
 
-Nunca partimos al azar. Agrupamos por andamio de Bemis--Murcko \autocite{bemis1996properties}, el esqueleto central de la molécula, unido al esqueleto de conectividad. Unir los dos criterios importa: un mismo esqueleto puede aparecer bajo andamios distintos, y agrupar solo por andamio coloca estereoisómeros del mismo compuesto a los dos lados de una partición. En la fase~1 el criterio conjunto deja 1,048 grupos, frente a 2,239 con el andamio solo. La diferencia en desempeño depende del modelo: 2.2 puntos de AUROC y 7.1 de MCC con el bosque aleatorio \autocite{breiman2001}, pero 1.3 y 1.9 con el modelo que seleccionamos como final. Una cifra que no declara cómo agrupó no es comparable.
+Nunca partimos al azar. Agrupamos por andamio de Bemis--Murcko \autocite{bemis1996properties}, el esqueleto central de la molécula, unido al esqueleto de conectividad. Unir los dos criterios importa: un mismo esqueleto puede aparecer bajo andamios distintos, y agrupar solo por andamio coloca estereoisómeros del mismo compuesto a los dos lados de una partición. En la fase~1 el criterio conjunto deja 1,048 grupos, frente a 2,239 con el andamio solo. La diferencia en desempeño depende del modelo: 2.2 puntos de AUROC y 7.1 de MCC con el bosque aleatorio \autocite{breiman2001}, pero 1.3 y 1.9 con el modelo final. Una cifra que no declara cómo agrupó no es comparable.
 
 \section{Métodos}
 
@@ -183,7 +183,7 @@ Sobre la prueba reservada el mismo modelo da MCC 0.339, AUROC 0.793 y AUPRC 0.72
   \centering
   \caption{Los once clasificadores de la fase 1, ordenados por MCC medio sobre las 15 evaluaciones de la validación cruzada agrupada (3 semillas $\times$ 5 pliegues). La desviación es entre evaluaciones y no un error estándar, porque las semillas comparten filas. El rango completo es de 4.2 puntos de MCC y 2.2 de AUROC.}
   \label{tab:modelos}
-  \small
+  \small\setlength{\tabcolsep}{4pt}
   \begin{tabular}{lcccc}
     \toprule
     Modelo & MCC & (desv.) & AUROC & AUPRC \\
@@ -205,7 +205,7 @@ Sobre la prueba reservada el mismo modelo da MCC 0.339, AUROC 0.793 y AUPRC 0.72
 
 \subsection{La semejanza permitida domina}
 
-La comparación de magnitudes es el resultado central. Entre los once clasificadores hay 4.2 puntos de MCC, el rango entre los dos más alejados, y la desviación de cada uno entre sus 15 evaluaciones es mayor que la distancia entre vecinos de la tabla (Tabla~\ref{tab:modelos}). El modelo que adoptamos ocupa el quinto lugar de once por MCC medio: lo elegimos, como se dijo, por consistencia y por descarte. Con un único modelo, el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues agrupados y de ahí al peldaño donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos: 0.752, 0.702 y 0.419 de MCC. La Figura~\ref{fig:escalera} muestra la escalera en AUROC para seis modelos, con la prueba reservada marcada como referencia.
+La comparación de magnitudes es el resultado central. Entre los once clasificadores hay 4.2 puntos de MCC, el rango entre los dos más alejados, y la desviación de cada uno entre sus 15 evaluaciones es mayor que la distancia entre vecinos de la tabla (Tabla~\ref{tab:modelos}). El modelo final ocupa el quinto lugar de once por MCC medio: lo elegimos, como se dijo, por consistencia y por descarte. Con un único modelo, el \texttt{svm\_rbf}, pasar de pliegues al azar a pliegues agrupados y de ahí al peldaño donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos: 0.752, 0.702 y 0.419 de MCC. La Figura~\ref{fig:escalera} muestra la escalera en AUROC para seis modelos, con la prueba reservada marcada como referencia.
 
 \begin{figure}[t]
   \centering
@@ -312,7 +312,7 @@ En las dos fases la ganancia de las huellas se concentra donde el caso de uso no
 
 \subsection{Qué significa para el caso de uso}
 
-Los resultados reordenan las prioridades de ingeniería. Si entre once familias de modelos hay 4.2 puntos de MCC y entre dos criterios de partición hay 33.3 sobre el modelo que se entrega, entonces el esfuerzo rinde más en caracterizar y comunicar la novedad estructural de cada consulta que en buscar un modelo mejor. De ahí tres recomendaciones operativas. Primera, entregar la probabilidad y no una clase, y acompañarla de la distancia del compuesto al conjunto de entrenamiento. Segunda, cuando se evalúa un lote completo y se puede suponer su prevalencia, corregir el punto de operación en lugar de heredar el corte de 0.5 (sección~\ref{sec:corte}). Tercera, no usar la fase~1 como filtro: un resultado BBB$-$ reordena al candidato pero no lo elimina, y el estrato de productos naturales es el más débil en las dos fases.
+Los resultados reordenan las prioridades de ingeniería. Si entre once familias de modelos hay 4.2 puntos de MCC y entre dos criterios de partición hay 33.3 sobre el modelo final, entonces el esfuerzo rinde más en caracterizar y comunicar la novedad estructural de cada consulta que en buscar un modelo mejor. De ahí tres recomendaciones operativas. Primera, entregar la probabilidad y no una clase, y acompañarla de la distancia del compuesto al conjunto de entrenamiento. Segunda, cuando se evalúa un lote completo y se puede suponer su prevalencia, corregir el punto de operación en lugar de heredar el corte de 0.5 (sección~\ref{sec:corte}). Tercera, no usar la fase~1 como filtro: un resultado BBB$-$ reordena al candidato pero no lo elimina, y el estrato de productos naturales es el más débil en las dos fases.
 
 Lo que entregamos, en consecuencia, no es un servicio sino un cuaderno ejecutable con los dos modelos finales, entrenados solo sobre las filas de ajuste, que para cada SMILES devuelve la probabilidad de permear, la potencia predicha contra cada una de las 26 dianas y la similitud al vecino más cercano de entrenamiento como advertencia de extrapolación.
 
