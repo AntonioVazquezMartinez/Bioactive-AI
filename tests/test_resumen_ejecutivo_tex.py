@@ -53,14 +53,15 @@ def test_la_base_del_ahorro_es_el_modelo_contra_el_sorteo_y_no_el_30_por_ciento(
     assert round(d, 4) == 0.1533  # 15.3 puntos, no 30
     al_mes = d * 20 / 6
     assert round(al_mes, 2) == 0.51
-    assert round(al_mes * 5430, -1) == 2770 and round(al_mes * 8390, -1) == 4290
+    # ahorro al mes de los dos escenarios (insumos propios y servicio contratado), con precios de EE. UU.
+    assert round(al_mes * 6390, -1) == 3270 and round(al_mes * 35700, -1) == 18240
     # neto del año contra los 51,840 de implementación y operación
-    assert round((al_mes * 5430 * 12 - 51840) / 100) * 100 == -18500
-    assert round((al_mes * 8390 * 12 - 51840) / 100) * 100 == -400
+    assert round((al_mes * 6390 * 12 - 51840) / 100) * 100 == -12700
+    assert al_mes * 35700 * 12 - 51840 > 0
     # más permeables a igual número de ensayos y los que se pierden
     assert round(d * 0.573 * 20, 1) == 1.8 and round((1 - 0.8533) * 0.573 * 20, 1) == 1.7
     plano = TEX.replace("{,}", ",")
-    for cifra in ("2,770", "4,290", "8,450", "28,300", "18,500", "1.8 permeables", "1.7 permeables"):
+    for cifra in ("3,270", "18,240", "8,450", "28,300", "12,700", "1.8 permeables", "1.7 permeables"):
         assert cifra in plano, f"falta {cifra}"
 
 
@@ -97,26 +98,27 @@ def comercial_a_decena(v):
     return math.floor(v / 10 + 0.5) * 10
 
 
-def test_el_costo_de_confirmar_un_candidato_cuadra_en_los_dos_mercados():
-    """Compuesto (promedio de dos estándares USP) más ensayo, a 17.5 pesos por dólar; México con IVA del 16%."""
+def test_el_costo_de_confirmar_un_candidato_cuadra_en_los_dos_escenarios_y_mercados():
+    """Compuesto (promedio de dos estándares USP) más dos pruebas, a 17.5 pesos por dólar; México con 16% de IVA."""
     compuesto = round((266 + 317) / 2, -1)
     assert compuesto == 290
-    ensayo = {"bajo": 5, "medio": 20, "alto": 2000}
-    eeuu = {k: comercial_a_decena((compuesto + v) * 17.5) for k, v in ensayo.items()}
-    assert eeuu == {"bajo": 5160, "medio": 5430, "alto": 40080}
-    mexico_bajo = comercial_a_decena((compuesto + ensayo["bajo"]) * 17.5 * 1.16)
-    mexico_medio = comercial_a_decena(compuesto * 17.5 * 1.16 + 2500)
-    assert (mexico_bajo, mexico_medio) == (5990, 8390)
+    pruebas = {"propios": 15 + 60, "servicio": 250 + 1500}  # permeabilidad más actividad celular
+    usd = {k: compuesto + v for k, v in pruebas.items()}
+    assert usd == {"propios": 365, "servicio": 2040}
+    eeuu = {k: comercial_a_decena(v * 17.5) for k, v in usd.items()}
+    assert eeuu == {"propios": 6390, "servicio": 35700}
+    mexico = {k: comercial_a_decena(v * 17.5 * 1.16) for k, v in usd.items()}
+    assert mexico == {"propios": 7410, "servicio": 41410}
     plano = TEX.replace("{,}", ",")
-    for cifra in ("5,160", "5,430", "40,080", "5,990", "8,390", "9,905", "2,962"):
+    for cifra in ("6,390", "35,700", "7,410", "41,410", "9,905", "2,962", "31,590"):
         assert cifra in plano, f"falta {cifra}"
-    assert round(173340 / 17.5) == 9905 and round(51840 / 17.5) == 2962
+    assert round(173340 / 17.5) == 9905 and round(51840 / 17.5) == 2962 and (80 + 76) * 202.5 == 31590
 
 
 def test_el_ahorro_al_mes_de_cada_escenario():
     al_mes = _evitados_por_candidato() * 20 / 6
-    ahorro = {costo: round(costo * al_mes / 10) * 10 for costo in (5160, 5430, 40080, 5990, 8390)}
-    assert ahorro == {5160: 2640, 5430: 2770, 40080: 20480, 5990: 3060, 8390: 4290}
+    ahorro = {costo: round(costo * al_mes / 10) * 10 for costo in (6390, 7410, 35700, 41410)}
+    assert ahorro == {6390: 3270, 7410: 3790, 35700: 18240, 41410: 21160}
     plano = TEX.replace("{,}", ",")
-    for cifra in ("2,640", "2,770", "20,480", "3,060", "4,290"):
+    for cifra in ("3,270", "3,790", "18,240", "21,160"):
         assert cifra in plano

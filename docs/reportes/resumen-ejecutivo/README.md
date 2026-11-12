@@ -20,15 +20,22 @@ anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resume
 - **Beneficio medido:** `scripts/ahorro_por_priorizacion.py` lee las predicciones de la lectura de la prueba
   reservada que ya estaba versionada y calcula qué parte de los permeables queda al ensayar solo lo mejor
   ordenado. **No abre la prueba de nuevo.** Su corrida está en `experimentos/*ahorro-por-priorizacion-fase1`.
-- **Costos:** **son supuestos del equipo, a confirmar con la patrocinadora**, y el resumen lo dice. Los precios
-  de ensayo se dan en **dos mercados**: los de EE. UU. (reactivos de una membrana artificial, un servicio de
-  cribado y un ensayo ADME de servicio, en dólares y convertidos a 17.5) y los de México. **Para México no hay
-  precios publicados de estos ensayos**: el escenario bajo es el de EE. UU. con IVA del 16% (sin flete ni aduana), el
-  medio toma 2,500 pesos, mitad del rango de servicios analíticos de un centro público mexicano (que no son ensayos
-  de permeabilidad) y el alto queda sin dato. No son precios de ella. Las horas de desarrollo,
-  implementación y operación (856 en total) y el volumen de 50 compuestos al mes no vienen de ninguna fuente:
-  hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al mes, dentro del rango de
-  las guías salariales, con 1.35 de cargas.
+- **Costos: son estimaciones del equipo, sin cotización**, y el resumen lo dice. La patrocinadora no responde, así
+  que se dan estimaciones razonadas con su rango en lugar de esperar un dato. Los «ensayos» son pruebas de
+  laboratorio in vitro, no ensayos clínicos. Confirmar un candidato cuesta **el compuesto más dos pruebas**
+  (permeabilidad y actividad celular con curva de dosis y réplicas), en dos escenarios:
+  **insumos propios** (unos 365 USD: compuesto de unos 290 USD, que es el promedio de dos estándares USP, más unos
+  75 USD de reactivos) y **servicio contratado** (unos 2,040 USD: el mismo compuesto más unos 250 USD por la
+  permeabilidad y unos 1,500 USD por la curva celular). **Los precios de servicio no tienen cotización**: son
+  nuestra estimación del orden de magnitud de un laboratorio de servicio. Los de lista (kit de membrana
+  artificial, cribado universitario, estándares) sí son reales y de EE. UU., convertidos a 17.5 pesos por dólar;
+  para México se suma el 16% de IVA (sin flete ni aduana) y se supone el mismo precio de servicio.
+  **Las horas de desarrollo, implementación y operación (856 en total) y el volumen de 20 compuestos por semestre
+  no vienen de ninguna fuente**: hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al
+  mes, dentro del rango de las guías salariales, con 1.35 de cargas. **El resultado depende de dos supuestos**: las
+  horas de operación (con 76 en lugar de 176, lo que se financia baja de 51,840 a unos 31,590) y el precio de la
+  confirmación (con insumos propios el ahorro queda debajo de la operación; contratando el servicio la cubre varias
+  veces).
 - **La base del ahorro es el modelo contra el sorteo, no contra no ensayar.** Confirmar el 70% mejor ordenado
   evita el 30% de los candidatos, pero un sorteo que confirma el 70% también lo evita; lo que el modelo aporta es
   conservar el 85.3% de los permeables en lugar del 70%. Para igualar ese 85.3% un sorteo tendría que confirmar el
