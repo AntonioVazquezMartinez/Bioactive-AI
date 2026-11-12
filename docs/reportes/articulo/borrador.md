@@ -79,8 +79,8 @@ sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo.
 ### 2.1 Fase 1: permeabilidad
 
 Partimos de 7,805 compuestos con clase, del archivo curado de la patrocinadora (derivado de B3DB y cruzado con
-COCONUT, una base de productos naturales, lo que permite separar los naturales de los sintéticos). El 65% son
-BBB+. Usamos 6,306 para ajustar y validar y reservamos 1,499 como prueba. El archivo trae una columna de
+COCONUT, una base de productos naturales, lo que permite separar los naturales de los sintéticos). El 63.5% son
+BBB+ (65.0% entre los 6,306 de ajuste y 57.3% en la prueba). Usamos 6,306 para ajustar y validar y reservamos 1,499 como prueba. El archivo trae una columna de
 confiabilidad (grupos A a D) que decidimos no usar para filtrar: el análisis exploratorio mostró que está mezclada
 con la clase, y filtrar empeoraba el desbalance en vez de limpiar ruido.
 
