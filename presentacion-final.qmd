@@ -95,7 +95,7 @@ El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto
 ::: {.column width="50%"}
 ### Fase 1 · permeabilidad
 
-- **7,805** compuestos con clase; 65% permeables.
+- **7,805** compuestos con clase; **63.5%** permeables (65.0% en las filas de ajuste).
 - **1,499** reservados para la prueba.
 :::
 ::: {.column width="50%"}
@@ -107,7 +107,7 @@ El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto
 :::
 
 ::: {.notes}
-**Antonio · 1 min.** Los datos de la fase 1 vienen de un archivo curado que cruzamos con una base de productos naturales; los de la fase 2, de tres fuentes etiquetadas con las mismas columnas.
+**Antonio · 1 min.** Los datos de la fase 1 vienen de un archivo curado que la patrocinadora ya nos entregó cruzado con COCONUT, una base de productos naturales, y ese cruce es lo que permite separar los naturales de los sintéticos; los de la fase 2, de tres fuentes etiquetadas con las mismas columnas. El 63.5% cuenta el archivo completo: las 6,306 filas de ajuste son 65.0% y la prueba reservada 57.3%, y esa diferencia es parte del argumento de la diapositiva 10.
 :::
 
 ## Cómo medimos sin engañarnos
@@ -117,7 +117,7 @@ El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto
 - La prueba reservada solo sirvió **para medir**, nunca para elegir un modelo.
 
 ::: {.notes}
-**Antonio · 1 min.** Partir al azar infla los resultados entre 7 y 13 puntos. Los intervalos remuestrean grupos de moléculas, no filas.
+**Antonio · 1 min.** La literatura reporta que partir al azar infla el resultado entre 7 y 13 puntos; nuestra medición equivalente es la escalera de la diapositiva 7, donde el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
 :::
 
 ## El modelo no es la palanca
