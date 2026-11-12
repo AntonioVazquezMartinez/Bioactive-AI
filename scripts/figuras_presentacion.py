@@ -7,6 +7,12 @@ Son tres, y cada una existe porque una idea no se puede explicar a tiempo con pa
 - `huella.svg`: cómo se vuelve bits una molécula y qué es el Tanimoto.
 - `dificultad.svg`: la semejanza ordena pero no explica el nivel. Sale de las corridas
   `2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad` y `…-octava-lectura-origen-similitud`.
+- `importancias.svg`: qué columnas pesan en cada fase. Sale de las dos corridas de atribución
+  (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
+  `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`): barras de |SHAP| medio, con el lugar por
+  permutación, y en azul lo que los dos métodos ponen entre sus quince primeros.
+- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
+  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`.
 - `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
   `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
 - `corte.svg`: dónde cae el corte y cuánto se declara permeable con cada uno. Sale de
@@ -47,6 +53,9 @@ CORTES = RAIZ / "experimentos" / "2026-11-08-ingrid-C.5-umbral-en-validacion-con
 DIFICULTAD = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad" / "metricas.json"
 TERCILES = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-octava-lectura-origen-similitud" / "metricas.json"
 EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-propia" / "metricas.json"
+ATRIB1 = RAIZ / "experimentos" / "2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos"
+ATRIB2 = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion" / "importancias.csv"
+RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
 MORFINA = "CN1CCC23c4c5ccc(O)c4O[C@@H]2[C@@H](O)C=C[C@@H]3C1C5"
@@ -354,6 +363,72 @@ def fig_medir() -> dict:
     return {"tres": tres["dif_media"], "ruido": ruido["dif_media"]}
 
 
+def fig_importancias() -> dict:
+    """Qué pesa en cada fase: |SHAP| medio por columna, con el lugar por permutación al lado."""
+    m1 = json.loads((ATRIB1 / "metricas.json").read_text(encoding="utf-8"))
+    comunes1 = set(m1["interseccion_semilla0"])
+    d1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv").sort_values("shap", ascending=False).head(8)
+    d1 = d1.assign(comun=d1["caracteristica"].isin(comunes1), rango_perm=d1["r_perm"], valor=d1["shap"])
+    d1["nombre"] = d1["caracteristica"]
+    d2 = pd.read_csv(ATRIB2).sort_values("shap", ascending=False).head(8)
+    d2 = d2.assign(comun=(d2["rango_shap"] <= 15) & (d2["rango_permutacion"] <= 15),
+                   rango_perm=d2["rango_permutacion"], valor=d2["shap"])
+    d2["nombre"] = d2["columna"].str.replace("diana:", "diana ", regex=False)
+    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 4.6), gridspec_kw={"wspace": 0.75})
+    for ax, d, titulo in ((ejes[0], d1, "Fase 1 · permeabilidad (svm_rbf)"), (ejes[1], d2, "Fase 2 · potencia (aft)")):
+        y = range(len(d))
+        ax.barh(y, d["valor"] / d["valor"].max(), color=[AZUL if c else GRIS_CLARO for c in d["comun"]], height=0.62)
+        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
+            ax.text(fila["valor"] / d["valor"].max() + 0.02, yi, f"perm. {int(fila['rango_perm'])}", va="center",
+                    fontsize=8.5, color=AZUL if fila["comun"] else GRIS)
+        ax.set_yticks(list(y), list(d["nombre"]), fontsize=9.5)
+        ax.invert_yaxis()
+        ax.set_xlim(0, 1.32)
+        ax.set_xticks([])
+        for lado in ("left", "right", "top", "bottom"):
+            ax.spines[lado].set_visible(False)
+        ax.set_title(titulo, fontsize=11.5, fontweight="bold", color=AZUL, loc="left")
+    fig.text(0.01, -0.02, "Largo de la barra: |SHAP| medio relativo al primero. En azul, lo que SHAP y la permutación "
+             "ponen los dos entre sus quince primeros;\nel número es el lugar por permutación.", fontsize=8.8, color=GRIS)
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"fase1": list(d1["nombre"]), "fase2": list(d2["nombre"])}
+
+
+def fig_ranking() -> dict:
+    """El ranking por fase de los compuestos de ejemplo del cuaderno: una lista por fase, con su similitud."""
+    f1 = pd.read_csv(RANKING / "ranking_fase1.csv")
+    f2 = pd.read_csv(RANKING / "ranking_fase2.csv")
+    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.75})
+    paneles = (
+        (ejes[0], f1, "p_bbb_mas", "similitud_fase1", "Fase 1 · probabilidad de cruzar la barrera", 1.0,
+         lambda r: f"{r['p_bbb_mas']:.2f}"),
+        (ejes[1], f2, "pActividad_max", "similitud_fase2", "Fase 2 · potencia máxima predicha (pActividad)", 8.0,
+         lambda r: f"{r['pActividad_max']:.1f}  ({r['mejor_diana']})"),
+    )
+    for ax, d, col, sim, titulo, tope, etiqueta in paneles:
+        y = range(len(d))
+        colores = [NARANJA if a else AZUL for a in d["aviso_extrapolacion"]]
+        ax.barh(y, d[col], color=colores, height=0.62)
+        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
+            ax.text(fila[col] + tope * 0.015, yi, etiqueta(fila), va="center", fontsize=9, color=GRIS)
+        ax.set_yticks(list(y), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
+        ax.invert_yaxis()
+        ax.set_xlim(0, tope * 1.45)
+        ax.set_xticks([])
+        for lado in ("left", "right", "top", "bottom"):
+            ax.spines[lado].set_visible(False)
+        ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
+    fig.text(0.01, -0.03, "En naranja, compuestos con aviso de extrapolación (lejos de lo que el modelo vio). Son compuestos "
+             "conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena por separado, "
+             "sin combinarlas.", fontsize=8.8, color=GRIS)
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
+
+
 if __name__ == "__main__":
     SALIDA.mkdir(parents=True, exist_ok=True)
     familia = cifras_de_la_familia()
@@ -363,4 +438,6 @@ if __name__ == "__main__":
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
     print("medir:", fig_medir())
+    print("importancias:", fig_importancias())
+    print("ranking:", fig_ranking())
     print("escritas en", SALIDA)

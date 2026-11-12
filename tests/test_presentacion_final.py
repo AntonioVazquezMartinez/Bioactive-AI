@@ -1,4 +1,4 @@
-"""La presentación final (#303): 14 diapositivas para 30 minutos, cada una con sus notas y dentro del
+"""La presentación final (#303): 15 diapositivas para 15 minutos de charla y 10 de preguntas, cada una con sus notas y dentro del
 presupuesto de texto que ya mide `test_armar_deck` (techo de 1,761 caracteres por diapositiva).
 
 La propuesta del #303 eran 13. La catorce es «Cómo se vuelve números una molécula»: el mazo no decía en
@@ -23,9 +23,9 @@ def _diapositivas():
     return trozos, re.split(r"^## ", respaldo, flags=re.M)[1:]
 
 
-def test_son_catorce_diapositivas_en_el_hilo_y_cinco_de_respaldo():
+def test_son_quince_diapositivas_en_el_hilo_y_cinco_de_respaldo():
     hilo, respaldo = _diapositivas()
-    assert len(hilo) == 14, f"{len(hilo)} diapositivas en el hilo; son 14 (las 13 del #303 más las variables)"
+    assert len(hilo) == 15, f"{len(hilo)} diapositivas en el hilo; son 15 (las 13 del #303 más dos: cómo se vuelve números una molécula y qué pesa en cada fase)"
     assert len(respaldo) == 5
 
 

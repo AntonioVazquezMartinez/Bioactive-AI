@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (14 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -58,7 +58,7 @@ Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos*
 :::
 
 ::: {.notes}
-**Antonio · 0.75 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
+**Antonio · 0.5 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
 :::
 
 ## Dos números que no cuadran
@@ -110,7 +110,7 @@ Fase 1, permeabilidad, con el modelo final.
 :::
 
 ::: {.notes}
-**Antonio · 0.75 min.** Fase 1: un archivo curado de la patrocinadora, cruzado con COCONUT, que permite separar naturales de sintéticos. Fase 2: tres fuentes con las mismas columnas. El 63.5% es el archivo completo: el ajuste tiene 65.0% y la prueba 57.3%, y esa diferencia es parte del argumento del corte.
+**Antonio · 0.5 min.** Fase 1: un archivo curado de la patrocinadora, cruzado con COCONUT, que permite separar naturales de sintéticos. Fase 2: tres fuentes con las mismas columnas. El 63.5% es el archivo completo: el ajuste tiene 65.0% y la prueba 57.3%, y esa diferencia es parte del argumento del corte.
 :::
 
 ## Cómo se vuelve números una molécula {.smaller}
@@ -121,7 +121,7 @@ Fase 1, permeabilidad, con el modelo final.
 - **Huellas:** las medimos aparte, y ayudan en la fase 2 y en la fase 1 no (respaldo). Los dos modelos finales corren sobre descriptores; en la fase 2 se suma la diana.
 
 ::: {.notes}
-**Antonio · 0.75 min.** Primero se eligieron las columnas sobre valores crudos, porque cambiar la transformación obligaba a repetir la selección: salen las mismas 151 con las tres. Las huellas medidas son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue.
+**Antonio · 0.5 min.** Primero se eligieron las columnas sobre valores crudos, porque cambiar la transformación obligaba a repetir la selección: salen las mismas 151 con las tres. Las huellas medidas son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue.
 :::
 
 ## Cómo medimos sin engañarnos {.smaller}
@@ -225,16 +225,28 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
 :::
 
-## El cuaderno
+## Qué pesa en cada fase {.smaller}
 
-![](docs/reportes/articulo/figuras/f7_despliegue.svg){fig-alt="Arquitectura de despliegue: un cuaderno local, un módulo de inferencia y dos modelos guardados" width="55%"}
+![](docs/reportes/presentacion/figuras/importancias.svg){fig-alt="Las columnas que más pesan en cada fase según SHAP, con su lugar por permutación"}
 
-- Se ejecuta con **SMILES propios**: no hay servicio.
-- Entrega la probabilidad, la potencia por diana y una **advertencia de extrapolación**.
-- No combina las fases en un ranking: queda como trabajo futuro.
+- **Fase 1:** pesan los donadores de hidrógeno y otros descriptores; TPSA no domina (puesto 40 por permutación).
+- **Fase 2:** pesa sobre todo la **diana** (MAOA, MAOB, DRD2) y la complejidad topológica; TPSA y los donadores quedan lejos.
+- **No afirmamos ningún mecanismo:** son nombres de columna, y lo que importa en una fase no sirve en la otra.
 
 ::: {.notes}
-**Art · 1 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 1 min.** Dos métodos independientes, SHAP y permutación; en azul lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. El detalle está en el respaldo.
+:::
+
+## El cuaderno
+
+![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de compuestos de ejemplo: probabilidad de cruzar la barrera y potencia máxima predicha" width="90%"}
+
+- Se ejecuta con **SMILES propios**: no hay servicio.
+- Entrega la probabilidad, la potencia por diana y una **advertencia de extrapolación**, y ordena **cada fase por separado**.
+- **No combina** las fases en un ranking: queda como trabajo futuro.
+
+::: {.notes}
+**Art · 0.75 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
@@ -311,7 +323,7 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 **Antonio · respaldo.** Para quien pregunte cómo se llega de la molécula a la columna y qué quiere decir cada etiqueta. El origen se usa en los resultados (la ventaja por tercil de rareza se reporta por origen). El corte de 10 µM viene del cribado original y es una decisión que puede cambiar, por eso se guarda el intervalo. El grupo A a D no es una escala: filtrar a A y B baja la clase minoritaria de 36.5% a 27.0%, así que empeora el desbalance en lugar de quitar ruido.
 :::
 
-## Qué pesa en cada fase {.smaller}
+## Qué pesa en cada fase: el detalle {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}

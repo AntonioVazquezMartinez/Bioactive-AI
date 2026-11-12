@@ -1,0 +1,7 @@
+lugar,nombre,pActividad_max,mejor_diana,similitud_fase2,aviso_extrapolacion
+1,curcumina,6.878350257873535,TSPO,1.0,False
+2,galantamina,6.3650431632995605,DRD2,1.0,False
+3,resveratrol,6.3027191162109375,APP,1.0,True
+4,quercetina,5.3350396156311035,MAOB,1.0,False
+5,cafeína,5.246984958648682,IL1B,1.0,False
+6,nicotina,4.928138256072998,MAPT,1.0,False

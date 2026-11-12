@@ -1,0 +1,1 @@
+python3.12.12 scripts/ranking_por_fase_ejemplo.py

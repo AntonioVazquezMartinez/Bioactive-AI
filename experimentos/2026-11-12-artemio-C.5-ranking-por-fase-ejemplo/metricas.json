@@ -1,0 +1,18 @@
+{
+  "fase1": {
+    "cafeína": 0.9444,
+    "curcumina": 0.1827,
+    "galantamina": 0.9619,
+    "nicotina": 0.9332,
+    "quercetina": 0.023,
+    "resveratrol": 0.1807
+  },
+  "fase2": {
+    "cafeína": 5.247,
+    "curcumina": 6.8784,
+    "galantamina": 6.365,
+    "nicotina": 4.9281,
+    "quercetina": 5.335,
+    "resveratrol": 6.3027
+  }
+}
