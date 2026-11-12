@@ -548,7 +548,7 @@ un mecanismo.
 
 ![Atribución](figuras/f8_atribucion.svg)
 
-*Figura C2. SHAP por fila: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
+*Figura C2. SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
 
 *Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
 cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,
