@@ -6,7 +6,8 @@ title: "Bioactive"
 subtitle: "Cuánto confiar en una predicción depende de la molécula, no del modelo"
 author: "Equipo 7 · Ingrid Pamela Ruiz Puga · Artemio Santiago Padilla Robles · José Antonio Vázquez Martínez"
 institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey"
-date: "13 de noviembre de 2026"
+date: "2026-11-13"
+date-format: "D [de] MMMM [de] YYYY"
 lang: es
 format:
   revealjs:
