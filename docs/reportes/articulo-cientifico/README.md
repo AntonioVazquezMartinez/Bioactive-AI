@@ -8,7 +8,7 @@ está pensado para circular fuera del curso: ante la patrocinadora, el Departame
 | archivo | qué es |
 |:--|:--|
 | `articulo-cientifico.tex` | el artículo, **se edita a mano** (ver abajo por qué) |
-| `articulo-cientifico.pdf` | el PDF compilado con `sh scripts/compilar_articulo.sh articulo-cientifico`; **no se versiona**, se compila cuando se necesita |
+| `articulo-cientifico.pdf` | el PDF compilado con `sh scripts/compilar_articulo.sh articulo-cientifico`; **se versiona**, así que hay que recompilarlo y empujarlo cada vez que cambie el `.tex` |
 | `figuras/` | enlace simbólico a `../articulo/figuras`: las mismas figuras, generadas con `scripts/figuras_articulo.py` |
 | `bibliografia.bib` | enlace simbólico a `docs/referencias/bibliografia.bib` |
 | `logo.jpeg` | enlace simbólico a `docs/reportes/logo-tec.jpeg`; el preámbulo no lo usa, porque un artículo de revista no lleva logo |
@@ -38,8 +38,28 @@ figuras apunten a PNG existentes (pdfLaTeX no incluye SVG), que los entornos est
 vaya a doble columna, que toda figura y toda tabla se referencie desde el texto, que no haya quedado sintaxis de
 Markdown arrastrada del borrador y que estén la declaración de uso de IA y las referencias.
 
+Y una guarda que no es de forma sino de contenido: **que el orden que combina las dos fases se diga pendiente.**
+La [C.5](../../decisiones.md) se revisó el 12 de noviembre —se entrega el cuaderno que ordena por fase, no una
+lista combinada— y este artículo había quedado diciendo en presente que las salidas «se combinan en un único
+orden», dos oraciones antes de llamar pendiente a esa misma combinación. La guarda de cifras no podía verlo,
+porque no es una cifra: es el mismo desfase de documento escrito a mano, en una afirmación.
+
 Lo que ninguna prueba cubre es el PDF: dónde cayó cada flotante, si un encabezado quedó huérfano al pie de una
 columna y si alguna tabla se desbordó. Eso pide ojos humanos, página por página.
+
+## Por qué el PDF sí se versiona
+
+La versión de octubre de este README decía que no, y se cambió el 12 de noviembre por una razón práctica: **quien
+revisa casi nunca tiene la cadena de compilación.** pdfLaTeX y Biber viven en una imagen de Docker de unos 4 GB,
+así que sin ella no hay forma de ver dónde cayó un flotante ni si una tabla se desbordó —que es exactamente lo
+que ninguna prueba cubre—. Con el PDF en el repo, cualquiera puede abrirlo y revisar la maquetación; sin él, la
+revisión se concentra en la única persona que tiene Docker levantado.
+
+El costo es el de siempre, y hay que asumirlo: **un PDF versionado se desfasa del `.tex` en silencio.** No hay
+prueba que lo detecte, porque comparar un PDF con su fuente pide compilar. Así que la regla es manual: el `.tex`
+y el PDF se empujan juntos, y si un cambio del `.tex` llega sin su PDF, el PDF del repo es viejo hasta que alguien
+lo recompile. Una guarda posible, para cuando moleste: que el script de compilación deje la huella `sha256` del
+`.tex` junto al PDF y una prueba la compare con la del `.tex` actual.
 
 ## Cómo se compila
 
@@ -71,10 +91,13 @@ cd docs/reportes/articulo-cientifico && mkdir -p /tmp/subir && cp -RL articulo-c
 
 ## Pendiente
 
-- **Revisar el PDF página por página.** Ya compila: en la revisión del [#305](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/305)
-  salieron **9 páginas** a doble columna, tamaño carta, sin referencias sin resolver. Lo que sigue pendiente es
-  más fino y ninguna prueba lo cubre: dónde cayó cada flotante, si algún encabezado quedó huérfano al pie de una
-  columna y si la tabla de los once modelos cabe en una columna o conviene pasarla a `table*`.
+- **Recompilar y empujar el PDF.** El que está en el repo se compiló del commit `e45da59`, **anterior** al
+  arreglo de la tabla, así que todavía muestra `tab:modelos` desbordada. La revisión página por página ya está
+  hecha sobre él ([#309](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/309)): **9 páginas**, carta,
+  dos columnas, sin referencias sin resolver; ningún flotante a más de una página de su mención; ningún encabezado
+  huérfano; y un defecto real, la tabla de los once modelos, que terminaba en 312.9 pt con la columna en 296.1 y
+  tocaba la figura de al lado. Se arregló con `\setlength{\tabcolsep}{4pt}`, que la deja en 295.0 sin mover el
+  resto, en lugar de pasarla a `table*`, que movería los flotantes de ancho completo.
 - **Decidir el destino.** Si es un congreso o una revista, su plantilla reemplaza al preámbulo de aquí.
 - **La afiliación de la patrocinadora y de la asesora** aparece como el Tec de Monterrey sin departamento;
   confirmar cómo quieren figurar y en qué orden de autoría.

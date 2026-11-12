@@ -254,7 +254,7 @@ Tres cosas que estas cifras no dicen. El corte de igual prevalencia necesita ten
 
 Las huellas Sort \& Slice no mejoran a ningún modelo de la fase 1 y bajan el MCC de cinco de seis; en la fase 2 mejoran a cinco de seis en las 15 evaluaciones. Por tramo de peso la media es negativa en la fase 1 y sin tendencia. En la fase 2 la ganancia parece crecer con el peso, pero esa tendencia no se sostiene (su intervalo incluye el cero) y se aplana al igualar los tramos por submuestreo; el detalle está en el Anexo C.
 
-Dos explicaciones simples las descartamos con experimentos propios. No es el tamaño de los datos: con el ajuste de la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, 0.8 por 6,306) la ganancia del \texttt{aft} es +0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). Tampoco es la granularidad de la etiqueta: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados (AUROC +0.017 a +0.085).
+Dos explicaciones simples las descartamos con experimentos propios. No es el tamaño de los datos: con el ajuste de la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, el 80\% de 6,306) la ganancia del \texttt{aft} es +0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). Tampoco es la granularidad de la etiqueta: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados (AUROC +0.017 a +0.085).
 
 \begin{figure}[H]
   \centering
@@ -512,7 +512,7 @@ Cada anexo amplía un resultado del cuerpo y nombra la corrida de la que sale, p
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\linewidth]{figuras/f8_atribucion.png}
-  \caption{SHAP por fila: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.}
+  \caption{SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.}
   \label{fig:f8_atribucion}
 \end{figure}
 
