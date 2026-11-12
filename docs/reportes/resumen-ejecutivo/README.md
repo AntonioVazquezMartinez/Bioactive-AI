@@ -29,6 +29,13 @@ anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resume
   implementación y operación (856 en total) y el volumen de 50 compuestos al mes no vienen de ninguna fuente:
   hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al mes, dentro del rango de
   las guías salariales, con 1.35 de cargas.
+- **La base del ahorro es el modelo contra el sorteo, no contra no ensayar.** Confirmar el 70% mejor ordenado
+  evita el 30% de los candidatos, pero un sorteo que confirma el 70% también lo evita; lo que el modelo aporta es
+  conservar el 85.3% de los permeables en lugar del 70%. Para igualar ese 85.3% un sorteo tendría que confirmar el
+  85.3%: el modelo evita **15.3 puntos** de candidatos a igual recuperación, 0.51 al mes con 20 compuestos por
+  semestre, y con eso **el ahorro (unos 2,770 pesos al mes con precios de EE. UU., 4,290 con los de México) no
+  cubre la operación (4,320)**. El resumen lo dice: se compensa si confirmar un candidato cuesta más de unos 8,450
+  pesos, o con más volumen. Lo calcula `tests/test_resumen_ejecutivo_tex.py` desde la corrida.
 - **El punto de equilibrio** (Anexo B) es lo que sostiene la recomendación sin depender de un precio
   que no conocemos: dice cuánto debe costar un ensayo para que el ahorro compense el gasto.
 

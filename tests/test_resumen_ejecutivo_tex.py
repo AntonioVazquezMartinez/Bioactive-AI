@@ -39,13 +39,37 @@ def test_el_costo_cuadra_por_servicio_y_en_total():
     assert costo["implementacion"] + costo["operacion"] == 51840
 
 
-def test_el_punto_de_equilibrio_sale_de_las_dos_bases():
-    """Candidatos evitados al mes = 30% del volumen semestral entre seis."""
-    comercial = lambda v: math.floor(v + 0.5)  # noqa: E731  (7,222.5 es 7,223, no el par más cercano)
-    for volumen, sin, con in ((10, 8640, 28890), (20, 4320, 14445), (40, 2160, 7223), (100, 864, 2889)):
-        evitados = 0.3 * volumen / 6
-        assert comercial(4320 / evitados) == sin and comercial(14445 / evitados) == con
-        assert f"{sin:,}" in TEX
+def _evitados_por_candidato() -> float:
+    """Fracción de candidatos que el modelo evita frente a un sorteo a igual recuperación de permeables:
+    el sorteo tendría que confirmar la cobertura del modelo, así que se evita (cobertura − fracción)."""
+    carpeta = next((RAIZ / "experimentos").glob("*ahorro-por-priorizacion-fase1"))
+    with open(carpeta / "ahorro.csv", encoding="utf-8") as f:
+        fila = next(r for r in csv.DictReader(f) if abs(float(r["fraccion_ensayada"]) - 0.7) < 1e-9)
+    return round(float(fila["cobertura_permeables"]), 4) - 0.7
+
+
+def test_la_base_del_ahorro_es_el_modelo_contra_el_sorteo_y_no_el_30_por_ciento():
+    d = _evitados_por_candidato()
+    assert round(d, 4) == 0.1533  # 15.3 puntos, no 30
+    al_mes = d * 20 / 6
+    assert round(al_mes, 2) == 0.51
+    assert round(al_mes * 5430, -1) == 2770 and round(al_mes * 8390, -1) == 4290
+    # neto del año contra los 51,840 de implementación y operación
+    assert round((al_mes * 5430 * 12 - 51840) / 100) * 100 == -18500
+    assert round((al_mes * 8390 * 12 - 51840) / 100) * 100 == -400
+    # más permeables a igual número de ensayos y los que se pierden
+    assert round(d * 0.573 * 20, 1) == 1.8 and round((1 - 0.8533) * 0.573 * 20, 1) == 1.7
+    plano = TEX.replace("{,}", ",")
+    for cifra in ("2,770", "4,290", "8,450", "28,300", "18,500", "1.8 permeables", "1.7 permeables"):
+        assert cifra in plano, f"falta {cifra}"
+
+
+def test_el_punto_de_equilibrio_sale_de_la_base_honesta():
+    d = _evitados_por_candidato()
+    for volumen, sin, con in ((10, 16908, 56536), (20, 8454, 28268), (40, 4227, 14134), (100, 1691, 5654)):
+        evitados = d * volumen / 6
+        assert round(4320 / evitados) == sin and round(14445 / evitados) == con
+        assert f"{sin:,}" in TEX and f"{con:,}" in TEX
 
 
 def test_las_cifras_de_desempeno_son_las_del_articulo():
@@ -87,3 +111,12 @@ def test_el_costo_de_confirmar_un_candidato_cuadra_en_los_dos_mercados():
     for cifra in ("5,160", "5,430", "40,080", "5,990", "8,390", "9,905", "2,962"):
         assert cifra in plano, f"falta {cifra}"
     assert round(173340 / 17.5) == 9905 and round(51840 / 17.5) == 2962
+
+
+def test_el_ahorro_al_mes_de_cada_escenario():
+    al_mes = _evitados_por_candidato() * 20 / 6
+    ahorro = {costo: round(costo * al_mes / 10) * 10 for costo in (5160, 5430, 40080, 5990, 8390)}
+    assert ahorro == {5160: 2640, 5430: 2770, 40080: 20480, 5990: 3060, 8390: 4290}
+    plano = TEX.replace("{,}", ",")
+    for cifra in ("2,640", "2,770", "20,480", "3,060", "4,290"):
+        assert cifra in plano
