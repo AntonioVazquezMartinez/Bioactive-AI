@@ -441,8 +441,12 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
     return orden
 
 
-def fig_importancias() -> dict:
-    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma."""
+def fig_importancias(salida: Path | None = None, nombre: str = "importancias") -> dict:
+    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma.
+
+    Por defecto escribe `importancias` en la carpeta del deck; el artículo la llama con su carpeta y otro nombre.
+    """
+    salida = salida or SALIDA
     from matplotlib.cm import ScalarMappable
     from matplotlib.colors import LinearSegmentedColormap, Normalize
 
@@ -475,7 +479,7 @@ def fig_importancias() -> dict:
              "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
              "métodos van primero.", fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
-        fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
     return {"fase1": o1, "fase2": o2}
 

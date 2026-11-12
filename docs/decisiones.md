@@ -14,9 +14,10 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente | |
 | [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta | |
 | [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta | |
-| [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente · revisada | 17 oct · 24 oct · 12 nov |
+| [C.5](#dc-5) | El entregable es el ordenador por fase, no una lista priorizada (versión del 17 oct); métricas de ranking por escenario | Vigente · revisada | 17 oct · 24 oct · 12 nov |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta | |
 | [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta | |
+| [C.8](#dc-8) | El proyecto termina con la entrega; la continuidad es autónoma de la patrocinadora y su grupo | Vigente | |
 
 **Fase 1 · Permeabilidad**
 
@@ -116,13 +117,13 @@ Es exploratorio: los 612 no son una muestra representativa (son los compuestos c
 
 **Se propone.** PAINS no entra al entrenamiento ni a la prueba, para no sesgar contra los naturales. Se aplica a la salida: cada candidato del ranking lleva su alerta y el ranking se reporta con y sin esos compuestos. Nunca se filtra la prueba. El protocolo de tres brazos (sin filtrar, filtrado solo en entrenamiento y evaluación estratificada) puede retomarse si el ranking resulta dominado por alertas, declarándolo antes de correrlo. Una molécula que agrega no falsea un logBB, así que en la fase 1 la alerta es información; en la fase 2 sí condiciona cómo leer el ranking.
 
-#### C.5 · El entregable es una lista priorizada, y el punto de operación se entrega como curva {#dc-5 .vigente .revisada}
+#### C.5 · El entregable es el ordenador por fase (antes: una lista priorizada), y el punto de operación se entrega como curva {#dc-5 .vigente .revisada}
 
 **Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada el 12 de noviembre: lo que se entrega es el ordenador, no una lista (ver abajo)
 
 **Revisada el 12 de noviembre.** La versión de octubre decía que el entregable es una lista de candidatos priorizados. **No se entrega una lista de compuestos concretos**: la patrocinadora no nos dio candidatos, y el cuaderno 06 devuelve, por cada estructura que ella ponga, la probabilidad de cruzar la barrera, la potencia por diana y la advertencia de extrapolación, **sin combinar las dos predicciones en un solo ranking** (la combinación sigue pendiente, [C.3](#dc-3)). Lo que sí se entrega es lo que permite construir esa lista con sus propios compuestos, y **un orden por fase** (sección 6 del cuaderno: la fase 1 por la probabilidad de cruzar la barrera, la fase 2 por la potencia máxima predicha), que se muestra con compuestos de ejemplo conocidos en `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El texto de octubre queda abajo porque la curva de precisión contra profundidad y las métricas de ranking siguen siendo el criterio para cuando exista el ranking combinado.
 
-**Qué se decidió.** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
+**Qué se decidió (versión del 17 de octubre, superada el 12 de noviembre: ver arriba).** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
 
 **Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística: un falso activo manda al laboratorio a ensayar algo que no funciona, y un falso inactivo descarta un candidato real sin que nadie se entere. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación era lo que faltaba.
 
@@ -236,6 +237,21 @@ Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `
 **De dónde saldría el dato, en orden de costo.** Primero el volcado de ChEMBL 37, que ya es la alternativa declarada de la fase 2: la citotoxicidad de estos mismos compuestos está ahí y el recorte que recibimos la filtró, así que es el mejor solapamiento posible y una sola procedencia. Después **Tox21**, público y de dominio público vía PubChem BioAssay, que incluye contra-tamices de viabilidad y ensayos de la vía Nrf2/ARE —la diana de estrés oxidativo—, con la duda de cuánto solapa su biblioteca de químicos ambientales con nuestros naturales, que se mide antes de invertir. **ToxCast** al final, por volumen.
 
 **Si no se resuelve:** el ranking se entrega declarando que ordena por potencia y permeabilidad, y que no distingue un compuesto selectivo de uno citotóxico. Eso cambia qué significa el entregable, así que toca la [C.3](#dc-3) y la [C.5](#dc-5).
+
+
+#### C.8 · El proyecto termina con la entrega; la continuidad es autónoma de la patrocinadora y su grupo {#dc-8 .vigente}
+
+**Estado:** vigente · decidida por el equipo el 12 de noviembre de 2026
+
+**Qué se decidió.** El proyecto termina con la entrega final. Si hay continuidad, la llevan la patrocinadora y su grupo de investigación **de manera autónoma**, y el equipo **no se compromete** a acompañar la puesta en marcha, la operación ni el mantenimiento. Para que puedan hacerlo solos se entrega el cuaderno 06 (recibe estructuras propias y devuelve probabilidad de cruzar la barrera, potencia por diana y una advertencia de extrapolación), los dos modelos guardados con su módulo de inferencia, el procedimiento para reentrenar con datos nuevos y la herramienta para medir columnas propias. Un artículo para revisión por pares es una posibilidad futura, sin compromiso.
+
+**Qué pasó.** El resumen ejecutivo, una figura de despliegue del artículo y una tabla de supervisión hablaban de implementación y operación como si el equipo las acompañara («mantenimiento y supervisión: el equipo»), y eso contradecía lo que el equipo había dicho de su alcance. Se unificó el lenguaje: las horas de puesta en marcha y de operación del resumen son tiempo del grupo de la patrocinadora, no del equipo.
+
+**Por qué.** Es una decisión del equipo sobre su propio alcance, no se apoya en una medición.
+
+**Qué la cambiaría.** Que la patrocinadora o la asesora pidan acompañamiento. Entonces se registra aquí como entrada nueva y se estima su costo, en vez de darlo por incluido.
+
+
 
 ### Supuestos
 
@@ -1358,7 +1374,7 @@ La logística queda 6–7 puntos abajo, con intervalos que no se tocan; entre el
 
 **Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. En un modelo de árboles con `survival:aft`, SHAP atribuye sobre log-potencia, más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo». La [C.2](#dc-2) sigue siendo viable, pero el relato cambia.
 
-**Por qué conviene.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es un número y no una clase, se puede comparar la potencia predicha contra la exposición alcanzable: un compuesto BBB− llega a menos concentración en el cerebro y necesita más potencia para servir.
+**Por qué conviene.** El ranking final combinaría las dos fases ([C.3](#dc-3), pendiente: hoy el cuaderno ordena cada fase por separado). Si la componente de actividad es un número y no una clase, se puede comparar la potencia predicha contra la exposición alcanzable: un compuesto BBB− llega a menos concentración en el cerebro y necesita más potencia para servir.
 
 #### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
 
@@ -1571,7 +1587,7 @@ del propio filtro, porque `limites_en_micromolar` devuelve `0.0` y XGBoost admit
 ajusta solo con exactas —`xgb_sin_censura` saca el mejor RMSE agregado de la corrida, 0.9967, y el
 mejor Spearman de `solo_npass`, 0.2586—, porque son las métricas que se calculan sobre ese mismo
 subconjunto ([C.1](#dc-1)). La censura compra concordancia y MCC, que es donde vive el umbral, y el
-entregable es una lista priorizada con un corte ([C.5](#dc-5)).
+entregable se pensó como una lista priorizada con un corte ([C.5](#dc-5), revisada el 12 de noviembre: hoy es un orden por fase).
 
 *La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
 

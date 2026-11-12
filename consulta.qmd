@@ -151,7 +151,7 @@ sale de los datos, y cambia qué conviene construir.
 
 ## 7 · ¿Qué espera recibir, y qué error le cuesta más?
 
-> **Decidido por el equipo: no se fija un punto de operación.** Se entrega la curva de precisión contra profundidad, con un corte sugerido en veinte compuestos. Así mover el corte no cuesta reentrenar nada, y usted lo ajusta cuando vea los resultados. [C.5](contenido/decisiones.html#dc-5).
+> **Decidido por el equipo: no se fija un punto de operación, y no se entrega una lista de candidatos.** Se entrega un cuaderno que ordena cada fase por separado (la probabilidad de cruzar la barrera y la potencia), sin combinarlas; la curva de precisión contra profundidad y un corte sugerido en veinte compuestos quedan como criterio para cuando exista un orden combinado. Así mover el corte no cuesta reentrenar nada, y usted lo ajusta cuando vea los resultados. [C.5](contenido/decisiones.html#dc-5).
 
 De esta respuesta cuelgan el punto de operación de los dos modelos y la forma del entregable. Es la
 única pregunta de esta página que el equipo no puede ni aproximar con una medición.

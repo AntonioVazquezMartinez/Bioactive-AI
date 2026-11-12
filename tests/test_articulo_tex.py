@@ -48,6 +48,27 @@ def test_no_queda_markdown_sin_convertir():
     assert not re.search(r"\*\*|\[@", cuerpo), "quedó sintaxis de Markdown o de citas sin convertir"
 
 
+def test_toda_figura_nombrada_en_el_texto_existe_como_pie():
+    """Una «Figura C2» en el texto sin un pie que la numere así se queda apuntando a nada.
+
+    La numeración de los anexos se hace con un contador que el `.tex` reinicia en la primera figura de anexo
+    (`\\renewcommand{\\thefigure}{C\\arabic{figure}}`), así que el número real depende del orden: aquí se
+    reconstruye contando los entornos `figure` y se compara con lo que el texto nombra.
+    """
+    tex = _tex()
+    etiquetas, n, anexo = set(), 0, False
+    for m in re.finditer(r"\\renewcommand\{\\thefigure\}\{C|\\begin\{figure\*?\}", tex):
+        if m.group(0).startswith("\\renewcommand"):
+            anexo, n = True, 0
+        else:
+            n += 1
+            etiquetas.add(f"C{n}" if anexo else str(n))
+    sin_pies = re.sub(r"\\caption\{.*?\}\n", "", tex, flags=re.S)
+    nombradas = set(re.findall(r"Figura (C?\d+)\b", sin_pies))
+    assert etiquetas, "no se encontró ningún entorno figure"
+    assert nombradas <= etiquetas, f"el texto nombra figuras sin pie: {sorted(nombradas - etiquetas)}"
+
+
 def test_los_entornos_estan_balanceados():
     tex = _tex()
     for entorno in set(re.findall(r"\\begin\{(\w+\*?)\}", tex)):
