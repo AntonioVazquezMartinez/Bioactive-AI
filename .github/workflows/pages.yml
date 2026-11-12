@@ -7,10 +7,7 @@ on:
       - "docs/**"
       - "notebooks/**"
       - "data/external/README.md"
-      - "index.qmd"
-      - "presentacion.qmd"
-      - "consulta.qmd"
-      - "visualizador.qmd"
+      - "*.qmd"          # cualquier página de la raíz: portada, presentaciones, consulta, visualizador
       - "recursos/**"
       - "estilos*.scss"
       - "bibliografia.qmd"

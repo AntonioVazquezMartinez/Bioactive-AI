@@ -110,7 +110,7 @@ partición. En la fase 1 quedan 1,048 grupos.
 ### 3.1 De dónde partimos
 
 Empezamos por un punto de referencia, el baseline: tres modelos sencillos (boosting por histogramas, bosque
-aleatorio y regresión logística) con validación cruzada agrupada, 3 semillas × 5 pliegues, es decir 15
+aleatorio y regresión logística) con validación cruzada agrupada, 3 semillas por 5 pliegues, es decir 15
 evaluaciones. Sus MCC fueron 0.702, 0.700 y 0.687, con intervalos del 95% que se solapan, así que ninguno ganó.
 Eso fijó el listón que había que superar, 0.70 de MCC (y 0.93 de AUROC), contra un piso de 0 de MCC, 0.5 de AUROC
 y 0.35 de AUPRC que dan los clasificadores triviales.
@@ -163,7 +163,7 @@ promediadas entre semillas y no es comparable con el 0.919, que es el promedio d
 
 Entre los once modelos hay solo 4.2 puntos de MCC. Con el `svm_rbf`, en cambio, pasar de pliegues al azar a
 pliegues donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos
-(0.752 → 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`; aquí la medimos con sus
+(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`; aquí la medimos con sus
 magnitudes.
 
 ![Escalera](figuras/f1_escalera.svg)
@@ -171,7 +171,7 @@ magnitudes.
 *Figura 2. AUROC por peldaño, seis modelos. La línea naranja es la prueba reservada (0.793).*
 
 La fase 2 muestra lo mismo, con una limitación del conjunto. La concordancia del `aft` baja de 0.807 (por
-molécula) a 0.695 con semejanza ≥ 0.6: una caída de 0.112, unas siete veces la dispersión de 0.015 entre los siete
+molécula) a 0.695 con semejanza de 0.6 o más: una caída de 0.112, unas siete veces la dispersión de 0.015 entre los siete
 modelos competitivos de la fase 2 (el doble, 0.030, era el umbral que fijamos). A 0.5 y 0.4 ni siquiera se puede
 construir la partición, porque el 69% y el 90% de las filas caen en un solo grupo. No hay manera de evaluar la fase
 2 con química realmente nueva a esos niveles.
@@ -276,7 +276,7 @@ tendencia. En la fase 2 la ganancia parece crecer con el peso, pero esa tendenci
 incluye el cero) y se aplana al igualar los tramos por submuestreo; el detalle está en el Anexo C.
 
 Dos explicaciones simples las descartamos con experimentos propios. No es el tamaño de los datos: con el ajuste de
-la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, 0.8 × 6,306) la ganancia del `aft` es
+la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, el 80% de 6,306) la ganancia del `aft` es
 +0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). Tampoco es la granularidad de la
 etiqueta: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados
 (AUROC +0.017 a +0.085).
@@ -355,17 +355,17 @@ descriptores (IC95% [−0.131, −0.034], mejoran en 1 de 15 evaluaciones).
 
 ### 5.3 Requisitos para operar
 
-La Tabla 1 lista lo que hace falta para operar los modelos y quién responde de cada cosa.
+La Tabla 1 lista lo que hace falta para operar los modelos y quién lo hace en adelante. El proyecto termina con la entrega y la continuidad es autónoma de la patrocinadora y su grupo, sin compromiso del equipo; por eso lo que se entrega es lo que les permite hacerlo solos.
 
-| requisito | por qué | responsable |
+| requisito | por qué | a cargo de |
 |:--|:--|:--|
-| procedimiento que entrena y guarda los dos modelos finales, con el comando y la huella criptográfica de los datos | que cualquiera pueda reconstruirlos | equipo, disponible |
-| cuaderno de uso con SMILES propios | es la forma de operación acordada | equipo, disponible |
-| advertencia de extrapolación: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto | equipo, disponible en el cuaderno |
-| reentrenar al llegar datos nuevos y reevaluar con la escalera, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
+| procedimiento que entrena y guarda los dos modelos finales, con el comando y la huella criptográfica de los datos | que cualquiera pueda reconstruirlos | grupo de la patrocinadora, con el procedimiento entregado |
+| cuaderno de uso con SMILES propios | es la forma de operación acordada | grupo de la patrocinadora, con el cuaderno entregado |
+| advertencia de extrapolación: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto | grupo de la patrocinadora; la calcula el cuaderno |
+| reentrenar al llegar datos nuevos y reevaluar con la escalera, no con un corte al azar | evita celebrar una cifra inflada | grupo de la patrocinadora |
 | evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella | hecha una vez con el `aft` final: concordancia 0.792 [0.787, 0.797] en 8,134 pares (`solo_npass` 0.667, 249 pares), pero no comparable: el 64.9% de sus pares tiene andamio ya visto (ver 5.4) |
 
-Table: Requisitos para operar los modelos, por qué se piden y quién responde de cada uno.
+Table: Requisitos para operar los modelos, por qué se piden y quién lo hace en adelante.
 
 ### 5.4 Qué pasó con la base externa de la patrocinadora
 
@@ -543,6 +543,12 @@ descriptores entre sus quince primeros (`fr_lactam`, `NumHDonors`, `NumAliphatic
 es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); TPSA no (40 por permutación y 10 por SHAP), porque
 comparte información con un racimo de columnas. No afirmamos ninguna estructura: son seis nombres de descriptor, no
 un mecanismo.
+
+*Hacia dónde empuja cada columna.* Corridas `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2` (`scripts/puntos_shap.py`): los mismos modelos y pliegues de las dos anteriores, pero guardando el valor de SHAP de cada fila y no solo su media. En la fase 1, una lactama o más donadores de hidrógeno bajan la probabilidad de cruzar la barrera; en la fase 2, ser la diana `MAOA` baja la potencia predicha y más complejidad topológica la sube (Figura C2). Cada punto es un compuesto en la fase 1 (300, los mismos de la corrida original) y un par compuesto-diana en la fase 2 (3,000, una submuestra de 600 filas por pliegue). Son direcciones que aprendió el modelo, no un mecanismo, y «confirmada por permutación» es lo que los dos métodos de las corridas anteriores ponen entre sus quince primeros.
+
+![Atribución](figuras/f8_atribucion.svg)
+
+*Figura C2. SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
 
 *Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
 cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,
