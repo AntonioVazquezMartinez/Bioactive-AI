@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -147,7 +147,7 @@ No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 1 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
+**Antonio · 0.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
@@ -172,7 +172,6 @@ En azul el `svm_rbf`, el modelo que entregamos; en gris los otros cinco.
 :::
 :::
 
-La fase 2 hace lo mismo en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
 
 ::: {.callout-tip title="Pista 2"}
 Importa qué tan nueva es la molécula.
@@ -225,6 +224,37 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Tres límites: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase; el techo de 0.485 usa las etiquetas de la prueba, así que mide el margen y no un resultado; y las dos lecturas salen de una sola apertura de la prueba, con el corte congelado antes de abrirla y controles que reproducen el 0.3385 y el 0.793 ya registrados. Si aprietan con por qué elegir el corte en validación no sirve: el congelado sale 0.361 y la prueba necesitaba 0.747, y la guarda por mitades de grupos elige un corte por debajo de 0.5 en el 78 al 82% de los remuestreos, con ganancia media negativa (−0.002 a −0.003).
 :::
 
+## El modelo de potencia · fase 2 {.smaller}
+
+::: {.columns}
+::: {.column width="54%"}
+![](docs/reportes/articulo/figuras/f6_escalera_fase2.svg){fig-alt="Concordancia del aft por peldaño de semejanza permitida; en gris, solo los pares de NPASS"}
+
+La misma escalera: de 0.807 por molécula a 0.695 con semejanza menor de 0.6. En gris, solo los pares de NPASS.
+:::
+::: {.column width="46%"}
+Predice la **potencia de cada par compuesto-diana**, no una clase. El `aft` aprende de las mediciones **censuradas**, las que solo dicen «menos potente que esto», y que los otros nueve modelos descartan.
+
+| Concordancia | |
+|:--|--:|
+| Validación cruzada | 0.761 |
+| Prueba reservada | **0.720** |
+| 117 pares naturales | **0.530** |
+| Línea base de peso y TPSA | 0.565 |
+
+Acierta cuál de dos pares es más potente. El azar da 0.5.
+:::
+:::
+
+::: {.callout-tip title="Pista 4"}
+El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no está demostrado**.
+:::
+
+::: {.notes}
+**Pame · 1 min.** Elegimos el `aft` justamente por los naturales: en los pares que solo tiene NPASS su concordancia en validación es 0.632 contra 0.511 del bosque, porque aprende de las censuradas que los demás tiran. En la prueba esos pares dan 0.530 y con 117 no hay potencia para distinguir 0.511 de 0.632: no refuta ni confirma, y por eso se dice «no demostrado» y no «falla». La escalera se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. Si preguntan por la base externa de la patrocinadora: 0.792 en 8,134 pares con el modelo guardado y sin reentrenar, mejor que nuestra prueba, pero no es comparable porque el 64.9% de sus pares tiene un andamio ya visto. Y un aviso que conviene decir: el orden global mide sobre todo **qué diana es**; en el ajuste, un control que solo usa la diana llega a 1.36 de enriquecimiento contra un techo de 1.40.
+:::
+
+
 ## Qué pesa en cada fase {.smaller}
 
 ![](docs/reportes/presentacion/figuras/importancias.svg){fig-alt="Gráfico de puntos de SHAP: cada punto es un compuesto, su posición es el efecto de la columna en la predicción y su color el valor de la columna"}
@@ -234,7 +264,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 - **Fase 2:** pesa sobre todo **qué diana es** (la MAOA baja la potencia predicha) y la **complejidad** del compuesto la sube. **No afirmamos ningún mecanismo.**
 
 ::: {.notes}
-**Art · 1 min.** Dos métodos independientes, SHAP y permutación; "confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación), por eso en la fase 2 pesa tanto qué diana es. El detalle está en el respaldo.
+**Art · 0.75 min.** Dos métodos independientes, SHAP y permutación; "confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación), por eso en la fase 2 pesa tanto qué diana es. El detalle está en el respaldo.
 :::
 
 ## El cuaderno
@@ -246,7 +276,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 - **No combina** las fases en un ranking: queda como trabajo futuro.
 
 ::: {.notes}
-**Art · 0.75 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 0.5 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
