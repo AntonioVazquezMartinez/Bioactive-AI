@@ -58,7 +58,12 @@ CIFRAS = [
 
 def _corpus() -> dict[str, str]:
     textos: dict[str, str] = {}
-    for p in [RAIZ / "CLAUDE.md", *RAIZ.glob("docs/**/*.md"), *RAIZ.glob("docs/**/*.qmd")]:
+    # Los `.tex` entran por los dos artículos. El de la rúbrica se genera desde su borrador, así
+    # que ahí la cifra ya venía vigilada en el Markdown; el científico se escribe a mano y queda
+    # fuera de esa cadena, de modo que sin esto una cifra podía corregirse en un artículo y no en
+    # el otro. La plantilla del curso también es `.tex` y no cita cifras, así que no molesta.
+    for p in [RAIZ / "CLAUDE.md", *RAIZ.glob("docs/**/*.md"), *RAIZ.glob("docs/**/*.qmd"),
+              *RAIZ.glob("docs/**/*.tex")]:
         textos[str(p.relative_to(RAIZ))] = ESPACIOS.sub(" ", p.read_text(encoding="utf-8"))
     for nb in RAIZ.glob("notebooks/*.ipynb"):
         celdas = json.loads(nb.read_text(encoding="utf-8"))["cells"]
