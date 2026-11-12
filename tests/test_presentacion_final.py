@@ -5,7 +5,7 @@ La propuesta del #303 eran 13. La catorce es «Cómo se vuelve números una mol�
 ninguna parte cómo se convierte un SMILES en columnas, que es el Avance 2 completo. Se paga con minuto y
 medio recortado de otras tres del mismo bloque, así que el reparto de #303 no cambia.
 
-Las de respaldo son 5: la figura de rareza salió del hilo porque mide la ventaja sobre la línea base
+Las de respaldo son 6: la figura de rareza salió del hilo porque mide la ventaja sobre la línea base
 mientras la diapositiva de la escalera habla de AUROC, y las dos cantidades juntas confunden."""
 import re
 from pathlib import Path

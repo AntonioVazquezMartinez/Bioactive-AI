@@ -1,13 +1,35 @@
 {
+  "acuerdo_entre_dianas": {
+    "pares_de_dianas": 120,
+    "spearman_maximo": 0.9732714569162045,
+    "spearman_mediano": 0.9425103548164214,
+    "spearman_minimo": 0.8985482935336434
+  },
   "dianas": 26,
   "dianas_con_filas_suficientes": 16,
-  "efecto_diana_mas_alto": {
-    "diana": "GRIN1",
-    "efecto_diana_media": 0.8145357370376587
+  "efecto_diana_extremos_26": {
+    "mas_alto": {
+      "diana": "GRIN1",
+      "efecto_diana_media": 0.8145357370376587,
+      "n_pares": 88
+    },
+    "mas_bajo": {
+      "diana": "MAOA",
+      "efecto_diana_media": -0.8060852289199829,
+      "n_pares": 4701
+    }
   },
-  "efecto_diana_mas_bajo": {
-    "diana": "MAOA",
-    "efecto_diana_media": -0.8060852289199829
+  "efecto_diana_extremos_interpretables": {
+    "mas_alto": {
+      "diana": "LRRK2",
+      "efecto_diana_media": 0.7035940885543823,
+      "n_pares": 3031
+    },
+    "mas_bajo": {
+      "diana": "MAOA",
+      "efecto_diana_media": -0.8060852289199829,
+      "n_pares": 4701
+    }
   },
   "media_abs_suma_diana": 0.4942038059234619,
   "media_abs_suma_quimica": 2.7012367248535156,

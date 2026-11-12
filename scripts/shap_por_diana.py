@@ -48,8 +48,8 @@ TOP_POR_DIANA = 8        # descriptores que se guardan por punto en el gráfico 
 PUNTOS_POR_DIANA = 300
 
 
-def calcular() -> tuple[np.ndarray, np.ndarray, np.ndarray, list]:
-    """SHAP de todas las filas, cada una explicada por el modelo que no la vio. Devuelve (phi, X, diana, nombres)."""
+def calcular() -> tuple[np.ndarray, np.ndarray, list]:
+    """SHAP de todas las filas, cada una explicada por el modelo que no la vio. Devuelve (phi, X, nombres)."""
     d = datos_fase2()
     nombres = [str(n) for n in d["nombres"]]
     clase = np.where(np.isnan(d["clase"]), -1, d["clase"]).astype(int)
@@ -120,14 +120,25 @@ def main() -> None:
         pd.DataFrame(pts, columns=["diana", "fila", "columna", "shap", "valor"]).to_csv(
             c.carpeta / "puntos_por_diana.csv", index=False)
 
+        # el acuerdo del orden de columnas entre las dianas que se interpretan (la conclusión de esta corrida)
+        m = por[por["diana"].isin(grandes)].pivot(index="columna", columns="diana", values="media_abs")
+        rho = m.corr(method="spearman").to_numpy()[np.triu_indices(len(grandes), 1)]
+        interpretables = ef[ef["n_pares"] >= MIN_FILAS]
+
         # cifras para el texto
         tot_diana = float(diana_abs.mean())
         tot_quim = float(quim_abs.mean())
         res = {"pares": int(len(X)), "dianas": int(len(set(de_la_fila))), "dianas_con_filas_suficientes": len(grandes),
                "media_abs_suma_diana": tot_diana, "media_abs_suma_quimica": tot_quim,
                "parte_de_la_diana": tot_diana / (tot_diana + tot_quim),
-               "efecto_diana_mas_alto": ef.iloc[0][["diana", "efecto_diana_media"]].to_dict(),
-               "efecto_diana_mas_bajo": ef.iloc[-1][["diana", "efecto_diana_media"]].to_dict()}
+               # los extremos sobre las 26 y sobre las que se interpretan (500 pares o más): la cifra citable es la segunda
+               "efecto_diana_extremos_26": {"mas_alto": ef.iloc[0][["diana", "n_pares", "efecto_diana_media"]].to_dict(),
+                                            "mas_bajo": ef.iloc[-1][["diana", "n_pares", "efecto_diana_media"]].to_dict()},
+               "efecto_diana_extremos_interpretables": {
+                   "mas_alto": interpretables.iloc[0][["diana", "n_pares", "efecto_diana_media"]].to_dict(),
+                   "mas_bajo": interpretables.iloc[-1][["diana", "n_pares", "efecto_diana_media"]].to_dict()},
+               "acuerdo_entre_dianas": {"pares_de_dianas": int(len(rho)), "spearman_mediano": float(np.median(rho)),
+                                        "spearman_minimo": float(rho.min()), "spearman_maximo": float(rho.max())}}
         c.metricas(res)
         print(res)
 

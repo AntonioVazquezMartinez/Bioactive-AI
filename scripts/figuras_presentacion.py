@@ -513,13 +513,17 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
-DIANA_POR_DIANA = "shap-por-diana-fase2"
-# columnas de la figura por diana: las que pesan en casi todas, y las que más distinguen a una diana de las demás
+DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
+# Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
+# que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
+# Una regla automática por especificidad sale peor: lo más «específico» de las 201 columnas es ruido (`fr_quatN`, `fr_SH`,
+# con 0.002 y 0.000). `SMR_VSA7` se quitó: pesa 0.11 en LRRK2 y es rango 20 de SHAP y 13 de permutación en la corrida de
+# dos métodos, es decir una columna común y no el rasgo de una diana.
 COMUNES = [("BertzCT", "complejidad"), ("fr_halogen", "halógenos"), ("FpDensityMorgan3", "densidad de huella"),
            ("SlogP_VSA10", "lipofilia/superficie"), ("PEOE_VSA1", "carga/superficie")]
 PROPIAS = [("fr_hdrzone", "hidrazonas"), ("fr_ketone", "cetonas"), ("fr_prisulfonamd", "sulfonamidas"),
            ("fr_oxime", "oximas"), ("NumSpiroAtoms", "átomos espiro"), ("fr_COO", "ácidos carboxílicos"),
-           ("PEOE_VSA5", "carga/superficie 5"), ("SMR_VSA7", "refractividad 7"),
+           ("PEOE_VSA5", "carga/superficie 5"),
            ("fr_unbrch_alkane", "alcanos sin ramas"), ("NumAromaticHeterocycles", "heterociclos aromáticos")]
 
 
@@ -529,7 +533,7 @@ def fig_shap_por_diana(salida: Path | None = None, nombre: str = "shap_por_diana
     from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
 
     salida = salida or SALIDA
-    carpeta = sorted((RAIZ / "experimentos").glob(f"*{DIANA_POR_DIANA}"))[-1]
+    carpeta = DIANA_POR_DIANA
     ef = pd.read_csv(carpeta / "efecto_diana.csv")
     por = pd.read_csv(carpeta / "shap_por_diana.csv")
     ef = ef[ef["n_pares"] >= 500].sort_values("efecto_diana_media", ascending=False).reset_index(drop=True)
