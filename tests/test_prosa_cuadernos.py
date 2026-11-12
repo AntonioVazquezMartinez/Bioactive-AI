@@ -12,10 +12,17 @@ encontró alguien leyendo, no una comprobación:
    índice, ni en el TOC del sitio, ni da corte al deck.
 
 `CUBIERTOS` es la lista de cuadernos vigilados, como `CON_DECK` en
-`tests/test_armar_deck.py`. Están los tres del Avance 5. **Los demás quedan
-fuera porque arrastran de 1 a 20 celdas huérfanas de antes de que la regla
-existiera** (el 01 tiene 20 y el 02 quince), y meterlos pide primero ponerlos
-al día, no bajar la vara.
+`tests/test_armar_deck.py`. Están los tres del Avance 5 y el 06. **Los demás
+quedan fuera porque arrastran de 1 a 20 celdas huérfanas de antes de que la
+regla existiera** (el 01 tiene 20 y el 02 quince), y meterlos pide primero
+ponerlos al día, no bajar la vara.
+
+El 06 entra porque el defecto volvió a pasar justo donde nadie medía: el #320
+le añadió dos celdas de una línea con la entradilla en negrita (`**Fase 1,
+permeabilidad.**` y `**Fase 2, potencia.**`) y pasó el CI, porque el cuaderno
+que la patrocinadora recibe no estaba en esta lista. Se corrigieron en ese PR,
+y la que arrastraba de antes (`**Cómo leerla.**`) es ahora `### Cómo leer la
+tabla`, así que el 06 entra sin bajar la vara.
 
 Los dos techos son **trinquetes medidos, no objetivos**: se fijaron justo por
 encima del peor caso del día en que la prueba entró (párrafo 2,024 en el 05,
@@ -32,6 +39,7 @@ CUBIERTOS = (
     "05_Modelo_Final.ipynb",
     "05b_Ensambles_actividad.ipynb",
     "05c_Ensambles_permeabilidad_huellas.ipynb",
+    "06_Uso_de_los_modelos.ipynb",
 )
 
 TECHO_PARRAFO = 2_100
