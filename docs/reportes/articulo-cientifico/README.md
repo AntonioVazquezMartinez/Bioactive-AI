@@ -8,7 +8,7 @@ está pensado para circular fuera del curso: ante la patrocinadora, el Departame
 | archivo | qué es |
 |:--|:--|
 | `articulo-cientifico.tex` | el artículo, **se edita a mano** (ver abajo por qué) |
-| `articulo-cientifico.pdf` | el PDF compilado con `sh scripts/compilar_articulo.sh articulo-cientifico`; **todavía no existe** |
+| `articulo-cientifico.pdf` | el PDF compilado con `sh scripts/compilar_articulo.sh articulo-cientifico`; **no se versiona**, se compila cuando se necesita |
 | `figuras/` | enlace simbólico a `../articulo/figuras`: las mismas figuras, generadas con `scripts/figuras_articulo.py` |
 | `bibliografia.bib` | enlace simbólico a `docs/referencias/bibliografia.bib` |
 | `logo.jpeg` | enlace simbólico a `docs/reportes/logo-tec.jpeg`; el preámbulo no lo usa, porque un artículo de revista no lleva logo |
@@ -71,9 +71,10 @@ cd docs/reportes/articulo-cientifico && mkdir -p /tmp/subir && cp -RL articulo-c
 
 ## Pendiente
 
-- **Compilar el PDF y revisarlo página por página.** No se ha compilado ninguna vez: la máquina donde se escribió
-  no tiene pdfLaTeX ni el demonio de Docker levantado. Hasta que eso ocurra, la extensión del documento es una
-  estimación y nada garantiza que los flotantes caigan bien.
+- **Revisar el PDF página por página.** Ya compila: en la revisión del [#305](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/305)
+  salieron **9 páginas** a doble columna, tamaño carta, sin referencias sin resolver. Lo que sigue pendiente es
+  más fino y ninguna prueba lo cubre: dónde cayó cada flotante, si algún encabezado quedó huérfano al pie de una
+  columna y si la tabla de los once modelos cabe en una columna o conviene pasarla a `table*`.
 - **Decidir el destino.** Si es un congreso o una revista, su plantilla reemplaza al preámbulo de aquí.
 - **La afiliación de la patrocinadora y de la asesora** aparece como el Tec de Monterrey sin departamento;
   confirmar cómo quieren figurar y en qué orden de autoría.
