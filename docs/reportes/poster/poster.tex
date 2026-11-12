@@ -70,7 +70,7 @@
   \end{tcolorbox}\vspace{-0.3em}}
 
 \newcommand{\circulo}[2]{%
-  \tikz\node[circle,fill=olivesoft,minimum size=7cm,align=center,text width=6cm,text=olivedark]{{\serif\fontsize{46}{50}\selectfont #1}\\[2pt]{\sffamily\bfseries\fontsize{19}{23}\selectfont #2}};}
+  \tikz\node[circle,fill=olivesoft,minimum size=5.6cm,align=center,text width=4.8cm,text=olivedark]{{\serif\fontsize{40}{44}\selectfont #1}\\[2pt]{\sffamily\bfseries\fontsize{19}{23}\selectfont #2}};}
 
 \newcommand{\cuerpo}{\fontsize{24}{31}\selectfont}
 \newcommand{\pie}[1]{{\sffamily\fontsize{18}{22}\selectfont\color{muted}#1}}
@@ -126,10 +126,8 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
   \circulo{7,805}{compuestos con clase\\(fase 1)}\hspace{0.6cm}\circulo{202,647}{registros de actividad\\(fase 2)}
 \end{center}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
-  \item Fase 1: archivo curado de la patrocinadora (B3DB cruzado con COCONUT). 63.5\,\% son permeables.
-  \item Fase 2: ChEMBL, NPASS y CMAUP, con mediciones censuradas (``mayor que'').
-  \item Prueba reservada de 1,499 compuestos, fuera del entrenamiento.
-  \item Partición por andamio y esqueleto, nunca al azar.
+  \item Fase 1: archivo curado de la patrocinadora (B3DB y COCONUT); 63.5\,\% permeables. Fase 2: ChEMBL, NPASS y CMAUP, con mediciones censuradas.
+  \item Prueba reservada de 1,499 compuestos, fuera del entrenamiento. Partición por andamio y esqueleto, nunca al azar.
 \end{itemize}
 
 \vfill
@@ -137,7 +135,13 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
   \item Descriptores de RDKit, y huellas de Morgan en la fase 2.
   \item Once modelos comparados, de la regresión logística a los ensambles. En la fase 2, un modelo de supervivencia (AFT) que aprovecha las mediciones censuradas.
-  \item Atribuciones con dos métodos independientes.
+\end{itemize}
+
+\vfill
+\seccion{Qué pesa en cada fase}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
+  \item Con dos métodos de atribución independientes. Fase 1: los donadores de hidrógeno y otros cinco descriptores; TPSA no domina.
+  \item Fase 2: sobre todo la diana (MAOA, MAOB, DRD2, LRRK2, BCHE). Sin afirmar ningún mecanismo.
 \end{itemize}
 
 \end{minipage}\hfill
