@@ -31,8 +31,8 @@ La primera vez construye una imagen `tex-art` a partir de `texlive/texlive:lates
 Compila en una copia porque Docker no sigue los enlaces simbólicos de la bibliografía y el logo.
 
 **Estado de la última compilación:** sin errores ni advertencias de LaTeX ni de Biber. El PDF del repositorio
-tiene **19 páginas**: el cuerpo, del título a las referencias, ocupa **17** (la rúbrica pide 12 a 18) y los
-anexos son las dos últimas, que van aparte. Así que **queda una página de margen, no dos ni cinco**: una sección
+tiene **21 páginas**: el cuerpo, del título a las referencias, ocupa **17** (la rúbrica pide 12 a 18) y los
+anexos son las cuatro últimas, que van aparte. Así que **queda una página de margen, no dos ni cinco**: una sección
 nueva no entra, y lo que se añada conviene que sustituya. Esta cuenta se rehace en cada compilación y ya se quedó
 corta una vez, así que conviene verificarla en el PDF y no heredarla de aquí. **Y hay que decidirlo a conciencia:**
 si quien califica cuenta el PDF completo en lugar de contar hasta las referencias, ve 19 contra un máximo de 18.

@@ -93,7 +93,7 @@ cd docs/reportes/articulo-cientifico && mkdir -p /tmp/subir && cp -RL articulo-c
 
 - **Recompilar y empujar el PDF.** El que está en el repo se compiló del commit `e45da59`, **anterior** al
   arreglo de la tabla, así que todavía muestra `tab:modelos` desbordada. La revisión página por página ya está
-  hecha sobre él ([#309](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/309)): **9 páginas**, carta,
+  hecha sobre él ([#309](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/309)): **9 páginas, 10 con la figura por diana**, carta,
   dos columnas, sin referencias sin resolver; ningún flotante a más de una página de su mención; ningún encabezado
   huérfano; y un defecto real, la tabla de los once modelos, que terminaba en 312.9 pt con la columna en 296.1 y
   tocaba la figura de al lado. Se arregló con `\setlength{\tabcolsep}{4pt}`, que la deja en 295.0 sin mover el

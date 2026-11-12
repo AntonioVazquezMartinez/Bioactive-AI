@@ -375,10 +375,23 @@ def fig_atribucion() -> None:
     print("   f8_atribucion")
 
 
+def fig_por_diana() -> None:
+    """La fase 2 separada por diana (Figura C3 del Anexo F y figura del artículo científico).
+
+    Sale de `2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas y no una muestra.
+    """
+    sys.path.insert(0, str(RAIZ))
+    from scripts.figuras_presentacion import fig_shap_por_diana
+
+    with plt.rc_context(plt.rcParamsDefault):
+        fig_shap_por_diana(SALIDA, "f9_por_diana")
+    print("   f9_por_diana")
+
+
 def main() -> int:
     print("figuras ->", SALIDA)
     for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2,
-              fig_despliegue, fig_atribucion):
+              fig_despliegue, fig_atribucion, fig_por_diana):
         f()
     return 0
 
