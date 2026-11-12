@@ -179,7 +179,7 @@ Importa qué tan nueva es la molécula.
 :::
 
 ::: {.notes}
-**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
+**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. El esqueleto de conectividad es el primer bloque del InChIKey, la misma molécula ignorando la estereoquímica, así que dos estereoisómeros lo comparten; el andamio es lo contrario, los anillos y sus puentes sin las cadenas colgantes. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. La línea naranja es la prueba reservada, 0.793: cae entre los peldaños de 0.5 y 0.4, y es el puente a la siguiente. Si preguntan por otra definición de parecido: la forma de la caída cambia y el tamaño casi no, 0.419 con ECFP4 contra 0.434 con ECFP6.
 :::
 
 ## Pero no lo explica todo · fase 1 {.smaller}
@@ -189,7 +189,7 @@ Importa qué tan nueva es la molécula.
 La semejanza nos dice **qué compuestos serán más difíciles**, no **cuánto** va a caer el conjunto. Ordena, pero no calibra. Qué explica esos 0.097 no está medido: hay cuatro candidatos anotados.
 
 ::: {.notes}
-**Pame · 1 min.** La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas; con vecino de cinco en lugar de uno sale lo mismo (0.882). Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
+**Pame · 1 min.** La prueba no es más nueva, es más familiar: 0.414 de parecido medio al vecino contra 0.384 de la validación, y por encima en los cinco cuantiles, no solo en la media. La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas: 0.879 tal cual, 0.889 repesada, 0.793 real, brecha 0.097; con vecino de cinco en lugar de uno sale lo mismo (0.882, brecha 0.089). Dentro de la prueba los terciles van de 0.70 a 0.87, +0.178 con IC95 [+0.119, +0.238] remuestreando esqueletos. Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero; en los análogos estereoquímicos no se puede leer, porque el tercil más parecido no junta 20 casos de la clase minoritaria. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
 :::
 
 ## Enseñarle lo raro no ayuda · fase 1 {.smaller}
@@ -209,7 +209,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 :::
 
 ::: {.notes}
-**Pame · 1 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
+**Pame · 1 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001; tampoco lo explica la prevalencia del ajuste, que pasa de 65.0% a 64.5%. El 0.94 y el 0.68 son poblaciones distintas, y conviene decirlo si preguntan: el 0.94 son las 295 filas comunes que pasaron a la prueba y el 0.68 los compuestos raros que se quedaron en el núcleo de evaluación, con el mismo modelo y sin reentrenar. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
 :::
 
 ## El corte de 0.5 está mal puesto · fase 1 {.smaller}
@@ -222,7 +222,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Qué explica la caída:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
-**Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+**Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Tres límites: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase; el techo de 0.485 usa las etiquetas de la prueba, así que mide el margen y no un resultado; y las dos lecturas salen de una sola apertura de la prueba, con el corte congelado antes de abrirla y controles que reproducen el 0.3385 y el 0.793 ya registrados. Si aprietan con por qué elegir el corte en validación no sirve: el congelado sale 0.361 y la prueba necesitaba 0.747, y la guarda por mitades de grupos elige un corte por debajo de 0.5 en el 78 al 82% de los remuestreos, con ganancia media negativa (−0.002 a −0.003).
 :::
 
 ## Qué pesa en cada fase {.smaller}
