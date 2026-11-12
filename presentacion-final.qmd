@@ -253,13 +253,13 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 
 ![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
 
-- De 0.70 a 0.34: unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41); el orden cayó **12.6 puntos** de AUROC y el resto sigue **sin explicar**.
-- La confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
-- **Límites:** una sola prueba, un modelo por fase, la brecha sin explicar.
-- **Siguiente:** combinar las fases en un orden y una evaluación externa separada por esqueleto.
+- **Fase 1, permeabilidad:** de 0.70 a 0.34 de MCC; unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41), y el orden cayó **12.6 puntos** de AUROC, **sin explicar**.
+- **Fase 2, potencia:** acierta cuál de dos pares es más potente en el **72%**, pero lo domina ChEMBL; en los **117 pares de productos naturales** baja a **0.530**, bajo la línea base de peso y superficie polar (0.565). Para ellos, **no está demostrado**.
+- **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
+- **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado.
+**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado. En la fase 2, el 72% es el agregado y lo domina ChEMBL; lo que le importa a la patrocinadora son los productos naturales, y ahí el modelo queda por debajo de una línea base sencilla, con solo 117 pares para juzgarlo.
 :::
 
 # Respaldo
