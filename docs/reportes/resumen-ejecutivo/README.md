@@ -20,7 +20,7 @@ anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resume
 - **Beneficio medido:** `scripts/ahorro_por_priorizacion.py` lee las predicciones de la lectura de la prueba
   reservada que ya estaba versionada y calcula qué parte de los permeables queda al ensayar solo lo mejor
   ordenado. **No abre la prueba de nuevo.** Su corrida está en `experimentos/*ahorro-por-priorizacion-fase1`.
-- **Costos: son estimaciones del equipo, sin cotización**, y el resumen lo dice. La patrocinadora no responde, así
+- **Costos: son estimaciones del equipo, sin cotización**, y el resumen lo dice. La patrocinadora no respondió (a 12 de noviembre sigue sin responder), así
   que se dan estimaciones razonadas con su rango en lugar de esperar un dato. Los «ensayos» son pruebas de
   laboratorio in vitro, no ensayos clínicos. Confirmar un candidato cuesta **el compuesto más dos pruebas**
   (permeabilidad y actividad celular con curva de dosis y réplicas), en dos escenarios:

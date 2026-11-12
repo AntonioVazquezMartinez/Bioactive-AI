@@ -16,12 +16,36 @@ Rutas de lectura según de dónde vengas:
 - **Vienes de bioingeniería o química** → empieza por el [glosario](contenido/glosario.html), sección *Partición y evaluación*, y sigue con el [Avance 1](contenido/reportes/index.html), que es el análisis de los datos y no supone conocimiento de modelado.
 - **Vienes de inteligencia artificial** → empieza por el [glosario](contenido/glosario.html), secciones *Química y biología* y *Descriptores moleculares*, y sigue con [01 · Representaciones moleculares](contenido/referencias/01-representaciones-moleculares.html), que explica cómo se pasa de una molécula a una tabla.
 - **Quieres el panorama completo** → el [marco teórico](contenido/planteamiento/marco-teorico/index.html) desarrolla los fundamentos en tres partes.
-- **Quieres ver lo entregado** → los [reportes de cada avance](contenido/reportes/index.html).
+- **Quieres ver lo entregado** → la [entrega final](contenido/reportes/index.html) y los reportes de cada avance.
 :::
+
+## La entrega final
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+**Para usar y presentar**
+
+- [Presentación final](presentacion-final.html), con notas del orador
+- [Cuaderno: usar los modelos con tus compuestos](contenido/notebooks/06_Uso_de_los_modelos.html)
+- [Medir una representación nueva](contenido/medir-una-representacion.html)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+**Documentos (PDF)**
+
+- [Resumen ejecutivo](contenido/reportes/resumen-ejecutivo/resumen_ejecutivo.pdf)
+- [Artículo](contenido/reportes/articulo/articulo.pdf)
+- [Póster](contenido/reportes/poster/poster.pdf)
+:::
+
+:::
+
+El proyecto termina con esta entrega: la continuidad es autónoma de la patrocinadora y su grupo ([C.8](contenido/decisiones.html#dc-8)).
 
 ## El problema
 
-A partir del SMILES de un compuesto, el proyecto resuelve dos preguntas encadenadas:
+A partir del SMILES de un compuesto, el proyecto resuelve dos preguntas **en paralelo**:
 
 ::: {.grid}
 
@@ -55,24 +79,28 @@ flowchart LR
     C --> D
     D --> E["Etapa 1<br/>¿cruza la barrera?"]
     D --> F["Etapa 2<br/>¿tiene actividad?"]
-    E --> G["Priorización<br/>con atribución a fragmentos"]
+    E --> G["Evidencia para priorizar<br/>cada fase por separado"]
     F --> G
 ```
 
-Las dos etapas son **independientes**: la primera no filtra a la segunda, sus salidas se combinan al final. Cada término del diagrama está en el [glosario](contenido/glosario.html).
+Las dos etapas son **independientes**: la primera no filtra a la segunda, y sus salidas se leen como evidencia paralela. Combinarlas en un solo orden sigue pendiente ([C.3](contenido/decisiones.html#dc-3)). Cada término del diagrama está en el [glosario](contenido/glosario.html).
 
 ## Estado
 
 | Componente | Estado |
 |---|---|
-| Marco teórico | Borrador completo, 10 capítulos, 208 referencias |
+| Marco teórico | Completo, en tres partes; las referencias están en la [bibliografía](bibliografia.html) |
 | Investigación de referencia | 5 documentos, 7 ramas de investigación |
 | Datos etapa 1 | Conjunto de la patrocinadora, auditado en el Avance 1 |
 | Datos etapa 2 | Entregados el 25 sep: 202,647 registros, 39 dianas · [EDA ejecutado](contenido/notebooks/01b_EDA_actividad_snc.html) |
 | EDA de permeabilidad (Avance 1) | Entregado el 4 oct |
 | Ingeniería de características (Avance 2) | Entregado el 11 oct · notebook, matriz de 151 columnas y reporte; la fase 2 tiene su propia matriz (70,384 pares) y su prueba reservada |
 | Modelos base (Avance 3) | Entregado el 18 oct · [notebook](contenido/notebooks/03_Baseline.html) con el modelo de referencia de las dos fases |
-| Modelos alternativos (Avance 4) | En curso · vence el 25 oct |
+| Modelos alternativos (Avance 4) | Entregado el 25 oct · [notebook](contenido/notebooks/04_Models.html) con seis familias en las dos fases |
+| Modelo final (Avance 5) | Entregado el 1 nov · tres notebooks, con la prueba reservada tomada una vez por fase: [fase 1](contenido/notebooks/05_Modelo_Final.html), [fase 2](contenido/notebooks/05b_Ensambles_actividad.html) |
+| Presentación final | [Presentación final](presentacion-final.html), 13 nov · 15 minutos y 10 de preguntas |
+| Cuaderno para la patrocinadora | [Usar los modelos con tus compuestos](contenido/notebooks/06_Uso_de_los_modelos.html) |
+| Resumen ejecutivo, artículo y póster | [Todas las entregas](contenido/reportes/index.html) · entrega final de noviembre |
 
 ## Decisiones técnicas
 

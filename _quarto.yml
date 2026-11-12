@@ -28,6 +28,7 @@ project:
     - contenido/notebooks/05_Modelo_Final.ipynb
     - contenido/notebooks/05b_Ensambles_actividad.ipynb
     - contenido/notebooks/05c_Ensambles_permeabilidad_huellas.ipynb
+    - contenido/notebooks/06_Uso_de_los_modelos.ipynb
 
 website:
   title: "Bioactive AI"
@@ -46,64 +47,37 @@ website:
     left:
       - href: index.qmd
         text: Inicio
-      - text: Proyecto
-        menu:
-          - href: contenido/guia-del-proyecto.md
-            text: Guía del proyecto
-          - href: contenido/medir-una-representacion.md
-            text: Medir una representación
-          - href: contenido/glosario.md
-            text: Glosario
-          - href: presentacion.qmd
-            text: Presentación
-          - href: visualizador.qmd
-            text: Visualizador
-      - text: Fundamentos
-        menu:
-          - href: contenido/fundamentos-desde-cero.md
-            text: Desde cero
-          - text: "---"
-          - text: "Marco teórico"
-          - href: contenido/planteamiento/marco-teorico/index.md
-            text: Presentación
-          - href: contenido/planteamiento/marco-teorico/01-biologia.md
-            text: "1 · Biología de la barrera y de la enfermedad"
-          - href: contenido/planteamiento/marco-teorico/02-metodos-computacionales.md
-            text: "2 · Métodos computacionales"
-          - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
-            text: "3 · Modelado, explicabilidad y hueco"
-          - text: "---"
-          - href: contenido/referencias/index.qmd
-            text: "Los cinco documentos de investigación"
-      - text: Datos
-        menu:
-          - href: contenido/datos.md
-            text: Procedencia y licencias
-          - href: contenido/datos-contenido.qmd
-            text: Contenido, defectos y linaje
-          - href: contenido/diccionario-matriz.md
-            text: Diccionario de la matriz
-      - text: Ruta
-        menu:
-          - href: contenido/recorrido-del-dato.md
-            text: De un SMILES a una lista de candidatos
-          - href: contenido/decisiones.md
-            text: La ruta del proyecto
-          - href: contenido/variable-objetivo-fase2.md
-            text: Las variables objetivo
-          # `consulta.qmd` se sigue construyendo y su URL sirve, pero sale del
-          # menú: de sus siete preguntas, cinco ya las contestó —la 1 y la 5 en
-          # la reunión del 15 de octubre, la 4 y la 7 en su correo del 25, y la
-          # 2 dejó de aplicar al decidir la 2.8—. Enlazarla ahí la invitaría a
-          # contestar lo que ya contestó. Vuelve al menú cuando se pode a las
-          # dos que siguen vivas, la brecha de los naturales (1.6) y la forma
-          # del modelo (2.2).
-          - href: contenido/referencias/index.qmd
-            text: Qué investigación sustenta cada una
-      - text: Entregables
+      - text: Entrega final
         menu:
           - href: contenido/reportes/index.md
-            text: Todos los entregables
+            text: Todas las entregas
+            icon: collection
+          - text: "---"
+          - text: "Para usar y presentar"
+          - href: presentacion-final.qmd
+            text: Presentación final
+            icon: easel
+          - href: contenido/notebooks/06_Uso_de_los_modelos.ipynb
+            text: "Cuaderno: usar los modelos con tus compuestos"
+            icon: journal-code
+          - href: contenido/medir-una-representacion.md
+            text: Medir una representación nueva
+            icon: rulers
+          - text: "---"
+          - text: "Documentos (PDF)"
+          - href: contenido/reportes/resumen-ejecutivo/resumen_ejecutivo.pdf
+            text: Resumen ejecutivo
+            icon: file-earmark-pdf
+          - href: contenido/reportes/articulo/articulo.pdf
+            text: Artículo
+            icon: file-earmark-pdf
+          - href: contenido/reportes/poster/poster.pdf
+            text: Póster
+            icon: file-earmark-pdf
+      - text: Avances
+        menu:
+          - href: contenido/reportes/index.md
+            text: Índice de avances y entregas
           - text: "---"
           - text: "Avance 0 · Propuesta"
           - href: contenido/reportes/avance-0/Avance0.7.pdf
@@ -148,6 +122,60 @@ website:
             text: Análisis · El modelo final de la fase 2 y sus ensambles
           - href: contenido/notebooks/05c_Ensambles_permeabilidad_huellas.ipynb
             text: Análisis · Qué añaden las huellas a los ensambles de la fase 1
+      - text: Proyecto
+        menu:
+          - href: contenido/guia-del-proyecto.md
+            text: Guía del proyecto
+          - href: contenido/medir-una-representacion.md
+            text: Medir una representación
+          - href: contenido/glosario.md
+            text: Glosario
+          - href: presentacion.qmd
+            text: Presentación de avance (octubre)
+          - href: visualizador.qmd
+            text: Visualizador
+      - text: Fundamentos
+        menu:
+          - href: contenido/fundamentos-desde-cero.md
+            text: Desde cero
+          - text: "---"
+          - text: "Marco teórico"
+          - href: contenido/planteamiento/marco-teorico/index.md
+            text: Presentación
+          - href: contenido/planteamiento/marco-teorico/01-biologia.md
+            text: "1 · Biología de la barrera y de la enfermedad"
+          - href: contenido/planteamiento/marco-teorico/02-metodos-computacionales.md
+            text: "2 · Métodos computacionales"
+          - href: contenido/planteamiento/marco-teorico/03-modelado-y-explicabilidad.md
+            text: "3 · Modelado, explicabilidad y hueco"
+          - text: "---"
+          - href: contenido/referencias/index.qmd
+            text: "Los cinco documentos de investigación"
+      - text: Datos
+        menu:
+          - href: contenido/datos.md
+            text: Procedencia y licencias
+          - href: contenido/datos-contenido.qmd
+            text: Contenido, defectos y linaje
+          - href: contenido/diccionario-matriz.md
+            text: Diccionario de la matriz
+      - text: Ruta
+        menu:
+          - href: contenido/recorrido-del-dato.md
+            text: De un SMILES a una lista de candidatos
+          - href: contenido/decisiones.md
+            text: La ruta del proyecto
+          - href: contenido/variable-objetivo-fase2.md
+            text: Las variables objetivo
+          # `consulta.qmd` se sigue construyendo y su URL sirve, pero sale del
+          # menú: de sus siete preguntas, cinco ya las contestó —la 1 y la 5 en
+          # la reunión del 15 de octubre, la 4 y la 7 en su correo del 25, y la
+          # 2 dejó de aplicar al decidir la 2.8—. Enlazarla ahí la invitaría a
+          # contestar lo que ya contestó. Vuelve al menú cuando se pode a las
+          # dos que siguen vivas, la brecha de los naturales (1.6) y la forma
+          # del modelo (2.2).
+          - href: contenido/referencias/index.qmd
+            text: Qué investigación sustenta cada una
       - href: bibliografia.qmd
         text: Bibliografía
     right:

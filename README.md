@@ -27,36 +27,19 @@ Para mantener el orden y la reproducibilidad, los documentos y el código están
 
 ```text
 bioactive-ai/
-│
-├── data/                   # Carpeta para almacenar los datos (ignorar en git los datos crudos/pesados)
-│   ├── raw/                # Datos originales sin procesar
-│   ├── processed/          # Datos limpios y listos para modelado
-│   └── external/           # Datos de fuentes externas (LipidMaps, PubChem, etc.)
-│
-├── notebooks/              # Jupyter Notebooks para exploración y prototipado
-│   ├── 01_EDA.ipynb        # Análisis Exploratorio de Datos (Avance 1)
-│   ├── 01b_EDA_actividad_snc.ipynb   # EDA de la actividad, etapa 2 (acompaña al Avance 1)
-│   ├── 02_Feature_Eng.ipynb# Ingeniería de características, permeabilidad (Avance 2)
-│   ├── 02b_Feature_Eng_actividad.ipynb # Matriz de pares y partición, actividad (Avance 2)
-│   ├── 03_Baseline.ipynb   # Modelo de referencia de las dos fases (Avance 3)
-│   └── 04_Models.ipynb     # Modelos alternativos y evaluación (Avance 4 y 5)
-│
-├── src/                    # Código fuente del proyecto (scripts de Python)
-│   ├── data_prep/          # Scripts para limpieza y transformación
-│   ├── features/           # Scripts para generación de descriptores químicos
-│   └── models/             # Scripts de entrenamiento y evaluación
-│
-├── models/                 # Modelos entrenados y serializados (.pkl, .h5, etc.)
-│
-├── docs/                   # Documentación, entregables y presentaciones
-│   ├── planteamiento/      # Entregables de las semanas 1 y 2
-│   ├── reportes/           # Resumen ejecutivo y producto de difusión
-│   └── referencias/        # Literatura médica y artículos base
-│
-├── .gitignore              # Archivos y carpetas a ignorar (ej. datos pesados, pycache)
-├── requirements.txt        # Dependencias necesarias para ejecutar el proyecto
-└── README.md               # Este archivo
+├── data/           # datos: raw/ (originales), external/ (de terceros y de la patrocinadora), processed/ (listos para modelar)
+├── notebooks/      # un número es un avance (01 a 05) y el 06 es el cuaderno para la patrocinadora; una letra es un análisis compañero
+├── src/            # código reutilizable: data_prep/, features/, models/, evaluation/, inferencia.py y tracking.py
+├── scripts/        # experimentos, figuras, compilación de los documentos y verificaciones
+├── tests/          # pruebas: cifras repetidas, cuadernos, documentos y datos
+├── models/         # los dos modelos finales (models/finales/) y lo que hace falta para usarlos sin los datos
+├── experimentos/   # una carpeta por corrida registrada: parámetros, entorno y métricas
+├── docs/           # documentación, decisiones, reportes y literatura
+└── presentacion-final.qmd, index.qmd, _quarto.yml   # el sitio y la presentación final
 ```
+
+No se enumeran aquí los archivos de cada carpeta, porque la lista envejece cada semana: se ven con `ls` y el sitio publica el
+índice de [entregas y avances](https://antoniovazquezmartinez.github.io/Bioactive-AI/contenido/reportes/index.html).
 
 ---
 
