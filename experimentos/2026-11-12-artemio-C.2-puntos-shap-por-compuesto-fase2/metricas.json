@@ -1,0 +1,19 @@
+{
+  "fase2": {
+    "columnas": [
+      "BertzCT",
+      "diana:MAOA",
+      "diana:MAOB",
+      "fr_halogen",
+      "SMR_VSA3",
+      "FpDensityMorgan3",
+      "diana:DRD2",
+      "SlogP_VSA10",
+      "fr_Ar_N",
+      "diana:LRRK2",
+      "MolLogP",
+      "PEOE_VSA1"
+    ],
+    "pares_compuesto_diana": 3000
+  }
+}

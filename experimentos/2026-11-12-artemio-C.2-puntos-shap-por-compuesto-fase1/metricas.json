@@ -1,0 +1,19 @@
+{
+  "fase1": {
+    "columnas": [
+      "fr_lactam",
+      "qed",
+      "NumAliphaticCarbocycles",
+      "NumHDonors",
+      "EState_VSA10",
+      "fr_COO",
+      "SlogP_VSA2",
+      "VSA_EState3",
+      "PEOE_VSA9",
+      "NumAtomStereoCenters",
+      "fr_Ar_OH",
+      "TPSA"
+    ],
+    "compuestos": 300
+  }
+}

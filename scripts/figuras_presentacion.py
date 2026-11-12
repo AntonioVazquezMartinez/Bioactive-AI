@@ -1,17 +1,27 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son tres, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son siete, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
 - `huella.svg`: cómo se vuelve bits una molécula y qué es el Tanimoto.
 - `dificultad.svg`: la semejanza ordena pero no explica el nivel. Sale de las corridas
   `2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad` y `…-octava-lectura-origen-similitud`.
-- `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
-  `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
 - `corte.svg`: dónde cae el corte y cuánto se declara permeable con cada uno. Sale de
   `experimentos/2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba`.
-- Las dos se escriben en `docs/reportes/presentacion/figuras/`.
+- `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
+  `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
+- `importancias.svg`: qué columnas pesan en cada fase, en un gráfico de puntos de SHAP: un punto por fila,
+  su posición es el efecto de la columna en la predicción y su color el valor de la columna. **Los puntos salen de
+  `experimentos/2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2`** (`scripts/puntos_shap.py`):
+  300 compuestos en la fase 1 y 3,000 **pares compuesto-diana** (una muestra) en la 2. Las dos corridas de atribución
+  del 4 de noviembre (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
+  `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`) solo aportan la marca «confirmada por permutación»,
+  y los confirmados van primero.
+- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
+  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El naranja marca la similitud de **esa fase**
+  por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
 figuras están versionadas.
@@ -38,6 +48,7 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 from src.data_prep.splits import andamio_murcko, esqueleto_conectividad  # noqa: E402
+from src.inferencia import UMBRAL_EXTRAPOLACION  # noqa: E402
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -47,6 +58,9 @@ CORTES = RAIZ / "experimentos" / "2026-11-08-ingrid-C.5-umbral-en-validacion-con
 DIFICULTAD = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad" / "metricas.json"
 TERCILES = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-octava-lectura-origen-similitud" / "metricas.json"
 EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-propia" / "metricas.json"
+ATRIB1 = RAIZ / "experimentos" / "2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos"
+ATRIB2 = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion" / "importancias.csv"
+RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
 MORFINA = "CN1CCC23c4c5ccc(O)c4O[C@@H]2[C@@H](O)C=C[C@@H]3C1C5"
@@ -354,6 +368,147 @@ def fig_medir() -> dict:
     return {"tres": tres["dif_media"], "ruido": ruido["dif_media"]}
 
 
+# nombre en español y, aparte, el código de RDKit con el que aparece en el cuaderno
+NOMBRES = {
+    # fase 1
+    "fr_lactam": ("Lactamas", "fr_lactam"),
+    "qed": ("Parecido a un fármaco", "qed"),
+    "NumAliphaticCarbocycles": ("Anillos de carbono no aromáticos", "NumAliphaticCarbocycles"),
+    "NumHDonors": ("Donadores de hidrógeno", "NumHDonors"),
+    "EState_VSA10": ("Estado electrónico y superficie, tramo 10", "EState_VSA10"),
+    "VSA_EState3": ("Estado electrónico y superficie, tramo 3", "VSA_EState3"),
+    "fr_COO": ("Ácidos carboxílicos", "fr_COO"),
+    "NumAtomStereoCenters": ("Centros estereogénicos", "NumAtomStereoCenters"),
+    "fr_Ar_OH": ("Hidroxilos aromáticos", "fr_Ar_OH"),
+    "fr_ether": ("Éteres", "fr_ether"),
+    "MolLogP": ("Lipofilia", "MolLogP"),
+    "TPSA": ("Superficie polar", "TPSA"),
+    # fase 2
+    "BertzCT": ("Complejidad topológica", "BertzCT"),
+    "diana:MAOA": ("Diana MAOA", "monoamino oxidasa A"),
+    "diana:MAOB": ("Diana MAOB", "monoamino oxidasa B"),
+    "diana:DRD2": ("Diana DRD2", "receptor de dopamina D2"),
+    "diana:LRRK2": ("Diana LRRK2", "quinasa LRRK2"),
+    "fr_halogen": ("Halógenos", "fr_halogen"),
+    "SMR_VSA3": ("Refractividad y superficie", "SMR_VSA3"),
+    "FpDensityMorgan3": ("Densidad de la huella Morgan", "FpDensityMorgan3"),
+    "SlogP_VSA10": ("Lipofilia y superficie", "SlogP_VSA10"),
+    "fr_Ar_N": ("Nitrógenos aromáticos", "fr_Ar_N"),
+    "PEOE_VSA1": ("Carga parcial y superficie", "PEOE_VSA1"),
+}
+
+
+def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6) -> list:
+    """Gráfico de puntos de SHAP: una fila por columna, un punto por compuesto, color = valor de la columna."""
+    import numpy as np
+    from matplotlib.colors import LinearSegmentedColormap
+
+    mapa = LinearSegmentedColormap.from_list("bajo_alto", [AZUL, "#e4e4e4", NARANJA])
+    por_shap = list(d.assign(a=d["shap"].abs()).groupby("columna")["a"].mean().sort_values(ascending=False).index)
+    orden = ([c for c in por_shap if c in confirmadas] + [c for c in por_shap if c not in confirmadas])[:n]
+    rng = np.random.default_rng(0)
+    for y, col in enumerate(orden):
+        f = d[d["columna"] == col]
+        v = f["valor"].to_numpy(float)
+        lo, hi = np.percentile(v, 2), np.percentile(v, 98)
+        color = np.clip((v - lo) / (hi - lo), 0, 1) if hi > lo else np.full(len(v), 0.0)
+        ax.scatter(f["shap"], y + rng.uniform(-0.3, 0.3, len(f)), c=color, cmap=mapa, s=11, alpha=0.9,
+                   linewidths=0, vmin=0, vmax=1)
+        ax.axhline(y + 0.5, color="#efefef", lw=0.8)
+    ax.axvline(0, color="#333333", lw=1)
+    ax.set_yticks([])
+    ax.set_ylim(len(orden) - 0.45, -0.55)
+    ax.set_xlabel(etiqueta_x, fontsize=10.5, color="#333333")
+    ax.tick_params(axis="x", labelsize=9.5, colors=GRIS)
+    for lado in ("left", "right", "top"):
+        ax.spines[lado].set_visible(False)
+    ax.spines["bottom"].set_color("#cccccc")
+    ax.set_title(titulo, fontsize=13.5, fontweight="bold", color=AZUL, loc="left", pad=30)
+    # etiquetas: nombre en español y, debajo, el código; a la derecha, si la permutación lo confirma
+    for y, col in enumerate(orden):
+        nombre, codigo = NOMBRES.get(col, (col, ""))
+        ax.text(-0.02, y - 0.1, nombre, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                fontsize=11, color="#111111", fontweight="bold")
+        ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                fontsize=8.6, color=GRIS)
+        ok = col in confirmadas
+        ax.text(1.02, y, "confirmada por\npermutación" if ok else "solo SHAP", transform=ax.get_yaxis_transform(),
+                ha="left", va="center", fontsize=8.8, color=AZUL if ok else "#a0a0a0", linespacing=1.1)
+    return orden
+
+
+def fig_importancias() -> dict:
+    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma."""
+    from matplotlib.cm import ScalarMappable
+    from matplotlib.colors import LinearSegmentedColormap, Normalize
+
+    carpetas = {f: sorted((RAIZ / "experimentos").glob(f"*puntos-shap-por-compuesto-{f}"))[-1] for f in ("fase1", "fase2")}
+    d1 = pd.read_csv(carpetas["fase1"] / "shap_fase1.csv")
+    d2 = pd.read_csv(carpetas["fase2"] / "shap_fase2.csv")
+    a1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv")
+    conf1 = set(a1[(a1["r_perm"] <= 15) & (a1["r_shap"] <= 15)]["caracteristica"])
+    a2 = pd.read_csv(ATRIB2)
+    conf2 = set(a2[(a2["rango_shap"] <= 15) & (a2["rango_permutacion"] <= 15)]["columna"])
+
+    fig, ejes = plt.subplots(1, 2, figsize=(11.8, 4.9), gridspec_kw={"wspace": 1.55})
+    o1 = _puntos(ejes[0], d1, conf1, "Fase 1 · permeabilidad",
+                 "efecto en la probabilidad de cruzar la barrera")
+    o2 = _puntos(ejes[1], d2, conf2, "Fase 2 · potencia",
+                 "efecto en la potencia predicha (pActividad)")
+    for ax in ejes:   # guía de lectura dentro de la figura, bajo el eje
+        x0, x1 = ax.get_xlim()
+        ax.text(0, 1.015, "← baja la predicción", transform=ax.get_xaxis_transform(), ha="right", va="bottom",
+                fontsize=8.8, color=GRIS)
+        ax.text(0, 1.015, "  la sube →", transform=ax.get_xaxis_transform(), ha="left", va="bottom",
+                fontsize=8.8, color=GRIS)
+    mapa = LinearSegmentedColormap.from_list("bajo_alto", [AZUL, "#e4e4e4", NARANJA])
+    barra = fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=mapa), ax=ejes, orientation="horizontal",
+                         fraction=0.03, pad=0.17, aspect=45, shrink=0.28)
+    barra.set_ticks([0, 1])
+    barra.set_ticklabels(["valor bajo de la columna", "valor alto"], fontsize=9.5)
+    barra.outline.set_visible(False)
+    fig.text(0.5, -0.03, "Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
+             "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
+             "métodos van primero.", fontsize=9.6, color=GRIS, ha="center")
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"fase1": o1, "fase2": o2}
+
+
+def fig_ranking() -> dict:
+    """El ranking por fase de los compuestos de ejemplo del cuaderno: una lista por fase, con su similitud."""
+    f1 = pd.read_csv(RANKING / "ranking_fase1.csv")
+    f2 = pd.read_csv(RANKING / "ranking_fase2.csv")
+    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.75})
+    paneles = (
+        (ejes[0], f1, "p_bbb_mas", "similitud_fase1", "Fase 1 · probabilidad de cruzar la barrera", 1.0,
+         lambda r: f"{r['p_bbb_mas']:.2f}"),
+        (ejes[1], f2, "pActividad_max", "similitud_fase2", "Fase 2 · potencia máxima predicha (pActividad)", 8.0,
+         lambda r: f"{r['pActividad_max']:.1f}  ({r['mejor_diana']})"),
+    )
+    for ax, d, col, sim, titulo, tope, etiqueta in paneles:
+        y = range(len(d))
+        colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in d[sim]]
+        ax.barh(y, d[col], color=colores, height=0.62)
+        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
+            ax.text(fila[col] + tope * 0.015, yi, etiqueta(fila), va="center", fontsize=9, color=GRIS)
+        ax.set_yticks(list(y), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
+        ax.invert_yaxis()
+        ax.set_xlim(0, tope * 1.45)
+        ax.set_xticks([])
+        for lado in ("left", "right", "top", "bottom"):
+            ax.spines[lado].set_visible(False)
+        ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
+    fig.text(0.01, -0.03, "En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase (aviso de extrapolación). "
+             "Son compuestos conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena "
+             "por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
+
+
 if __name__ == "__main__":
     SALIDA.mkdir(parents=True, exist_ok=True)
     familia = cifras_de_la_familia()
@@ -363,4 +518,6 @@ if __name__ == "__main__":
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
     print("medir:", fig_medir())
+    print("importancias:", fig_importancias())
+    print("ranking:", fig_ranking())
     print("escritas en", SALIDA)
