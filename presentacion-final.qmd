@@ -60,7 +60,7 @@ Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos*
 **Antonio · 1.5 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
 :::
 
-## El gancho
+## Dos números que no cuadran
 
 ::: {.columns}
 ::: {.column width="45%"}
@@ -83,7 +83,7 @@ MCC
 :::
 
 El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
-Fase 1, permeabilidad, con el modelo que entregamos.
+Fase 1, permeabilidad, con el modelo final.
 
 **¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
 
@@ -141,7 +141,7 @@ Fase 1, permeabilidad, con el modelo que entregamos.
 - Entre ellos hay solo **4.2 puntos** de MCC.
 - El mejor iguala el punto de partida y no lo supera: MCC 0.7017 contra 0.70. El **lift es cero**.
 
-::: {.callout-tip title="Pista 1"}
+::: {.callout-tip title="Lo que descarta"}
 No es el modelo.
 :::
 
@@ -173,7 +173,7 @@ En azul el `svm_rbf`, el modelo que entregamos; en gris los otros cinco.
 
 La fase 2 hace lo mismo en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
 
-::: {.callout-tip title="Pista 2"}
+::: {.callout-tip title="Lo que apunta"}
 Importa qué tan nueva es la molécula.
 :::
 
@@ -203,22 +203,22 @@ Tres formas de darle más química rara. Las tres con la **regla escrita antes d
 
 Y de paso, lo más útil: con el mismo modelo y sin reentrenar, los compuestos **comunes** se miden con AUROC **0.94** y los **raros** con **0.68**.
 
-::: {.callout-tip title="Pista 3"}
-El problema no es cuánta química rara ve el modelo. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
+::: {.callout-tip title="Lo que descarta"}
+Ninguna de las tres formas cerró la brecha, con un solo modelo. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 :::
 
 ::: {.notes}
 **Pame · 2.5 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
 :::
 
-## El giro: el corte de 0.5 · fase 1 {.smaller}
+## El corte de 0.5 declara permeable al 79%, y lo real es 57% · fase 1 {.smaller}
 
 ![](docs/reportes/presentacion/figuras/corte.svg){fig-alt="Dónde cae cada corte y qué porcentaje de la prueba declara permeable"}
 
 - Igualar la tasa declarada a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba. Y supusimos 65% cuando era 57%: aguanta el error.
 - Elegir el corte con validación **no sirve** (+0.0065): lo mueve hacia abajo, y la prueba lo necesitaba hacia arriba.
 
-**Respuesta al gancho:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
+**Qué explica la caída:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
 **Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
@@ -254,8 +254,8 @@ Es Python, no una interfaz; mide clasificación.
 
 ![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
 
+- De 0.70 a 0.34: unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41); el orden cayó **12.6 puntos** de AUROC y el resto sigue **sin explicar**.
 - La confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
-- Lo único que recuperó algo fue el **corte**, que se puede ajustar: MCC de 0.34 a 0.41.
 - **Límites:** una sola prueba, un modelo por fase, la brecha sin explicar.
 - **Siguiente:** combinar las fases en un orden y una evaluación externa separada por esqueleto.
 
@@ -288,3 +288,26 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 - 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación.
 - Con 117 pares no hay potencia: **ni refuta ni confirma**.
+
+## Cómo preparamos las columnas y qué significan las banderas {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Las columnas
+
+- Probamos **tres transformaciones** (estandarización, min–max y Yeo-Johnson): salen las mismas **151** columnas con las tres, porque la selección se hace sobre los valores crudos.
+- Se quitan las **casi constantes** (un valor domina) y las **redundantes** (correlación de Spearman muy alta).
+- Las huellas son bits que marcan fragmentos; el vocabulario se reaprende **dentro de cada pliegue**.
+:::
+::: {.column width="50%"}
+### Las banderas
+
+- **Origen**, del cruce con COCONUT: *natural exacto* (coincidencia exacta), *análogo estereoquímico* (mismo esqueleto) y *sin equivalente natural*.
+- **Activo**: potencia a 10 µM o menos. Guardamos el **intervalo de potencia**, no la etiqueta, y las mediciones censuradas cuentan.
+- **Confiabilidad A a D** del archivo: sirve para estratificar, **nunca para excluir**.
+:::
+:::
+
+::: {.notes}
+**Respaldo.** Para quien pregunte cómo se llega de la molécula a la columna y qué quiere decir cada etiqueta. El origen se usa en los resultados (la ventaja por tercil de rareza se reporta por origen). El corte de 10 µM viene del cribado original y es una decisión que puede cambiar, por eso se guarda el intervalo.
+:::
