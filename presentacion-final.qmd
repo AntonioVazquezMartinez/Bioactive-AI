@@ -1,5 +1,6 @@
 ---
-# Presentación final, 30 minutos: 14 diapositivas (25 min) y 5 de preguntas; dos de respaldo al final.
+# Presentación final: 15 minutos de charla (14 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
 title: "Bioactive"
@@ -30,7 +31,7 @@ format:
 - Lo que producimos es *evidencia para priorizar*, no una decisión automática.
 
 ::: {.notes}
-**Antonio · 1 min.** Un compuesto natural solo sirve si cumple las dos cosas. La salida es evidencia para priorizar, no una decisión automática.
+**Antonio · 0.5 min.** Un compuesto natural solo sirve si cumple las dos cosas. La salida es evidencia para priorizar, no una decisión automática.
 :::
 
 ## Dos preguntas, en paralelo
@@ -57,10 +58,10 @@ Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos*
 :::
 
 ::: {.notes}
-**Antonio · 1.5 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
+**Antonio · 0.75 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
 :::
 
-## El gancho
+## Dos números que no cuadran
 
 ::: {.columns}
 ::: {.column width="45%"}
@@ -83,12 +84,12 @@ MCC
 :::
 
 El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
-Fase 1, permeabilidad, con el modelo que entregamos.
+Fase 1, permeabilidad, con el modelo final.
 
 **¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
 
 ::: {.notes}
-**Antonio · 1 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo es una máquina de vectores de soporte, `svm_rbf`.
+**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo es una máquina de vectores de soporte, `svm_rbf`.
 :::
 
 ## Los datos {.smaller}
@@ -109,7 +110,7 @@ Fase 1, permeabilidad, con el modelo que entregamos.
 :::
 
 ::: {.notes}
-**Antonio · 1 min.** Los datos de la fase 1 vienen de un archivo curado que la patrocinadora ya nos entregó cruzado con COCONUT, una base de productos naturales, y ese cruce es lo que permite separar los naturales de los sintéticos; los de la fase 2, de tres fuentes etiquetadas con las mismas columnas. El 63.5% cuenta el archivo completo: las 6,306 filas de ajuste son 65.0% y la prueba reservada 57.3%, y esa diferencia es parte del argumento de la diapositiva 10.
+**Antonio · 0.75 min.** Fase 1: un archivo curado de la patrocinadora, cruzado con COCONUT, que permite separar naturales de sintéticos. Fase 2: tres fuentes con las mismas columnas. El 63.5% es el archivo completo: el ajuste tiene 65.0% y la prueba 57.3%, y esa diferencia es parte del argumento del corte.
 :::
 
 ## Cómo se vuelve números una molécula {.smaller}
@@ -120,7 +121,7 @@ Fase 1, permeabilidad, con el modelo que entregamos.
 - **Huellas:** las medimos aparte, y ayudan en la fase 2 y en la fase 1 no (respaldo). Los dos modelos finales corren sobre descriptores; en la fase 2 se suma la diana.
 
 ::: {.notes}
-**Antonio · 1.5 min.** El orden importa: primero se eligieron las columnas sobre valores crudos, porque en el Avance 2 la primera selección se hizo sobre una matriz ya transformada y cambiar la transformación obligaba a repetirla. El mismo juego de 151 columnas sale con las tres transformaciones. Las huellas que se midieron son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue; las Morgan de la figura son las que usamos para medir parecido.
+**Antonio · 0.75 min.** Primero se eligieron las columnas sobre valores crudos, porque cambiar la transformación obligaba a repetir la selección: salen las mismas 151 con las tres. Las huellas medidas son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue.
 :::
 
 ## Cómo medimos sin engañarnos {.smaller}
@@ -132,7 +133,7 @@ Fase 1, permeabilidad, con el modelo que entregamos.
 - Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
-**Antonio · 1.5 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Lo del 7 a 13 es de la literatura; lo nuestro es la escalera de la diapositiva 7, donde el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
+**Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Lo del 7 a 13 es de la literatura; lo nuestro es la escalera de la diapositiva 7, donde el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
 :::
 
 ## El modelo no es la palanca
@@ -146,7 +147,7 @@ No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 1.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
+**Antonio · 1 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
@@ -178,7 +179,7 @@ Importa qué tan nueva es la molécula.
 :::
 
 ::: {.notes}
-**Pame · 2 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
+**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
 :::
 
 ## Pero no lo explica todo · fase 1 {.smaller}
@@ -188,7 +189,7 @@ Importa qué tan nueva es la molécula.
 La semejanza nos dice **qué compuestos serán más difíciles**, no **cuánto** va a caer el conjunto. Ordena, pero no calibra. Qué explica esos 0.097 no está medido: hay cuatro candidatos anotados.
 
 ::: {.notes}
-**Pame · 1.5 min.** La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas; con vecino de cinco en lugar de uno sale lo mismo (0.882). Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
+**Pame · 1 min.** La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas; con vecino de cinco en lugar de uno sale lo mismo (0.882). Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
 :::
 
 ## Enseñarle lo raro no ayuda · fase 1 {.smaller}
@@ -204,24 +205,24 @@ Tres formas de darle más química rara. Las tres con la **regla escrita antes d
 Y de paso, lo más útil: con el mismo modelo y sin reentrenar, los compuestos **comunes** se miden con AUROC **0.94** y los **raros** con **0.68**.
 
 ::: {.callout-tip title="Pista 3"}
-El problema no es cuánta química rara ve el modelo. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
+Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 :::
 
 ::: {.notes}
-**Pame · 2.5 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
+**Pame · 1 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
 :::
 
-## El giro: el corte de 0.5 · fase 1 {.smaller}
+## El corte de 0.5 está mal puesto · fase 1 {.smaller}
 
 ![](docs/reportes/presentacion/figuras/corte.svg){fig-alt="Dónde cae cada corte y qué porcentaje de la prueba declara permeable"}
 
-- Igualar la tasa declarada a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba. Y supusimos 65% cuando era 57%: aguanta el error.
+- Igualar la tasa declarada a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba. Y supusimos la prevalencia del ajuste, 65%, cuando era 57%: aguanta el error.
 - Elegir el corte con validación **no sirve** (+0.0065): lo mueve hacia abajo, y la prueba lo necesitaba hacia arriba.
 
-**Respuesta al gancho:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
+**Qué explica la caída:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
-**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+**Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
 :::
 
 ## El cuaderno
@@ -233,7 +234,7 @@ El problema no es cuánta química rara ve el modelo. Recomponer la prueba cambi
 - No combina las fases en un ranking: queda como trabajo futuro.
 
 ::: {.notes}
-**Art · 2 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 1 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
@@ -247,20 +248,20 @@ Es Python, no una interfaz; mide clasificación.
 :::
 
 ::: {.notes}
-**Art · 2 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
+**Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
 :::
 
 ## Qué concluimos {.smaller}
 
 ![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
 
+- De 0.70 a 0.34: unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41); el orden cayó **12.6 puntos** de AUROC y el resto sigue **sin explicar**.
 - La confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
-- Lo único que recuperó algo fue el **corte**, que se puede ajustar: MCC de 0.34 a 0.41.
 - **Límites:** una sola prueba, un modelo por fase, la brecha sin explicar.
 - **Siguiente:** combinar las fases en un orden y una evaluación externa separada por esqueleto.
 
 ::: {.notes}
-**Art · 3 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado.
+**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado.
 :::
 
 # Respaldo
@@ -288,3 +289,49 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 - 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación.
 - Con 117 pares no hay potencia: **ni refuta ni confirma**.
+
+## Cómo preparamos las columnas y qué significan las banderas {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Las columnas
+
+- Probamos **tres transformaciones** (estandarización, min–max y Yeo-Johnson): salen las mismas **151** columnas con las tres, porque la selección se hace sobre los valores crudos.
+- Se quitan las **casi constantes** (un valor domina) y las **redundantes** (correlación de Spearman muy alta).
+- Las huellas son bits que marcan fragmentos; el vocabulario se reaprende **dentro de cada pliegue**.
+:::
+::: {.column width="50%"}
+### Las banderas
+
+- **Origen**, del cruce con COCONUT: *natural exacto* (coincidencia exacta), *análogo estereoquímico* (mismo esqueleto) y *sin equivalente natural*.
+- **Activo**: potencia a 10 µM o menos. Guardamos el **intervalo de potencia**, no la etiqueta, y las mediciones censuradas cuentan.
+- **Grupo A a D** del archivo: indica de qué tipo de dato salió la etiqueta, **no es una escala de calidad** (en regresión, A es el de menos respaldo). Sirve para estratificar, **nunca para excluir**.
+:::
+:::
+
+::: {.notes}
+**Antonio · respaldo.** Para quien pregunte cómo se llega de la molécula a la columna y qué quiere decir cada etiqueta. El origen se usa en los resultados (la ventaja por tercil de rareza se reporta por origen). El corte de 10 µM viene del cribado original y es una decisión que puede cambiar, por eso se guarda el intervalo. El grupo A a D no es una escala: filtrar a A y B baja la clase minoritaria de 36.5% a 27.0%, así que empeora el desbalance en lugar de quitar ruido.
+:::
+
+## Qué pesa en cada fase {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Fase 1 · permeabilidad
+
+- Dos métodos (permutación y KernelSHAP) coinciden en seis descriptores: `fr_lactam`, `NumHDonors` (puesto 4 en ambos), `NumAliphaticCarbocycles`, `VSA_EState3`, `fr_Ar_OH` y `fr_ether`.
+- **TPSA no domina**: puesto 40 por permutación y 10 por SHAP, porque comparte información con otras columnas.
+:::
+::: {.column width="50%"}
+### Fase 2 · potencia
+
+- TreeSHAP y permutación concuerdan (Spearman 0.93). Pesa la **diana** (`MAOA`, `MAOB`, `DRD2`, `LRRK2`, `BCHE`: el 15% de la atribución), la complejidad topológica (`BertzCT`), la lipofilia y los halógenos.
+- TPSA y los donadores de hidrógeno, que dominan la permeabilidad, quedan lejos: lugares 44 y 165.
+:::
+:::
+
+**No afirmamos ningún mecanismo:** son nombres de columna. Por subestructura solo salen heterociclos nitrogenados, genéricos.
+
+::: {.notes}
+**Respaldo.** Pame contesta la fase 1 y Antonio la 2. Es para quien pregunte qué mira el modelo. Lo que importa en una fase no sirve en la otra: los donadores de hidrógeno son cuartos en la permeabilidad y quedan en el lugar 165 en la potencia. Corridas: `2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`.
+:::

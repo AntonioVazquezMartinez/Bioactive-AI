@@ -93,3 +93,7 @@ resultados y discusión, y el hallazgo en el título en vez del nombre del proye
 curso** y existe para circular fuera de él. Usa las mismas figuras y las mismas cifras que el entregable, con la
 salvedad de que se edita a mano y la coincidencia entre los dos es manual; su README explica por qué y qué queda
 pendiente.
+
+## Póster
+
+`docs/reportes/poster/poster.tex` es el póster de la presentación final (A1 horizontal, tres columnas), armado sobre la plantilla del curso con el encabezado, la paleta y la tipografía que pide. Se compila con `sh scripts/compilar_articulo.sh poster`. Las cifras son las del artículo y del resumen ejecutivo, y las dos figuras son las del artículo.
