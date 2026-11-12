@@ -263,15 +263,22 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 
 ## Qué concluimos {.smaller}
 
-![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
+::: {.columns .align-center}
+::: {.column width="50%"}
+![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Fase 1: orden de magnitud de los factores que mueven el desempeño"}
+:::
+::: {.column width="50%"}
+![](docs/reportes/presentacion/figuras/fase2_origen.svg){fig-alt="Fase 2: concordancia del modelo y de una línea base por procedencia de los datos"}
+:::
+:::
 
-- **Fase 1, permeabilidad:** de 0.70 a 0.34 de MCC; unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41), y el orden cayó **12.6 puntos** de AUROC, **sin explicar**.
-- **Fase 2, potencia:** acierta cuál de dos pares es más potente en el **72%**, pero lo domina ChEMBL; en los **117 pares de productos naturales** baja a **0.530**, bajo la línea base de peso y superficie polar (0.565). Para ellos, **no está demostrado**.
+- **Fase 1, permeabilidad:** el MCC cae de 0.70 a 0.34. Unos **0.07 son el corte**, que se ajusta (0.34 a 0.41). El resto es que el **orden empeoró**: el AUROC, que mide qué tan bien se ordenan los compuestos sin fijar un corte, baja de 0.919 a 0.793, **12.6 puntos**. Que la prueba sea más difícil explica unos 3; los otros 10 **no los explicamos**.
+- **Fase 2, potencia:** el modelo acierta el orden en el 72%, pero lo domina ChEMBL. En los **117 pares de productos naturales** pierde contra una línea base sencilla: **no está demostrado**.
 - **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
 - **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado. En la fase 2, el 72% es el agregado y lo domina ChEMBL; lo que le importa a la patrocinadora son los productos naturales, y ahí el modelo queda por debajo de una línea base sencilla, con solo 117 pares para juzgarlo.
+**Art · 1.5 min.** El AUROC es qué tan bien se ordenan los permeables por encima de los que no, con cualquier corte; el MCC depende del corte. Del 0.919 de validación al 0.793 de la prueba hay 12.6 puntos de AUROC; si solo contara que la prueba se parece menos al entrenamiento, esperaríamos unos 0.89, o sea que eso explica unos 3 puntos y los otros 10 siguen sin explicación (tres formas de enseñarle más química rara no los cerraron). A la izquierda, lo que más mueve el MCC de la fase 1: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia, con modelo y línea base de la misma corrida: con ChEMBL el modelo supera a la línea base (0.721 contra 0.639), y en los 117 pares de productos naturales no (0.511 contra 0.565; la corrida registrada da 0.530). El 72% de arriba es el agregado.
 :::
 
 # Respaldo

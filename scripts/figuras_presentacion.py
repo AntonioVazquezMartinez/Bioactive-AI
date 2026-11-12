@@ -18,6 +18,9 @@ Son siete, y cada una existe porque una idea no se puede explicar a tiempo con p
   del 4 de noviembre (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
   `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`) solo aportan la marca «confirmada por permutación»,
   y los confirmados van primero.
+- `fase2_origen.svg`: la prueba de la fase 2 por procedencia de los datos, el modelo contra la línea base de peso
+  molecular y TPSA. Sale de `experimentos/2026-11-03-artemio-1.5-prueba-por-rareza`: **modelo y línea base de la
+  misma corrida** (reajuste), por eso en NPASS el modelo da 0.511 y no el 0.530 de la corrida registrada.
 - `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
   `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El naranja marca la similitud de **esa fase**
   por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
@@ -61,6 +64,7 @@ EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-
 ATRIB1 = RAIZ / "experimentos" / "2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos"
 ATRIB2 = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion" / "importancias.csv"
 RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo"
+RAREZA = RAIZ / "experimentos" / "2026-11-03-artemio-1.5-prueba-por-rareza" / "metricas.json"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
 MORFINA = "CN1CCC23c4c5ccc(O)c4O[C@@H]2[C@@H](O)C=C[C@@H]3C1C5"
@@ -509,6 +513,37 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
+def fig_fase2_origen() -> dict:
+    """La fase 2 en la prueba, por procedencia: el modelo supera a la línea base solo donde hay ChEMBL."""
+    estratos = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
+    orden = [("solo_chembl", "Solo ChEMBL"), ("mixto", "Mixto"), ("solo_npass", "Solo NPASS\n(productos naturales)")]
+    fig, ax = plt.subplots(figsize=(7.2, 3.3))
+    ancho = 0.36
+    for i, (clave, _) in enumerate(orden):
+        e = estratos[clave]
+        ax.bar(i - ancho / 2, e["conc_aft"], ancho, color=AZUL)
+        ax.bar(i + ancho / 2, e["conc_base"], ancho, color=GRIS_CLARO)
+        ax.text(i - ancho / 2, e["conc_aft"] + 0.01, f"{e['conc_aft']:.3f}", ha="center", fontsize=10.5, fontweight="bold", color=AZUL)
+        ax.text(i + ancho / 2, e["conc_base"] + 0.01, f"{e['conc_base']:.3f}", ha="center", fontsize=10.5, color=GRIS)
+    ax.axhline(0.5, color="#333333", lw=1, ls=(0, (4, 3)))
+    ax.text(2.62, 0.503, "azar", fontsize=9, color="#333333", ha="right", va="bottom")
+    ax.set_xticks(range(len(orden)), [f"{o[1]}\n{estratos[o[0]]['n']:,} pares" for o in orden], fontsize=10.5)
+    ax.set_ylim(0.4, 0.8)
+    ax.set_xlim(-0.6, 2.7)
+    ax.set_ylabel("concordancia en la prueba reservada", fontsize=10)
+    for lado in ("right", "top"):
+        ax.spines[lado].set_visible(False)
+    ax.set_title("El modelo gana a la línea base donde hay ChEMBL\ny la pierde en los productos naturales", fontsize=12,
+                 fontweight="bold", color=AZUL, loc="left", pad=12)
+    ax.bar([0], [0], color=AZUL, label="modelo (aft)")
+    ax.bar([0], [0], color=GRIS_CLARO, label="línea base: peso molecular, TPSA y diana")
+    ax.legend(loc="upper right", fontsize=8.8, frameon=False)
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"fase2_origen.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {k: (round(v["conc_aft"], 3), round(v["conc_base"], 3), v["n"]) for k, v in estratos.items()}
+
+
 if __name__ == "__main__":
     SALIDA.mkdir(parents=True, exist_ok=True)
     familia = cifras_de_la_familia()
@@ -520,4 +555,5 @@ if __name__ == "__main__":
     print("medir:", fig_medir())
     print("importancias:", fig_importancias())
     print("ranking:", fig_ranking())
+    print("fase2_origen:", fig_fase2_origen())
     print("escritas en", SALIDA)
