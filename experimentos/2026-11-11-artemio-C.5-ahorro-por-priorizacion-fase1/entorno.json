@@ -1,0 +1,22 @@
+{
+  "arbol_sucio": false,
+  "commit": "1a8c447a8e2237e5f0199a39c249dfc599f45208",
+  "datos_sha256": {
+    "experimentos/2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba/prueba_predicciones.csv": "1d50e69ae7e02af5fadd9d63a01c8fbef97e7318eecd2e2f19506e06b3834063"
+  },
+  "decision": "C.5",
+  "duracion_s": 2.1,
+  "lock_sha256": "7b40cfb8375a9554a3f5c3dc86d1d0dfec9730c8602ea4df48053fd6b4748e2e",
+  "paquetes": {
+    "imbalanced-learn": "0.14.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "rdkit": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "xgboost": "3.4.1"
+  },
+  "python": "3.12.12",
+  "sin_seguimiento": 2,
+  "sistema": "macOS-27.0.1-arm64-arm-64bit"
+}

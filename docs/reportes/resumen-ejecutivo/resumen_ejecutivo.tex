@@ -1,10 +1,6 @@
-% Plantilla del artículo del Proyecto Integrador (Resumen ejecutivo)
+% Resumen ejecutivo del Proyecto Integrador (entrega 8), sobre la plantilla del curso.
 % Formato requerido: carta, una columna, 11 pt, márgenes de 2.5 cm, interlineado 1.15.
-% Extensión: 3 páginas sin contar anexos (aquí sí es la cifra de la rúbrica).
-% Referencias: APA 7.
-% Compila con pdfLaTeX (opción predeterminada de Overleaf) + Biber.
-% Logos: logo.jpeg (Tec) y logo_empresa.png (empresa) en la misma carpeta.
-% Si un archivo no existe, se muestra un recuadro de marcador.
+% Extensión: 3 páginas sin contar anexos. Referencias: APA 7. Compila con pdfLaTeX + Biber.
 \documentclass[letterpaper,11pt]{article}
 
 \usepackage[utf8]{inputenc}
@@ -20,15 +16,16 @@
 \usepackage{csquotes}
 \usepackage[hidelinks]{hyperref}
 
-% Estilo de referencias: APA 7
+% Estilo de referencias: APA 7. Las notas internas de la bibliografía no se imprimen.
 \usepackage[style=apa,backend=biber]{biblatex}
 \addbibresource{bibliografia.bib}
+\AtEveryBibitem{\clearfield{note}}
 
 % --- Complementos del resumen ejecutivo ---
 \usepackage{xcolor}
 \setlength{\parindent}{1.5em}
 
-% --- Encabezado: logos solo en la primera página ---
+% --- Encabezado: el logo del Tec solo en la primera página ---
 \usepackage{fancyhdr}
 \geometry{headheight=52pt,headsep=0.3cm}
 \renewcommand{\headrulewidth}{0pt}
@@ -39,7 +36,6 @@
 \fancypagestyle{primera}{%
   \fancyhf{}%
   \fancyhead[L]{\logo{logo.jpeg}{Logo Tec}}%
-  \fancyhead[R]{\logo{logo_empresa.png}{Logo empresa}}%
   \fancyfoot[C]{\thepage}}
 \pagestyle{fancy}
 \fancyhf{}
@@ -47,126 +43,200 @@
 
 % --- Recuadros de cifras (texto grande) ---
 % \cifra{fondo}{color del texto}{valor}{etiqueta}{unidad}
+\newlength{\alturacifra}\setlength{\alturacifra}{2.3cm}
 \newcommand{\cifra}[5]{%
   \begingroup\setlength{\fboxsep}{5pt}%
-  \colorbox{#1}{\parbox[t]{\dimexpr\linewidth-2\fboxsep\relax}{%
-    \setstretch{1}\color{#2}{\Large\bfseries #3}\par
+  \colorbox{#1}{\parbox[t][\alturacifra][t]{\dimexpr\linewidth-2\fboxsep\relax}{%
+    \setstretch{1}\raggedright\color{#2}{\Large\bfseries #3}\par
     #4%
     \ifx\relax#5\relax\else\par{\footnotesize #5}\fi}}%
   \endgroup}
 \newcommand{\cifragris}[4]{\cifra{black!8}{black}{#1}{#2}{#3}}
 \newcommand{\cifraacento}[4]{\cifra{blue!10}{blue!55!black}{#1}{#2}{#3}}
 
-% --- Texto de relleno (lorem ipsum) Quitar al llenar el doc ---
-\newcommand{\lorem}{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.}
-
-\newcommand{\loremb}{Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.}
-
-\newcommand{\loremc}{Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.}
-
 \begin{document}
 \thispagestyle{primera}
 
 % --- Título y datos ---
-\noindent{\LARGE\bfseries Título del proyecto\par}
+\noindent{\LARGE\bfseries Bioactive\par}
 \smallskip
-\noindent{\large\textcolor{black!60}{Resumen ejecutivo}\par}
+\noindent{\large\textcolor{black!60}{Resumen ejecutivo: priorizar compuestos naturales con potencial neuroprotector}\par}
 \medskip
 
 \noindent\begingroup\setlength{\fboxsep}{7pt}%
 \colorbox{black!8}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\small\setstretch{1.1}%
-\textcolor{black!60}{Integrantes:} Integrante 1, Integrante 2, Integrante 3\\
-\textcolor{black!60}{Programa:} Proyecto Integrador · Maestría en Inteligencia Artificial Aplicada\\
-\textcolor{black!60}{Asesor:} Nombre del asesor \quad \textcolor{black!60}{Fecha:} Fecha de entrega}}%
+\textcolor{black!60}{Integrantes:} Ingrid Pamela Ruiz Puga, Artemio Santiago Padilla Robles, José Antonio Vázquez Martínez\\
+\textcolor{black!60}{Programa:} Proyecto Integrador, Maestría en Inteligencia Artificial Aplicada\\
+\textcolor{black!60}{Asesora:} Dra. Grettel Barceló Alonso \quad \textcolor{black!60}{Patrocinadora:} Dra. Mariana Martínez Ávila \quad \textcolor{black!60}{Fecha:} 15 de noviembre de 2026}}%
 \endgroup\par\medskip
 
-% --- Problema y solución (con citas de ejemplo) ---
-\lorem{} Como muestran \textcite{breiman2001}, lorem ipsum dolor sit amet consectetur adipiscing elit (\cite{hastie2009}), y se implementó con herramientas estándar \parencite{pedregosa2011}.
+% --- Decisión y problema ---
+Bioactive ordena compuestos naturales por su probabilidad de cruzar la barrera hematoencefálica y por su potencia contra 26 dianas del sistema nervioso, para decidir cuáles confirmar primero. Estimamos que adoptarlo costaría a su grupo unos \$51,840 MXN en 12 meses, entre puesta en marcha y operación; adoptarlo es decisión de la patrocinadora. Recomendamos usarlo como apoyo a la priorización: el ahorro de pruebas de laboratorio cubre ese costo solo si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre; en otro caso se justifica por el orden y la evidencia que da.
+
+Un compuesto natural que se considera para una terapia neuroprotectora tiene que cumplir dos condiciones antes de justificar una prueba de laboratorio: llegar al cerebro, cruzando la barrera hematoencefálica, y actuar sobre una diana, la proteína a la que se une. Confirmarlas una por una cuesta tiempo y dinero, la lista de candidatos es larga y la patrocinadora ayuda a planear esas pruebas, que son ensayos in vitro y no clínicos. Construimos dos modelos que ordenan los compuestos a partir de su estructura, con datos públicos \parencite{meng2021b3db,zdrazil2024chembl,zhao2023npass}. Dan evidencia para decidir en qué orden confirmar, no una decisión automática. Las dos preguntas no se excluyen: un compuesto que el modelo juzga poco probable de cruzar sigue siendo un candidato, porque esa predicción se equivoca y porque hay formas de superar la barrera, como los profármacos, la lipidización o los nanoacarreadores.
 
 % --- Cifras de desempeño del modelo ---
 \medskip
 \noindent
-\begin{minipage}[t]{0.235\linewidth}\cifragris{0.71}{Métrica}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{+12\,\%}{Mejora}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{92\,\%}{Cobertura}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{3\,s}{Latencia}{}{}\end{minipage}
+\setlength{\alturacifra}{2.3cm}
+\begin{minipage}[t]{0.235\linewidth}\cifragris{0.793}{AUROC}{orden, con compuestos no vistos}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\cifragris{85\,\%}{Conservados}{permeables, al confirmar el 70\,\% mejor ordenado}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\cifragris{0.339}{MCC}{corte 0.5; 0.410 ajustado}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\cifragris{0.720}{Concordancia}{orden de potencia, agregado}{}\end{minipage}
 \medskip
 
 % --- Desempeño ---
-\lorem\par
-\loremb
+Con 1,499 compuestos reservados que ningún modelo vio, ante un permeable y un no permeable, el modelo le da mayor probabilidad al permeable el 79\,\% de las veces (AUROC). Con la regla habitual, que declara permeable todo lo que pasa de 0.5, el coeficiente de Matthews (MCC, entre $-1$ y 1, donde 0 es el azar) es 0.339, lejos del 0.70 de validar con compuestos parecidos a los de entrenamiento: esa regla declara permeable al 79\,\% cuando lo es el 57\,\%, y ajustar la proporción sube el MCC a 0.410. Para la potencia, dados dos pares compuesto-diana con potencias distintas, el modelo acierta cuál es más potente en el 72\,\% de los casos (el azar daría 50\,\%), pero ese agregado lo domina ChEMBL: en los 117 pares de productos naturales de la prueba baja a 0.530, por debajo de una línea base de peso molecular y superficie polar (0.565), así que para ellos el orden de potencia no está demostrado. La permeabilidad alcanza para ordenar y priorizar; dejar fuera el final de la lista ahorra ensayos, pero pierde permeables.
 
 % --- Beneficios cuantificables (mensuales) ---
 \medskip
 \noindent
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$40\,h}{Ahorro de tiempo}{horas/mes}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$\$X}{Costos operativos}{MXN/mes}{}\end{minipage}
+\setlength{\alturacifra}{2.2cm}
+\begin{minipage}[t]{0.485\linewidth}\cifragris{3}{Pruebas menos por semestre}{a igual recuperación de permeables frente a un sorteo, con 20 compuestos por semestre (supuesto)}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\cifragris{\$3,270}{Ahorro}{MXN/mes con insumos propios; \$18,240 si se contrata el servicio (precios de EE.~UU.)}{}\end{minipage}
 
-\vspace{5pt}
-\noindent
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$25\,\%}{Reducción de errores}{\% de reducción/mes}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.485\linewidth}\cifragris{+30\,\%}{Capacidad de atención}{volumen/mes}{}\end{minipage}
-
-\smallskip
-\noindent{\footnotesize\textcolor{black!60}{Cálculo y supuestos en el Anexo~A.}}
 \medskip
 
-\lorem
+Lo medido es el intercambio. Para encontrar el 85\,\% de los permeables reales, un sorteo tendría que confirmar el 85\,\% de los candidatos; el modelo confirma el 70\,\%, quince puntos menos. El 15\,\% que no conserva es el riesgo, unos 1.7 permeables por semestre. Lo supuesto es el volumen y lo que cuesta confirmar un candidato en el laboratorio, que no conocemos: el compuesto más las pruebas. Es una estimación nuestra: unos \$6,390 si el laboratorio pone los insumos y unos \$35,700 si contrata el servicio, con precios de EE.~UU. (Anexo~A).
 
 % --- Beneficios intangibles ---
-\medskip
-\noindent\textbf{Mejora en la toma de decisiones.} \loremc\par
 \smallskip
-\noindent\textbf{Mejora en la calidad.} \loremc\par
+\noindent\textit{Mejora en la toma de decisiones.} Cada compuesto llega con su probabilidad, su potencia y qué tan conocido es; quien decide sabe cuánto confiar.\par
 \smallskip
-\noindent\textbf{Facilidad o simplificación del trabajo.} \loremc\par
+\noindent\textit{Capacidad para evaluar representaciones adicionales.} Un método para medir si columnas nuevas (datos ómicos, propiedades de otro programa) predicen mejor que las actuales, con la misma validación y un control de ruido.\par
 \smallskip
-\noindent\textbf{Innovación o diferenciación competitiva.} \loremc\par
-\medskip
 
 % --- Inversión y costos (TCO a 12 meses) ---
-\lorem
+El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,500 de desarrollo, ya realizado y valorado a tarifa de referencia; \$16,200 de puesta en marcha y \$35,640 de operación. Lo que habría que financiar de aquí en adelante son \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local.
 
 \medskip
 \noindent
-\begin{minipage}[t]{0.235\linewidth}\cifragris{\$X}{Desarrollo}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{\$X}{Implementación}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{\$X}{Operación}{}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifraacento{\$X}{TCO 12 meses}{}{}\end{minipage}
-\medskip
+\setlength{\alturacifra}{1.9cm}
+\begin{minipage}[t]{0.31\linewidth}\cifragris{\$121,500}{Desarrollo}{600 h, ya realizado}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.31\linewidth}\cifragris{\$51,840}{A financiar}{80 h de puesta en marcha y 176 h de operación}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.31\linewidth}\cifragris{\$173,340}{TCO 12 meses}{MXN, con el desarrollo}{}\end{minipage}
+\smallskip
 
-\loremb
+Recomendamos usarlo para decidir el orden en que se confirma, y dejar fuera el final de la lista solo aceptando que se pierde en promedio el 15\,\% de los permeables; adoptarlo costaría a su grupo \$51,840 en puesta en marcha y operación. El ahorro depende de cómo se confirme: con insumos propios (unos \$3,270 al mes) queda por debajo de la operación (\$4,320 al mes) y en el año habría una pérdida de unos \$12,700; si se contrata el servicio (unos \$18,240 al mes) la cubre varias veces. Se compensa si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre o si el volumen sube (Anexo~B). Las condiciones: más volumen, porque a 20 compuestos por semestre no se puede medir cuántos permeables se pierden (harían falta decenas); y nombrar a quien hará la revisión mensual. Los riesgos y su mitigación están en la Tabla~\ref{tab:riesgos}.
 
 % --- Riesgos y mitigación ---
-\medskip
-\noindent
+\smallskip
+\begin{table}[h]
+\centering
+\caption{Riesgos principales y su mitigación.}
+\label{tab:riesgos}
+\small
 \begin{tabular}{@{}p{0.46\linewidth}@{\hspace{0.06\linewidth}}p{0.46\linewidth}@{}}
 \toprule
-\textbf{Riesgo} & \textbf{Mitigación}\\
+Riesgo & Mitigación\\
 \midrule
-\loremc & \loremc\\[4pt]
-\loremc & \loremc\\[4pt]
-\loremc & \loremc\\
+Química distinta de la entrenada: el AUROC cae de 0.919 a 0.793, y el corte de 0.5 declara permeable al 79\,\% cuando lo es el 57\,\%. & Advertencia de similitud en cada compuesto, reevaluación con cada lote y ajuste de la proporción declarada a la del lote.\\[3pt]
+El orden de potencia no está demostrado en productos naturales (117 pares). & Usarlo como evidencia secundaria y medirlo con los primeros lotes propios.\\[3pt]
+Supuestos económicos sin confirmar: el costo de confirmar un candidato y el volumen. & Confirmarlos antes de contratar la operación; el Anexo~B muestra cuánto pesan.\\[3pt]
+Etiquetas y datos: el corte de «activo» (10 µM) viene del cribado original; NPASS es de uso no comercial. & Guardar el intervalo de potencia y no la etiqueta; declarar el uso no comercial.\\[3pt]
+Continuidad: depende de que alguien lo mantenga y reentrene. & Procedimiento documentado y dependencias fijadas.\\
 \bottomrule
 \end{tabular}
-\medskip
+\end{table}
 
-% --- Transferencia y continuidad ---
-\section*{Transferencia y continuidad}
-\lorem\par
-\loremb
+% --- Transferencia y continuidad (la rúbrica de la presentación la nombra) ---
+\noindent\textbf{Transferencia y continuidad.} Para operar sin depender del equipo se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, sin combinarlas en una lista de candidatos (queda como trabajo futuro); los dos modelos con su módulo de inferencia; el procedimiento para reentrenar; y una guía para medir columnas propias. La operación queda a cargo de la patrocinadora y su grupo, con revisión mensual de la advertencia de similitud. El proyecto termina con esta entrega y la continuidad es autónoma; a futuro podría escribirse un artículo, sin compromiso.
 
 \section*{Declaración de uso de inteligencia artificial}
-Se utilizó \textcite{anthropic2026claude} para \textcolor{red}{[indicar la finalidad]}.
-La responsabilidad final sobre el contenido entregado recae en los autores.
+Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5, Claude Sonnet~5.5 y Claude Sonnet~5 (este último cuando restricciones de seguridad en biología y química impidieron usar el 5.5) para redactar este resumen y calcular las cifras de los anexos. Los supuestos, la interpretación y las recomendaciones son del equipo, que contrastó cada cifra. La responsabilidad final sobre el contenido entregado recae en los autores.
 
 % --- Referencias (biblatex + Biber, solo lo citado) ---
-\printbibliography[title={Referencias}]
+\printbibliography[title={Referencias},notkeyword=anexo]
 
 % --- Anexos ---
 \clearpage
-\section*{Anexo A. Título del anexo}
-\lorem
+\section*{Anexo A. Beneficios: supuestos, escenarios y lo medido}
+\noindent\textit{Lo medido.} Con las probabilidades que el modelo final dio a los 1,499 compuestos de la prueba reservada, ordenamos de mayor a menor probabilidad de cruzar la barrera y simulamos confirmar solo los mejor ordenados. La Tabla~\ref{tab:ahorro} da, para cada fracción confirmada, qué parte de los permeables reales queda dentro (con intervalo del 95\,\% que remuestrea grupos de andamio) y qué tan seguido acierta lo confirmado, contra una prevalencia de 57.3\,\%. Si en lugar del modelo se eligiera al azar, la fracción de permeables conservados sería igual a la fracción confirmada; por eso el beneficio del modelo es la diferencia: con el 70\,\% confirmado conserva el 85.3\,\%, y un sorteo tendría que confirmar el 85.3\,\% para igualarlo, 15.3 puntos más.
+
+\begin{table}[h]
+\centering
+\caption{Confirmar solo la fracción mejor ordenada: qué queda sin confirmar, qué permeables se conservan y qué tan seguido acierta lo confirmado. Dejar algo sin confirmar no es un ahorro del modelo: un sorteo también lo deja, y conserva menos permeables.}
+\label{tab:ahorro}
+\small
+\begin{tabular}{rrrrr}
+\toprule
+Fracción confirmada & Sin confirmar & Permeables conservados & IC95\,\% & Acierto entre lo confirmado\\
+\midrule
+40\,\% & 60\,\% & 58.8\,\% & 56.3 a 61.1 & 84.2\,\%\\
+50\,\% & 50\,\% & 70.9\,\% & 68.5 a 73.1 & 81.2\,\%\\
+60\,\% & 40\,\% & 77.5\,\% & 75.4 a 79.9 & 74.1\,\%\\
+70\,\% & 30\,\% & 85.3\,\% & 83.5 a 87.5 & 69.9\,\%\\
+80\,\% & 20\,\% & 91.6\,\% & 89.7 a 93.5 & 65.6\,\%\\
+90\,\% & 10\,\% & 96.5\,\% & 95.3 a 97.7 & 61.5\,\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textit{Los supuestos.} La patrocinadora ayuda a planear pruebas de laboratorio, ensayos in vitro y no clínicos, que hace un laboratorio propio o de un colaborador. Volumen de 20 compuestos por semestre, de los que se confirma el 70\,\% mejor ordenado. A igual recuperación de permeables el modelo evita 15.3 puntos de candidatos frente a un sorteo: 3.1 por semestre, 0.51 al mes. Medir cuántos permeables se pierden exigiría confirmar unas decenas de los compuestos que el orden deja fuera, que a este volumen son 6 por semestre: llevaría años o cancelaría el ahorro, así que el control solo es viable con más volumen. Confirmar un candidato cuesta el compuesto más dos pruebas, a 17.5 pesos por dólar. \emph{El compuesto:} unos 290 USD, el promedio de los paquetes mínimos de dos estándares de productos naturales (curcumina de 30 mg a 266 USD \parencite{usp2026curcumina} y L-fucosa de 200 mg a 317 USD \parencite{usp2026fucosa}). Son estándares de referencia certificados y no material de catálogo de grado investigación: con éste el precio bajaría, el ahorro por candidato evitado bajaría con él y la pérdida anual con insumos propios crecería. \emph{Las pruebas} son una de permeabilidad y una de actividad en células neuronales, con curva de dosis y réplicas. Con \emph{insumos propios}, unos 15 USD de reactivos de membrana artificial por triplicado (5 USD por pozo \parencite{calibre2026pampa}) y unos 60 USD de insumos del ensayo celular (de 1 a 2.5 USD por pozo \parencite{osu2026htscore}, con unos 24 pozos por compuesto). Con \emph{servicio contratado} no tenemos cotización: nuestra estimación, del orden de lo que cobra un laboratorio de servicio (una hoja de tarifas publicada cobra 2,000 USD por compuesto en ADME in vitro \parencite{ttuhsc2025wtpc}), es de unos 250 USD por la prueba de permeabilidad y unos 1,500 USD por la curva de dosis celular con réplicas. Los precios de lista son de EE.~UU., en dólares y convertidos. Para México no encontramos precios publicados: se suma el 16\,\% de IVA a todo (sin flete ni aduana, que no conocemos) y se supone el mismo precio de servicio. Son estimaciones del equipo y no precios de la patrocinadora, que debe confirmar.
+
+\begin{table}[h]
+\centering
+\caption{Costo de confirmar un candidato (compuesto más pruebas) y ahorro mensual de 0.51 candidatos menos al mes.}
+\label{tab:escenarios}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Escenario & EE.~UU. (USD) & EE.~UU. (MXN) & Ahorro al mes & México (MXN) & Ahorro al mes\\
+\midrule
+Insumos propios & 365 & 6,390 & 3,270 & 7,410 & 3,790\\
+Servicio contratado & 2,040 & 35,700 & 18,240 & 41,410 & 21,160\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Con insumos propios el compuesto pesa más que las pruebas; contratando el servicio pesan más las pruebas. Los precios del servicio contratado son nuestra estimación, sin cotización, y es lo más incierto del documento: mueve el resultado de una pequeña pérdida a una ganancia clara. El punto de equilibrio del Anexo~B vale en los dos mercados: con 20 compuestos por semestre es de unos \$8,450 por candidato (\$28,300 contando el desarrollo) y con 100 por semestre bastan unos \$1,700, del orden de lo que un centro público mexicano de servicios analíticos cobra por muestra (de 1,700 a 4,000 pesos, aunque su catálogo no incluye ensayos de permeabilidad \parencite{ciatej2026catalogo}). Los beneficios intangibles no se cuantifican.
+
+\section*{Anexo B. Costo total de propiedad a 12 meses, por servicio}
+\noindent Todas las horas son supuestos del equipo, a confirmar; las de puesta en marcha y operación son tiempo del grupo de la patrocinadora, no del equipo. La tarifa es \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de una guía salarial \parencite{keepcoding2026salarios}, por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora. Las horas de operación pesan mucho: con 76 en lugar de 176, los \$51,840 a financiar bajan a unos \$31,590. En dólares, a 17.5, el TCO es de unos 9,905 USD (2,962 sin el desarrollo); el salario es el mexicano, así que a la tarifa de un perfil estadounidense sería mayor.
+
+\begin{table}[h]
+\centering
+\caption{TCO de los primeros 12 meses, por servicio (MXN).}
+\label{tab:tco}
+\small
+\begin{tabular}{llrr}
+\toprule
+Fase & Servicio & Horas & Costo (MXN)\\
+\midrule
+Desarrollo & Ciencia de datos: modelos y evaluación & 400 & 81,000\\
+ & Ingeniería: código, pruebas y herramienta & 140 & 28,350\\
+ & Documentación & 60 & 12,150\\
+Puesta en marcha & Instalación del cuaderno & 32 & 6,480\\
+ & Familiarización con el cuaderno & 24 & 4,860\\
+ & Validación con datos propios & 24 & 4,860\\
+Operación (12 meses) & Revisión mensual, 8 h por mes & 96 & 19,440\\
+ & Reentrenamiento, dos veces al año & 80 & 16,200\\
+ & Nube, cómputo y licencias & 0 & 0\\
+\midrule
+\textbf{Total} & & \textbf{856} & \textbf{173,340}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textit{Punto de equilibrio.} El costo que debe tener confirmar un candidato para que el ahorro compense el gasto es el gasto mensual entre los candidatos evitados al mes (15.3\,\% del volumen semestral, entre seis, a igual recuperación). La Tabla~\ref{tab:equilibrio} lo da para varios volúmenes, sin contar el desarrollo ($51{,}840 / 12 = \$4{,}320$ al mes) y contándolo ($173{,}340 / 12 = \$14{,}445$ al mes).
+
+\begin{table}[h]
+\centering
+\caption{Costo mínimo por candidato (MXN) para que el ahorro compense el gasto, según el volumen semestral.}
+\label{tab:equilibrio}
+\small
+\begin{tabular}{rrrr}
+\toprule
+Compuestos por semestre & Candidatos evitados al mes & Sin desarrollo & Con desarrollo\\
+\midrule
+10 & 0.26 & 16,908 & 56,536\\
+20 & 0.51 & 8,454 & 28,268\\
+40 & 1.02 & 4,227 & 14,134\\
+100 & 2.56 & 1,691 & 5,654\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\printbibliography[title={Fuentes de precios y salarios de los anexos},keyword=anexo]
 
 \end{document}
