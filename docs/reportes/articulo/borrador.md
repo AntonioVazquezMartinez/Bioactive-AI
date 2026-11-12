@@ -544,6 +544,12 @@ es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); TPSA no (40 por
 comparte información con un racimo de columnas. No afirmamos ninguna estructura: son seis nombres de descriptor, no
 un mecanismo.
 
+*Hacia dónde empuja cada columna.* Corridas `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2` (`scripts/puntos_shap.py`): los mismos modelos y pliegues de las dos anteriores, pero guardando el valor de SHAP de cada fila y no solo su media. En la fase 1, una lactama o más donadores de hidrógeno bajan la probabilidad de cruzar la barrera; en la fase 2, ser la diana `MAOA` baja la potencia predicha y más complejidad topológica la sube (Figura C2). Cada punto es un compuesto en la fase 1 (300, los mismos de la corrida original) y un par compuesto-diana en la fase 2 (3,000, una submuestra de 600 filas por pliegue). Son direcciones que aprendió el modelo, no un mecanismo, y «confirmada por permutación» es lo que los dos métodos de las corridas anteriores ponen entre sus quince primeros.
+
+![Atribución](figuras/f8_atribucion.svg)
+
+*Figura C2. SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
+
 *Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
 cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,
 así que repetimos el diseño con el brazo que sí (`aft_huellas`,
