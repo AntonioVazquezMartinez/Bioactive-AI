@@ -61,7 +61,7 @@ def test_la_base_del_ahorro_es_el_modelo_contra_el_sorteo_y_no_el_30_por_ciento(
     # más permeables a igual número de ensayos y los que se pierden
     assert round(d * 0.573 * 20, 1) == 1.8 and round((1 - 0.8533) * 0.573 * 20, 1) == 1.7
     plano = TEX.replace("{,}", ",")
-    for cifra in ("3,270", "18,240", "8,450", "28,300", "12,700", "1.8 permeables", "1.7 permeables"):
+    for cifra in ("3,270", "18,240", "8,450", "28,300", "12,700", "1.7 permeables"):
         assert cifra in plano, f"falta {cifra}"
 
 

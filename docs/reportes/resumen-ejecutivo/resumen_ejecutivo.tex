@@ -80,11 +80,11 @@ Un compuesto natural que se considera para una terapia neuroprotectora tiene que
 \begin{minipage}[t]{0.235\linewidth}\cifragris{0.793}{AUROC}{orden, con compuestos no vistos}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifragris{85\,\%}{Conservados}{permeables, al confirmar el 70\,\% mejor ordenado}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.235\linewidth}\cifragris{0.339}{MCC}{corte 0.5; 0.410 ajustado}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.235\linewidth}\cifragris{0.720}{Concordancia}{orden de potencia}{}\end{minipage}
+\begin{minipage}[t]{0.235\linewidth}\cifragris{0.720}{Concordancia}{orden de potencia, agregado}{}\end{minipage}
 \medskip
 
 % --- Desempeño ---
-Con 1,499 compuestos reservados que ningún modelo vio, el modelo ordena bien: ante un permeable y un no permeable, le da mayor probabilidad al permeable el 79\,\% de las veces (AUROC). Con la regla habitual, que declara permeable todo lo que pasa de 0.5, el coeficiente de Matthews (MCC, entre $-1$ y 1, donde 0 es el azar) es 0.339, lejos del 0.70 que se obtiene al validar con compuestos parecidos a los de entrenamiento. La causa es doble: esa regla declara permeable al 79\,\% de los compuestos cuando lo es el 57\,\%, y la química nueva es más difícil. Ajustar la proporción declarada a la esperada sube el MCC a 0.410. Para la potencia, dados dos pares compuesto-diana con potencias distintas, el modelo ordena bien cuál es más potente en el 72\,\% de los casos (el azar daría 50\,\%). En las dos preguntas alcanza para ordenar y priorizar; dejar fuera el final de la lista ahorra ensayos, pero pierde permeables.
+Con 1,499 compuestos reservados que ningún modelo vio, el modelo ordena bien: ante un permeable y un no permeable, le da mayor probabilidad al permeable el 79\,\% de las veces (AUROC). Con la regla habitual, que declara permeable todo lo que pasa de 0.5, el coeficiente de Matthews (MCC, entre $-1$ y 1, donde 0 es el azar) es 0.339, lejos del 0.70 que se obtiene al validar con compuestos parecidos a los de entrenamiento. La causa es doble: esa regla declara permeable al 79\,\% de los compuestos cuando lo es el 57\,\%, y la química nueva es más difícil. Ajustar la proporción declarada a la esperada sube el MCC a 0.410. Para la potencia, dados dos pares compuesto-diana con potencias distintas, el modelo ordena bien cuál es más potente en el 72\,\% de los casos (el azar daría 50\,\%), pero ese agregado lo domina ChEMBL: en los 117 pares de productos naturales de la prueba baja a 0.530, por debajo de una línea base de peso molecular y superficie polar (0.565), así que para ellos el orden de potencia no está demostrado. La permeabilidad alcanza para ordenar y priorizar; dejar fuera el final de la lista ahorra ensayos, pero pierde permeables.
 
 % --- Beneficios cuantificables (mensuales) ---
 \medskip
@@ -92,21 +92,19 @@ Con 1,499 compuestos reservados que ningún modelo vio, el modelo ordena bien: a
 \begin{minipage}[t]{0.485\linewidth}\cifragris{0.5}{Candidatos menos al mes}{a igual recuperación de permeables, con 20 compuestos por semestre (supuesto)}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.485\linewidth}\cifragris{\$3,270}{Ahorro}{MXN/mes con insumos propios; \$18,240 si se contrata el servicio (precios de EE.~UU.)}{}\end{minipage}
 
-\smallskip
-\noindent{\footnotesize\textcolor{black!60}{Cálculo, escenarios y supuestos en el Anexo~A.}}
 \medskip
 
-Lo medido es el intercambio. Para encontrar el 85\,\% de los permeables reales, un sorteo tendría que confirmar el 85\,\% de los candidatos; el modelo confirma el 70\,\%, quince puntos menos. Si en cambio se confirma el mismo número, el modelo encuentra unos 1.8 permeables más por semestre. El 15\,\% que no conserva es el riesgo, unos 1.7 permeables por semestre. Lo supuesto es el volumen y lo que cuesta confirmar un candidato en el laboratorio, que no conocemos: el compuesto más las pruebas. Es una estimación nuestra: unos \$6,390 si el laboratorio pone los insumos y unos \$35,700 si contrata el servicio, con precios de EE.~UU. (Anexo~A).
+Lo medido es el intercambio. Para encontrar el 85\,\% de los permeables reales, un sorteo tendría que confirmar el 85\,\% de los candidatos; el modelo confirma el 70\,\%, quince puntos menos. El 15\,\% que no conserva es el riesgo, unos 1.7 permeables por semestre. Lo supuesto es el volumen y lo que cuesta confirmar un candidato en el laboratorio, que no conocemos: el compuesto más las pruebas. Es una estimación nuestra: unos \$6,390 si el laboratorio pone los insumos y unos \$35,700 si contrata el servicio, con precios de EE.~UU. (Anexo~A).
 
 % --- Beneficios intangibles ---
-\medskip
+\smallskip
 \noindent\textit{Mejora en la toma de decisiones.} Cada compuesto llega con su probabilidad, su potencia y qué tan conocido es; quien decide sabe cuánto confiar.\par
 \smallskip
-\noindent\textit{Capacidad para evaluar representaciones adicionales.} El proyecto deja un método para medir si columnas nuevas, como datos ómicos o propiedades de otro programa, predicen mejor que las actuales, con la misma validación y un control de ruido; ya mostró que las huellas moleculares ayudan a predecir la potencia y no la permeabilidad.\par
+\noindent\textit{Capacidad para evaluar representaciones adicionales.} Un método para medir si columnas nuevas (datos ómicos, propiedades de otro programa) predicen mejor que las actuales, con la misma validación y un control de ruido; ya mostró que las huellas moleculares ayudan a predecir la potencia y no la permeabilidad.\par
 \smallskip
 
 % --- Inversión y costos (TCO a 12 meses) ---
-El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,500 de desarrollo, ya realizado y valorado a la tarifa de referencia de un perfil junior; \$16,200 de implementación y \$35,640 de operación. Lo que habría que financiar de aquí en adelante son \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local y los datos de NPASS son de uso no comercial.
+El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,500 de desarrollo, ya realizado y valorado a tarifa de referencia; \$16,200 de implementación y \$35,640 de operación. Lo que habría que financiar de aquí en adelante son \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local.
 
 \medskip
 \noindent
@@ -115,12 +113,10 @@ El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$173,340}{TCO 12 meses}{MXN, con el desarrollo}{}\end{minipage}
 \smallskip
 
-Recomendamos usarlo para decidir el orden en que se confirma, y dejar fuera el final de la lista solo sabiendo cuántos permeables se pierden; llevarlo a la práctica costaría \$51,840 en implementación y operación. El ahorro depende de cómo se confirme: con insumos propios (unos \$3,270 al mes) queda por debajo de la operación (\$4,320 al mes) y en el año habría una pérdida de unos \$12,700; si se contrata el servicio (unos \$18,240 al mes) la cubre varias veces. Se compensa si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre (\$28,300 contando el desarrollo) o si el volumen sube: con 100 por semestre bastan unos \$1,700 (Anexo~B). Las condiciones son tres: confirmar con quien ensaya el costo real y el volumen; confirmar también 3 de cada 100 compuestos de los que el orden deja fuera, para medir con datos propios cuántos permeables se pierden; y nombrar a la persona que hará la revisión mensual.
+Recomendamos usarlo para decidir el orden en que se confirma, y dejar fuera el final de la lista solo sabiendo cuántos permeables se pierden; llevarlo a la práctica costaría \$51,840 en implementación y operación. El ahorro depende de cómo se confirme: con insumos propios (unos \$3,270 al mes) queda por debajo de la operación (\$4,320 al mes) y en el año habría una pérdida de unos \$12,700; si se contrata el servicio (unos \$18,240 al mes) la cubre varias veces. Se compensa si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre (\$28,300 contando el desarrollo) o si el volumen sube: con 100 por semestre bastan unos \$1,700 (Anexo~B). Las condiciones: confirmar con quien ensaya el costo real y el volumen; confirmar también 3 de cada 100 compuestos de los que el orden deja fuera, para medir cuántos permeables se pierden; y nombrar a quien hará la revisión mensual. Los riesgos y su mitigación están en la Tabla~\ref{tab:riesgos}.
 
 % --- Riesgos y mitigación ---
-\medskip
-La Tabla~\ref{tab:riesgos} resume los cinco riesgos y cómo se mitigan.
-
+\smallskip
 \begin{table}[h]
 \centering
 \caption{Riesgos principales y su mitigación.}
@@ -130,8 +126,8 @@ La Tabla~\ref{tab:riesgos} resume los cinco riesgos y cómo se mitigan.
 \toprule
 Riesgo & Mitigación\\
 \midrule
-Química distinta de la entrenada: el AUROC cae de 0.919 a 0.793 entre validación y prueba. & Advertencia de similitud en cada compuesto y reevaluación con cada lote nuevo.\\[3pt]
-El corte de 0.5 declara permeable al 79\,\% cuando lo es el 57\,\%. & Entregar probabilidades y ajustar la proporción declarada a la del lote.\\[3pt]
+Química distinta de la entrenada: el AUROC cae de 0.919 a 0.793, y el corte de 0.5 declara permeable al 79\,\% cuando lo es el 57\,\%. & Advertencia de similitud en cada compuesto, reevaluación con cada lote y ajuste de la proporción declarada a la del lote.\\[3pt]
+El orden de potencia no está demostrado en productos naturales (117 pares). & Usarlo como evidencia secundaria y medirlo con los primeros lotes propios.\\[3pt]
 Supuestos económicos sin confirmar: el costo de confirmar un candidato y el volumen. & Confirmarlos antes de contratar la operación; el Anexo~B muestra cuánto pesan.\\[3pt]
 Etiquetas y datos: el corte de «activo» (10 µM) viene del cribado original; NPASS es de uso no comercial. & Guardar el intervalo de potencia y no la etiqueta; declarar el uso no comercial.\\[3pt]
 Continuidad: depende de que alguien lo mantenga y reentrene. & Procedimiento documentado y dependencias fijadas.\\
@@ -140,7 +136,7 @@ Continuidad: depende de que alguien lo mantenga y reentrene. & Procedimiento doc
 \end{table}
 
 % --- Transferencia y continuidad (en el hilo, sin encabezado) ---
-Para que la patrocinadora opere sin depender del equipo se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos guardados, con un módulo de inferencia que no necesita los datos de entrenamiento; el procedimiento para reentrenar con datos nuevos; y una guía con la herramienta para medir columnas propias. La operación queda a cargo de la patrocinadora, con una revisión mensual de la advertencia de similitud; quien ensaya, propio o colaborador, absorbe el costo del laboratorio.
+Para que la patrocinadora opere sin depender del equipo se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos guardados con su módulo de inferencia; el procedimiento para reentrenar con datos nuevos; y una guía con la herramienta para medir columnas propias. La operación queda a cargo de la patrocinadora, con una revisión mensual de la advertencia de similitud; quien ensaya, propio o colaborador, absorbe el costo del laboratorio.
 
 \section*{Declaración de uso de inteligencia artificial}
 Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5, Claude Sonnet~5.5 y Claude Sonnet~5 (este último cuando restricciones de seguridad en biología y química impidieron usar el 5.5) para redactar este resumen y calcular las cifras de los anexos. Los supuestos, la interpretación y las recomendaciones son del equipo, que contrastó cada cifra. La responsabilidad final sobre el contenido entregado recae en los autores.
