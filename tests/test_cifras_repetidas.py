@@ -53,6 +53,16 @@ CIFRAS = [
      r"([\d,]{3,5}) esqueletos en el archivo que ve el modelo", "612"),
     ("los esqueletos comunes en el archivo que ve el modelo, en inglés",
      r"([\d,]{3,5}) skeletons in the file the model sees", "612"),
+    # La prevalencia tiene tres valores verdaderos sobre poblaciones distintas —63.5% en los 7,805
+    # con clase, 65.0% en las 6,306 de ajuste y 57.3% en la prueba— y se vigila solo la primera,
+    # atada a la frase que la nombra. El #313 la corrigió en el entregable y el artículo científico
+    # se quedó con el 65%, que es la del ajuste: el documento escrito a mano quedó fuera de la
+    # cadena del borrador y nada lo detectó. Las otras dos no se vigilan porque su contexto dice de
+    # qué población habla, y el piso de AUPRC de 0.350 las ata aparte.
+    # Va anclada a la población y no solo a «% son BBB+»: sin el ancla enganchaba el 99.5% de los
+    # 410 compuestos de un componente conexo del Avance 0, que es otra cifra verdadera.
+    ("la prevalencia de BBB+ en los 7,805 compuestos con clase",
+     r"7,805 compuestos con clase.{0,260}?([\d.]{2,4})\s*\\?,?\\?%\s*(?:son|de ellos) BBB\+", "63.5"),
 ]
 
 

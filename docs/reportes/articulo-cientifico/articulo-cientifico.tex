@@ -110,7 +110,7 @@ Tratamos por eso las dos fases en paralelo: cada una se entrena y se evalúa por
 
 \subsection{Permeabilidad (fase 1)}
 
-Partimos de un archivo curado por la patrocinadora, derivado de B3DB \autocite{meng2021b3db} y cruzado contra COCONUT \autocite{chandrasekhar2025coconut}, una colección abierta de productos naturales; ese cruce es lo que permite separar los compuestos naturales de los sintéticos y reportar por separado. Quedan 7,805 compuestos con clase asignada, el 65\,\% de ellos BBB+, con un umbral de logBB de $-1.0$. Reservamos 1,499 compuestos como prueba y usamos 6,306 para ajustar y validar.
+Partimos de un archivo curado por la patrocinadora, derivado de B3DB \autocite{meng2021b3db} y cruzado contra COCONUT \autocite{chandrasekhar2025coconut}, una colección abierta de productos naturales; ese cruce es lo que permite separar los compuestos naturales de los sintéticos y reportar por separado. Quedan 7,805 compuestos con clase asignada, el 63.5\,\% de ellos BBB+, con un umbral de logBB de $-1.0$. Reservamos 1,499 compuestos como prueba y usamos 6,306 para ajustar y validar, y conviene decir de qué población habla cada prevalencia: 65.0\,\% de BBB+ entre las filas de ajuste y 57.3\,\% en la prueba, un desajuste que reaparece en la sección~\ref{sec:corte}.
 
 El archivo incluye una columna de confiabilidad con grupos de A a D. Decidimos no usarla para filtrar: el análisis exploratorio mostró que está confundida con la clase, de modo que restringir a los grupos más confiables reduce la clase minoritaria del 36.5\,\% al 27.0\,\% y empeora el desbalance en lugar de limpiar ruido. La usamos para estratificar, nunca para excluir.
 
