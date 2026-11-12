@@ -360,10 +360,25 @@ def fig_despliegue() -> None:
     guardar(fig, "f7_despliegue")
 
 
+def fig_atribucion() -> None:
+    """El gráfico de puntos de SHAP del Anexo F: la misma figura que usa el deck, en la carpeta del artículo.
+
+    Sale de `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2`; las corridas de atribución del
+    4 de noviembre solo aportan la marca «confirmada por permutación». Se aísla de los parámetros de matplotlib
+    de este archivo para que se vea igual que en el deck.
+    """
+    sys.path.insert(0, str(RAIZ))
+    from scripts.figuras_presentacion import fig_importancias
+
+    with plt.rc_context(plt.rcParamsDefault):
+        fig_importancias(SALIDA, "f8_atribucion")
+    print("   f8_atribucion")
+
+
 def main() -> int:
     print("figuras ->", SALIDA)
     for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2,
-              fig_despliegue):
+              fig_despliegue, fig_atribucion):
         f()
     return 0
 
