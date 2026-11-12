@@ -70,7 +70,7 @@
 \endgroup\par\medskip
 
 % --- Decisión y problema ---
-Bioactive ordena compuestos naturales por su probabilidad de cruzar la barrera hematoencefálica y por su potencia contra 26 dianas del sistema nervioso, para decidir cuáles confirmar primero. Llevarlo a la práctica costaría unos \$51,840 MXN en 12 meses, entre implementación y operación; hacerlo o no es decisión de la patrocinadora. Recomendamos usarlo como apoyo a la priorización: el ahorro de pruebas de laboratorio cubre ese costo solo si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre; en otro caso se justifica por el orden y la evidencia que da.
+Bioactive ordena compuestos naturales por su probabilidad de cruzar la barrera hematoencefálica y por su potencia contra 26 dianas del sistema nervioso, para decidir cuáles confirmar primero. Adoptarlo costaría a su grupo unos \$51,840 MXN en 12 meses, entre puesta en marcha y operación; adoptarlo es decisión de la patrocinadora. Recomendamos usarlo como apoyo a la priorización: el ahorro de pruebas de laboratorio cubre ese costo solo si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre; en otro caso se justifica por el orden y la evidencia que da.
 
 Un compuesto natural que se considera para una terapia neuroprotectora tiene que cumplir dos condiciones antes de justificar una prueba de laboratorio: llegar al cerebro, cruzando la barrera hematoencefálica, y actuar sobre una diana, la proteína a la que se une. Confirmarlas una por una cuesta tiempo y dinero, la lista de candidatos es larga y la patrocinadora ayuda a planear esas pruebas, que son ensayos in vitro y no clínicos. Construimos dos modelos que ordenan los compuestos a partir de su estructura, con datos públicos \parencite{meng2021b3db,zdrazil2024chembl,zhao2023npass}. Dan evidencia para decidir en qué orden confirmar, no una decisión automática. Las dos preguntas no se excluyen: un compuesto que el modelo juzga poco probable de cruzar sigue siendo un candidato, porque esa predicción se equivoca y porque hay formas de superar la barrera, como los profármacos, la lipidización o los nanoacarreadores.
 
@@ -104,16 +104,16 @@ Lo medido es el intercambio. Para encontrar el 85\,\% de los permeables reales, 
 \smallskip
 
 % --- Inversión y costos (TCO a 12 meses) ---
-El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,500 de desarrollo, ya realizado y valorado a tarifa de referencia; \$16,200 de implementación y \$35,640 de operación. Lo que habría que financiar de aquí en adelante son \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local.
+El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN: \$121,500 de desarrollo, ya realizado y valorado a tarifa de referencia; \$16,200 de puesta en marcha y \$35,640 de operación. Lo que habría que financiar de aquí en adelante son \$51,840, unos \$4,320 al mes. No hay gasto de nube ni de licencias: el cuaderno corre en un equipo local.
 
 \medskip
 \noindent
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$121,500}{Desarrollo}{600 h, ya realizado}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.31\linewidth}\cifragris{\$51,840}{A financiar}{80 h de implementación y 176 h de operación}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.31\linewidth}\cifragris{\$51,840}{A financiar}{80 h de puesta en marcha y 176 h de operación}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.31\linewidth}\cifragris{\$173,340}{TCO 12 meses}{MXN, con el desarrollo}{}\end{minipage}
 \smallskip
 
-Recomendamos usarlo para decidir el orden en que se confirma, y dejar fuera el final de la lista solo sabiendo cuántos permeables se pierden; llevarlo a la práctica costaría \$51,840 en implementación y operación. El ahorro depende de cómo se confirme: con insumos propios (unos \$3,270 al mes) queda por debajo de la operación (\$4,320 al mes) y en el año habría una pérdida de unos \$12,700; si se contrata el servicio (unos \$18,240 al mes) la cubre varias veces. Se compensa si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre (\$28,300 contando el desarrollo) o si el volumen sube: con 100 por semestre bastan unos \$1,700 (Anexo~B). Las condiciones: confirmar con quien ensaya el costo real y el volumen; confirmar también 3 de cada 100 compuestos de los que el orden deja fuera, para medir cuántos permeables se pierden; y nombrar a quien hará la revisión mensual. Los riesgos y su mitigación están en la Tabla~\ref{tab:riesgos}.
+Recomendamos usarlo para decidir el orden en que se confirma, y dejar fuera el final de la lista solo sabiendo cuántos permeables se pierden; adoptarlo costaría a su grupo \$51,840 en puesta en marcha y operación. El ahorro depende de cómo se confirme: con insumos propios (unos \$3,270 al mes) queda por debajo de la operación (\$4,320 al mes) y en el año habría una pérdida de unos \$12,700; si se contrata el servicio (unos \$18,240 al mes) la cubre varias veces. Se compensa si confirmar un candidato cuesta más de unos \$8,450 con 20 compuestos por semestre o si el volumen sube (Anexo~B). Las condiciones: confirmar también 3 de cada 100 compuestos de los que el orden deja fuera, para medir cuántos permeables se pierden; y nombrar a quien hará la revisión mensual. Los riesgos y su mitigación están en la Tabla~\ref{tab:riesgos}.
 
 % --- Riesgos y mitigación ---
 \smallskip
@@ -136,7 +136,7 @@ Continuidad: depende de que alguien lo mantenga y reentrene. & Procedimiento doc
 \end{table}
 
 % --- Transferencia y continuidad (en el hilo, sin encabezado) ---
-Para que la patrocinadora opere sin depender del equipo se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos guardados con su módulo de inferencia; el procedimiento para reentrenar con datos nuevos; y una guía con la herramienta para medir columnas propias. La operación queda a cargo de la patrocinadora, con una revisión mensual de la advertencia de similitud; quien ensaya, propio o colaborador, absorbe el costo del laboratorio.
+Para operar sin depender del equipo se transfieren un cuaderno que recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido; los dos modelos con su módulo de inferencia; el procedimiento para reentrenar; y una guía para medir columnas propias. La operación queda a cargo de la patrocinadora y su grupo, con revisión mensual de la advertencia de similitud; quien ensaya, propio o colaborador, absorbe el costo del laboratorio. El proyecto termina con esta entrega y la continuidad es autónoma; a futuro podría escribirse un artículo, sin compromiso.
 
 \section*{Declaración de uso de inteligencia artificial}
 Se utilizó \textcite{anthropic2026claude} con los modelos Claude Opus~5, Claude Sonnet~5.5 y Claude Sonnet~5 (este último cuando restricciones de seguridad en biología y química impidieron usar el 5.5) para redactar este resumen y calcular las cifras de los anexos. Los supuestos, la interpretación y las recomendaciones son del equipo, que contrastó cada cifra. La responsabilidad final sobre el contenido entregado recae en los autores.
@@ -185,10 +185,10 @@ Servicio contratado & 2,040 & 35,700 & 18,240 & 41,410 & 21,160\\
 \end{tabular}
 \end{table}
 
-\noindent Con insumos propios el compuesto pesa más que las pruebas; contratando el servicio pesan más las pruebas. Los precios del servicio contratado son nuestra estimación, sin cotización, y es lo más incierto del documento: mueve el resultado de una pequeña pérdida a una ganancia clara. El punto de equilibrio del Anexo~B vale en los dos mercados. Los beneficios intangibles no se cuantifican.
+\noindent Con insumos propios el compuesto pesa más que las pruebas; contratando el servicio pesan más las pruebas. Los precios del servicio contratado son nuestra estimación, sin cotización, y es lo más incierto del documento: mueve el resultado de una pequeña pérdida a una ganancia clara. El punto de equilibrio del Anexo~B vale en los dos mercados: con 20 compuestos por semestre es de unos \$8,450 por candidato (\$28,300 contando el desarrollo) y con 100 por semestre bastan unos \$1,700. Los beneficios intangibles no se cuantifican.
 
 \section*{Anexo B. Costo total de propiedad a 12 meses, por servicio}
-\noindent Todas las horas son supuestos del equipo, a confirmar. La tarifa es \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de una guía salarial \parencite{keepcoding2026salarios}, por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora. Las horas de operación pesan mucho: con 76 en lugar de 176, los \$51,840 a financiar bajan a unos \$31,590. En dólares, a 17.5, el TCO es de unos 9,905 USD (2,962 sin el desarrollo); el salario es el mexicano, así que a la tarifa de un perfil estadounidense sería mayor.
+\noindent Todas las horas son supuestos del equipo, a confirmar; las de puesta en marcha y operación son tiempo del grupo de la patrocinadora, no del equipo. La tarifa es \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de una guía salarial \parencite{keepcoding2026salarios}, por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora. Las horas de operación pesan mucho: con 76 en lugar de 176, los \$51,840 a financiar bajan a unos \$31,590. En dólares, a 17.5, el TCO es de unos 9,905 USD (2,962 sin el desarrollo); el salario es el mexicano, así que a la tarifa de un perfil estadounidense sería mayor.
 
 \begin{table}[h]
 \centering
@@ -202,8 +202,8 @@ Fase & Servicio & Horas & Costo (MXN)\\
 Desarrollo & Ciencia de datos: modelos y evaluación & 400 & 81,000\\
  & Ingeniería: código, pruebas y herramienta & 140 & 28,350\\
  & Documentación & 60 & 12,150\\
-Implementación & Instalación y entrega del cuaderno & 32 & 6,480\\
- & Capacitación & 24 & 4,860\\
+Puesta en marcha & Instalación del cuaderno & 32 & 6,480\\
+ & Familiarización con el cuaderno & 24 & 4,860\\
  & Validación con datos propios & 24 & 4,860\\
 Operación (12 meses) & Revisión mensual, 8 h por mes & 96 & 19,440\\
  & Reentrenamiento, dos veces al año & 80 & 16,200\\

@@ -30,7 +30,7 @@ anexos en la 4 y la 5). Se compila con `bash scripts/compilar_articulo.sh resume
   nuestra estimación del orden de magnitud de un laboratorio de servicio. Los de lista (kit de membrana
   artificial, cribado universitario, estándares) sí son reales y de EE. UU., convertidos a 17.5 pesos por dólar;
   para México se suma el 16% de IVA (sin flete ni aduana) y se supone el mismo precio de servicio.
-  **Las horas de desarrollo, implementación y operación (856 en total) y el volumen de 20 compuestos por semestre
+  **Las horas de desarrollo, puesta en marcha y operación (856 en total) y el volumen de 20 compuestos por semestre
   no vienen de ninguna fuente**: hay que cambiarlos por los reales. La tarifa sale de un sueldo de 24,000 pesos al
   mes, dentro del rango de las guías salariales, con 1.35 de cargas. **El resultado depende de dos supuestos**: las
   horas de operación (con 76 en lugar de 176, lo que se financia baja de 51,840 a unos 31,590) y el precio de la
