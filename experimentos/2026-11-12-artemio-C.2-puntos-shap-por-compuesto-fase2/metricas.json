@@ -14,6 +14,6 @@
       "MolLogP",
       "PEOE_VSA1"
     ],
-    "compuestos": 3000
+    "pares_compuesto_diana": 3000
   }
 }

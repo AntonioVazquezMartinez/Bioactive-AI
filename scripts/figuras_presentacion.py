@@ -1,23 +1,27 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son tres, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son siete, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
 - `huella.svg`: cómo se vuelve bits una molécula y qué es el Tanimoto.
 - `dificultad.svg`: la semejanza ordena pero no explica el nivel. Sale de las corridas
   `2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad` y `…-octava-lectura-origen-similitud`.
-- `importancias.svg`: qué columnas pesan en cada fase. Sale de las dos corridas de atribución
-  (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
-  `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`): barras de |SHAP| medio, con el lugar por
-  permutación, y en azul lo que los dos métodos ponen entre sus quince primeros.
-- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
-  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`.
-- `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
-  `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
 - `corte.svg`: dónde cae el corte y cuánto se declara permeable con cada uno. Sale de
   `experimentos/2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba`.
-- Las dos se escriben en `docs/reportes/presentacion/figuras/`.
+- `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
+  `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
+- `importancias.svg`: qué columnas pesan en cada fase, en un gráfico de puntos de SHAP: un punto por fila,
+  su posición es el efecto de la columna en la predicción y su color el valor de la columna. **Los puntos salen de
+  `experimentos/2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2`** (`scripts/puntos_shap.py`):
+  300 compuestos en la fase 1 y 3,000 **pares compuesto-diana** (una muestra) en la 2. Las dos corridas de atribución
+  del 4 de noviembre (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
+  `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`) solo aportan la marca «confirmada por permutación»,
+  y los confirmados van primero.
+- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
+  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El naranja marca la similitud de **esa fase**
+  por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
 figuras están versionadas.
@@ -44,6 +48,7 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 from src.data_prep.splits import andamio_murcko, esqueleto_conectividad  # noqa: E402
+from src.inferencia import UMBRAL_EXTRAPOLACION  # noqa: E402
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -370,8 +375,8 @@ NOMBRES = {
     "qed": ("Parecido a un fármaco", "qed"),
     "NumAliphaticCarbocycles": ("Anillos de carbono no aromáticos", "NumAliphaticCarbocycles"),
     "NumHDonors": ("Donadores de hidrógeno", "NumHDonors"),
-    "EState_VSA10": ("Superficie y estado electrónico", "EState_VSA10"),
-    "VSA_EState3": ("Superficie y estado electrónico", "VSA_EState3"),
+    "EState_VSA10": ("Estado electrónico y superficie, tramo 10", "EState_VSA10"),
+    "VSA_EState3": ("Estado electrónico y superficie, tramo 3", "VSA_EState3"),
     "fr_COO": ("Ácidos carboxílicos", "fr_COO"),
     "NumAtomStereoCenters": ("Centros estereogénicos", "NumAtomStereoCenters"),
     "fr_Ar_OH": ("Hidroxilos aromáticos", "fr_Ar_OH"),
@@ -399,7 +404,8 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
     from matplotlib.colors import LinearSegmentedColormap
 
     mapa = LinearSegmentedColormap.from_list("bajo_alto", [AZUL, "#e4e4e4", NARANJA])
-    orden = list(d.assign(a=d["shap"].abs()).groupby("columna")["a"].mean().sort_values(ascending=False).head(n).index)
+    por_shap = list(d.assign(a=d["shap"].abs()).groupby("columna")["a"].mean().sort_values(ascending=False).index)
+    orden = ([c for c in por_shap if c in confirmadas] + [c for c in por_shap if c not in confirmadas])[:n]
     rng = np.random.default_rng(0)
     for y, col in enumerate(orden):
         f = d[d["columna"] == col]
@@ -461,8 +467,9 @@ def fig_importancias() -> dict:
     barra.set_ticks([0, 1])
     barra.set_ticklabels(["valor bajo de la columna", "valor alto"], fontsize=9.5)
     barra.outline.set_visible(False)
-    fig.text(0.5, -0.03, "Cada punto es un compuesto (300 en la fase 1, 3,000 en la 2). Su posición dice cuánto empuja esa columna "
-             "la predicción en ese compuesto; su color, qué valor tiene la columna.", fontsize=9.6, color=GRIS, ha="center")
+    fig.text(0.5, -0.03, "Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
+             "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
+             "métodos van primero.", fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
@@ -482,7 +489,7 @@ def fig_ranking() -> dict:
     )
     for ax, d, col, sim, titulo, tope, etiqueta in paneles:
         y = range(len(d))
-        colores = [NARANJA if a else AZUL for a in d["aviso_extrapolacion"]]
+        colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in d[sim]]
         ax.barh(y, d[col], color=colores, height=0.62)
         for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
             ax.text(fila[col] + tope * 0.015, yi, etiqueta(fila), va="center", fontsize=9, color=GRIS)
@@ -493,9 +500,9 @@ def fig_ranking() -> dict:
         for lado in ("left", "right", "top", "bottom"):
             ax.spines[lado].set_visible(False)
         ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
-    fig.text(0.01, -0.03, "En naranja, compuestos con aviso de extrapolación (lejos de lo que el modelo vio). Son compuestos "
-             "conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena por separado, "
-             "sin combinarlas.", fontsize=8.8, color=GRIS)
+    fig.text(0.01, -0.03, "En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase (aviso de extrapolación). "
+             "Son compuestos conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena "
+             "por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)

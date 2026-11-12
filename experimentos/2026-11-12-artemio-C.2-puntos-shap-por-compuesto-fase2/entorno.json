@@ -1,9 +1,9 @@
 {
-  "arbol_sucio": false,
-  "commit": "325c01483d9608f5ea8da16e91042222fa70b278",
+  "arbol_sucio": true,
+  "commit": "d883aa8c59eab513b91a916c466580697f47fe0c",
   "datos_sha256": {},
   "decision": "C.2",
-  "duracion_s": 13.4,
+  "duracion_s": 12.3,
   "lock_sha256": "7b40cfb8375a9554a3f5c3dc86d1d0dfec9730c8602ea4df48053fd6b4748e2e",
   "paquetes": {
     "imbalanced-learn": "0.14.2",
@@ -15,6 +15,6 @@
     "xgboost": "3.4.1"
   },
   "python": "3.12.12",
-  "sin_seguimiento": 2,
+  "sin_seguimiento": 0,
   "sistema": "macOS-27.0.1-arm64-arm-64bit"
 }

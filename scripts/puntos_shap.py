@@ -11,10 +11,12 @@ desempeño ni toca la prueba reservada.
   (semilla 0, cinco pliegues agrupados, 60 compuestos por pliegue, fondo de 10 centroides, 400 muestras). Los
   300 compuestos explicados son los mismos. Un valor positivo sube la probabilidad de cruzar la barrera.
 - **Fase 2** (`aft`): TreeSHAP sobre el margen del modelo, en cinco pliegues agrupados (semilla 0), con 600
-  filas de validación por pliegue. Se convierte a la escala de pActividad (`-phi / ln 10`): un valor positivo
+  filas de validación por pliegue. **Cada fila es un par compuesto-diana, no un compuesto** (56,241 en total),
+  y es una **submuestra**: la corrida original de atribución calculó sobre todas las filas de validación de cada
+  pliegue (unas 11,248); aquí se toman 600 por pliegue solo para poder dibujar. Se convierte a la escala de pActividad (`-phi / ln 10`): un valor positivo
   sube la potencia predicha.
 
-Se guardan, por compuesto, el valor de SHAP y el valor de la columna de las 12 columnas con mayor media de
+Se guardan, por fila, el valor de SHAP y el valor de la columna de las 12 columnas con mayor media de
 |SHAP|; el valor de la columna es lo que colorea cada punto.
 
     ./env312/bin/python scripts/puntos_shap.py [fase1|fase2]
@@ -113,7 +115,7 @@ def main() -> None:
         if cual in ("ambas", "fase2"):
             d2 = quedarse_con_las_primeras(fase2())
             d2.to_csv(c.carpeta / "shap_fase2.csv", index=False)
-            res["fase2"] = {"compuestos": int(d2.groupby("columna").size().iloc[0]),
+            res["fase2"] = {"pares_compuesto_diana": int(d2.groupby("columna").size().iloc[0]),
                             "columnas": list(d2.assign(a=d2["shap"].abs()).groupby("columna")["a"].mean()
                                              .sort_values(ascending=False).index)}
         c.metricas(res)
