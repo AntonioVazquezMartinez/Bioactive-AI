@@ -1,0 +1,17 @@
+decision: C.5
+semillas:
+- 0
+params:
+  fracciones_ensayadas:
+  - 0.3
+  - 0.4
+  - 0.5
+  - 0.6
+  - 0.7
+  - 0.8
+  - 0.9
+  remuestras: 2000
+  toca_prueba: false
+  origen: experimentos/2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba/prueba_predicciones.csv
+  prevalencia: 0.5730486991327551
+  n: 1499
