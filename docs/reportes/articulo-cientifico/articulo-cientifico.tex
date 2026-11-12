@@ -290,6 +290,15 @@ La explicabilidad a nivel de subestructura era un requisito de la patrocinadora,
 
 El contraste entre fases es informativo y conviene no trasladarlo: TPSA y los donadores de hidrógeno, las dos propiedades que dominan la literatura de permeabilidad, no dominan la potencia (lugares 44 y 165), mientras que en la fase~1 los donadores de hidrógeno sí entran en el cuarto lugar con ambos métodos y TPSA no (lugares 40 y 10), porque comparte información con un conjunto de columnas correlacionadas. Con el brazo que sí usa huellas, los dos métodos concuerdan según la regla declarada (Spearman 0.577 sobre la unión de los 100 primeros, contra el 0.50 fijado de antemano) y la intersección contiene dos subestructuras genéricas y frecuentes, un nitrógeno de anillo tipo piridina y un CH aromático vecino, presentes en el 57\,\% y el 21\,\% de las moléculas. Indican que el modelo usa heterociclos nitrogenados; no afirmamos ningún farmacóforo específico.
 
+Los gráficos de puntos de SHAP añaden la dirección (Figura~\ref{fig:atribucion}): en la fase~1, una lactama o más donadores de hidrógeno bajan la probabilidad de cruzar la barrera; en la fase~2, ser la diana \texttt{MAOA} baja la potencia predicha y más complejidad topológica la sube. Cada punto es un compuesto en la fase~1 (300, los mismos de la corrida de atribución) y un par compuesto--diana en la fase~2 (3,000, una submuestra de 600 filas por pliegue). Son direcciones que aprendió el modelo y no un mecanismo, y «confirmada por permutación» marca lo que los dos métodos ponen entre sus quince primeros.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figuras/f8_atribucion.png}
+  \caption{SHAP por fila: la posición de cada punto es el efecto de la columna en la predicción y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.}
+  \label{fig:atribucion}
+\end{figure*}
+
 \section{La representación no se traslada entre fases}
 \label{sec:huellas}
 
