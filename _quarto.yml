@@ -65,9 +65,6 @@ website:
             icon: rulers
           - text: "---"
           - text: "Documentos (PDF)"
-          - href: contenido/reportes/resumen-ejecutivo/resumen_ejecutivo.pdf
-            text: Resumen ejecutivo
-            icon: file-earmark-pdf
           - href: contenido/reportes/articulo/articulo.pdf
             text: Artículo
             icon: file-earmark-pdf

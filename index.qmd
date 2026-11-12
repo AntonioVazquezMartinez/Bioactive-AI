@@ -34,7 +34,6 @@ Rutas de lectura según de dónde vengas:
 ::: {.g-col-12 .g-col-md-6}
 **Documentos (PDF)**
 
-- [Resumen ejecutivo](contenido/reportes/resumen-ejecutivo/resumen_ejecutivo.pdf)
 - [Artículo](contenido/reportes/articulo/articulo.pdf)
 - [Póster](contenido/reportes/poster/poster.pdf)
 :::

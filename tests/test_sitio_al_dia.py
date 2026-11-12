@@ -45,7 +45,8 @@ def test_todo_cuaderno_se_publica_o_esta_declarado_como_excluido():
     for nb in sorted((RAIZ / "notebooks").glob("*.ipynb")):
         if nb.name in CUADERNOS_EXCLUIDOS:
             continue
-        assert f"notebooks/{nb.name}" in prepare, f"{nb.name} no está en la lista de prepare_site.py"
+        # entre comillas: es una entrada de la lista, no una mención en un comentario
+        assert f'"notebooks/{nb.name}"' in prepare, f"{nb.name} no está en la lista de prepare_site.py"
         assert f"contenido/notebooks/{nb.name}" in quarto, f"{nb.name} no está en la lista render de _quarto.yml"
 
 

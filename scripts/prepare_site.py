@@ -121,7 +121,6 @@ PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
         "docs/reportes/avance-1/Avance1.0.pdf",
         "docs/reportes/avance-2/Avance2.0.pdf",
         # la entrega final: el PDF se versiona junto a su .tex y el sitio lo publica tal cual
-        "docs/reportes/resumen-ejecutivo/resumen_ejecutivo.pdf",
         "docs/reportes/articulo/articulo.pdf",
         "docs/reportes/poster/poster.pdf"]
 
