@@ -1,5 +1,9 @@
-"""La presentación final (#303): 13 diapositivas para 30 minutos, cada una con sus notas y dentro del
-presupuesto de texto que ya mide `test_armar_deck` (techo de 1,761 caracteres por diapositiva)."""
+"""La presentación final (#303): 14 diapositivas para 30 minutos, cada una con sus notas y dentro del
+presupuesto de texto que ya mide `test_armar_deck` (techo de 1,761 caracteres por diapositiva).
+
+La propuesta del #303 eran 13. La catorce es «Cómo se vuelve números una molécula»: el mazo no decía en
+ninguna parte cómo se convierte un SMILES en columnas, que es el Avance 2 completo. Se paga con minuto y
+medio recortado de otras tres del mismo bloque, así que el reparto de #303 no cambia."""
 import re
 from pathlib import Path
 
@@ -16,9 +20,9 @@ def _diapositivas():
     return trozos, re.split(r"^## ", respaldo, flags=re.M)[1:]
 
 
-def test_son_trece_diapositivas_en_el_hilo_y_dos_de_respaldo():
+def test_son_catorce_diapositivas_en_el_hilo_y_dos_de_respaldo():
     hilo, respaldo = _diapositivas()
-    assert len(hilo) == 13, f"{len(hilo)} diapositivas en el hilo; la propuesta del #303 son 13"
+    assert len(hilo) == 14, f"{len(hilo)} diapositivas en el hilo; son 14 (las 13 del #303 más las variables)"
     assert len(respaldo) == 2
 
 
