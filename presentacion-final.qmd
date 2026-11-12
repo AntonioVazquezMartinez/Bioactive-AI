@@ -82,11 +82,12 @@ MCC
 :::
 
 El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
+Fase 1, permeabilidad, con el modelo que entregamos.
 
 **¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
 
 ::: {.notes}
-**Antonio · 1.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista.
+**Antonio · 1 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo es una máquina de vectores de soporte, `svm_rbf`.
 :::
 
 ## Los datos {.smaller}
@@ -112,40 +113,25 @@ El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto
 
 ## Cómo se vuelve números una molécula {.smaller}
 
-Entra un **SMILES**, la estructura escrita como texto. Un modelo necesita números.
+![](docs/reportes/presentacion/figuras/huella.svg){fig-alt="Un fragmento de la morfina prende una casilla de la huella; comparar dos huellas es el Tanimoto"}
 
-::: {.columns}
-::: {.column width="50%"}
-### Descriptores
-
-Propiedades calculadas con RDKit: peso, superficie polar, donadores de hidrógeno y doscientas más.
-
-Quedan **151**: fuera las casi constantes y las redundantes. Elegidas sobre los **valores crudos**, para que la selección no cambie si cambia el escalado.
-:::
-::: {.column width="50%"}
-### Huellas moleculares
-
-Una cadena de bits que marca **qué fragmentos** tiene la molécula.
-
-Las medimos aparte: ayudan en la fase 2 y en la fase 1 **no** (respaldo).
-:::
-:::
-
-Los dos modelos finales corren sobre descriptores; en la fase 2 se suma la diana. Y los fragmentos sirven además para medir **parecido** entre dos moléculas, que es con lo que se construye la escalera.
+- **Descriptores:** propiedades que calcula RDKit (peso, superficie polar, donadores de hidrógeno y doscientas más). Quedan **151**: fuera las casi constantes y las redundantes, elegidas sobre los **valores crudos** para que la selección no cambie si cambia el escalado.
+- **Huellas:** las medimos aparte, y ayudan en la fase 2 y en la fase 1 no (respaldo). Los dos modelos finales corren sobre descriptores; en la fase 2 se suma la diana.
 
 ::: {.notes}
-**Antonio · 1.5 min.** El orden importa: primero se eligieron las columnas sobre valores crudos, porque en el Avance 2 la primera selección se hizo sobre una matriz ya transformada y cambiar la transformación obligaba a repetirla. El mismo juego de 151 columnas sale con las tres transformaciones. Las huellas son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue.
+**Antonio · 1.5 min.** El orden importa: primero se eligieron las columnas sobre valores crudos, porque en el Avance 2 la primera selección se hizo sobre una matriz ya transformada y cambiar la transformación obligaba a repetirla. El mismo juego de 151 columnas sale con las tres transformaciones. Las huellas que se midieron son Sort & Slice, con el vocabulario reaprendido dentro de cada pliegue; las Morgan de la figura son las que usamos para medir parecido.
 :::
 
-## Cómo medimos sin engañarnos
+## Cómo medimos sin engañarnos {.smaller}
 
-- **Agrupamos por andamio de Bemis-Murcko** (los anillos, sin las cadenas colgantes) **y por esqueleto de
-  conectividad**, nunca al azar: así lo evaluado no es un análogo de lo entrenado. Quedan 1,048 grupos.
-- Cada prueba se **planteó antes** de ver su resultado.
-- La prueba reservada solo sirvió **para medir**, nunca para elegir un modelo.
+![](docs/reportes/presentacion/figuras/anatomia.svg){fig-alt="La morfina, su andamio de Bemis-Murcko y su esqueleto de conectividad"}
+
+- **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. Partir al azar infla el resultado entre 7 y 13 puntos.
+- **Qué medimos. Fase 1**, clasificar: MCC, AUROC (si el orden es bueno) y AUPRC. **Fase 2**, predecir potencia: concordancia (si ordena bien los pares).
+- Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
-**Antonio · 1 min.** Partir al azar infla los resultados entre 7 y 13 puntos. Los intervalos remuestrean grupos de moléculas, no filas.
+**Antonio · 1.5 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Los intervalos remuestrean grupos de moléculas, no filas.
 :::
 
 ## El modelo no es la palanca
@@ -162,69 +148,79 @@ No es el modelo.
 **Antonio · 1.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
 :::
 
-## La escalera de semejanza {.smaller}
+## La escalera de semejanza · fase 1 {.smaller}
 
 ::: {.columns}
-::: {.column width="50%"}
+::: {.column width="54%"}
 ![](docs/reportes/articulo/figuras/f1_escalera.svg){fig-alt="AUROC por peldaño de semejanza permitida entre entrenamiento y validación"}
+
+En azul el `svm_rbf`, el modelo que entregamos; en gris los otros cinco.
 :::
-::: {.column width="50%"}
-![](docs/reportes/articulo/figuras/f2_rareza.svg){fig-alt="Ventaja del modelo sobre la línea base por tercil de rareza"}
+::: {.column width="46%"}
+| Cómo se parte | Parecido al vecino | MCC |
+|:--|--:|--:|
+| Al azar | 0.90 | **0.752** |
+| Por andamio | 0.75 | 0.721 |
+| Andamio + esqueleto | 0.50 | 0.702 |
+| Tanimoto < 0.6 | 0.42 | 0.688 |
+| Tanimoto < 0.5 | 0.33 | 0.486 |
+| Tanimoto < 0.4 | 0.28 | **0.419** |
+
+33 puntos de MCC, contra **4.2** entre los once modelos.
 :::
 :::
 
-- Si nada de lo entrenado puede parecerse más de **0.4 de Tanimoto** a lo evaluado (los fragmentos que dos
-  moléculas comparten, de 0 a 1), el MCC baja de **0.75 a 0.42**: 33 puntos, contra 4.2 entre modelos.
-- La fase 2 hace lo mismo, en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
+La fase 2 hace lo mismo en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
 
 ::: {.callout-tip title="Pista 2"}
 Importa qué tan nueva es la molécula.
 :::
 
 ::: {.notes}
-**Pame · 2 min.** No dividir 33 entre 4.2: son dos estimadores distintos. La escalera de la fase 2 se detiene en 0.6 porque más abajo la partición no se puede construir.
+**Pame · 2 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
 :::
 
-## Pero no lo explica todo {.smaller}
+## Pero no lo explica todo · fase 1 {.smaller}
 
-- La prueba se parece **más** a lo entrenado que la validación (0.414 contra 0.384): debería rendir mejor.
-- Esperábamos AUROC **0.89**; vemos **0.79**.
-- La semejanza nos dice **qué compuestos serán más difíciles**, no cuánto va a caer el conjunto.
+![](docs/reportes/presentacion/figuras/dificultad.svg){fig-alt="A la izquierda, el AUROC esperado por semejanza contra el real; a la derecha, el AUROC por tercil de semejanza"}
+
+La semejanza nos dice **qué compuestos serán más difíciles**, no **cuánto** va a caer el conjunto. Ordena, pero no calibra. Qué explica esos 0.097 no está medido: hay cuatro candidatos anotados.
 
 ::: {.notes}
-**Pame · 1.5 min.** Dentro de la prueba, el AUROC sube de 0.697 a 0.875 del tercio más raro al más parecido. Pero esa semejanza ordena, no calibra. Qué explica los diez puntos no está medido; hay cuatro candidatos anotados.
+**Pame · 1.5 min.** La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas; con vecino de cinco en lugar de uno sale lo mismo (0.882). Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
 :::
 
-## Enseñarle lo raro no ayuda {.smaller}
+## Enseñarle lo raro no ayuda · fase 1 {.smaller}
 
-| Qué probamos | Resultado |
-|:--|:--|
-| **Repesar** las filas raras | AUROC −0.0005 en lo más raro; un control al azar mueve casi igual |
-| **Pasar filas de la prueba** al entrenamiento | MCC sube 0.035, pero el orden casi no cambia (AUROC +0.002) |
-| **Recomponer** qué filas se usan | −0.060 de AUROC al empezar por lo raro, con el 25% del ajuste |
+Tres formas de darle más química rara. Las tres con la **regla escrita antes de correr**.
+
+| Qué le dimos | Qué pedíamos | Qué pasó |
+|:--|:--|:--|
+| **Más peso** a las filas raras que ya tenía | +0.005 de AUROC en 12 de 15 evaluaciones | **−0.0005**, y los mismos pesos al azar mueven igual |
+| **Filas raras de la prueba**, devolviendo otras tantas comunes | que mejorara el orden, no solo el corte | MCC +0.035 pero AUROC **+0.002**: movió el corte. Al azar sube casi lo mismo |
+| **Otra composición** del ajuste, mismo tamaño y prevalencia | que empezar por lo raro ayudara | **−0.060** de AUROC con el 25%; con el 75% da igual |
+
+Y de paso, lo más útil: con el mismo modelo y sin reentrenar, los compuestos **comunes** se miden con AUROC **0.94** y los **raros** con **0.68**.
 
 ::: {.callout-tip title="Pista 3"}
-El problema no es cuánta química rara ve el modelo.
+El problema no es cuánta química rara ve el modelo. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 :::
 
 ::: {.notes}
-**Pame · 2.5 min.** Pasar filas sube el MCC porque cambia el corte, no lo que el modelo sabe: tanto con filas raras (+0.035) como al azar (+0.023). Las tres reglas estaban escritas antes de correr.
+**Pame · 2.5 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
 :::
 
-## El giro: el corte de 0.5 {.smaller}
+## El giro: el corte de 0.5 · fase 1 {.smaller}
 
-- A 0.5 el modelo declara permeable al **79.3%** de la prueba; lo real es **57.3%**: 22 puntos de desajuste.
-- Igualar esa tasa a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba.
-- Elegir el corte con validación **no sirve**: +0.0065, indistinguible de cero.
+![](docs/reportes/presentacion/figuras/corte.svg){fig-alt="Dónde cae cada corte y qué porcentaje de la prueba declara permeable"}
 
-::: {.callout-important}
-Límite: necesita el lote completo y suponer una prevalencia.
-:::
+- Igualar la tasa declarada a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba. Y supusimos 65% cuando era 57%: aguanta el error.
+- Elegir el corte con validación **no sirve** (+0.0065): lo mueve hacia abajo, y la prueba lo necesitaba hacia arriba.
 
 **Respuesta al gancho:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
-**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad: de 0.919 en validación. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+**Pame · 3 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
 :::
 
 ## El cuaderno
@@ -274,6 +270,16 @@ Es Python, no una interfaz; mide clasificación.
 
 - Ayudan a cinco de seis modelos en la fase 2 y a ninguno en la fase 1.
 - No es el tamaño de los datos ni el tipo de etiqueta.
+
+## La ventaja sobre la línea base, por tercil {.smaller}
+
+![](docs/reportes/articulo/figuras/f2_rareza.svg){fig-alt="Ventaja del modelo sobre la línea base de peso y TPSA, por tercil de rareza"}
+
+La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido que es el compuesto: +0.036 en el tercil más raro y +0.106 en el más parecido (IC95% de la diferencia: 0.011 a 0.124). En la fase 2 la diferencia es cuatro veces menor.
+
+::: {.notes}
+**Pame.** Salió del hilo porque mide la ventaja sobre la línea base y la diapositiva 8 habla de AUROC: dos cantidades distintas en la misma pantalla confunden.
+:::
 
 ## El modelo de potencia en NPASS {.smaller}
 
