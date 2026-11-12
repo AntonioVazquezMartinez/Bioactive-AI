@@ -119,7 +119,12 @@ DOCUMENTOS = [
 # se publica el PDF tal cual y la página índice enlaza a él.
 PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
         "docs/reportes/avance-1/Avance1.0.pdf",
-        "docs/reportes/avance-2/Avance2.0.pdf"]
+        "docs/reportes/avance-2/Avance2.0.pdf",
+        # El artículo científico no es un entregable del curso, pero su PDF se versiona —el
+        # README de su carpeta dice por qué— y la página de entregables lo ofrece para
+        # descargar, así que hay que copiarlo o ese enlace queda roto. Que el PDF no se quede
+        # atrás de su `.tex` lo vigila `tests/test_pdf_al_dia.py`.
+        "docs/reportes/articulo-cientifico/articulo-cientifico.pdf"]
 
 
 def claves_bib() -> set[str]:

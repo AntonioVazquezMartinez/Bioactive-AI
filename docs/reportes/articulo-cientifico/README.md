@@ -44,8 +44,10 @@ lista combinada— y este artículo había quedado diciendo en presente que las 
 orden», dos oraciones antes de llamar pendiente a esa misma combinación. La guarda de cifras no podía verlo,
 porque no es una cifra: es el mismo desfase de documento escrito a mano, en una afirmación.
 
-Lo que ninguna prueba cubre es el PDF: dónde cayó cada flotante, si un encabezado quedó huérfano al pie de una
-columna y si alguna tabla se desbordó. Eso pide ojos humanos, página por página.
+Y una guarda sobre el PDF, explicada en la sección siguiente: que su commit no sea anterior al del `.tex`.
+
+Lo que ninguna prueba cubre es la maquetación: dónde cayó cada flotante, si un encabezado quedó huérfano al pie
+de una columna y si alguna tabla se desbordó. Eso pide ojos humanos, página por página.
 
 ## Por qué el PDF sí se versiona
 
@@ -55,11 +57,18 @@ así que sin ella no hay forma de ver dónde cayó un flotante ni si una tabla s
 que ninguna prueba cubre—. Con el PDF en el repo, cualquiera puede abrirlo y revisar la maquetación; sin él, la
 revisión se concentra en la única persona que tiene Docker levantado.
 
-El costo es el de siempre, y hay que asumirlo: **un PDF versionado se desfasa del `.tex` en silencio.** No hay
-prueba que lo detecte, porque comparar un PDF con su fuente pide compilar. Así que la regla es manual: el `.tex`
-y el PDF se empujan juntos, y si un cambio del `.tex` llega sin su PDF, el PDF del repo es viejo hasta que alguien
-lo recompile. Una guarda posible, para cuando moleste: que el script de compilación deje la huella `sha256` del
-`.tex` junto al PDF y una prueba la compare con la del `.tex` actual.
+El costo es el de siempre: **un PDF versionado se desfasa del `.tex` en silencio**, y desde que el sitio lo
+publica, un PDF viejo es una página publicada vieja. Ya pasó aquí: el PDF se compiló en `85644f8`, del `.tex`
+anterior al arreglo de `tab:modelos`; `74a0543` arregló el `.tex` y el PDF siguió mostrando la tabla desbordada
+hasta que `bdc8d01` lo recompiló. En medio, el PDF contradecía a su propia fuente y nada fallaba.
+
+Comparar un PDF con su fuente de verdad pide compilar, que es lo que no hay en CI. Lo que sí se comprueba sin
+compilador es el orden, y es lo que hace `tests/test_pdf_al_dia.py`: **el commit del PDF no puede ser anterior al
+del `.tex`.** Si los dos se empujan juntos, como pide la regla, caen en el mismo commit y las fechas coinciden.
+No garantiza que el PDF se haya recompilado —quien quiera burlarlo solo tiene que tocar el archivo— pero atrapa
+el descuido, que es el modo en que esto se rompe. La guarda necesita `fetch-depth: 0` en el `actions/checkout`
+de CI: con el clon superficial que viene por defecto, `git log` atribuye todos los archivos al único commit del
+clon y las dos fechas salen iguales, así que la comparación pasaría sin medir nada.
 
 ## Cómo se compila
 
@@ -89,15 +98,17 @@ cd docs/reportes/articulo-cientifico && mkdir -p /tmp/subir && cp -RL articulo-c
   figura que se dibuja dos veces deriva. Las dos que no entran son la de huellas por tramo de peso, que es de
   anexo, y la de arquitectura de despliegue, que es de operación y no de resultados.
 
+## La revisión de la maquetación
+
+Hecha página por página en el [#309](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/309) y vigente
+para el PDF que está en el repo: **9 páginas**, carta, dos columnas, sin referencias sin resolver; ningún
+flotante a más de una página de su mención; ningún encabezado huérfano; la página 9 solo con el final de las
+referencias. Encontró un defecto real, la tabla de los once modelos, que terminaba en 312.9 pt con la columna en
+296.1 y tocaba la figura de al lado. Se arregló con `\setlength{\tabcolsep}{4pt}`, que la deja en 295.0 sin mover
+el resto, en lugar de pasarla a `table*`, que movería los flotantes de ancho completo.
+
 ## Pendiente
 
-- **Recompilar y empujar el PDF.** El que está en el repo se compiló del commit `e45da59`, **anterior** al
-  arreglo de la tabla, así que todavía muestra `tab:modelos` desbordada. La revisión página por página ya está
-  hecha sobre él ([#309](https://github.com/AntonioVazquezMartinez/Bioactive-AI/pull/309)): **9 páginas**, carta,
-  dos columnas, sin referencias sin resolver; ningún flotante a más de una página de su mención; ningún encabezado
-  huérfano; y un defecto real, la tabla de los once modelos, que terminaba en 312.9 pt con la columna en 296.1 y
-  tocaba la figura de al lado. Se arregló con `\setlength{\tabcolsep}{4pt}`, que la deja en 295.0 sin mover el
-  resto, en lugar de pasarla a `table*`, que movería los flotantes de ancho completo.
 - **Decidir el destino.** Si es un congreso o una revista, su plantilla reemplaza al preámbulo de aquí.
 - **La afiliación de la patrocinadora y de la asesora** aparece como el Tec de Monterrey sin departamento;
   confirmar cómo quieren figurar y en qué orden de autoría.

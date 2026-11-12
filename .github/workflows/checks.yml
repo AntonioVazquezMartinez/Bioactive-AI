@@ -52,7 +52,12 @@ jobs:
     name: Ruff y pytest
     runs-on: ubuntu-latest
     steps:
+      # Historial completo: `tests/test_pdf_al_dia.py` compara con `git log` la fecha del commit
+      # de cada PDF con la de su `.tex`, y el clon superficial que trae por defecto atribuye
+      # todos los archivos a su único commit, así que la comparación pasaría en vacío.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
