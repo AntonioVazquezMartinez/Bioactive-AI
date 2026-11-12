@@ -352,7 +352,7 @@ def fig_despliegue() -> None:
     flecha(35, 43.4, 35, 37.8, "", NARANJA)
     flecha(13.4, 33, 9.5, 43.4, "", NARANJA)
 
-    ax.text(0, 19.5, "Mantenimiento y supervisión: el equipo, y la patrocinadora al reentrenar", fontsize=9.6,
+    ax.text(0, 19.5, "Continuidad: la patrocinadora y su grupo, con lo que se entrega", fontsize=9.6,
             fontweight="bold", va="top")
     caja(1, 0.5, 31, 13, "Reentrenar y verificar", "entrenar_finales.py deja el comando\ny los sha256 (MANIFEST.json)", negrita=False)
     caja(35, 0.5, 29, 13, "CI de GitHub", "pruebas, ruff y sha256\nde los datos en cada PR", negrita=False)
