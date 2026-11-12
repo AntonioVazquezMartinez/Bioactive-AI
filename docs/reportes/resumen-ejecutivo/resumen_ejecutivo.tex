@@ -70,7 +70,7 @@
 \endgroup\par\medskip
 
 % --- Problema y solución ---
-Un compuesto natural que se considera para una terapia neuroprotectora tiene que cumplir dos condiciones antes de justificar un ensayo: llegar al cerebro, cruzando la barrera hematoencefálica, y actuar sobre una diana, la proteína a la que se une. Confirmarlas una por una cuesta tiempo y dinero, y la lista de candidatos es larga. Construimos dos modelos que ordenan los compuestos a partir de su estructura, con datos públicos \parencite{meng2021b3db,zdrazil2024chembl,zhao2023npass}: uno estima la probabilidad de que el compuesto cruce la barrera y otro la potencia con que actúa sobre 26 dianas del sistema nervioso. Los dos dan evidencia para decidir en qué orden confirmar, no una decisión automática: un compuesto que el modelo juzga poco probable de cruzar sigue siendo un candidato, porque esa predicción se equivoca.
+Un compuesto natural que se considera para una terapia neuroprotectora tiene que cumplir dos condiciones antes de justificar un ensayo: llegar al cerebro, cruzando la barrera hematoencefálica, y actuar sobre una diana, la proteína a la que se une. Confirmarlas una por una cuesta tiempo y dinero, la lista de candidatos es larga y la patrocinadora ayuda a planear esos ensayos. Construimos dos modelos que ordenan los compuestos a partir de su estructura, con datos públicos \parencite{meng2021b3db,zdrazil2024chembl,zhao2023npass}: uno estima la probabilidad de que el compuesto cruce la barrera y otro la potencia con que actúa sobre 26 dianas del sistema nervioso. Los dos dan evidencia para decidir en qué orden confirmar, no una decisión automática: un compuesto que el modelo juzga poco probable de cruzar sigue siendo un candidato, porque esa predicción se equivoca.
 
 % --- Cifras de desempeño del modelo ---
 \medskip
@@ -87,19 +87,19 @@ Con 1,499 compuestos reservados que ningún modelo vio, el modelo ordena bien: a
 % --- Beneficios cuantificables (mensuales) ---
 \medskip
 \noindent
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$30\,\%}{Ensayos de confirmación}{\% de reducción/mes (supuesto de operación)}{}\end{minipage}\hfill
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$15}{Ensayos al mes}{ensayos/mes, con 50 compuestos al mes (supuesto)}{}\end{minipage}
+\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$30\,\%}{Candidatos a confirmar}{\% de reducción (supuesto de operación)}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$1}{Candidato al mes}{candidatos/mes: 6 por semestre, con 20 (supuesto)}{}\end{minipage}
 
 \vspace{5pt}
 \noindent
-\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$\$5,250}{Costos de ensayo}{MXN/mes a \$350 por ensayo (EE.~UU.); \$37,500 a \$2,500 (México)}{}\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\cifragris{$-$\$5,430}{Costo de confirmar}{MXN/mes con precios de EE.~UU.; \$8,390 con los de México}{}\end{minipage}\hfill
 \begin{minipage}[t]{0.485\linewidth}\cifragris{15\,\%}{Permeables que se pierden}{riesgo medido: 100\,\% menos 85\,\% conservado}{}\end{minipage}
 
 \smallskip
 \noindent{\footnotesize\textcolor{black!60}{Cálculo, escenarios y supuestos en el Anexo~A.}}
 \medskip
 
-Lo medido es el intercambio: ensayar el 70\,\% mejor ordenado evita el 30\,\% de los ensayos y conserva el 85\,\% de los permeables (intervalo del 95\,\%, de 84 a 87), contra el 70\,\% de un sorteo al azar. Lo supuesto es el volumen, 50 compuestos al mes, y el costo de un ensayo de confirmación, que no conocemos: tomamos como referencia 350 pesos, de un servicio universitario de EE.~UU. convertido a pesos, y 2,500 de servicios analíticos de un centro mexicano (fuentes en el Anexo~A). El ahorro crece en proporción directa con ese costo, y por eso la recomendación depende de él.
+Lo medido es el intercambio: confirmar el 70\,\% mejor ordenado evita el 30\,\% de los candidatos y conserva el 85\,\% de los permeables (intervalo del 95\,\%, de 84 a 87), contra el 70\,\% de un sorteo al azar. Lo supuesto es el volumen, 20 compuestos por semestre, y lo que cuesta confirmar un candidato, que no conocemos: conseguir el compuesto y ensayarlo. Tomamos como referencia 5,430 pesos con precios de EE.~UU. y 8,390 con los de México, donde el compuesto pesa más que el ensayo (fuentes en el Anexo~A). El ahorro crece en proporción directa con ese costo, y por eso la recomendación depende de él.
 
 % --- Beneficios intangibles ---
 \medskip
@@ -123,7 +123,7 @@ El costo total de propiedad de los primeros 12 meses es de \$173,340 MXN. De ell
 \begin{minipage}[t]{0.235\linewidth}\cifraacento{\$173,340}{TCO 12 meses}{MXN}{}\end{minipage}
 \smallskip
 
-Recomendamos adoptarlo como apoyo a la priorización y no como filtro de descarte, con una condición de arranque: apartar al azar 10 de cada 100 compuestos aunque queden mal ordenados y ensayarlos también, para medir con datos propios cuántos permeables se pierden. La inversión se compensa si cada ensayo de confirmación cuesta más de unos \$290 con 50 compuestos al mes, sin contar el desarrollo, o unos \$960 contándolo (Anexo~B); con un ensayo más barato o menos volumen, no conviene.
+Recomendamos adoptarlo como apoyo a la priorización y no como filtro de descarte, con una condición de arranque: apartar al azar 10 de cada 100 compuestos aunque queden mal ordenados y ensayarlos también, para medir con datos propios cuántos permeables se pierden. La inversión se compensa si confirmar un candidato cuesta más de unos \$4,300 con 20 compuestos por semestre, sin contar el desarrollo, o unos \$14,400 contándolo (Anexo~B); con un costo menor o menos volumen, el ahorro no la justifica y quedan los beneficios intangibles.
 
 % --- Riesgos y mitigación ---
 \medskip
@@ -174,26 +174,25 @@ Fracción ensayada & Ensayos evitados & Permeables conservados & IC95\,\% & Acie
 \end{tabular}
 \end{table}
 
-\noindent\textit{Los supuestos.} Volumen de 50 compuestos considerados al mes. Fracción ensayada de 70\,\% (30\,\% de ensayos evitados). Costo de un ensayo de confirmación en tres escenarios y en dos mercados, a 17.5 pesos por dólar. Los de EE.~UU. son precios de lista de reactivos y de laboratorios universitarios estadounidenses, en dólares y convertidos: \emph{bajo}, 5 USD por pozo de reactivos de una membrana artificial \parencite{calibre2026pampa}; \emph{medio}, unos 20 USD, de 1 a 2.5 USD por pozo con curva de dosis \parencite{osu2026htscore}; \emph{alto}, 2,000 USD por compuesto en un ensayo ADME de servicio \parencite{ttuhsc2025wtpc}. Para México no encontramos precios publicados de estos ensayos: el \emph{bajo} es el de EE.~UU. con el IVA del 16\,\% (sin flete ni aduana, que no conocemos); el \emph{medio} toma 2,500 pesos, mitad del rango de 1,700 a 4,000 pesos por muestra que cobra un centro público mexicano por servicios analíticos \parencite{ciatej2026catalogo}, que no son ensayos de permeabilidad; y el \emph{alto} se queda sin dato. Son referencias y no precios de la patrocinadora, que debe confirmar.
+\noindent\textit{Los supuestos.} La patrocinadora ayuda a planear ensayos que hace un laboratorio, propio o de un colaborador. Volumen de 20 compuestos por semestre, de los que se confirma el 70\,\% mejor ordenado: 6 candidatos menos por semestre, uno al mes. Confirmar un candidato cuesta el compuesto más el ensayo, a 17.5 pesos por dólar. \emph{El compuesto:} unos 290 USD, el promedio de los paquetes mínimos de dos estándares de productos naturales (curcumina de 30 mg a 266 USD \parencite{usp2026curcumina} y L-fucosa de 200 mg a 317 USD \parencite{usp2026fucosa}). \emph{El ensayo,} en tres escenarios: \emph{bajo}, 5 USD de reactivos de una membrana artificial \parencite{calibre2026pampa}; \emph{medio}, 20 USD de un servicio universitario con curva de dosis \parencite{osu2026htscore}; \emph{alto}, 2,000 USD de un ensayo ADME de servicio \parencite{ttuhsc2025wtpc}. Todos son precios de lista de EE.~UU. en dólares y convertidos. Para México no encontramos precios publicados de estos ensayos: el compuesto importado paga el 16\,\% de IVA (sin flete ni aduana, que no conocemos) y el ensayo \emph{medio} toma 2,500 pesos, mitad del rango de 1,700 a 4,000 pesos por muestra que cobra un centro público por servicios analíticos \parencite{ciatej2026catalogo}, que no son ensayos de permeabilidad; el \emph{alto} queda sin dato. Son referencias y no precios de la patrocinadora, que debe confirmar.
 
 \begin{table}[h]
 \centering
-\caption{Costo por ensayo y ahorro mensual con 50 compuestos al mes y 30\,\% de ensayos evitados (15 ensayos), con precios de EE.~UU. y de México (MXN).}
+\caption{Costo de confirmar un candidato (compuesto más ensayo). El ahorro mensual es ese costo, porque se evita un candidato al mes.}
 \label{tab:escenarios}
 \small
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrr}
 \toprule
- & \multicolumn{2}{c}{EE.~UU., en pesos} & \multicolumn{2}{c}{México}\\
-Escenario & Por ensayo & Ahorro al mes & Por ensayo & Ahorro al mes\\
+Escenario del ensayo & EE.~UU. (USD) & EE.~UU. (MXN) & México (MXN)\\
 \midrule
-Bajo (reactivos) & 90 & 1,350 & 104 & 1,560\\
-Medio (servicio) & 350 & 5,250 & 2,500 & 37,500\\
-Alto (ADME de servicio) & 35,000 & 525,000 & sin dato & sin dato\\
+Bajo (reactivos) & 295 & 5,160 & 5,990\\
+Medio (servicio) & 310 & 5,430 & 8,390\\
+Alto (ADME de servicio) & 2,290 & 40,080 & sin dato\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent El escenario alto es un techo de referencia y no una expectativa: supone que cada ensayo evitado cuesta lo que un ensayo ADME completo. El ahorro depende del precio del ensayo, no del gasto del proyecto, así que el punto de equilibrio del Anexo~B es el mismo en los dos mercados. Los beneficios intangibles no se cuantifican.
+\noindent El compuesto pesa más que el ensayo en los dos primeros escenarios, y por eso el costo apenas cambia entre ellos. El escenario alto es un techo de referencia y no una expectativa. El ahorro depende de ese costo y no del gasto del proyecto, así que el punto de equilibrio del Anexo~B vale en los dos mercados. Los beneficios intangibles no se cuantifican.
 
 \section*{Anexo B. Costo total de propiedad a 12 meses, por servicio}
 \noindent Todas las horas son supuestos del equipo, a confirmar. La tarifa es \$24,000 al mes, dentro del rango de \$18,000 a \$30,000 de una guía salarial \parencite{keepcoding2026salarios}, por 1.35 de cargas, entre 160 horas, es decir \$202.50 por hora. En dólares, a 17.5, el TCO es de unos 9,905 USD (2,962 sin el desarrollo); el salario es el mexicano, así que a la tarifa de un perfil estadounidense sería mayor.
@@ -222,21 +221,21 @@ Operación (12 meses) & Revisión mensual, 8 h por mes & 96 & 19,440\\
 \end{tabular}
 \end{table}
 
-\noindent\textit{Punto de equilibrio.} El costo que debe tener un ensayo para que el ahorro compense el gasto es el gasto mensual entre los ensayos evitados al mes (30\,\% del volumen). La Tabla~\ref{tab:equilibrio} lo da para varios volúmenes, sin contar el desarrollo ($51{,}840 / 12 = \$4{,}320$ al mes) y contándolo ($173{,}340 / 12 = \$14{,}445$ al mes).
+\noindent\textit{Punto de equilibrio.} El costo que debe tener confirmar un candidato para que el ahorro compense el gasto es el gasto mensual entre los candidatos evitados al mes (30\,\% del volumen semestral, entre seis). La Tabla~\ref{tab:equilibrio} lo da para varios volúmenes, sin contar el desarrollo ($51{,}840 / 12 = \$4{,}320$ al mes) y contándolo ($173{,}340 / 12 = \$14{,}445$ al mes).
 
 \begin{table}[h]
 \centering
-\caption{Costo mínimo por ensayo (MXN) para que el ahorro compense el gasto, según el volumen mensual.}
+\caption{Costo mínimo por candidato (MXN) para que el ahorro compense el gasto, según el volumen semestral.}
 \label{tab:equilibrio}
 \small
 \begin{tabular}{rrrr}
 \toprule
-Compuestos al mes & Ensayos evitados al mes & Sin desarrollo & Con desarrollo\\
+Compuestos por semestre & Candidatos evitados al mes & Sin desarrollo & Con desarrollo\\
 \midrule
-20 & 6 & 720 & 2,408\\
-50 & 15 & 288 & 963\\
-100 & 30 & 144 & 482\\
-200 & 60 & 72 & 241\\
+10 & 0.5 & 8,640 & 28,890\\
+20 & 1 & 4,320 & 14,445\\
+40 & 2 & 2,160 & 7,223\\
+100 & 5 & 864 & 2,889\\
 \bottomrule
 \end{tabular}
 \end{table}

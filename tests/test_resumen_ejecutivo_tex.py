@@ -2,6 +2,7 @@
 aritmética del costo cuadre y que sus cifras sean las del artículo y las de la corrida que las mide.
 No compila: el conteo de páginas se verifica al compilar (3 hasta las referencias, anexos aparte)."""
 import csv
+import math
 import re
 from pathlib import Path
 
@@ -39,11 +40,12 @@ def test_el_costo_cuadra_por_servicio_y_en_total():
 
 
 def test_el_punto_de_equilibrio_sale_de_las_dos_bases():
-    for volumen, sin, con in ((20, 720, 2408), (50, 288, 963), (100, 144, 482), (200, 72, 241)):
-        evitados = 0.3 * volumen
-        assert round(4320 / evitados) == sin and round(14445 / evitados) == con
-        assert f"{sin:,}" in TEX or str(sin) in TEX
-    assert 15 * 350 == 5250 and 15 * 90 == 1350 and 15 * 35000 == 525000
+    """Candidatos evitados al mes = 30% del volumen semestral entre seis."""
+    comercial = lambda v: math.floor(v + 0.5)  # noqa: E731  (7,222.5 es 7,223, no el par más cercano)
+    for volumen, sin, con in ((10, 8640, 28890), (20, 4320, 14445), (40, 2160, 7223), (100, 864, 2889)):
+        evitados = 0.3 * volumen / 6
+        assert comercial(4320 / evitados) == sin and comercial(14445 / evitados) == con
+        assert f"{sin:,}" in TEX
 
 
 def test_las_cifras_de_desempeno_son_las_del_articulo():
@@ -67,11 +69,21 @@ def test_la_tabla_de_ahorro_es_la_de_la_corrida():
         assert cobertura in renglon and acierto in renglon, f"la fila de {fraccion}% no coincide con la corrida"
 
 
-def test_los_dos_mercados_de_precios_cuadran():
-    """EE. UU. convertido a 17.5 pesos por dólar y México: el bajo con IVA del 16%, el medio de un centro público."""
-    assert round(5 * 17.5, -1) == 90 and round(20 * 17.5) == 350 and 2000 * 17.5 == 35000
-    assert round(90 * 1.16) == 104 and 15 * 104 == 1560 and 15 * 2500 == 37500
+def comercial_a_decena(v):
+    return math.floor(v / 10 + 0.5) * 10
+
+
+def test_el_costo_de_confirmar_un_candidato_cuadra_en_los_dos_mercados():
+    """Compuesto (promedio de dos estándares USP) más ensayo, a 17.5 pesos por dólar; México con IVA del 16%."""
+    compuesto = round((266 + 317) / 2, -1)
+    assert compuesto == 290
+    ensayo = {"bajo": 5, "medio": 20, "alto": 2000}
+    eeuu = {k: comercial_a_decena((compuesto + v) * 17.5) for k, v in ensayo.items()}
+    assert eeuu == {"bajo": 5160, "medio": 5430, "alto": 40080}
+    mexico_bajo = comercial_a_decena((compuesto + ensayo["bajo"]) * 17.5 * 1.16)
+    mexico_medio = comercial_a_decena(compuesto * 17.5 * 1.16 + 2500)
+    assert (mexico_bajo, mexico_medio) == (5990, 8390)
     plano = TEX.replace("{,}", ",")
-    for cifra in ("1,560", "37,500", "9,905", "2,962"):
+    for cifra in ("5,160", "5,430", "40,080", "5,990", "8,390", "9,905", "2,962"):
         assert cifra in plano, f"falta {cifra}"
     assert round(173340 / 17.5) == 9905 and round(51840 / 17.5) == 2962
