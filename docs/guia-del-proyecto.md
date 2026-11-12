@@ -91,7 +91,7 @@ El proyecto ya tiene trabajo real hecho, no es solo una estructura vacía:
 | 4 | Modelos alternativos (`notebooks/04_Models.ipynb`) | Entregado el 25 de octubre: seis familias sin ensamble en las dos fases, con el ajuste fino de las dos mejores. El individual final de la fase 1 es el SVM RBF sin afinar. Tres acompañantes miden qué añaden las huellas moleculares |
 | 5 | Modelo final | Entregado el 1 de noviembre, en tres cuadernos. Fase 1 (`notebooks/05_Modelo_Final.ipynb`): el SVM RBF como final, porque ninguna de las 30 comparaciones pasa la regla, con la prueba reservada tomada una vez. Fase 2 (`notebooks/05b_Ensambles_actividad.ipynb`): el AFT censurado como final. Y `notebooks/05c_Ensambles_permeabilidad_huellas.ipynb`, las huellas sobre los ensambles de la fase 1. Una auditoría posterior abrió sus hallazgos como issues `deuda` |
 | — | Producto de difusión | Vence el 15 de noviembre, el equipo entrega el 13 · el [artículo](reportes/articulo/articulo.pdf), de 20 páginas con anexos; el cuerpo termina en la 17 |
-| — | Resumen ejecutivo | Vence el 15 de noviembre · redactado y revisado: tres páginas más anexos, en [`docs/reportes/resumen-ejecutivo/`](reportes/resumen-ejecutivo/resumen_ejecutivo.pdf) |
+| — | Resumen ejecutivo | Vence el 15 de noviembre · redactado y revisado: tres páginas más anexos, en `docs/reportes/resumen-ejecutivo/` del repositorio (no se publica en el sitio hasta que la patrocinadora lo autorice) |
 
 **Resultado ya obtenido de la partición por andamio** (Avance 2, sobre las 7,805 filas con clase, **sin filtrar por `group`** — ver [por qué ya no se filtra](datos-contenido.md)):
 
