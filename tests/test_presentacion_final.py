@@ -23,10 +23,10 @@ def _diapositivas():
     return trozos, re.split(r"^## ", respaldo, flags=re.M)[1:]
 
 
-def test_son_quince_diapositivas_en_el_hilo_y_cinco_de_respaldo():
+def test_son_quince_diapositivas_en_el_hilo_y_seis_de_respaldo():
     hilo, respaldo = _diapositivas()
     assert len(hilo) == 15, f"{len(hilo)} diapositivas en el hilo; son 15 (las 13 del #303 más dos: cómo se vuelve números una molécula y qué pesa en cada fase)"
-    assert len(respaldo) == 5
+    assert len(respaldo) == 6
 
 
 def test_cada_diapositiva_del_hilo_trae_notas_con_quien_la_presenta():
