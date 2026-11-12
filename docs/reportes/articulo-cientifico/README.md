@@ -38,6 +38,12 @@ figuras apunten a PNG existentes (pdfLaTeX no incluye SVG), que los entornos est
 vaya a doble columna, que toda figura y toda tabla se referencie desde el texto, que no haya quedado sintaxis de
 Markdown arrastrada del borrador y que estén la declaración de uso de IA y las referencias.
 
+Y una guarda que no es de forma sino de contenido: **que el orden que combina las dos fases se diga pendiente.**
+La [C.5](../../decisiones.md) se revisó el 12 de noviembre —se entrega el cuaderno que ordena por fase, no una
+lista combinada— y este artículo había quedado diciendo en presente que las salidas «se combinan en un único
+orden», dos oraciones antes de llamar pendiente a esa misma combinación. La guarda de cifras no podía verlo,
+porque no es una cifra: es el mismo desfase de documento escrito a mano, en una afirmación.
+
 Lo que ninguna prueba cubre es el PDF: dónde cayó cada flotante, si un encabezado quedó huérfano al pie de una
 columna y si alguna tabla se desbordó. Eso pide ojos humanos, página por página.
 

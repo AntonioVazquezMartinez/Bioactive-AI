@@ -94,7 +94,7 @@ Un compuesto natural solo resulta útil como candidato neuroprotector si llega a
 
 La formulación intuitiva encadena las dos fases: lo que se predice como BBB$-$ se descarta y solo el resto pasa a la estimación de potencia. La descartamos por falta de datos para sostenerla. De los 99,585 esqueletos de conectividad con actividad medida, solo 1,033 tienen además permeabilidad medida, y 612 en los archivos que efectivamente alimentan a los modelos, de modo que el resto se filtraría con una predicción que nadie ha verificado. Como toda predicción de permeabilidad se equivoca, descartar con ella elimina candidatos reales sin dejar rastro.
 
-Tratamos por eso las dos fases en paralelo: cada una se entrena y se evalúa por separado y sus salidas son evidencia que se combina en un único orden de prioridad. La primera informa si el compuesto puede permear; la segunda estima cuánto actuaría, y esa respuesta sigue siendo útil cuando la primera es dudosa. La combinación explícita de ambas en un solo ranking queda como trabajo pendiente (sección~\ref{sec:futuro}).
+Tratamos por eso las dos fases en paralelo: cada una se entrena y se evalúa por separado y sus salidas son evidencia paralela y no filtros encadenados. La primera informa si el compuesto puede permear; la segunda estima cuánto actuaría, y esa respuesta sigue siendo útil cuando la primera es dudosa. Ese orden único todavía no existe: hoy cada fase ordena por su cuenta y la combinación explícita de las dos en un solo ranking queda como trabajo pendiente (sección~\ref{sec:futuro}).
 
 \subsection{Contribuciones}
 
