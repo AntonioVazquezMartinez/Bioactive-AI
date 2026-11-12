@@ -239,13 +239,11 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 
 ## Una herramienta para medir columnas nuevas {.smaller}
 
-- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada**.
-- Incluye un **control de ruido** y una **guía** de cómo agrupar y cómo medir.
-- Ejemplo: TPSA, donadores de hidrógeno y peso quedan **0.082 de MCC** por debajo de los 151 descriptores.
+![](docs/reportes/presentacion/figuras/medir.svg){fig-alt="Diferencia de MCC contra los 151 descriptores: tres propiedades bien elegidas quedan unos 0.08 por debajo y un control de ruido casi 0.69 por debajo"}
 
-::: {.callout-note}
-Es Python, no una interfaz; mide clasificación.
-:::
+- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
+- Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
+- Es Python con una guía de cómo agrupar y medir, no una interfaz.
 
 ::: {.notes}
 **Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.

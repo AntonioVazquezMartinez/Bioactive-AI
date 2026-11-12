@@ -7,6 +7,8 @@ Son tres, y cada una existe porque una idea no se puede explicar a tiempo con pa
 - `huella.svg`: cómo se vuelve bits una molécula y qué es el Tanimoto.
 - `dificultad.svg`: la semejanza ordena pero no explica el nivel. Sale de las corridas
   `2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad` y `…-octava-lectura-origen-similitud`.
+- `medir.svg`: lo que dice la herramienta de medir columnas nuevas en un ejemplo. Sale de
+  `experimentos/2026-11-08-ingrid-1.3-ejemplo-representacion-propia`.
 - `corte.svg`: dónde cae el corte y cuánto se declara permeable con cada uno. Sale de
   `experimentos/2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba`.
 - Las dos se escriben en `docs/reportes/presentacion/figuras/`.
@@ -44,6 +46,7 @@ DATOS = RAIZ / "data" / "external" / "profesora" / "bbb_permeability_experimenta
 CORTES = RAIZ / "experimentos" / "2026-11-08-ingrid-C.5-umbral-en-validacion-con-prueba" / "metricas.json"
 DIFICULTAD = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-dificultad-de-la-prueba-permeabilidad" / "metricas.json"
 TERCILES = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-octava-lectura-origen-similitud" / "metricas.json"
+EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-propia" / "metricas.json"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
 MORFINA = "CN1CCC23c4c5ccc(O)c4O[C@@H]2[C@@H](O)C=C[C@@H]3C1C5"
@@ -313,6 +316,44 @@ def fig_corte() -> dict:
     return {n: (d["corte"], d["fraccion_positiva"], d["mcc"]) for n, d, _, _ in lecturas} | {"real": real}
 
 
+def fig_medir() -> dict:
+    """La herramienta en un ejemplo: tres propiedades contra los 151 descriptores y contra ruido."""
+    filas = {
+        (d["representacion"], d["metrica"]): d
+        for d in json.loads(EJEMPLO.read_text(encoding="utf-8"))["todos"]
+    }
+    tres = filas[("tpsa_hbd_peso", "mcc")]
+    ruido = filas[("ruido_3_columnas", "mcc")]
+    barras = [
+        ("151 descriptores\n(la referencia)", 0.0, None, GRIS_CLARO, "referencia"),
+        ("TPSA, donadores\ny peso (3 columnas)", tres["dif_media"], (tres["ic95_inf"], tres["ic95_sup"]), AZUL,
+         f"{tres['dif_media']:+.3f}"),
+        ("ruido, 3 columnas\n(el control)", ruido["dif_media"], (ruido["ic95_inf"], ruido["ic95_sup"]), NARANJA,
+         f"{ruido['dif_media']:+.3f}"),
+    ]
+    fig, ax = plt.subplots(figsize=(11.4, 4.2))
+    for y, (nombre, valor, ic, color, texto) in enumerate(barras):
+        ax.barh(y, valor, color=color, height=0.5)
+        if ic:
+            ax.errorbar(valor, y, xerr=[[valor - ic[0]], [ic[1] - valor]], color="#111111", capsize=5, lw=1.6)
+        x_txt = (ic[0] if ic else 0) - 0.02
+        ax.text(x_txt, y, texto, va="center", ha="right", fontsize=11, fontweight="bold",
+                color=color if ic else GRIS)
+    ax.axvline(0, color="#111111", lw=1.4)
+    ax.set_yticks(range(len(barras)), [b[0] for b in barras], fontsize=10.5)
+    ax.set_ylim(2.6, -0.6)
+    ax.set_xlim(-0.95, 0.1)
+    ax.set_xlabel("diferencia de MCC contra los 151 descriptores, fase 1 (con intervalo de 95 %)", fontsize=10)
+    for lado in ("left", "right", "top"):
+        ax.spines[lado].set_visible(False)
+    ax.set_title("Tres propiedades bien elegidas aprenden; el ruido no", fontsize=12.5, fontweight="bold",
+                 color=AZUL, loc="left", pad=12)
+    for ext in ("svg", "png"):
+        fig.savefig(SALIDA / f"medir.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"tres": tres["dif_media"], "ruido": ruido["dif_media"]}
+
+
 if __name__ == "__main__":
     SALIDA.mkdir(parents=True, exist_ok=True)
     familia = cifras_de_la_familia()
@@ -321,4 +362,5 @@ if __name__ == "__main__":
     print("huella:", fig_huella())
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
+    print("medir:", fig_medir())
     print("escritas en", SALIDA)
