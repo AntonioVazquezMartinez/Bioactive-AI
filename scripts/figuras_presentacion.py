@@ -21,9 +21,10 @@ Son siete, y cada una existe porque una idea no se puede explicar a tiempo con p
 - `fase2_origen.svg`: la prueba de la fase 2 por procedencia de los datos, el modelo contra la línea base de peso
   molecular y TPSA. Sale de `experimentos/2026-11-03-artemio-1.5-prueba-por-rareza`: **modelo y línea base de la
   misma corrida** (reajuste), por eso en NPASS el modelo da 0.511 y no el 0.530 de la corrida registrada.
-- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
-  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El naranja marca la similitud de **esa fase**
-  por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- `ranking.svg`: el ranking por fase de seis compuestos **de la prueba reservada** (sorteados con semilla 0; ningún
+  modelo los vio), con la etiqueta BBB real y la mayor potencia medida junto a lo predicho. Sale de
+  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba`. El naranja marca la similitud de **esa
+  fase** por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
 - Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
@@ -63,7 +64,7 @@ TERCILES = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-octava-lectura-origen
 EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-propia" / "metricas.json"
 ATRIB1 = RAIZ / "experimentos" / "2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos"
 ATRIB2 = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion" / "importancias.csv"
-RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo"
+RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba"
 RAREZA = RAIZ / "experimentos" / "2026-11-03-artemio-1.5-prueba-por-rareza" / "metricas.json"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
@@ -485,32 +486,38 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias") -
 
 
 def fig_ranking() -> dict:
-    """El ranking por fase de los compuestos de ejemplo del cuaderno: una lista por fase, con su similitud."""
+    """Seis compuestos de la prueba reservada, una lista por fase, con lo predicho junto a lo medido."""
     f1 = pd.read_csv(RANKING / "ranking_fase1.csv")
     f2 = pd.read_csv(RANKING / "ranking_fase2.csv")
-    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.75})
-    paneles = (
-        (ejes[0], f1, "p_bbb_mas", "similitud_fase1", "Fase 1 · probabilidad de cruzar la barrera", 1.0,
-         lambda r: f"{r['p_bbb_mas']:.2f}"),
-        (ejes[1], f2, "pActividad_max", "similitud_fase2", "Fase 2 · potencia máxima predicha (pActividad)", 8.0,
-         lambda r: f"{r['pActividad_max']:.1f}  ({r['mejor_diana']})"),
-    )
-    for ax, d, col, sim, titulo, tope, etiqueta in paneles:
-        y = range(len(d))
-        colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in d[sim]]
-        ax.barh(y, d[col], color=colores, height=0.62)
-        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
-            ax.text(fila[col] + tope * 0.015, yi, etiqueta(fila), va="center", fontsize=9, color=GRIS)
-        ax.set_yticks(list(y), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
+    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.9})
+    a1, a2 = ejes
+    # fase 1: probabilidad predicha y, al lado, la etiqueta real
+    colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in f1["similitud_fase1"]]
+    a1.barh(range(len(f1)), f1["p_bbb_mas"], color=colores, height=0.62)
+    for yi, (_, r) in enumerate(f1.iterrows()):
+        real = "cruza" if r["bbb_real"] == 1 else "no cruza"
+        a1.text(1.03, yi, f"{r['p_bbb_mas']:.2f}   real: {real}", va="center", fontsize=9,
+                color="#111111" if r["bbb_real"] == 1 else "#b3261e", fontweight="bold" if r["bbb_real"] == 0 else "normal")
+    # fase 2: potencia predicha (barra) y la mayor medida (rombo)
+    colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in f2["similitud_fase2"]]
+    a2.barh(range(len(f2)), f2["pActividad_max"], color=colores, height=0.62)
+    for yi, (_, r) in enumerate(f2.iterrows()):
+        a2.scatter([r["pActividad_medida"]], [yi], marker="D", s=46, color="#111111", zorder=3)
+        a2.text(10.3, yi,
+                f"predicha {r['pActividad_max']:.1f} ({r['mejor_diana']})  ·  medida {r['pActividad_medida']:.1f} ({r['diana_medida']})",
+                va="center", fontsize=8.6, color=GRIS)
+    for ax, d, titulo, tope in ((a1, f1, "Fase 1 · probabilidad de cruzar la barrera", 1.0),
+                                 (a2, f2, "Fase 2 · potencia máxima (pActividad)", 10.0)):
+        ax.set_yticks(list(range(len(d))), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
         ax.invert_yaxis()
-        ax.set_xlim(0, tope * 1.45)
+        ax.set_xlim(0, tope * 1.75 if ax is a1 else tope * 2.2)
         ax.set_xticks([])
         for lado in ("left", "right", "top", "bottom"):
             ax.spines[lado].set_visible(False)
         ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
-    fig.text(0.01, -0.03, "En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase (aviso de extrapolación). "
-             "Son compuestos conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena "
-             "por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
+    fig.text(0.01, -0.05, "Seis compuestos de la prueba reservada, que ninguno de los modelos vio, sorteados con semilla 0; no son candidatos ni una "
+             "métrica. Rombo: la mayor potencia medida.\nEn naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase. "
+             "Cada fase se ordena por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)

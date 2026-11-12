@@ -239,14 +239,15 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 
 ## El cuaderno 06: usar los modelos con tus compuestos {.smaller}
 
-![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de compuestos de ejemplo: probabilidad de cruzar la barrera y potencia máxima predicha" width="85%"}
+![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de seis compuestos de la prueba reservada: probabilidad de cruzar la barrera junto a la etiqueta real, y potencia máxima predicha junto a la medida" width="85%"}
 
 - **Qué es:** `notebooks/06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio.
-- **Qué se ve:** su salida para seis compuestos conocidos, **ordenada por fase**. A la izquierda, qué tan probable es que crucen la barrera; a la derecha, con qué potencia actúan sobre su mejor diana (entre paréntesis). Uno puede ir arriba en una lista y abajo en la otra.
-- **No combina** las fases en un solo ranking (queda como trabajo futuro) y **no es una lista de candidatos**.
+- **Qué se ve:** su salida para seis compuestos de la **prueba reservada**, que ningún modelo vio, sorteados sin escoger y **ordenados por fase**. A la izquierda, la probabilidad de cruzar la barrera junto a la etiqueta real; a la derecha, la potencia predicha (barra) y la medida (rombo).
+- **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**, y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
+- **No combina** las fases en un solo ranking (queda como trabajo futuro); seis ejemplos para ver el formato, **ni lista de candidatos ni métrica**.
 
 ::: {.notes}
-**Art · 0.75 min.** Es el cuaderno que usa la patrocinadora. La figura es su salida para seis compuestos conocidos que trae de ejemplo, no resultados del proyecto: varios estaban en el entrenamiento. Cada panel es una lista distinta: a la izquierda la probabilidad de cruzar la barrera, y a la derecha la potencia máxima predicha contra alguna de las 26 dianas. Por eso la curcumina va primera en potencia y cuarta en permeabilidad. En naranja, un compuesto cuya similitud con lo que el modelo vio es menor de 0.4 en esa fase: la advertencia de extrapolación.
+**Art · 0.75 min.** Es el cuaderno que usa la patrocinadora. Los seis compuestos son de la prueba reservada, sorteados con semilla 0 entre los que tienen nombre y potencia medida: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera. A la derecha, el rombo es la potencia medida, y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
@@ -272,13 +273,13 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 :::
 :::
 
-- **Fase 1, permeabilidad:** el MCC cae de 0.70 a 0.34. Unos **0.07 son el corte**, que se ajusta (0.34 a 0.41). El resto es que el **orden empeoró**: el AUROC, que mide qué tan bien se ordenan los compuestos sin fijar un corte, baja de 0.919 a 0.793, **12.6 puntos**. Que la prueba sea más difícil explica unos 3; los otros 10 **no los explicamos**.
+- **Fase 1, permeabilidad:** el MCC cae de 0.70 a 0.34. Unos **0.07 son el corte**, que se ajusta (0.34 a 0.41). El resto es que el **orden empeoró**: el AUROC, que mide qué tan bien se ordenan los compuestos sin fijar un corte, baja de 0.919 a 0.793, **12.6 puntos**: unos 3 son lo que la semejanza de la prueba predecía (0.89); los otros 10 **no los explicamos**.
 - **Fase 2, potencia:** el modelo acierta el orden en el 72%, pero lo domina ChEMBL. En los **117 pares de productos naturales** pierde contra una línea base sencilla: **no está demostrado**.
 - **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
 - **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1.5 min.** El AUROC es qué tan bien se ordenan los permeables por encima de los que no, con cualquier corte; el MCC depende del corte. Del 0.919 de validación al 0.793 de la prueba hay 12.6 puntos de AUROC; si solo contara que la prueba se parece menos al entrenamiento, esperaríamos unos 0.89, o sea que eso explica unos 3 puntos y los otros 10 siguen sin explicación (tres formas de enseñarle más química rara no los cerraron). A la izquierda, lo que más mueve el MCC de la fase 1: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia, con modelo y línea base de la misma corrida: con ChEMBL el modelo supera a la línea base (0.721 contra 0.639), y en los 117 pares de productos naturales no (0.511 contra 0.565; la corrida registrada da 0.530). El 72% de arriba es el agregado.
+**Art · 1.5 min.** Lo nuevo es la figura de la derecha. A la izquierda, lo que más mueve el MCC de la fase 1, como vimos: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia: con ChEMBL el modelo supera a una línea base sencilla, y en los 117 pares de productos naturales no. La cifra citable es la de la corrida registrada, 0.530; la figura muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida (la línea base da 0.565). El 72% de arriba es el agregado. Si preguntan por los 12.6 puntos del AUROC, se repasaron en «Pero no lo explica todo».
 :::
 
 # Respaldo
