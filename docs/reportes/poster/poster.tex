@@ -158,28 +158,26 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 % ===== COLUMNA CENTRAL =====
 
 \seccion{Lo que encontramos}
-\begin{center}
-  \includegraphics[width=\linewidth,height=6.2cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) rinde como un caso muy exigente.}
-\end{center}
+\begin{minipage}[t]{0.485\linewidth}\centering
+  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \raggedright\pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) rinde como un caso muy exigente.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\centering
+  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{f4_aft_izq.png}\\[2pt]
+  \raggedright\pie{Figura 2. Fase 2: acierta cuál de dos compuestos es más potente el 76\,\% de las veces en validación y el 72\,\% en la prueba (azar: 50\,\%). En 117 pares de naturales baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana.}
+\end{minipage}
 
 \vfill
 \begin{center}
-  \includegraphics[height=6.4cm,keepaspectratio]{f4_aft_izq.png}\\[2pt]
-  \pie{Figura 2. Fase 2: de dos compuestos, el modelo acierta cuál es más potente el 76\,\% de las veces en validación y el 72\,\% en la prueba reservada (azar: 50\,\%). En los 117 pares de naturales (AFT es el modelo de potencia) baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana.}
-\end{center}
-
-\vfill
-\begin{center}
-  \includegraphics[width=\linewidth,height=4.8cm,keepaspectratio]{f0_palancas.png}\\[2pt]
+  \includegraphics[width=0.82\linewidth,height=8.4cm,keepaspectratio]{f0_palancas.png}\\[2pt]
   \pie{Figura 3. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo.}
 \end{center}
 
 \vfill
 \seccion{Qué características pesan}
 \begin{center}
-  \includegraphics[width=\linewidth,height=8.6cm,keepaspectratio]{importancias_poster.png}\\[2pt]
-  \pie{Figura 4. Cada punto es un compuesto o un par compuesto-diana: su posición dice cuánto empuja esa característica la predicción; su color, qué valor tiene. TPSA, el filtro clásico, no domina. La diana aporta otro 15\,\% en la fase 2.}
+  \includegraphics[width=\linewidth,height=9.0cm,keepaspectratio]{importancias_poster.png}\\[2pt]
+  \pie{Figura 4. Cada punto es un compuesto o un par compuesto-diana; su posición dice cuánto empuja la predicción y su color, qué valor tiene. TPSA, el filtro clásico, no domina.}
 \end{center}
 
 \vfill
@@ -198,7 +196,7 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 \vfill
 \seccion{Qué entregamos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=9.2cm,keepaspectratio]{lista_priorizada_poster.png}\\[2pt]
+  \includegraphics[width=\linewidth,height=8.0cm,keepaspectratio]{lista_priorizada_poster.png}\\[2pt]
   \pie{Los tres primeros por enfermedad: potencia predicha (número junto a la diana) y probabilidad de cruzar la barrera. En naranja, se parece poco a lo que el modelo conoce.}
 \end{center}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
