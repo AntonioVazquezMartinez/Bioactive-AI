@@ -149,7 +149,7 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 \vfill
 \seccion{Métodos}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
-  \item Se compararon once modelos, de la regresión logística a los ensambles.
+  \item Descriptores de RDKit (propiedades calculadas de cada molécula) y, en la fase 2, huellas de Morgan. Once modelos comparados, de la regresión logística a los ensambles.
   \item En la fase 2, un modelo que aprovecha también las mediciones «mayores que» o «menores que».
 \end{itemize}
 
@@ -159,26 +159,30 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 
 \seccion{Lo que encontramos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=9.4cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja. La prueba reservada (0.793) rinde como un caso muy exigente, aunque se parece al entrenamiento como uno laxo.}
+  \includegraphics[width=\linewidth,height=6.8cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) rinde como un caso muy exigente.}
 \end{center}
 
 \vfill
 \begin{center}
-  \includegraphics[width=\linewidth,height=6.2cm,keepaspectratio]{f0_palancas.png}\\[2pt]
-  \pie{Figura 2. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo. Cada barra viene de una corrida distinta.}
+  \circulo{0.761}{fase 2: validación\\cruzada}\hspace{0.6cm}\circulo{0.720}{fase 2: prueba\\reservada}\\[2pt]
+  \pie{Figura 2. Fase 2: de dos compuestos, acierta cuál es más potente el 76\,\% de las veces (azar: 50\,\%). En los 117 pares de naturales baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana (0.565).}
+\end{center}
+
+\vfill
+\begin{center}
+  \includegraphics[width=\linewidth,height=4.8cm,keepaspectratio]{f0_palancas.png}\\[2pt]
+  \pie{Figura 3. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo.}
 \end{center}
 
 \vfill
 \seccion{Qué características pesan}
 \begin{center}
-  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{importancias_poster.png}\\[2pt]
-  \pie{Figura 3. Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2); su posición dice cuánto empuja esa característica la predicción y su color, qué valor tiene. En la fase 2, saber la diana aporta otro 15\,\% que no se dibuja.}
+  \includegraphics[width=\linewidth,height=8.6cm,keepaspectratio]{importancias_poster.png}\\[2pt]
+  \pie{Figura 4. Cada punto es un compuesto o un par compuesto-diana: su posición dice cuánto empuja esa característica la predicción; su color, qué valor tiene. TPSA, el filtro clásico, no domina. La diana aporta otro 15\,\% en la fase 2.}
 \end{center}
 
 \vfill
-{\sffamily\fontsize{17}{21}\selectfont\color{muted}\textbf{Palabras clave.} \textbf{MCC}: acierto, de $-1$ a 1 (0 es el azar). \textbf{AUROC}: qué tan bien se ordenan los permeables por encima de los que no (0.5 es el azar). \textbf{Andamio}: el núcleo de anillos de una molécula. \textbf{TPSA}: superficie polar.\par}
-
 \end{minipage}\hfill
 \begin{minipage}[t][\colh][s]{0.30\linewidth}\cuerpo\vspace{0pt}
 % ===== COLUMNA DERECHA =====
@@ -186,8 +190,9 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 \seccion{Conclusiones}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
   \item La confianza en una predicción depende de qué tan nueva es la molécula, no del modelo.
+  \item De 0.70 a 0.34 de MCC (el acierto) con moléculas nuevas: unos 0.07 eran el corte, que se puede ajustar; el resto sigue sin explicar.
   \item Sirve para ordenar: probar el 70\,\% mejor ordenado conserva el 85.3\,\% de los permeables, 15.3 puntos más que un sorteo.
-  \item En naturales el orden de potencia no está demostrado (117 pares): no se distingue de un modelo que solo ve peso, polaridad y diana.
+  \item En naturales el orden de potencia no está demostrado (117 pares).
 \end{itemize}
 
 \vfill
