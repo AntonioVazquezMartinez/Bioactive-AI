@@ -499,9 +499,9 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias", s
     barra.set_ticklabels(["valor bajo", "valor alto"] if simple else ["valor bajo de la columna", "valor alto"], fontsize=9.5)
     barra.outline.set_visible(False)
     if simple:
-        pie = ("Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2). Su posición dice cuánto empuja esa característica la "
-               "predicción; su color, qué valor tiene.\nVan primero las que confirman dos métodos distintos. En la fase 2 solo se muestra "
-               "la química: la diana pone aparte el 15% de lo que pesa.")
+        pie = ("Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2). Su posición dice cuánto empuja esa característica "
+               "la predicción; su color, qué valor tiene.\nVan primero las confirmadas por dos métodos. En la fase 2, saber qué diana es "
+               "aporta otro 15% que no se muestra.")
     else:
         pie = ("Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
                "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
