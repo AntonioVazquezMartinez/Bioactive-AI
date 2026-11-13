@@ -159,25 +159,28 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 
 \seccion{Lo que encontramos}
 \begin{minipage}[t]{0.485\linewidth}\centering
-  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \raggedright\pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) rinde como un caso muy exigente.}
+  \includegraphics[width=\linewidth,height=9.8cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \raggedright\pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) cae como un caso muy exigente.}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.485\linewidth}\centering
-  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{f4_aft_izq.png}\\[2pt]
-  \raggedright\pie{Figura 2. Fase 2: acierta cuál de dos compuestos es más potente el 76\,\% de las veces en validación y el 72\,\% en la prueba (azar: 50\,\%). En 117 pares de naturales baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana.}
+  \includegraphics[width=\linewidth,height=9.8cm,keepaspectratio]{dificultad.png}\\[2pt]
+  \raggedright\pie{Figura 2. La prueba está más cerca de lo entrenado que la validación, pero rinde 0.097 menos de lo esperado. Dentro de la prueba, la semejanza sí ordena.}
+\end{minipage}
+
+\vfill
+\begin{minipage}[t]{0.485\linewidth}\centering
+  \includegraphics[width=\linewidth,height=9.8cm,keepaspectratio]{corte.png}\\[2pt]
+  \raggedright\pie{Figura 3. Mover el corte no cambia el orden: cambia cuántos compuestos se declaran permeables (de 84\,\% a 65\,\%) y el MCC (de 0.346 a 0.410).}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\centering
+  \includegraphics[width=\linewidth,height=9.8cm,keepaspectratio]{fase2_desempeno.png}\\[2pt]
+  \raggedright\pie{Figura 4. Fase 2: la concordancia se sostiene en la prueba (0.720). En los 117 pares de naturales, 0.530 (0.511 al reajustar) no se distingue de un modelo de peso y TPSA (0.565).}
 \end{minipage}
 
 \vfill
 \begin{center}
-  \includegraphics[width=0.82\linewidth,height=8.4cm,keepaspectratio]{f0_palancas.png}\\[2pt]
-  \pie{Figura 3. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo.}
-\end{center}
-
-\vfill
-\seccion{Qué características pesan}
-\begin{center}
-  \includegraphics[width=\linewidth,height=9.0cm,keepaspectratio]{importancias_poster.png}\\[2pt]
-  \pie{Figura 4. Cada punto es un compuesto o un par compuesto-diana; su posición dice cuánto empuja la predicción y su color, qué valor tiene. TPSA, el filtro clásico, no domina.}
+  \includegraphics[width=0.84\linewidth,height=8.4cm,keepaspectratio]{f0_palancas.png}\\[2pt]
+  \pie{Figura 5. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo.}
 \end{center}
 
 \vfill
@@ -190,31 +193,29 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
   \item La confianza en una predicción depende de qué tan nueva es la molécula, no del modelo.
   \item De 0.70 a 0.34 de MCC (el acierto) con moléculas nuevas: unos 0.07 eran el corte, que se puede ajustar; el resto sigue sin explicar.
   \item Sirve para ordenar: probar el 70\,\% mejor ordenado conserva el 85.3\,\% de los permeables, 15.3 puntos más que un sorteo.
-  \item En naturales el orden de potencia no está demostrado (117 pares).
+  \item En naturales el orden de potencia no está demostrado (117 pares). Sigue medirlo con muestras propias y combinar las dos fases.
 \end{itemize}
+
+\vfill
+\seccion{Qué características pesan}
+\begin{center}
+  \includegraphics[width=0.9\linewidth,height=7.4cm,keepaspectratio]{importancias_poster.png}\\[2pt]
+  \pie{Figura 6. Cada punto es un compuesto o par compuesto-diana. TPSA no domina.}
+\end{center}
 
 \vfill
 \seccion{Qué entregamos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=8.0cm,keepaspectratio]{lista_priorizada_poster.png}\\[2pt]
-  \pie{Los tres primeros por enfermedad: potencia predicha (número junto a la diana) y probabilidad de cruzar la barrera. En naranja, se parece poco a lo que el modelo conoce.}
+  \includegraphics[width=\linewidth,height=5.8cm,keepaspectratio]{lista_priorizada_poster.png}
 \end{center}
-\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
-  \item Una lista exploratoria de naturales (hipótesis, no resultados) y un cuaderno que, para moléculas propias, devuelve la probabilidad de cruzar la barrera, la potencia por diana y un aviso si son muy distintas de lo conocido.
-  \item Una guía para medir columnas nuevas. La continuidad queda con la patrocinadora y su grupo.
-\end{itemize}
-
-\vfill
-\seccion{Trabajo futuro}
-\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
-  \item Medir la potencia con muestras propias de naturales.
-  \item Combinar las dos fases en un solo orden.
+\begin{itemize}[leftmargin=1.2em,itemsep=0.3em]
+  \item Una lista exploratoria de naturales (hipótesis, no resultados) y un cuaderno para moléculas propias, con aviso si son muy distintas de lo conocido, y una guía para medir columnas nuevas. La continuidad queda con la patrocinadora.
 \end{itemize}
 
 \vfill
 \seccion{Referencias}
-{\fontsize{16}{20}\selectfont
-\begin{itemize}[leftmargin=1.2em,itemsep=0.2em]
+{\fontsize{14}{17}\selectfont
+\begin{itemize}[leftmargin=1.2em,itemsep=0.1em]
   \item Meng, F., Xi, Y., Huang, J., y Ayers, P. W. (2021). \emph{A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors.} Scientific Data, 8(1), 289.
   \item Zdrazil, B., et al. (2024). \emph{The ChEMBL Database in 2023.} Nucleic Acids Research, 52(D1), D1180--D1192.
   \item Zhao, H., et al. (2023). \emph{NPASS database update 2023.} Nucleic Acids Research, 51(D1), D621--D628.
