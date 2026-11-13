@@ -553,7 +553,7 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
-LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales"
+LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05"
 
 
 def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> dict:
@@ -588,8 +588,8 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
     for lado in ("left", "right", "top", "bottom"):
         ax.spines[lado].set_visible(False)
     ax.tick_params(length=0)
-    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (el número junto a la diana; más alto, más potente) en una diana donde ese compuesto no se ha medido, con "
-             "probabilidad razonable de cruzar la barrera\ny sin estructuras que suelen dar falsos positivos. En naranja, se parece poco a lo "
+    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (el número junto a la diana; más alto, más potente) en una diana donde ese compuesto no se ha medido, "
+             "sin filtrar por barrera (su probabilidad va al lado: puede entrar por un transportador)\ny sin estructuras que suelen dar falsos positivos. En naranja, se parece poco a lo "
              "que el modelo conoce. Es una lista exploratoria: en productos naturales el modelo no supera a un método sencillo.",
              fontsize=8.6, color=GRIS)
     for ext in ("svg", "png"):

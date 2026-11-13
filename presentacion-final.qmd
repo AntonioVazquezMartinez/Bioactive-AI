@@ -288,7 +288,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ## Lo que entregamos {.smaller}
 
-![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
+![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera, que no filtra" width="80%"}
 
 - **Un cuaderno** para usar los modelos con compuestos propios: da la probabilidad de cruzar la barrera, la potencia contra cada diana y un aviso si la molécula es muy distinta de lo conocido. [Está en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html).
 - **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no supera a un método sencillo.
