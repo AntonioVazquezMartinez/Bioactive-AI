@@ -116,7 +116,8 @@ def test_cada_liga_del_indice_del_respaldo_lleva_a_una_diapositiva():
     liga en silencio, y se descubre en la sala, durante las preguntas."""
     texto = MAZO.read_text(encoding="utf-8")
     ids = {_identificador(m.group(1)) for m in re.finditer(r"^## (.+)$", texto, flags=re.M)}
-    ligas = re.findall(r"\]\(#/([^)]+)\)", texto)
+    # `(#id)` y no `(#/id)`: Quarto ya antepone el `/` de reveal al renderizar, y con dos quedaba `#//id`
+    ligas = re.findall(r"\]\(#([^/)][^)]*)\)", texto)
     assert len(ligas) >= 8, "el índice del respaldo debería enlazar a las ocho diapositivas"
     rotas = [liga for liga in ligas if liga not in ids]
     assert not rotas, f"estas ligas no llevan a ninguna diapositiva: {rotas}"

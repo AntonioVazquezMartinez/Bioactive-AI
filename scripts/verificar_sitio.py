@@ -85,6 +85,9 @@ def main() -> int:
         for h in crudos(html[f]):
             archivo, _, frag = h.partition("#")
             frag = unquote(frag.split("?")[0])
+            # reveal enlaza a una diapositiva con `#/id`: el `/` es de su ruteo y el id es lo que hay que encontrar
+            if frag.startswith("/"):
+                frag = frag.lstrip("/")
             if not frag:
                 continue
             # un fragmento sobre un PDF u otro formato no es un ancla de HTML
