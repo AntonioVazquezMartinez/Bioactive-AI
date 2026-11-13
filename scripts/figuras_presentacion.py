@@ -1,6 +1,6 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son nueve, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son diez, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
@@ -28,6 +28,11 @@ Son nueve, y cada una existe porque una idea no se puede explicar a tiempo con p
 - `shap_por_diana.svg`: la fase 2 separada por diana: cuánto sube o baja la potencia predicha ser esa diana, y qué
   columnas químicas pesan en cada una (las 16 dianas con 500 pares o más). Sale de
   `experimentos/2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas.
+- `fase2_desempeno.svg`: la concordancia del modelo de potencia en la validación cruzada, en la prueba reservada y en
+  la base externa, y las mismas lecturas solo en productos naturales (con la línea base de peso y TPSA). Sale de cinco
+  corridas: `2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura`,
+  `2026-10-31-antonio-2.13-comparativa-regresion-ensambles`, `2026-11-03-artemio-1.5-prueba-por-rareza` y las dos de
+  la base externa de la patrocinadora. La prueba externa va rayada porque no es comparable con la reservada.
 - Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
@@ -571,6 +576,80 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
     return {"enfermedades": enfermedades}
 
 
+CV_FASE2 = RAIZ / "experimentos" / "2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura" / "metricas.json"
+PRUEBA_FASE2 = RAIZ / "experimentos" / "2026-10-31-antonio-2.13-comparativa-regresion-ensambles" / "metricas.json"
+EXTERNA = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-muestra-de-jorge" / "metricas.json"
+CONTAMINACION = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-contaminacion-externa" / "metricas.json"
+
+
+def fig_fase2_desempeno() -> dict:
+    """Las tres mediciones del modelo de potencia —ajuste, prueba reservada y base externa— y las mismas
+    tres solo en productos naturales, que es donde el proyecto las necesita y donde no gana a dos columnas."""
+    cv = json.loads(CV_FASE2.read_text(encoding="utf-8"))["todos"]["aft"]["concordancia"]
+    pr = json.loads(PRUEBA_FASE2.read_text(encoding="utf-8"))
+    ext = json.loads(EXTERNA.read_text(encoding="utf-8"))
+    base = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
+    cont = json.loads(CONTAMINACION.read_text(encoding="utf-8"))["base_externa"]
+
+    nat_prueba = pr["prueba_por_origen"]["solo_npass"]
+    todos = [
+        ("Validación cruzada\nen el ajuste", cv, "5 pliegues agrupados", GRIS, False, None),
+        ("Prueba reservada\nquímica nueva", pr["prueba"]["aft"]["concordancia"],
+         f"{pr['prueba']['aft']['n_total']:,} pares", AZUL, False, None),
+        ("Prueba externa\notro equipo", ext["global"]["concordancia"], f"{ext['global']['n_total']:,} pares",
+         NARANJA, True, ext["global"]["concordancia_ic95"]),
+    ]
+    naturales = [
+        ("Prueba reservada\nsolo NPASS", nat_prueba["concordancia"], f"{nat_prueba['n_total']} pares", AZUL, False, None),
+        ("Línea base\npeso y TPSA", base["solo_npass"]["conc_base"], f"{base['solo_npass']['n']} pares",
+         GRIS_CLARO, False, None),
+        ("Prueba externa\nsolo NPASS", ext["por_estrato"]["solo_npass"]["concordancia"],
+         f"{ext['por_estrato']['solo_npass']['n_total']} pares", NARANJA, True, None),
+    ]
+
+    fig, ax = plt.subplots(figsize=(10.4, 3.9))
+    xs, etiquetas = [], []
+    for grupo, inicio in ((todos, 0), (naturales, 3.8)):
+        for i, (nombre, v, pie, color, rayado, ic) in enumerate(grupo):
+            x = inicio + i
+            xs.append(x)
+            # desde la línea del azar: una barra de concordancia que arranca más abajo exagera la
+            # distancia al azar (0.530 se vería tres veces y media más baja que 0.720, cuando su exceso
+            # sobre el azar es 0.03 contra 0.22)
+            ax.bar(x, v - 0.5, bottom=0.5, color=color, width=0.62,
+                   hatch="///" if rayado else None, edgecolor="white", linewidth=0)
+            if ic:
+                ax.errorbar(x, v, yerr=[[v - ic[0]], [ic[1] - v]], fmt="none", ecolor="#333333", capsize=4, lw=1.3)
+            ax.text(x, v + 0.012, f"{v:.3f}", ha="center", fontsize=12, fontweight="bold",
+                    color=color if color != GRIS_CLARO else GRIS)
+            etiquetas.append(f"{nombre}\n{pie}")
+
+    ax.axhline(0.5, color="#333333", lw=1.4)
+    ax.text(-0.62, 0.505, "azar", fontsize=9, color="#333333", ha="left", va="bottom")
+    ax.axvline(2.4, color=GRIS_CLARO, lw=1.2)
+    ax.text(1.0, 0.845, "Todos los pares", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.857, "Solo pares que solo aporta NPASS", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.828, "la prueba externa no trae línea base", ha="center", fontsize=9, color=GRIS)
+    ax.set_xticks(xs, etiquetas, fontsize=8.6)
+    ax.set_ylim(0.5, 0.87)
+    ax.set_xlim(-0.65, 6.15)
+    ax.set_ylabel("concordancia", fontsize=10)
+    limpiar(ax)
+    ax.set_title("El agregado se sostiene fuera de casa; en la prueba reservada de naturales no gana a dos columnas",
+                 fontsize=12, fontweight="bold", color=AZUL, loc="left", pad=22)
+    fig.text(0.5, -0.13, f"La prueba externa (rayada) no es comparable con la reservada: se separó por compuesto y no por "
+             f"andamio, y el {cont['andamio_fraccion_pares'] * 100:.1f}% de sus pares tiene un andamio que el modelo ya vio, "
+             f"contra el {cont['piso_del_control'] * 100:.1f}% del control.", fontsize=8.8, color=GRIS, ha="center")
+    for ext_ in ("svg", "png"):
+        fig.savefig(SALIDA / f"fase2_desempeno.{ext_}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"cv": round(cv, 3), "prueba": round(pr["prueba"]["aft"]["concordancia"], 3),
+            "externa": round(ext["global"]["concordancia"], 3),
+            "nat_prueba": round(nat_prueba["concordancia"], 3),
+            "nat_base": round(base["solo_npass"]["conc_base"], 3),
+            "nat_externa": round(ext["por_estrato"]["solo_npass"]["concordancia"], 3)}
+
+
 DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
 # Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
 # que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
@@ -664,5 +743,6 @@ if __name__ == "__main__":
     print("lista:", fig_lista())
 
 
+    print("fase2_desempeno:", fig_fase2_desempeno())
     print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)
