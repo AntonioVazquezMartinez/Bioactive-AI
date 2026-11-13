@@ -47,19 +47,59 @@ def huella_del_pdf(ruta: Path) -> str | None:
     return texto[len(PREFIJO):] if texto.startswith(PREFIJO) else None
 
 
+def direcciones(texto: str) -> list[str]:
+    """La dirección de cada diapositiva en reveal: `h` si va sola y `h/v` si está en una pila vertical (el respaldo).
+
+    Un índice plano `#/i` no alcanza las de la pila: reveal lo lee como la columna `i`, y todas las del respaldo
+    salían como la diapositiva de índice."""
+    from html.parser import HTMLParser
+
+    class Secciones(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.pila: list[int] = []  # hijos vistos en cada nivel abierto
+            self.raiz = -1
+            self.hijas: dict[int, int] = {}
+
+        def handle_starttag(self, tag, attrs):
+            if tag != "section":
+                return
+            if len(self.pila) == 0:
+                self.raiz += 1
+                self.hijas[self.raiz] = 0
+            elif len(self.pila) == 1:
+                self.hijas[self.raiz] += 1
+            self.pila.append(0)
+
+        def handle_endtag(self, tag):
+            if tag == "section" and self.pila:
+                self.pila.pop()
+
+    p = Secciones()
+    p.feed(texto)
+    salida = []
+    for h in range(p.raiz + 1):
+        if p.hijas[h] == 0:
+            salida.append(str(h))
+        else:
+            salida.extend(f"{h}/{v}" for v in range(p.hijas[h]))
+    return salida
+
+
 def main() -> int:
     from PIL import Image
 
     subprocess.run(["quarto", "render", "presentacion-final.qmd", "--to", "revealjs"], cwd=RAIZ, check=True,
                    capture_output=True)
     html = (RAIZ / "_site" / "presentacion-final.html")
-    n = len(re.findall(r'<section id="', html.read_text(encoding="utf-8")))
+    destinos = direcciones(html.read_text(encoding="utf-8"))
+    n = len(destinos)
     with tempfile.TemporaryDirectory() as tmp:
         paginas = []
         for i in range(n):
             png = Path(tmp) / f"d{i:02d}.png"
             subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--window-size=1600,900",
-                            "--virtual-time-budget=6000", f"--screenshot={png}", f"file://{html}#/{i}"],
+                            "--virtual-time-budget=6000", f"--screenshot={png}", f"file://{html}#/{destinos[i]}"],
                            check=True, capture_output=True)
             paginas.append(Image.open(png).convert("RGB"))
         SALIDA.parent.mkdir(parents=True, exist_ok=True)

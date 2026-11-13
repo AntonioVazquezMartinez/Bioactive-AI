@@ -1,0 +1,21 @@
+<section id="title-slide"$for(title-slide-attributes/pairs)$ $it.key$="$it.value$"$endfor$>
+  <img class="portada-logo" src="recursos/logo-tec-posgrados.png" alt="Tecnológico de Monterrey, Posgrados">
+  <span class="portada-banda">Presentación del Proyecto Integrador</span>
+  <p class="portada-programa">Maestría en Inteligencia Artificial Aplicada (MNA)</p>
+  <h1 class="title">$title$</h1>
+$if(subtitle)$
+  <p class="subtitle">$subtitle$</p>
+$endif$
+  <p class="portada-etiqueta">Presenta(n):</p>
+  <ul class="portada-integrantes">
+$for(author)$
+    <li>$author$</li>
+$endfor$
+  </ul>
+$for(institute)$
+  <p class="portada-fila">$institute$</p>
+$endfor$
+$if(date)$
+  <p class="date">$date$</p>
+$endif$
+</section>
