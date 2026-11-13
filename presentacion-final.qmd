@@ -266,7 +266,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 :::
 
 ::: {.notes}
-**Pame · 1 min.** Elegimos el `aft` justamente por los naturales: en los pares que solo tiene NPASS su concordancia en validación es 0.632 contra 0.511 del bosque, porque aprende de las censuradas que los demás tiran. En la prueba esos pares dan 0.530 y con 117 no hay potencia para distinguir 0.511 de 0.632: no refuta ni confirma, y por eso se dice «no demostrado» y no «falla». La escalera se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. Si preguntan por la base externa de la patrocinadora: 0.792 en 8,134 pares con el modelo guardado y sin reentrenar, mejor que nuestra prueba, pero no es comparable porque el 64.9% de sus pares tiene un andamio ya visto. Y un aviso que conviene decir: el orden global mide sobre todo **qué diana es**; en el ajuste, un control que solo usa la diana llega a 1.36 de enriquecimiento contra un techo de 1.40.
+**Pame · 1 min.** Elegimos el `aft` justamente por los naturales: en los pares que solo tiene NPASS su concordancia en validación es 0.632 contra 0.511 del bosque, porque aprende de las censuradas que los demás tiran. En la prueba esos pares dan 0.530 y con 117 no hay potencia para distinguir 0.511 de 0.632: no refuta ni confirma, y por eso se dice «no demostrado» y no «falla». La escalera se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. Si preguntan por la base externa de la patrocinadora: 0.792 en 8,134 pares con el modelo guardado y sin reentrenar, mejor que nuestra prueba, pero no es comparable porque el 64.9% de sus pares tiene un andamio ya visto. Y si preguntan por el enriquecimiento: en el agregado está contra el techo (1.40 con 71.4% de activos, y el `aft` en 544 de 544), así que ahí la medida no distingue a nadie y el 1.36 del control de solo diana no dice nada sobre la química. Donde el techo deja margen sí se ve: en los pares de solo NPASS el `aft` da 3.09 contra 1.16 de ese control, y en los mixtos 1.55 contra 1.40. Son cifras del ajuste, fuera de pliegue.
 :::
 
 
@@ -274,7 +274,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ![](docs/reportes/presentacion/figuras/fase2_desempeno.svg){fig-alt="Concordancia del modelo de potencia, medida desde el azar: en la validación cruzada del ajuste, en la prueba reservada y en la base externa, primero sobre todos los pares y después solo sobre los pares que únicamente aporta NPASS, donde se añade la línea base de peso y superficie polar"}
 
-- **La diana manda.** El enriquecimiento del `aft` ya está en el techo (1.40 con 71.4% de activos) y un control que **solo usa la diana** llega a 1.36: el orden global mide sobre todo **qué diana es**, no qué molécula.
+- **El orden global mezcla 26 dianas.** Cada diana tiene su propio nivel de potencia, así que una lista única se ordena en buena parte por **qué diana es**. Dentro de cada diana ordena la química: en los pares que solo aporta NPASS, el modelo pone **8 activos entre los 21 primeros** (3.1×) contra 1.2× de ordenar por diana. *(Ajuste, fuera de pliegue.)*
 - **La procedencia lleva señal de la etiqueta.** Un modelo que solo ve **de dónde viene** el compuesto, sin mirar la molécula, llega a 0.280 de MCC: el **65%** de lo que logra la química (0.428), en la versión de clasificación. Por eso cada métrica se reporta por procedencia.
 
 ::: {.notes}
