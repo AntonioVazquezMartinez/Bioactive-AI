@@ -111,37 +111,46 @@
 % ===== COLUMNA IZQUIERDA =====
 
 \seccion{El problema}
-Hay muchos compuestos naturales con potencial neuroprotector y probar cada uno en el laboratorio cuesta tiempo y dinero. Un compuesto solo sirve si:
+Probar en el laboratorio cada compuesto natural con potencial neuroprotector es lento y caro. Para decidir cuáles probar primero, dos modelos estiman, a partir de su estructura química, si un compuesto:
 
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
-  \item cruza la barrera hematoencefálica (fase 1, clasificación);
-  \item actúa sobre una de 26 dianas del sistema nervioso, y con qué potencia (fase 2, regresión).
+  \item cruza la barrera que protege al cerebro (fase 1);
+  \item actúa sobre alguna de 26 proteínas del sistema nervioso, y con qué potencia (fase 2).
 \end{itemize}
 
-La entrada es la estructura escrita como texto (SMILES). La salida es evidencia para priorizar, no una decisión automática.
+\vspace{0.2em}
+\begin{center}
+\begin{tikzpicture}[
+  caja/.style={draw=olive,fill=olivesoft,rounded corners=4pt,line width=2pt,align=center,
+    font=\sffamily\bfseries\fontsize{19}{23}\selectfont,text=olivedark,minimum height=2.6cm,text width=5.0cm},
+  arr/.style={-{Stealth[length=4mm]},line width=3pt,color=olive}]
+  \node[caja,fill=white] (a) at (0,0) {Estructura\\del compuesto};
+  \node[caja] (b) at (6.6,1.55) {Fase 1: ¿cruza\\la barrera?};
+  \node[caja] (c) at (6.6,-1.55) {Fase 2: ¿con qué\\potencia actúa?};
+  \node[caja,fill=white] (d) at (13.2,0) {Evidencia para\\priorizar};
+  \draw[arr] (a.east) -- (b.west);
+  \draw[arr] (a.east) -- (c.west);
+  \draw[arr] (b.east) -- (d.west);
+  \draw[arr] (c.east) -- (d.west);
+\end{tikzpicture}
+\end{center}
+La salida es evidencia para decidir en qué orden probar, no una decisión automática.
 
 \vfill
 \seccion{Datos}
 \begin{center}
-  \circulo{7,805}{compuestos con clase\\(fase 1)}\hspace{0.6cm}\circulo{202,647}{registros de actividad\\(fase 2)}
+  \circulo{7,805}{compuestos\\(fase 1)}\hspace{0.6cm}\circulo{202,647}{mediciones\\(fase 2)}
 \end{center}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
-  \item Fase 1: archivo curado de la patrocinadora (B3DB y COCONUT); 63.5\,\% permeables. Fase 2: ChEMBL, NPASS y CMAUP, con mediciones censuradas.
-  \item Prueba reservada de 1,499 compuestos, fuera del entrenamiento. Partición por andamio y esqueleto, nunca al azar.
+  \item Fase 1: archivo curado de la patrocinadora (63.5\,\% permeables). Fase 2: ChEMBL, NPASS y CMAUP, con mediciones acotadas, como «mayor que 10 µM».
+  \item Prueba reservada de 1,499 compuestos que ningún modelo vio; la separación es por familia química, nunca al azar.
 \end{itemize}
 
 \vfill
 \seccion{Métodos}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
-  \item Descriptores de RDKit, y huellas de Morgan en la fase 2.
-  \item Once modelos comparados, de la regresión logística a los ensambles. En la fase 2, un modelo de supervivencia (AFT) que aprovecha las mediciones censuradas.
-\end{itemize}
-
-\vfill
-\seccion{Qué pesa en cada fase}
-\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
-  \item Con dos métodos de atribución independientes. Fase 1: los donadores de hidrógeno y otros cinco descriptores; TPSA no domina.
-  \item Fase 2: la diana pone el 15\,\% y el resto es química (complejidad, halógenos). Sin afirmar ningún mecanismo.
+  \item Se compararon once modelos, de la regresión logística a los ensambles.
+  \item En la fase 2, un modelo que aprovecha también las mediciones «mayores que» o «menores que».
 \end{itemize}
 
 \end{minipage}\hfill
@@ -150,65 +159,59 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 
 \seccion{Lo que encontramos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=12.2cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \pie{Figura 1. El AUROC cae al exigir que lo evaluado se parezca menos a lo entrenado; la prueba reservada (0.793) cae como un peldaño estricto, aunque se parece al entrenamiento como uno laxo.}
+  \includegraphics[width=\linewidth,height=9.4cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja. La prueba reservada (0.793) rinde como un caso muy exigente, aunque se parece al entrenamiento como uno laxo.}
 \end{center}
 
 \vfill
 \begin{center}
-  \includegraphics[width=\linewidth,height=7.2cm,keepaspectratio]{f6_escalera_fase2.png}\\[2pt]
-  \pie{Figura 2. En la fase 2 la concordancia también baja al exigir menos parecido, y los pares que solo aporta NPASS, los productos naturales (gris), quedan siempre más abajo. Los peldaños estrictos no se pueden construir en este conjunto.}
+  \includegraphics[width=\linewidth,height=6.2cm,keepaspectratio]{f0_palancas.png}\\[2pt]
+  \pie{Figura 2. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo. Cada barra viene de una corrida distinta.}
 \end{center}
 
 \vfill
+\seccion{Qué características pesan}
 \begin{center}
-  \includegraphics[width=\linewidth,height=7.6cm,keepaspectratio]{f0_palancas.png}\\[2pt]
-  \pie{Figura 3. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo. Cada barra viene de una corrida distinta.}
+  \includegraphics[width=\linewidth,height=10.4cm,keepaspectratio]{importancias_poster.png}\\[2pt]
+  \pie{Figura 3. Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2); su posición dice cuánto empuja esa característica la predicción y su color, qué valor tiene. En la fase 2, saber la diana aporta otro 15\,\% que no se dibuja.}
 \end{center}
 
 \vfill
-{\sffamily\fontsize{17}{21}\selectfont\color{muted}\textbf{Palabras clave.} \textbf{MCC}: medida de acierto, de $-1$ a 1 (0 es el azar). \textbf{AUROC}: qué tan bien se ordenan los permeables por encima de los que no. \textbf{TPSA}: superficie polar. \textbf{Andamio}: el núcleo de anillos de una molécula. \textbf{Huella}: bits que marcan los fragmentos que contiene.\par}
+{\sffamily\fontsize{17}{21}\selectfont\color{muted}\textbf{Palabras clave.} \textbf{MCC}: acierto, de $-1$ a 1 (0 es el azar). \textbf{AUROC}: qué tan bien se ordenan los permeables por encima de los que no (0.5 es el azar). \textbf{Andamio}: el núcleo de anillos de una molécula. \textbf{TPSA}: superficie polar.\par}
 
 \end{minipage}\hfill
 \begin{minipage}[t][\colh][s]{0.30\linewidth}\cuerpo\vspace{0pt}
 % ===== COLUMNA DERECHA =====
 
 \seccion{Conclusiones}
-\begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
+\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
   \item La confianza en una predicción depende de qué tan nueva es la molécula, no del modelo.
-  \item De 0.70 a 0.34 de MCC: unos 0.07 eran el corte, que se puede ajustar. El orden cayó 12.6 puntos de AUROC y el resto sigue sin explicar.
-  \item Sirve para ordenar: confirmar el 70\,\% mejor ordenado conserva el 85.3\,\% de los permeables, 15.3 puntos más que un sorteo.
-  \item En productos naturales el orden de potencia no está demostrado: 0.511 en 117 pares (0.530 registrada), sin distinguirse de la línea base de peso, polaridad y diana (0.565).
+  \item Sirve para ordenar: probar el 70\,\% mejor ordenado conserva el 85.3\,\% de los permeables, 15.3 puntos más que un sorteo.
+  \item En naturales el orden de potencia no está demostrado (117 pares): no se distingue de un modelo que solo ve peso, polaridad y diana.
 \end{itemize}
 
 \vfill
-\seccion{Transferencia y continuidad}
+\seccion{Qué entregamos}
 \begin{center}
-\begin{tikzpicture}[
-  caja/.style={draw=olive,fill=olivesoft,rounded corners=4pt,line width=2pt,align=center,
-    font=\sffamily\bfseries\fontsize{20}{24}\selectfont,text=olivedark,minimum height=3.6cm,text width=6.2cm},
-  arr/.style={-{Stealth[length=5mm]},line width=3.5pt,color=olive}]
-  \node[caja] (a) at (0,0) {Lista de\\SMILES};
-  \node[caja] (b) at (7.6,0) {Cuaderno\\con los dos\\modelos};
-  \node[caja,fill=white] (c) at (15.2,0) {Probabilidad,\\potencia y\\advertencia};
-  \draw[arr] (a.east) -- (b.west);
-  \draw[arr] (b.east) -- (c.west);
-\end{tikzpicture}
+  \includegraphics[width=\linewidth,height=9.2cm,keepaspectratio]{lista_priorizada_poster.png}\\[2pt]
+  \pie{Los tres primeros por enfermedad: potencia predicha (número junto a la diana) y probabilidad de cruzar la barrera. En naranja, se parece poco a lo que el modelo conoce.}
 \end{center}
-Un cuaderno recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, con una advertencia de extrapolación. Se entrega también una lista priorizada exploratoria de naturales, y los dos modelos, el procedimiento para reentrenar y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora y su grupo.
+\begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
+  \item Una lista exploratoria de naturales (hipótesis, no resultados) y un cuaderno que, para moléculas propias, devuelve la probabilidad de cruzar la barrera, la potencia por diana y un aviso si son muy distintas de lo conocido.
+  \item Una guía para medir columnas nuevas. La continuidad queda con la patrocinadora y su grupo.
+\end{itemize}
 
 \vfill
 \seccion{Trabajo futuro}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
-  \item Medir la potencia con los primeros lotes propios de productos naturales.
-  \item Combinar las dos fases en un solo orden y comprobar si elige mejor que cada una; hoy el cuaderno las ordena por separado.
-  \item Evaluar representaciones adicionales con la herramienta incluida.
+  \item Medir la potencia con muestras propias de naturales.
+  \item Combinar las dos fases en un solo orden.
 \end{itemize}
 
 \vfill
 \seccion{Referencias}
-{\fontsize{18}{23}\selectfont
-\begin{itemize}[leftmargin=1.2em,itemsep=0.3em]
+{\fontsize{16}{20}\selectfont
+\begin{itemize}[leftmargin=1.2em,itemsep=0.2em]
   \item Meng, F., Xi, Y., Huang, J., y Ayers, P. W. (2021). \emph{A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors.} Scientific Data, 8(1), 289.
   \item Zdrazil, B., et al. (2024). \emph{The ChEMBL Database in 2023.} Nucleic Acids Research, 52(D1), D1180--D1192.
   \item Zhao, H., et al. (2023). \emph{NPASS database update 2023.} Nucleic Acids Research, 51(D1), D621--D628.
