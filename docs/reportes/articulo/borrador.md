@@ -18,7 +18,8 @@ pierden al exigir que lo evaluado se parezca menos a lo entrenado. En la prueba 
 peor de lo que su semejanza predecía (AUROC 0.79 en lugar de 0.89), y tres formas distintas de enseñarle química
 rara no cerraron la brecha. Lo que sí movió el resultado fue el corte de decisión: igualar la tasa de compuestos
 declarados permeables a la prevalencia esperada sube el MCC de 0.34 a 0.41. Las huellas moleculares ayudaron en la
-fase 2 y no en la 1. Concluimos que la confianza en una predicción depende de cuán nueva es la molécula, y que esa
+fase 2 y no en la 1, y en los 117 pares de naturales de la prueba el orden de potencia (0.530) no supera a una línea
+base de peso y polaridad (0.565). Concluimos que la confianza en una predicción depende de cuán nueva es la molécula, y que esa
 distancia conviene medirla y mostrarla junto con cada predicción.
 
 ![Qué mueve el resultado](figuras/f0_palancas.svg)
@@ -434,14 +435,17 @@ buen resultado.
 1. *Los ensambles no mejoran al modelo simple en MCC ni en AUPRC, y no es un fracaso:* es el peldaño más bajo de una
    escalera donde el modelo nunca fue el factor grande. En AUROC, la votación (+0.0139 [+0.0038, +0.0239]) y el
    stacking (+0.0128 [+0.0023, +0.0233]) sí superan al `svm_rbf` con el intervalo corregido de Nadeau y Bengio, pero
-   al corregir por las diez comparaciones hechas ninguno se sostiene (p = 0.103 y 0.180). Acomodar el escalador
-   dentro de la calibración del SVM no cambia nada (MCC 0.7015 contra 0.7017; AUROC y AUPRC idénticos).
+   al corregir por las diez comparaciones hechas ninguno se sostiene (p = 0.103 y 0.180).
 2. *Una cifra de validación cruzada no describe a la química nueva,* y la semejanza al vecino más cercano no basta
    para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10 más de lo que su semejanza
    predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
-3. *La representación no se traslada entre fases,* y no por tamaño de datos, por tipo de etiqueta ni por el peso de
+3. *En productos naturales el orden de potencia no está demostrado.* En la prueba reservada, los 117 pares que solo aporta
+   NPASS dan una concordancia de 0.530 con el modelo y de 0.565 con una línea base de peso y superficie polar: el modelo no la
+   supera, aunque con 117 pares la prueba tampoco confirma ni refuta su ventaja de validación (0.632 contra 0.511 del
+   bosque). Por eso la lista priorizada que se entrega es de hipótesis (sección 5.1).
+4. *La representación no se traslada entre fases,* y no por tamaño de datos, por tipo de etiqueta ni por el peso de
    la molécula; la densidad del espacio químico queda como pista sin confirmar.
-4. *Para quien use los modelos:* priorizar candidatos y no descartarlos (un BBB− no excluye un compuesto); leer la
+5. *Para quien use los modelos:* priorizar candidatos y no descartarlos (un BBB− no excluye un compuesto); leer la
    probabilidad de la fase 1 junto con la advertencia de semejanza y no como una clase; y medir cualquier mejora
    donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de entrenamiento (Figura 1), no
    solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro que probamos cerró la brecha. Para
@@ -451,6 +455,8 @@ buen resultado.
 
 - La prueba reservada es una sola, de tamaño moderado (1,499 compuestos en la fase 1), así que los intervalos de
   los subgrupos pequeños son anchos.
+- En la fase 2 los productos naturales de la prueba son 117 pares, sin potencia para distinguir 0.511 de 0.632, y la
+  escalera de semejanza no se puede construir por debajo de 0.6: el 69% y el 90% de las filas caen en un solo grupo.
 - Las 151 columnas de la fase 1 se eligieron con etiquetas de entrenamiento, así que su sesgo de selección no es
   medible contra la dispersión.
 - El efecto de agrupar depende del modelo (1.3 puntos de AUROC con el `svm_rbf` y 2.2 con el bosque) y de qué se
