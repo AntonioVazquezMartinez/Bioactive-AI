@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; ocho de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 12 min, más 1.5 del resumen en Zoom) y 10 de preguntas; nueve de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -275,53 +275,38 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 :::
 
 
-## Qué pesa en cada fase {.smaller}
+## Qué características pesan en cada fase {.smaller}
 
-![](docs/reportes/presentacion/figuras/importancias.svg){fig-alt="Gráfico de puntos de SHAP: cada punto es un compuesto, su posición es el efecto de la columna en la predicción y su color el valor de la columna"}
+![](docs/reportes/presentacion/figuras/importancias.svg){fig-alt="Para cada fase, las características de la molécula que más empujan la predicción, hacia arriba o hacia abajo"}
 
-- **Cómo se lee:** cada punto es un compuesto (en la fase 2, un par compuesto-diana); a la derecha, esa columna **sube** la predicción, y el color es su valor.
-- **Dos métodos:** SHAP reparte cada predicción entre las columnas; la **permutación** baraja una columna y mide cuánto empeora el modelo. «Confirmada» es que las dos la ponen entre sus 15 primeras.
-- **Fase 1:** una **lactama** o más **donadores de hidrógeno** bajan la probabilidad de cruzar la barrera; TPSA no domina.
-- **Fase 2:** pesa sobre todo la **complejidad** (`BertzCT`), y la química es **casi la misma en todas las dianas**; la diana pone aparte el **15%**. **No afirmamos ningún mecanismo.**
+- **Permeabilidad:** tener lactamas (un tipo de anillo) o más grupos que ceden hidrógeno **baja** la probabilidad de cruzar la barrera.
+- **Potencia:** pesa sobre todo la **complejidad de la molécula**, y es casi igual para todas las dianas. Es lo que usa el modelo, no una explicación del mecanismo.
 
 ::: {.notes}
-**Art · 0.75 min.** Dos métodos independientes. SHAP mira dentro del modelo y dice cuánto empuja cada columna cada predicción, y en qué dirección. La permutación solo mira la salida: baraja una columna, para que deje de tener relación con la respuesta, y mide cuánto empeora el modelo; no da dirección, y subestima a las columnas redundantes, como TPSA. "Confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación). En la fase 2 la figura deja fuera las 26 columnas de diana, que son el 15% de la atribución y dicen qué diana es el par, para mostrar solo química; en el respaldo se ven aparte, con la química de cada diana. El detalle está en el respaldo.
+**Art · 0.5 min.** Cada punto es una molécula y su color dice si esa característica es alta o baja en ella; a la derecha, la característica sube la predicción. Dos métodos independientes coinciden en casi todas. Si preguntan por la diana: aporta el 15% de lo que pesa en la fase 2 y se ve aparte en el respaldo.
 :::
 
-## El entregable: el cuaderno para usar los modelos con tus compuestos {.smaller}
-
-![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de seis compuestos de la prueba reservada: probabilidad de cruzar la barrera junto a la etiqueta real, y potencia máxima predicha junto a la medida" width="85%"}
-
-- **Qué es:** el cuaderno `06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio. **Dónde:** [en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html), menú *Entrega final*.
-- **Qué se ve:** su salida para seis compuestos de la **prueba reservada**, que ningún modelo vio, sorteados sin escoger y **ordenados por fase**. A la izquierda, la probabilidad de cruzar la barrera junto a la etiqueta real; a la derecha, la potencia predicha (barra) y la medida (rombo).
-- **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**, y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
-- **No combina** las fases en un solo ranking (queda como trabajo futuro); son seis ejemplos para ver el formato, **no una métrica**.
-
-::: {.notes}
-**Art · 0.5 min.** Es lo que entregamos para que la patrocinadora lo use: un cuaderno, con la liga en pantalla. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
-:::
-
-## La lista priorizada: qué probar primero {.smaller}
+## Lo que entregamos {.smaller}
 
 ![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
 
-- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa [en el sitio](contenido/lista-priorizada.html) y en CSV.
-- **Cómo leerla:** es **exploratoria**. El modelo de potencia **no supera a una línea base** en naturales (0.530 contra 0.565): sirve para decidir qué probar primero, no como resultado.
-- **Se repite:** 84 compuestos distintos en 260 lugares, porque la química que pesa es casi la misma en todas las dianas.
+- **Un cuaderno** para usar los modelos con compuestos propios: da la probabilidad de cruzar la barrera, la potencia contra cada diana y un aviso si la molécula es muy distinta de lo conocido. [Está en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html).
+- **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no supera a un método sencillo.
+- **Una guía** para medir si unas columnas nuevas mejoran la predicción.
 
 ::: {.notes}
-**Art · 0.5 min.** Es el objetivo con el que abrimos: priorizar naturales que lleguen al cerebro y actúen sobre su diana. La figura trae los tres primeros por enfermedad; la lista completa, por diana y por enfermedad, está en el sitio. Es una lista de hipótesis para el laboratorio: el modelo de potencia no supera a una línea base en naturales, y combinar las dos fases no está validado, así que el criterio de barrera solo ordena y no descarta. En naranja, compuestos lejos de lo que el modelo vio. Los identificadores NPASS:NPC son compuestos de esa base sin un nombre usable en el dato.
+**Art · 0.75 min.** Esto es lo que se queda la patrocinadora. La figura muestra los tres primeros de cada enfermedad. Varios compuestos aparecen en más de una lista, porque la química que pesa es casi igual en todas las dianas. Un ejemplo del cuaderno con seis compuestos conocidos está en el respaldo.
 :::
 
 ## Qué concluimos {.smaller}
 
-- **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana, pero **la mitad del desempeño se va cuando la química es nueva** (MCC de 0.70 a 0.34, y **10 de los 12.6 puntos de AUROC sin explicar**). La confianza depende de **qué tan nueva es la molécula**, no del modelo.
-- **Qué no está demostrado:** en **productos naturales** el orden de potencia no supera a una línea base sencilla (0.530 contra 0.565). Es evidencia para priorizar, no una decisión.
-- **Qué entregamos:** el cuaderno, una **lista priorizada** (hipótesis para el laboratorio) y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora.
-- **Límites y qué sigue:** una sola prueba y un modelo por fase. Falta medir la potencia con **lotes propios** de naturales y combinar las dos fases en un solo orden.
+- **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana. Con moléculas nuevas el acierto (MCC) cae de 0.70 a 0.34 y **no sabemos explicar** buena parte de esa caída.
+- **Qué no está demostrado:** en productos naturales, el orden de potencia no supera a un método sencillo (0.530 frente a 0.565). Es evidencia para priorizar, no una decisión.
+- **Qué entregamos:** el cuaderno, la lista y la guía. La continuidad queda en manos de la patrocinadora y su grupo.
+- **Qué sigue:** medir la potencia con muestras propias de productos naturales, y combinar las dos fases en un solo orden.
 
 ::: {.notes}
-**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados (la escalera, lo que la semejanza no explica, el corte, el modelo de potencia, lo que mide de verdad la fase 2 y qué pesa en cada fase). Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte, y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no los explicamos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base. Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
+**Art · 1.0 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados. Si preguntan por el detalle: el acierto cae de 0.70 a 0.34, unos 0.07 por el corte de decisión, y de la pérdida en capacidad de ordenar la semejanza explica una parte pequeña. En la fase 2 el 0.72 lo domina ChEMBL; en los 117 pares de naturales el modelo da 0.530. Límites: una sola prueba reservada y un modelo por fase. Lo que necesitamos de ustedes: muestras propias de naturales con potencia medida.
 :::
 
 # Respaldo
@@ -334,6 +319,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - [La diana y la química (fase 2)](#fase-2-la-diana-y-la-química-por-separado)
 - [Una herramienta para medir columnas nuevas](#una-herramienta-para-medir-columnas-nuevas)
 - [Cómo leer las métricas](#cómo-leer-las-métricas)
+- [Ejemplo: seis compuestos conocidos](#ejemplo-seis-compuestos-conocidos)
 
 ::: {.notes}
 Índice del respaldo: cada línea lleva a su diapositiva. Las flechas recorren todo el respaldo en orden y la tecla O abre el mapa de diapositivas.
@@ -446,4 +432,17 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ::: {.notes}
 **Respaldo · Antonio.** Para cuando alguien oiga una métrica y no la ubique. El AUROC es el mismo con cualquier corte, por eso cae menos que el MCC; la concordancia es el AUROC de la fase 2, donde la respuesta es una potencia con mediciones censuradas. El enriquecimiento está explicado en «Qué mide de verdad · fase 2».
+:::
+
+## Ejemplo: seis compuestos conocidos {.smaller}
+
+![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Seis compuestos: probabilidad de cruzar la barrera junto a la realidad, y potencia predicha junto a la medida" width="85%"}
+
+- Seis compuestos que los modelos **no habían visto**, elegidos al azar entre los que tienen nombre y potencia medida.
+- A la izquierda, la probabilidad de cruzar la barrera junto a lo que se sabe; a la derecha, la potencia predicha (barra) y la medida (rombo).
+- **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**; y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
+- Es un ejemplo del formato, no una lista de candidatos ni una medida de desempeño.
+
+::: {.notes}
+**Respaldo · Art.** Es lo que devuelve el cuaderno para seis compuestos conocidos. Se muestra con compuestos que el modelo no había visto para no presentar como acierto lo que ya conocía.
 :::
