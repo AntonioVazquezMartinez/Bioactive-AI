@@ -2,7 +2,7 @@
 """La lista priorizada de compuestos naturales por diana y por enfermedad (el objetivo de la primera diapositiva).
 
 **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que en los productos
-naturales **no supera a una línea base sencilla** (concordancia 0.530 contra 0.565 de peso, TPSA y diana, en 117 pares de
+naturales **no se distingue de una línea base de peso, TPSA y diana** (concordancia 0.511 al reajustar, 0.530 en la corrida registrada, contra 0.565, en 117 pares de
 la prueba reservada): sirve para decidir qué probar primero, no para afirmar que un compuesto actúa. Cada fila lleva lo
 que hace falta para leerla así: la probabilidad de cruzar la barrera (o la etiqueta medida, si existe), la similitud con
 lo que el modelo vio y la bandera de extrapolación.
@@ -150,7 +150,7 @@ def escribir_documento(pe: pd.DataFrame, pd_potencia: pd.DataFrame, cifras: dict
     out = [
         "# Lista priorizada de compuestos naturales", "",
         "> **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que **en los productos "
-        "naturales no supera a una línea base sencilla** (concordancia 0.530 contra 0.565 de peso, TPSA y diana, en 117 pares de la "
+        "naturales no se distingue de una línea base de peso, TPSA y diana** (concordancia 0.511 al reajustar, 0.530 en la corrida registrada, contra 0.565, en 117 pares de la "
         "prueba reservada, [C.5](decisiones.md#dc-5)). Sirve para decidir **qué probar primero**, no para afirmar que un compuesto "
         "actúa. Ninguna fila es un resultado de laboratorio.", "",
         "## Cómo se hizo", "",

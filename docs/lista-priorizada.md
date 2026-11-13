@@ -1,6 +1,6 @@
 # Lista priorizada de compuestos naturales
 
-> **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que **en los productos naturales no supera a una línea base sencilla** (concordancia 0.530 contra 0.565 de peso, TPSA y diana, en 117 pares de la prueba reservada, [C.5](decisiones.md#dc-5)). Sirve para decidir **qué probar primero**, no para afirmar que un compuesto actúa. Ninguna fila es un resultado de laboratorio.
+> **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que **en los productos naturales no se distingue de una línea base de peso, TPSA y diana** (concordancia 0.511 al reajustar, 0.530 en la corrida registrada, contra 0.565, en 117 pares de la prueba reservada, [C.5](decisiones.md#dc-5)). Sirve para decidir **qué probar primero**, no para afirmar que un compuesto actúa. Ninguna fila es un resultado de laboratorio.
 
 ## Cómo se hizo
 

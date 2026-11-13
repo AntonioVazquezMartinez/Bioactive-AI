@@ -291,7 +291,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 ![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera, que no filtra" width="80%"}
 
 - **Un cuaderno** para usar los modelos con compuestos propios: da la probabilidad de cruzar la barrera, la potencia contra cada diana y un aviso si la molécula es muy distinta de lo conocido. [Está en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html).
-- **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no supera a un método sencillo.
+- **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no se distingue de una línea base de peso, TPSA y diana.
 - **Una guía** para medir si unas columnas nuevas mejoran la predicción.
 
 ::: {.notes}
@@ -301,7 +301,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 ## Qué concluimos {.smaller}
 
 - **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana. Con moléculas nuevas el acierto (MCC) cae de 0.70 a 0.34 y **no sabemos explicar** buena parte de esa caída.
-- **Qué no está demostrado:** en productos naturales, el orden de potencia no supera a un método sencillo (0.530 frente a 0.565). Es evidencia para priorizar, no una decisión.
+- **Qué no está demostrado:** en productos naturales, el orden de potencia no se distingue de un modelo que solo ve peso, TPSA y diana (117 pares). Es evidencia para priorizar, no una decisión.
 - **Qué entregamos:** el cuaderno, la lista y la guía. La continuidad queda en manos de la patrocinadora y su grupo.
 - **Qué sigue:** medir la potencia con muestras propias de productos naturales, y combinar las dos fases en un solo orden.
 

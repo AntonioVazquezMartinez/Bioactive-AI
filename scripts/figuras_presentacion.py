@@ -590,7 +590,7 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
     ax.tick_params(length=0)
     fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (el número junto a la diana; más alto, más potente) en una diana donde ese compuesto no se ha medido, "
              "sin filtrar por barrera (su probabilidad va al lado: puede entrar por un transportador)\ny sin estructuras que suelen dar falsos positivos. En naranja, se parece poco a lo "
-             "que el modelo conoce. Es una lista exploratoria: en productos naturales el modelo no supera a un método sencillo.",
+             "que el modelo conoce. Es una lista exploratoria: en productos naturales el modelo no se distingue de una línea base de peso, TPSA y diana.",
              fontsize=8.6, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
