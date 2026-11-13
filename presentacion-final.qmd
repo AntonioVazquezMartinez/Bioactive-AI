@@ -283,7 +283,9 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - **Potencia:** pesa sobre todo la **complejidad de la molécula**, y es casi igual para todas las dianas. Es lo que usa el modelo, no una explicación del mecanismo.
 
 ::: {.notes}
-**Art · 0.5 min.** Cada punto es una molécula y su color dice si esa característica es alta o baja en ella; a la derecha, la característica sube la predicción. Dos métodos independientes coinciden en casi todas. Si preguntan por la diana: aporta el 15% de lo que pesa en la fase 2 y se ve aparte en el respaldo.
+**Art · 0.75 min.** *Lo que digo:* Aquí vemos qué características de la molécula pesan más en cada fase. Cada punto es una molécula: si va a la derecha, esa característica sube la predicción, y el color dice si su valor es alto o bajo. En permeabilidad, tener lactamas o más grupos que ceden hidrógeno baja la probabilidad de cruzar la barrera. En potencia pesa sobre todo la complejidad de la molécula, y es casi igual para todas las dianas. Es lo que usa el modelo, no una explicación del mecanismo.
+
+*Si preguntan:* dos métodos independientes coinciden en casi todas. La diana aporta el 15% de lo que pesa en la fase 2 y se ve aparte en el respaldo.
 :::
 
 ## Lo que entregamos {.smaller}
@@ -295,7 +297,9 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - **Una guía** para medir si unas columnas nuevas mejoran la predicción.
 
 ::: {.notes}
-**Art · 0.75 min.** Esto es lo que se queda la patrocinadora. La figura muestra los tres primeros de cada enfermedad. Varios compuestos aparecen en más de una lista, porque la química que pesa es casi igual en todas las dianas. Un ejemplo del cuaderno con seis compuestos conocidos está en el respaldo.
+**Art · 0.75 min.** *Lo que digo:* Esto es lo que se queda la patrocinadora. La figura muestra, para cada enfermedad, los tres compuestos naturales con mayor potencia predicha, con su diana y la probabilidad de cruzar la barrera, que no filtra. Entregamos tres cosas: un cuaderno para probar moléculas propias, que da la probabilidad de cruzar, la potencia por diana y un aviso si la molécula es muy distinta de lo conocido; una lista de naturales para probar primero, que son hipótesis y no resultados; y una guía para medir columnas nuevas.
+
+*Si preguntan:* varios compuestos aparecen en más de una lista, porque la química que pesa es casi igual en todas las dianas. Un ejemplo del cuaderno con seis compuestos conocidos está en el respaldo.
 :::
 
 ## Qué concluimos {.smaller}
@@ -306,7 +310,9 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - **Qué sigue:** medir la potencia con muestras propias de productos naturales, y combinar las dos fases en un solo orden.
 
 ::: {.notes}
-**Art · 1.0 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados. Si preguntan por el detalle: el acierto cae de 0.70 a 0.34, unos 0.07 por el corte de decisión, y de la pérdida en capacidad de ordenar la semejanza explica una parte pequeña. En la fase 2 el 0.72 lo domina ChEMBL; en los 117 pares de naturales el modelo da 0.530. Límites: una sola prueba reservada y un modelo por fase. Lo que necesitamos de ustedes: muestras propias de naturales con potencia medida.
+**Art · 0.75 min.** *Lo que digo:* Cierro con cuatro ideas. Primero, podemos estimar si un compuesto cruza la barrera y con qué potencia actúa; con moléculas nuevas el acierto, medido con el MCC, cae de 0.70 a 0.34, y no sabemos explicar buena parte de esa caída. Segundo, en productos naturales el orden de potencia no está demostrado: con 117 pares no se distingue de un modelo que solo ve peso, TPSA y diana. Por eso sirve como evidencia para priorizar, no para decidir. Tercero, entregamos el cuaderno, la lista y la guía, y la continuidad queda con la patrocinadora y su grupo. Y lo que sigue es medir la potencia con muestras propias de naturales y combinar las dos fases.
+
+*Si preguntan por el detalle:* el acierto cae de 0.70 a 0.34, unos 0.07 por el corte de decisión, y de la pérdida en capacidad de ordenar la semejanza explica una parte pequeña. En la fase 2 el 0.72 lo domina ChEMBL; en los 117 pares de naturales el modelo da 0.530. Límites: una sola prueba reservada y un modelo por fase. Lo que necesitamos de ustedes: muestras propias de naturales con potencia medida.
 :::
 
 ## Gracias {.center}
