@@ -553,7 +553,7 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
-LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05"
+LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres"
 
 
 def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> dict:

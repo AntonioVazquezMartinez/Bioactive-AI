@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 12 min, más 1.5 del resumen en Zoom) y 10 de preguntas; nueve de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 12 min y una de cierre, más 1.5 del resumen en Zoom) y 10 de preguntas; nueve de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -307,6 +307,16 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ::: {.notes}
 **Art · 1.0 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados. Si preguntan por el detalle: el acierto cae de 0.70 a 0.34, unos 0.07 por el corte de decisión, y de la pérdida en capacidad de ordenar la semejanza explica una parte pequeña. En la fase 2 el 0.72 lo domina ChEMBL; en los 117 pares de naturales el modelo da 0.530. Límites: una sola prueba reservada y un modelo por fase. Lo que necesitamos de ustedes: muestras propias de naturales con potencia medida.
+:::
+
+## Gracias {.center}
+
+**¿Preguntas?**
+
+Bioactive AI · Tec de Monterrey · Equipo 7
+
+::: {.notes}
+**Art · 0 min.** Cierre del hilo: aquí termina la presentación y empiezan las preguntas. Lo que sigue es respaldo, para consultar si alguien pregunta por un detalle.
 :::
 
 # Respaldo

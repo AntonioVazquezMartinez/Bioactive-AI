@@ -327,7 +327,7 @@ pActividad por diana y sin intervalo) y qué tan cerca queda de lo que los model
 dos fases en un ranking: esa combinación sigue pendiente y, cuando exista, será evidencia paralela y no una cascada.
 
 Además del cuaderno se entrega una **lista priorizada exploratoria de compuestos naturales** por diana y por enfermedad, que es
-el objetivo del proyecto (`lista-priorizada.md`, corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05`). Parte de los 1,821
+el objetivo del proyecto (`lista-priorizada.md`, corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres`). Parte de los 1,821
 compuestos de NPASS y CMAUP de las filas de ajuste, excluye los 223 con alerta PAINS y los 569 con puntaje de semejanza a productos
 naturales menor de 0.5 `ertl2008natural` (quedan 1,026 candidatos), y ordena por potencia predicha entre los que no tienen
 medición contra esa diana. La barrera hematoencefálica no filtra, porque un compuesto que no cruza por difusión puede entrar por un

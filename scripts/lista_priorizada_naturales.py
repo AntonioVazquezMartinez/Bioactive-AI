@@ -63,6 +63,10 @@ NOMBRES_VERIFICADOS = {
     # estructura**, no verificada en una base de datos: la clase, no el compuesto.
     "VBRSHBGIUDRWEJ": "Lignano (NPC483651)",              # CHEMBL4634863
     "JHPIJMUNSMWWAA": "Hidroxi-cantin-6-ona (NPC53144)",  # alcaloide; posición del hidroxilo sin confirmar
+    # Verificados por conectividad (primeros 14 caracteres de la InChIKey) contra PubChem por nombre: coinciden.
+    "DBWQSCSXHFNTMO": "8,9-EET (ácido epoxieicosatrienoico)",
+    "YFGQJKBUXPKSAW": "Lanatósido A",
+    "UJYGDMFEEDNVBF": "Ergocornina",
 }
 INCHIKEY = re.compile(r"^[A-Z]{14}-[A-Z]{10}-[A-Z]$")
 
@@ -186,7 +190,7 @@ def escribir_documento(pe: pd.DataFrame, pd_potencia: pd.DataFrame, cifras: dict
 def main() -> None:
     params = {"top_por_lista": TOP, "barrera_como_filtro": False, "toca_prueba": False, "combina_fases": False,
               "exploratoria": True, "filtro_pains": "A, B y C de RDKit", "np_likeness_minimo": NP_MINIMO, "universo": "NPASS y CMAUP, filas de ajuste"}
-    with Corrida("lista-priorizada-naturales-corte-np-05", decision="C.5", params=params, semillas=[0]) as c:
+    with Corrida("lista-priorizada-naturales-nombres", decision="C.5", params=params, semillas=[0]) as c:
         u = universo()
         modelos = inferencia.cargar()
         pred = inferencia.predecir(u["smiles"].tolist(), modelos).reset_index(drop=True)

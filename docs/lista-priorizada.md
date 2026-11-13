@@ -5,7 +5,7 @@
 ## Cómo se hizo
 
 - **Universo:** 1,821 compuestos de las filas de ajuste que NPASS o CMAUP aportan a la fase 2 (la prueba reservada no se lee). Salen 223 con alerta PAINS y 569 con puntaje de semejanza a productos naturales menor de 0.5 (Ertl et al., 2008, `ertl2008natural`), porque esas bases traen algunos fármacos sintéticos; quedan 1,026.
-- **Por diana:** los 10 de mayor potencia predicha entre los que **no tienen medición contra esa diana** (los pares ya medidos no son hipótesis nuevas). **Ordena solo la potencia: la barrera hematoencefálica no filtra**, porque un compuesto que no cruza por difusión puede llegar al cerebro por un transportador o con una formulación, y un BBB− no descarta ([C.5](decisiones.md#dc-5)). La probabilidad de cruzar va en su columna, al lado; la variante que exige barrera probable (0.5 o más) se guarda aparte (`por_diana_con_barrera_probable.csv` en `experimentos/2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05`).
+- **Por diana:** los 10 de mayor potencia predicha entre los que **no tienen medición contra esa diana** (los pares ya medidos no son hipótesis nuevas). **Ordena solo la potencia: la barrera hematoencefálica no filtra**, porque un compuesto que no cruza por difusión puede llegar al cerebro por un transportador o con una formulación, y un BBB− no descarta ([C.5](decisiones.md#dc-5)). La probabilidad de cruzar va en su columna, al lado; la variante que exige barrera probable (0.5 o más) se guarda aparte (`por_diana_con_barrera_probable.csv` en `experimentos/2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres`).
 - **Por enfermedad:** lo mismo, con el máximo entre las dianas de esa categoría (las categorías son las del archivo de la patrocinadora).
 
 ## Cómo leerla
@@ -15,7 +15,7 @@
 - **Se repiten:** la química que pesa es casi la misma en todas las dianas (la diana pone el 15% de la atribución, ver el anexo F del artículo), así que **los mismos compuestos suben en varias listas**: las 260 filas por diana tienen solo 75 compuestos distintos. Lo que dice la lista es qué compuestos de entrada parecen potentes, más que cuál es el mejor para cada diana.
 - **Identificadores:** si el dato no trae un nombre usable, el compuesto va con su identificador de NPASS (`NPASS:NPC...`). SMILES, esqueleto y todas las columnas están en los CSV de la corrida.
 
-Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scripts/lista_priorizada_naturales.py`).
+Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres` (`scripts/lista_priorizada_naturales.py`).
 
 ## Por enfermedad
 
@@ -29,10 +29,10 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 4 | NPASS:NPC607165 | GRIN1 (antagonismo) | 7.1 | 0.25 | bajo (extrapola) |
 | 5 | NPASS:NPC184932 | GRIN1 (antagonismo) | 7.1 | 0.25 | bajo (extrapola) |
 | 6 | 3-(3,4-dimetoxifenil)serina | GRIN1 (antagonismo) | 7.0 | 0.61 | razonable |
-| 7 | NPASS:NPC603739 | GRIN1 (antagonismo) | 7.0 | 0.09 | razonable |
+| 7 | Ergocornina | GRIN1 (antagonismo) | 7.0 | 0.09 | razonable |
 | 8 | NPASS:NPC607395 | GRIN1 (antagonismo) | 7.0 | 0.28 | bajo (extrapola) |
 | 9 | Staurosporine | GRIN1 (antagonismo) | 7.0 | 0.80 | bajo (extrapola) |
-| 10 | NPASS:NPC74259 | GRIN1 (antagonismo) | 7.0 | 0.08 | razonable |
+| 10 | Lanatósido A | GRIN1 (antagonismo) | 7.0 | 0.08 | razonable |
 
 ### Depresión
 
@@ -40,7 +40,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 |--:|:--|:--|--:|--:|:--|
 | 1 | Fisovenina | GRIN2B (antagonismo) | 7.8 | 0.88 | razonable |
 | 2 | Lignano (NPC483651) | GRIN2B (antagonismo) | 7.0 | 0.61 | bajo (extrapola) |
-| 3 | NPASS:NPC323597 | GRIN2B (antagonismo) | 7.0 | 0.31 | razonable |
+| 3 | 8,9-EET (ácido epoxieicosatrienoico) | GRIN2B (antagonismo) | 7.0 | 0.31 | razonable |
 | 4 | Sanguinine | GRIN2B (antagonismo) | 6.7 | 0.92 | razonable |
 | 5 | Calcimycin | GRIN2B (antagonismo) | 6.6 | 0.37 | bajo (extrapola) |
 | 6 | NPASS:NPC195075 | GRIN2B (antagonismo) | 6.6 | 0.94 | razonable |
@@ -59,7 +59,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 4 | Calcimycin | KEAP1 (inhibición) | 6.6 | 0.37 | bajo (extrapola) |
 | 5 | Sanguinine | NFE2L2 (activación) | 6.4 | 0.92 | razonable |
 | 6 | NPASS:NPC607165 | KEAP1 (inhibición) | 6.3 | 0.25 | bajo (extrapola) |
-| 7 | NPASS:NPC603739 | KEAP1 (inhibición) | 6.3 | 0.09 | razonable |
+| 7 | Ergocornina | KEAP1 (inhibición) | 6.3 | 0.09 | razonable |
 | 8 | NPASS:NPC483652 | KEAP1 (inhibición) | 6.3 | 0.63 | bajo (extrapola) |
 | 9 | NPASS:NPC607395 | KEAP1 (inhibición) | 6.2 | 0.28 | bajo (extrapola) |
 | 10 | NPASS:NPC610464 | NFE2L2 (activación) | 6.2 | 0.43 | bajo (extrapola) |
@@ -70,7 +70,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 |--:|:--|:--|--:|--:|:--|
 | 1 | Lignano (NPC483651) | TNF (inhibición) | 8.5 | 0.61 | bajo (extrapola) |
 | 2 | Fisovenina | TSPO (activación) | 8.3 | 0.88 | razonable |
-| 3 | NPASS:NPC74259 | TNF (inhibición) | 8.2 | 0.08 | razonable |
+| 3 | Lanatósido A | TNF (inhibición) | 8.2 | 0.08 | razonable |
 | 4 | NPASS:NPC313921 | TNF (inhibición) | 8.2 | 0.50 | bajo (extrapola) |
 | 5 | Deslanoside | TNF (inhibición) | 8.1 | 0.09 | razonable |
 | 6 | Kamebanin | TNF (inhibición) | 8.0 | 0.74 | bajo (extrapola) |
@@ -85,7 +85,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 |--:|:--|:--|--:|--:|:--|
 | 1 | Fisovenina | LRRK2 (inhibición) | 7.8 | 0.88 | razonable |
 | 2 | NPASS:NPC603594 | COMT (inhibición) | 7.1 | 0.08 | bajo (extrapola) |
-| 3 | NPASS:NPC603739 | LRRK2 (inhibición) | 7.0 | 0.09 | razonable |
+| 3 | Ergocornina | LRRK2 (inhibición) | 7.0 | 0.09 | razonable |
 | 4 | Sanguinine | DRD2 (agonismo o antagonismo (según enfermedad)) | 7.0 | 0.92 | razonable |
 | 5 | Hidroxi-cantin-6-ona (NPC53144) | SNCA (reducir agregación) | 7.0 | 0.75 | bajo (extrapola) |
 | 6 | NPASS:NPC609876 | COMT (inhibición) | 7.0 | 0.08 | bajo (extrapola) |
@@ -101,7 +101,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | Lugar | Compuesto | Potencia predicha | Cruzar la barrera | Parecido a lo visto |
 |--:|:--|--:|--:|:--|
 | 1 | NPASS:NPC603594 | 6.3 | 0.08 | bajo (extrapola) |
-| 2 | NPASS:NPC603739 | 6.2 | 0.09 | razonable |
+| 2 | Ergocornina | 6.2 | 0.09 | razonable |
 | 3 | Calcimycin | 6.2 | 0.37 | bajo (extrapola) |
 | 4 | NPASS:NPC609876 | 6.2 | 0.08 | bajo (extrapola) |
 | 5 | NPASS:NPC469878 | 6.1 | 0.23 | bajo (extrapola) |
@@ -123,7 +123,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 1 | Fisovenina | 7.4 | 0.88 | razonable |
 | 2 | Calcimycin | 6.8 | 0.37 | bajo (extrapola) |
 | 3 | 3-(3,4-dimetoxifenil)serina | 6.6 | 0.61 | razonable |
-| 4 | NPASS:NPC603739 | 6.5 | 0.09 | razonable |
+| 4 | Ergocornina | 6.5 | 0.09 | razonable |
 | 5 | NPASS:NPC607165 | 6.4 | 0.25 | bajo (extrapola) |
 
 ### BCHE: Alzheimer (inhibición)
@@ -182,7 +182,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 |--:|:--|--:|--:|:--|
 | 1 | Fisovenina | 7.8 | 0.88 | razonable |
 | 2 | Lignano (NPC483651) | 7.0 | 0.61 | bajo (extrapola) |
-| 3 | NPASS:NPC323597 | 7.0 | 0.31 | razonable |
+| 3 | 8,9-EET (ácido epoxieicosatrienoico) | 7.0 | 0.31 | razonable |
 | 4 | Sanguinine | 6.7 | 0.92 | razonable |
 | 5 | Calcimycin | 6.6 | 0.37 | bajo (extrapola) |
 
@@ -194,7 +194,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 2 | Calcimycin | 6.8 | 0.37 | bajo (extrapola) |
 | 3 | Lignano (NPC483651) | 6.7 | 0.61 | bajo (extrapola) |
 | 4 | NPASS:NPC607165 | 6.3 | 0.25 | bajo (extrapola) |
-| 5 | NPASS:NPC603739 | 6.2 | 0.09 | razonable |
+| 5 | Ergocornina | 6.2 | 0.09 | razonable |
 
 ### IL1B: Neuroinflamación (inhibición)
 
@@ -231,7 +231,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | Lugar | Compuesto | Potencia predicha | Cruzar la barrera | Parecido a lo visto |
 |--:|:--|--:|--:|:--|
 | 1 | Fisovenina | 7.8 | 0.88 | razonable |
-| 2 | NPASS:NPC603739 | 7.0 | 0.09 | razonable |
+| 2 | Ergocornina | 7.0 | 0.09 | razonable |
 | 3 | NPASS:NPC184932 | 6.8 | 0.25 | bajo (extrapola) |
 | 4 | NPASS:NPC607165 | 6.8 | 0.25 | bajo (extrapola) |
 | 5 | NPASS:NPC607395 | 6.7 | 0.28 | bajo (extrapola) |
@@ -304,7 +304,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 2 | Lignano (NPC483651) | 6.8 | 0.61 | bajo (extrapola) |
 | 3 | 3-(3,4-dimetoxifenil)serina | 6.5 | 0.61 | razonable |
 | 4 | NPASS:NPC483652 | 6.4 | 0.63 | bajo (extrapola) |
-| 5 | NPASS:NPC603739 | 6.3 | 0.09 | razonable |
+| 5 | Ergocornina | 6.3 | 0.09 | razonable |
 
 ### PTGS2: Neuroinflamación (inhibición)
 
@@ -333,7 +333,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | 1 | Fisovenina | 7.5 | 0.88 | razonable |
 | 2 | Lignano (NPC483651) | 6.7 | 0.61 | bajo (extrapola) |
 | 3 | 3-(3,4-dimetoxifenil)serina | 6.6 | 0.61 | razonable |
-| 4 | NPASS:NPC74259 | 6.2 | 0.08 | razonable |
+| 4 | Lanatósido A | 6.2 | 0.08 | razonable |
 | 5 | NPASS:NPC53222 | 6.0 | 0.93 | bajo (extrapola) |
 
 ### TNF: Neuroinflamación (inhibición)
@@ -341,7 +341,7 @@ Corrida: `2026-11-12-artemio-C.5-lista-priorizada-naturales-corte-np-05` (`scrip
 | Lugar | Compuesto | Potencia predicha | Cruzar la barrera | Parecido a lo visto |
 |--:|:--|--:|--:|:--|
 | 1 | Lignano (NPC483651) | 8.5 | 0.61 | bajo (extrapola) |
-| 2 | NPASS:NPC74259 | 8.2 | 0.08 | razonable |
+| 2 | Lanatósido A | 8.2 | 0.08 | razonable |
 | 3 | NPASS:NPC313921 | 8.2 | 0.50 | bajo (extrapola) |
 | 4 | Deslanoside | 8.1 | 0.09 | razonable |
 | 5 | Kamebanin | 8.0 | 0.74 | bajo (extrapola) |
