@@ -1,0 +1,10 @@
+decision: C.2
+semillas:
+- 0
+params:
+  modelo: aft
+  metodo: TreeSHAP
+  filas: todas (cada par en validacion una vez)
+  pliegues: 5
+  min_filas_para_interpretar: 500
+  toca_prueba: false

@@ -163,8 +163,8 @@ promediadas entre semillas y no es comparable con el 0.919, que es el promedio d
 
 Entre los once modelos hay solo 4.2 puntos de MCC. Con el `svm_rbf`, en cambio, pasar de pliegues al azar a
 pliegues donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos
-(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`; aquí la medimos con sus
-magnitudes.
+(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`, y que la exactitud depende de cuánto se parece la
+molécula al entrenamiento también `sheridan2004similarity`; aquí la medimos con sus magnitudes.
 
 ![Escalera](figuras/f1_escalera.svg)
 
@@ -343,8 +343,8 @@ a los compuestos por SMILES canónico, se evalúa con la misma validación cruza
 referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio. Es Python y no una
 interfaz, y mide clasificación, no la regresión de supervivencia de la fase 2.
 
-La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que infla de
-7 a 13 puntos, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
+La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que da cifras
+demasiado optimistas, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de potencia en el umbral que esa regla nombra, y el
 resultado se reporta por subgrupo. La guía dice también lo único que la herramienta no puede verificar: que las
 columnas no se hayan calculado usando las etiquetas ni usando todas las filas a la vez.
@@ -549,6 +549,12 @@ un mecanismo.
 ![Atribución](figuras/f8_atribucion.svg)
 
 *Figura C2. SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
+
+*La diana por separado.* Corrida `2026-11-12-artemio-C.2-shap-por-diana-fase2` (`scripts/shap_por_diana.py`): el mismo modelo y los mismos pliegues, pero sobre las 56,241 filas, cada una explicada por el modelo que no la vio, y agrupando el SHAP por la diana del par. La diana entra al modelo como 26 columnas 0 o 1, así que en un ranking global se mezcla con la química (Figura C2); aquí se separa. Las columnas de diana suman el 15% de la atribución: ser `MAOA` baja la potencia predicha unas 0.8 unidades de pActividad y ser `LRRK2` la sube unas 0.7 (se interpretan las 16 dianas con 500 pares o más, de 26). La química que pesa es casi la misma en todas: el orden de las columnas coincide entre dianas (Spearman mediano 0.94, mínimo 0.90). Lo que distingue a una diana (hidrazonas en `MAOA`, sulfonamidas en `PTGS2`, cetonas en `BCHE`) pesa entre 0.03 y 0.06, contra 0.11 a 0.34 de la complejidad topológica, y son fragmentos poco frecuentes, de modo que pueden reflejar qué compuestos se midieron contra esa diana y no cómo actúa (Figura C3). Solo las ve SHAP: la permutación no las confirma (puestos 57 a 108), y la decisión pide lo que coincide en dos métodos. Son direcciones que aprendió el modelo, no un mecanismo.
+
+![Por diana](figuras/f9_por_diana.svg)
+
+*Figura C3. SHAP de la fase 2 por diana, en las 16 dianas con 500 pares o más: a la izquierda, cuánto sube o baja la potencia predicha ser esa diana; a la derecha, la media del valor absoluto de SHAP de cada columna en los pares de esa diana, con su dirección en el color.*
 
 *Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
 cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,
