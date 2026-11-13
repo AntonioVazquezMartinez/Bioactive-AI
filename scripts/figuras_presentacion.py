@@ -513,6 +513,85 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
+DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
+# Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
+# que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
+# Una regla automática por especificidad sale peor: lo más «específico» de las 201 columnas es ruido (`fr_quatN`, `fr_SH`,
+# con 0.002 y 0.000). `SMR_VSA7` se quitó: pesa 0.11 en LRRK2 y es rango 20 de SHAP y 13 de permutación en la corrida de
+# dos métodos, es decir una columna común y no el rasgo de una diana.
+COMUNES = [("BertzCT", "complejidad"), ("fr_halogen", "halógenos"), ("FpDensityMorgan3", "densidad de huella"),
+           ("SlogP_VSA10", "lipofilia/superficie"), ("PEOE_VSA1", "carga/superficie")]
+PROPIAS = [("fr_hdrzone", "hidrazonas"), ("fr_ketone", "cetonas"), ("fr_prisulfonamd", "sulfonamidas"),
+           ("fr_oxime", "oximas"), ("NumSpiroAtoms", "átomos espiro"), ("fr_COO", "ácidos carboxílicos"),
+           ("PEOE_VSA5", "carga/superficie 5"),
+           ("fr_unbrch_alkane", "alcanos sin ramas"), ("NumAromaticHeterocycles", "heterociclos aromáticos")]
+
+
+def fig_shap_por_diana(salida: Path | None = None, nombre: str = "shap_por_diana") -> dict:
+    """La fase 2 separada por diana: cuánto sube o baja la predicción ser esa diana, y qué química pesa en cada una."""
+    import numpy as np
+    from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
+
+    salida = salida or SALIDA
+    carpeta = DIANA_POR_DIANA
+    ef = pd.read_csv(carpeta / "efecto_diana.csv")
+    por = pd.read_csv(carpeta / "shap_por_diana.csv")
+    ef = ef[ef["n_pares"] >= 500].sort_values("efecto_diana_media", ascending=False).reset_index(drop=True)
+    dianas = ef["diana"].tolist()
+    cols = [c for c, _ in COMUNES + PROPIAS]
+    celdas = np.zeros((len(dianas), len(cols)))
+    for i, dn in enumerate(dianas):
+        f = por[por["diana"] == dn].set_index("columna")
+        for j, col in enumerate(cols):
+            s = f.loc[col, "spearman_valor_shap"]
+            celdas[i, j] = f.loc[col, "media_abs"] * (0 if np.isnan(s) else np.sign(s))
+
+    fig, (a, b) = plt.subplots(1, 2, figsize=(12.6, 6.0), gridspec_kw={"width_ratios": [1, 2.7], "wspace": 0.04},
+                               sharey=True)
+    y = np.arange(len(dianas))
+    a.barh(y, ef["efecto_diana_media"], color=[NARANJA if v > 0 else AZUL for v in ef["efecto_diana_media"]], height=0.7)
+    a.axvline(0, color="#333333", lw=1)
+    a.set_yticks(y, [f"{d}  ({n:,})" for d, n in zip(ef["diana"], ef["n_pares"])], fontsize=10)
+    a.set_ylim(len(dianas) - 0.4, -0.6)
+    a.set_xlabel("efecto de ser esa diana en la potencia\n(unidades de pActividad)", fontsize=9.5, color="#333333")
+    a.set_title("Lo que pone la diana", fontsize=12.5, fontweight="bold", color=AZUL, loc="left", pad=34)
+    a.tick_params(axis="x", labelsize=9, colors=GRIS)
+    for lado in ("right", "top", "left"):
+        a.spines[lado].set_visible(False)
+    a.text(0, 1.012, "← baja la predicción", transform=a.get_xaxis_transform(), ha="right", va="bottom", fontsize=8.6, color=GRIS)
+    a.text(0, 1.012, "  la sube →", transform=a.get_xaxis_transform(), ha="left", va="bottom", fontsize=8.6, color=GRIS)
+
+    tope = np.abs(celdas).max()
+    im = b.imshow(celdas, aspect="auto", cmap=LinearSegmentedColormap.from_list("baja_sube", [AZUL, "#f4f4f4", NARANJA]), norm=TwoSlopeNorm(0, -tope, tope))
+    for i in range(len(dianas)):
+        for j in range(len(cols)):
+            v = celdas[i, j]
+            if abs(v) >= 0.03:
+                b.text(j, i, f"{abs(v):.2f}", ha="center", va="center", fontsize=7.6,
+                       color="white" if abs(v) > tope * 0.55 else "#222222")
+    etiquetas = [f"{c}\n{g}" for c, g in COMUNES + PROPIAS]
+    b.set_xticks(range(len(cols)), etiquetas, fontsize=7.6, rotation=60, ha="left")
+    b.xaxis.tick_top()
+    b.axvline(len(COMUNES) - 0.5, color="#333333", lw=1.4)
+    b.tick_params(length=0)
+    for lado in b.spines.values():
+        lado.set_visible(False)
+    b.text(len(COMUNES) / 2 - 0.5, len(dianas) + 0.15, "pesan en casi todas", ha="center", va="top", fontsize=9.5, color=GRIS)
+    b.text(len(COMUNES) + len(PROPIAS) / 2 - 0.5, len(dianas) + 0.15, "pesan más en una diana que en las demás",
+           ha="center", va="top", fontsize=9.5, color=GRIS)
+    barra = fig.colorbar(im, ax=b, orientation="horizontal", fraction=0.04, pad=0.1, aspect=40, shrink=0.45)
+    barra.set_ticks([-tope, 0, tope])
+    barra.set_ticklabels(["valor alto de la columna\nbaja la potencia", "", "valor alto\nsube la potencia"], fontsize=8.6)
+    barra.outline.set_visible(False)
+    fig.text(0.5, -0.04, "Dianas con 500 pares o más (entre paréntesis, los pares). Cada celda es la media de |SHAP| de esa columna en los pares "
+             "de esa diana; el color da la dirección.\nSon 56,241 pares, cada uno explicado por el modelo que no lo vio. "
+             "Lo que el modelo aprendió, no un mecanismo.", fontsize=9, color=GRIS, ha="center")
+    for ext in ("svg", "png"):
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"dianas": dianas, "columnas": cols}
+
+
 if __name__ == "__main__":
     SALIDA.mkdir(parents=True, exist_ok=True)
     familia = cifras_de_la_familia()
@@ -524,4 +603,5 @@ if __name__ == "__main__":
     print("medir:", fig_medir())
     print("importancias:", fig_importancias())
     print("ranking:", fig_ranking())
+    print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)
