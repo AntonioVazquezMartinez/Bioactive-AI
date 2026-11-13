@@ -72,31 +72,30 @@ Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos*
 **Antonio · 0.5 min.** Van en paralelo, como evidencia que se combina. Cómo combinarlas queda como trabajo futuro.
 :::
 
-## Dos números que no cuadran
+## Dos números que no cuadran {.smaller}
 
 ::: {.columns}
-::: {.column width="45%"}
-### Validación
+::: {.column width="48%"}
+### Fase 1 · permeabilidad
 
-[0.70]{style="font-size:4.5em;font-weight:700;"}
+[0.70 → 0.34]{style="font-size:2.6em;font-weight:700;"}
 
-MCC
+**MCC**, de validación a la prueba reservada. Se cae **a la mitad**.
 :::
-::: {.column width="10%"}
-[→]{style="font-size:3em;"}
+::: {.column width="4%"}
 :::
-::: {.column width="45%"}
-### Prueba reservada
+::: {.column width="48%"}
+### Fase 2 · potencia
 
-[0.34]{style="font-size:4.5em;font-weight:700;"}
+[0.76 → 0.72]{style="font-size:2.6em;font-weight:700;"}
 
-MCC
+**Concordancia**, y apenas baja. Pero en los **117 pares** que solo tiene la base de productos naturales llega a [0.53]{style="font-weight:700;"}, bajo una línea base de peso y superficie polar (0.565).
 :::
 :::
 
-Fase 1, permeabilidad, con el modelo final. El **MCC** resume aciertos y errores de las dos clases, y 0 es azar.
-
-**La fase 2 se cae de otro modo.** La concordancia apenas baja, de 0.76 a 0.72, pero en los **117 pares** que solo tiene la base de productos naturales llega a **0.53**, bajo una línea base de peso y superficie polar (0.565).
+::: {.callout-note}
+El **MCC** resume aciertos y errores de las dos clases y el azar da 0. La **concordancia** es con qué frecuencia ordena bien dos pares compuesto-diana y el azar da 0.5. En las dos, 1 es acertar siempre.
+:::
 
 **¿Por qué se cae a la mitad una, y la otra solo donde importa?** El resto de la charla busca la respuesta.
 
