@@ -442,7 +442,7 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
         nombre, codigo = NOMBRES.get(col, (col, ""))
         ax.text(-0.02, y - 0.1, nombre, transform=ax.get_yaxis_transform(), ha="right", va="center",
                 fontsize=11, color="#111111", fontweight="bold")
-        if not simple:
+        if codigo:
             ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
                     fontsize=8.6, color=GRIS)
         ok = col in confirmadas
@@ -464,8 +464,8 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias", s
     las filas de la diana, que se ven aparte en `shap_por_diana`. Los artículos conservan la figura completa, que sí
     trae el texto que la explica.
 
-    `simple` es para quien no conoce el proyecto: sin los códigos de las columnas y con «segundo método» en lugar de
-    «permutación». Lo usa el deck.
+    `simple` es para quien no conoce el proyecto: con «segundo método» en lugar de «permutación» y un pie más corto; el código
+    de la columna va bajo el nombre. Lo usa el deck.
     """
     salida = salida or SALIDA
     from matplotlib.cm import ScalarMappable
