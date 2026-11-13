@@ -98,7 +98,7 @@ def fig_escalera() -> None:
     ax.set_ylabel("AUROC del svm_rbf")
     ax.set_xlabel("→ ningún compuesto de entrenamiento puede parecerse más a uno de validación", fontsize=8.5)
     limpiar(ax)
-    ax.set_title("La prueba reservada equivale a los peldaños más estrictos de la escalera")
+    ax.set_title("La prueba reservada cae como un peldaño estricto,\npero se parece al entrenamiento como uno laxo (>= 0.6)", fontsize=10.5)
     guardar(fig, "f1_escalera")
 
 
@@ -360,10 +360,38 @@ def fig_despliegue() -> None:
     guardar(fig, "f7_despliegue")
 
 
+def fig_atribucion() -> None:
+    """El gráfico de puntos de SHAP del Anexo F: la misma figura que usa el deck, en la carpeta del artículo.
+
+    Sale de `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2`; las corridas de atribución del
+    4 de noviembre solo aportan la marca «confirmada por permutación». Se aísla de los parámetros de matplotlib
+    de este archivo para que se vea igual que en el deck.
+    """
+    sys.path.insert(0, str(RAIZ))
+    from scripts.figuras_presentacion import fig_importancias
+
+    with plt.rc_context(plt.rcParamsDefault):
+        fig_importancias(SALIDA, "f8_atribucion")
+    print("   f8_atribucion")
+
+
+def fig_por_diana() -> None:
+    """La fase 2 separada por diana (Figura C3 del Anexo F y figura del artículo científico).
+
+    Sale de `2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas y no una muestra.
+    """
+    sys.path.insert(0, str(RAIZ))
+    from scripts.figuras_presentacion import fig_shap_por_diana
+
+    with plt.rc_context(plt.rcParamsDefault):
+        fig_shap_por_diana(SALIDA, "f9_por_diana")
+    print("   f9_por_diana")
+
+
 def main() -> int:
     print("figuras ->", SALIDA)
     for f in (fig_palancas, fig_escalera, fig_rareza, fig_huellas, fig_aft, fig_rivales, fig_escalera_fase2,
-              fig_despliegue):
+              fig_despliegue, fig_atribucion, fig_por_diana):
         f()
     return 0
 

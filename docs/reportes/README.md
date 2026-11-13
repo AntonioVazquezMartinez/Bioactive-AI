@@ -4,6 +4,22 @@ Lo que el equipo ha entregado en el Proyecto Integrador, en orden cronológico: 
 
 El calendario completo de entregas está en la [tabla de fases de CRISP-ML(Q)](avance-0/Avance0.7.pdf) del Avance 0.
 
+## Entrega final
+
+| Pieza | Qué es |
+|:--|:--|
+| [Presentación final](../../presentacion-final.qmd) ([PDF](presentacion/presentacion-final.pdf)) | 15 minutos de charla y 10 de preguntas, con notas del orador. El PDF lleva la huella del mazo y una prueba falla si se queda atrás; se regenera con `scripts/exportar_mazo_pdf.py` |
+| [Cuaderno para la patrocinadora](../../notebooks/06_Uso_de_los_modelos.ipynb) | Recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una advertencia de extrapolación; ordena cada fase por separado |
+| Resumen ejecutivo (`resumen-ejecutivo/resumen_ejecutivo.pdf`, en el repositorio; no se publica en el sitio hasta que la patrocinadora lo autorice) | Tres páginas para la dirección: la decisión, el desempeño, los costos estimados y los riesgos |
+| [Artículo (PDF)](articulo/articulo.pdf) | El producto de difusión, de 12 a 18 páginas, con sus anexos |
+| [Póster (PDF)](poster/poster.pdf) | A1 horizontal, sobre la plantilla del curso |
+
+**El proyecto termina con esta entrega.** La continuidad es autónoma de la patrocinadora y su grupo, y el equipo no se compromete a acompañarla ([C.8](../decisiones.md#dc-8)). Lo que se entrega para poder hacerlo solos: el cuaderno, los dos modelos guardados con su módulo de inferencia, el procedimiento para reentrenar y la [herramienta para medir columnas propias](../medir-una-representacion.md). El video del proyecto no forma parte de la entrega final.
+
+Se entrega además una **[lista priorizada de naturales](../lista-priorizada.md) por diana y por enfermedad, exploratoria**: la ordena un modelo que en los naturales no supera a una línea base, y combinar las dos fases en un solo orden sigue pendiente ([C.3](../decisiones.md#dc-3)); el cuaderno ordena cada fase por separado ([C.5](../decisiones.md#dc-5), revisada dos veces el 12 de noviembre).
+
+## Los avances, en orden cronológico
+
 ## Avance 0 · Propuesta de proyecto
 
 **Entregado el 27 de septiembre de 2026 · 17 páginas · [descargar PDF](avance-0/Avance0.7.pdf)**
@@ -70,21 +86,6 @@ Entregado el 1 de noviembre, en tres cuadernos: [`05_Modelo_Final`](../../notebo
 
 La prueba reservada se tomó una vez en la fase 1 y quedó registrada con su motivo en `experimentos/prueba.csv`, igual que cada acceso de la fase 2, incluido el recálculo de las cifras de los gráficos. Una auditoría posterior abrió como issues, etiquetados `deuda`, las correcciones de prosa y de método que encontró.
 
-## Próximas entregas
-
-| Entrega | Fecha | Fase de CRISP-ML(Q) |
-|:--------|:------|:--------------------|
-| Producto de difusión · artículo de 12–18 páginas | 15 de noviembre, el equipo entrega el 13 | Evaluación y despliegue |
-| Resumen ejecutivo · tres páginas para la dirección | 15 de noviembre | Evaluación y despliegue |
-
-Las dos traen ya su plantilla del curso versionada, con APA 7 fijado y la bibliografía del
-proyecto por enlace simbólico. Cómo se compila cada una, qué quedó decidido y qué falta está
-en el repositorio, en `docs/reportes/articulo/README.md` y
-`docs/reportes/resumen-ejecutivo/README.md`: son notas de trabajo y no se publican en el
-sitio, igual que el esqueleto del artículo.
-
-Las dos últimas no son libretas sino documentos en PDF, y entre las dos piden lo que el proyecto todavía no tiene escrito: una arquitectura de despliegue con su monitoreo, y una evaluación económica con beneficios mensuales, costo total de propiedad a doce meses y riesgos con su mitigación.
-
 ## Fuera del curso · artículo científico
 
 Además del artículo que cubre la rúbrica, el mismo trabajo está escrito con la forma de un artículo de
@@ -94,6 +95,6 @@ curso** y existe para circular fuera de él: **9 páginas · [descargar PDF](art
 salvedad de que se edita a mano y la coincidencia entre los dos es manual; su README explica por qué y qué queda
 pendiente.
 
-## Póster
+## Cómo se compilan los PDF de la entrega final
 
-`docs/reportes/poster/poster.tex` es el póster de la presentación final (A1 horizontal, tres columnas), armado sobre la plantilla del curso con el encabezado, la paleta y la tipografía que pide. Se compila con `sh scripts/compilar_articulo.sh poster`. Las cifras son las del artículo y del resumen ejecutivo, y las dos figuras son las del artículo.
+El artículo, el artículo científico, el resumen ejecutivo y el póster se compilan con `sh scripts/compilar_articulo.sh <carpeta>` (la carpeta es `articulo`, `articulo-cientifico`, `resumen-ejecutivo` o `poster`), que usa una imagen de Docker con TeX Live. **El PDF se versiona junto a su `.tex`**, porque quien revisa casi nunca tiene esa imagen, y el sitio publica el PDF tal cual. Eso tiene un costo: un PDF puede quedar atrás de su `.tex` sin que nada lo avise, así que quien cambia un `.tex` recompila y sube el PDF en el mismo PR. El póster usa las cifras del artículo y del resumen ejecutivo, y sus gráficas son las del artículo.

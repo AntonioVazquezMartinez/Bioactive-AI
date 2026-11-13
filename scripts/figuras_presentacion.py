@@ -1,6 +1,6 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son siete, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son diez, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
@@ -18,9 +18,21 @@ Son siete, y cada una existe porque una idea no se puede explicar a tiempo con p
   del 4 de noviembre (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
   `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`) solo aportan la marca «confirmada por permutación»,
   y los confirmados van primero.
-- `ranking.svg`: el ranking por fase de los compuestos de ejemplo del cuaderno 06. Sale de
-  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El naranja marca la similitud de **esa fase**
-  por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- `ranking.svg`: el ranking por fase de seis compuestos **de la prueba reservada** (sorteados con semilla 0; ningún
+  modelo los vio), con la etiqueta BBB real y la mayor potencia medida junto a lo predicho. Sale de
+  `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba`. El naranja marca la similitud de **esa
+  fase** por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- `lista_priorizada.svg`: los tres primeros naturales de cada enfermedad de la lista priorizada, con su diana, su
+  potencia predicha y la probabilidad de cruzar la barrera. Sale de
+  `experimentos/2026-11-12-artemio-C.5-lista-priorizada-naturales`; el naranja marca un parecido menor de 0.4 a lo visto.
+- `shap_por_diana.svg`: la fase 2 separada por diana: cuánto sube o baja la potencia predicha ser esa diana, y qué
+  columnas químicas pesan en cada una (las 16 dianas con 500 pares o más). Sale de
+  `experimentos/2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas.
+- `fase2_desempeno.svg`: la concordancia del modelo de potencia en la validación cruzada, en la prueba reservada y en
+  la base externa, y las mismas lecturas solo en productos naturales (con la línea base de peso y TPSA). Sale de cinco
+  corridas: `2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura`,
+  `2026-10-31-antonio-2.13-comparativa-regresion-ensambles`, `2026-11-03-artemio-1.5-prueba-por-rareza` y las dos de
+  la base externa de la patrocinadora. La prueba externa va rayada porque no es comparable con la reservada.
 - Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
@@ -60,7 +72,8 @@ TERCILES = RAIZ / "experimentos" / "2026-11-04-artemio-1.5-octava-lectura-origen
 EJEMPLO = RAIZ / "experimentos" / "2026-11-08-ingrid-1.3-ejemplo-representacion-propia" / "metricas.json"
 ATRIB1 = RAIZ / "experimentos" / "2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos"
 ATRIB2 = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion" / "importancias.csv"
-RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo"
+RANKING = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba"
+RAREZA = RAIZ / "experimentos" / "2026-11-03-artemio-1.5-prueba-por-rareza" / "metricas.json"
 
 # La morfina: alcaloide natural, BBB+, y su familia de andamios está en el archivo.
 MORFINA = "CN1CCC23c4c5ccc(O)c4O[C@@H]2[C@@H](O)C=C[C@@H]3C1C5"
@@ -398,7 +411,7 @@ NOMBRES = {
 }
 
 
-def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6) -> list:
+def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6, simple: bool = False) -> list:
     """Gráfico de puntos de SHAP: una fila por columna, un punto por compuesto, color = valor de la columna."""
     import numpy as np
     from matplotlib.colors import LinearSegmentedColormap
@@ -429,22 +442,40 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
         nombre, codigo = NOMBRES.get(col, (col, ""))
         ax.text(-0.02, y - 0.1, nombre, transform=ax.get_yaxis_transform(), ha="right", va="center",
                 fontsize=11, color="#111111", fontweight="bold")
-        ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
-                fontsize=8.6, color=GRIS)
+        if codigo:
+            ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                    fontsize=8.6, color=GRIS)
         ok = col in confirmadas
-        ax.text(1.02, y, "confirmada por\npermutación" if ok else "solo SHAP", transform=ax.get_yaxis_transform(),
+        si, no = ("confirmada por un\nsegundo método", "un solo método") if simple else ("confirmada por\npermutación", "solo SHAP")
+        ax.text(1.02, y, si if ok else no, transform=ax.get_yaxis_transform(),
                 ha="left", va="center", fontsize=8.8, color=AZUL if ok else "#a0a0a0", linespacing=1.1)
     return orden
 
 
-def fig_importancias() -> dict:
-    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma."""
+def fig_importancias(salida: Path | None = None, nombre: str = "importancias", sin_dianas: bool = False,
+                     simple: bool = False) -> dict:
+    """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma.
+
+    Por defecto escribe `importancias` en la carpeta del deck; el artículo la llama con su carpeta y otro nombre.
+
+    `sin_dianas` quita del panel de la fase 2 las columnas `diana:*`. Es lo que usa el deck: esas columnas dicen **qué
+    diana es el par** (el 15% de la atribución) y no son química, y mezcladas en el ranking dan la lectura contraria a
+    la que la diapositiva afirma. No cambia ningún valor de SHAP ni el orden de las columnas químicas, solo oculta
+    las filas de la diana, que se ven aparte en `shap_por_diana`. Los artículos conservan la figura completa, que sí
+    trae el texto que la explica.
+
+    `simple` es para quien no conoce el proyecto: con «segundo método» en lugar de «permutación» y un pie más corto; el código
+    de la columna va bajo el nombre. Lo usa el deck.
+    """
+    salida = salida or SALIDA
     from matplotlib.cm import ScalarMappable
     from matplotlib.colors import LinearSegmentedColormap, Normalize
 
     carpetas = {f: sorted((RAIZ / "experimentos").glob(f"*puntos-shap-por-compuesto-{f}"))[-1] for f in ("fase1", "fase2")}
     d1 = pd.read_csv(carpetas["fase1"] / "shap_fase1.csv")
     d2 = pd.read_csv(carpetas["fase2"] / "shap_fase2.csv")
+    if sin_dianas:
+        d2 = d2[~d2["columna"].str.startswith("diana:")]
     a1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv")
     conf1 = set(a1[(a1["r_perm"] <= 15) & (a1["r_shap"] <= 15)]["caracteristica"])
     a2 = pd.read_csv(ATRIB2)
@@ -452,9 +483,9 @@ def fig_importancias() -> dict:
 
     fig, ejes = plt.subplots(1, 2, figsize=(11.8, 4.9), gridspec_kw={"wspace": 1.55})
     o1 = _puntos(ejes[0], d1, conf1, "Fase 1 · permeabilidad",
-                 "efecto en la probabilidad de cruzar la barrera")
+                 "efecto en la probabilidad de cruzar la barrera", simple=simple)
     o2 = _puntos(ejes[1], d2, conf2, "Fase 2 · potencia",
-                 "efecto en la potencia predicha (pActividad)")
+                 "efecto en la potencia predicha" if simple else "efecto en la potencia predicha (pActividad)", simple=simple)
     for ax in ejes:   # guía de lectura dentro de la figura, bajo el eje
         x0, x1 = ax.get_xlim()
         ax.text(0, 1.015, "← baja la predicción", transform=ax.get_xaxis_transform(), ha="right", va="bottom",
@@ -465,48 +496,259 @@ def fig_importancias() -> dict:
     barra = fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=mapa), ax=ejes, orientation="horizontal",
                          fraction=0.03, pad=0.17, aspect=45, shrink=0.28)
     barra.set_ticks([0, 1])
-    barra.set_ticklabels(["valor bajo de la columna", "valor alto"], fontsize=9.5)
+    barra.set_ticklabels(["valor bajo", "valor alto"] if simple else ["valor bajo de la columna", "valor alto"], fontsize=9.5)
     barra.outline.set_visible(False)
-    fig.text(0.5, -0.03, "Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
-             "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
-             "métodos van primero.", fontsize=9.6, color=GRIS, ha="center")
+    if simple:
+        pie = ("Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2). Su posición dice cuánto empuja esa característica "
+               "la predicción; su color, qué valor tiene.\nVan primero las confirmadas por dos métodos. En la fase 2, saber qué diana es "
+               "aporta otro 15% que no se muestra.")
+    else:
+        pie = ("Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
+               "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
+               "métodos van primero." + (" En la fase 2 solo se muestra la química: la diana pone aparte el 15% de la atribución."
+                                         if sin_dianas else ""))
+    fig.text(0.5, -0.03, pie, fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
-        fig.savefig(SALIDA / f"importancias.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
     return {"fase1": o1, "fase2": o2}
 
 
 def fig_ranking() -> dict:
-    """El ranking por fase de los compuestos de ejemplo del cuaderno: una lista por fase, con su similitud."""
+    """Seis compuestos de la prueba reservada, una lista por fase, con lo predicho junto a lo medido."""
     f1 = pd.read_csv(RANKING / "ranking_fase1.csv")
     f2 = pd.read_csv(RANKING / "ranking_fase2.csv")
-    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.75})
-    paneles = (
-        (ejes[0], f1, "p_bbb_mas", "similitud_fase1", "Fase 1 · probabilidad de cruzar la barrera", 1.0,
-         lambda r: f"{r['p_bbb_mas']:.2f}"),
-        (ejes[1], f2, "pActividad_max", "similitud_fase2", "Fase 2 · potencia máxima predicha (pActividad)", 8.0,
-         lambda r: f"{r['pActividad_max']:.1f}  ({r['mejor_diana']})"),
-    )
-    for ax, d, col, sim, titulo, tope, etiqueta in paneles:
-        y = range(len(d))
-        colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in d[sim]]
-        ax.barh(y, d[col], color=colores, height=0.62)
-        for yi, (_, fila) in zip(y, d.iterrows(), strict=True):
-            ax.text(fila[col] + tope * 0.015, yi, etiqueta(fila), va="center", fontsize=9, color=GRIS)
-        ax.set_yticks(list(y), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
+    fig, ejes = plt.subplots(1, 2, figsize=(11.6, 3.9), gridspec_kw={"wspace": 0.9})
+    a1, a2 = ejes
+    # fase 1: probabilidad predicha y, al lado, la etiqueta real
+    colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in f1["similitud_fase1"]]
+    a1.barh(range(len(f1)), f1["p_bbb_mas"], color=colores, height=0.62)
+    for yi, (_, r) in enumerate(f1.iterrows()):
+        real = "cruza" if r["bbb_real"] == 1 else "no cruza"
+        a1.text(1.03, yi, f"{r['p_bbb_mas']:.2f}   real: {real}", va="center", fontsize=9,
+                color="#111111" if r["bbb_real"] == 1 else "#b3261e", fontweight="bold" if r["bbb_real"] == 0 else "normal")
+    # fase 2: potencia predicha (barra) y la mayor medida (rombo)
+    colores = [NARANJA if s < UMBRAL_EXTRAPOLACION else AZUL for s in f2["similitud_fase2"]]
+    a2.barh(range(len(f2)), f2["pActividad_max"], color=colores, height=0.62)
+    for yi, (_, r) in enumerate(f2.iterrows()):
+        a2.scatter([r["pActividad_medida"]], [yi], marker="D", s=46, color="#111111", zorder=3)
+        a2.text(10.3, yi,
+                f"predicha {r['pActividad_max']:.1f} ({r['mejor_diana']})  ·  medida {r['pActividad_medida']:.1f} ({r['diana_medida']})",
+                va="center", fontsize=8.6, color=GRIS)
+    for ax, d, titulo, tope in ((a1, f1, "Fase 1 · probabilidad de cruzar la barrera", 1.0),
+                                 (a2, f2, "Fase 2 · potencia máxima (pActividad)", 10.0)):
+        ax.set_yticks(list(range(len(d))), [f"{int(l)}. {n}" for l, n in zip(d["lugar"], d["nombre"], strict=True)], fontsize=9.5)
         ax.invert_yaxis()
-        ax.set_xlim(0, tope * 1.45)
+        ax.set_xlim(0, tope * 1.75 if ax is a1 else tope * 2.2)
         ax.set_xticks([])
         for lado in ("left", "right", "top", "bottom"):
             ax.spines[lado].set_visible(False)
         ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
-    fig.text(0.01, -0.03, "En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase (aviso de extrapolación). "
-             "Son compuestos conocidos del cuaderno, no candidatos;\nvarios estaban en el entrenamiento. Cada fase se ordena "
-             "por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
+    fig.text(0.01, -0.05, "Seis compuestos que los modelos no habían visto, elegidos al azar entre los que tienen nombre y potencia medida. "
+             "Son un ejemplo del formato, no candidatos ni una medida de desempeño.\nRombo: la mayor potencia medida. En naranja, "
+             "se parece poco a lo que el modelo conoce. Cada fase se ordena por separado.", fontsize=8.8, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
+
+
+LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres"
+
+
+def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> dict:
+    """Los tres primeros naturales de cada enfermedad de la lista priorizada, con su diana, potencia y barrera."""
+    salida = salida or SALIDA
+    d = pd.read_csv(LISTA / "por_enfermedad.csv")
+    d = d[d["lugar"] <= 3]
+    enfermedades = list(dict.fromkeys(d["enfermedad"]))
+    fig, ax = plt.subplots(figsize=(11.6, 5.6))
+    y = 0.0
+    marcas, etiquetas = [], []
+    for enf in enfermedades:
+        g = d[d["enfermedad"] == enf]
+        ax.text(0, y, enf, ha="left", va="center", fontsize=11.5, fontweight="bold", color=AZUL)
+        y += 0.95
+        for _, r in g.iterrows():
+            nom = str(r["nombre_corto"])
+            nom = "carbamato de furoindol" if nom.startswith("[(3As") else nom
+            nom = "sin nombre (" + nom.split("NPC")[-1].join(["NPC", ""]) + ")" if nom.startswith("NPASS:NPC") else nom
+            ax.barh(y, r["pActividad_predicha"], color=NARANJA if r["aviso_extrapolacion"] else AZUL, height=0.72)
+            ax.text(r["pActividad_predicha"] + 0.08, y,
+                    f"{r['diana']}  {r['pActividad_predicha']:.1f}  ·  cruza la barrera {r['p_bbb_mas']:.2f}", va="center",
+                    fontsize=8.8, color=GRIS)
+            marcas.append(y)
+            etiquetas.append(nom)
+            y += 1
+        y += 0.45
+    ax.set_yticks(marcas, etiquetas, fontsize=9.2)
+    ax.set_ylim(y - 0.4, -0.7)
+    ax.set_xlim(0, 12.5)
+    ax.set_xticks([])
+    for lado in ("left", "right", "top", "bottom"):
+        ax.spines[lado].set_visible(False)
+    ax.tick_params(length=0)
+    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (el número junto a la diana; más alto, más potente) en una diana donde ese compuesto no se ha medido, "
+             "sin filtrar por barrera (su probabilidad va al lado: puede entrar por un transportador)\ny sin estructuras que suelen dar falsos positivos. En naranja, se parece poco a lo "
+             "que el modelo conoce. Es una lista exploratoria: en productos naturales el modelo no se distingue de una línea base de peso, TPSA y diana.",
+             fontsize=8.6, color=GRIS)
+    for ext in ("svg", "png"):
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"enfermedades": enfermedades}
+
+
+CV_FASE2 = RAIZ / "experimentos" / "2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura" / "metricas.json"
+PRUEBA_FASE2 = RAIZ / "experimentos" / "2026-10-31-antonio-2.13-comparativa-regresion-ensambles" / "metricas.json"
+EXTERNA = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-muestra-de-jorge" / "metricas.json"
+CONTAMINACION = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-contaminacion-externa" / "metricas.json"
+
+
+def fig_fase2_desempeno() -> dict:
+    """Las tres mediciones del modelo de potencia —ajuste, prueba reservada y base externa— y las mismas
+    tres solo en productos naturales, que es donde el proyecto las necesita y donde no gana a dos columnas."""
+    cv = json.loads(CV_FASE2.read_text(encoding="utf-8"))["todos"]["aft"]["concordancia"]
+    pr = json.loads(PRUEBA_FASE2.read_text(encoding="utf-8"))
+    ext = json.loads(EXTERNA.read_text(encoding="utf-8"))
+    base = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
+    cont = json.loads(CONTAMINACION.read_text(encoding="utf-8"))["base_externa"]
+
+    nat_prueba = pr["prueba_por_origen"]["solo_npass"]
+    todos = [
+        ("Validación cruzada\nen el ajuste", cv, "5 pliegues agrupados", GRIS, False, None),
+        ("Prueba reservada\nquímica nueva", pr["prueba"]["aft"]["concordancia"],
+         f"{pr['prueba']['aft']['n_total']:,} pares", AZUL, False, None),
+        ("Prueba externa\notro equipo", ext["global"]["concordancia"], f"{ext['global']['n_total']:,} pares",
+         NARANJA, True, ext["global"]["concordancia_ic95"]),
+    ]
+    naturales = [
+        ("Prueba reservada\nsolo NPASS", nat_prueba["concordancia"], f"{nat_prueba['n_total']} pares", AZUL, False, None),
+        ("Línea base\npeso y TPSA", base["solo_npass"]["conc_base"], f"{base['solo_npass']['n']} pares",
+         GRIS_CLARO, False, None),
+        ("Prueba externa\nsolo NPASS", ext["por_estrato"]["solo_npass"]["concordancia"],
+         f"{ext['por_estrato']['solo_npass']['n_total']} pares", NARANJA, True, None),
+    ]
+
+    fig, ax = plt.subplots(figsize=(10.4, 3.9))
+    xs, etiquetas = [], []
+    for grupo, inicio in ((todos, 0), (naturales, 3.8)):
+        for i, (nombre, v, pie, color, rayado, ic) in enumerate(grupo):
+            x = inicio + i
+            xs.append(x)
+            # desde la línea del azar: una barra de concordancia que arranca más abajo exagera la
+            # distancia al azar (0.530 se vería tres veces y media más baja que 0.720, cuando su exceso
+            # sobre el azar es 0.03 contra 0.22)
+            ax.bar(x, v - 0.5, bottom=0.5, color=color, width=0.62,
+                   hatch="///" if rayado else None, edgecolor="white", linewidth=0)
+            if ic:
+                ax.errorbar(x, v, yerr=[[v - ic[0]], [ic[1] - v]], fmt="none", ecolor="#333333", capsize=4, lw=1.3)
+            ax.text(x, v + 0.012, f"{v:.3f}", ha="center", fontsize=12, fontweight="bold",
+                    color=color if color != GRIS_CLARO else GRIS)
+            etiquetas.append(f"{nombre}\n{pie}")
+
+    ax.axhline(0.5, color="#333333", lw=1.4)
+    ax.text(-0.62, 0.505, "azar", fontsize=9, color="#333333", ha="left", va="bottom")
+    ax.axvline(2.4, color=GRIS_CLARO, lw=1.2)
+    ax.text(1.0, 0.845, "Todos los pares", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.857, "Solo pares que solo aporta NPASS", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.828, "la prueba externa no trae línea base", ha="center", fontsize=9, color=GRIS)
+    ax.set_xticks(xs, etiquetas, fontsize=8.6)
+    ax.set_ylim(0.5, 0.87)
+    ax.set_xlim(-0.65, 6.15)
+    ax.set_ylabel("concordancia", fontsize=10)
+    limpiar(ax)
+    ax.set_title("El agregado se sostiene fuera de casa; en la prueba reservada de naturales no gana a dos columnas",
+                 fontsize=12, fontweight="bold", color=AZUL, loc="left", pad=22)
+    fig.text(0.5, -0.13, f"La prueba externa (rayada) no es comparable con la reservada: se separó por compuesto y no por "
+             f"andamio, y el {cont['andamio_fraccion_pares'] * 100:.1f}% de sus pares tiene un andamio que el modelo ya vio, "
+             f"contra el {cont['piso_del_control'] * 100:.1f}% del control.", fontsize=8.8, color=GRIS, ha="center")
+    for ext_ in ("svg", "png"):
+        fig.savefig(SALIDA / f"fase2_desempeno.{ext_}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"cv": round(cv, 3), "prueba": round(pr["prueba"]["aft"]["concordancia"], 3),
+            "externa": round(ext["global"]["concordancia"], 3),
+            "nat_prueba": round(nat_prueba["concordancia"], 3),
+            "nat_base": round(base["solo_npass"]["conc_base"], 3),
+            "nat_externa": round(ext["por_estrato"]["solo_npass"]["concordancia"], 3)}
+
+
+DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
+# Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
+# que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
+# Una regla automática por especificidad sale peor: lo más «específico» de las 201 columnas es ruido (`fr_quatN`, `fr_SH`,
+# con 0.002 y 0.000). `SMR_VSA7` se quitó: pesa 0.11 en LRRK2 y es rango 20 de SHAP y 13 de permutación en la corrida de
+# dos métodos, es decir una columna común y no el rasgo de una diana.
+COMUNES = [("BertzCT", "complejidad"), ("fr_halogen", "halógenos"), ("FpDensityMorgan3", "densidad de huella"),
+           ("SlogP_VSA10", "lipofilia/superficie"), ("PEOE_VSA1", "carga/superficie")]
+PROPIAS = [("fr_hdrzone", "hidrazonas"), ("fr_ketone", "cetonas"), ("fr_prisulfonamd", "sulfonamidas"),
+           ("fr_oxime", "oximas"), ("NumSpiroAtoms", "átomos espiro"), ("fr_COO", "ácidos carboxílicos"),
+           ("PEOE_VSA5", "carga/superficie 5"),
+           ("fr_unbrch_alkane", "alcanos sin ramas"), ("NumAromaticHeterocycles", "heterociclos aromáticos")]
+
+
+def fig_shap_por_diana(salida: Path | None = None, nombre: str = "shap_por_diana") -> dict:
+    """La fase 2 separada por diana: cuánto sube o baja la predicción ser esa diana, y qué química pesa en cada una."""
+    import numpy as np
+    from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
+
+    salida = salida or SALIDA
+    carpeta = DIANA_POR_DIANA
+    ef = pd.read_csv(carpeta / "efecto_diana.csv")
+    por = pd.read_csv(carpeta / "shap_por_diana.csv")
+    ef = ef[ef["n_pares"] >= 500].sort_values("efecto_diana_media", ascending=False).reset_index(drop=True)
+    dianas = ef["diana"].tolist()
+    cols = [c for c, _ in COMUNES + PROPIAS]
+    celdas = np.zeros((len(dianas), len(cols)))
+    for i, dn in enumerate(dianas):
+        f = por[por["diana"] == dn].set_index("columna")
+        for j, col in enumerate(cols):
+            s = f.loc[col, "spearman_valor_shap"]
+            celdas[i, j] = f.loc[col, "media_abs"] * (0 if np.isnan(s) else np.sign(s))
+
+    fig, (a, b) = plt.subplots(1, 2, figsize=(12.6, 6.0), gridspec_kw={"width_ratios": [1, 2.7], "wspace": 0.04},
+                               sharey=True)
+    y = np.arange(len(dianas))
+    a.barh(y, ef["efecto_diana_media"], color=[NARANJA if v > 0 else AZUL for v in ef["efecto_diana_media"]], height=0.7)
+    a.axvline(0, color="#333333", lw=1)
+    a.set_yticks(y, [f"{d}  ({n:,})" for d, n in zip(ef["diana"], ef["n_pares"])], fontsize=10)
+    a.set_ylim(len(dianas) - 0.4, -0.6)
+    a.set_xlabel("efecto de ser esa diana en la potencia\n(unidades de pActividad)", fontsize=9.5, color="#333333")
+    a.set_title("Lo que pone la diana", fontsize=12.5, fontweight="bold", color=AZUL, loc="left", pad=34)
+    a.tick_params(axis="x", labelsize=9, colors=GRIS)
+    for lado in ("right", "top", "left"):
+        a.spines[lado].set_visible(False)
+    a.text(0, 1.012, "← baja la predicción", transform=a.get_xaxis_transform(), ha="right", va="bottom", fontsize=8.6, color=GRIS)
+    a.text(0, 1.012, "  la sube →", transform=a.get_xaxis_transform(), ha="left", va="bottom", fontsize=8.6, color=GRIS)
+
+    tope = np.abs(celdas).max()
+    im = b.imshow(celdas, aspect="auto", cmap=LinearSegmentedColormap.from_list("baja_sube", [AZUL, "#f4f4f4", NARANJA]), norm=TwoSlopeNorm(0, -tope, tope))
+    for i in range(len(dianas)):
+        for j in range(len(cols)):
+            v = celdas[i, j]
+            if abs(v) >= 0.03:
+                b.text(j, i, f"{abs(v):.2f}", ha="center", va="center", fontsize=7.6,
+                       color="white" if abs(v) > tope * 0.55 else "#222222")
+    etiquetas = [f"{c}\n{g}" for c, g in COMUNES + PROPIAS]
+    b.set_xticks(range(len(cols)), etiquetas, fontsize=7.6, rotation=60, ha="left")
+    b.xaxis.tick_top()
+    b.axvline(len(COMUNES) - 0.5, color="#333333", lw=1.4)
+    b.tick_params(length=0)
+    for lado in b.spines.values():
+        lado.set_visible(False)
+    b.text(len(COMUNES) / 2 - 0.5, len(dianas) + 0.15, "pesan en casi todas", ha="center", va="top", fontsize=9.5, color=GRIS)
+    b.text(len(COMUNES) + len(PROPIAS) / 2 - 0.5, len(dianas) + 0.15, "pesan más en una diana que en las demás",
+           ha="center", va="top", fontsize=9.5, color=GRIS)
+    barra = fig.colorbar(im, ax=b, orientation="horizontal", fraction=0.04, pad=0.1, aspect=40, shrink=0.45)
+    barra.set_ticks([-tope, 0, tope])
+    barra.set_ticklabels(["valor alto de la columna\nbaja la potencia", "", "valor alto\nsube la potencia"], fontsize=8.6)
+    barra.outline.set_visible(False)
+    fig.text(0.5, -0.04, "Dianas con 500 pares o más (entre paréntesis, los pares). Cada celda es la media de |SHAP| de esa columna en los pares "
+             "de esa diana; el color da la dirección.\nSon 56,241 pares, cada uno explicado por el modelo que no lo vio. "
+             "Lo que el modelo aprendió, no un mecanismo.", fontsize=9, color=GRIS, ha="center")
+    for ext in ("svg", "png"):
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"dianas": dianas, "columnas": cols}
 
 
 if __name__ == "__main__":
@@ -518,6 +760,11 @@ if __name__ == "__main__":
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
     print("medir:", fig_medir())
-    print("importancias:", fig_importancias())
+    print("importancias:", fig_importancias(sin_dianas=True, simple=True))
     print("ranking:", fig_ranking())
+    print("lista:", fig_lista())
+
+
+    print("fase2_desempeno:", fig_fase2_desempeno())
+    print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)

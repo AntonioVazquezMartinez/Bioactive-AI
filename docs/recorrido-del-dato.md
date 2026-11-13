@@ -53,7 +53,7 @@ Dos moléculas van al mismo grupo si comparten **andamio** —el esqueleto de an
 
 70% entrenamiento, 10% validación, **20% prueba reservada que el modelo nunca ve**.
 
-**Por qué no al azar.** Una partición aleatoria **infla el resultado entre 7 y 13 puntos**, porque deja análogos casi idénticos a los dos lados. El modelo parece reconocer química nueva cuando en realidad reconoce a un primo hermano.
+**Por qué no al azar.** Una partición aleatoria **da un resultado demasiado optimista** (Sheridan, 2013), porque deja análogos casi idénticos a los dos lados: con el `svm_rbf`, el MCC baja de 0.752 con pliegues al azar a 0.419 cuando ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación. El modelo parece reconocer química nueva cuando en realidad reconoce a un primo hermano.
 
 **Por qué una prueba reservada.** No se espera encontrar otra base de datos con la que validar después, así que la única evaluación sobre química que el modelo nunca vio es la que se aparte ahora ([2.6](decisiones.md#d2-6)).
 
@@ -123,7 +123,7 @@ Guardarlo así tuvo una consecuencia concreta. Al revisar de dónde venían los 
 
 ## 11 · Se ordena la lista
 
-El entregable es **una lista de candidatos priorizados**, no un sí o un no.
+El entregable es **un orden por fase y una lista priorizada exploratoria de naturales** ([ver la lista](lista-priorizada.md)), no un sí o un no.
 
 **Por qué no se fija dónde cortar la lista.** Depende de qué error cuesta más, y eso no lo decide la estadística: un falso positivo manda al laboratorio a ensayar algo que no sirve, y un falso negativo descarta un candidato sin que nadie se entere. Se entrega **la curva de precisión contra profundidad**, con un corte sugerido en los veinte primeros, que es lo que un laboratorio ensaya en un semestre ([C.5](decisiones.md#dc-5)).
 

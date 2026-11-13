@@ -12,13 +12,14 @@ Queríamos saber qué tan lejos podía llegar un modelo para priorizar compuesto
 neuroprotector, y encontramos que casi nunca era el modelo lo que importaba. Entrenamos dos modelos
 en paralelo: uno que decide si una molécula cruza la barrera hematoencefálica (fase 1) y otro que estima su
 potencia contra 26 dianas del sistema nervioso central, usando también las mediciones censuradas (fase 2).
-Comparamos once modelos, de una regresión logística a ensambles, y ninguno mejoró de forma distinguible al mejor
+Comparamos once modelos, de una regresión logística a ensambles; ninguno mejoró de forma distinguible al mejor
 modelo individual: entre ellos hay 4.2 puntos de MCC (una medida que pesa los aciertos y errores de las dos clases, entre −1 y 1), contra 33.3 puntos que se
 pierden al exigir que lo evaluado se parezca menos a lo entrenado. En la prueba reservada el mejor modelo rindió
 peor de lo que su semejanza predecía (AUROC 0.79 en lugar de 0.89), y tres formas distintas de enseñarle química
 rara no cerraron la brecha. Lo que sí movió el resultado fue el corte de decisión: igualar la tasa de compuestos
 declarados permeables a la prevalencia esperada sube el MCC de 0.34 a 0.41. Las huellas moleculares ayudaron en la
-fase 2 y no en la 1. Concluimos que la confianza en una predicción depende de cuán nueva es la molécula, y que esa
+fase 2 y no en la 1, y en los 117 pares de naturales de la prueba el orden de potencia (0.511) no se distingue de una
+línea base de tamaño y polaridad (0.565). Concluimos que la confianza en una predicción depende de cuán nueva es la molécula, y que esa
 distancia conviene medirla y mostrarla junto con cada predicción.
 
 ![Qué mueve el resultado](figuras/f0_palancas.svg)
@@ -61,7 +62,8 @@ entregamos una probabilidad y no una clase.
 Conviene decir con precisión qué se entrega hoy. Por cada compuesto salen tres cosas: la probabilidad de cruzar la
 barrera, la potencia predicha contra cada diana y qué tan cerca queda la molécula de lo que los modelos vieron.
 Combinar las tres en una sola lista priorizada es un entregable que falta y no un detalle de presentación: la
-sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo.
+sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo. Se entrega, además, una lista exploratoria de
+naturales por diana y por enfermedad (sección 5.1), que no sustituye esa combinación validada.
 
 ### 1.4 Qué puede y qué no puede decir este trabajo
 
@@ -110,7 +112,7 @@ partición. En la fase 1 quedan 1,048 grupos.
 ### 3.1 De dónde partimos
 
 Empezamos por un punto de referencia, el baseline: tres modelos sencillos (boosting por histogramas, bosque
-aleatorio y regresión logística) con validación cruzada agrupada, 3 semillas × 5 pliegues, es decir 15
+aleatorio y regresión logística) con validación cruzada agrupada, 3 semillas por 5 pliegues, es decir 15
 evaluaciones. Sus MCC fueron 0.702, 0.700 y 0.687, con intervalos del 95% que se solapan, así que ninguno ganó.
 Eso fijó el listón que había que superar, 0.70 de MCC (y 0.93 de AUROC), contra un piso de 0 de MCC, 0.5 de AUROC
 y 0.35 de AUPRC que dan los clasificadores triviales.
@@ -163,15 +165,15 @@ promediadas entre semillas y no es comparable con el 0.919, que es el promedio d
 
 Entre los once modelos hay solo 4.2 puntos de MCC. Con el `svm_rbf`, en cambio, pasar de pliegues al azar a
 pliegues donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos
-(0.752 → 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`; aquí la medimos con sus
-magnitudes.
+(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`, y que la exactitud depende de cuánto se parece la
+molécula al entrenamiento también `sheridan2004similarity`; aquí la medimos con sus magnitudes.
 
 ![Escalera](figuras/f1_escalera.svg)
 
 *Figura 2. AUROC por peldaño, seis modelos. La línea naranja es la prueba reservada (0.793).*
 
 La fase 2 muestra lo mismo, con una limitación del conjunto. La concordancia del `aft` baja de 0.807 (por
-molécula) a 0.695 con semejanza ≥ 0.6: una caída de 0.112, unas siete veces la dispersión de 0.015 entre los siete
+molécula) a 0.695 con semejanza de 0.6 o más: una caída de 0.112, unas siete veces la dispersión de 0.015 entre los siete
 modelos competitivos de la fase 2 (el doble, 0.030, era el umbral que fijamos). A 0.5 y 0.4 ni siquiera se puede
 construir la partición, porque el 69% y el 90% de las filas caen en un solo grupo. No hay manera de evaluar la fase
 2 con química realmente nueva a esos niveles.
@@ -276,7 +278,7 @@ tendencia. En la fase 2 la ganancia parece crecer con el peso, pero esa tendenci
 incluye el cero) y se aplana al igualar los tramos por submuestreo; el detalle está en el Anexo C.
 
 Dos explicaciones simples las descartamos con experimentos propios. No es el tamaño de los datos: con el ajuste de
-la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, 0.8 × 6,306) la ganancia del `aft` es
+la fase 2 reducido a 5,000 filas (lo que ajusta un pliegue de la fase 1, el 80% de 6,306) la ganancia del `aft` es
 +0.0105 en 14 de 15 evaluaciones, mayor que con el ajuste completo (+0.0057). Tampoco es la granularidad de la
 etiqueta: con la etiqueta «molécula activa contra alguna diana» las huellas ayudan a los cuatro modelos probados
 (AUROC +0.017 a +0.085).
@@ -299,7 +301,7 @@ modelos y no prueban qué pasa en la fase 1.
 ### 4.7 El modelo de potencia en NPASS
 
 Elegimos el AFT porque en los pares que solo tiene NPASS aprende de mediciones censuradas que los demás modelos
-descartan. En validación cruzada su concordancia ahí es 0.632 contra 0.511 del bosque. En la prueba (117 pares)
+descartan. En validación cruzada su concordancia ahí es 0.632 contra 0.511 del bosque. Una recta con censura (Tobit) llega a 0.639: la ventaja es sobre el bosque. En la prueba (117 pares)
 baja a 0.530 en la corrida registrada (0.511 al reajustarlo, que es lo que muestra la figura) y la línea base de
 peso y TPSA da 0.565. Con 117 pares no hay potencia para distinguir 0.511 de 0.632, y los pares no son la misma
 población (12.3% de activos contra 44.4%): no refuta el resultado, pero tampoco lo confirma. Además, su ventaja de
@@ -324,6 +326,16 @@ probabilidad de cruzar la barrera (fase 1), la potencia predicha contra cada una
 pActividad por diana y sin intervalo) y qué tan cerca queda de lo que los modelos vieron. El cuaderno no combina las
 dos fases en un ranking: esa combinación sigue pendiente y, cuando exista, será evidencia paralela y no una cascada.
 
+Además del cuaderno se entrega una **lista priorizada exploratoria de compuestos naturales** por diana y por enfermedad, que es
+el objetivo del proyecto (`lista-priorizada.md`, corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres`). Parte de los 1,821
+compuestos de NPASS y CMAUP de las filas de ajuste, excluye los 223 con alerta PAINS y los 569 con puntaje de semejanza a productos
+naturales menor de 0.5 `ertl2008natural` (quedan 1,026 candidatos), y ordena por potencia predicha entre los que no tienen
+medición contra esa diana. La barrera hematoencefálica no filtra, porque un compuesto que no cruza por difusión puede entrar por un
+transportador; su probabilidad va al lado. **Es una lista de hipótesis para el laboratorio y no un
+resultado**: en los productos naturales el modelo de potencia no se distingue de una línea base de peso, superficie polar y diana
+(0.511 contra 0.565, 117 pares), combinar las dos fases no está validado, y las 260 filas por diana contienen solo 75 compuestos distintos, porque la
+química que pesa es casi la misma en todas las dianas.
+
 Los dos modelos finales pesan unos 3 MB y se usan con un módulo de inferencia que no necesita los datos de
 entrenamiento. Comprobamos que los descriptores calculados desde un SMILES coinciden bit a bit con los de
 entrenamiento (150 moléculas de cada fase) y que el modelo recargado reproduce al entrenado. Se entrenan con las
@@ -343,8 +355,8 @@ a los compuestos por SMILES canónico, se evalúa con la misma validación cruza
 referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio. Es Python y no una
 interfaz, y mide clasificación, no la regresión de supervivencia de la fase 2.
 
-La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que infla de
-7 a 13 puntos, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
+La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que da cifras
+demasiado optimistas, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de potencia en el umbral que esa regla nombra, y el
 resultado se reporta por subgrupo. La guía dice también lo único que la herramienta no puede verificar: que las
 columnas no se hayan calculado usando las etiquetas ni usando todas las filas a la vez.
@@ -355,17 +367,17 @@ descriptores (IC95% [−0.131, −0.034], mejoran en 1 de 15 evaluaciones).
 
 ### 5.3 Requisitos para operar
 
-La Tabla 1 lista lo que hace falta para operar los modelos y quién responde de cada cosa.
+La Tabla 1 lista lo que hace falta para operar los modelos y quién lo hace en adelante. El proyecto termina con la entrega y la continuidad es autónoma de la patrocinadora y su grupo, sin compromiso del equipo; por eso lo que se entrega es lo que les permite hacerlo solos.
 
-| requisito | por qué | responsable |
+| requisito | por qué | a cargo de |
 |:--|:--|:--|
-| procedimiento que entrena y guarda los dos modelos finales, con el comando y la huella criptográfica de los datos | que cualquiera pueda reconstruirlos | equipo, disponible |
-| cuaderno de uso con SMILES propios | es la forma de operación acordada | equipo, disponible |
-| advertencia de extrapolación: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto | equipo, disponible en el cuaderno |
-| reentrenar al llegar datos nuevos y reevaluar con la escalera, no con un corte al azar | evita celebrar una cifra inflada | patrocinadora, con apoyo del equipo |
+| procedimiento que entrena y guarda los dos modelos finales, con el comando y la huella criptográfica de los datos | que cualquiera pueda reconstruirlos | grupo de la patrocinadora, con el procedimiento entregado |
+| cuaderno de uso con SMILES propios | es la forma de operación acordada | grupo de la patrocinadora, con el cuaderno entregado |
+| advertencia de extrapolación: la similitud de cada compuesto consultado a su vecino más cercano de entrenamiento | una cifra de validación cruzada no describe a la química nueva; la escalera de la sección 4.2 muestra cuánto | grupo de la patrocinadora; la calcula el cuaderno |
+| reentrenar al llegar datos nuevos y reevaluar con la escalera, no con un corte al azar | evita celebrar una cifra inflada | grupo de la patrocinadora |
 | evaluación externa con su conjunto de prueba | la prueba reservada es nuestra, no la de ella | hecha una vez con el `aft` final: concordancia 0.792 [0.787, 0.797] en 8,134 pares (`solo_npass` 0.667, 249 pares), pero no comparable: el 64.9% de sus pares tiene andamio ya visto (ver 5.4) |
 
-Table: Requisitos para operar los modelos, por qué se piden y quién responde de cada uno.
+Table: Requisitos para operar los modelos, por qué se piden y quién lo hace en adelante.
 
 ### 5.4 Qué pasó con la base externa de la patrocinadora
 
@@ -424,14 +436,17 @@ buen resultado.
 1. *Los ensambles no mejoran al modelo simple en MCC ni en AUPRC, y no es un fracaso:* es el peldaño más bajo de una
    escalera donde el modelo nunca fue el factor grande. En AUROC, la votación (+0.0139 [+0.0038, +0.0239]) y el
    stacking (+0.0128 [+0.0023, +0.0233]) sí superan al `svm_rbf` con el intervalo corregido de Nadeau y Bengio, pero
-   al corregir por las diez comparaciones hechas ninguno se sostiene (p = 0.103 y 0.180). Acomodar el escalador
-   dentro de la calibración del SVM no cambia nada (MCC 0.7015 contra 0.7017; AUROC y AUPRC idénticos).
+   al corregir por las diez comparaciones hechas ninguno se sostiene (p = 0.103 y 0.180).
 2. *Una cifra de validación cruzada no describe a la química nueva,* y la semejanza al vecino más cercano no basta
    para anticipar cuánto cae: en la fase 1 la prueba cae 12.6 puntos de AUROC, 10 más de lo que su semejanza
    predice; en la fase 2 la concordancia agregada baja de 0.761 a 0.720.
-3. *La representación no se traslada entre fases,* y no por tamaño de datos, por tipo de etiqueta ni por el peso de
+3. *En productos naturales el orden de potencia no está demostrado.* En la prueba reservada, los 117 pares que solo aporta
+   NPASS dan una concordancia de 0.511 con el modelo (0.530 registrada) y de 0.565 con una línea base de peso, polaridad y
+   diana: no se distinguen, y con 117 pares la prueba tampoco confirma ni refuta su ventaja de validación (0.632 contra 0.511 del
+   bosque). Por eso la lista priorizada que se entrega es de hipótesis (sección 5.1).
+4. *La representación no se traslada entre fases,* y no por tamaño de datos, por tipo de etiqueta ni por el peso de
    la molécula; la densidad del espacio químico queda como pista sin confirmar.
-4. *Para quien use los modelos:* priorizar candidatos y no descartarlos (un BBB− no excluye un compuesto); leer la
+5. *Para quien use los modelos:* priorizar candidatos y no descartarlos (un BBB− no excluye un compuesto); leer la
    probabilidad de la fase 1 junto con la advertencia de semejanza y no como una clase; y medir cualquier mejora
    donde el resultado se mueve, que es qué tan lejos queda la química evaluada de la de entrenamiento (Figura 1), no
    solo con el modelo que se prueba. Ninguna de las formas de aprender de lo raro que probamos cerró la brecha. Para
@@ -441,6 +456,8 @@ buen resultado.
 
 - La prueba reservada es una sola, de tamaño moderado (1,499 compuestos en la fase 1), así que los intervalos de
   los subgrupos pequeños son anchos.
+- En la fase 2 los productos naturales de la prueba son 117 pares, sin potencia para distinguir 0.511 de 0.632, y la
+  escalera de semejanza no se puede construir por debajo de 0.6: el 69% y el 90% de las filas caen en un solo grupo.
 - Las 151 columnas de la fase 1 se eligieron con etiquetas de entrenamiento, así que su sesgo de selección no es
   medible contra la dispersión.
 - El efecto de agrupar depende del modelo (1.3 puntos de AUROC con el `svm_rbf` y 2.2 con el bosque) y de qué se
@@ -543,6 +560,18 @@ descriptores entre sus quince primeros (`fr_lactam`, `NumHDonors`, `NumAliphatic
 es 0.37. Los donadores de hidrógeno entran (puesto 4 en ambos); TPSA no (40 por permutación y 10 por SHAP), porque
 comparte información con un racimo de columnas. No afirmamos ninguna estructura: son seis nombres de descriptor, no
 un mecanismo.
+
+*Hacia dónde empuja cada columna.* Corridas `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2` (`scripts/puntos_shap.py`): los mismos modelos y pliegues de las dos anteriores, pero guardando el valor de SHAP de cada fila y no solo su media. En la fase 1, una lactama o más donadores de hidrógeno bajan la probabilidad de cruzar la barrera; en la fase 2, ser la diana `MAOA` baja la potencia predicha y más complejidad topológica la sube (Figura C2). Cada punto es un compuesto en la fase 1 (300, los mismos de la corrida original) y un par compuesto-diana en la fase 2 (3,000, una submuestra de 600 filas por pliegue). Son direcciones que aprendió el modelo, no un mecanismo, y «confirmada por permutación» es lo que los dos métodos de las corridas anteriores ponen entre sus quince primeros.
+
+![Atribución](figuras/f8_atribucion.svg)
+
+*Figura C2. SHAP por compuesto en la fase 1 y por par compuesto-diana en la fase 2: la posición de cada punto es el efecto de la columna en la predicción, y su color, el valor de la columna. Van primero las columnas que la permutación también confirma.*
+
+*La diana por separado.* Corrida `2026-11-12-artemio-C.2-shap-por-diana-fase2` (`scripts/shap_por_diana.py`): el mismo modelo y los mismos pliegues, pero sobre las 56,241 filas, cada una explicada por el modelo que no la vio, y agrupando el SHAP por la diana del par. La diana entra al modelo como 26 columnas 0 o 1, así que en un ranking global se mezcla con la química (Figura C2); aquí se separa. Las columnas de diana suman el 15% de la atribución: ser `MAOA` baja la potencia predicha unas 0.8 unidades de pActividad y ser `LRRK2` la sube unas 0.7 (se interpretan las 16 dianas con 500 pares o más, de 26). La química que pesa es casi la misma en todas: el orden de las columnas coincide entre dianas (Spearman mediano 0.94, mínimo 0.90). Lo que distingue a una diana (hidrazonas en `MAOA`, sulfonamidas en `PTGS2`, cetonas en `BCHE`) pesa entre 0.03 y 0.06, contra 0.11 a 0.34 de la complejidad topológica, y son fragmentos poco frecuentes, de modo que pueden reflejar qué compuestos se midieron contra esa diana y no cómo actúa (Figura C3). Solo las ve SHAP: la permutación no las confirma (puestos 57 a 108), y la decisión pide lo que coincide en dos métodos. Son direcciones que aprendió el modelo, no un mecanismo.
+
+![Por diana](figuras/f9_por_diana.svg)
+
+*Figura C3. SHAP de la fase 2 por diana, en las 16 dianas con 500 pares o más: a la izquierda, cuánto sube o baja la potencia predicha ser esa diana; a la derecha, la media del valor absoluto de SHAP de cada columna en los pares de esa diana, con su dirección en el color.*
 
 *Por subestructura.* Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`; la medición previa que se
 cita más abajo es `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`. El modelo final no usa huellas,

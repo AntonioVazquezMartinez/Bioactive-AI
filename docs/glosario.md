@@ -61,6 +61,9 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 ---
 
+**Lactama**
+: Un anillo con un grupo amida dentro. El descriptor `fr_lactam` cuenta cuántos tiene una molécula. **Por qué importa:** en la fase 1 es la columna con más peso según SHAP, y tener una baja la probabilidad de cruzar la barrera; es una dirección que aprendió el modelo, no un mecanismo.
+
 ## Descriptores moleculares
 
 **Descriptor molecular**
@@ -92,13 +95,16 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 
 ---
 
+**Tanimoto**
+: La medida de parecido entre dos huellas moleculares: los bits que comparten entre los bits que tiene alguna de las dos, de 0 a 1. **Por qué importa:** es la «semejanza» de la escalera de semejanza; 1.0 significa que el compuesto estaba en el entrenamiento, y por debajo de 0.4 el cuaderno avisa que la predicción extrapola.
+
 ## Partición y evaluación
 
 **Andamio de Bemis-Murcko**
 : El esqueleto de la molécula: sus anillos y los enlaces que los conectan, sin los grupos que cuelgan de ellos. Agrupa compuestos que son variaciones del mismo núcleo químico. **Por qué importa:** es el criterio con el que se parten los datos.
 
 **Scaffold split**
-: Partición que reparte **andamios completos** entre entrenamiento y prueba, en vez de repartir filas al azar. Así ninguna variación del mismo núcleo aparece en ambos lados. **Por qué importa:** es la diferencia entre medir si el modelo generaliza a química nueva o si solo memorizó andamios. Una partición aleatoria infla los resultados entre 7 y 13 puntos.
+: Partición que reparte **andamios completos** entre entrenamiento y prueba, en vez de repartir filas al azar. Así ninguna variación del mismo núcleo aparece en ambos lados. **Por qué importa:** es la diferencia entre medir si el modelo generaliza a química nueva o si solo memorizó andamios. Una partición aleatoria da resultados demasiado optimistas (Sheridan, 2013); en nuestro caso, el MCC del `svm_rbf` baja de 0.752 con pliegues al azar a 0.419 en el peldaño estricto de la escalera de semejanza.
 
 **EDA** (análisis exploratorio de datos)
 : Etapa que describe la estructura, calidad, distribución y relaciones presentes en un conjunto, antes de construir un modelo. **Por qué importa:** sus asociaciones sugieren preguntas y variables a estudiar, pero no son por sí solas reglas predictivas ni pruebas de generalización.
@@ -131,6 +137,21 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Cociente entre la tasa de activos recuperados en una fracción temprana superior de la biblioteca priorizada ($f$, típicamente 1% o 5%) y la tasa esperada por simple azar ($f$). **Por qué importa:** mide la eficacia práctica del modelo en campañas de cribado virtual de laboratorio. Su límite matemático máximo es $1/p$ (con $p$ siendo la prevalencia de activos), por lo que una curva visualmente plana en un conjunto dominado por activos puede deberse a que el modelo ya satura el 100% del techo alcanzable.
 
 ---
+
+**Prueba reservada**
+: Los compuestos (o pares) que se apartan al principio y no se usan para entrenar ni para elegir nada, para medir al final cómo rinde el modelo con química que no vio. **Por qué importa:** es la cifra que se defiende; se toma una vez por fase y cada lectura queda registrada con su motivo.
+
+**Tercil de rareza**
+: Cada uno de los tres grupos de igual tamaño en que se parten los compuestos de la prueba según qué tan parecidos son a los de entrenamiento: comunes, intermedios y raros. **Por qué importa:** el desempeño cae en los raros, y ahí es donde el proyecto necesita que el modelo sirva.
+
+**Punto de operación**
+: El corte que convierte una probabilidad en una clase (por ejemplo, declarar permeable todo lo que pasa de 0.5). **Por qué importa:** mover el corte cambia cuántos compuestos se declaran permeables, no el orden; por eso el cuaderno entrega la probabilidad y no la clase.
+
+**Correlación de Spearman**
+: La correlación entre los lugares que dos listas dan a los mismos elementos, de −1 a 1. **Por qué importa:** mide si dos métodos de atribución ordenan las columnas de forma parecida (0.93 en la fase 2, 0.37 en la fase 1).
+
+**BEDROC**
+: Una métrica de ranking que premia que lo activo quede arriba de la lista, con un parámetro que fija cuánto pesa el principio. **Por qué importa:** sirve para ver si el orden por potencia pone los compuestos útiles primero; se declara con α = 20 y no se ajusta.
 
 ## Datos y metodología
 
@@ -267,6 +288,21 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : Poder señalar qué fragmento concreto de la molécula sustenta la predicción, no solo qué variable pesó más. **Por qué importa:** la patrocinadora lo planteó como requisito no negociable. Un modelo que acierta pero no se puede interpretar no sirve para orientar trabajo de laboratorio.
 
 ---
+
+**Par compuesto-diana**
+: Una fila de la fase 2: un compuesto medido contra una diana concreta, con su potencia. **Por qué importa:** la unidad de la fase 2 no es el compuesto sino el par, y por eso en sus gráficos de SHAP cada punto es un par y pesa tanto qué diana es.
+
+**AFT (modelo de tiempo de falla acelerado)**
+: El modelo de la fase 2: una regresión con árboles que acepta que una medición sea un intervalo, por ejemplo «mayor que 10 µM», en lugar de forzarla a un número. **Por qué importa:** aprovecha las mediciones censuradas, que son muchas, sin inventarles un valor.
+
+**SVM con núcleo RBF**
+: El modelo de la fase 1: una máquina de vectores de soporte que separa permeables y no permeables con fronteras curvas. **Por qué importa:** es el modelo final de la fase 1 (`svm_rbf`), elegido por la regla y no porque gane la tabla.
+
+**KernelSHAP**
+: La variante de **SHAP** que sirve con cualquier modelo, porque solo observa sus salidas, y por eso es más lenta y ruidosa que **TreeSHAP**. **Por qué importa:** es el método con que se atribuye el `svm_rbf` de la fase 1.
+
+**Gráfico de puntos de SHAP**
+: Un gráfico con una fila por columna y un punto por compuesto (o por par): la posición dice cuánto empuja esa columna la predicción en ese caso y el color, qué valor tiene la columna. **Por qué importa:** muestra la dirección del efecto, que la media de |SHAP| no dice.
 
 ## Dónde se tratan a fondo
 

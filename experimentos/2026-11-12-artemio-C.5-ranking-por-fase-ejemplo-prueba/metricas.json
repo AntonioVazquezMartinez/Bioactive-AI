@@ -1,0 +1,19 @@
+{
+  "candidatos_con_nombre": 40,
+  "fase1": {
+    "amiodarone": 0.571,
+    "droperidol": 0.8431,
+    "elopiprazole": 0.9491,
+    "gluconolactone": 0.2752,
+    "leflunomide": 0.9329,
+    "pizotifen": 0.9402
+  },
+  "fase2": {
+    "amiodarone": 7.1047,
+    "droperidol": 7.2679,
+    "elopiprazole": 6.4067,
+    "gluconolactone": 4.7092,
+    "leflunomide": 6.4816,
+    "pizotifen": 7.2035
+  }
+}

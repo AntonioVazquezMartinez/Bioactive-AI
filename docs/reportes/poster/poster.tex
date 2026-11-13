@@ -141,7 +141,7 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 \seccion{Qué pesa en cada fase}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
   \item Con dos métodos de atribución independientes. Fase 1: los donadores de hidrógeno y otros cinco descriptores; TPSA no domina.
-  \item Fase 2: sobre todo la diana (MAOA, MAOB, DRD2, LRRK2, BCHE). Sin afirmar ningún mecanismo.
+  \item Fase 2: la diana pone el 15\,\% y el resto es química (complejidad, halógenos). Sin afirmar ningún mecanismo.
 \end{itemize}
 
 \end{minipage}\hfill
@@ -150,29 +150,24 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 
 \seccion{Lo que encontramos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=14.5cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \pie{Figura 1. El AUROC cae al exigir que lo evaluado se parezca menos a lo entrenado; la prueba reservada (0.793) equivale a los peldaños más estrictos.}
+  \includegraphics[width=\linewidth,height=12.2cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \pie{Figura 1. El AUROC cae al exigir que lo evaluado se parezca menos a lo entrenado; la prueba reservada (0.793) cae como un peldaño estricto, aunque se parece al entrenamiento como uno laxo.}
 \end{center}
 
 \vfill
 \begin{center}
-  \begin{tikzpicture}
-    % barras proporcionales: 100 % = 17 cm
-    \node[anchor=south west,font=\sffamily\bfseries\fontsize{22}{26}\selectfont,text=olivedark] at (0,3.5) {El corte de 0.5 declara permeable a};
-    \fill[alerta] (0,2.4) rectangle (13.48,3.4);
-    \node[anchor=west,font=\serif\fontsize{40}{44}\selectfont,text=alerta] at (13.7,2.9) {79.3\%};
-    \node[anchor=south west,font=\sffamily\bfseries\fontsize{22}{26}\selectfont,text=olivedark] at (0,1.2) {Lo que de verdad es permeable};
-    \fill[olive] (0,0.1) rectangle (9.74,1.1);
-    \node[anchor=west,font=\serif\fontsize{40}{44}\selectfont,text=olivedark] at (9.96,0.6) {57.3\%};
-  \end{tikzpicture}\\[4pt]
-  \pie{Figura 2. Compuestos de la prueba reservada. Igualar la tasa de permeables a la real sube el MCC de 0.339 a 0.410.}
+  \includegraphics[width=\linewidth,height=7.2cm,keepaspectratio]{f6_escalera_fase2.png}\\[2pt]
+  \pie{Figura 2. En la fase 2 la concordancia también baja al exigir menos parecido, y los pares que solo aporta NPASS, los productos naturales (gris), quedan siempre más abajo. Los peldaños estrictos no se pueden construir en este conjunto.}
 \end{center}
 
 \vfill
 \begin{center}
-  \includegraphics[width=\linewidth,height=9cm,keepaspectratio]{f0_palancas.png}\\[2pt]
+  \includegraphics[width=\linewidth,height=7.6cm,keepaspectratio]{f0_palancas.png}\\[2pt]
   \pie{Figura 3. Lo que más mueve el resultado es cuánta novedad se exige, no el modelo. Cada barra viene de una corrida distinta.}
 \end{center}
+
+\vfill
+{\sffamily\fontsize{17}{21}\selectfont\color{muted}\textbf{Palabras clave.} \textbf{MCC}: medida de acierto, de $-1$ a 1 (0 es el azar). \textbf{AUROC}: qué tan bien se ordenan los permeables por encima de los que no. \textbf{TPSA}: superficie polar. \textbf{Andamio}: el núcleo de anillos de una molécula. \textbf{Huella}: bits que marcan los fragmentos que contiene.\par}
 
 \end{minipage}\hfill
 \begin{minipage}[t][\colh][s]{0.30\linewidth}\cuerpo\vspace{0pt}
@@ -183,7 +178,7 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
   \item La confianza en una predicción depende de qué tan nueva es la molécula, no del modelo.
   \item De 0.70 a 0.34 de MCC: unos 0.07 eran el corte, que se puede ajustar. El orden cayó 12.6 puntos de AUROC y el resto sigue sin explicar.
   \item Sirve para ordenar: confirmar el 70\,\% mejor ordenado conserva el 85.3\,\% de los permeables, 15.3 puntos más que un sorteo.
-  \item En productos naturales el orden de potencia no está demostrado: 0.530 en 117 pares, bajo la línea base de peso y superficie polar (0.565).
+  \item En productos naturales el orden de potencia no está demostrado: 0.511 en 117 pares (0.530 registrada), sin distinguirse de la línea base de peso, polaridad y diana (0.565).
 \end{itemize}
 
 \vfill
@@ -200,12 +195,13 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
   \draw[arr] (b.east) -- (c.west);
 \end{tikzpicture}
 \end{center}
-Un cuaderno recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, con una advertencia de extrapolación. Se entregan los dos modelos, el procedimiento para reentrenar y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora y su grupo.
+Un cuaderno recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, con una advertencia de extrapolación. Se entrega también una lista priorizada exploratoria de naturales, y los dos modelos, el procedimiento para reentrenar y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora y su grupo.
 
 \vfill
 \seccion{Trabajo futuro}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
   \item Medir la potencia con los primeros lotes propios de productos naturales.
+  \item Combinar las dos fases en un solo orden y comprobar si elige mejor que cada una; hoy el cuaderno las ordena por separado.
   \item Evaluar representaciones adicionales con la herramienta incluida.
 \end{itemize}
 

@@ -103,6 +103,9 @@ DOCUMENTOS = [
     ("docs/variable-objetivo-fase2.md",
      "variable-objetivo-fase2.md",
      "Qué se predice en cada fase, cómo se construye y cómo se evalúa"),
+    ("docs/lista-priorizada.md",
+     "lista-priorizada.md",
+     "Compuestos naturales que probar primero, por enfermedad y por diana (exploratoria)"),
     ("docs/medir-una-representacion.md",
      "medir-una-representacion.md",
      "Cómo medir si unas columnas nuevas predicen mejor, y los gotchas de agrupar y medir"),
@@ -120,6 +123,10 @@ DOCUMENTOS = [
 PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
         "docs/reportes/avance-1/Avance1.0.pdf",
         "docs/reportes/avance-2/Avance2.0.pdf",
+        # la entrega final: el PDF se versiona junto a su .tex y el sitio lo publica tal cual
+        "docs/reportes/articulo/articulo.pdf",
+        "docs/reportes/poster/poster.pdf",
+        "docs/reportes/presentacion/presentacion-final.pdf",
         # El artículo científico no es un entregable del curso, pero su PDF se versiona —el
         # README de su carpeta dice por qué— y la página de entregables lo ofrece para
         # descargar, así que hay que copiarlo o ese enlace queda roto. Que el PDF no se quede
@@ -259,7 +266,8 @@ def main() -> int:
                    "notebooks/04c_Regresion_actividad_huellas.ipynb",
                    "notebooks/05_Modelo_Final.ipynb",
                    "notebooks/05b_Ensambles_actividad.ipynb",
-                   "notebooks/05c_Ensambles_permeabilidad_huellas.ipynb"]:
+                   "notebooks/05c_Ensambles_permeabilidad_huellas.ipynb",
+                   "notebooks/06_Uso_de_los_modelos.ipynb"]:
         src = RAIZ / nb_rel
         if not src.exists():
             print(f"[sitio] AVISO: no existe {nb_rel}, se omite")

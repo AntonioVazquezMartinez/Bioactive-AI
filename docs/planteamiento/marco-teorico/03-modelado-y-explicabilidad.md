@@ -33,7 +33,7 @@ Por ello, para el EDA vigente se incluyen las **7,805 filas etiquetadas** del ar
 | Rango esperable para un modelo bien construido | **0.85–0.92 AUROC** |
 | Split aleatorio / Kennard-Stone | 98.7% exactitud `yuan2018improved` |
 
-La brecha de 7 a 13 puntos entre ambos regímenes es el efecto de la fuga de información entre particiones. Una auditoría de 51 configuraciones de benchmarks encontró que, al endurecer las particiones, **el modelo de primer lugar perdió su posición en 15 de 28 conjuntos** `schuh2026auditing`.
+**Esa diferencia no es una brecha medida:** resta una exactitud de un trabajo con partición aleatoria de un AUROC de otros con partición por andamio, con métricas y conjuntos distintos. Lo que sí está documentado es la dirección: la selección aleatoria da una cifra demasiado optimista frente a la predicción prospectiva `sheridan2013`, y la similitud con el entrenamiento discrimina la exactitud de la predicción `sheridan2004similarity`. Una auditoría de 51 configuraciones de benchmarks encontró que, al endurecer las particiones, **el modelo de primer lugar perdió su posición en 15 de 28 conjuntos** `schuh2026auditing`.
 
 Los baselines publicados para el mismo conjunto BBBP varían entre 0.681 y 0.7194 para Random Forest según la fuente, producto de implementaciones distintas del scaffold split. **Este trabajo no adopta cifras de la literatura como referencia, sino que construye su propio baseline.**
 

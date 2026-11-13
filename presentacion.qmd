@@ -290,7 +290,7 @@ Aquí **no hay un experimento comparativo**: nadie entrenó un modelo con Box–
 | Análisis factorial | Buscamos conservar la correspondencia entre columna y propiedad química, no factores latentes | Razonamiento |
 | Discretizar los descriptores | Pierde diferencias dentro de cada intervalo y los cortes no están justificados; el TPSA ya mostró que no son constantes | Razonamiento |
 | *Embeddings* congelados de transformers | No superan a descriptores más fingerprint bajo partición por andamio | Literatura |
-| Dejar que la etapa 1 filtre a la etapa 2 | Solo 1,033 esqueletos tienen medición en las dos; para el resto sería una predicción sin verificar | Un conteo en nuestros datos |
+| Dejar que la etapa 1 filtre a la etapa 2 | Solo 1,033 esqueletos tienen medición en las dos en el archivo crudo (612 en el archivo que ve el modelo); para el resto sería una predicción sin verificar | Un conteo en nuestros datos |
 
 ::: {.callout-note}
 La diferencia importa: un resultado comparado se revisa repitiendo el experimento con otros datos; un descarte por conteo o por razonamiento, solo con un argumento mejor.
@@ -464,7 +464,7 @@ El criterio de agrupamiento no es un detalle de implementación. Un esqueleto de
 | Solo andamio | 2,239 | **0.959** [0.941, 0.973] | **0.769** |
 
 ::: {.callout-caution}
-**2.2 puntos de AUROC y 7.1 de MCC.** En MCC eso es mucho más que la elección de modelo, que mueve 1.5 puntos entre la logística y el boosting: **el criterio de partición importa casi cinco veces más**. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
+**2.2 puntos de AUROC y 7.1 de MCC.** En MCC, con la misma medida en las dos comparaciones, eso es más que la elección de modelo, que mueve 2.2 puntos entre la logística y el boosting: **el criterio de partición importa algo más de tres veces más**. Cuánto separa a los modelos depende de cuántos se comparen (2.2 con tres canalizaciones, 4.2 con once), así que un múltiplo tiene que decir entre cuáles. En AUROC **no**: con el mismo estimador, el agrupamiento mueve 0.0223 y la distancia entre el bosque y la logística 0.0225, o sea lo mismo. Una versión anterior de esta diapositiva afirmaba lo contrario porque comparaba dos estimadores distintos. Lo que se sostiene con cualquiera: **una cifra que no diga cómo agrupó no se puede comparar** con estas.
 :::
 
 ::: {.callout-note}

@@ -14,9 +14,10 @@ Los términos están en el [glosario](glosario.md). Cuando una decisión cambia 
 | [C.2](#dc-2) | Dos métodos de atribución independientes | Vigente | |
 | [C.3](#dc-3) | Comprobar si combinar las dos predicciones mejora la selección | Propuesta | |
 | [C.4](#dc-4) | PAINS: aplicarlos a los resultados finales | Propuesta | |
-| [C.5](#dc-5) | El entregable es una lista priorizada; métricas de ranking por escenario | Vigente · revisada | 17 oct · 24 oct · 12 nov |
+| [C.5](#dc-5) | El entregable es el ordenador por fase, no una lista priorizada (versión del 17 oct); métricas de ranking por escenario | Vigente · revisada | 17 oct · 24 oct · 12 nov |
 | [C.6](#dc-6) | Licencia y uso académico de los resultados | Propuesta | |
 | [C.7](#dc-7) | La ventana terapéutica: potencia contra citotoxicidad | Propuesta | |
+| [C.8](#dc-8) | El proyecto termina con la entrega; la continuidad es autónoma de la patrocinadora y su grupo | Vigente | |
 
 **Fase 1 · Permeabilidad**
 
@@ -87,6 +88,8 @@ Lo que vale para las dos fases.
 
 **Lo que la corrida definitiva de la fase 2 encontró, sobre el brazo `aft_huellas`.** Corrida `2026-11-06-antonio-C.2-atribucion-fase2-con-nombres`, cinco pliegues, cinco repeticiones de permutación y 2,048 bits. Los dos métodos **concuerdan**: Spearman 0.577 sobre la unión de sus 100 primeras y 11 de las 15 primeras compartidas, con la regla que ese brazo declaró antes de correr (ρ ≥ 0.50 y 8 de 15). Eso corrige la lectura de la corrida previa `2026-11-05-artemio-2.13-atribucion-aft-huellas-subestructuras`, que con 1,500 filas y una sola repetición daba 0.378 y no pasaba esa misma regla: el desacuerdo era ruido de la permutación, no un resultado. **El umbral no es el de la atribución del `aft` final** (ρ ≥ 0.70, [2.13](#d2-13)): cada corrida declaró el suyo antes de medir y el del brazo con huellas es el más laxo, y la razón que da esa corrida previa para su propio ruido es permutar unas 2,270 columnas casi todas cercanas a cero, contra las 227 del modelo final. Una cifra de acuerdo se compara contra su propio umbral o no se compara. En la intersección hay once características, dos de ellas huellas —los identificadores Morgan `2041434490` y `3777168895`, que la corrida previa describe como un nitrógeno de anillo aromático tipo piridina y un CH aromático vecino a un N aromático—, cinco dianas (MAOA, MAOB, DRD2, LRRK2, BCHE) y los descriptores `BertzCT`, `SMR_VSA3`, `MolLogP` y `fr_halogen`. **El contraste obligatorio no reproduce la jerarquía de la fase 1**: TPSA queda en los puestos 54 y 48 y HBD en 247 y 308, así que la dominancia de TPSA y donadores que la fase 1 encuentra aquí no aparece, y una afirmación estructural de una fase no se traslada a la otra. La convención del párrafo anterior no mueve el acuerdo (0.577 contando solo las completas, 0.576 contándolas todas), aunque dejó fuera 618 de 2,534 características, todas huellas.
 
+**La dirección y la diana por separado (12 de noviembre).** Tres corridas, sin tocar la prueba reservada. `2026-11-12-artemio-C.2-puntos-shap-por-compuesto-fase1` y `…-fase2` guardan el SHAP de cada fila (300 compuestos en la fase 1; 3,000 pares, una submuestra de 600 filas por pliegue, en la fase 2) para ver **hacia dónde** empuja cada columna. `2026-11-12-artemio-C.2-shap-por-diana-fase2` (`scripts/shap_por_diana.py`) explica las 56,241 filas, cada una con el modelo que no la vio, y agrupa el SHAP por la diana del par. Lo que sale: las columnas de diana suman el 15.5% de la atribución, **la misma cifra de la corrida del 4 de noviembre, ahora sobre todas las filas y no sobre una muestra**; ser `MAOA` baja la potencia predicha unas 0.8 unidades de pActividad y ser `LRRK2` la sube unas 0.7 (entre las 16 dianas con 500 pares o más, de 26); y la química que pesa es casi la misma en todas, con un Spearman mediano de 0.94 y mínimo de 0.90 entre los órdenes de columnas. Lo que distingue a una diana (hidrazonas en `MAOA`, sulfonamidas en `PTGS2`, cetonas en `BCHE`) pesa 0.03 a 0.06, contra 0.11 a 0.34 de `BertzCT`. **Esto cumple en parte lo que la entrada del `aft` final declaraba imposible** (atribución por subestructura): como las `fr_*` son conteos de fragmento, se ven fragmentos por diana sin necesitar huellas. **Pero con un solo método**: la permutación no los confirma (rangos globales SHAP y permutación de `fr_hdrzone` 129 y 108, `fr_prisulfonamd` 124 y 57, `fr_ketone` 134 y 93, en `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`), y esta decisión pide solo lo que coincide en dos. Se reportan como lo que el modelo aprendió, sin mecanismo, y como un posible dato de qué se midió contra cada diana más que de cómo actúa.
+
 ### Propuestas
 
 #### C.3 · Comprobar si combinar las dos predicciones mejora la selección {#dc-3 .propuesta}
@@ -116,13 +119,15 @@ Es exploratorio: los 612 no son una muestra representativa (son los compuestos c
 
 **Se propone.** PAINS no entra al entrenamiento ni a la prueba, para no sesgar contra los naturales. Se aplica a la salida: cada candidato del ranking lleva su alerta y el ranking se reporta con y sin esos compuestos. Nunca se filtra la prueba. El protocolo de tres brazos (sin filtrar, filtrado solo en entrenamiento y evaluación estratificada) puede retomarse si el ranking resulta dominado por alertas, declarándolo antes de correrlo. Una molécula que agrega no falsea un logBB, así que en la fase 1 la alerta es información; en la fase 2 sí condiciona cómo leer el ranking.
 
-#### C.5 · El entregable es una lista priorizada, y el punto de operación se entrega como curva {#dc-5 .vigente .revisada}
+#### C.5 · El entregable es el ordenador por fase (antes: una lista priorizada), y el punto de operación se entrega como curva {#dc-5 .vigente .revisada}
 
-**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada el 12 de noviembre: lo que se entrega es el ordenador, no una lista (ver abajo)
+**Estado:** vigente · decidida por el equipo el 17 de octubre de 2026 · revisada dos veces el 12 de noviembre: se entrega el orden por fase y una lista priorizada exploratoria de naturales (ver abajo)
 
-**Revisada el 12 de noviembre.** La versión de octubre decía que el entregable es una lista de candidatos priorizados. **No se entrega una lista de compuestos concretos**: la patrocinadora no nos dio candidatos, y el cuaderno 06 devuelve, por cada estructura que ella ponga, la probabilidad de cruzar la barrera, la potencia por diana y la advertencia de extrapolación, **sin combinar las dos predicciones en un solo ranking** (la combinación sigue pendiente, [C.3](#dc-3)). Lo que sí se entrega es lo que permite construir esa lista con sus propios compuestos, y **un orden por fase** (sección 6 del cuaderno: la fase 1 por la probabilidad de cruzar la barrera, la fase 2 por la potencia máxima predicha), que se muestra con compuestos de ejemplo conocidos en `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo`. El texto de octubre queda abajo porque la curva de precisión contra profundidad y las métricas de ranking siguen siendo el criterio para cuando exista el ranking combinado.
+**Primera revisión del 12 de noviembre (superada por la segunda, más abajo).** La versión de octubre decía que el entregable es una lista de candidatos priorizados. **No se entrega una lista de compuestos concretos**: la patrocinadora no nos dio candidatos, y el cuaderno 06 devuelve, por cada estructura que ella ponga, la probabilidad de cruzar la barrera, la potencia por diana y la advertencia de extrapolación, **sin combinar las dos predicciones en un solo ranking** (la combinación sigue pendiente, [C.3](#dc-3)). Lo que sí se entrega es lo que permite construir esa lista con sus propios compuestos, y **un orden por fase** (sección 6 del cuaderno: la fase 1 por la probabilidad de cruzar la barrera, la fase 2 por la potencia máxima predicha), que se muestra con seis compuestos **de la prueba reservada**, sorteados con semilla 0 y con lo medido junto a lo predicho, en `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba` (la primera versión, con seis compuestos conocidos que estaban casi todos en el entrenamiento, quedó en `…-ranking-por-fase-ejemplo` y no prueba nada del modelo). El texto de octubre queda abajo porque la curva de precisión contra profundidad y las métricas de ranking siguen siendo el criterio para cuando exista el ranking combinado.
 
-**Qué se decidió.** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
+**Segunda revisión, el mismo 12 de noviembre: sí se entrega una lista priorizada, pero exploratoria.** El objetivo del proyecto, la primera diapositiva de la presentación, es priorizar compuestos naturales, así que el equipo decidió entregarla. Corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales-nombres` (`scripts/lista_priorizada_naturales.py`, documento [lista-priorizada.md](lista-priorizada.md)): los 10 compuestos naturales (NPASS y CMAUP, filas de ajuste) con mayor potencia predicha por diana y por enfermedad, sin medición contra esa diana, sin alerta PAINS ni puntaje de semejanza a naturales menor de 0.5 (`ertl2008natural`; el corte era 0 y se subió al ver que la ciglitazona, un sintético, entraba con 0.23). **La barrera no filtra** (un compuesto que no cruza por difusión puede entrar por un transportador, y un BBB− no descarta): su probabilidad va al lado y la variante que la exige se guarda aparte. **Lo que no cambia:** el modelo de potencia no supera a la línea base en naturales (0.530 contra 0.565), combinar las dos fases sigue sin validarse ([C.3](#dc-3)), y por eso es una lista de hipótesis para probar y no un resultado; la lista repite compuestos entre dianas porque la química que pesa es casi la misma en todas (260 filas por diana, 75 compuestos distintos). **Un primer intento usó la marca `natural` de la fase 1** (coincidir con COCONUT) y devolvió fármacos sintéticos (loxapina, fenobarbital, mezlocilina); se descartó, y la corrida registrada usa NPASS y CMAUP.
+
+**Qué se decidió (versión del 17 de octubre, superada el 12 de noviembre: ver arriba).** El entregable es **una lista de candidatos priorizados**, con la marca de origen natural, la alerta PAINS de la [C.4](#dc-4) y la diana predicha. Y el punto de operación **no se fija**: se entrega la curva de precisión contra profundidad, con un corte **sugerido** en los veinte primeros compuestos, que es lo que un laboratorio puede ensayar en un semestre.
 
 **Qué pasó.** El umbral de decisión depende de qué error es más caro, y eso no lo decide la estadística: un falso activo manda al laboratorio a ensayar algo que no funciona, y un falso inactivo descarta un candidato real sin que nadie se entere. Las métricas están fijadas ([C.1](#dc-1)); el punto de operación era lo que faltaba.
 
@@ -237,6 +242,21 @@ Son 925 filas con desenlace citotóxico (`GI50`, `TGI`, `CC50`, `ID50`, `MIC`, `
 
 **Si no se resuelve:** el ranking se entrega declarando que ordena por potencia y permeabilidad, y que no distingue un compuesto selectivo de uno citotóxico. Eso cambia qué significa el entregable, así que toca la [C.3](#dc-3) y la [C.5](#dc-5).
 
+
+#### C.8 · El proyecto termina con la entrega; la continuidad es autónoma de la patrocinadora y su grupo {#dc-8 .vigente}
+
+**Estado:** vigente · decidida por el equipo el 12 de noviembre de 2026
+
+**Qué se decidió.** El proyecto termina con la entrega final. Si hay continuidad, la llevan la patrocinadora y su grupo de investigación **de manera autónoma**, y el equipo **no se compromete** a acompañar la puesta en marcha, la operación ni el mantenimiento. Para que puedan hacerlo solos se entrega el cuaderno 06 (recibe estructuras propias y devuelve probabilidad de cruzar la barrera, potencia por diana y una advertencia de extrapolación), los dos modelos guardados con su módulo de inferencia, el procedimiento para reentrenar con datos nuevos y la herramienta para medir columnas propias. Un artículo para revisión por pares es una posibilidad futura, sin compromiso.
+
+**Qué pasó.** El resumen ejecutivo, una figura de despliegue del artículo y una tabla de supervisión hablaban de implementación y operación como si el equipo las acompañara («mantenimiento y supervisión: el equipo»), y eso contradecía lo que el equipo había dicho de su alcance. Se unificó el lenguaje: las horas de puesta en marcha y de operación del resumen son tiempo del grupo de la patrocinadora, no del equipo.
+
+**Por qué.** Es una decisión del equipo sobre su propio alcance, no se apoya en una medición.
+
+**Qué la cambiaría.** Que la patrocinadora o la asesora pidan acompañamiento. Entonces se registra aquí como entrada nueva y se estima su costo, en vez de darlo por incluido.
+
+
+
 ### Supuestos
 
 | # | Supuesto | Estado | Qué se sabe | Si falla |
@@ -311,7 +331,7 @@ Lo que se lee, con sus límites:
 
 **Los andamios grandes son más raros y más pesados.** En un análisis aparte sobre el archivo de la profesora, con un compuesto por esqueleto (4,018) y el andamio de Murcko, el número de moléculas por andamio cae con su tamaño: 9.3 en los de 6 átomos pesados o menos y 1.12 en los de más de 24, donde el 92% de los andamios son solitarios; el tamaño del andamio y el peso molecular correlacionan 0.75 en Spearman, y el % BBB+ baja de 64–71% a 48% en los de más de 24 átomos. Como `scaffold_split` manda los grupos grandes a entrenamiento y deja los pequeños a la prueba, **rareza y tamaño van mezclados en la prueba**. Ese análisis es de un script sin corrida registrada y cuenta esqueletos, no las 6,306 filas ni los 1,048 grupos: no se cita hasta que se registre.
 
-**Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura reporta que así se infla el resultado entre 7 y 13 puntos.
+**Qué pasó.** Los andamios grandes tienen pureza de clase extrema: el más frecuente, de 410 compuestos, es 99.5% BBB+. Con partición aleatoria al modelo le basta reconocer el andamio, y la literatura coincide en que una partición aleatoria da una cifra demasiado optimista (`sheridan2013`); cuánto se infla lo medimos (escalera de la 1.2) y no lo citamos. La versión anterior citaba «7 a 13 puntos»: era una resta entre la exactitud de 98.7% de un trabajo con partición aleatoria (`yuan2018improved`) y el AUROC de 0.85 a 0.92 de otros con partición por andamio, es decir métricas, conjuntos y modelos distintos, así que no era una brecha medida por nadie.
 
 **Se decidió.** Bemis-Murcko, agrupando también por esqueleto de conectividad para que los estereoisómeros no se separen. Los andamios frecuentes van a entrenamiento y los raros a prueba (convención de DeepChem): 5,557 / 749 / 1,499, sin andamio ni esqueleto compartido. **Los 312 compuestos acíclicos** (cadenas sin anillos, que no tienen andamio) **van todos a entrenamiento**: no comparten estructura de anillo con nada, así que no filtran información a la prueba, pero tampoco ayudan a medir generalización estructural.
 
@@ -1358,7 +1378,7 @@ La logística queda 6–7 puntos abajo, con intervalos que no se tocan; entre el
 
 **Qué cuesta.** La pérdida censurada es más maquinaria y su calibración importa. En un modelo de árboles con `survival:aft`, SHAP atribuye sobre log-potencia, más difícil de narrar a un biólogo que «esta subestructura empujó hacia activo». La [C.2](#dc-2) sigue siendo viable, pero el relato cambia.
 
-**Por qué conviene.** El ranking final combina las dos fases ([C.3](#dc-3)). Si la componente de actividad es un número y no una clase, se puede comparar la potencia predicha contra la exposición alcanzable: un compuesto BBB− llega a menos concentración en el cerebro y necesita más potencia para servir.
+**Por qué conviene.** El ranking final combinaría las dos fases ([C.3](#dc-3), pendiente: hoy el cuaderno ordena cada fase por separado). Si la componente de actividad es un número y no una clase, se puede comparar la potencia predicha contra la exposición alcanzable: un compuesto BBB− llega a menos concentración en el cerebro y necesita más potencia para servir.
 
 #### 2.10 · El objetivo se guarda como intervalo, no como etiqueta {#d2-10 .vigente}
 
@@ -1571,7 +1591,7 @@ del propio filtro, porque `limites_en_micromolar` devuelve `0.0` y XGBoost admit
 ajusta solo con exactas —`xgb_sin_censura` saca el mejor RMSE agregado de la corrida, 0.9967, y el
 mejor Spearman de `solo_npass`, 0.2586—, porque son las métricas que se calculan sobre ese mismo
 subconjunto ([C.1](#dc-1)). La censura compra concordancia y MCC, que es donde vive el umbral, y el
-entregable es una lista priorizada con un corte ([C.5](#dc-5)).
+entregable se pensó como una lista priorizada con un corte ([C.5](#dc-5), revisada el 12 de noviembre: hoy es un orden por fase).
 
 *La ventaja en tiempo del `aft` mezcla el modelo con la representación.* Corre sobre las 227 columnas densas, mientras los ensambles pagan `AgregarHuellas` dentro de cada ajuste. En ajuste puro son 3.9 s contra 163.6 s del bosque, cuarenta y dos veces; en reloj total, 74 s contra 2,486 s, treinta y tres. La dirección es la misma por los dos caminos, pero no son la misma cuenta, y la parte que corresponde a no construir las huellas no se separó.
 
