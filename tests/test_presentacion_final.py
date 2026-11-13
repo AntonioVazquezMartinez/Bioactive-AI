@@ -5,7 +5,7 @@ La propuesta del #303 eran 13. La catorce es «Cómo se vuelve números una mol�
 ninguna parte cómo se convierte un SMILES en columnas, que es el Avance 2 completo. Se paga con minuto y
 medio recortado de otras tres del mismo bloque, así que el reparto de #303 no cambia.
 
-Las de respaldo son 6: la figura de rareza salió del hilo porque mide la ventaja sobre la línea base
+La figura de rareza salió del hilo y quedó en el respaldo porque mide la ventaja sobre la línea base
 mientras la diapositiva de la escalera habla de AUROC, y las dos cantidades juntas confunden."""
 import re
 from pathlib import Path
@@ -23,10 +23,10 @@ def _diapositivas():
     return trozos, re.split(r"^## ", respaldo, flags=re.M)[1:]
 
 
-def test_son_dieciseis_diapositivas_en_el_hilo_y_siete_de_respaldo():
+def test_son_dieciseis_diapositivas_en_el_hilo_y_ocho_de_respaldo():
     hilo, respaldo = _diapositivas()
     assert len(hilo) == 16, f"{len(hilo)} diapositivas en el hilo; son 16 (las 13 del #303 más tres: cómo se vuelve números una molécula, qué pesa en cada fase y el modelo de potencia)"
-    assert len(respaldo) == 7
+    assert len(respaldo) == 8
 
 
 def test_cada_diapositiva_del_hilo_trae_notas_con_quien_la_presenta():

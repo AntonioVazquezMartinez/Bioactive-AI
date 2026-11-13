@@ -23,7 +23,7 @@ Un desfase («stale») es una cifra, una decisión o una estructura de archivos 
 
 ## Lo que no conviene automatizar
 
-- **Una prueba por afirmación** («no hay lista de candidatos», «la continuidad es autónoma»): el costo de mantener los patrones supera el problema. Esas afirmaciones se cuidan con la decisión que las registra (C.5 y C.8 en `docs/decisiones.md`) y con una búsqueda a mano antes de cada entrega.
+- **Una prueba por afirmación** («la lista es exploratoria y no validada», «la continuidad es autónoma»): el costo de mantener los patrones supera el problema. Esas afirmaciones se cuidan con la decisión que las registra (C.5 y C.8 en `docs/decisiones.md`) y con una búsqueda a mano antes de cada entrega.
 - **Un escáner de cifras huérfanas**: el ruido de falsos positivos lo vuelve inútil.
 - **Probar el registro de decisiones contra el código**: sale caro y el riesgo es bajo.
 
