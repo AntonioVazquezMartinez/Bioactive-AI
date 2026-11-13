@@ -19,6 +19,9 @@ format:
     controls: true
     progress: true
     hash: true
+    # Lineal: las flechas recorren todas las diapositivas en orden, también las del respaldo, que van en una pila
+    # vertical. Sin esto, la flecha izquierda desde cualquier respaldo salta a las conclusiones.
+    navigation-mode: linear
     width: 1280
     height: 760
     center: true
@@ -322,6 +325,19 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 :::
 
 # Respaldo
+
+- [Las huellas ayudan en una fase y no en la otra](#/las-huellas-ayudan-en-una-fase-y-no-en-la-otra)
+- [La ventaja sobre la línea base, por tercil](#/la-ventaja-sobre-la-línea-base-por-tercil)
+- [El modelo de potencia en NPASS](#/el-modelo-de-potencia-en-npass)
+- [Cómo preparamos las columnas](#/cómo-preparamos-las-columnas-y-qué-significan-las-banderas)
+- [Qué pesa en cada fase: el detalle](#/qué-pesa-en-cada-fase-el-detalle)
+- [La diana y la química (fase 2)](#/fase-2-la-diana-y-la-química-por-separado)
+- [Una herramienta para medir columnas nuevas](#/una-herramienta-para-medir-columnas-nuevas)
+- [Cómo leer las métricas](#/cómo-leer-las-métricas)
+
+::: {.notes}
+Índice del respaldo: cada línea lleva a su diapositiva. Las flechas recorren todo el respaldo en orden y la tecla O abre el mapa de diapositivas.
+:::
 
 ## Las huellas ayudan en una fase y no en la otra {.smaller}
 

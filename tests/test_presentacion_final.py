@@ -102,3 +102,26 @@ def test_la_tabla_de_la_escalera_es_la_de_la_corrida():
             margen = 0.5 * 10 ** -len(valor.partition(".")[2]) + 1e-6
             assert abs(float(valor) - p[clave_corrida]) <= margen, (
                 f"«{etiqueta}», {clave_corrida}: la tabla dice {valor} y la corrida {p[clave_corrida]}")
+
+
+def _identificador(titulo: str) -> str:
+    """El id que pandoc le da a un título, que es el que usa reveal en la dirección (`#/id`)."""
+    titulo = re.sub(r"\{[^}]*\}", "", titulo).strip().lower()
+    titulo = re.sub(r"[^\w\s\-.]", "", titulo)
+    return "-".join(titulo.split())
+
+
+def test_cada_liga_del_indice_del_respaldo_lleva_a_una_diapositiva():
+    """El índice del respaldo enlaza por el id de cada título: renombrar una diapositiva sin tocar el índice rompe la
+    liga en silencio, y se descubre en la sala, durante las preguntas."""
+    texto = MAZO.read_text(encoding="utf-8")
+    ids = {_identificador(m.group(1)) for m in re.finditer(r"^## (.+)$", texto, flags=re.M)}
+    ligas = re.findall(r"\]\(#/([^)]+)\)", texto)
+    assert len(ligas) >= 8, "el índice del respaldo debería enlazar a las ocho diapositivas"
+    rotas = [liga for liga in ligas if liga not in ids]
+    assert not rotas, f"estas ligas no llevan a ninguna diapositiva: {rotas}"
+
+
+def test_la_navegacion_es_lineal_para_que_las_flechas_recorran_el_respaldo():
+    """Sin `navigation-mode: linear` el respaldo es una pila vertical y la flecha izquierda sale de ella a las conclusiones."""
+    assert "navigation-mode: linear" in MAZO.read_text(encoding="utf-8")
