@@ -1,6 +1,6 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son siete, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son nueve, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
@@ -22,6 +22,12 @@ Son siete, y cada una existe porque una idea no se puede explicar a tiempo con p
   modelo los vio), con la etiqueta BBB real y la mayor potencia medida junto a lo predicho. Sale de
   `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba`. El naranja marca la similitud de **esa
   fase** por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- `lista_priorizada.svg`: los tres primeros naturales de cada enfermedad de la lista priorizada, con su diana, su
+  potencia predicha y la probabilidad de cruzar la barrera. Sale de
+  `experimentos/2026-11-12-artemio-C.5-lista-priorizada-naturales`; el naranja marca un parecido menor de 0.4 a lo visto.
+- `shap_por_diana.svg`: la fase 2 separada por diana: cuánto sube o baja la potencia predicha ser esa diana, y qué
+  columnas químicas pesan en cada una (las 16 dianas con 500 pares o más). Sale de
+  `experimentos/2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas.
 - Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las

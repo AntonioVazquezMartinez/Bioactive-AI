@@ -314,7 +314,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - **Límites y qué sigue:** una sola prueba y un modelo por fase. Falta medir la potencia con **lotes propios** de naturales y combinar las dos fases en un solo orden.
 
 ::: {.notes}
-**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados (la escalera, lo que la semejanza no explica, el corte y el modelo de potencia). Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte, y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no los explicamos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base. Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
+**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados (la escalera, lo que la semejanza no explica, el corte, el modelo de potencia, lo que mide de verdad la fase 2 y qué pesa en cada fase). Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte, y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no los explicamos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base. Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
 :::
 
 # Respaldo
