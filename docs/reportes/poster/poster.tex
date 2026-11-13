@@ -142,7 +142,7 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
   \circulo{7,805}{compuestos\\(fase 1)}\hspace{0.6cm}\circulo{202,647}{mediciones\\(fase 2)}
 \end{center}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
-  \item Fase 1: archivo curado de la patrocinadora (63.5\,\% permeables). Fase 2: ChEMBL, NPASS y CMAUP, con mediciones acotadas, como «mayor que 10 µM».
+  \item Fase 1: archivo curado de la patrocinadora (63.5\,\% permeables). Fase 2: ChEMBL, NPASS y CMAUP, con mediciones acotadas (por ejemplo, mayores que 10 µM).
   \item Prueba reservada de 1,499 compuestos que ningún modelo vio; la separación es por familia química, nunca al azar.
 \end{itemize}
 
@@ -150,7 +150,7 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 \seccion{Métodos}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.5em]
   \item Descriptores de RDKit (propiedades calculadas de cada molécula) y, en la fase 2, huellas de Morgan. Once modelos comparados, de la regresión logística a los ensambles.
-  \item En la fase 2, un modelo que aprovecha también las mediciones «mayores que» o «menores que».
+  \item En la fase 2, un modelo que aprovecha también las mediciones acotadas, que solo dicen que el valor es mayor o menor que un límite.
 \end{itemize}
 
 \end{minipage}\hfill
@@ -159,14 +159,14 @@ La salida es evidencia para decidir en qué orden probar, no una decisión autom
 
 \seccion{Lo que encontramos}
 \begin{center}
-  \includegraphics[width=\linewidth,height=6.8cm,keepaspectratio]{f1_escalera.png}\\[2pt]
+  \includegraphics[width=\linewidth,height=6.2cm,keepaspectratio]{f1_escalera.png}\\[2pt]
   \pie{Figura 1. Al exigir que lo evaluado se parezca menos a lo entrenado, el acierto baja; la prueba reservada (0.793) rinde como un caso muy exigente.}
 \end{center}
 
 \vfill
 \begin{center}
-  \circulo{0.761}{fase 2: validación\\cruzada}\hspace{0.6cm}\circulo{0.720}{fase 2: prueba\\reservada}\\[2pt]
-  \pie{Figura 2. Fase 2: de dos compuestos, acierta cuál es más potente el 76\,\% de las veces (azar: 50\,\%). En los 117 pares de naturales baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana (0.565).}
+  \includegraphics[height=6.4cm,keepaspectratio]{f4_aft_izq.png}\\[2pt]
+  \pie{Figura 2. Fase 2: de dos compuestos, el modelo acierta cuál es más potente el 76\,\% de las veces en validación y el 72\,\% en la prueba reservada (azar: 50\,\%). En los 117 pares de naturales (AFT es el modelo de potencia) baja a 0.511, sin distinguirse de un modelo de peso, polaridad y diana.}
 \end{center}
 
 \vfill
