@@ -86,12 +86,10 @@ MCC
 El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
 Fase 1, permeabilidad, con el modelo final.
 
-**Y en la fase 2, potencia:** la **concordancia** (de dos pares, qué fracción ordena bien al más potente; 0.5 es azar) es **0.72** en todo el conjunto y **0.53** en los productos naturales.
-
 **¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
 
 ::: {.notes}
-**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo de la fase 1 es una máquina de vectores de soporte, `svm_rbf`. En la fase 2 el contraste es otro: no es validación contra prueba, sino el conjunto completo (0.720 en la prueba) contra los 117 pares de naturales (0.530).
+**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo es una máquina de vectores de soporte, `svm_rbf`.
 :::
 
 ## Los datos {.smaller}
@@ -131,7 +129,7 @@ Fase 1, permeabilidad, con el modelo final.
 ![](docs/reportes/presentacion/figuras/anatomia.svg){fig-alt="La morfina, su andamio de Bemis-Murcko y su esqueleto de conectividad"}
 
 - **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. Partir al azar da cifras demasiado optimistas (Sheridan, 2013): con el `svm_rbf`, el MCC baja de 0.752 con pliegues al azar a 0.702 al agrupar.
-- **Qué medimos, en palabras simples.** **MCC:** acierto en las dos clases a la vez (0 es azar, 1 perfecto). **AUROC:** la probabilidad de poner a un permeable por encima de uno que no lo es (0.5 es azar). **Concordancia** (fase 2): lo mismo para la potencia, entre dos pares (0.5 es azar).
+- **Qué medimos. Fase 1**, clasificar: MCC, AUROC (si el orden es bueno) y AUPRC. **Fase 2**, predecir potencia: concordancia (si ordena bien los pares).
 - Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
@@ -143,14 +141,13 @@ Fase 1, permeabilidad, con el modelo final.
 - Probamos **once modelos**, de regresión logística a ensambles.
 - Entre ellos hay solo **4.2 puntos** de MCC.
 - El mejor iguala el punto de partida y no lo supera: MCC 0.7017 contra 0.70. El **lift es cero**.
-- **En la fase 2 pasa lo mismo:** entre las familias que compiten en serio la concordancia va de **0.750 a 0.765**; por procedencia baja de 0.761 a **0.632** en los pares que solo tiene NPASS.
 
 ::: {.callout-tip title="Pista 1"}
 No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 0.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista. En la fase 2, nueve regresores: boosting 0.750, bosque 0.765, aft 0.761; la procedencia pesa mucho más que la familia (corrida 2.13, comparativa de regresión y ensambles).
+**Antonio · 0.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
