@@ -126,7 +126,12 @@ PDFS = ["docs/reportes/avance-0/Avance0.7.pdf",
         # la entrega final: el PDF se versiona junto a su .tex y el sitio lo publica tal cual
         "docs/reportes/articulo/articulo.pdf",
         "docs/reportes/poster/poster.pdf",
-        "docs/reportes/presentacion/presentacion-final.pdf"]
+        "docs/reportes/presentacion/presentacion-final.pdf",
+        # El artículo científico no es un entregable del curso, pero su PDF se versiona —el
+        # README de su carpeta dice por qué— y la página de entregables lo ofrece para
+        # descargar, así que hay que copiarlo o ese enlace queda roto. Que el PDF no se quede
+        # atrás de su `.tex` lo vigila `tests/test_pdf_al_dia.py`.
+        "docs/reportes/articulo-cientifico/articulo-cientifico.pdf"]
 
 
 def claves_bib() -> set[str]:
