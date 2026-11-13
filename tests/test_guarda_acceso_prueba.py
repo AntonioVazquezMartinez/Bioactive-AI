@@ -30,6 +30,7 @@ PERMITIDOS = {
     "experimento_raros_al_ajuste.py",          # pasa raros de la prueba al ajuste y devuelve comunes a la prueba, con etiquetas (1.11)
     "prevalencia_raros_al_ajuste.py",          # prevalencia de BBB+ en el entrenamiento de cada brazo de la 1.11, sin entrenar (1.11)
     "experimento_umbral_en_validacion.py",     # MCC de la prueba a un umbral congelado en validación, con etiquetas (#191)
+    "ranking_por_fase_ejemplo.py",             # elige seis compuestos de la prueba y muestra su valor medido, sin evaluar ningún modelo (C.5)
 }
 PIDE_PRUEBA = re.compile(r"incluir_prueba\s*=\s*True")
 LLAMA_GUARDA = re.compile(r"\btomar_prueba\s*\(")

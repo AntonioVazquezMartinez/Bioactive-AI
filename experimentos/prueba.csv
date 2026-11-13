@@ -13,3 +13,5 @@ fecha,autor,commit,filas,motivo
 2026-11-07,artemio,bf18719,1499,"1.11: pasar los raros de la prueba al ajuste y devolver comunes a la prueba; la prueba se reparte, no se evalúa con el modelo final"
 2026-11-08,artemio,4a1a2c6,1499,"1.11: prevalencia de BBB+ en el entrenamiento de cada brazo (no entrena nada), para leer el efecto del MCC como umbral o como aprendizaje"
 2026-11-08,ingrid,78fb31e,1499,"#191: MCC de la prueba a un umbral elegido con validación interna agrupada, congelado antes de leerla; el corte fijo de 0.5 es el control"
+2026-11-12,artemio,1065439,1499,C.5: elegir seis compuestos de ejemplo para el cuaderno 06 y mostrar su etiqueta BBB; no evalúa ni cambia ningún modelo
+2026-11-12,artemio,1065439,13973,C.5: mostrar la mayor potencia medida de esos seis compuestos; no evalúa ni cambia ningún modelo

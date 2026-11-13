@@ -279,16 +279,17 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 **Art · 0.75 min.** Dos métodos independientes. SHAP mira dentro del modelo y dice cuánto empuja cada columna cada predicción, y en qué dirección. La permutación solo mira la salida: baraja una columna, para que deje de tener relación con la respuesta, y mide cuánto empeora el modelo; no da dirección, y subestima a las columnas redundantes, como TPSA. "Confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación). En la fase 2 la diana entra al modelo como 26 columnas 0 o 1, y en un ranking global aparecen mezcladas con la química; por eso en el respaldo las separamos: cuánto pone la diana (15% de la atribución) y qué química pesa dentro de cada una. El detalle está en el respaldo.
 :::
 
-## El cuaderno
+## El cuaderno 06: usar los modelos con tus compuestos {.smaller}
 
-![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de compuestos de ejemplo: probabilidad de cruzar la barrera y potencia máxima predicha" width="90%"}
+![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de seis compuestos de la prueba reservada: probabilidad de cruzar la barrera junto a la etiqueta real, y potencia máxima predicha junto a la medida" width="85%"}
 
-- Se ejecuta con **SMILES propios**: no hay servicio.
-- Entrega la probabilidad, la potencia por diana y una **advertencia de extrapolación**, y ordena **cada fase por separado**.
-- **No combina** las fases en un ranking: queda como trabajo futuro.
+- **Qué es:** `notebooks/06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio.
+- **Qué se ve:** su salida para seis compuestos de la **prueba reservada**, que ningún modelo vio, sorteados sin escoger y **ordenados por fase**. A la izquierda, la probabilidad de cruzar la barrera junto a la etiqueta real; a la derecha, la potencia predicha (barra) y la medida (rombo).
+- **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**, y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
+- **No combina** las fases en un solo ranking (queda como trabajo futuro); seis ejemplos para ver el formato, **ni lista de candidatos ni métrica**.
 
 ::: {.notes}
-**Art · 0.5 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 0.5 min.** Es el cuaderno que usa la patrocinadora. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
@@ -297,23 +298,30 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 - Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
 - Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
-- Es Python con una guía de cómo agrupar y medir, no una interfaz.
+- **Dónde está:** el módulo `src/models/representaciones.py` del repositorio, con su guía en el sitio (*Entrega final*, «Medir una representación nueva»). Es Python, no una interfaz.
 
 ::: {.notes}
-**Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
+**Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse. Se usa con tres funciones: `con_tabla` para traer las columnas propias, `columnas_al_azar` para el control de ruido y `comparar` para medir con la misma validación; la guía dice cómo agrupar y qué errores evitar.
 :::
 
 ## Qué concluimos {.smaller}
 
-![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
+::: {.columns .align-center}
+::: {.column width="50%"}
+![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Fase 1: orden de magnitud de los factores que mueven el desempeño"}
+:::
+::: {.column width="50%"}
+![](docs/reportes/presentacion/figuras/fase2_origen.svg){fig-alt="Fase 2: concordancia del modelo y de una línea base por procedencia de los datos"}
+:::
+:::
 
-- **Fase 1, permeabilidad:** de 0.70 a 0.34 de MCC; unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41), y el orden cayó **12.6 puntos** de AUROC, **sin explicar**.
-- **Fase 2, potencia:** acierta cuál de dos pares es más potente en el **72%**, pero lo domina ChEMBL; en los **117 pares de productos naturales** baja a **0.530**, bajo la línea base de peso y superficie polar (0.565). Para ellos, **no está demostrado**.
+- **Fase 1, permeabilidad:** el MCC cae de 0.70 a 0.34. Unos **0.07 son el corte**, que se ajusta (0.34 a 0.41). El resto es que el **orden empeoró**: el AUROC, que mide qué tan bien se ordenan los compuestos sin fijar un corte, baja de 0.919 a 0.793, **12.6 puntos**: unos 3 son lo que la semejanza de la prueba predecía (0.89); los otros 10 **no los explicamos**.
+- **Fase 2, potencia:** el modelo acierta el orden en el 72%, pero lo domina ChEMBL. En los **117 pares de productos naturales** pierde contra una línea base sencilla: **no está demostrado**.
 - **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
 - **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado. En la fase 2, el 72% es el agregado y lo domina ChEMBL; lo que le importa a la patrocinadora son los productos naturales, y ahí el modelo queda por debajo de una línea base sencilla, con solo 117 pares para juzgarlo.
+**Art · 1.5 min.** Lo nuevo es la figura de la derecha. A la izquierda, lo que más mueve el MCC de la fase 1, como vimos: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia: con ChEMBL el modelo supera a una línea base sencilla, y en los 117 pares de productos naturales no. La cifra citable es la de la corrida registrada, 0.530; la figura muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida (la línea base da 0.565). El 72% de arriba es el agregado. Si preguntan por los 12.6 puntos del AUROC, se repasaron en «Pero no lo explica todo».
 :::
 
 # Respaldo

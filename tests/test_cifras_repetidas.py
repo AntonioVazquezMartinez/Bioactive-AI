@@ -27,7 +27,7 @@ N = r"(\d\.\d)"
 # alguien estaba leyendo; ahora añadir una lectura al CSV sin actualizar las copias falla aquí.
 _LECTURAS = len(list(csv.DictReader((RAIZ / "experimentos" / "prueba.csv").open(encoding="utf-8"))))
 _EN_PALABRAS = {9: "nueve", 10: "diez", 11: "once", 12: "doce", 13: "trece", 14: "catorce",
-                15: "quince"}
+                15: "quince", 16: "dieciséis"}
 
 # (nombre, patrón con un grupo, valor canónico). Añadir una cifra vigilada es una línea.
 CIFRAS = [

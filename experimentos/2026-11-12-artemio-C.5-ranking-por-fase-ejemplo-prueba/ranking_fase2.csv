@@ -1,0 +1,7 @@
+lugar,nombre,pActividad_max,mejor_diana,pActividad_medida,diana_medida,similitud_fase2,aviso_extrapolacion
+1,droperidol,7.267904281616211,TNF,8.86,DRD2,0.5081967,False
+2,pizotifen,7.203519821166992,TSPO,8.62,DRD2,0.525,False
+3,amiodarone,7.1046905517578125,GRIN1,4.94,DRD2,0.44444445,True
+4,leflunomide,6.481604099273682,IL6,4.68,MAOA,0.51111114,True
+5,elopiprazole,6.406720161437988,MAPT,9.38,DRD2,0.44117647,True
+6,gluconolactone,4.7092132568359375,IL6,4.58,NFE2L2,0.34375,True
