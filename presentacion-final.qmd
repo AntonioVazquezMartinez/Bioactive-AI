@@ -83,13 +83,14 @@ MCC
 :::
 :::
 
-El **MCC** resume aciertos y errores de las dos clases: 0 es azar, 1 es perfecto.
-Fase 1, permeabilidad, con el modelo final.
+Fase 1, permeabilidad, con el modelo final. El **MCC** resume aciertos y errores de las dos clases, y 0 es azar.
 
-**¿Por qué se cae a la mitad?** El resto de la charla busca la respuesta.
+**La fase 2 se cae de otro modo.** La concordancia apenas baja, de 0.76 a 0.72, pero en los **117 pares** que solo tiene la base de productos naturales llega a **0.53**, bajo una línea base de peso y superficie polar (0.565).
+
+**¿Por qué se cae a la mitad una, y la otra solo donde importa?** El resto de la charla busca la respuesta.
 
 ::: {.notes}
-**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo es una máquina de vectores de soporte, `svm_rbf`.
+**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. El modelo de la fase 1 es una máquina de vectores de soporte, `svm_rbf`, y el de la fase 2 un modelo de supervivencia acelerada, `aft`. El estrato de la fase 2 es `solo_npass`, los pares cuya evidencia solo está en NPASS, y su 0.53 viene de 0.63 en validación: con 117 pares no refuta ni confirma. Que el agregado apenas baje es porque lo domina ChEMBL, con 13,598 de los 13,944 pares de la prueba. Las cuatro cifras de la fase 2 vuelven en la 11, que es donde Pame las desarrolla; aquí solo se plantan.
 :::
 
 ## Los datos {.smaller}
@@ -129,25 +130,26 @@ Fase 1, permeabilidad, con el modelo final.
 ![](docs/reportes/presentacion/figuras/anatomia.svg){fig-alt="La morfina, su andamio de Bemis-Murcko y su esqueleto de conectividad"}
 
 - **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. Partir al azar da cifras demasiado optimistas (Sheridan, 2013): con el `svm_rbf`, el MCC baja de 0.752 con pliegues al azar a 0.702 al agrupar.
-- **Qué medimos. Fase 1**, clasificar: MCC, AUROC (si el orden es bueno) y AUPRC. **Fase 2**, predecir potencia: concordancia (si ordena bien los pares).
+- **Qué medimos, y qué dice cada medida. Fase 1**, clasificar: el **MCC** resume en un número los aciertos y los errores de las dos clases, y el **AUROC** dice si pone a los permeables por encima sin fijar ningún corte. También el AUPRC. **Fase 2**, predecir potencia: la **concordancia**, que mide si ordena bien los pares, donde el azar da 0.5.
 - Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
-**Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Que partir al azar da cifras demasiado optimistas lo dice la literatura (Sheridan, 2013); la cifra es nuestra: en la escalera de la diapositiva 7, el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
+**Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Que partir al azar da cifras demasiado optimistas lo dice la literatura (Sheridan, 2013); la cifra es nuestra: en la escalera de la diapositiva 7, el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas. Las escalas, si preguntan: el MCC va de −1 a 1 y el azar es 0; el AUROC y la concordancia van de 0 a 1 y el azar es 0.5; el AUPRC va de 0 a 1 pero su piso es la prevalencia de la clase minoritaria, 0.35 en las filas de ajuste de la fase 1. Usamos MCC y no porcentaje de aciertos porque las clases están desbalanceadas: decir «permeable» siempre acierta el 63.5% en el archivo completo y el 57.3% en la prueba reservada.
 :::
 
 ## El modelo no es la palanca
 
-- Probamos **once modelos**, de regresión logística a ensambles.
-- Entre ellos hay solo **4.2 puntos** de MCC.
-- El mejor iguala el punto de partida y no lo supera: MCC 0.7017 contra 0.70. El **lift es cero**.
+- **Permeabilidad: probamos once modelos y todos valen casi lo mismo.** Del mejor al peor hay **4.2 puntos** de MCC, y el mejor **iguala** al modelo sencillo de referencia (0.70) sin superarlo.
+- **Potencia: pasa igual.** De los nueve modelos, los siete que compiten de verdad caben en **0.015** de concordancia. Pedirle química más nueva cuesta **siete veces más**.
 
 ::: {.callout-tip title="Pista 1"}
 No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 0.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista.
+**Antonio · 0.5 min.** **No decir «por descarte» de la fase 2:** ahí el `aft` sí gana el criterio declarado antes de correr, la concordancia en `solo_npass`, y le gana a los otros ocho en todas las evaluaciones; lo que no gana es el agregado, y eso lo cuenta Pame. Es un resultado negativo honesto en las dos fases: elegir el modelo no fue la palanca. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista.
+
+*Si preguntan.* El modelo sencillo de referencia es el baseline del Avance 3, con 0.7019 de MCC contra el 0.7017 del modelo final, así que no le gana nada. En la prueba reservada ese modelo da MCC 0.339 y AUROC 0.793. El 0.015 de la fase 2 es el rango entre el `bosque` (0.765) y el `boosting` (0.750) de los siete competitivos; **es diminuto pero no es ruido**, porque pareado el `bosque` gana al `boosting` en 15 de 15 pliegues (+0.0148, 5.4 desviaciones pareadas), así que lo que se dice es que es pequeño al lado de lo que cuesta la química nueva (0.112 en la escalera de la fase 2, unas siete veces más) y no que las diferencias sean indistinguibles. Las desviaciones de 0.005 a 0.006 por modelo no sirven para eso, porque las semillas comparten filas.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
