@@ -635,7 +635,10 @@ def fig_fase2_desempeno() -> dict:
         for i, (nombre, v, pie, color, rayado, ic) in enumerate(grupo):
             x = inicio + i
             xs.append(x)
-            ax.bar(x, v - 0.45, bottom=0.45, color=color, width=0.62,
+            # desde la línea del azar: una barra de concordancia que arranca más abajo exagera la
+            # distancia al azar (0.530 se vería tres veces y media más baja que 0.720, cuando su exceso
+            # sobre el azar es 0.03 contra 0.22)
+            ax.bar(x, v - 0.5, bottom=0.5, color=color, width=0.62,
                    hatch="///" if rayado else None, edgecolor="white", linewidth=0)
             if ic:
                 ax.errorbar(x, v, yerr=[[v - ic[0]], [ic[1] - v]], fmt="none", ecolor="#333333", capsize=4, lw=1.3)
@@ -643,17 +646,18 @@ def fig_fase2_desempeno() -> dict:
                     color=color if color != GRIS_CLARO else GRIS)
             etiquetas.append(f"{nombre}\n{pie}")
 
-    ax.axhline(0.5, color="#333333", lw=1, ls=(0, (4, 3)))
-    ax.text(-0.62, 0.503, "azar", fontsize=9, color="#333333", ha="left", va="bottom")
+    ax.axhline(0.5, color="#333333", lw=1.4)
+    ax.text(-0.62, 0.505, "azar", fontsize=9, color="#333333", ha="left", va="bottom")
     ax.axvline(2.4, color=GRIS_CLARO, lw=1.2)
     ax.text(1.0, 0.845, "Todos los pares", ha="center", fontsize=11, fontweight="bold", color=GRIS)
-    ax.text(4.8, 0.845, "Solo productos naturales", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.857, "Solo pares que solo aporta NPASS", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.828, "la prueba externa no trae línea base", ha="center", fontsize=9, color=GRIS)
     ax.set_xticks(xs, etiquetas, fontsize=8.6)
-    ax.set_ylim(0.45, 0.87)
+    ax.set_ylim(0.5, 0.87)
     ax.set_xlim(-0.65, 6.15)
     ax.set_ylabel("concordancia", fontsize=10)
     limpiar(ax)
-    ax.set_title("El agregado se sostiene fuera de casa; en productos naturales no gana a dos columnas",
+    ax.set_title("El agregado se sostiene fuera de casa; en la prueba reservada de naturales no gana a dos columnas",
                  fontsize=12, fontweight="bold", color=AZUL, loc="left", pad=22)
     fig.text(0.5, -0.13, f"La prueba externa (rayada) no es comparable con la reservada: se separó por compuesto y no por "
              f"andamio, y el {cont['andamio_fraccion_pares'] * 100:.1f}% de sus pares tiene un andamio que el modelo ya vio, "
