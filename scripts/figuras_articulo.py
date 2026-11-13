@@ -109,8 +109,8 @@ def fig_palancas() -> None:
     azar = s[[k for k in s.index if k.startswith("1 ")][0]]
     estricta = s[[k for k in s.index if "≥ 0.4" in k][0]]
     filas = [  # (etiqueta, puntos de MCC, dato de qué corrida)
-        ("añadir ensambles al mejor modelo individual", 0.9, GRIS),
-        ("criterio de partición, con el svm_rbf entregado", 1.9, GRIS),
+        ("sumar ensambles al mejor modelo", 0.9, GRIS),
+        ("cómo se agrupan las moléculas parecidas\nal separar entrenamiento y validación", 1.9, GRIS),
         ("elegir entre once modelos", 4.2, GRIS),
         ("cuánta semejanza se permite entre\nentrenamiento y validación", round(100 * (round(azar, 3) - round(estricta, 3)), 1), AZUL),
     ]
