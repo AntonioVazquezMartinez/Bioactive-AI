@@ -283,10 +283,10 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de seis compuestos de la prueba reservada: probabilidad de cruzar la barrera junto a la etiqueta real, y potencia máxima predicha junto a la medida" width="85%"}
 
-- **Qué es:** el cuaderno `06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio. **Dónde:** [en el sitio](https://antoniovazquezmartinez.github.io/Bioactive-AI/contenido/notebooks/06_Uso_de_los_modelos.html), menú *Entrega final*.
+- **Qué es:** el cuaderno `06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio. **Dónde:** [en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html), menú *Entrega final*.
 - **Qué se ve:** su salida para seis compuestos de la **prueba reservada**, que ningún modelo vio, sorteados sin escoger y **ordenados por fase**. A la izquierda, la probabilidad de cruzar la barrera junto a la etiqueta real; a la derecha, la potencia predicha (barra) y la medida (rombo).
 - **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**, y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
-- **No combina** las fases en un solo ranking (queda como trabajo futuro); seis ejemplos para ver el formato, **ni lista de candidatos ni métrica**.
+- **No combina** las fases en un solo ranking (queda como trabajo futuro); son seis ejemplos para ver el formato, **no una métrica**.
 
 ::: {.notes}
 **Art · 0.5 min.** Es lo que entregamos para que la patrocinadora lo use: un cuaderno, con la liga en pantalla. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
@@ -296,7 +296,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
 
-- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa [en el sitio](https://antoniovazquezmartinez.github.io/Bioactive-AI/contenido/lista-priorizada.html) y en CSV.
+- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa [en el sitio](contenido/lista-priorizada.html) y en CSV.
 - **Cómo leerla:** es **exploratoria**. El modelo de potencia **no supera a una línea base** en naturales (0.530 contra 0.565): sirve para decidir qué probar primero, no como resultado.
 - **Se repite:** 84 compuestos distintos en 260 lugares, porque la química que pesa es casi la misma en todas las dianas.
 
@@ -306,13 +306,13 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ## Qué concluimos {.smaller}
 
-- **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana. La confianza en esa estimación depende de **qué tan nueva es la molécula**, no del modelo.
+- **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana, pero **la mitad del desempeño se va cuando la química es nueva** (MCC de 0.70 a 0.34, y **10 de los 12.6 puntos de AUROC sin explicar**). La confianza depende de **qué tan nueva es la molécula**, no del modelo.
 - **Qué no está demostrado:** en **productos naturales** el orden de potencia no supera a una línea base sencilla (0.530 contra 0.565). Es evidencia para priorizar, no una decisión.
 - **Qué entregamos:** el cuaderno, una **lista priorizada** (hipótesis para el laboratorio) y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora.
-- **Qué sigue:** medir la potencia con **lotes propios** de naturales y combinar las dos fases en un solo orden.
+- **Límites y qué sigue:** una sola prueba y un modelo por fase. Falta medir la potencia con **lotes propios** de naturales y combinar las dos fases en un solo orden.
 
 ::: {.notes}
-**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en las diapositivas 8 a 12. Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no sabemos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base (la figura de respaldo muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida). Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
+**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados (la escalera, «no lo explica», el corte y el modelo de potencia). Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte, y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no los explicamos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base. Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
 :::
 
 # Respaldo
@@ -338,7 +338,7 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ![](docs/reportes/articulo/figuras/f4_aft.svg){fig-alt="Concordancia solo NPASS y ventaja en MCC del AFT sobre el bosque" width="55%"}
 
-- 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación.
+- 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación (la barra de la prueba es el 0.511 del reajuste).
 - Con 117 pares no hay potencia: **ni refuta ni confirma**.
 
 ## Cómo preparamos las columnas y qué significan las banderas {.smaller}
@@ -418,10 +418,10 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 |:--|:--|--:|
 | **MCC** | acierto en las dos clases a la vez; exige un corte (aquí 0.5) | 0 |
 | **AUROC** | la probabilidad de poner a un permeable por encima de uno que no lo es, sin fijar un corte | 0.5 |
-| **AUPRC** | qué tan limpia es la lista al ir recuperando la clase minoritaria; se lee contra su proporción | 0.35 |
+| **AUPRC** | qué tan limpia es la lista al ir recuperando la clase minoritaria; se lee contra su proporción | la proporción de la minoritaria (0.35 en el ajuste de la fase 1) |
 | **Concordancia** (fase 2) | de dos pares con potencias distintas, qué fracción ordena bien al más potente | 0.5 |
 | **Enriquecimiento** | cuántas veces más activos hay en el 1% mejor ordenado que en el total | 1 |
 
 ::: {.notes}
-**Respaldo · Antonio.** Para cuando alguien oiga una métrica y no la ubique. El AUROC es el mismo con cualquier corte, por eso cae menos que el MCC; la concordancia es el AUROC de la fase 2, donde la respuesta es una potencia con mediciones censuradas. El enriquecimiento al 1% de la fase 2 está en el techo porque la tasa base de activos es 71.4%, así que ahí discrimina poco (ver «Qué mide de verdad»).
+**Respaldo · Antonio.** Para cuando alguien oiga una métrica y no la ubique. El AUROC es el mismo con cualquier corte, por eso cae menos que el MCC; la concordancia es el AUROC de la fase 2, donde la respuesta es una potencia con mediciones censuradas. El enriquecimiento está explicado en «Qué mide de verdad · fase 2».
 :::
