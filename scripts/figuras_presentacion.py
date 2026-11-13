@@ -411,7 +411,7 @@ NOMBRES = {
 }
 
 
-def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6) -> list:
+def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str, n: int = 6, simple: bool = False) -> list:
     """Gráfico de puntos de SHAP: una fila por columna, un punto por compuesto, color = valor de la columna."""
     import numpy as np
     from matplotlib.colors import LinearSegmentedColormap
@@ -442,15 +442,18 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
         nombre, codigo = NOMBRES.get(col, (col, ""))
         ax.text(-0.02, y - 0.1, nombre, transform=ax.get_yaxis_transform(), ha="right", va="center",
                 fontsize=11, color="#111111", fontweight="bold")
-        ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
-                fontsize=8.6, color=GRIS)
+        if not simple:
+            ax.text(-0.02, y + 0.17, codigo, transform=ax.get_yaxis_transform(), ha="right", va="center",
+                    fontsize=8.6, color=GRIS)
         ok = col in confirmadas
-        ax.text(1.02, y, "confirmada por\npermutación" if ok else "solo SHAP", transform=ax.get_yaxis_transform(),
+        si, no = ("confirmada por un\nsegundo método", "un solo método") if simple else ("confirmada por\npermutación", "solo SHAP")
+        ax.text(1.02, y, si if ok else no, transform=ax.get_yaxis_transform(),
                 ha="left", va="center", fontsize=8.8, color=AZUL if ok else "#a0a0a0", linespacing=1.1)
     return orden
 
 
-def fig_importancias(salida: Path | None = None, nombre: str = "importancias", sin_dianas: bool = False) -> dict:
+def fig_importancias(salida: Path | None = None, nombre: str = "importancias", sin_dianas: bool = False,
+                     simple: bool = False) -> dict:
     """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma.
 
     Por defecto escribe `importancias` en la carpeta del deck; el artículo la llama con su carpeta y otro nombre.
@@ -460,6 +463,9 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias", s
     la que la diapositiva afirma. No cambia ningún valor de SHAP ni el orden de las columnas químicas, solo oculta
     las filas de la diana, que se ven aparte en `shap_por_diana`. Los artículos conservan la figura completa, que sí
     trae el texto que la explica.
+
+    `simple` es para quien no conoce el proyecto: sin los códigos de las columnas y con «segundo método» en lugar de
+    «permutación». Lo usa el deck.
     """
     salida = salida or SALIDA
     from matplotlib.cm import ScalarMappable
@@ -477,9 +483,9 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias", s
 
     fig, ejes = plt.subplots(1, 2, figsize=(11.8, 4.9), gridspec_kw={"wspace": 1.55})
     o1 = _puntos(ejes[0], d1, conf1, "Fase 1 · permeabilidad",
-                 "efecto en la probabilidad de cruzar la barrera")
+                 "efecto en la probabilidad de cruzar la barrera", simple=simple)
     o2 = _puntos(ejes[1], d2, conf2, "Fase 2 · potencia",
-                 "efecto en la potencia predicha (pActividad)")
+                 "efecto en la potencia predicha" if simple else "efecto en la potencia predicha (pActividad)", simple=simple)
     for ax in ejes:   # guía de lectura dentro de la figura, bajo el eje
         x0, x1 = ax.get_xlim()
         ax.text(0, 1.015, "← baja la predicción", transform=ax.get_xaxis_transform(), ha="right", va="bottom",
@@ -490,12 +496,18 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias", s
     barra = fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=mapa), ax=ejes, orientation="horizontal",
                          fraction=0.03, pad=0.17, aspect=45, shrink=0.28)
     barra.set_ticks([0, 1])
-    barra.set_ticklabels(["valor bajo de la columna", "valor alto"], fontsize=9.5)
+    barra.set_ticklabels(["valor bajo", "valor alto"] if simple else ["valor bajo de la columna", "valor alto"], fontsize=9.5)
     barra.outline.set_visible(False)
-    fig.text(0.5, -0.03, "Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
-             "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
-             "métodos van primero." + (" En la fase 2 solo se muestra la química: la diana pone aparte el 15% de la atribución."
-                                       if sin_dianas else ""), fontsize=9.6, color=GRIS, ha="center")
+    if simple:
+        pie = ("Cada punto es un compuesto (fase 1) o un par compuesto-diana (fase 2). Su posición dice cuánto empuja esa característica la "
+               "predicción; su color, qué valor tiene.\nVan primero las que confirman dos métodos distintos. En la fase 2 solo se muestra "
+               "la química: la diana pone aparte el 15% de lo que pesa.")
+    else:
+        pie = ("Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
+               "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
+               "métodos van primero." + (" En la fase 2 solo se muestra la química: la diana pone aparte el 15% de la atribución."
+                                         if sin_dianas else ""))
+    fig.text(0.5, -0.03, pie, fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
         fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
@@ -532,9 +544,9 @@ def fig_ranking() -> dict:
         for lado in ("left", "right", "top", "bottom"):
             ax.spines[lado].set_visible(False)
         ax.set_title(titulo, fontsize=11, fontweight="bold", color=AZUL, loc="left")
-    fig.text(0.01, -0.05, "Seis compuestos de la prueba reservada, que ninguno de los modelos vio, sorteados con semilla 0; no son candidatos ni una "
-             "métrica. Rombo: la mayor potencia medida.\nEn naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase. "
-             "Cada fase se ordena por separado, sin combinarlas.", fontsize=8.8, color=GRIS)
+    fig.text(0.01, -0.05, "Seis compuestos que los modelos no habían visto, elegidos al azar entre los que tienen nombre y potencia medida. "
+             "Son un ejemplo del formato, no candidatos ni una medida de desempeño.\nRombo: la mayor potencia medida. En naranja, "
+             "se parece poco a lo que el modelo conoce. Cada fase se ordena por separado.", fontsize=8.8, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(SALIDA / f"ranking.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
@@ -560,6 +572,7 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
         for _, r in g.iterrows():
             nom = str(r["nombre_corto"])
             nom = "carbamato de furoindol" if nom.startswith("[(3As") else nom
+            nom = "sin nombre (" + nom.split("NPC")[-1].join(["NPC", ""]) + ")" if nom.startswith("NPASS:NPC") else nom
             ax.barh(y, r["pActividad_predicha"], color=NARANJA if r["aviso_extrapolacion"] else AZUL, height=0.72)
             ax.text(r["pActividad_predicha"] + 0.08, y,
                     f"{r['diana']}  {r['pActividad_predicha']:.1f}  ·  cruza la barrera {r['p_bbb_mas']:.2f}", va="center",
@@ -575,9 +588,9 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
     for lado in ("left", "right", "top", "bottom"):
         ax.spines[lado].set_visible(False)
     ax.tick_params(length=0)
-    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (pActividad) sin medición contra esa diana, con barrera "
-             "probable y sin alerta PAINS. En naranja, parecido menor de 0.4 a lo visto (extrapola).\nExploratoria: el modelo de potencia no "
-             "supera a una línea base en productos naturales. Sale de la corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales`.",
+    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (el número junto a la diana; más alto, más potente) en una diana donde ese compuesto no se ha medido, con "
+             "probabilidad razonable de cruzar la barrera\ny sin estructuras que suelen dar falsos positivos. En naranja, se parece poco a lo "
+             "que el modelo conoce. Es una lista exploratoria: en productos naturales el modelo no supera a un método sencillo.",
              fontsize=8.6, color=GRIS)
     for ext in ("svg", "png"):
         fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
@@ -747,7 +760,7 @@ if __name__ == "__main__":
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
     print("medir:", fig_medir())
-    print("importancias:", fig_importancias(sin_dianas=True))
+    print("importancias:", fig_importancias(sin_dianas=True, simple=True))
     print("ranking:", fig_ranking())
     print("lista:", fig_lista())
 
