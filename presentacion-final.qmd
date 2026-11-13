@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 13.5 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -87,7 +87,7 @@ El azar vale 0 en el MCC y 0.5 en la concordancia; acertar siempre vale 1 en las
 **Las dos fases se caen, y no del mismo modo:** una de golpe y la otra solo donde importa. El resto de la charla busca por qué.
 
 ::: {.notes}
-**Antonio · 0.75 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. Los modelos son una máquina de vectores de soporte (`svm_rbf`) en la fase 1 y un modelo de supervivencia acelerada (`aft`) en la fase 2. El estrato de la fase 2 es `solo_npass`, los pares cuya evidencia solo está en NPASS, que es la base de productos naturales: su 0.53 viene de 0.63 en validación y con 117 pares no refuta ni confirma. Es el hallazgo que más le importa a la patrocinadora y lo cobra Art en las conclusiones. Que la concordancia agregada apenas baje es porque la domina ChEMBL, que aporta 13,598 de los 13,944 pares de la prueba.
+**Antonio · 0.5 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. Los modelos son una máquina de vectores de soporte (`svm_rbf`) en la fase 1 y un modelo de supervivencia acelerada (`aft`) en la fase 2. El estrato de la fase 2 es `solo_npass`, los pares cuya evidencia solo está en NPASS, que es la base de productos naturales: su 0.53 viene de 0.63 en validación y con 117 pares no refuta ni confirma. Es el hallazgo que más le importa a la patrocinadora y lo cobra Art en las conclusiones. Que la concordancia agregada apenas baje es porque la domina ChEMBL, que aporta 13,598 de los 13,944 pares de la prueba.
 :::
 
 ## Los datos {.smaller}
