@@ -5,14 +5,21 @@
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
 title: "Bioactive"
 subtitle: "Cuánto confiar en una predicción depende de la molécula, no del modelo"
-author: "Equipo 7 · Ingrid Pamela Ruiz Puga · Artemio Santiago Padilla Robles · José Antonio Vázquez Martínez"
-institute: "Maestría en Inteligencia Artificial Aplicada · TC5035.10 · Tecnológico de Monterrey"
+author:
+  - "Ingrid Pamela Ruiz Puga"
+  - "Artemio Santiago Padilla Robles"
+  - "José Antonio Vázquez Martínez"
+institute:
+  - "Asesora: Dra. Grettel Barceló Alonso"
+  - "Patrocinadora: Dra. Mariana Martínez Ávila"
 date: "2026-11-13"
 date-format: "D [de] MMMM [de] YYYY"
 lang: es
 format:
   revealjs:
-    theme: [default, estilos-slides.scss]
+    theme: [default, estilos-mna.scss]
+    template-partials:
+      - recursos/mna/title-slide.html
     slide-number: c/t
     show-slide-number: all
     transition: fade
@@ -24,7 +31,8 @@ format:
     navigation-mode: linear
     width: 1280
     height: 760
-    center: true
+    center: false
+    footer: "Bioactive · Equipo 7 · MNA"
 ---
 
 ## Qué buscamos
