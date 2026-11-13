@@ -87,6 +87,26 @@ CIFRAS = [
      r"([\d,]+) candidatos (?:con barrera probable|de 1,821)", "752"),
     ("los candidatos que quedan en la lista priorizada",
      r"quedan ([\d,]+) candidatos", "752"),
+    # Las tres de la fase 2 que el deck ascendió al hilo con este cambio. El estrato `solo_npass`
+    # es el que la patrocinadora mira, y sus tres cifras —cuántos pares, qué saca el modelo y qué
+    # saca la línea base— ya viven en el artículo, el registro, el deck y el cuaderno. El 0.530 no
+    # se vigila aparte porque va siempre pegado a uno de estos anclajes.
+    ("los pares del estrato que solo tiene NPASS",
+     r"\*{0,2}([\d,]{3,4})\s*pares\*{0,2}\s*(?:(?:de productos )?naturales\b"
+     r"|que solo tiene (?:NPASS|la base de productos naturales))", "117"),
+    # La línea base se escribe de cuatro formas: «da 0.565», fila de tabla en el deck, «(0.565)» y
+    # «(0.530 contra 0.565)», donde el primer número es el del modelo. De ahí el «contra» opcional:
+    # sin él el patrón capturaba el 0.530 y la guarda fallaba contra su propia cifra canónica.
+    # Y se nombra «TPSA» o «superficie polar» según para quién esté escrito el documento.
+    ("la línea base de los pares que solo tiene NPASS",
+     r"[Ll][ií]nea base de peso y (?:superficie polar|TPSA)[^|.\n]{0,45}[|( ]\s*"
+     r"(?:0\.\d{3} contra )?\*{0,2}(0\.\d{3})", "0.565"),
+    # El 0.015 va con su redacción del deck y con la del artículo y el registro, que lo dicen al
+    # revés («la dispersión de 0.015 entre los siete modelos»). Es la cifra de la que se derivó el
+    # 0.030 de la escalera de la fase 2, así que una copia que se mueva invalida ese umbral también.
+    ("la dispersión entre los modelos competitivos de la fase 2",
+     r"(?:caben en \*{0,2}(0\.\d{3})\*{0,2} de concordancia"
+     r"|dispersi[óo]n de \*{0,2}(0\.\d{3})\*{0,2} entre los siete modelos)", "0.015"),
 ]
 
 
