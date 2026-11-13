@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -147,7 +147,7 @@ No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 1 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793.
+**Antonio · 0.5 min.** Es un resultado negativo honesto: elegir el modelo no fue la palanca. En la prueba reservada el mismo modelo da MCC 0.339 y AUROC 0.793. Medio minuto: el 4.2 lo remata Pame en la siguiente con la escalera al lado, así que aquí basta con dejar la pista.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
@@ -172,45 +172,44 @@ En azul el `svm_rbf`, el modelo que entregamos; en gris los otros cinco.
 :::
 :::
 
-La fase 2 hace lo mismo en un peldaño más fácil: la concordancia baja de 0.81 a 0.70.
 
 ::: {.callout-tip title="Pista 2"}
 Importa qué tan nueva es la molécula.
 :::
 
 ::: {.notes}
-**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
+**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. El esqueleto de conectividad es el primer bloque del InChIKey, la misma molécula ignorando la estereoquímica, así que dos estereoisómeros lo comparten; el andamio es lo contrario, los anillos y sus puentes sin las cadenas colgantes. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. La línea naranja es la prueba reservada, 0.793: cae entre los peldaños de 0.5 y 0.4, y es el puente a la siguiente. Si preguntan por otra definición de parecido: la forma de la caída cambia y el tamaño casi no, 0.419 con ECFP4 contra 0.434 con ECFP6.
 :::
 
-## Pero no lo explica todo · fase 1 {.smaller}
+## No lo explica, y enseñarle lo raro no ayuda · fase 1 {.smaller}
 
+::: {.columns}
+::: {.column width="44%"}
 ![](docs/reportes/presentacion/figuras/dificultad.svg){fig-alt="A la izquierda, el AUROC esperado por semejanza contra el real; a la derecha, el AUROC por tercil de semejanza"}
 
-La semejanza nos dice **qué compuestos serán más difíciles**, no **cuánto** va a caer el conjunto. Ordena, pero no calibra. Qué explica esos 0.097 no está medido: hay cuatro candidatos anotados.
-
-::: {.notes}
-**Pame · 1 min.** La barra gris es la validación repesada a la mezcla de semejanzas de la prueba, en diez cubetas; con vecino de cinco en lugar de uno sale lo mismo (0.882). Por origen, la diferencia entre terciles es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero. Los cuatro candidatos de los 0.097: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
+La prueba es **más familiar** que la validación, no más nueva. Debería haber dado 0.889 y dio 0.793.
 :::
+::: {.column width="56%"}
+Tres formas de darle más química rara, las tres con la **regla escrita antes de correr**:
 
-## Enseñarle lo raro no ayuda · fase 1 {.smaller}
+| Qué le dimos | Qué pasó |
+|:--|:--|
+| **Más peso** a las filas raras que ya tenía | **−0.0005**; los mismos pesos al azar mueven igual |
+| **Filas raras de la prueba**, devolviendo comunes | MCC +0.035 pero AUROC **+0.002**: movió el corte |
+| **Otra composición** del ajuste, mismo tamaño | **−0.060** con el 25%; con el 75% da igual |
 
-Tres formas de darle más química rara. Las tres con la **regla escrita antes de correr**.
-
-| Qué le dimos | Qué pedíamos | Qué pasó |
-|:--|:--|:--|
-| **Más peso** a las filas raras que ya tenía | +0.005 de AUROC en 12 de 15 evaluaciones | **−0.0005**, y los mismos pesos al azar mueven igual |
-| **Filas raras de la prueba**, devolviendo otras tantas comunes | que mejorara el orden, no solo el corte | MCC +0.035 pero AUROC **+0.002**: movió el corte. Al azar sube casi lo mismo |
-| **Otra composición** del ajuste, mismo tamaño y prevalencia | que empezar por lo raro ayudara | **−0.060** de AUROC con el 25%; con el 75% da igual |
-
-Y de paso, lo más útil: con el mismo modelo y sin reentrenar, los compuestos **comunes** se miden con AUROC **0.94** y los **raros** con **0.68**.
+Y de paso, lo más útil: con el mismo modelo y sin reentrenar, las filas **comunes** se miden con AUROC **0.94** y las **raras** con **0.68**.
+:::
+:::
 
 ::: {.callout-tip title="Pista 3"}
-Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
+La semejanza dice **qué compuestos** serán más difíciles, no **cuánto** cae el conjunto: ordena, pero no calibra. Y recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 :::
 
 ::: {.notes}
-**Pame · 1 min.** El repeso descarta una mejora grande y no una de 0.005: con la dispersión observada solo detectaría 0.010. En el segundo, los tres brazos separan de dónde sale: recibir filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, y quitar solo las comunes −0.001. El tercero lo corrí yo; su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es una comparación secundaria.
+**Pame · 1.25 min.** Dos cosas en una: la semejanza no explica el nivel, y darle más química rara no lo arregla. La prueba está a 0.414 de parecido medio al vecino contra 0.384 de la validación, y por encima en los cinco cuantiles; la barra gris es la validación repesada a la mezcla de la prueba en diez cubetas (0.879 tal cual, 0.889 repesada, 0.793 real, brecha 0.097; con vecino de cinco sale lo mismo, 0.882). Dentro de la prueba los terciles van de 0.70 a 0.87, +0.178 con IC95 [+0.119, +0.238]; por origen la diferencia es +0.223 en los compuestos sin equivalente natural y +0.086 en los naturales exactos, donde el intervalo incluye el cero, y en los análogos estereoquímicos no se puede leer por la regla de los 20 casos. De los tres intentos: el repeso descarta una mejora grande y no una de 0.005 (solo detectaría 0.010); en el segundo los tres brazos separan de dónde sale (filas raras +0.035 en 15 de 15, al azar +0.023 en 13 de 15, quitar solo las comunes −0.001) y tampoco lo explica la prevalencia, que pasa de 65.0% a 64.5%; el tercero lo corrí yo y su estadístico principal incluye el cero, el −0.060 es la lectura equilibrada y es secundaria. El 0.94 y el 0.68 son poblaciones distintas: el 0.94 son las 295 filas comunes que pasaron a la prueba y el 0.68 los raros que se quedaron en el núcleo. Los cuatro candidatos de los 0.097, ninguno medido: prevalencia, peso y polaridad, curación de los datos, y andamios raros reservados a propósito.
 :::
+
 
 ## El corte de 0.5 está mal puesto · fase 1 {.smaller}
 
@@ -222,8 +221,50 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Qué explica la caída:** el corte explica una parte y se puede corregir: recupera 0.07 de los 0.36 de MCC que perdimos. El resto es real: el orden también cayó, 12.6 puntos de AUROC (0.919 a 0.793).
 
 ::: {.notes}
-**Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Límite: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase. El techo de 0.485 usa las etiquetas de la prueba, así que mide el margen, no un resultado.
+**Pame · 1.5 min.** El AUROC es el mismo con cualquier corte (0.793), y es lo que cayó de verdad, de 0.919 en validación. Tres límites: el corte de igual prevalencia necesita el lote completo y suponer una prevalencia, así que para un compuesto suelto no sirve, y por eso el cuaderno entrega la probabilidad y no una clase; el techo de 0.485 usa las etiquetas de la prueba, así que mide el margen y no un resultado; y las dos lecturas salen de una sola apertura de la prueba, con el corte congelado antes de abrirla y controles que reproducen el 0.3385 y el 0.793 ya registrados. Si aprietan con por qué elegir el corte en validación no sirve: el congelado sale 0.361 y la prueba necesitaba 0.747, y la guarda por mitades de grupos elige un corte por debajo de 0.5 en el 78 al 82% de los remuestreos, con ganancia media negativa (−0.002 a −0.003).
 :::
+
+## El modelo de potencia · fase 2 {.smaller}
+
+::: {.columns}
+::: {.column width="54%"}
+![](docs/reportes/articulo/figuras/f6_escalera_fase2.svg){fig-alt="Concordancia del aft por peldaño de semejanza permitida; en gris, solo los pares de NPASS"}
+
+La misma escalera: de 0.807 por molécula a 0.695 con semejanza menor de 0.6. En gris, solo los pares de NPASS.
+:::
+::: {.column width="46%"}
+Predice la **potencia de cada par compuesto-diana**, no una clase. El `aft` aprende de las mediciones **censuradas**, las que solo dicen «menos potente que esto», y que los otros nueve modelos descartan.
+
+| Concordancia | |
+|:--|--:|
+| Validación cruzada | 0.761 |
+| Prueba reservada | **0.720** |
+| 117 pares naturales | **0.530** |
+| Línea base de peso y TPSA | 0.565 |
+
+Acierta cuál de dos pares es más potente. El azar da 0.5.
+:::
+:::
+
+::: {.callout-tip title="Pista 4"}
+El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no está demostrado**.
+:::
+
+::: {.notes}
+**Pame · 1 min.** Elegimos el `aft` justamente por los naturales: en los pares que solo tiene NPASS su concordancia en validación es 0.632 contra 0.511 del bosque, porque aprende de las censuradas que los demás tiran. En la prueba esos pares dan 0.530 y con 117 no hay potencia para distinguir 0.511 de 0.632: no refuta ni confirma, y por eso se dice «no demostrado» y no «falla». La escalera se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. Si preguntan por la base externa de la patrocinadora: 0.792 en 8,134 pares con el modelo guardado y sin reentrenar, mejor que nuestra prueba, pero no es comparable porque el 64.9% de sus pares tiene un andamio ya visto. Y un aviso que conviene decir: el orden global mide sobre todo **qué diana es**; en el ajuste, un control que solo usa la diana llega a 1.36 de enriquecimiento contra un techo de 1.40.
+:::
+
+
+## Qué mide de verdad · fase 2 {.smaller}
+
+- **La diana manda.** El enriquecimiento del `aft` ya está en el techo (1.40 con 71.4% de activos) y un control que **solo usa la diana** llega a 1.36: el orden global mide sobre todo **qué diana es**, no qué molécula.
+- **La procedencia lleva señal de la etiqueta.** En la versión de clasificación, un modelo que solo ve **de dónde viene** el compuesto, sin mirar la molécula, llega a 0.280 de MCC: el **65%** de lo que logra la química (0.428). Por eso cada métrica se reporta por procedencia y no solo en agregado.
+- **Su base externa, la que nos dio el equipo de la patrocinadora.** Con el modelo guardado y sin reentrenar: concordancia **0.792** en 8,134 pares (0.667 en los 249 que solo tiene NPASS). Mejor que nuestra prueba, y **no comparable**: se separó por compuesto y no por andamio, y el **64.9%** de sus pares tiene un andamio que el modelo ya vio.
+
+::: {.notes}
+**Pame · 0.75 min.** Es la diapositiva de las salvedades de la fase 2, y las tres apuntan al mismo sitio: el agregado promete más de lo que el modelo sabe de una molécula nueva. El enriquecimiento al 1% está en el techo porque la tasa base es del 71.4%, así que ahí no discrimina y se lee mejor la precisión en los primeros 100. El dato de la procedencia es de la tarea de clasificación a 10 µM, no de la regresión, y conviene decirlo así; la química le gana por 0.148 de MCC, pero que una columna de tres valores llegue al 65% dice que la fuente lleva señal de la etiqueta. Y la base externa es la buena noticia con asterisco: su cifra es alta porque su partición es por compuesto, así que no mide química nueva. Si preguntan qué haría falta: medir la potencia con sus propios lotes, que es lo que pide el trabajo futuro.
+:::
+
 
 ## Qué pesa en cada fase {.smaller}
 
@@ -234,7 +275,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 - **Fase 2:** pesa sobre todo **qué diana es** (la MAOA baja la potencia predicha) y la **complejidad** del compuesto la sube. **No afirmamos ningún mecanismo.**
 
 ::: {.notes}
-**Art · 1 min.** Dos métodos independientes, SHAP y permutación; "confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación), por eso en la fase 2 pesa tanto qué diana es. El detalle está en el respaldo.
+**Art · 0.75 min.** Dos métodos independientes, SHAP y permutación; "confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación), por eso en la fase 2 pesa tanto qué diana es. El detalle está en el respaldo.
 :::
 
 ## El cuaderno
@@ -246,7 +287,7 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 - **No combina** las fases en un ranking: queda como trabajo futuro.
 
 ::: {.notes}
-**Art · 0.75 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
+**Art · 0.5 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
 :::
 
 ## Una herramienta para medir columnas nuevas {.smaller}
