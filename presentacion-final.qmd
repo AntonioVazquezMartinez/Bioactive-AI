@@ -64,14 +64,16 @@ Pensamos **encadenarlas**. No hay datos para comprobarlo: solo **612 esqueletos*
 ## Dos números que no cuadran
 
 ::: {.columns}
-::: {.column width="48%"}
+::: {.column width="44%"}
 ### Fase 1 · permeabilidad
 
 [0.70 → 0.34]{style="font-size:2.4em;font-weight:700;"}
 
 MCC, de validación a la prueba reservada: se cae **a la mitad**.
 :::
-::: {.column width="48%"}
+::: {.column width="12%"}
+:::
+::: {.column width="44%"}
 ### Fase 2 · potencia
 
 [0.76 → 0.72]{style="font-size:2.4em;font-weight:700;"}
@@ -132,18 +134,18 @@ El azar vale 0 en el MCC y 0.5 en la concordancia; acertar siempre vale 1 en las
 **Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Lo del 7 a 13 es de la literatura; lo nuestro es la escalera de la diapositiva 7, donde el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas. Las escalas: el MCC va de −1 a 1 y el azar es 0; el AUROC, el AUPRC y la concordancia van de 0 a 1 y el azar es 0.5, salvo el AUPRC, cuyo piso es la prevalencia de la clase minoritaria (0.35 en la fase 1). Usamos MCC y no porcentaje de aciertos porque las clases están desbalanceadas: decir «permeable» siempre ya acierta el 63.5%. La concordancia es la de Harrell, que aprovecha las mediciones censuradas.
 :::
 
-## El modelo no es la palanca {.smaller}
+## El modelo no es la palanca
 
 - **Fase 1:** once modelos, de regresión logística a ensambles. Entre ellos hay solo **4.2 puntos** de MCC, y el mejor iguala el punto de partida sin superarlo (0.7017 contra 0.70): el **lift es cero**.
 - **Fase 2:** nueve modelos de regresión, y los siete competitivos caben en **0.015** de concordancia, con sus intervalos solapados: ninguno se distingue de los otros.
-- El modelo que entregamos en la fase 2 **no es el que gana el agregado**: el `aft` queda 0.004 debajo del bosque y lo elegimos porque en los pares que solo tiene NPASS saca 0.63 contra 0.51 **en validación**. Lo que lo movió fue **qué datos ve** —las mediciones censuradas, que a los demás se les quitan— y no el algoritmo.
+- En las dos fases el modelo final se eligió **por descarte**, no porque ganara.
 
 ::: {.callout-tip title="Pista 1"}
 No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 1.25 min.** Es un resultado negativo honesto en las dos fases: elegir el modelo no fue la palanca. En la prueba reservada el `svm_rbf` da MCC 0.339 y AUROC 0.793. En la fase 2 el bosque gana el agregado de forma consistente, en 14 de los 15 pliegues, así que no es un empate; el `aft` gana en los pares que solo tiene NPASS contra los ocho restantes en todas las evaluaciones. El 0.63 contra 0.51 es de validación cruzada y en la prueba reservada el `aft` cae a 0.530 ahí, con 117 pares que no refutan ni confirman: la elección se sostiene en el mecanismo, no en la prueba. El 0.015 es el rango entre el `bosque` (0.765) y el `boosting` (0.750), con desviaciones de 0.005 a 0.006. No decir que 0.015 es la mitad de un umbral declarado: el 0.030 de la escalera de la fase 2 se definió como el doble de esta dispersión, así que el argumento sería circular. El mecanismo está medido: el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL, y los ensambles, que descartan las censuradas, reciben 982 de las 2,114 filas de NPASS mientras el `aft` las recibe todas.
+**Antonio · 1 min.** Es un resultado negativo honesto en las dos fases: elegir el modelo no fue la palanca. En la prueba reservada el `svm_rbf` da MCC 0.339 y AUROC 0.793. El 0.015 es el rango entre el `bosque` (0.765) y el `boosting` (0.750), con desviaciones de 0.005 a 0.006. No decir que 0.015 es la mitad de un umbral declarado: el 0.030 de la escalera de la fase 2 se definió como el doble de esta dispersión, así que el argumento sería circular. **Por qué el descarte de la fase 2, si preguntan:** el `aft` no gana el agregado, queda 0.004 debajo del bosque, que lo supera en 14 de los 15 pliegues; lo elegimos porque en los pares que solo tiene NPASS saca 0.63 contra 0.51 en validación cruzada, y le gana ahí a los ocho restantes en todas las evaluaciones. El mecanismo está medido: el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL, y los ensambles, que descartan las censuradas, reciben 982 de las 2,114 filas de NPASS mientras el `aft` las recibe todas. En la prueba ese estrato cae a 0.530, con 117 pares que no refutan ni confirman, así que la elección se sostiene en el mecanismo y no en la prueba.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
