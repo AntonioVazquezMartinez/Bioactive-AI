@@ -83,7 +83,7 @@ El **scaffold split (Bemis-Murcko) es la práctica estándar** y la recomendada 
 | Split aleatorio / Kennard-Stone (Yuan et al. 2018) | 98.7% de exactitud, MCC 0.958 |
 | B3DB + CMUH-NPRL, split 80/10/10 no confirmado scaffold | AUC 0.88 |
 
-**La brecha de 7 a 13 puntos entre split aleatorio y scaffold es el efecto de la fuga de datos.** Sirve como ilustración directa en la tesis. Los números de 95–99% no son comparables con los de 85–92%.
+**Corrección (12 de noviembre): la «brecha de 7 a 13 puntos» no es una brecha medida.** Resta una exactitud con split aleatorio (Yuan et al. 2018) de un AUROC con scaffold split (leaderboard de TDC), y la propia tabla de arriba advierte que no son comparables. La versión anterior decía que sirve como ilustración directa; no sirve. Lo documentado es la dirección (`sheridan2013`) y la cifra propia está en la decisión 1.2. Los números de 95–99% no son comparables con los de 85–92%.
 
 ## El problema de la concentración
 
