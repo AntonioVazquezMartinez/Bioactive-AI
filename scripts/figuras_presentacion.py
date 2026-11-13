@@ -598,6 +598,76 @@ def fig_fase2_origen() -> dict:
     plt.close(fig)
     return {k: (round(v["conc_aft"], 3), round(v["conc_base"], 3), v["n"]) for k, v in estratos.items()}
 
+CV_FASE2 = RAIZ / "experimentos" / "2026-11-01-ingrid-2.13-comparativa-aft-huellas-y-censura" / "metricas.json"
+PRUEBA_FASE2 = RAIZ / "experimentos" / "2026-10-31-antonio-2.13-comparativa-regresion-ensambles" / "metricas.json"
+EXTERNA = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-muestra-de-jorge" / "metricas.json"
+CONTAMINACION = RAIZ / "experimentos" / "2026-11-04-artemio-2.13-contaminacion-externa" / "metricas.json"
+
+
+def fig_fase2_desempeno() -> dict:
+    """Las tres mediciones del modelo de potencia —ajuste, prueba reservada y base externa— y las mismas
+    tres solo en productos naturales, que es donde el proyecto las necesita y donde no gana a dos columnas."""
+    cv = json.loads(CV_FASE2.read_text(encoding="utf-8"))["todos"]["aft"]["concordancia"]
+    pr = json.loads(PRUEBA_FASE2.read_text(encoding="utf-8"))
+    ext = json.loads(EXTERNA.read_text(encoding="utf-8"))
+    base = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
+    cont = json.loads(CONTAMINACION.read_text(encoding="utf-8"))["base_externa"]
+
+    nat_prueba = pr["prueba_por_origen"]["solo_npass"]
+    todos = [
+        ("Validación cruzada\nen el ajuste", cv, "5 pliegues agrupados", GRIS, False, None),
+        ("Prueba reservada\nquímica nueva", pr["prueba"]["aft"]["concordancia"],
+         f"{pr['prueba']['aft']['n_total']:,} pares", AZUL, False, None),
+        ("Prueba externa\notro equipo", ext["global"]["concordancia"], f"{ext['global']['n_total']:,} pares",
+         NARANJA, True, ext["global"]["concordancia_ic95"]),
+    ]
+    naturales = [
+        ("Prueba reservada\nsolo NPASS", nat_prueba["concordancia"], f"{nat_prueba['n_total']} pares", AZUL, False, None),
+        ("Línea base\npeso y TPSA", base["solo_npass"]["conc_base"], f"{base['solo_npass']['n']} pares",
+         GRIS_CLARO, False, None),
+        ("Prueba externa\nsolo NPASS", ext["por_estrato"]["solo_npass"]["concordancia"],
+         f"{ext['por_estrato']['solo_npass']['n_total']} pares", NARANJA, True, None),
+    ]
+
+    fig, ax = plt.subplots(figsize=(10.4, 3.9))
+    xs, etiquetas = [], []
+    for grupo, inicio in ((todos, 0), (naturales, 3.8)):
+        for i, (nombre, v, pie, color, rayado, ic) in enumerate(grupo):
+            x = inicio + i
+            xs.append(x)
+            ax.bar(x, v - 0.45, bottom=0.45, color=color, width=0.62,
+                   hatch="///" if rayado else None, edgecolor="white", linewidth=0)
+            if ic:
+                ax.errorbar(x, v, yerr=[[v - ic[0]], [ic[1] - v]], fmt="none", ecolor="#333333", capsize=4, lw=1.3)
+            ax.text(x, v + 0.012, f"{v:.3f}", ha="center", fontsize=12, fontweight="bold",
+                    color=color if color != GRIS_CLARO else GRIS)
+            etiquetas.append(f"{nombre}\n{pie}")
+
+    ax.axhline(0.5, color="#333333", lw=1, ls=(0, (4, 3)))
+    ax.text(-0.62, 0.503, "azar", fontsize=9, color="#333333", ha="left", va="bottom")
+    ax.axvline(2.4, color=GRIS_CLARO, lw=1.2)
+    ax.text(1.0, 0.845, "Todos los pares", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.text(4.8, 0.845, "Solo productos naturales", ha="center", fontsize=11, fontweight="bold", color=GRIS)
+    ax.set_xticks(xs, etiquetas, fontsize=8.6)
+    ax.set_ylim(0.45, 0.87)
+    ax.set_xlim(-0.65, 6.15)
+    ax.set_ylabel("concordancia", fontsize=10)
+    limpiar(ax)
+    ax.set_title("El agregado se sostiene fuera de casa; en productos naturales no gana a dos columnas",
+                 fontsize=12, fontweight="bold", color=AZUL, loc="left", pad=22)
+    fig.text(0.5, -0.13, f"La prueba externa (rayada) no es comparable con la reservada: se separó por compuesto y no por "
+             f"andamio, y el {cont['andamio_fraccion_pares'] * 100:.1f}% de sus pares tiene un andamio que el modelo ya vio, "
+             f"contra el {cont['piso_del_control'] * 100:.1f}% del control.", fontsize=8.8, color=GRIS, ha="center")
+    for ext_ in ("svg", "png"):
+        fig.savefig(SALIDA / f"fase2_desempeno.{ext_}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"cv": round(cv, 3), "prueba": round(pr["prueba"]["aft"]["concordancia"], 3),
+            "externa": round(ext["global"]["concordancia"], 3),
+            "nat_prueba": round(nat_prueba["concordancia"], 3),
+            "nat_base": round(base["solo_npass"]["conc_base"], 3),
+            "nat_externa": round(ext["por_estrato"]["solo_npass"]["concordancia"], 3)}
+
+
 DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
 # Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
 # que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
@@ -692,5 +762,6 @@ if __name__ == "__main__":
 
 
     print("fase2_origen:", fig_fase2_origen())
+    print("fase2_desempeno:", fig_fase2_desempeno())
     print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)

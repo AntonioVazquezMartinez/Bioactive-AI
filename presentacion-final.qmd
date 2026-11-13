@@ -159,16 +159,16 @@ No es el modelo.
 En azul el `svm_rbf`, el modelo que entregamos; en gris los otros cinco.
 :::
 ::: {.column width="46%"}
-| Cómo se parte | Parecido al vecino | MCC |
-|:--|--:|--:|
-| Al azar | 0.90 | **0.752** |
-| Por andamio | 0.75 | 0.721 |
-| Andamio + esqueleto | 0.50 | 0.702 |
-| Tanimoto < 0.6 | 0.42 | 0.688 |
-| Tanimoto < 0.5 | 0.33 | 0.486 |
-| Tanimoto < 0.4 | 0.28 | **0.419** |
+| Cómo se parte | Parecido al vecino | AUROC | MCC |
+|:--|--:|--:|--:|
+| Al azar | 0.90 | 0.947 | **0.752** |
+| Por andamio | 0.75 | 0.932 | 0.721 |
+| Andamio + esqueleto | 0.50 | 0.919 | 0.702 |
+| Tanimoto < 0.6 | 0.42 | 0.913 | 0.688 |
+| Tanimoto < 0.5 | 0.33 | 0.835 | 0.486 |
+| Tanimoto < 0.4 | 0.28 | 0.780 | **0.419** |
 
-33 puntos de MCC, contra **4.2** entre los once modelos.
+33 puntos de MCC y 17 de AUROC, contra **4.2** de MCC entre los once modelos.
 :::
 :::
 
@@ -181,13 +181,15 @@ Importa qué tan nueva es la molécula.
 **Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. El esqueleto de conectividad es el primer bloque del InChIKey, la misma molécula ignorando la estereoquímica, así que dos estereoisómeros lo comparten; el andamio es lo contrario, los anillos y sus puentes sin las cadenas colgantes. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. La línea naranja es la prueba reservada, 0.793: cae entre los peldaños de 0.5 y 0.4, y es el puente a la siguiente. Si preguntan por otra definición de parecido: la forma de la caída cambia y el tamaño casi no, 0.419 con ECFP4 contra 0.434 con ECFP6. Que la exactitud dependa de la semejanza con el entrenamiento es un resultado clásico (Sheridan et al., 2004).
 :::
 
-## No lo explica, y enseñarle lo raro no ayuda · fase 1 {.smaller}
+## La semejanza ordena, pero no clasifica · fase 1 {.smaller}
 
 ::: {.columns}
 ::: {.column width="44%"}
 ![](docs/reportes/presentacion/figuras/dificultad.svg){fig-alt="A la izquierda, el AUROC esperado por semejanza contra el real; a la derecha, el AUROC por tercil de semejanza"}
 
 La prueba es **más familiar** que la validación, no más nueva. Debería haber dado 0.889 y dio 0.793.
+
+**En los naturales rinde igual:** AUROC **0.780** en los 446 de equivalente natural exacto, contra 0.793 en toda la prueba. Pero ahí ni siquiera ordena: +0.086, con el cero dentro.
 :::
 ::: {.column width="56%"}
 Tres formas de darle más química rara, las tres con la **regla escrita antes de correr**:
@@ -203,7 +205,7 @@ Y de paso, lo más útil: con el mismo modelo y sin reentrenar, las filas **comu
 :::
 
 ::: {.callout-tip title="Pista 3"}
-La semejanza dice **qué compuestos** serán más difíciles, no **cuánto** cae el conjunto: ordena, pero no calibra. Y recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
+La semejanza dice **qué compuestos** serán más difíciles, no **cuánto** rinde el conjunto: ordena, pero no clasifica. Y recomponer la prueba cambia el número que se reporta, no lo que el modelo sabe.
 :::
 
 ::: {.notes}
@@ -211,10 +213,11 @@ La semejanza dice **qué compuestos** serán más difíciles, no **cuánto** cae
 :::
 
 
-## El corte de 0.5 está mal puesto · fase 1 {.smaller}
+## El corte explica una parte, no la caída · fase 1 {.smaller}
 
 ![](docs/reportes/presentacion/figuras/corte.svg){fig-alt="Dónde cae cada corte y qué porcentaje de la prueba declara permeable"}
 
+- El corte en **0.5** es la convención que trae la librería, no una decisión: con él el modelo declara permeable al **79.3%** de la prueba, cuando lo real es **57.3%**.
 - Igualar la tasa declarada a una prevalencia supuesta sube el MCC de **0.34 a 0.41**, sin usar etiquetas de la prueba. Y supusimos la prevalencia del ajuste, 65%, cuando era 57%: aguanta el error.
 - Elegir el corte con validación **no sirve** (+0.0065): lo mueve hacia abajo, y la prueba lo necesitaba hacia arriba.
 
@@ -257,12 +260,13 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ## Qué mide de verdad · fase 2 {.smaller}
 
+![](docs/reportes/presentacion/figuras/fase2_desempeno.svg){fig-alt="Concordancia del modelo de potencia en la validación cruzada del ajuste, en la prueba reservada y en la base externa, primero en todos los pares y después solo en los de productos naturales"}
+
 - **La diana manda.** El enriquecimiento del `aft` ya está en el techo (1.40 con 71.4% de activos) y un control que **solo usa la diana** llega a 1.36: el orden global mide sobre todo **qué diana es**, no qué molécula.
-- **La procedencia lleva señal de la etiqueta.** En la versión de clasificación, un modelo que solo ve **de dónde viene** el compuesto, sin mirar la molécula, llega a 0.280 de MCC: el **65%** de lo que logra la química (0.428). Por eso cada métrica se reporta por procedencia y no solo en agregado.
-- **Su base externa, la que nos dio el equipo de la patrocinadora.** Con el modelo guardado y sin reentrenar: concordancia **0.792** en 8,134 pares (0.667 en los 249 que solo tiene NPASS). Mejor que nuestra prueba, y **no comparable**: se separó por compuesto y no por andamio, y el **64.9%** de sus pares tiene un andamio que el modelo ya vio.
+- **La procedencia lleva señal de la etiqueta.** Un modelo que solo ve **de dónde viene** el compuesto, sin mirar la molécula, llega a 0.280 de MCC: el **65%** de lo que logra la química (0.428), en la versión de clasificación. Por eso cada métrica se reporta por procedencia.
 
 ::: {.notes}
-**Pame · 0.75 min.** Es la diapositiva de las salvedades de la fase 2, y las tres apuntan al mismo sitio: el agregado promete más de lo que el modelo sabe de una molécula nueva. El enriquecimiento al 1% está en el techo porque la tasa base es del 71.4%, así que ahí no discrimina y se lee mejor la precisión en los primeros 100. El dato de la procedencia es de la tarea de clasificación a 10 µM, no de la regresión, y conviene decirlo así; la química le gana por 0.148 de MCC, pero que una columna de tres valores llegue al 65% dice que la fuente lleva señal de la etiqueta. Y la base externa es la buena noticia con asterisco: su cifra es alta porque su partición es por compuesto, así que no mide química nueva. Si preguntan qué haría falta: medir la potencia con sus propios lotes, que es lo que pide el trabajo futuro.
+**Pame · 0.75 min.** La figura es el resumen de la fase 2 en una imagen: tres mediciones arriba y las mismas tres solo en naturales. Es la diapositiva de las salvedades, y las tres apuntan al mismo sitio: el agregado promete más de lo que el modelo sabe de una molécula nueva. El enriquecimiento al 1% está en el techo porque la tasa base es del 71.4%, así que ahí no discrimina y se lee mejor la precisión en los primeros 100. El dato de la procedencia es de la tarea de clasificación a 10 µM, no de la regresión, y conviene decirlo así; la química le gana por 0.148 de MCC, pero que una columna de tres valores llegue al 65% dice que la fuente lleva señal de la etiqueta. Y la base externa es la buena noticia con asterisco: su cifra es alta porque su partición es por compuesto, así que no mide química nueva. Si preguntan qué haría falta: medir la potencia con sus propios lotes, que es lo que pide el trabajo futuro.
 :::
 
 
@@ -321,7 +325,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 - **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1.5 min.** Lo nuevo es la figura de la derecha. A la izquierda, lo que más mueve el MCC de la fase 1, como vimos: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia: con ChEMBL el modelo supera a una línea base sencilla, y en los 117 pares de productos naturales no. La cifra citable es la de la corrida registrada, 0.530; la figura muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida (la línea base da 0.565). El 72% de arriba es el agregado. Si preguntan por los 12.6 puntos del AUROC, se repasaron en «Pero no lo explica todo».
+**Art · 1.5 min.** Lo nuevo es la figura de la derecha. A la izquierda, lo que más mueve el MCC de la fase 1, como vimos: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia: con ChEMBL el modelo supera a una línea base sencilla, y en los 117 pares de productos naturales no. La cifra citable es la de la corrida registrada, 0.530; la figura muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida (la línea base da 0.565). El 72% de arriba es el agregado. Si preguntan por los 12.6 puntos del AUROC, se repasaron en «La semejanza ordena, pero no clasifica».
 :::
 
 # Respaldo

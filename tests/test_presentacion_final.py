@@ -70,3 +70,35 @@ def test_los_minutos_del_hilo_suman_el_presupuesto():
     assert sum(minutos) == 13.0, (
         f"el hilo suma {sum(minutos)} minutos y el presupuesto son 13.0; "
         "si una diapositiva crece, otra tiene que bajar")
+
+
+def test_la_tabla_de_la_escalera_es_la_de_la_corrida():
+    """Los 18 números de la tabla salen de `2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad`.
+
+    La columna de AUROC entró después que las otras dos (es la que dibuja la figura de al lado, y sin
+    ella la tabla y la curva contaban cosas distintas). Tres copias a mano de la misma corrida es como
+    se desincronizó el 1,048 en doce archivos, así que aquí se comparan contra el JSON.
+    """
+    import json
+
+    corrida = json.loads((RAIZ / "experimentos" / "2026-11-03-artemio-1.2-escalera-agrupacion-permeabilidad"
+                          / "metricas.json").read_text(encoding="utf-8"))["e1_escalera"]
+    peldanos = {p["agrupacion"]: p for p in corrida}
+    filas = {"Al azar": "1 al azar", "Por andamio": "3 por andamio",
+             "Andamio + esqueleto": "4 andamio + esqueleto (actual)",
+             "Tanimoto < 0.6": "5 similitud ≥ 0.6", "Tanimoto < 0.5": "5 similitud ≥ 0.5",
+             "Tanimoto < 0.4": "5 similitud ≥ 0.4"}
+    texto = MAZO.read_text(encoding="utf-8")
+    for etiqueta, clave in filas.items():
+        p = peldanos[clave]
+        linea = next((x for x in texto.splitlines() if x.startswith(f"| {etiqueta} |")), None)
+        assert linea, f"la tabla de la escalera no tiene la fila «{etiqueta}»"
+        celdas = [c.strip().replace("**", "") for c in linea.strip("| \n").split("|")]
+        assert len(celdas) == 4, f"«{etiqueta}» no tiene las cuatro columnas: {linea}"
+        for valor, clave_corrida in zip(celdas[1:], ("vecino_mas_cercano", "auroc_svm_rbf", "mcc_svm_rbf"),
+                                        strict=True):
+            # el margen es media unidad del último decimal que la tabla enseña: el JSON guarda 0.7515 y
+            # 0.901, y la tabla redondea a 0.752 y 0.90 como el resto del repositorio
+            margen = 0.5 * 10 ** -len(valor.partition(".")[2]) + 1e-6
+            assert abs(float(valor) - p[clave_corrida]) <= margen, (
+                f"«{etiqueta}», {clave_corrida}: la tabla dice {valor} y la corrida {p[clave_corrida]}")
