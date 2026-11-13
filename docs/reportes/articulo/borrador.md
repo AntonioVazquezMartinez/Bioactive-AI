@@ -61,7 +61,8 @@ entregamos una probabilidad y no una clase.
 Conviene decir con precisión qué se entrega hoy. Por cada compuesto salen tres cosas: la probabilidad de cruzar la
 barrera, la potencia predicha contra cada diana y qué tan cerca queda la molécula de lo que los modelos vieron.
 Combinar las tres en una sola lista priorizada es un entregable que falta y no un detalle de presentación: la
-sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo.
+sección 5.1 dice en qué estado está y la 6.3 qué haría falta para cerrarlo. Se entrega, además, una lista exploratoria de
+naturales por diana y por enfermedad (sección 5.1), que no sustituye esa combinación validada.
 
 ### 1.4 Qué puede y qué no puede decir este trabajo
 
@@ -323,6 +324,15 @@ persona ejecute con sus propios compuestos. La entrada es una lista de SMILES; l
 probabilidad de cruzar la barrera (fase 1), la potencia predicha contra cada una de las 26 dianas (fase 2, una
 pActividad por diana y sin intervalo) y qué tan cerca queda de lo que los modelos vieron. El cuaderno no combina las
 dos fases en un ranking: esa combinación sigue pendiente y, cuando exista, será evidencia paralela y no una cascada.
+
+Además del cuaderno se entrega una **lista priorizada exploratoria de compuestos naturales** por diana y por enfermedad, que es
+el objetivo del proyecto (`lista-priorizada.md`, corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales`). Parte de los 1,821
+compuestos de NPASS y CMAUP de las filas de ajuste, excluye los 223 con alerta PAINS y los 315 con puntaje de semejanza a productos
+naturales menor de 0 `ertl2008natural`, y ordena por potencia predicha entre los que no tienen medición contra esa diana y tienen
+barrera probable (probabilidad de cruzar de 0.5 o más; quedan 752 candidatos). **Es una lista de hipótesis para el laboratorio y no un
+resultado**: el modelo de potencia no supera a una línea base de peso y superficie polar en los productos naturales (0.530 contra
+0.565), combinar las dos fases no está validado, y las 260 filas por diana contienen solo 84 compuestos distintos, porque la
+química que pesa es casi la misma en todas las dianas.
 
 Los dos modelos finales pesan unos 3 MB y se usan con un módulo de inferencia que no necesita los datos de
 entrenamiento. Comprobamos que los descriptores calculados desde un SMILES coinciden bit a bit con los de

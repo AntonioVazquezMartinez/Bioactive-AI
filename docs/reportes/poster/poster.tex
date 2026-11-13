@@ -141,7 +141,7 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 \seccion{Qué pesa en cada fase}
 \begin{itemize}[leftmargin=1.2em,itemsep=0.4em]
   \item Con dos métodos de atribución independientes. Fase 1: los donadores de hidrógeno y otros cinco descriptores; TPSA no domina.
-  \item Fase 2: sobre todo la diana (MAOA, MAOB, DRD2, LRRK2, BCHE). Sin afirmar ningún mecanismo.
+  \item Fase 2: la diana pone el 15\,\% y el resto es química (complejidad, halógenos). Sin afirmar ningún mecanismo.
 \end{itemize}
 
 \end{minipage}\hfill
@@ -151,7 +151,7 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
 \seccion{Lo que encontramos}
 \begin{center}
   \includegraphics[width=\linewidth,height=14.5cm,keepaspectratio]{f1_escalera.png}\\[2pt]
-  \pie{Figura 1. El AUROC cae al exigir que lo evaluado se parezca menos a lo entrenado; la prueba reservada (0.793) equivale a los peldaños más estrictos.}
+  \pie{Figura 1. El AUROC cae al exigir que lo evaluado se parezca menos a lo entrenado; la prueba reservada (0.793) cae como un peldaño estricto, aunque se parece al entrenamiento como uno laxo.}
 \end{center}
 
 \vfill
@@ -203,7 +203,7 @@ La entrada es la estructura escrita como texto (SMILES). La salida es evidencia 
   \draw[arr] (b.east) -- (c.west);
 \end{tikzpicture}
 \end{center}
-Un cuaderno recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, con una advertencia de extrapolación. Se entregan los dos modelos, el procedimiento para reentrenar y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora y su grupo.
+Un cuaderno recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y qué tan cerca queda de lo conocido, con una advertencia de extrapolación. Se entrega también una lista priorizada exploratoria de naturales, y los dos modelos, el procedimiento para reentrenar y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora y su grupo.
 
 \vfill
 \seccion{Trabajo futuro}

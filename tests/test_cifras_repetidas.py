@@ -73,6 +73,16 @@ CIFRAS = [
      r"([\d.]{2,4})\s*\\?,?\\?%\s*es el archivo completo", "63.5"),
     ("los esqueletos medidos en las dos fases, como lo dice el deck",
      r"\*{0,2}([\d,]{3,5})\s*esqueletos\*{0,2}\s*est[áa]n medidos en las dos", "612"),
+    # La lista priorizada (C.5, 12 de noviembre) vive en el deck, los dos artículos, el resumen, el sitio y el
+    # registro. Sus tres cifras de lectura se escriben cada una con su frase.
+    ("los compuestos distintos de la lista priorizada, como lo dice el deck",
+     r"(\d+) compuestos distintos en 260", "84"),
+    ("los compuestos distintos de la lista priorizada, en prosa",
+     r"260 (?:filas|lugares) por diana[^.]{0,40}?(\d+) compuestos distintos", "84"),
+    ("los candidatos con barrera probable de la lista priorizada",
+     r"([\d,]+) candidatos (?:con barrera probable|de 1,821)", "752"),
+    ("los candidatos que quedan en la lista priorizada",
+     r"quedan ([\d,]+) candidatos", "752"),
 ]
 
 
