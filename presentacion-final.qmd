@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 12 min, más 1.5 del resumen en Zoom) y 10 de preguntas; nueve de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 12 min y una de cierre, más 1.5 del resumen en Zoom) y 10 de preguntas; nueve de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -291,7 +291,7 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 ![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera, que no filtra" width="80%"}
 
 - **Un cuaderno** para usar los modelos con compuestos propios: da la probabilidad de cruzar la barrera, la potencia contra cada diana y un aviso si la molécula es muy distinta de lo conocido. [Está en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html).
-- **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no supera a un método sencillo.
+- **Una lista de naturales para probar primero**, por enfermedad y por diana ([completa en el sitio](contenido/lista-priorizada.html)). Son **hipótesis**, no resultados: en naturales el modelo no se distingue de una línea base de peso, TPSA y diana.
 - **Una guía** para medir si unas columnas nuevas mejoran la predicción.
 
 ::: {.notes}
@@ -301,12 +301,22 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 ## Qué concluimos {.smaller}
 
 - **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana. Con moléculas nuevas el acierto (MCC) cae de 0.70 a 0.34 y **no sabemos explicar** buena parte de esa caída.
-- **Qué no está demostrado:** en productos naturales, el orden de potencia no supera a un método sencillo (0.530 frente a 0.565). Es evidencia para priorizar, no una decisión.
+- **Qué no está demostrado:** en productos naturales, el orden de potencia no se distingue de un modelo que solo ve peso, TPSA y diana (117 pares). Es evidencia para priorizar, no una decisión.
 - **Qué entregamos:** el cuaderno, la lista y la guía. La continuidad queda en manos de la patrocinadora y su grupo.
 - **Qué sigue:** medir la potencia con muestras propias de productos naturales, y combinar las dos fases en un solo orden.
 
 ::: {.notes}
 **Art · 1.0 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados. Si preguntan por el detalle: el acierto cae de 0.70 a 0.34, unos 0.07 por el corte de decisión, y de la pérdida en capacidad de ordenar la semejanza explica una parte pequeña. En la fase 2 el 0.72 lo domina ChEMBL; en los 117 pares de naturales el modelo da 0.530. Límites: una sola prueba reservada y un modelo por fase. Lo que necesitamos de ustedes: muestras propias de naturales con potencia medida.
+:::
+
+## Gracias {.center}
+
+**¿Preguntas?**
+
+Bioactive AI · Tec de Monterrey · Equipo 7
+
+::: {.notes}
+**Art · 0 min.** Cierre del hilo: aquí termina la presentación y empiezan las preguntas. Lo que sigue es respaldo, para consultar si alguien pregunta por un detalle.
 :::
 
 # Respaldo

@@ -25,7 +25,7 @@ def _diapositivas():
 
 def test_son_quince_diapositivas_en_el_hilo_y_nueve_de_respaldo():
     hilo, respaldo = _diapositivas()
-    assert len(hilo) == 15, f"{len(hilo)} diapositivas en el hilo; son 15"
+    assert len(hilo) == 16, f"{len(hilo)} diapositivas en el hilo; son 15 de contenido y la de cierre"
     assert len(respaldo) == 9
 
 

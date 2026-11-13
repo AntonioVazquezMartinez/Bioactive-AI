@@ -2,7 +2,7 @@
 """La lista priorizada de compuestos naturales por diana y por enfermedad (el objetivo de la primera diapositiva).
 
 **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que en los productos
-naturales **no supera a una línea base sencilla** (concordancia 0.530 contra 0.565 de peso, TPSA y diana, en 117 pares de
+naturales **no se distingue de una línea base de peso, TPSA y diana** (concordancia 0.511 al reajustar, 0.530 en la corrida registrada, contra 0.565, en 117 pares de
 la prueba reservada): sirve para decidir qué probar primero, no para afirmar que un compuesto actúa. Cada fila lleva lo
 que hace falta para leerla así: la probabilidad de cruzar la barrera (o la etiqueta medida, si existe), la similitud con
 lo que el modelo vio y la bandera de extrapolación.
@@ -63,6 +63,10 @@ NOMBRES_VERIFICADOS = {
     # estructura**, no verificada en una base de datos: la clase, no el compuesto.
     "VBRSHBGIUDRWEJ": "Lignano (NPC483651)",              # CHEMBL4634863
     "JHPIJMUNSMWWAA": "Hidroxi-cantin-6-ona (NPC53144)",  # alcaloide; posición del hidroxilo sin confirmar
+    # Verificados por conectividad (primeros 14 caracteres de la InChIKey) contra PubChem por nombre: coinciden.
+    "DBWQSCSXHFNTMO": "8,9-EET (ácido epoxieicosatrienoico)",
+    "YFGQJKBUXPKSAW": "Lanatósido A",
+    "UJYGDMFEEDNVBF": "Ergocornina",
 }
 INCHIKEY = re.compile(r"^[A-Z]{14}-[A-Z]{10}-[A-Z]$")
 
@@ -146,7 +150,7 @@ def escribir_documento(pe: pd.DataFrame, pd_potencia: pd.DataFrame, cifras: dict
     out = [
         "# Lista priorizada de compuestos naturales", "",
         "> **Es una lista exploratoria, no una validada.** La ordena el modelo de potencia de la fase 2, que **en los productos "
-        "naturales no supera a una línea base sencilla** (concordancia 0.530 contra 0.565 de peso, TPSA y diana, en 117 pares de la "
+        "naturales no se distingue de una línea base de peso, TPSA y diana** (concordancia 0.511 al reajustar, 0.530 en la corrida registrada, contra 0.565, en 117 pares de la "
         "prueba reservada, [C.5](decisiones.md#dc-5)). Sirve para decidir **qué probar primero**, no para afirmar que un compuesto "
         "actúa. Ninguna fila es un resultado de laboratorio.", "",
         "## Cómo se hizo", "",
@@ -186,7 +190,7 @@ def escribir_documento(pe: pd.DataFrame, pd_potencia: pd.DataFrame, cifras: dict
 def main() -> None:
     params = {"top_por_lista": TOP, "barrera_como_filtro": False, "toca_prueba": False, "combina_fases": False,
               "exploratoria": True, "filtro_pains": "A, B y C de RDKit", "np_likeness_minimo": NP_MINIMO, "universo": "NPASS y CMAUP, filas de ajuste"}
-    with Corrida("lista-priorizada-naturales-corte-np-05", decision="C.5", params=params, semillas=[0]) as c:
+    with Corrida("lista-priorizada-naturales-nombres", decision="C.5", params=params, semillas=[0]) as c:
         u = universo()
         modelos = inferencia.cargar()
         pred = inferencia.predecir(u["smiles"].tolist(), modelos).reset_index(drop=True)
