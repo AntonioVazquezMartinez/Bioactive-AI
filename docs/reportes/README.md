@@ -8,7 +8,7 @@ El calendario completo de entregas está en la [tabla de fases de CRISP-ML(Q)](a
 
 | Pieza | Qué es |
 |:--|:--|
-| [Presentación final](../../presentacion-final.qmd) | 15 minutos de charla y 10 de preguntas, con notas del orador |
+| [Presentación final](../../presentacion-final.qmd) ([PDF](presentacion/presentacion-final.pdf)) | 15 minutos de charla y 10 de preguntas, con notas del orador. El PDF lleva la huella del mazo y una prueba falla si se queda atrás; se regenera con `scripts/exportar_mazo_pdf.py` |
 | [Cuaderno para la patrocinadora](../../notebooks/06_Uso_de_los_modelos.ipynb) | Recibe estructuras propias y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una advertencia de extrapolación; ordena cada fase por separado |
 | Resumen ejecutivo (`resumen-ejecutivo/resumen_ejecutivo.pdf`, en el repositorio; no se publica en el sitio hasta que la patrocinadora lo autorice) | Tres páginas para la dirección: la decisión, el desempeño, los costos estimados y los riesgos |
 | [Artículo (PDF)](articulo/articulo.pdf) | El producto de difusión, de 12 a 18 páginas, con sus anexos |
