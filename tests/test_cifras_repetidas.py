@@ -73,6 +73,21 @@ CIFRAS = [
      r"([\d.]{2,4})\s*\\?,?\\?%\s*es el archivo completo", "63.5"),
     ("los esqueletos medidos en las dos fases, como lo dice el deck",
      r"\*{0,2}([\d,]{3,5})\s*esqueletos\*{0,2}\s*est[áa]n medidos en las dos", "612"),
+    # Las tres de la fase 2 que el deck ascendió al hilo con este cambio. El estrato `solo_npass`
+    # es el que la patrocinadora mira, y sus tres cifras —cuántos pares, qué saca el modelo y qué
+    # saca la línea base— ya viven en el artículo, el registro, el deck y el cuaderno. El 0.530 no
+    # se vigila aparte porque va siempre pegado a uno de estos anclajes.
+    ("los pares del estrato que solo tiene NPASS",
+     r"\*{0,2}([\d,]{3,4})\s*pares\*{0,2}\s*(?:de productos naturales\b"
+     r"|que solo tiene (?:NPASS|la base de productos naturales))", "117"),
+    ("la línea base de los pares que solo tiene NPASS",
+     r"l[ií]nea base de peso y (?:superficie polar|TPSA)[^.]{0,40}?\((0\.\d{3})\)", "0.565"),
+    # El 0.015 va con su redacción del deck y con la del artículo y el registro, que lo dicen al
+    # revés («la dispersión de 0.015 entre los siete modelos»). Es la cifra de la que se derivó el
+    # 0.030 de la escalera de la fase 2, así que una copia que se mueva invalida ese umbral también.
+    ("la dispersión entre los modelos competitivos de la fase 2",
+     r"(?:competitivos caben en \*{0,2}(0\.\d{3})"
+     r"|dispersi[óo]n de \*{0,2}(0\.\d{3})\*{0,2} entre los siete modelos)", "0.015"),
 ]
 
 

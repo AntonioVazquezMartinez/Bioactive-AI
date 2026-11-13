@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 13.5 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -76,16 +76,16 @@ MCC, de validación a la prueba reservada: se cae **a la mitad**.
 
 [0.76 → 0.72]{style="font-size:2.4em;font-weight:700;"}
 
-Concordancia: casi no se mueve. Pero en los **117 pares de productos naturales** cae a **0.53**, bajo una línea base de peso y superficie polar (0.565).
+Concordancia: casi no se mueve. Pero en los **117 pares** que solo tiene la base de productos naturales cae a **0.53**, bajo una línea base de peso y superficie polar (0.565).
 :::
 :::
 
-Las dos medidas valen 0 en el azar y 1 acertando siempre.
+El azar vale 0 en el MCC y 0.5 en la concordancia; acertar siempre vale 1 en las dos.
 
 **Las dos fases se caen, y no del mismo modo:** una de golpe y la otra solo donde importa. El resto de la charla busca por qué.
 
 ::: {.notes}
-**Antonio · 0.75 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. Los modelos son una máquina de vectores de soporte (`svm_rbf`) en la fase 1 y un modelo de supervivencia acelerada (`aft`) en la fase 2. En la fase 2 el 0.53 viene de 0.63 en validación, y con 117 pares no refuta ni confirma: es el hallazgo que más le importa a la patrocinadora y lo retoma Pame. Que la concordancia agregada apenas baje es porque la domina ChEMBL.
+**Antonio · 0.75 min.** Este es el hilo de la presentación. Cada hallazgo es una pista. Los modelos son una máquina de vectores de soporte (`svm_rbf`) en la fase 1 y un modelo de supervivencia acelerada (`aft`) en la fase 2. El estrato de la fase 2 es `solo_npass`, los pares cuya evidencia solo está en NPASS, que es la base de productos naturales: su 0.53 viene de 0.63 en validación y con 117 pares no refuta ni confirma. Es el hallazgo que más le importa a la patrocinadora y lo cobra Art en las conclusiones. Que la concordancia agregada apenas baje es porque la domina ChEMBL, que aporta 13,598 de los 13,944 pares de la prueba.
 :::
 
 ## Los datos {.smaller}
@@ -125,7 +125,7 @@ Las dos medidas valen 0 en el azar y 1 acertando siempre.
 ![](docs/reportes/presentacion/figuras/anatomia.svg){fig-alt="La morfina, su andamio de Bemis-Murcko y su esqueleto de conectividad"}
 
 - **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. La literatura reporta que partir al azar lo infla entre 7 y 13 puntos.
-- **Qué medimos, y qué dice cada medida.** **Fase 1**, clasificar: el **MCC** resume los aciertos y los errores de las dos clases en un número, el **AUROC** dice si pone a los permeables por encima sin fijar ningún corte, y el **AUPRC** mira la clase minoritaria. **Fase 2**, predecir potencia: la **concordancia** es con qué frecuencia acierta cuál de dos compuestos es el más potente.
+- **Qué medimos, y qué dice cada medida.** **Fase 1**, clasificar: el **MCC** resume los aciertos y los errores de las dos clases en un número, el **AUROC** dice si pone a los permeables por encima sin fijar ningún corte, y el **AUPRC** mira la clase minoritaria. **Fase 2**, predecir potencia: la **concordancia** es con qué frecuencia acierta cuál de dos pares compuesto-diana es el más potente.
 - Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
@@ -135,15 +135,15 @@ Las dos medidas valen 0 en el azar y 1 acertando siempre.
 ## El modelo no es la palanca {.smaller}
 
 - **Fase 1:** once modelos, de regresión logística a ensambles. Entre ellos hay solo **4.2 puntos** de MCC, y el mejor iguala el punto de partida sin superarlo (0.7017 contra 0.70): el **lift es cero**.
-- **Fase 2:** nueve modelos de regresión, y entre los siete competitivos hay **0.015** de concordancia, la mitad de lo que habíamos declarado como mejora (0.030).
-- El modelo que entregamos en la fase 2 **no es el que gana el agregado**: el `aft` queda 0.004 debajo del bosque y lo elegimos porque en los pares de productos naturales saca 0.63 contra 0.51. Lo que lo movió fue **qué datos ve** —las mediciones censuradas, que a los demás se les quitan— y no el algoritmo.
+- **Fase 2:** nueve modelos de regresión, y los siete competitivos caben en **0.015** de concordancia, con sus intervalos solapados: ninguno se distingue de los otros.
+- El modelo que entregamos en la fase 2 **no es el que gana el agregado**: el `aft` queda 0.004 debajo del bosque y lo elegimos porque en los pares que solo tiene NPASS saca 0.63 contra 0.51 **en validación**. Lo que lo movió fue **qué datos ve** —las mediciones censuradas, que a los demás se les quitan— y no el algoritmo.
 
 ::: {.callout-tip title="Pista 1"}
 No es el modelo.
 :::
 
 ::: {.notes}
-**Antonio · 1.25 min.** Es un resultado negativo honesto en las dos fases: elegir el modelo no fue la palanca. En la prueba reservada el `svm_rbf` da MCC 0.339 y AUROC 0.793. En la fase 2 el bosque gana el agregado de forma consistente, en 14 de los 15 pliegues, así que no es un empate; el `aft` gana en los pares que solo tiene NPASS contra los ocho restantes en todas las evaluaciones. El mecanismo está medido: el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL, y los ensambles, que descartan las censuradas, reciben 982 de las 2,114 filas de NPASS mientras el `aft` las recibe todas.
+**Antonio · 1.25 min.** Es un resultado negativo honesto en las dos fases: elegir el modelo no fue la palanca. En la prueba reservada el `svm_rbf` da MCC 0.339 y AUROC 0.793. En la fase 2 el bosque gana el agregado de forma consistente, en 14 de los 15 pliegues, así que no es un empate; el `aft` gana en los pares que solo tiene NPASS contra los ocho restantes en todas las evaluaciones. El 0.63 contra 0.51 es de validación cruzada y en la prueba reservada el `aft` cae a 0.530 ahí, con 117 pares que no refutan ni confirman: la elección se sostiene en el mecanismo, no en la prueba. El 0.015 es el rango entre el `bosque` (0.765) y el `boosting` (0.750), con desviaciones de 0.005 a 0.006. No decir que 0.015 es la mitad de un umbral declarado: el 0.030 de la escalera de la fase 2 se definió como el doble de esta dispersión, así que el argumento sería circular. El mecanismo está medido: el 53.5% de las filas de NPASS vienen censuradas contra el 16.6% de las de ChEMBL, y los ensambles, que descartan las censuradas, reciben 982 de las 2,114 filas de NPASS mientras el `aft` las recibe todas.
 :::
 
 ## La escalera de semejanza · fase 1 {.smaller}
@@ -262,12 +262,12 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 ![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Orden de magnitud de los factores que mueven el desempeño" width="50%"}
 
 - **Fase 1, permeabilidad:** de 0.70 a 0.34 de MCC; unos **0.07 eran el corte**, que se puede ajustar (0.34 a 0.41), y el orden cayó **12.6 puntos** de AUROC, **sin explicar**.
-- **Fase 2, potencia:** el **72%** agregado lo domina ChEMBL, y en los 117 pares de productos naturales **no está demostrado** (0.530, bajo la línea base).
+- **Fase 2, potencia:** acierta cuál de dos pares es el más potente en el **72%**, pero lo domina ChEMBL; en los **117 pares** que solo tiene la base de productos naturales baja a **0.530**, bajo una línea base de peso y superficie polar (0.565). Para ellos, **no está demostrado**.
 - **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
 - **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
 
 ::: {.notes}
-**Art · 1 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado. Los dos hallazgos ya salieron en la diapositiva 3, así que aquí se cobran y no se construyen. En la fase 2, el 72% es el agregado y lo domina ChEMBL; lo que le importa a la patrocinadora son los productos naturales, y ahí el modelo queda por debajo de una línea base sencilla, con solo 117 pares para juzgarlo.
+**Art · 1.5 min.** Cada barra viene de una corrida distinta: ordenan la magnitud, no miden el efecto de cada factor por separado. Los dos hallazgos ya salieron en la diapositiva 3, así que aquí se cobran y no hace falta volver a construirlos. En la fase 2, el 72% es el agregado y lo domina ChEMBL; lo que le importa a la patrocinadora son los productos naturales, y ahí el modelo queda por debajo de una línea base sencilla, con solo 117 pares para juzgarlo.
 :::
 
 # Respaldo
