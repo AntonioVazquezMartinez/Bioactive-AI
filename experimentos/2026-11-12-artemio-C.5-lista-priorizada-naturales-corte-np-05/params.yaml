@@ -1,0 +1,12 @@
+decision: C.5
+semillas:
+- 0
+params:
+  top_por_lista: 10
+  barrera_como_filtro: false
+  toca_prueba: false
+  combina_fases: false
+  exploratoria: true
+  filtro_pains: A, B y C de RDKit
+  np_likeness_minimo: 0.5
+  universo: NPASS y CMAUP, filas de ajuste

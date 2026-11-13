@@ -15,15 +15,17 @@ La regla, fijada antes de mirar el resultado final:
    porque «natural» ahí es solo «coincide con COCONUT» y COCONUT los incluye.
 2. **Se excluyen** los SMILES que no se pueden usar; los compuestos con alerta **PAINS** (A, B o C de RDKit), porque
    la guía del proyecto pide filtrarlos antes de reportar un candidato; y los de **puntaje de semejanza a productos
-   naturales** (Ertl et al. 2008, `ertl2008natural`, implementación de RDKit) menor de 0, porque NPASS y CMAUP traen
+   naturales** (Ertl et al. 2008, `ertl2008natural`, implementación de RDKit) menor de 0.5, porque NPASS y CMAUP traen
    algunos fármacos sintéticos (prazosina, sunitinib, clorpromazina). Se cuenta cuántos salen por cada motivo.
+   **El corte era 0 y se subió a 0.5** al ver que la ciglitazona, un fármaco sintético (PubChem, CID 2750), entraba
+   con 0.23 al tercer lugar de «Depresión». Se cambió la regla y se repitió la corrida completa, en lugar de excluir
+   ese compuesto a mano; la corrida anterior (`2026-11-12-artemio-C.5-lista-priorizada-naturales`) se conserva como
+   la versión superada. El corte no es una frontera nítida: el puntaje es una probabilidad aprendida, no una etiqueta.
 3. **Por diana:** los 10 con mayor potencia predicha (`pActividad`) entre los compuestos **sin medición contra esa
-   diana** en las filas de ajuste (los pares ya medidos no son hipótesis nuevas) **y con barrera probable**
-   (`p_bbb_mas` ≥ 0.5). Es el criterio de la primera diapositiva, que un compuesto tiene que llegar al cerebro **y**
-   actuar sobre su diana. **El 0.5 no es un corte calibrado** (el modelo declara permeable al 79% de la prueba, que
-   tiene 57.3%, así que es una condición laxa: solo deja fuera a los claramente impermeables) **y combinar las dos fases
-   no está validado** (C.3 sigue pendiente: solo hay 612 esqueletos medidos en ambas). Por eso se guarda también la
-   lista sin ese criterio (`por_diana_solo_potencia.csv`), y la columna `p_bbb_mas` va siempre al lado.
+   diana** en las filas de ajuste (los pares ya medidos no son hipótesis nuevas). **La probabilidad de cruzar la
+   barrera no filtra**: un compuesto que no cruza por difusión puede llegar al cerebro por un transportador o con una
+   formulación, y un BBB− no descarta (C.5). Va siempre al lado (`p_bbb_mas`) para que quien lea decida, y la
+   variante que sí exige barrera probable (≥ 0.5) se guarda aparte (`por_diana_con_barrera_probable.csv`).
 4. **Por enfermedad:** lo mismo, con el máximo de la potencia predicha entre las dianas sin medir de esa categoría (la
    columna `diana_categoria` del archivo de la patrocinadora), y la diana que da ese máximo.
 
@@ -51,7 +53,17 @@ TOP = 10
 BARRERA = 0.5
 CRUDO = RAIZ / "data" / "external" / "profesora" / "snc_activity_crudo_v3_final_2026-09-25_Entrenamiento.csv"
 ETIQUETAS = RAIZ / "data" / "external" / "profesora" / "etiquetas_dianas_2026-09-25.csv"
-NP_MINIMO = 0.0
+NP_MINIMO = 0.5
+# Nombres comunes verificados en PubChem el 13 de noviembre de 2026 (por InChIKey), para los compuestos que el dato trae
+# sin nombre o con una descripción química; la clave es el primer bloque del InChIKey, igual que `esqueleto`.
+NOMBRES_VERIFICADOS = {
+    "LXTKNVLLWOLCOV": "Fisovenina",                      # CID 442113, alcaloide de Physostigma venenosum
+    "ZKPVWZDNDNCTBB": "3-(3,4-dimetoxifenil)serina",     # CHEMBL4647106
+    # Sin nombre común en PubChem (solo identificadores de ChEMBL). Estos dos van con una descripción **por su
+    # estructura**, no verificada en una base de datos: la clase, no el compuesto.
+    "VBRSHBGIUDRWEJ": "Lignano (NPC483651)",              # CHEMBL4634863
+    "JHPIJMUNSMWWAA": "Hidroxi-cantin-6-ona (NPC53144)",  # alcaloide; posición del hidroxilo sin confirmar
+}
 INCHIKEY = re.compile(r"^[A-Z]{14}-[A-Z]{10}-[A-Z]$")
 
 
@@ -79,6 +91,7 @@ def universo() -> pd.DataFrame:
     nombre = u["esqueleto"].map(medida["compound_name"])
     nombre = nombre.where(nombre.map(nombre_util), u["esqueleto"].map(buenos))
     u["nombre"] = nombre.where(nombre.map(nombre_util), u["esqueleto"].map(ids)).fillna("(sin nombre)")
+    u["nombre"] = u["esqueleto"].map(NOMBRES_VERIFICADOS).fillna(u["nombre"])
     u["nombre_corto"] = u["nombre"].str.slice(0, 60)
     return u
 
@@ -127,7 +140,7 @@ def tabla(df: pd.DataFrame, con_diana: bool) -> str:
     return "\n".join(filas)
 
 
-def escribir_documento(pe: pd.DataFrame, pd_barrera: pd.DataFrame, cifras: dict, carpeta: Path) -> None:
+def escribir_documento(pe: pd.DataFrame, pd_potencia: pd.DataFrame, cifras: dict, carpeta: Path) -> None:
     """`docs/lista-priorizada.md`: la lista, con las advertencias antes que las tablas."""
     rel = carpeta.relative_to(RAIZ)
     out = [
@@ -139,22 +152,21 @@ def escribir_documento(pe: pd.DataFrame, pd_barrera: pd.DataFrame, cifras: dict,
         "## Cómo se hizo", "",
         f"- **Universo:** {cifras['universo']:,} compuestos de las filas de ajuste que NPASS o CMAUP aportan a la fase 2 (la prueba "
         "reservada no se lee). Salen "
-        f"{cifras['pains']} con alerta PAINS y {cifras['np']} con puntaje de semejanza a productos naturales menor de 0 "
+        f"{cifras['pains']} con alerta PAINS y {cifras['np']} con puntaje de semejanza a productos naturales menor de 0.5 "
         "(Ertl et al., 2008, `ertl2008natural`), porque esas bases traen algunos fármacos sintéticos; quedan "
         f"{cifras['candidatos']:,}.",
-        "- **Por diana:** los 10 de mayor potencia predicha entre los que **no tienen medición contra esa diana** (los pares ya medidos "
-        "no son hipótesis nuevas) y con **barrera probable** (probabilidad de cruzar la barrera de 0.5 o más). Es lo que pide el "
-        "objetivo del proyecto: llegar al cerebro **y** actuar sobre su diana. El 0.5 no es un corte calibrado y **combinar las dos "
-        "fases no está validado** ([C.3](decisiones.md#dc-3)); por eso la lista sin ese criterio también se guarda "
-        f"(`por_diana_solo_potencia.csv` en `{rel}`).",
-        "- **Por enfermedad:** lo mismo, con el máximo entre las dianas de esa categoría (las categorías son las del archivo de la patrocinadora).",
-        "- **Un compuesto con barrera baja no queda descartado** (un BBB− no descarta, [C.5](decisiones.md#dc-5)): el criterio solo ordena.", "",
+        "- **Por diana:** los 10 de mayor potencia predicha entre los que **no tienen medición contra esa diana** (los pares ya "
+        "medidos no son hipótesis nuevas). **Ordena solo la potencia: la barrera hematoencefálica no filtra**, porque un compuesto "
+        "que no cruza por difusión puede llegar al cerebro por un transportador o con una formulación, y un BBB− no descarta "
+        "([C.5](decisiones.md#dc-5)). La probabilidad de cruzar va en su columna, al lado; la variante que exige barrera probable "
+        f"(0.5 o más) se guarda aparte (`por_diana_con_barrera_probable.csv` en `{rel}`).",
+        "- **Por enfermedad:** lo mismo, con el máximo entre las dianas de esa categoría (las categorías son las del archivo de la patrocinadora).", "",
         "## Cómo leerla", "",
         "- **Potencia predicha:** pActividad (5 es unos 10 µM, 6 es 1 µM, 7 es 0.1 µM). El modelo predice potencia, **sin saber en qué "
         "sentido** debe actuar el compuesto (inhibir o activar): el efecto buscado viene del archivo de dianas de la patrocinadora.",
         "- **Parecido a lo visto:** «bajo» si el compuesto se parece menos de 0.4 a lo que los modelos vieron al entrenarse; entonces su lugar vale menos.",
         "- **Se repiten:** la química que pesa es casi la misma en todas las dianas (la diana pone el 15% de la atribución, ver el anexo F del "
-        f"artículo), así que **los mismos compuestos suben en varias listas**: las {len(pd_barrera)} filas por diana tienen solo "
+        f"artículo), así que **los mismos compuestos suben en varias listas**: las {len(pd_potencia)} filas por diana tienen solo "
         f"{cifras['distintos']} compuestos distintos. Lo que dice la lista es qué compuestos de entrada parecen potentes, más que "
         "cuál es el mejor para cada diana.",
         "- **Identificadores:** si el dato no trae un nombre usable, el compuesto va con su identificador de NPASS (`NPASS:NPC...`). "
@@ -165,16 +177,16 @@ def escribir_documento(pe: pd.DataFrame, pd_barrera: pd.DataFrame, cifras: dict,
     for enf, g in pe.groupby("enfermedad", sort=True):
         out += [f"### {enf}", "", tabla(g, True), ""]
     out += ["## Por diana (los cinco primeros)", ""]
-    for diana, g in pd_barrera.groupby("diana", sort=True):
+    for diana, g in pd_potencia.groupby("diana", sort=True):
         out += [f"### {diana}: {g['enfermedad'].iloc[0]} ({str(g['efecto_buscado'].iloc[0]).lower()})", "",
                 tabla(g.head(5), False), ""]
     (RAIZ / "docs" / "lista-priorizada.md").write_text("\n".join(out), encoding="utf-8")
 
 
 def main() -> None:
-    params = {"top_por_lista": TOP, "barrera_minima_p_bbb_mas": BARRERA, "toca_prueba": False, "combina_fases": False,
+    params = {"top_por_lista": TOP, "barrera_como_filtro": False, "toca_prueba": False, "combina_fases": False,
               "exploratoria": True, "filtro_pains": "A, B y C de RDKit", "np_likeness_minimo": NP_MINIMO, "universo": "NPASS y CMAUP, filas de ajuste"}
-    with Corrida("lista-priorizada-naturales", decision="C.5", params=params, semillas=[0]) as c:
+    with Corrida("lista-priorizada-naturales-corte-np-05", decision="C.5", params=params, semillas=[0]) as c:
         u = universo()
         modelos = inferencia.cargar()
         pred = inferencia.predecir(u["smiles"].tolist(), modelos).reset_index(drop=True)
@@ -213,10 +225,13 @@ def main() -> None:
                                   "candidatos_sin_medir"]])
             return pd.concat(filas, ignore_index=True)
 
-        pd_barrera = por_diana(True)
+        # La lista principal ordena solo por potencia: un compuesto que no cruza por difusión puede llegar al cerebro por
+        # un transportador o con una formulación, así que la probabilidad de cruzar va al lado y no filtra. La variante
+        # con barrera probable se guarda aparte para quien quiera ese criterio.
         pd_potencia = por_diana(False)
-        pd_barrera.to_csv(c.carpeta / "por_diana.csv", index=False)
-        pd_potencia.to_csv(c.carpeta / "por_diana_solo_potencia.csv", index=False)
+        pd_barrera = por_diana(True)
+        pd_potencia.to_csv(c.carpeta / "por_diana.csv", index=False)
+        pd_barrera.to_csv(c.carpeta / "por_diana_con_barrera_probable.csv", index=False)
 
         def por_enfermedad(con_barrera: bool) -> pd.DataFrame:
             filas = []
@@ -237,31 +252,31 @@ def main() -> None:
                 filas.append(m)
             return pd.concat(filas, ignore_index=True)
 
-        pe = por_enfermedad(True)
+        pe = por_enfermedad(False)
         pe.to_csv(c.carpeta / "por_enfermedad.csv", index=False)
-        por_enfermedad(False).to_csv(c.carpeta / "por_enfermedad_solo_potencia.csv", index=False)
+        por_enfermedad(True).to_csv(c.carpeta / "por_enfermedad_con_barrera_probable.csv", index=False)
 
-        escribir_documento(pe, pd_barrera, {
+        escribir_documento(pe, pd_potencia, {
             "universo": len(u), "pains": int(usables["pains"].sum()),
             "np": int((~usables["pains"] & (usables["np_likeness"] < NP_MINIMO)).sum()), "candidatos": len(validos),
-            "distintos": int(pd_barrera["esqueleto"].nunique())}, c.carpeta)
+            "distintos": int(pd_potencia["esqueleto"].nunique())}, c.carpeta)
         c.metricas({
             "universo_naturales": int(len(u)),
             "sin_usar": int((d["motivo"] != "").sum()),
             "con_alerta_pains": int(usables["pains"].sum()),
-            "fuera_por_np_likeness_menor_de_0": int((~usables["pains"] & (usables["np_likeness"] < NP_MINIMO)).sum()),
+            "fuera_por_np_likeness_menor_de_0_5": int((~usables["pains"] & (usables["np_likeness"] < NP_MINIMO)).sum()),
             "candidatos": int(len(validos)),
             "candidatos_con_barrera_probable": int((validos["p_bbb_mas"] >= BARRERA).sum()),
             "dianas": len(dianas),
             "enfermedades": sorted(set(categoria.values()) - {""}),
-            "compuestos_distintos_en_las_listas_por_diana": int(pd_barrera["esqueleto"].nunique()),
-            "filas_en_las_listas_por_diana": int(len(pd_barrera)),
-            "con_aviso_de_extrapolacion_en_las_listas": int(pd_barrera["aviso_extrapolacion"].sum()),
+            "compuestos_distintos_en_las_listas_por_diana": int(pd_potencia["esqueleto"].nunique()),
+            "filas_en_las_listas_por_diana": int(len(pd_potencia)),
+            "con_aviso_de_extrapolacion_en_las_listas": int(pd_potencia["aviso_extrapolacion"].sum()),
         })
         print(f"universo {len(u)} · sin usar {(d['motivo'] != '').sum()} · PAINS {usables['pains'].sum()} "
-              f"· NP<0 {(~usables['pains'] & (usables['np_likeness'] < NP_MINIMO)).sum()} "
+              f"· NP<0.5 {(~usables['pains'] & (usables['np_likeness'] < NP_MINIMO)).sum()} "
               f"· candidatos {len(validos)} · con barrera probable {(validos['p_bbb_mas'] >= BARRERA).sum()}")
-        print(f"compuestos distintos en las {len(pd_barrera)} filas por diana: {pd_barrera['esqueleto'].nunique()}")
+        print(f"compuestos distintos en las {len(pd_potencia)} filas por diana: {pd_potencia['esqueleto'].nunique()}")
         print(pe[["enfermedad", "lugar", "nombre_corto", "diana", "pActividad_predicha", "p_bbb_mas", "aviso_extrapolacion"]]
               .round(2).to_string(index=False))
 

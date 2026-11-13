@@ -80,11 +80,11 @@ CIFRAS = [
     # La lista priorizada (C.5, 12 de noviembre) vive en el deck, los dos artículos, el resumen, el sitio y el
     # registro. Sus tres cifras de lectura se escriben cada una con su frase.
     ("los compuestos distintos de la lista priorizada, en prosa",
-     r"260 (?:filas|lugares) por diana[^.]{0,40}?(\d+) compuestos distintos", "84"),
-    ("los candidatos con barrera probable de la lista priorizada",
-     r"([\d,]+) candidatos (?:con barrera probable|de 1,821)", "752"),
+     r"260 (?:filas|lugares) por diana[^.]{0,40}?(\d+) compuestos distintos", "75"),
+    ("los candidatos de la lista priorizada, en prosa",
+     r"([\d,]+) candidatos de 1,821", "1,026"),
     ("los candidatos que quedan en la lista priorizada",
-     r"quedan ([\d,]+) candidatos", "752"),
+     r"quedan ([\d,]+) candidatos", "1,026"),
     # Las tres de la fase 2 que el deck ascendió al hilo con este cambio. El estrato `solo_npass`
     # es el que la patrocinadora mira, y sus tres cifras —cuántos pares, qué saca el modelo y qué
     # saca la línea base— ya viven en el artículo, el registro, el deck y el cuaderno. El 0.530 no
