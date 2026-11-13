@@ -98,7 +98,7 @@ def fig_escalera() -> None:
     ax.set_ylabel("AUROC del svm_rbf")
     ax.set_xlabel("→ ningún compuesto de entrenamiento puede parecerse más a uno de validación", fontsize=8.5)
     limpiar(ax)
-    ax.set_title("La prueba reservada equivale a los peldaños más estrictos de la escalera")
+    ax.set_title("La prueba reservada cae como un peldaño estricto,\npero se parece al entrenamiento como uno laxo (>= 0.6)", fontsize=10.5)
     guardar(fig, "f1_escalera")
 
 

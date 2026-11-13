@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; seis de respaldo al final.
+# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; siete de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -292,16 +292,16 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 **Art · 0.5 min.** Es el cuaderno que usa la patrocinadora. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
 :::
 
-## Una herramienta para medir columnas nuevas {.smaller}
+## La lista priorizada: qué probar primero {.smaller}
 
-![](docs/reportes/presentacion/figuras/medir.svg){fig-alt="Diferencia de MCC contra los 151 descriptores: tres propiedades bien elegidas quedan unos 0.08 por debajo y un control de ruido casi 0.69 por debajo"}
+![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
 
-- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
-- Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
-- **Dónde está:** el módulo `src/models/representaciones.py` del repositorio, con su guía en el sitio (*Entrega final*, «Medir una representación nueva»). Es Python, no una interfaz.
+- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa en el sitio (*Entrega final*) y en CSV.
+- **Cómo leerla:** es **exploratoria**. El modelo de potencia **no supera a una línea base** en naturales (0.530 contra 0.565): sirve para decidir qué probar primero, no como resultado.
+- **Se repite:** 84 compuestos distintos en 260 lugares, porque la química que pesa es casi la misma en todas las dianas.
 
 ::: {.notes}
-**Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse. Se usa con tres funciones: `con_tabla` para traer las columnas propias, `columnas_al_azar` para el control de ruido y `comparar` para medir con la misma validación; la guía dice cómo agrupar y qué errores evitar.
+**Art · 0.5 min.** Es el objetivo con el que abrimos: priorizar naturales que lleguen al cerebro y actúen sobre su diana. La figura trae los tres primeros por enfermedad; la lista completa, por diana y por enfermedad, está en el sitio. Es una lista de hipótesis para el laboratorio: el modelo de potencia no supera a una línea base en naturales, y combinar las dos fases no está validado, así que el criterio de barrera solo ordena y no descarta. En naranja, compuestos lejos de lo que el modelo vio. Los identificadores NPASS:NPC son compuestos de esa base sin un nombre usable en el dato.
 :::
 
 ## Qué concluimos {.smaller}
@@ -406,4 +406,17 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ::: {.notes}
 **Respaldo · Antonio.** Contesta «¿para cada diana, qué química importa?». La diana entra al modelo como 26 columnas 0 o 1, así que un ranking global la mezcla con los descriptores; aquí se separan. Se explican las 56,241 filas, cada una con el modelo que no la vio (en el resto de la presentación son 3,000 de muestra). Izquierda: la suma del SHAP de las columnas de diana de cada par, promediada por diana. Derecha: media de |SHAP| de cada columna en los pares de esa diana; naranja, un valor alto de la columna sube la potencia; azul, la baja. Lo que sale: casi toda la química es común, y las columnas propias de una diana son fragmentos poco frecuentes, de modo que pueden reflejar qué tipo de compuestos se midió contra esa diana y no cómo actúan. Además solo las ve SHAP: la permutación no las confirma, y la C.2 pide lo que coincide en dos métodos. Las dianas con menos de 500 pares no se interpretan. Corrida: `2026-11-12-artemio-C.2-shap-por-diana-fase2`.
+
+:::
+
+## Una herramienta para medir columnas nuevas {.smaller}
+
+![](docs/reportes/presentacion/figuras/medir.svg){fig-alt="Diferencia de MCC contra los 151 descriptores: tres propiedades bien elegidas quedan unos 0.08 por debajo y un control de ruido casi 0.69 por debajo"}
+
+- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
+- Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
+- **Dónde está:** el módulo `src/models/representaciones.py` del repositorio, con su guía en el sitio (*Entrega final*, «Medir una representación nueva»). Es Python, no una interfaz.
+
+::: {.notes}
+**Respaldo · Art.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse. Se usa con tres funciones: `con_tabla` para traer las columnas propias, `columnas_al_azar` para el control de ruido y `comparar` para medir con la misma validación; la guía dice cómo agrupar y qué errores evitar.
 :::

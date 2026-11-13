@@ -57,6 +57,9 @@ website:
           - href: presentacion-final.qmd
             text: Presentación final
             icon: easel
+          - href: contenido/lista-priorizada.md
+            text: Lista priorizada de naturales
+            icon: list-ol
           - href: contenido/notebooks/06_Uso_de_los_modelos.ipynb
             text: "Cuaderno: usar los modelos con tus compuestos"
             icon: journal-code
