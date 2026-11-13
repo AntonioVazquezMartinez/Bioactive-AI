@@ -524,6 +524,50 @@ def fig_ranking() -> dict:
     return {"fase1": list(f1["nombre"]), "fase2": list(f2["nombre"])}
 
 
+LISTA = RAIZ / "experimentos" / "2026-11-12-artemio-C.5-lista-priorizada-naturales"
+
+
+def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> dict:
+    """Los tres primeros naturales de cada enfermedad de la lista priorizada, con su diana, potencia y barrera."""
+    salida = salida or SALIDA
+    d = pd.read_csv(LISTA / "por_enfermedad.csv")
+    d = d[d["lugar"] <= 3]
+    enfermedades = list(dict.fromkeys(d["enfermedad"]))
+    fig, ax = plt.subplots(figsize=(11.6, 5.6))
+    y = 0.0
+    marcas, etiquetas = [], []
+    for enf in enfermedades:
+        g = d[d["enfermedad"] == enf]
+        ax.text(0, y, enf, ha="left", va="center", fontsize=11.5, fontweight="bold", color=AZUL)
+        y += 0.95
+        for _, r in g.iterrows():
+            nom = str(r["nombre_corto"])
+            nom = "carbamato de furoindol" if nom.startswith("[(3As") else nom
+            ax.barh(y, r["pActividad_predicha"], color=NARANJA if r["aviso_extrapolacion"] else AZUL, height=0.72)
+            ax.text(r["pActividad_predicha"] + 0.08, y,
+                    f"{r['diana']}  {r['pActividad_predicha']:.1f}  ·  cruza la barrera {r['p_bbb_mas']:.2f}", va="center",
+                    fontsize=8.8, color=GRIS)
+            marcas.append(y)
+            etiquetas.append(nom)
+            y += 1
+        y += 0.45
+    ax.set_yticks(marcas, etiquetas, fontsize=9.2)
+    ax.set_ylim(y - 0.4, -0.7)
+    ax.set_xlim(0, 12.5)
+    ax.set_xticks([])
+    for lado in ("left", "right", "top", "bottom"):
+        ax.spines[lado].set_visible(False)
+    ax.tick_params(length=0)
+    fig.text(0.01, -0.03, "Los tres primeros por enfermedad: mayor potencia predicha (pActividad) sin medición contra esa diana, con barrera "
+             "probable y sin alerta PAINS. En naranja, parecido menor de 0.4 a lo visto (extrapola).\nExploratoria: el modelo de potencia no "
+             "supera a una línea base en productos naturales. Sale de la corrida `2026-11-12-artemio-C.5-lista-priorizada-naturales`.",
+             fontsize=8.6, color=GRIS)
+    for ext in ("svg", "png"):
+        fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
+    plt.close(fig)
+    return {"enfermedades": enfermedades}
+
+
 def fig_fase2_origen() -> dict:
     """La fase 2 en la prueba, por procedencia: el modelo supera a la línea base solo donde hay ChEMBL."""
     estratos = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
@@ -644,6 +688,9 @@ if __name__ == "__main__":
     print("medir:", fig_medir())
     print("importancias:", fig_importancias())
     print("ranking:", fig_ranking())
+    print("lista:", fig_lista())
+
+
     print("fase2_origen:", fig_fase2_origen())
     print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)

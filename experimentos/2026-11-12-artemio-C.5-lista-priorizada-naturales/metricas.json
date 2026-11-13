@@ -1,0 +1,19 @@
+{
+  "candidatos": 1280,
+  "candidatos_con_barrera_probable": 752,
+  "compuestos_distintos_en_las_listas_por_diana": 84,
+  "con_alerta_pains": 223,
+  "con_aviso_de_extrapolacion_en_las_listas": 171,
+  "dianas": 26,
+  "enfermedades": [
+    "Alzheimer",
+    "Depresión",
+    "Estrés oxidativo",
+    "Neuroinflamación",
+    "Parkinson"
+  ],
+  "filas_en_las_listas_por_diana": 260,
+  "fuera_por_np_likeness_menor_de_0": 315,
+  "sin_usar": 3,
+  "universo_naturales": 1821
+}

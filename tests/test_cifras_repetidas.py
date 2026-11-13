@@ -77,6 +77,16 @@ CIFRAS = [
      r"([\d.]{2,4})\s*\\?,?\\?%\s*es el archivo completo", "63.5"),
     ("los esqueletos medidos en las dos fases, como lo dice el deck",
      r"\*{0,2}([\d,]{3,5})\s*esqueletos\*{0,2}\s*est[áa]n medidos en las dos", "612"),
+    # La lista priorizada (C.5, 12 de noviembre) vive en el deck, los dos artículos, el resumen, el sitio y el
+    # registro. Sus tres cifras de lectura se escriben cada una con su frase.
+    ("los compuestos distintos de la lista priorizada, como lo dice el deck",
+     r"(\d+) compuestos distintos en 260", "84"),
+    ("los compuestos distintos de la lista priorizada, en prosa",
+     r"260 (?:filas|lugares) por diana[^.]{0,40}?(\d+) compuestos distintos", "84"),
+    ("los candidatos con barrera probable de la lista priorizada",
+     r"([\d,]+) candidatos (?:con barrera probable|de 1,821)", "752"),
+    ("los candidatos que quedan en la lista priorizada",
+     r"quedan ([\d,]+) candidatos", "752"),
     # Las tres de la fase 2 que el deck ascendió al hilo con este cambio. El estrato `solo_npass`
     # es el que la patrocinadora mira, y sus tres cifras —cuántos pares, qué saca el modelo y qué
     # saca la línea base— ya viven en el artículo, el registro, el deck y el cuaderno. El 0.530 no
@@ -84,11 +94,13 @@ CIFRAS = [
     ("los pares del estrato que solo tiene NPASS",
      r"\*{0,2}([\d,]{3,4})\s*pares\*{0,2}\s*(?:(?:de productos )?naturales\b"
      r"|que solo tiene (?:NPASS|la base de productos naturales))", "117"),
-    # La línea base aparece entre paréntesis en la prosa y como fila de tabla en el deck, de ahí
-    # las dos aperturas; y se nombra «TPSA» o «superficie polar» según para quién esté escrito.
+    # La línea base se escribe de cuatro formas: «da 0.565», fila de tabla en el deck, «(0.565)» y
+    # «(0.530 contra 0.565)», donde el primer número es el del modelo. De ahí el «contra» opcional:
+    # sin él el patrón capturaba el 0.530 y la guarda fallaba contra su propia cifra canónica.
+    # Y se nombra «TPSA» o «superficie polar» según para quién esté escrito el documento.
     ("la línea base de los pares que solo tiene NPASS",
-     r"[Ll][ií]nea base de peso y (?:superficie polar|TPSA)[^|.\n]{0,40}[|(]\s*\*{0,2}(0\.\d{3})",
-     "0.565"),
+     r"[Ll][ií]nea base de peso y (?:superficie polar|TPSA)[^|.\n]{0,45}[|( ]\s*"
+     r"(?:0\.\d{3} contra )?\*{0,2}(0\.\d{3})", "0.565"),
     # El 0.015 va con su redacción del deck y con la del artículo y el registro, que lo dicen al
     # revés («la dispersión de 0.015 entre los siete modelos»). Es la cifra de la que se derivó el
     # 0.030 de la escalera de la fase 2, así que una copia que se mueva invalida ese umbral también.
