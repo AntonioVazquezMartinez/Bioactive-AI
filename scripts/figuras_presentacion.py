@@ -450,10 +450,16 @@ def _puntos(ax, d: pd.DataFrame, confirmadas: set, titulo: str, etiqueta_x: str,
     return orden
 
 
-def fig_importancias(salida: Path | None = None, nombre: str = "importancias") -> dict:
+def fig_importancias(salida: Path | None = None, nombre: str = "importancias", sin_dianas: bool = False) -> dict:
     """Qué pesa en cada fase: gráfico de puntos de SHAP por compuesto, y si la permutación lo confirma.
 
     Por defecto escribe `importancias` en la carpeta del deck; el artículo la llama con su carpeta y otro nombre.
+
+    `sin_dianas` quita del panel de la fase 2 las columnas `diana:*`. Es lo que usa el deck: esas columnas dicen **qué
+    diana es el par** (el 15% de la atribución) y no son química, y mezcladas en el ranking dan la lectura contraria a
+    la que la diapositiva afirma. No cambia ningún valor de SHAP ni el orden de las columnas químicas, solo oculta
+    las filas de la diana, que se ven aparte en `shap_por_diana`. Los artículos conservan la figura completa, que sí
+    trae el texto que la explica.
     """
     salida = salida or SALIDA
     from matplotlib.cm import ScalarMappable
@@ -462,6 +468,8 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias") -
     carpetas = {f: sorted((RAIZ / "experimentos").glob(f"*puntos-shap-por-compuesto-{f}"))[-1] for f in ("fase1", "fase2")}
     d1 = pd.read_csv(carpetas["fase1"] / "shap_fase1.csv")
     d2 = pd.read_csv(carpetas["fase2"] / "shap_fase2.csv")
+    if sin_dianas:
+        d2 = d2[~d2["columna"].str.startswith("diana:")]
     a1 = pd.read_csv(ATRIB1 / "atribucion_semilla0.csv")
     conf1 = set(a1[(a1["r_perm"] <= 15) & (a1["r_shap"] <= 15)]["caracteristica"])
     a2 = pd.read_csv(ATRIB2)
@@ -486,7 +494,8 @@ def fig_importancias(salida: Path | None = None, nombre: str = "importancias") -
     barra.outline.set_visible(False)
     fig.text(0.5, -0.03, "Cada punto es un compuesto en la fase 1 (300) y un par compuesto-diana en la 2 (3,000, una muestra). "
              "Su posición dice cuánto empuja esa columna la predicción; su color, qué valor tiene.\nLos confirmados por los dos "
-             "métodos van primero.", fontsize=9.6, color=GRIS, ha="center")
+             "métodos van primero." + (" En la fase 2 solo se muestra la química: la diana pone aparte el 15% de la atribución."
+                                       if sin_dianas else ""), fontsize=9.6, color=GRIS, ha="center")
     for ext in ("svg", "png"):
         fig.savefig(salida / f"{nombre}.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
     plt.close(fig)
@@ -738,7 +747,7 @@ if __name__ == "__main__":
     print("dificultad:", fig_dificultad())
     print("cortes:", fig_corte())
     print("medir:", fig_medir())
-    print("importancias:", fig_importancias())
+    print("importancias:", fig_importancias(sin_dianas=True))
     print("ranking:", fig_ranking())
     print("lista:", fig_lista())
 
