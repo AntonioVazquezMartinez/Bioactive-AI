@@ -299,6 +299,15 @@ Los gráficos de puntos de SHAP añaden la dirección (Figura~\ref{fig:atribucio
   \label{fig:atribucion}
 \end{figure*}
 
+Como la diana entra al modelo como 26 columnas 0 o 1, un ranking global la mezcla con la química, y separarlas cambia la lectura (Figura~\ref{fig:pordiana}). Explicamos las 56,241 filas, cada una con el modelo que no la vio, y agrupamos el SHAP por la diana del par. Las columnas de diana suman el 15\,\% de la atribución: ser \texttt{MAOA} baja la potencia predicha unas 0.8 unidades de pActividad y ser \texttt{LRRK2} la sube unas 0.7 (se interpretan las 16 dianas con 500 pares o más, de 26). La química que pesa es casi la misma en todas: el orden de las columnas coincide entre dianas (Spearman mediano 0.94, mínimo 0.90). Lo que distingue a una diana (hidrazonas en \texttt{MAOA}, sulfonamidas en \texttt{PTGS2}, cetonas en \texttt{BCHE}) pesa entre 0.03 y 0.06, contra 0.11 a 0.34 de la complejidad topológica, y son fragmentos poco frecuentes, de modo que pueden reflejar qué compuestos se midieron contra esa diana y no cómo actúa. Solo las ve SHAP: la permutación no las confirma (puestos 57 a 108), y reportamos únicamente lo que coincide en dos métodos. De nuevo, es lo que aprendió el modelo y no un mecanismo.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figuras/f9_por_diana.png}
+  \caption{SHAP de la fase~2 por diana, en las 16 dianas con 500 pares o más: a la izquierda, cuánto sube o baja la potencia predicha ser esa diana; a la derecha, la media del valor absoluto de SHAP de cada columna en los pares de esa diana, con su dirección en el color.}
+  \label{fig:pordiana}
+\end{figure*}
+
 \section{La representación no se traslada entre fases}
 \label{sec:huellas}
 

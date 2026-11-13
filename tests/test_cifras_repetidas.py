@@ -27,13 +27,17 @@ N = r"(\d\.\d)"
 # alguien estaba leyendo; ahora añadir una lectura al CSV sin actualizar las copias falla aquí.
 _LECTURAS = len(list(csv.DictReader((RAIZ / "experimentos" / "prueba.csv").open(encoding="utf-8"))))
 _EN_PALABRAS = {9: "nueve", 10: "diez", 11: "once", 12: "doce", 13: "trece", 14: "catorce",
-                15: "quince"}
+                15: "quince", 16: "dieciséis"}
 
 # (nombre, patrón con un grupo, valor canónico). Añadir una cifra vigilada es una línea.
 CIFRAS = [
     ("los compuestos del gráfico de puntos de la fase 1", r"fase[~ ]1 \((\d+), los mismos", "300"),
     ("los pares del gráfico de puntos de la fase 2", r"\(([\d,]+), una submuestra de", "3,000"),
     ("las filas por pliegue de esa submuestra", r"submuestra de (\d+) filas por pliegue", "600"),
+    ("las filas que explica el SHAP por diana", r"(?:sobre las|Explicamos las) ([\d,]+) filas, cada una", "56,241"),
+    ("el acuerdo del orden de columnas entre dianas", r"Spearman mediano (0\.\d+)", "0.94"),
+    ("la parte de la atribución que pone la diana, en el SHAP por diana",
+     r"columnas de diana suman el (\d+)\\?,?\s?\\?%", "15"),
     ("las lecturas de la prueba, en palabras",
      r"se ley[óo] \**(\w+) veces", _EN_PALABRAS.get(_LECTURAS, f"<{_LECTURAS}: añádela a _EN_PALABRAS>")),
     ("las lecturas de la prueba, en cifras",
@@ -78,15 +82,18 @@ CIFRAS = [
     # saca la línea base— ya viven en el artículo, el registro, el deck y el cuaderno. El 0.530 no
     # se vigila aparte porque va siempre pegado a uno de estos anclajes.
     ("los pares del estrato que solo tiene NPASS",
-     r"\*{0,2}([\d,]{3,4})\s*pares\*{0,2}\s*(?:de productos naturales\b"
+     r"\*{0,2}([\d,]{3,4})\s*pares\*{0,2}\s*(?:(?:de productos )?naturales\b"
      r"|que solo tiene (?:NPASS|la base de productos naturales))", "117"),
+    # La línea base aparece entre paréntesis en la prosa y como fila de tabla en el deck, de ahí
+    # las dos aperturas; y se nombra «TPSA» o «superficie polar» según para quién esté escrito.
     ("la línea base de los pares que solo tiene NPASS",
-     r"l[ií]nea base de peso y (?:superficie polar|TPSA)[^.]{0,40}?\((0\.\d{3})\)", "0.565"),
+     r"[Ll][ií]nea base de peso y (?:superficie polar|TPSA)[^|.\n]{0,40}[|(]\s*\*{0,2}(0\.\d{3})",
+     "0.565"),
     # El 0.015 va con su redacción del deck y con la del artículo y el registro, que lo dicen al
     # revés («la dispersión de 0.015 entre los siete modelos»). Es la cifra de la que se derivó el
     # 0.030 de la escalera de la fase 2, así que una copia que se mueva invalida ese umbral también.
     ("la dispersión entre los modelos competitivos de la fase 2",
-     r"(?:competitivos caben en \*{0,2}(0\.\d{3})"
+     r"(?:caben en \*{0,2}(0\.\d{3})\*{0,2} de concordancia"
      r"|dispersi[óo]n de \*{0,2}(0\.\d{3})\*{0,2} entre los siete modelos)", "0.015"),
 ]
 

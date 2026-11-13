@@ -1,0 +1,17 @@
+decision: C.5
+semillas:
+- 0
+params:
+  compuestos:
+    amiodarone: CCCCc1oc2ccccc2c1C(=O)c1cc(I)c(OCCN(CC)CC)c(I)c1
+    droperidol: O=C(CCCN1CC=C(n2c(=O)[nH]c3ccccc32)CC1)c1ccc(F)cc1
+    elopiprazole: Fc1ccc(-c2ccc(CN3CCN(c4cccc5ccoc45)CC3)[nH]2)cc1
+    gluconolactone: O=C1OC(CO)C(O)C(O)C1O
+    leflunomide: Cc1oncc1C(=O)Nc1ccc(C(F)(F)F)cc1
+    pizotifen: CN1CCC(=C2c3ccccc3CCc3sccc32)CC1
+  semilla: 0
+  candidatos_con_nombre: 40
+  combina_fases: false
+  toca_prueba: true
+  uso_de_la_prueba: solo elige seis compuestos y muestra su valor medido; ningun modelo
+    cambia
