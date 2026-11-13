@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; siete de respaldo al final.
+# Presentación final: 15 minutos de charla (16 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; ocho de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -281,24 +281,24 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 **Art · 0.75 min.** Dos métodos independientes. SHAP mira dentro del modelo y dice cuánto empuja cada columna cada predicción, y en qué dirección. La permutación solo mira la salida: baraja una columna, para que deje de tener relación con la respuesta, y mide cuánto empeora el modelo; no da dirección, y subestima a las columnas redundantes, como TPSA. "Confirmada por permutación" es lo que los dos ponen entre sus quince primeros. En la fase 1 coinciden en seis descriptores; en la 2, en doce de quince. Los puntos son 300 compuestos en la fase 1 y 3,000 pares compuesto-diana en la 2 (una muestra de las filas de validación). En la fase 2 la diana entra al modelo como 26 columnas 0 o 1, y en un ranking global aparecen mezcladas con la química; por eso en el respaldo las separamos: cuánto pone la diana (15% de la atribución) y qué química pesa dentro de cada una. El detalle está en el respaldo.
 :::
 
-## El cuaderno 06: usar los modelos con tus compuestos {.smaller}
+## El entregable: el cuaderno para usar los modelos con tus compuestos {.smaller}
 
 ![](docs/reportes/presentacion/figuras/ranking.svg){fig-alt="Ranking por fase de seis compuestos de la prueba reservada: probabilidad de cruzar la barrera junto a la etiqueta real, y potencia máxima predicha junto a la medida" width="85%"}
 
-- **Qué es:** `notebooks/06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio.
+- **Qué es:** el cuaderno `06_Uso_de_los_modelos.ipynb`. Le das **SMILES propios** y devuelve, por compuesto, la probabilidad de cruzar la barrera, la potencia por diana y una **advertencia de extrapolación**. No hay servicio. **Dónde:** [en el sitio](contenido/notebooks/06_Uso_de_los_modelos.html), menú *Entrega final*.
 - **Qué se ve:** su salida para seis compuestos de la **prueba reservada**, que ningún modelo vio, sorteados sin escoger y **ordenados por fase**. A la izquierda, la probabilidad de cruzar la barrera junto a la etiqueta real; a la derecha, la potencia predicha (barra) y la medida (rombo).
 - **Lo que enseña:** la leflunomida sale con 0.93 y **no cruza**, y la diana de mayor potencia predicha no coincide con la medida en ninguno de los seis.
-- **No combina** las fases en un solo ranking (queda como trabajo futuro); seis ejemplos para ver el formato, **ni lista de candidatos ni métrica**.
+- **No combina** las fases en un solo ranking (queda como trabajo futuro); son seis ejemplos para ver el formato, **no una métrica**.
 
 ::: {.notes}
-**Art · 0.5 min.** Es el cuaderno que usa la patrocinadora. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
+**Art · 0.5 min.** Es lo que entregamos para que la patrocinadora lo use: un cuaderno, con la liga en pantalla. Los seis compuestos son de la prueba reservada, sorteados con semilla 0: ningún modelo los vio, y no son una métrica. A la izquierda, la leflunomida sale con 0.93 y no cruza la barrera; a la derecha, el rombo es la potencia medida y la diana predicha no coincide con la medida en ninguno. En naranja, similitud menor de 0.4 con lo que el modelo vio en esa fase.
 :::
 
 ## La lista priorizada: qué probar primero {.smaller}
 
 ![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
 
-- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa en el sitio (*Entrega final*) y en CSV.
+- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa [en el sitio](contenido/lista-priorizada.html) y en CSV.
 - **Cómo leerla:** es **exploratoria**. El modelo de potencia **no supera a una línea base** en naturales (0.530 contra 0.565): sirve para decidir qué probar primero, no como resultado.
 - **Se repite:** 84 compuestos distintos en 260 lugares, porque la química que pesa es casi la misma en todas las dianas.
 
@@ -308,22 +308,13 @@ El agregado lo domina ChEMBL. En productos naturales el orden de potencia **no e
 
 ## Qué concluimos {.smaller}
 
-::: {.columns .align-center}
-::: {.column width="50%"}
-![](docs/reportes/articulo/figuras/f0_palancas.svg){fig-alt="Fase 1: orden de magnitud de los factores que mueven el desempeño"}
-:::
-::: {.column width="50%"}
-![](docs/reportes/presentacion/figuras/fase2_origen.svg){fig-alt="Fase 2: concordancia del modelo y de una línea base por procedencia de los datos"}
-:::
-:::
-
-- **Fase 1, permeabilidad:** el MCC cae de 0.70 a 0.34. Unos **0.07 son el corte**, que se ajusta (0.34 a 0.41). El resto es que el **orden empeoró**: el AUROC, que mide qué tan bien se ordenan los compuestos sin fijar un corte, baja de 0.919 a 0.793, **12.6 puntos**: unos 3 son lo que la semejanza de la prueba predecía (0.89); los otros 10 **no los explicamos**.
-- **Fase 2, potencia:** el modelo acierta el orden en el 72%, pero lo domina ChEMBL. En los **117 pares de productos naturales** pierde contra una línea base sencilla: **no está demostrado**.
-- **En las dos:** la confianza en una predicción depende de **qué tan nueva es la molécula**, no del modelo.
-- **Límites:** una sola prueba y un modelo por fase. **Siguiente:** combinar las fases en un orden, y medir la potencia con lotes propios.
+- **Qué encontramos:** podemos estimar si un compuesto cruza la barrera y con qué potencia actúa sobre cada diana, pero **la mitad del desempeño se va cuando la química es nueva** (MCC de 0.70 a 0.34, y **10 de los 12.6 puntos de AUROC sin explicar**). La confianza depende de **qué tan nueva es la molécula**, no del modelo.
+- **Qué no está demostrado:** en **productos naturales** el orden de potencia no supera a una línea base sencilla (0.530 contra 0.565). Es evidencia para priorizar, no una decisión.
+- **Qué entregamos:** el cuaderno, una **lista priorizada** (hipótesis para el laboratorio) y una guía para medir columnas propias. La continuidad queda en manos de la patrocinadora.
+- **Límites y qué sigue:** una sola prueba y un modelo por fase. Falta medir la potencia con **lotes propios** de naturales y combinar las dos fases en un solo orden.
 
 ::: {.notes}
-**Art · 1.5 min.** Lo nuevo es la figura de la derecha. A la izquierda, lo que más mueve el MCC de la fase 1, como vimos: la semejanza que se permite, no el modelo. A la derecha, la fase 2 en la prueba por procedencia: con ChEMBL el modelo supera a una línea base sencilla, y en los 117 pares de productos naturales no. La cifra citable es la de la corrida registrada, 0.530; la figura muestra 0.511, del reajuste que mide modelo y línea base en la misma corrida (la línea base da 0.565). El 72% de arriba es el agregado. Si preguntan por los 12.6 puntos del AUROC, se repasaron en «Pero no lo explica todo».
+**Art · 1.5 min.** Cuatro ideas, sin tecnicismos; lo técnico está en el bloque de resultados (la escalera, lo que la semejanza no explica, el corte, el modelo de potencia, lo que mide de verdad la fase 2 y qué pesa en cada fase). Si preguntan por el detalle: en la fase 1 el MCC cae de 0.70 a 0.34, unos 0.07 por el corte, y el orden perdió 12.6 puntos de AUROC, de los que la semejanza explica unos 3 (esperábamos 0.89) y los otros 10 no los explicamos. En la fase 2 el 0.72 lo domina ChEMBL: en los 117 pares de productos naturales el modelo da 0.530, la cifra citable, contra 0.565 de la línea base. Lo que necesitamos de ustedes: lotes propios de naturales con potencia medida, que es lo único que puede cerrar la pregunta.
 :::
 
 # Respaldo
@@ -349,7 +340,7 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ![](docs/reportes/articulo/figuras/f4_aft.svg){fig-alt="Concordancia solo NPASS y ventaja en MCC del AFT sobre el bosque" width="55%"}
 
-- 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación.
+- 117 pares: concordancia 0.530 en la prueba contra 0.632 en validación (la barra de la prueba es el 0.511 del reajuste).
 - Con 117 pares no hay potencia: **ni refuta ni confirma**.
 
 ## Cómo preparamos las columnas y qué significan las banderas {.smaller}
@@ -421,4 +412,18 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ::: {.notes}
 **Respaldo · Art.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse. Se usa con tres funciones: `con_tabla` para traer las columnas propias, `columnas_al_azar` para el control de ruido y `comparar` para medir con la misma validación; la guía dice cómo agrupar y qué errores evitar.
+:::
+
+## Cómo leer las métricas {.smaller}
+
+| Métrica | Qué dice, en una frase | El azar da |
+|:--|:--|--:|
+| **MCC** | acierto en las dos clases a la vez; exige un corte (aquí 0.5) | 0 |
+| **AUROC** | la probabilidad de poner a un permeable por encima de uno que no lo es, sin fijar un corte | 0.5 |
+| **AUPRC** | qué tan limpia es la lista al ir recuperando la clase minoritaria; se lee contra su proporción | la proporción de la minoritaria (0.35 en el ajuste de la fase 1) |
+| **Concordancia** (fase 2) | de dos pares con potencias distintas, qué fracción ordena bien al más potente | 0.5 |
+| **Enriquecimiento** | cuántas veces más activos hay en el 1% mejor ordenado que en el total | 1 |
+
+::: {.notes}
+**Respaldo · Antonio.** Para cuando alguien oiga una métrica y no la ubique. El AUROC es el mismo con cualquier corte, por eso cae menos que el MCC; la concordancia es el AUROC de la fase 2, donde la respuesta es una potencia con mediciones censuradas. El enriquecimiento está explicado en «Qué mide de verdad · fase 2».
 :::

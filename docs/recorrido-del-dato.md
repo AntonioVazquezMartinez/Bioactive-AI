@@ -123,7 +123,7 @@ Guardarlo así tuvo una consecuencia concreta. Al revisar de dónde venían los 
 
 ## 11 · Se ordena la lista
 
-El entregable es **una lista de candidatos priorizados**, no un sí o un no.
+El entregable es **un orden por fase y una lista priorizada exploratoria de naturales** ([ver la lista](lista-priorizada.md)), no un sí o un no.
 
 **Por qué no se fija dónde cortar la lista.** Depende de qué error cuesta más, y eso no lo decide la estadística: un falso positivo manda al laboratorio a ensayar algo que no sirve, y un falso negativo descarta un candidato sin que nadie se entere. Se entrega **la curva de precisión contra profundidad**, con un corte sugerido en los veinte primeros, que es lo que un laboratorio ensaya en un semestre ([C.5](decisiones.md#dc-5)).
 

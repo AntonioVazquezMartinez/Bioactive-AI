@@ -1,6 +1,6 @@
 """Figuras que solo usa la presentación final, no el artículo.
 
-Son siete, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
+Son nueve, y cada una existe porque una idea no se puede explicar a tiempo con palabras:
 
 - `anatomia.svg`: las dos formas de agrupar una molécula. Las cifras del pie salen del
   archivo curado de la patrocinadora al generar la figura, no de este texto.
@@ -18,13 +18,16 @@ Son siete, y cada una existe porque una idea no se puede explicar a tiempo con p
   del 4 de noviembre (`2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y
   `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`) solo aportan la marca «confirmada por permutación»,
   y los confirmados van primero.
-- `fase2_origen.svg`: la prueba de la fase 2 por procedencia de los datos, el modelo contra la línea base de peso
-  molecular y TPSA. Sale de `experimentos/2026-11-03-artemio-1.5-prueba-por-rareza`: **modelo y línea base de la
-  misma corrida** (reajuste), por eso en NPASS el modelo da 0.511 y no el 0.530 de la corrida registrada.
 - `ranking.svg`: el ranking por fase de seis compuestos **de la prueba reservada** (sorteados con semilla 0; ningún
   modelo los vio), con la etiqueta BBB real y la mayor potencia medida junto a lo predicho. Sale de
   `experimentos/2026-11-12-artemio-C.5-ranking-por-fase-ejemplo-prueba`. El naranja marca la similitud de **esa
   fase** por debajo de `UMBRAL_EXTRAPOLACION`, no la bandera del compuesto.
+- `lista_priorizada.svg`: los tres primeros naturales de cada enfermedad de la lista priorizada, con su diana, su
+  potencia predicha y la probabilidad de cruzar la barrera. Sale de
+  `experimentos/2026-11-12-artemio-C.5-lista-priorizada-naturales`; el naranja marca un parecido menor de 0.4 a lo visto.
+- `shap_por_diana.svg`: la fase 2 separada por diana: cuánto sube o baja la potencia predicha ser esa diana, y qué
+  columnas químicas pesan en cada una (las 16 dianas con 500 pares o más). Sale de
+  `experimentos/2026-11-12-artemio-C.2-shap-por-diana-fase2`, que explica las 56,241 filas.
 - Todas se escriben en `docs/reportes/presentacion/figuras/`.
 
 Se regenera con `python scripts/figuras_presentacion.py` y no hace falta en el CI: las
@@ -568,36 +571,6 @@ def fig_lista(salida: Path | None = None, nombre: str = "lista_priorizada") -> d
     return {"enfermedades": enfermedades}
 
 
-def fig_fase2_origen() -> dict:
-    """La fase 2 en la prueba, por procedencia: el modelo supera a la línea base solo donde hay ChEMBL."""
-    estratos = {f["estrato"]: f for f in json.loads(RAREZA.read_text(encoding="utf-8"))["fase2"]["por_estrato"]}
-    orden = [("solo_chembl", "Solo ChEMBL"), ("mixto", "Mixto"), ("solo_npass", "Solo NPASS\n(productos naturales)")]
-    fig, ax = plt.subplots(figsize=(7.2, 3.3))
-    ancho = 0.36
-    for i, (clave, _) in enumerate(orden):
-        e = estratos[clave]
-        ax.bar(i - ancho / 2, e["conc_aft"], ancho, color=AZUL)
-        ax.bar(i + ancho / 2, e["conc_base"], ancho, color=GRIS_CLARO)
-        ax.text(i - ancho / 2, e["conc_aft"] + 0.01, f"{e['conc_aft']:.3f}", ha="center", fontsize=10.5, fontweight="bold", color=AZUL)
-        ax.text(i + ancho / 2, e["conc_base"] + 0.01, f"{e['conc_base']:.3f}", ha="center", fontsize=10.5, color=GRIS)
-    ax.axhline(0.5, color="#333333", lw=1, ls=(0, (4, 3)))
-    ax.text(2.62, 0.503, "azar", fontsize=9, color="#333333", ha="right", va="bottom")
-    ax.set_xticks(range(len(orden)), [f"{o[1]}\n{estratos[o[0]]['n']:,} pares" for o in orden], fontsize=10.5)
-    ax.set_ylim(0.4, 0.8)
-    ax.set_xlim(-0.6, 2.7)
-    ax.set_ylabel("concordancia en la prueba reservada", fontsize=10)
-    for lado in ("right", "top"):
-        ax.spines[lado].set_visible(False)
-    ax.set_title("El modelo gana a la línea base donde hay ChEMBL\ny la pierde en los productos naturales", fontsize=12,
-                 fontweight="bold", color=AZUL, loc="left", pad=12)
-    ax.bar([0], [0], color=AZUL, label="modelo (aft)")
-    ax.bar([0], [0], color=GRIS_CLARO, label="línea base: peso molecular, TPSA y diana")
-    ax.legend(loc="upper right", fontsize=8.8, frameon=False)
-    for ext in ("svg", "png"):
-        fig.savefig(SALIDA / f"fase2_origen.{ext}", bbox_inches="tight", facecolor="white", dpi=190)
-    plt.close(fig)
-    return {k: (round(v["conc_aft"], 3), round(v["conc_base"], 3), v["n"]) for k, v in estratos.items()}
-
 DIANA_POR_DIANA = RAIZ / "experimentos" / "2026-11-12-artemio-C.2-shap-por-diana-fase2"
 # Columnas de la figura por diana, escogidas a mano por peso **y** especificidad: las que pesan en casi todas, y las
 # que más distinguen a una diana de las demás (máximo entre las dianas dividido por la mediana, y de peso apreciable).
@@ -691,6 +664,5 @@ if __name__ == "__main__":
     print("lista:", fig_lista())
 
 
-    print("fase2_origen:", fig_fase2_origen())
     print("por diana:", fig_shap_por_diana())
     print("escritas en", SALIDA)
