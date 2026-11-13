@@ -128,12 +128,12 @@ Fase 1, permeabilidad, con el modelo final.
 
 ![](docs/reportes/presentacion/figuras/anatomia.svg){fig-alt="La morfina, su andamio de Bemis-Murcko y su esqueleto de conectividad"}
 
-- **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. La literatura reporta que partir al azar lo infla entre 7 y 13 puntos.
+- **Agrupamos por andamio y por esqueleto, nunca al azar.** Quedan **1,048 grupos**. Partir al azar da cifras demasiado optimistas (Sheridan, 2013): con el `svm_rbf`, el MCC baja de 0.752 con pliegues al azar a 0.702 al agrupar.
 - **Qué medimos. Fase 1**, clasificar: MCC, AUROC (si el orden es bueno) y AUPRC. **Fase 2**, predecir potencia: concordancia (si ordena bien los pares).
 - Cada prueba se **planteó antes** de ver su resultado, y la prueba reservada solo sirvió **para medir**.
 
 ::: {.notes}
-**Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Lo del 7 a 13 es de la literatura; lo nuestro es la escalera de la diapositiva 7, donde el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
+**Antonio · 1 min.** El andamio guarda la estereoquímica, así que por sí solo parte en seis los ocho registros de la morfina. El esqueleto es el primer bloque del InChIKey e ignora la estereoquímica. Que partir al azar da cifras demasiado optimistas lo dice la literatura (Sheridan, 2013); la cifra es nuestra: en la escalera de la diapositiva 7, el `svm_rbf` baja de 0.752 de MCC con pliegues al azar a 0.702 al agrupar y a 0.419 en el peldaño de 0.4. Los intervalos remuestrean grupos de moléculas, no filas.
 :::
 
 ## El modelo no es la palanca
@@ -179,7 +179,7 @@ Importa qué tan nueva es la molécula.
 :::
 
 ::: {.notes}
-**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo.
+**Pame · 1.25 min.** No dividir 33 entre 4.2: son dos estimadores distintos. Agrupar solo por andamio deja el vecino en 0.75, más alto que agrupar solo por esqueleto (0.62): por eso usamos los dos. La escalera de la fase 2 se detiene en 0.6 porque más abajo el 69% y el 90% de los pares caen en un solo grupo. Que la exactitud dependa de la semejanza con el entrenamiento es un resultado clásico (Sheridan et al., 2004).
 :::
 
 ## Pero no lo explica todo · fase 1 {.smaller}

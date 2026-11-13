@@ -83,7 +83,7 @@ Aparecieron en más de una rama y conviene tenerlas presentes desde el inicio.
 
 **No citar números de desempeño de la literatura como referencia.** Los baselines reportados para el *mismo* dataset BBBP varían entre 0.681 y 0.7194 para Random Forest según quién los reporte, porque cada grupo implementa el scaffold split a su manera. Hay que correr el baseline propio.
 
-**El split aleatorio infla los resultados.** La brecha documentada entre split aleatorio (~98% de exactitud) y scaffold split (~0.92 AUROC) es de 7 a 13 puntos. Un resultado sospechosamente bueno casi siempre es fuga de datos, no mérito del modelo.
+**El split aleatorio infla los resultados.** **Corrección (12 de noviembre):** la «brecha» de 7 a 13 puntos que este párrafo citaba restaba una exactitud (~98%, split aleatorio) de un AUROC (~0.92, scaffold split) de trabajos distintos, así que no es una brecha medida. La dirección sí está documentada (`sheridan2013`) y la cifra propia está en la decisión 1.2. Un resultado sospechosamente bueno casi siempre es fuga de datos, no mérito del modelo.
 
 **Cuidado con el aprendizaje de atajos.** Hay evidencia preliminar de que, en benchmarks derivados de ChEMBL, la identidad del laboratorio que corrió el ensayo explica tanto como la estructura química. Conviene verificar que los splits sean disjuntos por fuente, no solo por andamio.
 

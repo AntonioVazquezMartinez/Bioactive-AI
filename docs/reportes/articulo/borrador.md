@@ -163,8 +163,8 @@ promediadas entre semillas y no es comparable con el 0.919, que es el promedio d
 
 Entre los once modelos hay solo 4.2 puntos de MCC. Con el `svm_rbf`, en cambio, pasar de pliegues al azar a
 pliegues donde ningún compuesto de entrenamiento se parece más de 0.4 a uno de validación cuesta 33.3 puntos
-(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`; aquí la medimos con sus
-magnitudes.
+(de 0.752 a 0.419). La lección ya se conocía `sheridan2013` `roberts2017crossvalidation`, y que la exactitud depende de cuánto se parece la
+molécula al entrenamiento también `sheridan2004similarity`; aquí la medimos con sus magnitudes.
 
 ![Escalera](figuras/f1_escalera.svg)
 
@@ -343,8 +343,8 @@ a los compuestos por SMILES canónico, se evalúa con la misma validación cruza
 referencia pliegue a pliegue, con un control de ruido y el intervalo de Nadeau y Bengio. Es Python y no una
 interfaz, y mide clasificación, no la regresión de supervivencia de la fase 2.
 
-La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que infla de
-7 a 13 puntos, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
+La acompaña una guía con lo que nos costó aprender sobre dos cosas. Sobre cómo agrupar: nunca al azar, que da cifras
+demasiado optimistas, y por andamio y esqueleto juntos y no por andamio solo. Sobre cómo medir: una corrida no decide, las
 15 evaluaciones comparten filas, «mejora en 10 de 15» tiene 49% de potencia en el umbral que esa regla nombra, y el
 resultado se reporta por subgrupo. La guía dice también lo único que la herramienta no puede verificar: que las
 columnas no se hayan calculado usando las etiquetas ni usando todas las filas a la vez.

@@ -104,7 +104,7 @@ Cada entrada dice **qué es** y, sobre todo, **por qué importa aquí**. Un tér
 : El esqueleto de la molécula: sus anillos y los enlaces que los conectan, sin los grupos que cuelgan de ellos. Agrupa compuestos que son variaciones del mismo núcleo químico. **Por qué importa:** es el criterio con el que se parten los datos.
 
 **Scaffold split**
-: Partición que reparte **andamios completos** entre entrenamiento y prueba, en vez de repartir filas al azar. Así ninguna variación del mismo núcleo aparece en ambos lados. **Por qué importa:** es la diferencia entre medir si el modelo generaliza a química nueva o si solo memorizó andamios. Una partición aleatoria infla los resultados entre 7 y 13 puntos.
+: Partición que reparte **andamios completos** entre entrenamiento y prueba, en vez de repartir filas al azar. Así ninguna variación del mismo núcleo aparece en ambos lados. **Por qué importa:** es la diferencia entre medir si el modelo generaliza a química nueva o si solo memorizó andamios. Una partición aleatoria da resultados demasiado optimistas (Sheridan, 2013); en nuestro caso, el MCC del `svm_rbf` baja de 0.752 con pliegues al azar a 0.419 en el peldaño estricto de la escalera de semejanza.
 
 **EDA** (análisis exploratorio de datos)
 : Etapa que describe la estructura, calidad, distribución y relaciones presentes en un conjunto, antes de construir un modelo. **Por qué importa:** sus asociaciones sugieren preguntas y variables a estudiar, pero no son por sí solas reglas predictivas ni pruebas de generalización.
