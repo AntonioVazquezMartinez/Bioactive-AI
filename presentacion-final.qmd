@@ -1,5 +1,5 @@
 ---
-# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; cinco de respaldo al final.
+# Presentación final: 15 minutos de charla (15 diapositivas en 13 min, más 1.5 del resumen en Zoom) y 10 de preguntas; seis de respaldo al final.
 # Los minutos de las notas son un plan, no una medición: se corrigen con el ensayo con cronómetro.
 # Guion y reparto: issue #303. Las cifras salen del artículo (docs/reportes/articulo/borrador.md).
 # Las notas de cada diapositiva (tecla S) traen quién la presenta y qué se dice.
@@ -249,16 +249,16 @@ Ninguna de las tres cerró la brecha. Recomponer la prueba cambia el número que
 **Art · 0.75 min.** La advertencia dice qué tan cerca queda cada compuesto de lo que los modelos vieron.
 :::
 
-## Una herramienta para medir columnas nuevas {.smaller}
+## La lista priorizada: qué probar primero {.smaller}
 
-![](docs/reportes/presentacion/figuras/medir.svg){fig-alt="Diferencia de MCC contra los 151 descriptores: tres propiedades bien elegidas quedan unos 0.08 por debajo y un control de ruido casi 0.69 por debajo"}
+![](docs/reportes/presentacion/figuras/lista_priorizada.svg){fig-alt="Los tres primeros compuestos naturales de cada enfermedad, con su diana, la potencia predicha y la probabilidad de cruzar la barrera" width="80%"}
 
-- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
-- Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
-- Es Python con una guía de cómo agrupar y medir, no una interfaz.
+- **Qué es:** los naturales con mayor potencia predicha por enfermedad y por diana, **sin medición** contra esa diana, con **barrera probable** y sin alerta PAINS (752 candidatos de 1,821 de NPASS y CMAUP). Completa en el sitio (*Entrega final*) y en CSV.
+- **Cómo leerla:** es **exploratoria**. El modelo de potencia **no supera a una línea base** en naturales (0.530 contra 0.565): sirve para decidir qué probar primero, no como resultado.
+- **Se repite:** 84 compuestos distintos en 260 lugares, porque la química que pesa es casi la misma en todas las dianas.
 
 ::: {.notes}
-**Art · 0.5 min.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
+**Art · 0.5 min.** Es el objetivo con el que abrimos: priorizar naturales que lleguen al cerebro y actúen sobre su diana. La figura trae los tres primeros por enfermedad; la lista completa, por diana y por enfermedad, está en el sitio. Es una lista de hipótesis para el laboratorio: el modelo de potencia no supera a una línea base en naturales, y combinar las dos fases no está validado, así que el criterio de barrera solo ordena y no descarta. En naranja, compuestos lejos de lo que el modelo vio. Los identificadores NPASS:NPC son compuestos de esa base sin un nombre usable en el dato.
 :::
 
 ## Qué concluimos {.smaller}
@@ -344,4 +344,16 @@ La ventaja del modelo sobre una línea base de peso y TPSA crece con lo parecido
 
 ::: {.notes}
 **Respaldo.** Pame contesta la fase 1 y Antonio la 2. Es para quien pregunte qué mira el modelo. Lo que importa en una fase no sirve en la otra: los donadores de hidrógeno son cuartos en la permeabilidad y quedan en el lugar 165 en la potencia. Corridas: `2026-11-04-artemio-C.2-atribucion-fase1-svm-dos-metodos` y `2026-11-04-artemio-2.13-atribucion-aft-treeshap-y-permutacion`.
+:::
+
+## Una herramienta para medir columnas nuevas {.smaller}
+
+![](docs/reportes/presentacion/figuras/medir.svg){fig-alt="Diferencia de MCC contra los 151 descriptores: tres propiedades bien elegidas quedan unos 0.08 por debajo y un control de ruido casi 0.69 por debajo"}
+
+- Una tabla de **columnas propias** se compara contra los descriptores con la **misma validación agrupada** y contra un **control de ruido**.
+- Ejemplo: tres propiedades de la literatura quedan **unos 0.08 de MCC** por debajo de los 151 descriptores, y el ruido casi 0.69. Aprenden, pero no igualan.
+- Es Python con una guía de cómo agrupar y medir, no una interfaz.
+
+::: {.notes}
+**Respaldo · Art.** Es la parte del proyecto que sirve más allá de nuestros modelos: cualquiera puede medir si unas columnas nuevas ayudan, sin engañarse.
 :::

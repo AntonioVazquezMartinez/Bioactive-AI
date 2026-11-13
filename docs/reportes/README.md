@@ -16,7 +16,7 @@ El calendario completo de entregas está en la [tabla de fases de CRISP-ML(Q)](a
 
 **El proyecto termina con esta entrega.** La continuidad es autónoma de la patrocinadora y su grupo, y el equipo no se compromete a acompañarla ([C.8](../decisiones.md#dc-8)). Lo que se entrega para poder hacerlo solos: el cuaderno, los dos modelos guardados con su módulo de inferencia, el procedimiento para reentrenar y la [herramienta para medir columnas propias](../medir-una-representacion.md). El video del proyecto no forma parte de la entrega final.
 
-Lo que **no** se entrega: una lista de candidatos. La patrocinadora no entregó candidatos, y combinar las dos fases en un solo orden sigue pendiente ([C.3](../decisiones.md#dc-3)); el cuaderno ordena cada fase por separado ([C.5](../decisiones.md#dc-5), revisada el 12 de noviembre).
+Se entrega además una **[lista priorizada de naturales](../lista-priorizada.md) por diana y por enfermedad, exploratoria**: la ordena un modelo que en los naturales no supera a una línea base, y combinar las dos fases en un solo orden sigue pendiente ([C.3](../decisiones.md#dc-3)); el cuaderno ordena cada fase por separado ([C.5](../decisiones.md#dc-5), revisada dos veces el 12 de noviembre).
 
 ## Los avances, en orden cronológico
 
